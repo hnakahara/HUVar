@@ -1,7 +1,5 @@
 """Unit tests for VCF reader."""
-import pytest
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 FIXTURE_VCF = Path(__file__).parent.parent / "fixtures" / "sample.vcf"
 

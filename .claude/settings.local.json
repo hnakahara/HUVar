@@ -1,0 +1,36 @@
+{
+  "env": {
+    "ECC_GATEGUARD": "off"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__plugin_everything-claude-code_playwright__browser_navigate",
+      "mcp__plugin_everything-claude-code_exa__web_search_exa",
+      "mcp__plugin_everything-claude-code_exa__web_fetch_exa",
+      "WebSearch",
+      "WebFetch(domain:asia.ensembl.org)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.sciencedirect.com)",
+      "WebFetch(domain:doi.org)",
+      "WebFetch(domain:pubmed.ncbi.nlm.nih.gov)",
+      "WebFetch(domain:www.cell.com)",
+      "WebFetch(domain:cspec.genome.network)",
+      "Bash(py -3.13 -m pytest tests/ --tb=short -q)",
+      "Bash(pip show *)",
+      "Bash(where python *)",
+      "Bash(uv run *)",
+      "Read(//c/Users/Nakahara/.local/bin//**)",
+      "Read(//c/Users/Nakahara/AppData/Roaming/**)",
+      "Bash(cmd /c \"where uv\")",
+      "Bash(cmd /c \"where pip\")",
+      "Bash(cmd /c \"py -3.13 -m pip show pytest\")",
+      "Bash(cmd /c \"py -3.11 --version\")",
+      "Bash(cmd /c \"py --list\")",
+      "Read(//c/Users/Nakahara/AppData/Local/Programs/Python//**)",
+      "Read(//c/Users/Nakahara/AppData/Local/Programs/Python/Python313//**)",
+      "Bash(\"/c/Users/Nakahara/AppData/Local/Programs/Python/Python313/python.exe\" -m pip show pytest)",
+      "Bash(\"/c/Users/Nakahara/AppData/Local/Programs/Python/Python313/python.exe\" -m pip show acmg-classifier)",
+      "Bash(grep -iA40 \"dependencies\\\\|\\\\[project\\\\]\")"
+    ]
+  }
+}

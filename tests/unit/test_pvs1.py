@@ -1,5 +1,4 @@
 """Unit tests for PVS1 decision tree."""
-import pytest
 from acmg_classifier.models.annotation import AnnotationData, GnomADData, ConsequenceInfo
 from acmg_classifier.models.enums import Assembly, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord

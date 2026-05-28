@@ -1,7 +1,5 @@
 """Data download, verification, and status reporting."""
 from __future__ import annotations
-import hashlib
-import urllib.request
 from pathlib import Path
 
 import structlog

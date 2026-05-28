@@ -1,8 +1,7 @@
 """Unit tests for Pydantic models."""
-import pytest
 from acmg_classifier.models.variant import VariantRecord
-from acmg_classifier.models.enums import Assembly, VariantType, CriterionStrength, CriterionDirection
-from acmg_classifier.models.criteria import CriteriaResult, STRENGTH_POINTS
+from acmg_classifier.models.enums import Assembly, VariantType
+from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion
 
 

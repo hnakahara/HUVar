@@ -58,7 +58,7 @@ class PM2Evaluator(CriterionEvaluator):
             return CriteriaResult.met(
                 ACMGCriterion.PM2,
                 CriterionStrength.SUPPORTING,
-                f"Absent from gnomAD (AC=0)",
+                "Absent from gnomAD (AC=0)",
             )
 
         threshold, basis = self._threshold(annotation)

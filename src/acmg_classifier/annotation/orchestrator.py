@@ -3,13 +3,11 @@ Annotation orchestrator: runs all local DB lookups in parallel and assembles Ann
 """
 from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
-from typing import Optional
 
 import structlog
 
 from acmg_classifier.config import Config
-from acmg_classifier.models.annotation import AnnotationData, GnomADData
+from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.enums import SpliceTool
 from acmg_classifier.models.variant import VariantRecord
 
@@ -78,7 +76,6 @@ class AnnotationOrchestrator:
 
     def _annotate_one(self, variant: VariantRecord, consequences) -> AnnotationData:
         from acmg_classifier.local_db.clinvar_vcf import query_clinvar_vcf
-        from acmg_classifier.local_db.clinvar_sqlite import query_same_aa_change
         from acmg_classifier.local_db.alphamissense_db import query_alphamissense
         from acmg_classifier.local_db.repeatmasker_db import query_repeat
 

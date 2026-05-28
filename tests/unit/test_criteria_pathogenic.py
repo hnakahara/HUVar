@@ -1,10 +1,9 @@
 """Unit tests for pathogenic criteria evaluators."""
-import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from acmg_classifier.models.annotation import (
     AnnotationData, GnomADData, AlphaMissenseData, ClinVarRecord, ConsequenceInfo
 )
-from acmg_classifier.models.enums import Assembly, ACMGCriterion, ConsequenceType, CriterionStrength
+from acmg_classifier.models.enums import Assembly, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 
 

@@ -37,7 +37,7 @@ def query_alphamissense(
                 fields = line.split("\t")
                 if len(fields) < 9:
                     continue
-                f_chrom, f_pos, f_ref, f_alt = fields[0], fields[1], fields[2], fields[3]
+                _, f_pos, f_ref, f_alt = fields[0], fields[1], fields[2], fields[3]
                 if int(f_pos) != pos or f_ref != ref or f_alt != alt:
                     continue
                 try:

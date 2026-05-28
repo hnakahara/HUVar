@@ -1,5 +1,4 @@
 """Unit tests for ACMG 2015 and Bayesian classifiers."""
-import pytest
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength, Pathogenicity
 from acmg_classifier.classification.classifier_2015 import Classifier2015

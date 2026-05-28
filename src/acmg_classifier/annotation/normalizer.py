@@ -1,6 +1,5 @@
 from __future__ import annotations
 from pathlib import Path
-from typing import Optional
 import pysam  # type: ignore
 
 from acmg_classifier.models.variant import VariantRecord

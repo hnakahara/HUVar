@@ -1,5 +1,4 @@
 """Unit tests for benign criteria evaluators using mock annotations."""
-import pytest
 from acmg_classifier.models.annotation import AnnotationData, GnomADData, RepeatMaskerRegion
 from acmg_classifier.models.annotation import ConsequenceInfo, SpliceScore
 from acmg_classifier.models.enums import Assembly, ACMGCriterion, ConsequenceType

@@ -1,6 +1,4 @@
 """Unit tests for variant left-alignment normalizer."""
-import pytest
-from unittest.mock import MagicMock, patch
 from acmg_classifier.models.enums import Assembly
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.annotation.normalizer import left_align_and_trim

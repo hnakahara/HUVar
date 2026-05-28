@@ -6,7 +6,7 @@ from acmg_classifier.models.enums import ACMGCriterion, Pathogenicity
 from acmg_classifier.models.criteria import CriteriaResult
 
 if TYPE_CHECKING:
-    from acmg_classifier.models.annotation import AnnotationData
+    pass
 
 
 class ClassificationResult(BaseModel):

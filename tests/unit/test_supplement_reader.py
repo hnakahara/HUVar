@@ -1,5 +1,4 @@
 """Unit tests for supplement TSV reader."""
-import pytest
 from pathlib import Path
 from acmg_classifier.io.supplement_reader import read_supplement
 from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
