@@ -485,6 +485,15 @@ pre-computed SpliceAI VCFs are present at `data/<asm>/spliceai/`, SpliceAI
 takes precedence over the missense predictor when its max Δscore ≥ 0.20.
 Below that threshold the missense predictor's call is retained.
 
+- **SQUIRLS** (default): PP3 raw_score `≥0.50` → Moderate, `≥0.20` →
+  Supporting. BP4 raw_score `<0.20` → Supporting. Strong / ThreePoint are
+  intentionally **not** assigned — there is no SQUIRLS-specific Walker /
+  Bergquist calibration, so thresholds are kept approximate and capped at
+  Moderate. Output evidence strings explicitly flag this with
+  `(thresholds approximate)`.
+- **SpliceAI** (`--splice-tool spliceai`): PP3 max_delta `≥0.20` → Moderate;
+  BP4 max_delta `≤0.10` → Supporting (Walker *Am J Hum Genet* 2023).
+
 ### Commercial use
 
 The tool itself is Apache-2.0, but **AlphaMissense scores are CC BY-NC-SA 4.0
