@@ -206,22 +206,22 @@ to git). A one-shot setup script downloads and builds everything required:
 
 ```bash
 # Default: GRCh38 only, downloads everything (~ 350 GB, takes hours)
-python scripts/setup_data.py --data-dir ./data --assembly GRCh38
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38
 
 # Both assemblies
-python scripts/setup_data.py --data-dir ./data --assembly GRCh38
-python scripts/setup_data.py --data-dir ./data --assembly GRCh37
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh37
 
 # If you already have a reference genome / gnomAD VCFs locally, point to them
-python scripts/setup_data.py --data-dir ./data \
+python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --genome-fasta /db/reference/GRCh38/hg38.fa \
     --gnomad-vcf-dir /db/gnomad/v4.1/exomes/vcf
 
 # Skip the gigantic gnomAD download (~300 GB)
-python scripts/setup_data.py --data-dir ./data --skip-gnomad
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --skip-gnomad
 
 # Pick specific chromosomes for gnomAD (testing/partial setup)
-python scripts/setup_data.py --data-dir ./data \
+python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --gnomad-chromosomes chr1 chr2 chrX
 ```
 
@@ -263,8 +263,8 @@ data/
 Validate the install at any time:
 
 ```bash
-acmg-classify validate --data-dir ./data --assembly GRCh38
-acmg-classify status   --data-dir ./data
+acmg-classify validate --data-dir /path/to/download/directory/data --assembly GRCh38
+acmg-classify status   --data-dir /path/to/download/directory/data
 ```
 
 ---
@@ -310,7 +310,7 @@ acmg-classify classify panel.vcf.gz \
 Print a human-readable breakdown of one variant without writing to disk:
 
 ```bash
-acmg-classify explain chr17 43044295 G A --assembly GRCh38
+acmg-classify explain chr17 7674221 G A --assembly GRCh38 --data-dir /path/to/download/directory/data
 ```
 
 Useful for debugging a specific classification or for ad-hoc review.
@@ -319,15 +319,15 @@ Useful for debugging a specific classification or for ad-hoc review.
 
 ```bash
 # Check that all required data files exist
-acmg-classify validate --data-dir ./data --assembly GRCh38
-acmg-classify validate --data-dir ./data --assembly both
+acmg-classify validate --data-dir /path/to/download/directory/data --assembly GRCh38
+acmg-classify validate --data-dir /path/to/download/directory/data --assembly both
 
 # Show DB versions / build dates
-acmg-classify status   --data-dir ./data
+acmg-classify status --data-dir /path/to/download/directory/data
 
 # (Re)run downloads — same effect as scripts/setup_data.py without
 # the advanced flags
-acmg-classify setup    --data-dir ./data --assembly GRCh38
+acmg-classify setup --data-dir /path/to/download/directory/data --assembly GRCh38
 ```
 
 ### Manual evidence supplement
@@ -503,7 +503,7 @@ Bergquist 2024 strength calibration in this implementation:
 
 ```bash
 acmg-classify classify input.vcf -o results.tsv \
-    --assembly GRCh38 --data-dir ./data \
+    --assembly GRCh38 --data-dir /path/to/download/directory/data \
     --insilico-tool esm1b --splice-tool squirls
 ```
 
