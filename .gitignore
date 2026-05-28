@@ -34,6 +34,7 @@ results/
 output/
 tmp/
 scratch/
+paper
 
 # Exception: keep tiny test fixtures shipped with the repo
 !tests/fixtures/*.vcf
