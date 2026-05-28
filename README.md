@@ -42,7 +42,6 @@ final classification under both frameworks side-by-side.
 - [Classification model](#classification-model)
 - [Commercial use](#commercial-use)
 - [Project layout](#project-layout)
-- [Testing](#testing)
 - [Configuration via environment variables](#configuration-via-environment-variables)
 - [Known limitations](#known-limitations)
 - [Citing](#citing)
@@ -186,23 +185,13 @@ conda activate acmg
 
 # 3. Install the package (editable install for development)
 pip install -e .
-
-# Optional: dev extras (pytest, ruff)
-pip install -e ".[dev]"
-
-# 4. Verify the CLI is wired up
-acmg-classify --help
 ```
-
-The console script `acmg-classify` is registered by `pyproject.toml` →
-`[project.scripts]` and resolves to `acmg_classifier.cli:cli`.
 
 ---
 
 ## Data setup
 
-All annotation databases live under a single `data/` directory (NOT committed
-to git). A one-shot setup script downloads and builds everything required:
+A one-shot setup script downloads and builds everything required:
 
 ```bash
 # Default: GRCh38 only, downloads everything (~ 350 GB, takes hours)
@@ -545,30 +534,6 @@ HUHVar/
 ├── LICENSE
 ├── NOTICE
 └── README.md
-```
-
----
-
-## Testing
-
-```bash
-# Install dev extras (pytest, pytest-cov)
-pip install -e ".[dev]"
-
-# Unit tests only (no data/ required)
-pytest tests/unit -v
-
-# With coverage
-pytest tests/unit --cov=src/acmg_classifier --cov-report=term-missing
-
-# Full integration suite (requires populated data/)
-pytest tests/integration -v
-```
-
-Lint:
-
-```bash
-ruff check src tests
 ```
 
 ---
