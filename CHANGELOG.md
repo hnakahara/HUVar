@@ -12,11 +12,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - BS2 inheritance-aware homozygote thresholds.
 - SpliceAI fallback when AlphaMissense disagrees with splice prediction
   (SpliceAI ≥ 0.20 takes precedence).
+- **ESM1b missense predictor** (Brandes et al. 2023, MIT-licensed) for
+  PP3 / BP4 with Bergquist 2024 Table 2 strengths. Enables commercial
+  deployments where AlphaMissense's CC BY-NC-SA 4.0 licence is a blocker.
+  Use `--insilico-tool esm1b`. New `esm1b_llr` column in the output TSV.
+- `--skip-esm1b` flag in `scripts/setup_data.py` to opt out of the
+  ~1.34 GB Brandes archive download.
+- VEP runner now passes `--uniprot`, so `ConsequenceInfo.uniprot_id` is
+  populated and the ESM1b lookup can key on the SwissProt accession.
 
 ### Changed
 
 - GRCh37 transcript IDs in TSV output are now RefSeq (NM_) by default,
   matching GRCh38 behaviour.
+
+### Fixed
+
+- **AlphaMissense BP4 strength** previously returned `Strong` for
+  `score ≤ 0.070`; per Bergquist 2024 Table 2 there is no Strong (-4)
+  category for AlphaMissense BP4. Capped at `ThreePoint`. Existing
+  Bayesian sums for very-benign AlphaMissense calls drop by 1 point.
 
 ### Known issues
 

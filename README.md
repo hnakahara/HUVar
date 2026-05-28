@@ -40,6 +40,7 @@ final classification under both frameworks side-by-side.
   - [Manual evidence supplement](#manual-evidence-supplement)
 - [Output format](#output-format)
 - [Classification model](#classification-model)
+- [Commercial use](#commercial-use)
 - [Project layout](#project-layout)
 - [Testing](#testing)
 - [Configuration via environment variables](#configuration-via-environment-variables)
@@ -105,9 +106,11 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   including NMD prediction, last-exon rescue, and biological-relevance gating.
 - **Inheritance-aware PM2** (BS1/BS2 also) thresholds switch between dominant
   and recessive frequencies using a per-gene inheritance table.
-- **In silico prediction**: AlphaMissense (default) or ESM1b for missense;
-  SQUIRLS (default) or SpliceAI for splice. SpliceAI overrides AlphaMissense
-  when its score crosses the high-impact threshold.
+- **In silico prediction**: AlphaMissense (default, non-commercial) or
+  **ESM1b** (MIT-licensed, commercial-use ready) for missense; SQUIRLS
+  (default) or SpliceAI for splice. SpliceAI overrides the missense call
+  when its score crosses the high-impact threshold. Both missense
+  predictors use Bergquist 2024 Table 2 strengths.
 - **Fully offline** at classification time. Local databases include:
   Ensembl reference genome, VEP cache, gnomAD (DuckDB), ClinVar (VCF +
   derived SQLite for PS1/PM5), AlphaMissense, RepeatMasker, optional SpliceAI.
@@ -235,6 +238,7 @@ python scripts/setup_data.py --data-dir ./data \
 | `--skip-gnomad` | Skip gnomAD download (~ 300 GB) |
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
+| `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
 
 After setup, the expected layout is:
 
@@ -243,6 +247,8 @@ data/
 ├── shared/
 │   └── gene_inheritance.tsv         # gene → AD/AR/XL (ships in repo)
 ├── vep_cache/                       # VEP indexed cache, both assemblies
+├── esm1b/                           # (optional) protein-coordinate, shared across assemblies
+│   └── esm1b_llr.sqlite             #   built from Brandes 2023 archive
 └── GRCh38/                          # (mirror at GRCh37/)
     ├── genome/GRCh38.p14.fa(+.fai)
     ├── clinvar/clinvar_GRCh38.vcf.gz(+.tbi)
@@ -387,8 +393,13 @@ Bayesian thresholds:
 `gnomad_pli`, `gnomad_loeuf`,
 `clinvar_variation_id`, `clinvar_significance`, `clinvar_stars`,
 `alphamissense_score`, `alphamissense_classification`,
+`esm1b_llr`,
 `splice_tool`, `splice_score`,
 `in_repeat`, `repeat_class`
+
+`alphamissense_*` is populated when `--insilico-tool alphamissense` (default);
+`esm1b_llr` is populated when `--insilico-tool esm1b`. The other column is
+left empty for the non-active tool.
 
 ### Per-criterion columns
 
@@ -456,13 +467,39 @@ Strong, Strong, Moderate, Supporting, or be entirely suppressed based on:
 
 ### In-silico aggregation (PP3 / BP4)
 
-- Missense default: **AlphaMissense** (likely_pathogenic / likely_benign /
-  ambiguous classification).
-- Splice default: **SQUIRLS**.
-- When `splice_tool=spliceai` or pre-computed SpliceAI VCFs are present at
-  `data/<asm>/spliceai/`, SpliceAI takes precedence over AlphaMissense when
-  its max Δscore ≥ 0.20 (default threshold for high-impact splice prediction).
-  Below that threshold the missense predictor's call is retained.
+Strengths are calibrated to Bergquist et al. *Genet Med* 2024 Table 2.
+
+**Missense predictor** — pick one with `--insilico-tool`:
+
+- **AlphaMissense** (default): Strong / ThreePoint / Moderate / Supporting
+  for PP3 (`≥0.990 / ≥0.972 / ≥0.906 / ≥0.792`); ThreePoint / Moderate /
+  Supporting for BP4 (`≤0.070 / ≤0.099 / ≤0.169`). No Strong BP4 category.
+- **ESM1b** (`--insilico-tool esm1b`): Strong / ThreePoint / Moderate /
+  Supporting for PP3 (LLR `≤−24.0 / ≤−14.0 / ≤−12.2 / ≤−10.7`); ThreePoint /
+  Moderate / Supporting for BP4 (LLR `≥8.8 / ≥−3.2 / ≥−6.3`). Lower LLR ⇒
+  more pathogenic. Use this path for **commercial deployments** — see
+  [Commercial use](#commercial-use).
+
+**Splice predictor** — default **SQUIRLS**. When `--splice-tool spliceai` or
+pre-computed SpliceAI VCFs are present at `data/<asm>/spliceai/`, SpliceAI
+takes precedence over the missense predictor when its max Δscore ≥ 0.20.
+Below that threshold the missense predictor's call is retained.
+
+### Commercial use
+
+The tool itself is Apache-2.0, but **AlphaMissense scores are CC BY-NC-SA 4.0
+(non-commercial)**. For commercial deployments, switch the missense
+predictor to **ESM1b** (Brandes et al. 2023, MIT-licensed), which has full
+Bergquist 2024 strength calibration in this implementation:
+
+```bash
+acmg-classify classify input.vcf -o results.tsv \
+    --assembly GRCh38 --data-dir ./data \
+    --insilico-tool esm1b --splice-tool squirls
+```
+
+All other defaults (gnomAD, ClinVar, VEP, SQUIRLS) are commercially
+permissive. SpliceAI remains a separate Illumina-licensed option.
 
 ---
 
@@ -555,7 +592,9 @@ CLI flags take precedence over environment variables.
   Bayesian-LP call where `gnomad_af` is high.
 - **AlphaMissense license.** Scores are CC BY-NC-SA 4.0 — commercial use
   requires direct arrangement with DeepMind/Google. The tool itself is
-  Apache-2.0 but the bundled annotation source is not.
+  Apache-2.0 but the bundled annotation source is not. Switch to
+  `--insilico-tool esm1b` for commercial settings (see
+  [Commercial use](#commercial-use)).
 - **SpliceAI.** Pre-computed score VCFs are not redistributed. Users with an
   Illumina license can place them under `data/<asm>/spliceai/` and pass
   `--splice-tool spliceai`.

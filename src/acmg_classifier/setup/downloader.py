@@ -5,33 +5,56 @@ from pathlib import Path
 import structlog
 
 from acmg_classifier.config import Config
-from acmg_classifier.models.enums import Assembly
+from acmg_classifier.models.enums import Assembly, InSilicoTool
 
 log = structlog.get_logger()
 
-_REQUIRED_FILES_38 = [
+# Per-assembly files that are always required regardless of which in-silico
+# tool is configured.
+_BASE_FILES_38 = [
     "genome/GRCh38.p14.fa",
     "gnomad/gnomad_v4.1_exomes.duckdb",
     "clinvar/clinvar_GRCh38.vcf.gz",
     "clinvar/clinvar_ps1_pm5_GRCh38.sqlite",
-    "alphamissense/AlphaMissense_hg38.tsv.gz",
 ]
-_REQUIRED_FILES_37 = [
+_BASE_FILES_37 = [
     "genome/GRCh37.p13.fa",
     "gnomad/gnomad_v2.1.1_exomes.duckdb",
     "clinvar/clinvar_GRCh37.vcf.gz",
     "clinvar/clinvar_ps1_pm5_GRCh37.sqlite",
-    "alphamissense/AlphaMissense_hg19.tsv.gz",
 ]
-_REQUIRED_FILES = {
-    Assembly.GRCH38: _REQUIRED_FILES_38,
-    Assembly.GRCH37: _REQUIRED_FILES_37,
+_BASE_FILES = {
+    Assembly.GRCH38: _BASE_FILES_38,
+    Assembly.GRCH37: _BASE_FILES_37,
 }
+_AM_FILE = {
+    Assembly.GRCH38: "alphamissense/AlphaMissense_hg38.tsv.gz",
+    Assembly.GRCH37: "alphamissense/AlphaMissense_hg19.tsv.gz",
+}
+# ESM1b SQLite is protein-coordinate, so it lives under data_dir/ (not
+# assembly_dir/) and is shared across GRCh37/GRCh38.
+_ESM1B_REL = "esm1b/esm1b_llr.sqlite"
 
 
 def validate_data_dir(cfg: Config) -> bool:
     ok = True
-    for rel in _REQUIRED_FILES.get(cfg.assembly, []):
+    for rel in _BASE_FILES.get(cfg.assembly, []):
+        p = cfg.assembly_dir / rel
+        if not p.exists():
+            log.warning("missing_data_file", path=str(p))
+            ok = False
+        else:
+            log.info("data_file_ok", path=str(p))
+
+    if cfg.insilico_tool == InSilicoTool.ESM1B:
+        p = cfg.data_dir / _ESM1B_REL
+        if not p.exists():
+            log.warning("missing_data_file", path=str(p))
+            ok = False
+        else:
+            log.info("data_file_ok", path=str(p))
+    else:
+        rel = _AM_FILE[cfg.assembly]
         p = cfg.assembly_dir / rel
         if not p.exists():
             log.warning("missing_data_file", path=str(p))
@@ -50,10 +73,14 @@ def print_status(data_dir: Path) -> None:
     table.add_column("File")
     table.add_column("Status")
     for asm in Assembly:
-        for rel in _REQUIRED_FILES.get(asm, []):
+        for rel in _BASE_FILES.get(asm, []) + [_AM_FILE[asm]]:
             p = data_dir / asm.value / rel
             status = "[green]OK[/green]" if p.exists() else "[red]MISSING[/red]"
             table.add_row(asm.value, rel, status)
+    # ESM1b is assembly-independent; show it once.
+    p = data_dir / _ESM1B_REL
+    status = "[green]OK[/green]" if p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
+    table.add_row("(shared)", _ESM1B_REL, status)
     console.print(table)
 
 
