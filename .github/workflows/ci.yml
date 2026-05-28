@@ -34,7 +34,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            libcurl4-openssl-dev libssl-dev zlib1g-dev libbz2-dev liblzma-dev \
+            libssl-dev zlib1g-dev libbz2-dev liblzma-dev \
             libdeflate-dev libhts-dev tabix bcftools samtools
 
       - name: Install package (dev extras)
