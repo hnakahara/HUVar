@@ -1,98 +1,118 @@
-"""Build the ESM1b SQLite from Brandes 2023 distribution.
+"""Build the ESM1b SQLite from the Brandes 2023 distribution.
 
-Inputs (downloaded by `scripts/setup_data.py`):
+Source archive (downloaded by `scripts/setup_data.py`):
   - ALL_hum_isoforms_ESM1b_LLR.zip
-      One file per isoform inside, keyed by UniProt ID. Each file is a CSV
-      matrix where rows are amino-acid positions (1-based) and columns are
-      the 20 standard amino acids; cells are the LLR for the substitution.
-      The WT position (diagonal) contains 0 or NaN and is skipped.
-  - isoform_list.csv
-      UniProt-to-Ensembl-transcript mapping with columns
-        (uniprot_id, ensembl_transcript_id, ...)
-      One UniProt isoform maps to exactly one Ensembl transcript.
+      One CSV per protein isoform, file name `<UniProt>_LLR.csv`
+      (e.g. `P38398_LLR.csv`, `P38398-2_LLR.csv`).
 
-Output:
-  - SQLite at the supplied path with schema
-      scores(transcript_id TEXT, aa_pos INTEGER, alt_aa TEXT, llr REAL)
-      indexed on (transcript_id, aa_pos).
+CSV layout (one isoform):
 
-Note: the upstream archive ships a matrix-style CSV. If a future release
-ships long-form (mutation,score) instead, set `long_form=True` to parse it.
+    ,M 1,A 2,A 3,E 4,L 5,...
+    K,-11.210,-6.968,-6.102,-4.795,-4.373,...
+    R,-12.401,-5.842,...,...
+    ...
+
+  - First row, first cell is empty; remaining header cells are "<WT_AA> <POS>"
+    pairs (note the single space). The position is 1-based and the WT amino
+    acid is the residue at that position.
+  - Each subsequent row's first cell is the *alt* amino acid; remaining cells
+    are LLR values per position. A cell is the LLR for substituting the
+    column's WT with the row's alt AA. Cells where the alt AA matches the
+    column's WT (the diagonal) are 0.000 — skipped.
+
+Output SQLite (no isoform mapping needed):
+
+    CREATE TABLE scores (
+        uniprot_id TEXT NOT NULL,
+        aa_pos     INTEGER NOT NULL,
+        alt_aa     TEXT NOT NULL,
+        llr        REAL NOT NULL,
+        PRIMARY KEY (uniprot_id, aa_pos, alt_aa)
+    ) WITHOUT ROWID;
+    CREATE INDEX idx_scores_uni_pos ON scores(uniprot_id, aa_pos);
 """
 from __future__ import annotations
 
 import csv
 import io
+import re
 import sqlite3
 import zipfile
 from pathlib import Path
 from typing import Iterator
 
-_AA_COLS = list("ACDEFGHIKLMNPQRSTVWY")
+_HEADER_CELL = re.compile(r"^([A-Z*])\s+(\d+)$")
 
 
-def _build_isoform_map(isoform_csv: Path) -> dict[str, str]:
-    """Return {uniprot_id (stripped of -N suffix): ensembl_transcript_id}."""
-    mapping: dict[str, str] = {}
-    with isoform_csv.open() as fh:
-        reader = csv.DictReader(fh)
-        for row in reader:
-            uni = (row.get("uniprot_id") or row.get("uniprot") or "").strip()
-            ens = (
-                row.get("ensembl_transcript_id")
-                or row.get("transcript_id")
-                or row.get("ensembl")
-                or ""
-            ).strip()
-            if not uni or not ens:
-                continue
-            mapping[uni] = ens.split(".", 1)[0]
-    return mapping
+def _parse_header(header: list[str]) -> list[tuple[str, int] | None]:
+    """Map each header column index (excluding the empty leading cell) to
+    a (wt_aa, position) tuple. Returns None for cells that do not match
+    the "<WT_AA> <POS>" pattern so the corresponding data columns can be
+    skipped without aborting the whole file.
+    """
+    parsed: list[tuple[str, int] | None] = []
+    for cell in header[1:]:
+        m = _HEADER_CELL.match(cell.strip())
+        if m:
+            parsed.append((m.group(1), int(m.group(2))))
+        else:
+            parsed.append(None)
+    return parsed
 
 
 def _iter_matrix_rows(
-    transcript_id: str,
+    uniprot_id: str,
     text: str,
 ) -> Iterator[tuple[str, int, str, float]]:
-    """Yield (transcript_id, aa_pos, alt_aa, llr) from a matrix-style CSV."""
+    """Yield (uniprot_id, aa_pos, alt_aa, llr) from one isoform CSV."""
     reader = csv.reader(io.StringIO(text))
     header = next(reader, None)
-    if not header:
+    if not header or len(header) < 2:
         return
-    # header[0] is the position column; remaining cells are AA labels.
-    aa_labels = [h.strip() for h in header[1:]]
+    pos_info = _parse_header(header)
+
     for row in reader:
-        if not row or len(row) < 2:
+        if not row:
             continue
-        try:
-            pos = int(row[0])
-        except ValueError:
+        alt_aa = row[0].strip()
+        if not alt_aa or len(alt_aa) != 1:
             continue
-        for label, cell in zip(aa_labels, row[1:]):
-            if not label or not cell:
+        for col_idx, cell in enumerate(row[1:]):
+            if col_idx >= len(pos_info):
+                break
+            info = pos_info[col_idx]
+            if info is None:
+                continue
+            wt_aa, pos = info
+            if alt_aa == wt_aa:
+                # WT-to-self diagonal — Brandes encodes these as 0.000.
+                continue
+            cell = cell.strip()
+            if not cell:
                 continue
             try:
                 llr = float(cell)
             except ValueError:
                 continue
-            if llr == 0.0:
-                # WT diagonal — Brandes archives encode WT cells as 0.
-                continue
-            yield transcript_id, pos, label, llr
+            yield uniprot_id, pos, alt_aa, llr
+
+
+def _uniprot_from_name(name: str) -> str | None:
+    """`P38398_LLR.csv` or `subdir/P38398-2_LLR.csv` → `P38398` / `P38398-2`."""
+    stem = Path(name).stem  # `P38398_LLR`
+    if not stem.endswith("_LLR"):
+        return None
+    uni = stem[: -len("_LLR")]
+    return uni or None
 
 
 def build_esm1b_sqlite(
     zip_path: Path,
-    isoform_csv: Path,
     dest: Path,
     *,
-    batch_size: int = 50_000,
+    batch_size: int = 100_000,
 ) -> None:
-    """Build the ESM1b SQLite from the Brandes 2023 zip + isoform map."""
-    uni2tx = _build_isoform_map(isoform_csv)
-    if not uni2tx:
-        raise RuntimeError(f"Empty UniProt→ENST map from {isoform_csv}")
-
+    """Build the ESM1b SQLite from the Brandes 2023 zip."""
     dest.parent.mkdir(parents=True, exist_ok=True)
     if dest.exists():
         dest.unlink()
@@ -103,11 +123,11 @@ def build_esm1b_sqlite(
         conn.execute("PRAGMA synchronous = OFF")
         conn.execute(
             "CREATE TABLE scores ("
-            " transcript_id TEXT NOT NULL,"
+            " uniprot_id TEXT NOT NULL,"
             " aa_pos INTEGER NOT NULL,"
             " alt_aa TEXT NOT NULL,"
             " llr REAL NOT NULL,"
-            " PRIMARY KEY (transcript_id, aa_pos, alt_aa)"
+            " PRIMARY KEY (uniprot_id, aa_pos, alt_aa)"
             ") WITHOUT ROWID"
         )
 
@@ -118,15 +138,12 @@ def build_esm1b_sqlite(
             for name in zf.namelist():
                 if not name.endswith(".csv"):
                     continue
-                # File name e.g. "Q14524_LLR.csv" or "Q14524-2_LLR.csv".
-                stem = Path(name).stem  # "Q14524_LLR"
-                uni_id = stem.replace("_LLR", "").strip()
-                tx = uni2tx.get(uni_id)
-                if tx is None:
+                uni_id = _uniprot_from_name(name)
+                if uni_id is None:
                     continue
                 with zf.open(name) as fh:
                     text = io.TextIOWrapper(fh, encoding="utf-8").read()
-                for tup in _iter_matrix_rows(tx, text):
+                for tup in _iter_matrix_rows(uni_id, text):
                     buf.append(tup)
                     if len(buf) >= batch_size:
                         conn.executemany(
@@ -136,6 +153,8 @@ def build_esm1b_sqlite(
                         n_rows += len(buf)
                         buf.clear()
                 n_isoforms += 1
+                if n_isoforms % 1000 == 0:
+                    print(f"  ESM1b: {n_isoforms} isoforms processed...")
         if buf:
             conn.executemany(
                 "INSERT OR IGNORE INTO scores VALUES (?, ?, ?, ?)",
@@ -144,8 +163,8 @@ def build_esm1b_sqlite(
             n_rows += len(buf)
 
         conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_scores_tx_pos "
-            "ON scores(transcript_id, aa_pos)"
+            "CREATE INDEX IF NOT EXISTS idx_scores_uni_pos "
+            "ON scores(uniprot_id, aa_pos)"
         )
         conn.commit()
         print(f"  ESM1b: {n_isoforms} isoforms, {n_rows:,} rows → {dest.name}")

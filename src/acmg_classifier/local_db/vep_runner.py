@@ -109,6 +109,16 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
         if len(parts) == 2:
             aa_change = parts[0] + str(protein_pos) + parts[1]
 
+    # VEP --uniprot emits "swissprot" (preferred) and "trembl" fields. Both can
+    # be a single string or a list; the version suffix (e.g. "P38398.4") is
+    # stripped to match Brandes 2023 ESM1b filenames ("P38398_LLR.csv").
+    uniprot_id = None
+    sp = tc.get("swissprot") or tc.get("trembl")
+    if sp:
+        first = sp[0] if isinstance(sp, list) and sp else sp
+        if isinstance(first, str) and first:
+            uniprot_id = first.split(".", 1)[0]
+
     return ConsequenceInfo(
         transcript_id=transcript_id,
         gene_id=gene_id,
@@ -125,6 +135,7 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
         amino_acids=amino_acids,
         protein_position=protein_pos,
         amino_acid_change=aa_change,
+        uniprot_id=uniprot_id,
         intron_distance_from_splice=_parse_intron_distance(hgvs_c),
     )
 
@@ -242,6 +253,7 @@ class LocalVEPRunner:
             "--fasta", str(self._fasta),
             "--hgvs", "--hgvsg", "--canonical", "--mane_select",
             "--numbers", "--domains", "--symbol", "--biotype",
+            "--uniprot",
             "--no_progress",
             "--fork", str(self._workers),
             "--force_overwrite",

@@ -53,10 +53,6 @@ URLS: dict[str, dict[str, str]] = {
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
             "ALL_hum_isoforms_ESM1b_LLR.zip"
         ),
-        "esm1b_isoform_csv": (
-            "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
-            "isoform_list.csv"
-        ),
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/"
             "gnomad.v4.1.constraint_metrics.tsv"
@@ -87,10 +83,6 @@ URLS: dict[str, dict[str, str]] = {
         "esm1b_zip": (
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
             "ALL_hum_isoforms_ESM1b_LLR.zip"
-        ),
-        "esm1b_isoform_csv": (
-            "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
-            "isoform_list.csv"
         ),
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/"
@@ -384,17 +376,14 @@ def step_esm1b(data_dir: Path, urls: dict, skip: bool) -> bool:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     zip_path = out_dir / "ALL_hum_isoforms_ESM1b_LLR.zip"
-    iso_path = out_dir / "isoform_list.csv"
     _verify_size(zip_path, min_bytes=500_000_000, label="ESM1b zip")
     if not zip_path.exists():
         _download(urls["esm1b_zip"], zip_path, "ESM1b LLR archive (~1.34 GB)")
-    if not iso_path.exists():
-        _download(urls["esm1b_isoform_csv"], iso_path, "ESM1b UniProt→ENST map")
 
     print("  ESM1b SQLite 構築中...")
     _add_src_to_path()
     from acmg_classifier.setup.esm1b_builder import build_esm1b_sqlite  # type: ignore
-    build_esm1b_sqlite(zip_path, iso_path, dest)
+    build_esm1b_sqlite(zip_path, dest)
     return True
 
 

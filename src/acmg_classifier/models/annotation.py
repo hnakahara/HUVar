@@ -28,6 +28,9 @@ class ConsequenceInfo(BaseModel):
     codons: Optional[str] = None
     protein_position: Optional[int] = None
     codon_position: Optional[int] = None  # genomic codon start (for PS1/PM5)
+    # SwissProt (preferred) / TrEMBL accession from VEP --uniprot; used as the
+    # join key against the Brandes 2023 ESM1b LLR archive.
+    uniprot_id: Optional[str] = None
 
     # Splice distance for BP7
     intron_distance_from_splice: Optional[int] = None

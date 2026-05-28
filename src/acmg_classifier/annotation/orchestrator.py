@@ -119,10 +119,17 @@ class AnnotationOrchestrator:
         )
 
     def _lookup_esm1b(self, primary):
-        """Lookup ESM1b LLR using VEP's transcript ID + protein position + alt AA."""
+        """Lookup ESM1b LLR using UniProt accession + protein position + alt AA.
+
+        Brandes 2023 archives are keyed by UniProt (SwissProt/TrEMBL), so we
+        depend on VEP --uniprot. Variants on a transcript without a UniProt
+        match (rare for protein-coding MANE transcripts) cannot be scored.
+        """
         if primary is None:
             return None
         if primary.consequence != ConsequenceType.MISSENSE:
+            return None
+        if not primary.uniprot_id:
             return None
         if primary.protein_position is None or not primary.amino_acids:
             return None
@@ -136,7 +143,7 @@ class AnnotationOrchestrator:
         from acmg_classifier.local_db.esm1b_db import query_esm1b
         return query_esm1b(
             self._esm1b_path,
-            primary.transcript_id,
+            primary.uniprot_id,
             primary.protein_position,
             alt_aa,
         )
