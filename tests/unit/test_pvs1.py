@@ -47,8 +47,9 @@ class TestGeneLoFMechanism:
     def test_lof_tolerant_high_loeuf(self):
         assert gene_has_lof_mechanism(None, gnomad_loeuf=0.80) is False
 
-    def test_no_loeuf_defaults_to_true(self):
-        assert gene_has_lof_mechanism(None, gnomad_loeuf=None) is True
+    def test_no_signals_defaults_to_false(self):
+        # No ClinVar P/LP null variants AND no LOEUF → LoF NOT established.
+        assert gene_has_lof_mechanism(None, gnomad_loeuf=None) is False
 
 
 class TestPVS1DecisionTree:
@@ -57,12 +58,22 @@ class TestPVS1DecisionTree:
         self.cfg = MagicMock()
 
     def test_frameshift_nmd_no_rescue_very_strong(self):
+        from unittest.mock import patch
         from acmg_classifier.pvs1.decision_tree import evaluate_pvs1
         c = _consequence(ConsequenceType.FRAMESHIFT, exon="5/24")
         gd = GnomADData(loeuf=0.10)
         ann = AnnotationData(consequences=[c], gnomad=gd)
         v = VariantRecord(chrom="chr17", pos=100, ref="G", alt="GA", assembly=Assembly.GRCH38)
-        strength, evidence = evaluate_pvs1(v, ann, self.cfg)
+        # Bypass the ClinGen SVI strength cap by simulating a gene with
+        # established LoF mechanism (>= _MIN_PLP_NULL_FOR_FULL_PVS1 P/LP nulls).
+        with patch(
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
+            return_value=5,
+        ), patch(
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_missense_count",
+            return_value=0,
+        ):
+            strength, evidence = evaluate_pvs1(v, ann, self.cfg)
         assert strength == CriterionStrength.VERY_STRONG
 
     def test_start_loss_moderate(self):
