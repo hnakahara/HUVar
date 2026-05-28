@@ -5,7 +5,7 @@ from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import (
-    ACMGCriterion, ConsequenceType, CriterionStrength,
+    ACMGCriterion, ConsequenceType, CriterionStrength, InSilicoTool,
 )
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
@@ -19,6 +19,19 @@ def _alphamissense_pp3(score: float) -> CriterionStrength | None:
     if score >= 0.906:
         return CriterionStrength.MODERATE
     if score >= 0.792:
+        return CriterionStrength.SUPPORTING
+    return None
+
+
+def _esm1b_pp3(llr: float) -> CriterionStrength | None:
+    """Bergquist 2024 Table 2 ESM1b PP3 thresholds (lower LLR ⇒ more pathogenic)."""
+    if llr <= -24.0:
+        return CriterionStrength.STRONG
+    if llr <= -14.0:
+        return CriterionStrength.THREE_POINT
+    if llr <= -12.2:
+        return CriterionStrength.MODERATE
+    if llr <= -10.7:
         return CriterionStrength.SUPPORTING
     return None
 
@@ -59,6 +72,21 @@ class PP3Evaluator(CriterionEvaluator):
                         ACMGCriterion.PP3, CriterionStrength.MODERATE,
                         f"SpliceAI max_delta={sp.max_delta:.3f} (Moderate) — missense with predicted splice impact",
                     )
+            if self._cfg.insilico_tool == InSilicoTool.ESM1B:
+                es = annotation.esm1b
+                if es and es.llr is not None:
+                    strength = _esm1b_pp3(es.llr)
+                    if strength:
+                        return CriteriaResult.met(
+                            ACMGCriterion.PP3, strength,
+                            f"ESM1b LLR={es.llr:.3f} ({strength.value})",
+                        )
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.PP3,
+                        f"ESM1b LLR={es.llr:.3f} (indeterminate or benign)",
+                    )
+                return CriteriaResult.not_met(ACMGCriterion.PP3, "No in-silico score available")
+
             am = annotation.alphamissense
             if am and am.score is not None:
                 strength = _alphamissense_pp3(am.score)

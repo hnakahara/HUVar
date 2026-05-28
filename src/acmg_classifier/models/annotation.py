@@ -62,6 +62,17 @@ class AlphaMissenseData(BaseModel):
     classification: Optional[str] = None  # "likely_pathogenic" / "ambiguous" / "likely_benign"
 
 
+class ESM1bData(BaseModel):
+    """ESM1b log-likelihood ratio (LLR) score for a missense variant.
+
+    LLR convention (Brandes et al., Nat Genet 2023): more negative LLR ⇒ more
+    pathogenic; more positive LLR ⇒ more benign. Thresholds follow
+    Bergquist et al. 2024 Table 2.
+    """
+
+    llr: Optional[float] = None
+
+
 class SpliceScore(BaseModel):
     """Unified splice prediction result (SQUIRLS or SpliceAI)."""
 
@@ -100,6 +111,7 @@ class AnnotationData(BaseModel):
 
     gnomad: Optional[GnomADData] = None
     alphamissense: Optional[AlphaMissenseData] = None
+    esm1b: Optional[ESM1bData] = None
     splice: Optional[SpliceScore] = None
     clinvar_vcf: list[ClinVarRecord] = []      # for PP5
     clinvar_sqlite: list[ClinVarRecord] = []   # for PS1 / PM5 (same-AA or same-codon)

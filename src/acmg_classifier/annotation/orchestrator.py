@@ -8,7 +8,7 @@ import structlog
 
 from acmg_classifier.config import Config
 from acmg_classifier.models.annotation import AnnotationData
-from acmg_classifier.models.enums import SpliceTool
+from acmg_classifier.models.enums import ConsequenceType, InSilicoTool, SpliceTool
 from acmg_classifier.models.variant import VariantRecord
 
 log = structlog.get_logger()
@@ -24,6 +24,7 @@ class AnnotationOrchestrator:
         self._clinvar_vcf_path = cfg.clinvar_vcf
         self._clinvar_sqlite_path = cfg.clinvar_sqlite
         self._am_path = cfg.alphamissense_tsv
+        self._esm1b_path = cfg.esm1b_sqlite
         self._repeat_path = cfg.repeatmasker_bed
         self._splice = self._init_splice()
 
@@ -93,10 +94,15 @@ class AnnotationOrchestrator:
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
 
-        alphamissense = query_alphamissense(
-            self._am_path,
-            variant.chrom, variant.pos, variant.ref, variant.alt,
-        )
+        alphamissense = None
+        esm1b = None
+        if self._cfg.insilico_tool == InSilicoTool.ESM1B:
+            esm1b = self._lookup_esm1b(primary)
+        else:
+            alphamissense = query_alphamissense(
+                self._am_path,
+                variant.chrom, variant.pos, variant.ref, variant.alt,
+            )
 
         splice = self._splice.predict(variant)
 
@@ -106,7 +112,31 @@ class AnnotationOrchestrator:
             consequences=consequences,
             gnomad=gnomad,
             alphamissense=alphamissense,
+            esm1b=esm1b,
             splice=splice if splice.is_available else None,
             clinvar_vcf=clinvar_vcf_recs,
             repeat=repeat,
+        )
+
+    def _lookup_esm1b(self, primary):
+        """Lookup ESM1b LLR using VEP's transcript ID + protein position + alt AA."""
+        if primary is None:
+            return None
+        if primary.consequence != ConsequenceType.MISSENSE:
+            return None
+        if primary.protein_position is None or not primary.amino_acids:
+            return None
+        parts = primary.amino_acids.split("/")
+        if len(parts) != 2:
+            return None
+        alt_aa = parts[1].strip()
+        if not alt_aa or len(alt_aa) != 1:
+            return None
+
+        from acmg_classifier.local_db.esm1b_db import query_esm1b
+        return query_esm1b(
+            self._esm1b_path,
+            primary.transcript_id,
+            primary.protein_position,
+            alt_aa,
         )

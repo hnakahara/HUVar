@@ -4,7 +4,9 @@ from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
-from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
+from acmg_classifier.models.enums import (
+    ACMGCriterion, ConsequenceType, CriterionStrength, InSilicoTool,
+)
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
@@ -20,6 +22,20 @@ def _alphamissense_bp4(score: float) -> CriterionStrength | None:
     if score <= 0.099:
         return CriterionStrength.MODERATE
     if score <= 0.169:
+        return CriterionStrength.SUPPORTING
+    return None
+
+
+def _esm1b_bp4(llr: float) -> CriterionStrength | None:
+    """Bergquist 2024 Table 2 ESM1b BP4 thresholds (higher LLR ⇒ more benign).
+
+    No Strong (-4) category; strongest BP4 is ThreePoint at LLR ≥ 8.8.
+    """
+    if llr >= 8.8:
+        return CriterionStrength.THREE_POINT
+    if llr >= -3.2:
+        return CriterionStrength.MODERATE
+    if llr >= -6.3:
         return CriterionStrength.SUPPORTING
     return None
 
@@ -60,6 +76,21 @@ class BP4Evaluator(CriterionEvaluator):
                         ACMGCriterion.BP4,
                         f"SpliceAI max_delta={sp.max_delta:.3f} — predicted splice impact, BP4 not applicable",
                     )
+            if self._cfg.insilico_tool == InSilicoTool.ESM1B:
+                es = annotation.esm1b
+                if es and es.llr is not None:
+                    strength = _esm1b_bp4(es.llr)
+                    if strength:
+                        return CriteriaResult.met(
+                            ACMGCriterion.BP4, strength,
+                            f"ESM1b LLR={es.llr:.3f} ({strength.value})",
+                        )
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.BP4,
+                        f"ESM1b LLR={es.llr:.3f} (not in benign range)",
+                    )
+                return CriteriaResult.not_met(ACMGCriterion.BP4, "No in-silico score available")
+
             am = annotation.alphamissense
             if am and am.score is not None:
                 strength = _alphamissense_bp4(am.score)

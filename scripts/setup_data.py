@@ -49,6 +49,14 @@ URLS: dict[str, dict[str, str]] = {
         "clinvar_vcf_tbi": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz.tbi",
         "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_xml_old_format/ClinVarFullRelease_00-latest.xml.gz",
         "alphamissense": "https://storage.googleapis.com/dm_alphamissense/AlphaMissense_hg38.tsv.gz",
+        "esm1b_zip": (
+            "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
+            "ALL_hum_isoforms_ESM1b_LLR.zip"
+        ),
+        "esm1b_isoform_csv": (
+            "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
+            "isoform_list.csv"
+        ),
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/"
             "gnomad.v4.1.constraint_metrics.tsv"
@@ -76,6 +84,14 @@ URLS: dict[str, dict[str, str]] = {
         "clinvar_vcf_tbi": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz.tbi",
         "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_xml_old_format/ClinVarFullRelease_00-latest.xml.gz",
         "alphamissense": "https://storage.googleapis.com/dm_alphamissense/AlphaMissense_hg19.tsv.gz",
+        "esm1b_zip": (
+            "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
+            "ALL_hum_isoforms_ESM1b_LLR.zip"
+        ),
+        "esm1b_isoform_csv": (
+            "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
+            "isoform_list.csv"
+        ),
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/"
             "gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz"
@@ -351,6 +367,37 @@ def step_alphamissense(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
+def step_esm1b(data_dir: Path, urls: dict, skip: bool) -> bool:
+    """Build ESM1b LLR SQLite from Brandes 2023 archive.
+
+    Assembly-independent (protein-coordinate), so the SQLite lives at
+    `data_dir/esm1b/esm1b_llr.sqlite` and is reused across GRCh37/GRCh38.
+    """
+    out_dir = data_dir / "esm1b"
+    dest = out_dir / "esm1b_llr.sqlite"
+    if _verify_sqlite_has_rows(dest, table="scores"):
+        print(f"  [SKIP] {dest.name}")
+        return True
+    if skip:
+        print("  [SKIP] --skip-esm1b 指定")
+        return True
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    zip_path = out_dir / "ALL_hum_isoforms_ESM1b_LLR.zip"
+    iso_path = out_dir / "isoform_list.csv"
+    _verify_size(zip_path, min_bytes=500_000_000, label="ESM1b zip")
+    if not zip_path.exists():
+        _download(urls["esm1b_zip"], zip_path, "ESM1b LLR archive (~1.34 GB)")
+    if not iso_path.exists():
+        _download(urls["esm1b_isoform_csv"], iso_path, "ESM1b UniProt→ENST map")
+
+    print("  ESM1b SQLite 構築中...")
+    _add_src_to_path()
+    from acmg_classifier.setup.esm1b_builder import build_esm1b_sqlite  # type: ignore
+    build_esm1b_sqlite(zip_path, iso_path, dest)
+    return True
+
+
 def step_gnomad_constraint(asm_dir: Path, assembly: str, urls: dict) -> bool:
     ver = _GNOMAD_VER[assembly]
     dest = asm_dir / "gnomad" / f"gnomad_v{ver}_constraint.tsv"
@@ -485,6 +532,8 @@ def main() -> None:
                         help="ゲノム FASTA ダウンロードをスキップ (~880 MB)")
     parser.add_argument("--skip-vep-cache", action="store_true",
                         help="VEP キャッシュダウンロードをスキップ (~14 GB)")
+    parser.add_argument("--skip-esm1b", action="store_true",
+                        help="ESM1b ダウンロード・構築をスキップ (~1.34 GB)")
     args = parser.parse_args()
 
     data_dir = args.data_dir.resolve()
@@ -506,6 +555,7 @@ def main() -> None:
         ("ClinVar VCF",       lambda: step_clinvar_vcf(asm_dir, assembly, urls)),
         ("ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls)),
         ("AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
+        ("ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
         ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
         ("gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.gnomad_workers)),
         ("RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),

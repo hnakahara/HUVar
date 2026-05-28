@@ -76,6 +76,16 @@ class Config(BaseSettings):
         return self.assembly_dir / "alphamissense" / names[self.assembly]
 
     @property
+    def esm1b_sqlite(self) -> Path:
+        """Brandes 2023 ESM1b LLR scores indexed by Ensembl transcript ID.
+
+        Built from `ALL_hum_isoforms_ESM1b_LLR.zip` (see scripts/setup_data.py).
+        Stored under `data_dir/esm1b/` rather than `assembly_dir/` because
+        ESM1b scores are protein-coordinate and reused across assemblies.
+        """
+        return self.data_dir / "esm1b" / "esm1b_llr.sqlite"
+
+    @property
     def squirls_db_dir(self) -> Path:
         names = {
             Assembly.GRCH38: "squirls-2309-hg38",

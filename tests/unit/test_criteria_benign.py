@@ -1,10 +1,10 @@
 """Unit tests for benign criteria evaluators using mock annotations."""
 from acmg_classifier.models.annotation import (
     AnnotationData, GnomADData, RepeatMaskerRegion,
-    ConsequenceInfo, SpliceScore, AlphaMissenseData,
+    ConsequenceInfo, SpliceScore, AlphaMissenseData, ESM1bData,
 )
 from acmg_classifier.models.enums import (
-    Assembly, ACMGCriterion, ConsequenceType, CriterionStrength,
+    Assembly, ACMGCriterion, ConsequenceType, CriterionStrength, InSilicoTool,
 )
 from acmg_classifier.models.variant import VariantRecord
 
@@ -135,6 +135,45 @@ class TestBP4AlphaMissense:
 
     def test_indeterminate_at_0_5(self):
         r = self.evaluator.evaluate(_snv(), self._ann(0.5))
+        assert not r.triggered
+
+
+class TestBP4ESM1b:
+    def setup_method(self):
+        from unittest.mock import MagicMock
+        cfg = MagicMock()
+        cfg.insilico_tool = InSilicoTool.ESM1B
+        from acmg_classifier.criteria.benign.bp4 import BP4Evaluator
+        self.evaluator = BP4Evaluator(cfg)
+
+    def _ann(self, llr):
+        return _annotation(
+            esm1b=ESM1bData(llr=llr),
+            consequences=[_consequence(ConsequenceType.MISSENSE)],
+        )
+
+    def test_three_point_at_8_8(self):
+        # ESM1b BP4 ≥ 8.8 is ThreePoint (no Strong category).
+        r = self.evaluator.evaluate(_snv(), self._ann(8.8))
+        assert r.triggered
+        assert r.strength == CriterionStrength.THREE_POINT
+
+    def test_moderate_at_minus3_2(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-3.2))
+        assert r.triggered
+        assert r.strength == CriterionStrength.MODERATE
+
+    def test_supporting_at_minus6_3(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-6.3))
+        assert r.triggered
+        assert r.strength == CriterionStrength.SUPPORTING
+
+    def test_indeterminate_at_minus8(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-8.0))
+        assert not r.triggered
+
+    def test_pathogenic_range_not_triggered(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-15.0))
         assert not r.triggered
 
 

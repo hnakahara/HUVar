@@ -1,9 +1,11 @@
 """Unit tests for pathogenic criteria evaluators."""
 from unittest.mock import MagicMock
 from acmg_classifier.models.annotation import (
-    AnnotationData, GnomADData, AlphaMissenseData, ClinVarRecord, ConsequenceInfo
+    AnnotationData, GnomADData, AlphaMissenseData, ESM1bData, ClinVarRecord, ConsequenceInfo
 )
-from acmg_classifier.models.enums import Assembly, ConsequenceType, CriterionStrength
+from acmg_classifier.models.enums import (
+    Assembly, ConsequenceType, CriterionStrength, InSilicoTool,
+)
 from acmg_classifier.models.variant import VariantRecord
 
 
@@ -91,6 +93,56 @@ class TestPP3:
         am = AlphaMissenseData(score=0.050)
         ann = AnnotationData(
             alphamissense=am,
+            consequences=[_consequence(ConsequenceType.MISSENSE)],
+        )
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+
+class TestPP3ESM1b:
+    def setup_method(self):
+        cfg = MagicMock()
+        cfg.insilico_tool = InSilicoTool.ESM1B
+        from acmg_classifier.criteria.pathogenic.pp3 import PP3Evaluator
+        self.evaluator = PP3Evaluator(cfg)
+
+    def _ann(self, llr):
+        return AnnotationData(
+            esm1b=ESM1bData(llr=llr),
+            consequences=[_consequence(ConsequenceType.MISSENSE)],
+        )
+
+    def test_pp3_strong_at_minus24(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-24.0))
+        assert r.triggered
+        assert r.strength == CriterionStrength.STRONG
+
+    def test_pp3_three_point_at_minus14(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-14.0))
+        assert r.triggered
+        assert r.strength == CriterionStrength.THREE_POINT
+
+    def test_pp3_moderate_at_minus12_2(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-12.2))
+        assert r.triggered
+        assert r.strength == CriterionStrength.MODERATE
+
+    def test_pp3_supporting_at_minus10_7(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-10.7))
+        assert r.triggered
+        assert r.strength == CriterionStrength.SUPPORTING
+
+    def test_pp3_indeterminate_at_minus5(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(-5.0))
+        assert not r.triggered
+
+    def test_pp3_benign_range_not_triggered(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(10.0))
+        assert not r.triggered
+
+    def test_pp3_falls_through_when_no_esm1b(self):
+        # Tool is ESM1B but score missing → "No in-silico score available"
+        ann = AnnotationData(
             consequences=[_consequence(ConsequenceType.MISSENSE)],
         )
         r = self.evaluator.evaluate(_snv(), ann)
