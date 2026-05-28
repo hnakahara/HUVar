@@ -71,6 +71,10 @@ pip install -e .
 
 **Step 3: Download and build annotation databases**
 
+> ⏱️ This step downloads ~350 GB and builds local indexes. **Expect 1–2 days
+> to complete** depending on network throughput and CPU; run it in `tmux` /
+> `screen` or as a background job.
+
 ```bash
 python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --gnomad-workers 6
 ```
