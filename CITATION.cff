@@ -1,0 +1,76 @@
+cff-version: 1.2.0
+title: "HUHVar (acmg-classifier): Fully local ACMG/AMP variant pathogenicity classifier"
+message: >-
+  If you use this software, please cite both this tool and the underlying
+  ACMG/AMP and ClinGen guidelines listed in the references.
+type: software
+authors:
+  - name: "Department of Clinical and Molecular Genetics, Hiroshima University Hospital"
+    affiliation: "Hiroshima University Hospital"
+license: Apache-2.0
+repository-code: "https://github.com/hnakahara/HUHVar"
+url: "https://github.com/hnakahara/HUHVar"
+keywords:
+  - ACMG
+  - AMP
+  - ClinGen
+  - variant interpretation
+  - clinical genomics
+  - bioinformatics
+  - pathogenicity classifier
+version: 0.1.0
+date-released: "2026-05-27"
+references:
+  - type: article
+    title: >-
+      Standards and guidelines for the interpretation of sequence variants:
+      a joint consensus recommendation of the American College of Medical
+      Genetics and Genomics and the Association for Molecular Pathology
+    authors:
+      - family-names: Richards
+        given-names: Sue
+    journal: "Genetics in Medicine"
+    year: 2015
+    volume: 17
+    issue: 5
+    start: 405
+    end: 424
+    doi: "10.1038/gim.2015.30"
+  - type: article
+    title: >-
+      Modeling the ACMG/AMP variant classification guidelines as a
+      Bayesian classification framework
+    authors:
+      - family-names: Tavtigian
+        given-names: Sean V.
+    journal: "Genetics in Medicine"
+    year: 2018
+    volume: 20
+    issue: 9
+    start: 1054
+    end: 1066
+    doi: "10.1038/gim.2017.210"
+  - type: article
+    title: >-
+      Fitting a naturally scaled point system to the ACMG/AMP-based
+      variant classification framework
+    authors:
+      - family-names: Tavtigian
+        given-names: Sean V.
+    journal: "Human Mutation"
+    year: 2020
+    doi: "10.1002/humu.24088"
+  - type: article
+    title: >-
+      Recommendations for interpreting the loss of function PVS1
+      ACMG/AMP variant criterion
+    authors:
+      - family-names: Abou Tayoun
+        given-names: Ahmad N.
+    journal: "Human Mutation"
+    year: 2018
+    volume: 39
+    issue: 11
+    start: 1517
+    end: 1524
+    doi: "10.1002/humu.23626"

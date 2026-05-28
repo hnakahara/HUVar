@@ -1,0 +1,131 @@
+"""DuckDB query layer for gnomAD exome data (BA1/BS1/BS2/PM2)."""
+from __future__ import annotations
+from pathlib import Path
+from typing import Optional
+
+import duckdb
+import structlog
+
+from acmg_classifier.models.annotation import GnomADData
+from acmg_classifier.utils.chrom import chrom_candidates
+
+log = structlog.get_logger()
+
+
+class GnomADDB:
+    def __init__(self, db_path: Path, constraint_tsv: Path) -> None:
+        self._db_path = db_path
+        self._constraint_tsv = constraint_tsv
+        self._constraint: dict[str, tuple[float | None, float | None, float | None]] = {}
+        if constraint_tsv.exists():
+            self._constraint = _load_constraint(constraint_tsv)
+
+    def query(self, chrom: str, pos: int, ref: str, alt: str) -> Optional[GnomADData]:
+        if not self._db_path.exists():
+            log.warning("gnomad_db_missing", path=str(self._db_path))
+            return None
+        c1, c2 = chrom_candidates(chrom)
+        try:
+            con = duckdb.connect(str(self._db_path), read_only=True)
+            row = con.execute(
+                """
+                SELECT af, an, ac, nhomalt, nhemi,
+                       popmax_af, popmax_pop, faf95_popmax,
+                       filters
+                FROM variants
+                WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
+                LIMIT 1
+                """,
+                [c1, c2, pos, ref, alt],
+            ).fetchone()
+            con.close()
+        except Exception as exc:
+            log.error("gnomad_query_error", error=str(exc))
+            return None
+
+        if row is None:
+            return GnomADData(af=0.0, ac=0, an=0, filter_pass=True)
+
+        (af, an, ac, nhomalt, nhemi,
+         popmax_af, popmax_pop, faf95_popmax, filters) = row
+
+        filter_pass = filters is None or filters.strip().upper() in ("", "PASS", ".")
+        return GnomADData(
+            af=af,
+            an=an,
+            ac=ac,
+            nhomalt=nhomalt,
+            nhemi=nhemi,
+            popmax_af=popmax_af,
+            popmax_pop=popmax_pop,
+            faf95_popmax=faf95_popmax,
+            filter_pass=filter_pass,
+        )
+
+    def get_constraint(
+        self, gene_symbol: str
+    ) -> tuple[float | None, float | None, float | None]:
+        """Return (pLI, LOEUF, missense Z-score) for the gene, or all-None if absent."""
+        return self._constraint.get(gene_symbol, (None, None, None))
+
+    def enrich_with_constraint(self, data: GnomADData, gene_symbol: str) -> GnomADData:
+        pli, loeuf, mis_z = self.get_constraint(gene_symbol)
+        return data.model_copy(update={"pli": pli, "loeuf": loeuf, "mis_z": mis_z})
+
+
+def _load_constraint(
+    tsv: Path,
+) -> dict[str, tuple[float | None, float | None, float | None]]:
+    """Load per-gene (pLI, LOEUF, missense Z-score) from a gnomAD constraint table.
+
+    The table has one row per *transcript*, so each gene appears many times. A
+    single representative row is chosen per gene with this priority:
+      1. value-bearing rows (a real LOEUF) before NA rows;
+      2. MANE Select, else canonical, else any transcript;
+      3. ties broken by the smallest (most constrained) LOEUF.
+
+    Missense Z-score (mis.z_score in v4.1 / mis_z in v2.1.1) is read from the
+    same chosen row and fed to PP2 as an alternative qualifier alongside the
+    ClinVar benign-missense rate.
+    """
+    import csv
+    import math
+
+    # gnomAD v4.1 と v2.1.1 でカラム名が異なるため候補リストで対応
+    _PLI_COLS = ["pLI", "lof.pLI"]
+    _LOEUF_COLS = ["oe_lof_upper", "lof.oe_ci.upper"]
+    _MIS_Z_COLS = ["mis_z", "mis.z_score"]
+
+    def _get_float(row: dict, cols: list[str]) -> float | None:
+        for c in cols:
+            v = row.get(c, "")
+            if v and v not in ("NA", ".", "nan"):
+                try:
+                    return float(v)
+                except ValueError:
+                    pass
+        return None
+
+    def _is_true(row: dict, col: str) -> bool:
+        return str(row.get(col, "")).strip().lower() == "true"
+
+    result: dict[str, tuple[float | None, float | None, float | None]] = {}
+    best_key: dict[str, tuple[int, int, float]] = {}
+    with tsv.open() as fh:
+        reader = csv.DictReader(fh, delimiter="\t")
+        for row in reader:
+            gene = row.get("gene", row.get("gene_id", "")).strip()
+            if not gene:
+                continue
+            loeuf = _get_float(row, _LOEUF_COLS)
+            rank = 0 if _is_true(row, "mane_select") else (1 if _is_true(row, "canonical") else 2)
+            # Lower key wins: value-bearing first, then MANE/canonical, then min LOEUF.
+            key = (0 if loeuf is not None else 1, rank, loeuf if loeuf is not None else math.inf)
+            if gene not in best_key or key < best_key[gene]:
+                best_key[gene] = key
+                result[gene] = (
+                    _get_float(row, _PLI_COLS),
+                    loeuf,
+                    _get_float(row, _MIS_Z_COLS),
+                )
+    return result

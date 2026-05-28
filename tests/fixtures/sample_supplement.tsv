@@ -1,0 +1,3 @@
+variant_id	criterion	strength	evidence
+chr17:43044295:G:A	PS3	Strong	PMID:12345678 functional study showing loss of BRCA1 HR activity
+chr17:43044295:G:A	PP1	Supporting	3 affected family members segregating variant

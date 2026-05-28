@@ -1,0 +1,49 @@
+HUHVar (acmg-classifier)
+Copyright 2026 Department of Clinical and Molecular Genetics,
+               Hiroshima University Hospital
+
+This product includes software developed at the Department of Clinical and
+Molecular Genetics, Hiroshima University Hospital.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this product except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+------------------------------------------------------------------------------
+Third-party data and tools used at runtime (not redistributed by this project):
+------------------------------------------------------------------------------
+
+* Ensembl VEP (Variant Effect Predictor)
+    Apache License 2.0 — https://github.com/Ensembl/ensembl-vep
+
+* gnomAD (Genome Aggregation Database)
+    Data made freely available under the terms described at
+    https://gnomad.broadinstitute.org/terms
+
+* ClinVar (NCBI)
+    Public domain — https://www.ncbi.nlm.nih.gov/clinvar/intro/
+
+* AlphaMissense (DeepMind / Google)
+    CC BY-NC-SA 4.0 — https://github.com/google-deepmind/alphamissense
+    NOTE: AlphaMissense scores are distributed under a non-commercial license.
+          Users intending commercial use must comply with the upstream license.
+
+* SQUIRLS
+    BSD-3-Clause — https://github.com/TheJacksonLaboratory/Squirls
+
+* SpliceAI (Illumina)
+    Free for academic/non-commercial research. Commercial use requires a
+    separate license from Illumina. Pre-computed score files are an
+    *optional* annotation source in this project.
+
+* Ensembl reference genome / transcript annotation
+    https://www.ensembl.org/info/about/legal/index.html
+
+* RepeatMasker (UCSC tracks distributed under the Dfam/UCSC terms)
+    https://www.repeatmasker.org/
+
+This NOTICE file does not modify the License; it provides attribution
+to upstream data sources whose terms may apply when end-users download
+data via `scripts/setup_data.py`.

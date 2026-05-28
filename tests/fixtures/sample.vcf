@@ -1,0 +1,7 @@
+##fileformat=VCFv4.2
+##reference=GRCh38
+##contig=<ID=chr17,length=83257441>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+chr17	43044295	.	G	A	.	PASS	.
+chr13	32339000	.	T	C	.	PASS	.
+chr17	7674220	.	C	T	.	PASS	.

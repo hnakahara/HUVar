@@ -1,0 +1,45 @@
+# Normalize line endings to LF on commit, regardless of OS
+* text=auto eol=lf
+
+# Source / config files — always LF
+*.py        text eol=lf
+*.toml      text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+*.cfg       text eol=lf
+*.md        text eol=lf
+*.txt       text eol=lf
+*.tsv       text eol=lf
+*.csv       text eol=lf
+*.sh        text eol=lf
+Dockerfile  text eol=lf
+Makefile    text eol=lf
+
+# Binary / data files — never normalise
+*.vcf.gz    binary
+*.vcf.bgz   binary
+*.bcf       binary
+*.bam       binary
+*.bai       binary
+*.cram      binary
+*.crai      binary
+*.tbi       binary
+*.fai       binary
+*.idx       binary
+*.gz        binary
+*.bgz       binary
+*.zip       binary
+*.tar       binary
+*.duckdb    binary
+*.sqlite    binary
+*.sqlite3   binary
+*.db        binary
+*.png       binary
+*.jpg       binary
+*.pdf       binary
+
+# Linguist hints — exclude vendored/data dirs from language stats
+data/       linguist-vendored
+scripts/    linguist-detectable
+tests/      linguist-detectable

@@ -1,0 +1,132 @@
+# ============================================================================
+# acmg-classifier .gitignore
+# ============================================================================
+
+# ----- Local databases / annotation resources (DO NOT COMMIT) ---------------
+# Reference genomes, VEP cache, gnomAD, ClinVar, AlphaMissense, SpliceAI,
+# RepeatMasker, etc. are several hundred GB in total and must be obtained
+# from upstream sources via `python scripts/setup_data.py`.
+data/
+!data/.gitkeep
+!data/shared/gene_inheritance.tsv
+
+# Sample input/output VCFs and result files placed at repo root during dev
+*.vcf
+*.vcf.gz
+*.vcf.gz.tbi
+*.vcf.bgz
+*.vcf.bgz.tbi
+*.bed
+*.bed.gz
+*.fa
+*.fa.gz
+*.fasta
+*.fai
+*.bam
+*.bai
+*.cram
+*.crai
+*.duckdb
+*.sqlite
+*.sqlite3
+*.db
+results/
+output/
+tmp/
+scratch/
+
+# Exception: keep tiny test fixtures shipped with the repo
+!tests/fixtures/*.vcf
+!tests/fixtures/*.tsv
+
+# ----- Python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / build
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+*.egg
+MANIFEST
+pip-wheel-metadata/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# ----- Testing / coverage ---------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+nosetests.xml
+
+# ----- Type checkers / linters ----------------------------------------------
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# ----- Jupyter / IPython ----------------------------------------------------
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# ----- IDE / editor ---------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ----- OS-specific ----------------------------------------------------------
+$RECYCLE.BIN/
+*.lnk
+
+# ----- Logs / temp ----------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.orig
+nohup.out
+
+# ----- Project-specific runtime artefacts -----------------------------------
+*_multianno.txt
+*.intervar
+concordance_*.tsv
+concordance_*.txt

@@ -1,0 +1,116 @@
+"""Rule-based ACMG 2015 classification."""
+from __future__ import annotations
+from acmg_classifier.models.criteria import CriteriaResult
+from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength, Pathogenicity
+
+
+def _count(
+    results: list[CriteriaResult],
+    criterion: ACMGCriterion,
+    strength: CriterionStrength,
+) -> int:
+    return sum(
+        1 for r in results
+        if r.criterion == criterion
+        and r.triggered
+        and not r.suppressed
+        and r.strength == strength
+    )
+
+
+def _has(results: list[CriteriaResult], criterion: ACMGCriterion) -> bool:
+    return any(
+        r.criterion == criterion and r.triggered and not r.suppressed
+        for r in results
+    )
+
+
+def _triggered(results: list[CriteriaResult]) -> dict[str, list[str]]:
+    """Group triggered criteria by effective strength label."""
+    out: dict[str, list[str]] = {
+        "pvs": [], "ps": [], "pm": [], "pp": [],
+        "ba": [], "bs": [], "bp": [],
+    }
+    for r in results:
+        if not r.triggered or r.suppressed:
+            continue
+        c = r.criterion.value
+        if c == "PVS1":
+            if r.strength in (CriterionStrength.VERY_STRONG,):
+                out["pvs"].append(c)
+            elif r.strength == CriterionStrength.STRONG:
+                out["ps"].append(c)
+            elif r.strength == CriterionStrength.MODERATE:
+                out["pm"].append(c)
+            else:
+                out["pp"].append(c)
+        elif c.startswith("PS"):
+            out["ps"].append(c)
+        elif c.startswith("PM"):
+            out["pm"].append(c)
+        elif c.startswith("PP"):
+            out["pp"].append(c)
+        elif c == "BA1":
+            out["ba"].append(c)
+        elif c.startswith("BS"):
+            out["bs"].append(c)
+        elif c.startswith("BP"):
+            out["bp"].append(c)
+    return out
+
+
+class Classifier2015:
+    """Implements the ACMG 2015 combination rules (Table 5)."""
+
+    def classify(
+        self, results: list[CriteriaResult]
+    ) -> tuple[Pathogenicity, str]:
+        g = _triggered(results)
+        pvs = len(g["pvs"])
+        ps = len(g["ps"])
+        pm = len(g["pm"])
+        pp = len(g["pp"])
+        ba = len(g["ba"])
+        bs = len(g["bs"])
+        bp = len(g["bp"])
+
+        triggered_names = (
+            g["pvs"] + g["ps"] + g["pm"] + g["pp"]
+            + g["ba"] + g["bs"] + g["bp"]
+        )
+        rule_str = " + ".join(triggered_names) if triggered_names else "none"
+
+        # --- Benign stand-alone ---
+        if ba:
+            return Pathogenicity.BENIGN, rule_str
+
+        # --- Pathogenic ---
+        if (
+            (pvs >= 1 and (ps >= 1 or pm >= 2 or (pm >= 1 and pp >= 1) or pp >= 2))
+            or (ps >= 2)
+            or (ps >= 1 and (pm >= 3 or (pm >= 2 and pp >= 2) or (pm >= 1 and pp >= 4)))
+        ):
+            return Pathogenicity.PATHOGENIC, rule_str
+
+        # --- Likely Pathogenic ---
+        if (
+            (pvs >= 1 and pm >= 1)
+            or (ps >= 1 and pm >= 1)
+            or (ps >= 1 and pp >= 2)
+            or (pm >= 3)
+            or (pm >= 2 and pp >= 2)
+            or (pm >= 1 and pp >= 4)
+        ):
+            return Pathogenicity.LIKELY_PATHOGENIC, rule_str
+
+        # --- Benign ---
+        if bs >= 2 or (bs >= 1 and bp >= 1):
+            # not quite Benign unless 2×Strong benign or 1×Strong + supporting
+            # ACMG table says: ≥2 Strong OR (1 Strong + 1 Supporting)
+            return Pathogenicity.BENIGN, rule_str
+
+        # --- Likely Benign ---
+        if bs >= 1 or bp >= 2:
+            return Pathogenicity.LIKELY_BENIGN, rule_str
+
+        return Pathogenicity.VUS, rule_str
