@@ -84,7 +84,7 @@ acmg-classify status --data-dir /path/to/download/directory/data
 **Step 5: Classify variants**
 
 ```bash
-acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /path/to/download/directory/data
+acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /path/to/download/directory/data --workers 12
 ```
 
 ---
@@ -133,11 +133,11 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 Install via `conda` / `mamba` (recommended):
 
 ```bash
-mamba create -n acmg -c bioconda -c conda-forge \
+conda create -n acmg -c bioconda -c conda-forge \
     python=3.12 \
     samtools tabix bcftools htslib \
     ensembl-vep=111
-mamba activate acmg
+conda activate acmg
 ```
 
 Required:
@@ -173,9 +173,9 @@ git clone https://github.com/hnakahara/HUHVar.git
 cd HUHVar
 
 # 2. Create & activate environment (conda example)
-mamba create -n acmg -c bioconda -c conda-forge \
+conda create -n acmg -c bioconda -c conda-forge \
     python=3.12 samtools tabix bcftools htslib ensembl-vep=111
-mamba activate acmg
+conda activate acmg
 
 # 3. Install the package (editable install for development)
 pip install -e .
