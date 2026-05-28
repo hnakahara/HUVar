@@ -1,7 +1,11 @@
 """Unit tests for benign criteria evaluators using mock annotations."""
-from acmg_classifier.models.annotation import AnnotationData, GnomADData, RepeatMaskerRegion
-from acmg_classifier.models.annotation import ConsequenceInfo, SpliceScore
-from acmg_classifier.models.enums import Assembly, ACMGCriterion, ConsequenceType
+from acmg_classifier.models.annotation import (
+    AnnotationData, GnomADData, RepeatMaskerRegion,
+    ConsequenceInfo, SpliceScore, AlphaMissenseData,
+)
+from acmg_classifier.models.enums import (
+    Assembly, ACMGCriterion, ConsequenceType, CriterionStrength,
+)
 from acmg_classifier.models.variant import VariantRecord
 
 
@@ -97,6 +101,40 @@ class TestBP3:
             repeat=rep,
         )
         r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+
+class TestBP4AlphaMissense:
+    def setup_method(self):
+        from unittest.mock import MagicMock
+        self.cfg = MagicMock()
+        from acmg_classifier.criteria.benign.bp4 import BP4Evaluator
+        self.evaluator = BP4Evaluator(self.cfg)
+
+    def _ann(self, score):
+        return _annotation(
+            alphamissense=AlphaMissenseData(score=score),
+            consequences=[_consequence(ConsequenceType.MISSENSE)],
+        )
+
+    def test_three_point_at_0_07(self):
+        # Bergquist 2024: AlphaMissense BP4 ≤ 0.070 is ThreePoint, NOT Strong.
+        r = self.evaluator.evaluate(_snv(), self._ann(0.070))
+        assert r.triggered
+        assert r.strength == CriterionStrength.THREE_POINT
+
+    def test_moderate_at_0_099(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.099))
+        assert r.triggered
+        assert r.strength == CriterionStrength.MODERATE
+
+    def test_supporting_at_0_169(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.169))
+        assert r.triggered
+        assert r.strength == CriterionStrength.SUPPORTING
+
+    def test_indeterminate_at_0_5(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.5))
         assert not r.triggered
 
 

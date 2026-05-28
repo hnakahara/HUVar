@@ -10,9 +10,13 @@ from acmg_classifier.models.supplement import SupplementEntry
 
 
 def _alphamissense_bp4(score: float) -> CriterionStrength | None:
-    """AlphaMissense BP4 strength per Bergquist 2024 Table 2."""
+    """AlphaMissense BP4 strength per Bergquist 2024 Table 2.
+
+    No Strong (-4) category exists for AlphaMissense; the strongest BP4 the
+    table assigns is ThreePoint at score ≤ 0.070.
+    """
     if score <= 0.070:
-        return CriterionStrength.STRONG
+        return CriterionStrength.THREE_POINT
     if score <= 0.099:
         return CriterionStrength.MODERATE
     if score <= 0.169:
