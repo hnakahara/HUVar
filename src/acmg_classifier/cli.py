@@ -63,6 +63,10 @@ def cli():
 @click.option("--workers", type=int, default=4, show_default=True)
 @click.option("--no-progress", is_flag=True, default=False,
               help="Disable progress bars (auto-disabled when stderr is not a TTY).")
+@click.option("--limit", type=int, default=None,
+              help="Process only the first N classifiable variants. Use with --profile for fast profiling.")
+@click.option("--profile", "profile_path", type=click.Path(path_type=Path), default=None,
+              help="Write cProfile stats to PATH and print top 30 functions to stderr.")
 @click.pass_context
 def classify(
     ctx: click.Context,
@@ -76,6 +80,8 @@ def classify(
     supplement: Optional[Path],
     workers: int,
     no_progress: bool,
+    limit: Optional[int],
+    profile_path: Optional[Path],
 ) -> None:
     """Classify all variants in VCF_FILE and write results to TSV."""
     from acmg_classifier.config import Config
@@ -94,7 +100,13 @@ def classify(
         spliceai_dir=spliceai_dir,
         workers=workers,
     )
-    run_pipeline(vcf, cfg, output_path=output, supplement_path=supplement)
+    run_pipeline(
+        vcf, cfg,
+        output_path=output,
+        supplement_path=supplement,
+        limit=limit,
+        profile_path=profile_path,
+    )
 
 
 # ---------------------------------------------------------------------------

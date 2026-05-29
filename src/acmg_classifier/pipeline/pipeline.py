@@ -19,8 +19,18 @@ def run_pipeline(
     cfg: Config,
     output_path: Optional[Path] = None,
     supplement_path: Optional[Path] = None,
+    limit: Optional[int] = None,
+    profile_path: Optional[Path] = None,
 ) -> list[ClassificationResult]:
     """Classify all variants in *vcf_path* and write TSV to *output_path*.
+
+    `limit` truncates the variant list before annotation — used together
+    with `profile_path` for fast performance profiling on a representative
+    subset rather than waiting hours for a full run.
+
+    `profile_path` enables cProfile around the annotation + classification
+    phases and dumps the binary stats to that path; top functions are also
+    written to the log so the user can spot hot paths without re-loading.
 
     Top-level orchestration. The deferred imports keep startup fast for
     CLI subcommands that don't classify (validate/status) by avoiding
@@ -63,6 +73,22 @@ def run_pipeline(
         "variants_loaded",
         total=len(all_records), classifiable=len(variants), skipped_no_alt=len(skipped),
     )
+
+    # --limit truncates AFTER skip filtering so the user gets the requested
+    # number of *classifiable* variants in the profile, not N rows that
+    # might be mostly ALT='.' placeholders.
+    if limit is not None and limit < len(variants):
+        log.info("variants_limited", from_count=len(variants), to_count=limit)
+        variants = variants[:limit]
+
+    # Optional cProfile wrap. Both annotation (subprocess + I/O heavy) and
+    # the per-variant classification loop run inside the profile so the
+    # caller can see whether the bottleneck is annotation or evaluation.
+    profiler = None
+    if profile_path is not None:
+        import cProfile
+        profiler = cProfile.Profile()
+        profiler.enable()
 
     annotations = orchestrator.annotate_batch(variants)
     log.info("annotations_returned", count=len(annotations))
@@ -114,6 +140,26 @@ def run_pipeline(
             warnings=extra_warnings,
         )
         results.append(result)
+
+    # Stop the profiler BEFORE the TSV write so output I/O doesn't pollute
+    # the top-N. Dump the raw stats for offline `snakeviz` / `pstats` use
+    # and emit the top 30 cumulative-time entries to stderr immediately so
+    # users can see the bottleneck without leaving the terminal.
+    if profiler is not None and profile_path is not None:
+        import io as _io
+        import pstats
+        profiler.disable()
+        profile_path.parent.mkdir(parents=True, exist_ok=True)
+        profiler.dump_stats(str(profile_path))
+        buf = _io.StringIO()
+        pstats.Stats(profiler, stream=buf).sort_stats("cumulative").print_stats(30)
+        log.info("profile_dumped", path=str(profile_path))
+        # Use sys.stderr directly: structlog would re-serialise the multi-
+        # line stats output as one giant field, which is unreadable.
+        import sys as _sys
+        _sys.stderr.write("\n===== cProfile top 30 (cumulative) =====\n")
+        _sys.stderr.write(buf.getvalue())
+        _sys.stderr.write("========================================\n")
 
     log.info(
         "pipeline_summary",
