@@ -2,6 +2,7 @@
 from __future__ import annotations
 import re
 import sqlite3
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
@@ -15,6 +16,36 @@ log = structlog.get_logger()
 _P_LP = frozenset({
     "Pathogenic", "Likely pathogenic", "Pathogenic/Likely pathogenic",
 })
+
+
+# --- Connection cache -------------------------------------------------------
+# Every query function used to open a fresh sqlite3 connection and close it.
+# On a network filesystem (NFS/SMB) the open/close handshake alone costs a few
+# milliseconds, and the classifier issues 6-7 ClinVar queries per variant — so
+# for ~12k variants that is ~500k redundant connects. We cache one read-only
+# connection per database path for the process lifetime instead.
+#
+# The URI uses mode=ro + immutable=1: immutable tells SQLite the file will not
+# change, so it skips ALL locking and change-detection stat() calls. This is
+# the single biggest NFS win and is safe here — the ClinVar DB is built once
+# offline and only ever read at classification time.
+_CONN_CACHE: dict[str, sqlite3.Connection] = {}
+
+
+def _get_conn(db_path: Path) -> sqlite3.Connection:
+    """Return a cached read-only connection for `db_path` (opened on first use)."""
+    key = str(db_path)
+    conn = _CONN_CACHE.get(key)
+    if conn is None:
+        # as_posix() normalises Windows backslashes to forward slashes, which
+        # the SQLite URI parser requires. immutable=1 implies read-only.
+        uri = "file:" + db_path.as_posix() + "?mode=ro&immutable=1"
+        # check_same_thread=False: criterion evaluation currently runs on the
+        # main thread, but read-only connections are safe to share, so this
+        # keeps the cache valid if evaluation is ever parallelised.
+        conn = sqlite3.connect(uri, uri=True, check_same_thread=False)
+        _CONN_CACHE[key] = conn
+    return conn
 
 
 def _protein_change_only(hgvs_p: Optional[str]) -> Optional[str]:
@@ -47,7 +78,7 @@ def query_same_aa_change(
     excl_chrom = strip_chr(exclude_chrom) if exclude_chrom else exclude_chrom
 
     try:
-        con = sqlite3.connect(str(db_path))
+        con = _get_conn(db_path)
         rows = con.execute(
             """
             SELECT variation_id, clinical_significance, review_status, star_rating,
@@ -62,7 +93,6 @@ def query_same_aa_change(
             """,
             (gene_symbol, "%:" + p_change, min_stars),
         ).fetchall()
-        con.close()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="same_aa", error=str(exc))
         return []
@@ -104,7 +134,7 @@ def query_same_codon_different_aa(
     if not db_path.exists() or codon_position is None:
         return []
     try:
-        con = sqlite3.connect(str(db_path))
+        con = _get_conn(db_path)
         rows = con.execute(
             """
             SELECT variation_id, clinical_significance, review_status, star_rating,
@@ -120,7 +150,6 @@ def query_same_codon_different_aa(
             """,
             (gene_symbol, codon_position, "%:" + (p_change or ""), min_stars),
         ).fetchall()
-        con.close()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="same_codon", error=str(exc))
         return []
@@ -155,19 +184,16 @@ def _sum_column(db_path: Path, column: str, chrom: str, pos: int, ref: str, alt:
     # file. Searching both forms avoids relying on a normalised schema.
     c1, c2 = chrom_candidates(chrom)
     try:
-        con = sqlite3.connect(str(db_path))
-        try:
-            row = con.execute(
-                f"""
-                SELECT COALESCE(SUM({column}), 0)
-                FROM variants
-                WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
-                """,
-                (c1, c2, pos, ref, alt),
-            ).fetchone()
-            return int(row[0]) if row and row[0] is not None else 0
-        finally:
-            con.close()
+        con = _get_conn(db_path)
+        row = con.execute(
+            f"""
+            SELECT COALESCE(SUM({column}), 0)
+            FROM variants
+            WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
+            """,
+            (c1, c2, pos, ref, alt),
+        ).fetchone()
+        return int(row[0]) if row and row[0] is not None else 0
     except sqlite3.OperationalError:
         # Old ClinVar build without this column — backward-compatible no-op.
         return 0
@@ -206,7 +232,7 @@ def query_hotspot_cluster(
     if not db_path.exists() or protein_position is None:
         return False, "No protein position or DB unavailable"
     try:
-        con = sqlite3.connect(str(db_path))
+        con = _get_conn(db_path)
         count = con.execute(
             """
             SELECT COUNT(DISTINCT amino_acid_change)
@@ -235,7 +261,6 @@ def query_hotspot_cluster(
             """,
             (gene_symbol, protein_position - window, protein_position + window),
         ).fetchone()[0]
-        con.close()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="hotspot", error=str(exc))
         return False, str(exc)
@@ -280,6 +305,13 @@ def _is_missense_p(hgvs_p: Optional[str]) -> bool:
     return bool(m) and m.group(1) != "Ter"
 
 
+# PP2 eligibility is a pure function of (gene, mis_z) — it scans every P/LP
+# and B/LB missense record for the gene, which is the single most expensive
+# ClinVar query (the `fetchall` hotspot in profiling). Genes recur constantly
+# across a panel/exome, so caching per-gene collapses thousands of repeated
+# full-gene scans into one per unique gene. Results are identical to the
+# uncached version — this is memoisation, not a logic change.
+@lru_cache(maxsize=8192)
 def query_pp2_eligible(
     db_path: Path,
     gene_symbol: Optional[str],
@@ -300,7 +332,7 @@ def query_pp2_eligible(
     if not db_path.exists() or not gene_symbol:
         return False, "No gene or DB unavailable"
     try:
-        con = sqlite3.connect(str(db_path))
+        con = _get_conn(db_path)
         rows = con.execute(
             """
             SELECT hgvs_p, clinical_significance
@@ -311,7 +343,6 @@ def query_pp2_eligible(
             """,
             (gene_symbol, min_stars, *_PP2_PATH, *_PP2_BENIGN),
         ).fetchall()
-        con.close()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="pp2", error=str(exc))
         return False, str(exc)
@@ -349,6 +380,10 @@ def query_pp2_eligible(
 
 
 # --- PVS1: is loss-of-function an established disease mechanism for the gene? ---
+# Both PVS1 helpers are per-gene aggregates, so they are memoised for the same
+# reason as query_pp2_eligible: a gene's ClinVar null/missense counts do not
+# change within a run, and panels hit the same genes repeatedly.
+@lru_cache(maxsize=8192)
 def query_pathogenic_null_count(
     db_path: Path,
     gene_symbol: Optional[str],
@@ -365,27 +400,25 @@ def query_pathogenic_null_count(
     if not db_path.exists() or not gene_symbol:
         return 0
     try:
-        con = sqlite3.connect(str(db_path))
-        try:
-            row = con.execute(
-                """
-                SELECT COUNT(*)
-                FROM variants
-                WHERE gene_symbol = ?
-                  AND star_rating >= ?
-                  AND clinical_significance IN (?,?,?)
-                  AND (hgvs_p LIKE '%Ter%' OR hgvs_p LIKE '%fs%' OR hgvs_p LIKE '%*%')
-                """,
-                (gene_symbol, min_stars, *_PP2_PATH),
-            ).fetchone()
-            return int(row[0]) if row and row[0] is not None else 0
-        finally:
-            con.close()
+        con = _get_conn(db_path)
+        row = con.execute(
+            """
+            SELECT COUNT(*)
+            FROM variants
+            WHERE gene_symbol = ?
+              AND star_rating >= ?
+              AND clinical_significance IN (?,?,?)
+              AND (hgvs_p LIKE '%Ter%' OR hgvs_p LIKE '%fs%' OR hgvs_p LIKE '%*%')
+            """,
+            (gene_symbol, min_stars, *_PP2_PATH),
+        ).fetchone()
+        return int(row[0]) if row and row[0] is not None else 0
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="pvs1_null", error=str(exc))
         return 0
 
 
+@lru_cache(maxsize=8192)
 def query_pathogenic_missense_count(
     db_path: Path,
     gene_symbol: Optional[str],
@@ -401,19 +434,16 @@ def query_pathogenic_missense_count(
     if not db_path.exists() or not gene_symbol:
         return 0
     try:
-        con = sqlite3.connect(str(db_path))
-        try:
-            rows = con.execute(
-                """
-                SELECT hgvs_p FROM variants
-                WHERE gene_symbol = ?
-                  AND star_rating >= ?
-                  AND clinical_significance IN (?,?,?)
-                """,
-                (gene_symbol, min_stars, *_PP2_PATH),
-            ).fetchall()
-        finally:
-            con.close()
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT hgvs_p FROM variants
+            WHERE gene_symbol = ?
+              AND star_rating >= ?
+              AND clinical_significance IN (?,?,?)
+            """,
+            (gene_symbol, min_stars, *_PP2_PATH),
+        ).fetchall()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="pvs1_miss", error=str(exc))
         return 0

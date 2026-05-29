@@ -24,7 +24,6 @@ from rich.progress import (
     BarColumn,
     MofNCompleteColumn,
     Progress,
-    SpinnerColumn,
     TaskProgressColumn,
     TextColumn,
     TimeElapsedColumn,
@@ -32,6 +31,13 @@ from rich.progress import (
 )
 
 T = TypeVar("T")
+
+# Cap the redraw rate. rich defaults to 10 Hz AND repaints continuously to
+# animate the spinner; profiling showed table/segment rendering eating ~10s
+# over a fast 100-variant loop. 4 Hz is smooth enough for humans and roughly
+# halves the render cost. (The spinner column is also dropped below for the
+# same reason — the bar itself already shows liveness.)
+_REFRESH_HZ = 4
 
 # Module-level override set by the CLI (`--no-progress`) before the first
 # progress-aware call. `None` keeps the automatic tty detection in effect.
@@ -60,7 +66,6 @@ def make_progress() -> Progress:
     (e.g. one bar per chromosome) can manage a single Progress themselves.
     """
     return Progress(
-        SpinnerColumn(),
         TextColumn("[bold blue]{task.description}"),
         BarColumn(),
         MofNCompleteColumn(),
@@ -71,6 +76,8 @@ def make_progress() -> Progress:
         console=Console(stderr=True),
         # Leave the completed bar visible so the user sees the final timing.
         transient=False,
+        # Throttle redraws (see _REFRESH_HZ) to cut rich's rendering overhead.
+        refresh_per_second=_REFRESH_HZ,
     )
 
 
