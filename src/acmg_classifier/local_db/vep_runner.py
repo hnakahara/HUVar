@@ -21,6 +21,10 @@ from acmg_classifier.models.variant import VariantRecord
 
 log = structlog.get_logger()
 
+# Ensembl VEP consequence term -> internal ConsequenceType.
+# Order matters: _SEVERITY_ORDER (derived below) uses dict insertion order
+# to define a severity ranking, which transcript-level sorting and
+# _most_severe() both rely on. Keep most-severe entries at the top.
 _CONSEQUENCE_MAP: dict[str, ConsequenceType] = {
     "frameshift_variant": ConsequenceType.FRAMESHIFT,
     "stop_gained": ConsequenceType.STOP_GAINED,
@@ -58,6 +62,14 @@ def _most_severe(terms: list[str]) -> ConsequenceType:
 
 
 def _parse_intron_distance(hgvs_c: str | None) -> int | None:
+    """Extract the +/- intron distance from an HGVS coding-DNA string.
+
+    HGVS encodes intronic positions as "<exonic_pos>+<n>" or
+    "<exonic_pos>-<n>" (e.g. c.123+5, c.123-21). BP7 needs this number to
+    decide whether an intronic variant is "deep" enough to be benign by
+    distance alone. Returns None when the variant is purely exonic (no
+    +/- suffix) so callers can distinguish "no intronic position" from
+    "intronic but near the splice site"."""
     import re
     if hgvs_c is None:
         return None
@@ -103,6 +115,10 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
         if isinstance(d, dict):
             domains.append(str(d.get("db", "")) + ": " + str(d.get("name", "")))
 
+    # NOTE: aa_change is computed but the ConsequenceInfo model has no
+    # `amino_acid_change` field (that field lives on ClinVarRecord). With
+    # Pydantic v2 default extra="ignore" this assignment is silently
+    # dropped. See docs/cleanup-candidates.md.
     aa_change = None
     if amino_acids and protein_pos:
         parts = amino_acids.split("/")
@@ -112,6 +128,9 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
     # VEP --uniprot emits "swissprot" (preferred) and "trembl" fields. Both can
     # be a single string or a list; the version suffix (e.g. "P38398.4") is
     # stripped to match Brandes 2023 ESM1b filenames ("P38398_LLR.csv").
+    # SwissProt is preferred because it is the manually-curated subset that
+    # the Brandes archive is built against — TrEMBL is the unreviewed
+    # fallback only.
     uniprot_id = None
     sp = tc.get("swissprot") or tc.get("trembl")
     if sp:
@@ -141,18 +160,29 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
 
 
 def _parse_vep_record(record: dict[str, Any]) -> tuple[str, list[ConsequenceInfo]]:
-    # 1. VEP's "id" field contains the VCF ID column value directly
+    """Translate one VEP JSON line into (variant_key, [consequences]).
+
+    The 3-step key resolution is defensive: VEP can drop or rename the
+    ID column depending on input format, and we MUST recover the original
+    CHROM:POS:REF:ALT key because that is the join key the pipeline uses
+    to attach VEP results to the input VariantRecord."""
+    # 1. VEP echoes back the VCF ID column value as `id` when present —
+    #    this is the fastest path and works for variants written by us.
     raw_id = record.get("id", "")
     key = raw_id if raw_id and raw_id != "." else ""
 
-    # 2. Fallback: parse from "input" (original VCF line, tab-separated)
+    # 2. If the JSON `id` is missing, parse the original input line that
+    #    VEP preserves in `input` (tab-separated VCF fields).
     if not key:
         input_line = record.get("input", "")
         fields = input_line.split("\t") if input_line else []
         if len(fields) >= 3 and fields[2] not in (".", ""):
             key = fields[2]
 
-    # 3. Last resort: reconstruct from coordinates (SNV only)
+    # 3. Last resort — reconstruct from VEP's parsed coordinates. This is
+    #    SNV-safe but may not exactly match indel keys because VEP can
+    #    left-align differently than the input. Used only when both
+    #    preferred paths fail.
     if not key:
         chrom = record.get("seq_region_name", "")
         if not chrom.startswith("chr"):
@@ -169,6 +199,14 @@ def _parse_vep_record(record: dict[str, Any]) -> tuple[str, list[ConsequenceInfo
         if c:
             consequences.append(c)
 
+    # Pre-sort so AnnotationData.primary_consequence (which picks the first
+    # match) sees the clinically-preferred transcript first:
+    #   1. MANE Select before non-MANE
+    #   2. RefSeq (NM_) before Ensembl (ENST) when MANE-tied
+    #   3. Canonical before non-canonical
+    #   4. Most-severe consequence within the same rank
+    # Using `not` on the booleans inverts True→False so True (preferred)
+    # sorts ahead under Python's ascending sort.
     consequences.sort(key=lambda c: (
         not c.is_mane_select,
         not c.transcript_id.startswith("NM_"),
@@ -198,6 +236,13 @@ class LocalVEPRunner:
         variants: list[VariantRecord],
         batch_size: int = 500,
     ) -> dict[str, list[ConsequenceInfo]]:
+        """Annotate a list of variants by chunking them into VEP subprocess calls.
+
+        VEP startup cost (cache load, FASTA index, plugin init) is large —
+        typically several seconds — so we amortise it across a batch of
+        ~500 variants per invocation. Smaller batches lose throughput;
+        larger batches risk hitting OS argv/stdin limits and make failure
+        recovery coarser (one bad variant kills the whole chunk)."""
         results: dict[str, list[ConsequenceInfo]] = {}
         for i in range(0, len(variants), batch_size):
             chunk = variants[i : i + batch_size]

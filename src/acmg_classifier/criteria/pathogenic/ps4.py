@@ -47,15 +47,23 @@ class PS4Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        # 1. Rarity check (same logic as PM2)
+        # 1. Rarity gate (mirrors PM2): a common variant cannot satisfy PS4
+        #    because case enrichment over controls is the entire point. Prefer
+        #    FAF95_popmax (Karczewski 2020) over raw popmax/AF — FAF gives a
+        #    conservative upper bound that is robust to small population
+        #    sample sizes. An absent gnomAD record is treated as "rare".
         gd = annotation.gnomad
         if gd is None:
-            rare = True  # absent from gnomAD
+            rare = True
         else:
+            # A failed gnomAD QC filter means AF is unreliable — refuse to
+            # commit either way rather than risk a false PS4 trigger.
             if not gd.filter_pass:
                 return CriteriaResult.not_met(ACMGCriterion.PS4, "gnomAD filter failed")
             faf = gd.faf95_popmax
             if faf is None:
+                # Fall back to popmax_af, then AF — FAF is missing for very
+                # rare variants where the upper bound is undefined.
                 faf = gd.popmax_af or gd.af or 0.0
             rare = (faf == 0.0 or gd.ac == 0 or faf < _FAF95_RARE)
 
@@ -64,7 +72,10 @@ class PS4Evaluator(CriterionEvaluator):
                 ACMGCriterion.PS4, "Not rare enough in gnomAD for PS4"
             )
 
-        # 2. Affected-case observation count in ClinVar SCVs
+        # 2. Proxy proband count: number of ClinVar SCVs that BOTH classified
+        #    the variant as P/LP AND reported AffectedStatus="yes". This is an
+        #    approximation — one SCV ≈ one proband — chosen because true
+        #    case/control statistics are unavailable from public data.
         from acmg_classifier.local_db.clinvar_sqlite import query_affected_cases
         n_affected = query_affected_cases(
             self._cfg.clinvar_sqlite,

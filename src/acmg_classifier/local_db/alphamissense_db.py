@@ -31,6 +31,9 @@ def query_alphamissense(
 
     try:
         with open_tabix(tsv_gz_path) as tf:
+            # AlphaMissense files contain one row per (REF, ALT) combination
+            # at each position, so we must filter on all three to pick the
+            # correct allele. The header row begins with '#' and is skipped.
             for line in fetch_region(tf, chrom, pos, pos):
                 if line.startswith("#"):
                     continue
@@ -43,6 +46,8 @@ def query_alphamissense(
                 try:
                     score = float(fields[8])
                 except (ValueError, IndexError):
+                    # Treat unparseable rows as "no score" rather than aborting
+                    # — a corrupt single row should not break annotation.
                     continue
                 am_class = fields[9].strip() if len(fields) > 9 else None
                 return AlphaMissenseData(score=score, classification=am_class)

@@ -21,9 +21,18 @@ class GnomADDB:
             self._constraint = _load_constraint(constraint_tsv)
 
     def query(self, chrom: str, pos: int, ref: str, alt: str) -> Optional[GnomADData]:
+        """Fetch population statistics for a specific variant.
+
+        Returns a synthetic "absent" record (AF=0, AC=0, filter_pass=True)
+        when the variant is missing from the database. This is intentional —
+        downstream criteria distinguish "absent" (rare, supports PM2) from
+        "filter-failed" (untrustworthy, supports neither side), so we must
+        differentiate them at this layer."""
         if not self._db_path.exists():
             log.warning("gnomad_db_missing", path=str(self._db_path))
             return None
+        # chrom_candidates handles "1" vs "chr1" — gnomAD raw files have
+        # historically used both depending on version/source.
         c1, c2 = chrom_candidates(chrom)
         try:
             con = duckdb.connect(str(self._db_path), read_only=True)
@@ -43,12 +52,18 @@ class GnomADDB:
             log.error("gnomad_query_error", error=str(exc))
             return None
 
+        # "Absent from gnomAD" is the most-informative PM2 signal — emit a
+        # well-formed record rather than None so callers don't need a special
+        # branch for the missing-record case.
         if row is None:
             return GnomADData(af=0.0, ac=0, an=0, filter_pass=True)
 
         (af, an, ac, nhomalt, nhemi,
          popmax_af, popmax_pop, faf95_popmax, filters) = row
 
+        # gnomAD FILTER column conventions: None / "" / "PASS" / "." all
+        # mean "passed QC". Anything else (e.g. "AC0", "InbreedingCoeff")
+        # is a quality flag that should disqualify the variant from BA1/BS*.
         filter_pass = filters is None or filters.strip().upper() in ("", "PASS", ".")
         return GnomADData(
             af=af,
@@ -91,7 +106,9 @@ def _load_constraint(
     import csv
     import math
 
-    # gnomAD v4.1 と v2.1.1 でカラム名が異なるため候補リストで対応
+    # Column names differ between gnomAD v4.1 (newer dotted form) and
+    # v2.1.1 (legacy short form). Candidate lists let one builder work
+    # against either constraint release without manual translation.
     _PLI_COLS = ["pLI", "lof.pLI"]
     _LOEUF_COLS = ["oe_lof_upper", "lof.oe_ci.upper"]
     _MIS_Z_COLS = ["mis_z", "mis.z_score"]

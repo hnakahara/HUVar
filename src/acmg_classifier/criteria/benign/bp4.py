@@ -64,12 +64,19 @@ class BP4Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
+        # BP4 mirrors PP3: same predictors and the same one-tool-only rule
+        # for protein-level missense scoring (to prevent dual-counting
+        # tools that share training data). The strength functions above use
+        # the benign-side Bergquist 2024 thresholds.
         pc = annotation.primary_consequence
         if pc is None:
             return CriteriaResult.not_met(ACMGCriterion.BP4, "No consequence")
 
         if pc.consequence == ConsequenceType.MISSENSE:
             sp = annotation.splice
+            # A missense with predicted splice impact (SpliceAI ≥ 0.20)
+            # cannot be claimed as benign by computation alone — the splice
+            # mechanism overrides the protein-level prediction.
             if sp and sp.is_available and sp.tool == "spliceai" and sp.max_delta is not None:
                 if sp.max_delta >= 0.20:
                     return CriteriaResult.not_met(

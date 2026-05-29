@@ -21,7 +21,14 @@ class PM2Evaluator(CriterionEvaluator):
         self._cfg = cfg
 
     def _threshold(self, annotation: AnnotationData) -> tuple[float, str]:
-        """Pick the FAF95 cutoff from the gene's inheritance; fall back to dominant."""
+        """Select the FAF95 cutoff based on the gene's inheritance pattern.
+
+        Recessive disease genes tolerate much higher carrier frequencies in
+        the general population (founder alleles are routinely seen at 0.1-1%),
+        so a strict dominant-disease cutoff would over-trigger PM2 against
+        legitimate pathogenic recessive variants. Falling back to the
+        dominant threshold when inheritance is unknown is the conservative
+        choice — it is harder to *meet* PM2, never easier."""
         from acmg_classifier.local_db.inheritance_db import (
             load_inheritance_map,
             is_recessive,
@@ -41,19 +48,28 @@ class PM2Evaluator(CriterionEvaluator):
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
         gd = annotation.gnomad
+        # Total absence from gnomAD is the strongest possible PM2 signal — it
+        # implies neither presence nor a failed filter, just no record at all.
         if gd is None:
             return CriteriaResult.met(
                 ACMGCriterion.PM2,
                 CriterionStrength.SUPPORTING,
                 "Absent from gnomAD (no record)",
             )
+        # A failed gnomAD QC filter means we cannot trust the AF estimate, so
+        # we abstain rather than assert PM2 on dubious data.
         if not gd.filter_pass:
             return CriteriaResult.not_met(ACMGCriterion.PM2, "gnomAD filter failed")
 
+        # Prefer FAF95_popmax (Karczewski 2020) — it gives a conservative
+        # upper bound that doesn't over-fire on tiny populations. Fall back to
+        # popmax_af then global AF if FAF is missing (very rare variants).
         faf = gd.faf95_popmax
         if faf is None:
             faf = gd.popmax_af or gd.af or 0.0
 
+        # AC=0 means "observed only in samples that failed QC" — effectively
+        # absent for ACMG purposes, so we treat it the same as FAF=0.
         if faf == 0.0 or gd.ac == 0:
             return CriteriaResult.met(
                 ACMGCriterion.PM2,

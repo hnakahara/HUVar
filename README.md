@@ -278,7 +278,6 @@ Full option list:
 | `--splice-tool {squirls,spliceai}` | str | `squirls` | Splice predictor used for PP3/BP4. SpliceAI takes precedence over AlphaMissense when its score ≥ 0.20. |
 | `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory |
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
-| `--inheritance {AD,AR,XL,Unknown}` | str | `Unknown` | Pedigree-level inheritance default (per-gene values in `data/shared/gene_inheritance.tsv` take precedence) |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
 Example for a panel sequencing run with manual segregation evidence:
@@ -290,7 +289,6 @@ acmg-classify classify panel.vcf.gz \
     --insilico-tool alphamissense \
     --splice-tool squirls \
     --supplement manual_evidence.tsv \
-    --inheritance AR \
     --workers 8
 ```
 

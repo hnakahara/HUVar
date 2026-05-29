@@ -42,12 +42,17 @@ class PS3Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        # 1. Manual supplement override
+        # 1. Manual supplement takes precedence over the text-mined fallback:
+        #    if a curator has reviewed the underlying paper they can assert a
+        #    higher strength (including PS3 Strong, which the text-mined path
+        #    cannot reach — see module docstring on OddsPath calibration).
         for e in (supplement or []):
             if e.criterion == ACMGCriterion.PS3:
                 return CriteriaResult.met(ACMGCriterion.PS3, e.strength, e.evidence)
 
-        # 2. ClinVar text-mined functional evidence
+        # 2. Fallback: count ClinVar SCVs whose free-text comment matches a
+        #    damaging-functional-study pattern. Strength is capped at Moderate
+        #    because OddsPath cannot be derived from free text alone.
         from acmg_classifier.local_db.clinvar_sqlite import query_functional_evidence
         n = query_functional_evidence(
             self._cfg.clinvar_sqlite,

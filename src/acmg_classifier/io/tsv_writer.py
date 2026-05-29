@@ -10,6 +10,10 @@ from acmg_classifier.models.classification import ClassificationResult
 from acmg_classifier.models.enums import ACMGCriterion
 from acmg_classifier.models.variant import VariantRecord
 
+# Ordered enum traversal — we iterate the criteria list THREE times when
+# building the header (triggered flag, strength, evidence) and again per row.
+# Materialising the list once guarantees the same column ordering in every
+# branch even if ACMGCriterion grows in future.
 _ALL_CRITERIA = list(ACMGCriterion)
 
 _ANNOTATION_HEADER = [
@@ -38,6 +42,11 @@ _HEADER = (
 
 
 def write_tsv(results: list[ClassificationResult], output_path: Optional[Path]) -> None:
+    """Write classification rows to TSV (or stdout when output_path is None).
+
+    Each cell is sanitised through _sanitize_cell before writing — ClinVar
+    free text can contain literal newlines that would otherwise split a
+    single variant across multiple TSV rows."""
     fh = open(output_path, "w", newline="", encoding="utf-8") if output_path else sys.stdout
     try:
         writer = csv.writer(fh, delimiter="\t")
@@ -45,6 +54,7 @@ def write_tsv(results: list[ClassificationResult], output_path: Optional[Path]) 
         for result in results:
             writer.writerow([_sanitize_cell(c) for c in _build_row(result)])
     finally:
+        # Only close when we opened the file ourselves — never close stdout.
         if output_path:
             fh.close()
 
@@ -117,6 +127,9 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
         _fmt(g.loeuf, ".4f") if g and g.loeuf is not None else "",
     ]
 
+    # Pick the single highest-confidence ClinVar record for the summary
+    # columns — multiple submitters can disagree, and a 3-star expert-panel
+    # call should win over a conflicting 1-star submission.
     best_cv = max(ann.clinvar_vcf, key=lambda r: r.star_rating, default=None)
     clinvar_cols = [
         best_cv.variation_id or "" if best_cv else "",

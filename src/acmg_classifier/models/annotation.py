@@ -122,17 +122,28 @@ class AnnotationData(BaseModel):
 
     @property
     def primary_consequence(self) -> Optional[ConsequenceInfo]:
-        """Return RefSeq MANE Select transcript if available, then any MANE Select, then RefSeq canonical, then any canonical."""
+        """Pick the single transcript that ACMG criteria will be evaluated against.
+
+        Priority order is RefSeq MANE Select > Ensembl MANE Select >
+        RefSeq canonical > Ensembl canonical > first available. RefSeq (NM_)
+        is preferred because clinical HGVS reporting and ClinVar use RefSeq
+        accessions; ranking MANE Select first follows the 2023 ClinGen/HGVS
+        recommendation to standardise on MANE for clinical variant reporting.
+        """
+        # MANE Select on a RefSeq transcript — the strongest clinical match.
         for c in self.consequences:
             if c.is_mane_select and c.transcript_id.startswith("NM_"):
                 return c
+        # Fall back to MANE Select on Ensembl (ENST) if RefSeq mapping is missing.
         for c in self.consequences:
             if c.is_mane_select:
                 return c
+        # No MANE record: use the canonical transcript, preferring RefSeq.
         for c in self.consequences:
             if c.is_canonical and c.transcript_id.startswith("NM_"):
                 return c
         for c in self.consequences:
             if c.is_canonical:
                 return c
+        # Last resort: take whatever VEP returned first (preserves VEP's own ordering).
         return self.consequences[0] if self.consequences else None

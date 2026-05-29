@@ -26,16 +26,23 @@ class PP2Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        # 1. Manual supplement override
+        # 1. Manual supplement always wins so curators can assert PP2 for
+        #    genes that don't meet the automatic statistical thresholds but
+        #    are known by domain experts to be missense-driven.
         for e in (supplement or []):
             if e.criterion == ACMGCriterion.PP2:
                 return CriteriaResult.met(ACMGCriterion.PP2, e.strength, e.evidence)
 
+        # PP2 is, by definition, a missense-only criterion.
         pc = annotation.primary_consequence
         if pc is None or pc.consequence != ConsequenceType.MISSENSE:
             return CriteriaResult.not_met(ACMGCriterion.PP2, "Not a missense variant")
 
-        # 2. ClinVar + gnomAD missense constraint (Z-score) gene eligibility
+        # 2. Gene eligibility combines two signals: ClinVar (low rate of
+        #    benign missense relative to pathogenic missense in the gene) AND
+        #    gnomAD missense Z-score (population-level missense constraint).
+        #    mis_z may be None for genes not in the constraint table; the
+        #    query handles that case internally.
         from acmg_classifier.local_db.clinvar_sqlite import query_pp2_eligible
         mis_z = annotation.gnomad.mis_z if annotation.gnomad else None
         eligible, evidence = query_pp2_eligible(

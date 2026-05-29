@@ -8,6 +8,12 @@ from acmg_classifier.models.enums import ACMGCriterion
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
+# Benign criteria that cannot be automated from public databases:
+#   BS3 = functional studies show no damaging effect (requires literature)
+#   BS4 = lack of segregation in affected family members
+#   BP2 = observed in trans with pathogenic in dominant gene / in cis
+#   BP5 = found in case with alternate molecular basis
+# Same supplement-based curator workflow as the pathogenic manual.py.
 _MANUAL_CRITERIA = (
     ACMGCriterion.BS3,
     ACMGCriterion.BS4,
@@ -26,6 +32,9 @@ class ManualBenignEvaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> list[CriteriaResult]:  # type: ignore[override]
+        # Returns a list (one record per criterion) so the registry sees a
+        # not_met entry for criteria the curator did not provide — keeps the
+        # audit trail complete.
         results = []
         sup = supplement or []
         for criterion in _MANUAL_CRITERIA:

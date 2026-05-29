@@ -32,6 +32,10 @@ class SpliceAIPredictor(SplicePredictor):
         return snv_ok or indel_ok
 
     def _vcf_for(self, variant: VariantRecord) -> Optional[Path]:
+        """SpliceAI distributes precomputed scores in two separate VCFs —
+        SNVs and indels — because the indel file is much larger and many
+        sites lack SNV-style precompute. We dispatch by variant length so
+        each lookup hits only the relevant file."""
         if len(variant.ref) == 1 and len(variant.alt) == 1:
             return self._snv_vcf
         return self._indel_vcf
@@ -64,6 +68,14 @@ class SpliceAIPredictor(SplicePredictor):
 
 
 def _extract_spliceai_max_delta(info: str) -> Optional[float]:
+    """Parse the max delta score from a SpliceAI INFO field.
+
+    SpliceAI emits four delta scores per allele in fixed positions of the
+    pipe-delimited payload: DS_AG (idx 2), DS_AL (3), DS_DG (4), DS_DL (5)
+    — acceptor/donor gain/loss. The "impact" of the variant is the maximum
+    of those four (per the SpliceAI paper and Walker 2023). We take max
+    instead of any specific delta because the four scores represent
+    competing splice-disruption mechanisms; the largest signal dominates."""
     for token in info.split(";"):
         if token.startswith("SpliceAI="):
             payload = token[len("SpliceAI="):]

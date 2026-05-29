@@ -19,6 +19,10 @@ class PM1Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
+        # PM1 only applies to variants that change protein sequence at a
+        # specific codon — missense and small in-frame indels. Truncating
+        # variants (frameshift, stop_gain) are PVS1 territory, and silent
+        # variants do not move an amino-acid position into a hotspot.
         pc = annotation.primary_consequence
         if pc is None or pc.consequence not in (
             ConsequenceType.MISSENSE,
@@ -27,6 +31,10 @@ class PM1Evaluator(CriterionEvaluator):
         ):
             return CriteriaResult.not_met(ACMGCriterion.PM1, "Not a missense/in-frame variant")
 
+        # Operationally we approximate "mutational hotspot or critical
+        # functional domain" by counting nearby pathogenic ClinVar entries at
+        # the same protein position / cluster window. The cluster definition
+        # itself lives in clinvar_sqlite.query_hotspot_cluster.
         from acmg_classifier.local_db.clinvar_sqlite import query_hotspot_cluster
         is_hotspot, evidence = query_hotspot_cluster(
             self._cfg.clinvar_sqlite,

@@ -19,6 +19,10 @@ class BP3Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
+        # BP3 is the benign-side counterpart to PM4: in-frame indels in
+        # repetitive regions are likely tolerated because length variation
+        # in repeats is biologically common. PM4 explicitly hands these
+        # variants to BP3 (see pm4.py).
         pc = annotation.primary_consequence
         if pc is None or pc.consequence not in (
             ConsequenceType.INFRAME_INSERTION,
@@ -26,6 +30,10 @@ class BP3Evaluator(CriterionEvaluator):
         ):
             return CriteriaResult.not_met(ACMGCriterion.BP3, "Not an in-frame indel")
 
+        # Repeat overlap is determined by Dfam/RepeatMasker (see
+        # local_db.repeatmasker_db). The "without known function" qualifier
+        # from the ACMG text is not enforced here — we assume the repeat
+        # tracks already exclude domains with known function.
         rep = annotation.repeat
         if rep and rep.in_repeat:
             return CriteriaResult.met(

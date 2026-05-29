@@ -24,6 +24,12 @@ def has_alternative_transcript_rescue(annotation: AnnotationData) -> bool:
         ConsequenceType.TRANSCRIPT_ABLATION,
     }
 
+    # Count LoF transcripts vs MANE/canonical transcripts that escape LoF.
+    # A "rescue" exists only when BOTH conditions hold: at least one
+    # transcript carries the LoF, AND at least one clinically-relevant
+    # (MANE/canonical) transcript carries a non-LoF consequence. We do not
+    # rescue against arbitrary minor isoforms — those are unlikely to
+    # produce enough protein to mitigate haploinsufficiency.
     lof_transcripts = 0
     non_lof_mane_canonical = 0
 

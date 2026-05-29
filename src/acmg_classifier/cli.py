@@ -12,7 +12,10 @@ log = structlog.get_logger()
 
 
 def _make_config(ctx: click.Context, **kwargs):
-    """Build Config from CLI options, injecting into Click context."""
+    """Build Config from CLI options, injecting into Click context.
+
+    NOTE: currently unused — each subcommand constructs Config inline.
+    See docs/cleanup-candidates.md."""
     from acmg_classifier.config import Config
     cfg = Config(**{k: v for k, v in kwargs.items() if v is not None})
     ctx.ensure_object(dict)
@@ -24,6 +27,9 @@ def _make_config(ctx: click.Context, **kwargs):
 @click.version_option()
 def cli():
     """ACMG 2015 + ClinGen SVI variant pathogenicity classifier (fully local)."""
+    # Structured JSON-ish console logging is configured here (not at import
+    # time) so library users importing acmg_classifier modules don't get
+    # our logging config forced onto their own application.
     structlog.configure(
         processors=[
             structlog.processors.TimeStamper(fmt="iso"),
@@ -54,9 +60,6 @@ def cli():
               help="Directory containing SpliceAI VCF files (snv + indel). Overrides default data-dir lookup.")
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),
               default=None, help="Manual evidence TSV")
-@click.option("--inheritance",
-              type=click.Choice(["AD", "AR", "XL", "Unknown"]),
-              default="Unknown", show_default=True)
 @click.option("--workers", type=int, default=4, show_default=True)
 @click.pass_context
 def classify(
@@ -69,7 +72,6 @@ def classify(
     splice_tool: str,
     spliceai_dir: Optional[Path],
     supplement: Optional[Path],
-    inheritance: str,
     workers: int,
 ) -> None:
     """Classify all variants in VCF_FILE and write results to TSV."""

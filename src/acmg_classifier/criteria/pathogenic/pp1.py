@@ -28,12 +28,17 @@ class PP1Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        # 1. Manual supplement override
+        # 1. Curator-asserted supplement overrides the automatic path so a
+        #    reviewer who has counted informative meioses can up-weight PP1
+        #    above Supporting (the only level the text-mined path can emit).
         for e in (supplement or []):
             if e.criterion == ACMGCriterion.PP1:
                 return CriteriaResult.met(ACMGCriterion.PP1, e.strength, e.evidence)
 
-        # 2. ClinVar text-mined cosegregation evidence
+        # 2. Fallback: ANY ClinVar SCV with a cosegregation phrase. We do not
+        #    scale strength by the SCV count because each SCV may describe a
+        #    different family — counting them is not equivalent to counting
+        #    meioses, so we stay at Supporting regardless of N.
         from acmg_classifier.local_db.clinvar_sqlite import query_segregation_evidence
         n = query_segregation_evidence(
             self._cfg.clinvar_sqlite,

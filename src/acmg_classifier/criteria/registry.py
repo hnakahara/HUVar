@@ -18,6 +18,11 @@ class CriteriaRegistry:
         self._evaluators: list[CriterionEvaluator] = self._build_evaluators()
 
     def _build_evaluators(self) -> list[CriterionEvaluator]:
+        # Local imports avoid an import cycle: each evaluator module imports
+        # config/models, and config in turn references the criteria layer for
+        # default thresholds during validation. Deferring imports here also
+        # makes the registry cheap to import in tests that stub specific
+        # evaluators.
         from acmg_classifier.criteria.pathogenic.pvs1 import PVS1Evaluator
         from acmg_classifier.criteria.pathogenic.ps1 import PS1Evaluator
         from acmg_classifier.criteria.pathogenic.ps3 import PS3Evaluator
@@ -68,15 +73,31 @@ class CriteriaRegistry:
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> list[CriteriaResult]:
+        """Run every registered evaluator and apply post-hoc suppression rules.
+
+        Evaluators are independent (each criterion is evaluated in isolation)
+        but ACMG/ClinGen forbid certain combinations from being counted
+        together. Those interactions are resolved here, after all results are
+        collected, rather than inside individual evaluators — otherwise each
+        evaluator would need to inspect every other evaluator's output.
+        """
         results: list[CriteriaResult] = []
         for evaluator in self._evaluators:
             result = evaluator.evaluate(variant, annotation, supplement)
+            # ManualPathogenicEvaluator / ManualBenignEvaluator may emit
+            # multiple results (one per supplement row), so accept either a
+            # single CriteriaResult or a list.
             if isinstance(result, list):
                 results.extend(result)
             else:
                 results.append(result)
 
-        # PVS1 ↔ PP3 mutual exclusion (Walker 2023)
+        # PVS1 ↔ PP3 mutual exclusion (Walker 2023, ClinGen SVI splicing WG):
+        # PVS1 already encodes null-variant/splice-disruption evidence at
+        # Very Strong, which subsumes in-silico splicing/missense evidence
+        # captured by PP3. Letting both fire would double-count the same
+        # mechanistic claim, so PP3 is suppressed (kept in the audit trail but
+        # contributes 0 points to the Bayesian sum).
         pvs1_triggered = any(
             r.criterion == ACMGCriterion.PVS1 and r.triggered for r in results
         )

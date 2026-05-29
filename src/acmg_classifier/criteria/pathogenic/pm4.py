@@ -23,6 +23,11 @@ class PM4Evaluator(CriterionEvaluator):
         if pc is None:
             return CriteriaResult.not_met(ACMGCriterion.PM4, "No consequence")
 
+        # PM4 fires for changes that alter protein length without truncation
+        # (frameshift/stop-gain are PVS1). For in-frame indels inside a
+        # repetitive region, the length change is expected/tolerated and the
+        # variant is better captured by BP3 — explicitly redirect rather than
+        # silently failing so the audit trail reflects the reasoning.
         if pc.consequence in (
             ConsequenceType.INFRAME_INSERTION,
             ConsequenceType.INFRAME_DELETION,

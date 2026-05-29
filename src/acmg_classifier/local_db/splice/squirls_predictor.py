@@ -31,6 +31,11 @@ class SquirlsPredictor(SplicePredictor):
         self._db_path: Optional[Path] = self._find_db()
 
     def _find_db(self) -> Optional[Path]:
+        """Locate the SQUIRLS SQLite file inside the configured directory.
+
+        SQUIRLS releases ship under different filenames per build year
+        (e.g. squirls-2309-hg38.db). Globbing for *.db then *.sqlite lets
+        the same code work across releases without per-version config."""
         if not self._db_dir.exists():
             return None
         for candidate in self._db_dir.glob("*.db"):

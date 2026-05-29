@@ -68,12 +68,17 @@ def query_same_aa_change(
         return []
 
     results: list[ClinVarRecord] = []
+    # Self-match exclusion: PS1 requires a DIFFERENT nucleotide change
+    # producing the same AA. If a ClinVar row matches the input variant by
+    # CHROM:POS:REF:ALT it is the variant itself and would let PS1 "vote
+    # for itself". We strip the chr prefix on both sides because ClinVar
+    # historically stored chromosomes both with and without the prefix.
     for r in rows:
         if (excl_chrom is not None and exclude_pos is not None
                 and exclude_ref is not None and exclude_alt is not None
                 and strip_chr(str(r[8])) == excl_chrom and r[9] == exclude_pos
                 and r[10] == exclude_ref and r[11] == exclude_alt):
-            continue  # self-match
+            continue
         results.append(ClinVarRecord(
             variation_id=str(r[0]),
             clinical_significance=r[1],
@@ -136,9 +141,18 @@ def query_same_codon_different_aa(
 
 
 def _sum_column(db_path: Path, column: str, chrom: str, pos: int, ref: str, alt: str) -> int:
-    """Return SUM(column) across SCV rows for a variant; 0 if column/DB missing."""
+    """Return SUM(column) across SCV rows for a variant; 0 if column/DB missing.
+
+    Shared helper for the three text-mined evidence counters (PS3, PS4, PP1).
+    Each counter column is populated by the clinvar_builder when scanning
+    SCV free text — see local_db/clinvar_builder. Returning 0 on missing
+    column (OperationalError) lets us read older databases built before a
+    given counter was added, without forcing a full rebuild."""
     if not db_path.exists():
         return 0
+    # chrom_candidates returns both "1" and "chr1" forms because the ClinVar
+    # build pipeline sometimes loaded one or the other depending on source
+    # file. Searching both forms avoids relying on a normalised schema.
     c1, c2 = chrom_candidates(chrom)
     try:
         con = sqlite3.connect(str(db_path))
@@ -155,7 +169,8 @@ def _sum_column(db_path: Path, column: str, chrom: str, pos: int, ref: str, alt:
         finally:
             con.close()
     except sqlite3.OperationalError:
-        return 0  # column missing in old build
+        # Old ClinVar build without this column — backward-compatible no-op.
+        return 0
     except Exception as exc:
         log.error("clinvar_sqlite_error", op=column, error=str(exc))
         return 0
@@ -248,11 +263,17 @@ _PP2_MIN_PATH = 5            # missense must be a recurrent pathogenic mechanism
 _PP2_MAX_BENIGN_FRAC = 0.10  # gene must have a low rate of benign missense
 _PP2_MIN_MIS_Z = 3.09        # gnomAD missense Z-score qualifying a constrained gene
 
-# Match a missense protein change (p.Val377Ile); the trailing AA must not be Ter.
+# Match a missense protein change (p.Val377Ile); the trailing AA must not be
+# Ter (stop). We use the 3-letter HGVS form because ClinVar normalises to it;
+# the regex deliberately rejects synonymous (=) and frameshift (fs) syntax.
 _MISSENSE_RE = re.compile(r"p\.[A-Z][a-z]{2}\d+([A-Z][a-z]{2})")
 
 
 def _is_missense_p(hgvs_p: Optional[str]) -> bool:
+    """Recognise true missense (not stop-gain, frameshift, or synonymous).
+    Used to filter ClinVar P/LP rows so PP2 / PVS1-cap counts include only
+    missense changes — counting truncating variants here would mix
+    mechanisms and break the missense-dominant heuristic."""
     if not hgvs_p:
         return False
     m = _MISSENSE_RE.search(hgvs_p)

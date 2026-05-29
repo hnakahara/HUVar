@@ -11,12 +11,20 @@ _VEP_MIN_VERSION = 111
 
 
 def find_vep_cmd() -> str:
-    """Return the VEP command string (vep path or docker run invocation)."""
+    """Return the VEP command string (vep path or docker run invocation).
+
+    Native install is preferred because docker startup adds ~1-2s per VEP
+    invocation, which dominates batch annotation throughput. Docker is only
+    used as a fallback so users who can't install VEP system-wide are still
+    able to run the pipeline."""
     native = shutil.which("vep")
     if native:
         log.info("vep_found", method="native", path=native)
         return native
 
+    # Docker fallback: verify the specific release image exists locally
+    # before returning "docker" so a missing image surfaces a clear pull
+    # instruction rather than a cryptic docker-run failure later.
     if shutil.which("docker"):
         try:
             result = subprocess.run(

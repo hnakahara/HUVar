@@ -1,12 +1,9 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
+from typing import Optional
 from pydantic import BaseModel, computed_field
 
 from acmg_classifier.models.enums import ACMGCriterion, Pathogenicity
 from acmg_classifier.models.criteria import CriteriaResult
-
-if TYPE_CHECKING:
-    pass
 
 
 class ClassificationResult(BaseModel):
@@ -43,9 +40,15 @@ class ClassificationResult(BaseModel):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def triggered_criteria(self) -> list[ACMGCriterion]:
+        # The classifier emits one CriteriaResult per criterion (including
+        # not_met) so the full audit trail is preserved. Reports usually only
+        # need the "active" subset — triggered AND not suppressed.
         return [r.criterion for r in self.criteria_results if r.triggered and not r.suppressed]
 
     @computed_field  # type: ignore[prop-decorator]
     @property
     def suppressed_criteria(self) -> list[ACMGCriterion]:
+        # Exposed separately so reviewers can see *why* a criterion was
+        # excluded (typically to avoid double-counting evidence already
+        # captured by a higher-strength criterion, e.g. PP3 under PVS1).
         return [r.criterion for r in self.criteria_results if r.suppressed]

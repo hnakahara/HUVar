@@ -55,12 +55,22 @@ class AnnotationOrchestrator:
         self,
         variants: list[VariantRecord],
     ) -> dict[str, AnnotationData]:
-        # VEP runs in a single batch subprocess
+        """Annotate a batch: one VEP subprocess + parallel per-variant DB lookups.
+
+        VEP is run once for the whole batch (subprocess startup cost is the
+        bottleneck — see vep_runner.annotate_batch). The remaining lookups
+        (gnomAD/ClinVar/AlphaMissense/etc.) are I/O-bound and embarrassingly
+        parallel per variant, so a thread pool is the right model: GIL is
+        released during SQLite/tabix calls, and we want to overlap network/
+        disk waits rather than CPU work."""
         vep_results = self._vep.annotate_batch(variants, batch_size=self._cfg.vep_batch_size)
 
         results: dict[str, AnnotationData] = {}
 
         def _annotate_single(v: VariantRecord) -> tuple[str, AnnotationData]:
+            # vep_results.get(..., []) gives an empty list when VEP dropped
+            # the variant (rare but possible — see vep_runner under-count
+            # log); the rest of the annotation still proceeds.
             return v.key, self._annotate_one(v, vep_results.get(v.key, []))
 
         with ThreadPoolExecutor(max_workers=self._cfg.workers) as pool:
@@ -70,22 +80,36 @@ class AnnotationOrchestrator:
                     key, ann = future.result()
                     results[key] = ann
                 except Exception as exc:
+                    # Per-variant failures are isolated: log and continue so a
+                    # single bad record cannot abort the whole batch.
                     v = futures[future]
                     log.error("annotation_failed", variant=v.key, error=str(exc))
 
         return results
 
     def _annotate_one(self, variant: VariantRecord, consequences) -> AnnotationData:
+        """Build the AnnotationData for a single variant by querying every DB.
+
+        Lookups are sequential here (one variant at a time) because the
+        thread pool in annotate_batch already provides the parallelism
+        across variants. Doing nested parallelism would oversubscribe the
+        DB clients without throughput gain."""
         from acmg_classifier.local_db.clinvar_vcf import query_clinvar_vcf
         from acmg_classifier.local_db.alphamissense_db import query_alphamissense
         from acmg_classifier.local_db.repeatmasker_db import query_repeat
 
         gnomad = self._gnomad.query(variant.chrom, variant.pos, variant.ref, variant.alt)
 
+        # `consequences` is pre-sorted by vep_runner._parse_vep_record so the
+        # first entry is already the clinically-preferred (MANE > canonical)
+        # transcript — no need to re-pick primary here.
         primary = None
         if consequences:
             primary = consequences[0]
 
+        # pLI/LOEUF/missense-Z are gene-level (not variant-level) and only
+        # meaningful once we know which gene the variant belongs to. Enrich
+        # *after* the primary consequence is resolved.
         if gnomad and primary:
             gnomad = self._gnomad.enrich_with_constraint(gnomad, primary.gene_symbol)
 
@@ -94,6 +118,10 @@ class AnnotationOrchestrator:
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
 
+        # Only one missense predictor is queried per variant — config picks
+        # either ESM1b or AlphaMissense to keep the PP3/BP4 Bayesian sum
+        # honest (combining tools that share training data would inflate
+        # evidence). See PP3Evaluator for the consumer-side enforcement.
         alphamissense = None
         esm1b = None
         if self._cfg.insilico_tool == InSilicoTool.ESM1B:
@@ -113,6 +141,9 @@ class AnnotationOrchestrator:
             gnomad=gnomad,
             alphamissense=alphamissense,
             esm1b=esm1b,
+            # Dropping the splice record entirely when the predictor was
+            # unavailable lets downstream criteria treat "no data" as
+            # "splice unknown" rather than "splice = 0".
             splice=splice if splice.is_available else None,
             clinvar_vcf=clinvar_vcf_recs,
             repeat=repeat,
@@ -125,6 +156,14 @@ class AnnotationOrchestrator:
         depend on VEP --uniprot. Variants on a transcript without a UniProt
         match (rare for protein-coding MANE transcripts) cannot be scored.
         """
+        # Cascade of gates — each `return None` represents a precondition the
+        # ESM1b archive needs. We bail early rather than fall through so the
+        # actual DB lookup is reached only when every required field is
+        # present and well-formed:
+        #   - missense only (Brandes archive is missense-substitution scored)
+        #   - UniProt ID is the file-name key in the archive
+        #   - protein_position + alt amino acid identify the substitution
+        #   - alt_aa must be a single 1-letter code (Brandes uses 1-letter)
         if primary is None:
             return None
         if primary.consequence != ConsequenceType.MISSENSE:

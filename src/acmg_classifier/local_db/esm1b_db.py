@@ -48,6 +48,10 @@ def query_esm1b(
         return None
 
     try:
+        # mode=ro opens the database read-only via URI so multiple worker
+        # processes can share the same file without write-lock contention.
+        # The variant pipeline only reads ESM1b, so RO is both safer and
+        # measurably faster under concurrent access.
         conn = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
         try:
             cur = conn.execute(

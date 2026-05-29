@@ -9,6 +9,11 @@ def _count(
     criterion: ACMGCriterion,
     strength: CriterionStrength,
 ) -> int:
+    """Count results for one (criterion, strength) pair.
+
+    NOTE: currently unused by the public Classifier2015.classify path —
+    retained for tests / future strength-aware rules. See
+    docs/cleanup-candidates.md."""
     return sum(
         1 for r in results
         if r.criterion == criterion
@@ -19,6 +24,7 @@ def _count(
 
 
 def _has(results: list[CriteriaResult], criterion: ACMGCriterion) -> bool:
+    """Convenience predicate. Currently unused — see _count note."""
     return any(
         r.criterion == criterion and r.triggered and not r.suppressed
         for r in results
@@ -26,7 +32,14 @@ def _has(results: list[CriteriaResult], criterion: ACMGCriterion) -> bool:
 
 
 def _triggered(results: list[CriteriaResult]) -> dict[str, list[str]]:
-    """Group triggered criteria by effective strength label."""
+    """Group triggered criteria into ACMG 2015 evidence buckets.
+
+    The buckets (pvs/ps/pm/pp/ba/bs/bp) are what the rule table in
+    Classifier2015.classify counts against. PVS1 with a *downgraded*
+    strength (e.g. PVS1 capped to Moderate per the ClinGen SVI cap) is
+    re-bucketed to the lower tier so the 2015 combination rules treat
+    it correctly — otherwise a capped PVS1 would still count as 'pvs'
+    and trigger Pathogenic with only one extra Moderate evidence."""
     out: dict[str, list[str]] = {
         "pvs": [], "ps": [], "pm": [], "pp": [],
         "ba": [], "bs": [], "bp": [],
@@ -36,6 +49,9 @@ def _triggered(results: list[CriteriaResult]) -> dict[str, list[str]]:
             continue
         c = r.criterion.value
         if c == "PVS1":
+            # PVS1 is the only criterion with a sliding strength (per the
+            # ClinGen 2019 decision tree). Re-bucket based on the actual
+            # strength that fired, not the criterion name.
             if r.strength in (CriterionStrength.VERY_STRONG,):
                 out["pvs"].append(c)
             elif r.strength == CriterionStrength.STRONG:
@@ -65,6 +81,12 @@ class Classifier2015:
     def classify(
         self, results: list[CriteriaResult]
     ) -> tuple[Pathogenicity, str]:
+        """Apply ACMG 2015 Table 5 combination rules.
+
+        Returns (final pathogenicity, human-readable rule string). The rule
+        string lists every criterion that contributed, preserving the
+        evidence trail so a clinician can audit the call without re-running
+        the classifier."""
         g = _triggered(results)
         pvs = len(g["pvs"])
         ps = len(g["ps"])
@@ -80,7 +102,10 @@ class Classifier2015:
         )
         rule_str = " + ".join(triggered_names) if triggered_names else "none"
 
-        # --- Benign stand-alone ---
+        # BA1 is "stand-alone" benign — a single trigger ends classification
+        # before any pathogenic combination is considered. Per ACMG 2015 BA1
+        # always wins over otherwise-pathogenic evidence (it represents
+        # population-level frequency that excludes Mendelian disease).
         if ba:
             return Pathogenicity.BENIGN, rule_str
 

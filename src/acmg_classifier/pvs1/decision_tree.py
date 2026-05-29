@@ -132,25 +132,41 @@ def _nmd_branch(
     alt_rescue: bool,
     pc,
 ) -> tuple[CriterionStrength, str]:
+    """ClinGen 2019 PVS1 sub-tree for frameshift / stop-gained variants.
+
+    Rationale: when NMD is predicted, the truncated mRNA is degraded so the
+    allele effectively produces no protein → Very Strong. If an alternative
+    transcript can rescue the LoF, we down-grade because the cell may
+    still express a functional protein → Strong. When NMD is escaped, the
+    truncated protein may still be expressed; severity then depends on what
+    region is removed (functional-domain truncation is more damaging than
+    truncation of an uncharacterised C-terminus)."""
     nmd = predicts_nmd(pc)
 
+    # Gate: if LoF is not a known mechanism for the gene, PVS1 does not apply
+    # regardless of how convincing the molecular evidence is — this is the
+    # very first ClinGen 2019 decision-tree branch.
     if not lof_mechanism:
         return CriterionStrength.NOT_MET, "Gene LoF mechanism not established"
 
     if nmd:
-        # NMD predicted
         if not alt_rescue:
             return CriterionStrength.VERY_STRONG, f"{pc.consequence.value}; NMD predicted; no rescue transcript"
         else:
             return CriterionStrength.STRONG, f"{pc.consequence.value}; NMD predicted; alt transcript may rescue"
     else:
-        # NMD NOT predicted (last exon or penultimate)
+        # NMD is escaped when the premature stop is in the last exon or within
+        # ~50 bp of the last exon-exon junction (penultimate exon). These two
+        # cases are usually grouped because the rule of thumb cannot
+        # distinguish them without splice-junction-level precision.
         last = is_last_exon(pc)
         penult = is_penultimate_exon(pc)
         note = "last exon" if last else ("penultimate exon" if penult else "NMD escape")
 
         if last or penult:
-            # Check if truncated region is critical
+            # Domain presence is the proxy for "critical region truncated".
+            # Without explicit functional-domain data we conservatively assume
+            # the truncation may be tolerated → Moderate.
             domains = pc.domains or []
             has_domain = bool(domains)
             if has_domain:
@@ -173,6 +189,14 @@ def _splice_branch(
     alt_rescue: bool,
     pc,
 ) -> tuple[CriterionStrength, str]:
+    """ClinGen 2019 PVS1 sub-tree for canonical-splice variants.
+
+    The variant is in a splice donor/acceptor by VEP consequence. We use
+    a splice predictor score to decide whether the LoF interpretation is
+    supported. When no predictor is available we still award a reduced
+    strength because the canonical splice site itself is strong prior
+    evidence of LoF — but we cap at Moderate to reflect the missing
+    confirmation."""
     if not lof_mechanism:
         return CriterionStrength.NOT_MET, "Gene LoF mechanism not established for splice variant"
 
@@ -180,6 +204,10 @@ def _splice_branch(
     splice_lof_predicted = False
     splice_tool_note = "no splice tool"
 
+    # Threshold differences: SpliceAI 0.20 is the Walker 2023 calibration.
+    # SQUIRLS uses 0.50 (a higher bar) because its score distribution is
+    # different and it is NOT Walker-calibrated; we tag the note "(approx)"
+    # so reviewers can see this caveat in the evidence string.
     if sp and sp.is_available:
         if sp.tool == "spliceai" and sp.max_delta is not None:
             splice_lof_predicted = sp.max_delta >= 0.20
@@ -200,8 +228,12 @@ def _splice_branch(
                 f"{pc.consequence.value}; splice LoF predicted ({splice_tool_note}); alt transcript may rescue",
             )
     else:
-        # Splice impact uncertain or not predicted
-        exon_skip_possible = True  # conservative assumption without RNA data
+        # Splice predictor disagrees or unavailable. Without RNA-seq we cannot
+        # rule out exon skipping, so we conservatively assume it is possible
+        # and fall back to the domain-presence heuristic used in _nmd_branch.
+        # NOTE: `exon_skip_possible` is hard-coded True — the Supporting
+        # branch at the bottom is currently unreachable. See cleanup-candidates.md.
+        exon_skip_possible = True
         if exon_skip_possible:
             domains = pc.domains or []
             if domains:

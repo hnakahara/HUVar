@@ -4,7 +4,12 @@ from pydantic import BaseModel
 
 from acmg_classifier.models.enums import ACMGCriterion, CriterionDirection, CriterionStrength
 
-# Bayesian point values per strength level (Tavtigian 2020 + Bergquist 2024)
+# Bayesian point values per strength level (Tavtigian 2020 + Bergquist 2024).
+# The Bayesian formulation maps each strength level to an integer "odds-of-
+# pathogenicity" exponent so that evidence can be summed instead of resolved
+# through the legacy 2015 rule combinatorics. Sums map to categories via the
+# thresholds in classifier_bayesian.py. Benign criteria contribute negative
+# points so a single sum captures both directions.
 STRENGTH_POINTS: dict[tuple[CriterionStrength, CriterionDirection], int] = {
     (CriterionStrength.VERY_STRONG, CriterionDirection.PATHOGENIC): 8,
     (CriterionStrength.STRONG, CriterionDirection.PATHOGENIC): 4,
@@ -67,6 +72,10 @@ class CriteriaResult(BaseModel):
 
     @property
     def points(self) -> int:
+        """Bayesian contribution for this criterion (0 when not triggered or
+        suppressed). Suppression is used when a higher-tier criterion already
+        encodes the same evidence — e.g. PP3 is suppressed when PVS1 fires so
+        in-silico evidence is not double-counted."""
         if not self.triggered or self.suppressed:
             return 0
         return STRENGTH_POINTS.get((self.strength, self.direction), 0)
@@ -77,6 +86,11 @@ class CriteriaResult(BaseModel):
         criterion: ACMGCriterion,
         evidence: str = "",
     ) -> "CriteriaResult":
+        """Build a "not triggered" result that still records the criterion's
+        direction from DEFAULT_STRENGTH. We always emit a CriteriaResult per
+        criterion (rather than omitting it) so downstream code can report the
+        full evidence trail, including which criteria were explicitly checked
+        and rejected."""
         default_strength, direction = DEFAULT_STRENGTH[criterion]
         return cls(
             criterion=criterion,
@@ -93,6 +107,10 @@ class CriteriaResult(BaseModel):
         strength: Optional[CriterionStrength] = None,
         evidence: str = "",
     ) -> "CriteriaResult":
+        """Build a "triggered" result. `strength` is optional because most
+        criteria fire at their ACMG default level; only criteria with formal
+        strength modifiers (e.g. PVS1_Strong, PS1_Moderate per ClinGen SVI)
+        need to pass an explicit override."""
         default_strength, direction = DEFAULT_STRENGTH[criterion]
         return cls(
             criterion=criterion,

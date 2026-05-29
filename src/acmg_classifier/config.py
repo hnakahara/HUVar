@@ -8,7 +8,13 @@ from acmg_classifier.models.enums import Assembly, InSilicoTool, SpliceTool
 
 
 class Config(BaseSettings):
-    """Runtime configuration — populated from CLI flags or environment variables."""
+    """Runtime configuration — populated from CLI flags or environment variables.
+
+    Backed by pydantic-settings so users can override any field via
+    ACMG_* environment variables or a .env file. `extra="ignore"` lets
+    callers pass extra kwargs (e.g. from a CLI option that maps to no
+    Config field) without raising, which is essential for the
+    forward-compatible CLI flags."""
 
     model_config = SettingsConfigDict(env_prefix="ACMG_", env_file=".env", extra="ignore")
 
@@ -23,6 +29,9 @@ class Config(BaseSettings):
     @field_validator("data_dir")
     @classmethod
     def resolve_data_dir(cls, v: Path) -> Path:
+        # Resolve to an absolute path on construction so that subprocess
+        # invocations (VEP) and tabix lookups see a stable, fully-qualified
+        # location regardless of the caller's working directory.
         return v.resolve()
 
     # ---- derived paths ----

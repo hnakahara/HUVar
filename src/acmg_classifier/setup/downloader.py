@@ -37,6 +37,12 @@ _ESM1B_REL = "esm1b/esm1b_llr.sqlite"
 
 
 def validate_data_dir(cfg: Config) -> bool:
+    """Check every file the configured pipeline will need is present.
+
+    Validates only the in-silico tool actually selected (ESM1b OR
+    AlphaMissense, never both) so users don't get spurious warnings about
+    files they intentionally chose not to download — the two tools are
+    mutually exclusive at runtime."""
     ok = True
     for rel in _BASE_FILES.get(cfg.assembly, []):
         p = cfg.assembly_dir / rel
