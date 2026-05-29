@@ -14,23 +14,18 @@
 - TSV 出力 (`tsv_writer.py`) のみが pipeline / cli から使われている。
 - JSON 出力機能を将来提供する予定がなければ、モジュールごと削除可能。
 
-### 1.2 `src/acmg_classifier/utils/progress.py` — モジュール全体 (H)
-- `make_progress()` / `progress_iter()` がどこからも import されていない。
-- 現在の pipeline は structlog でログを出しているのみで rich プログレスバーは未使用。
-- 必要なら再追加すれば良いので、現状は削除候補。
-
-### 1.3 `src/acmg_classifier/criteria/pathogenic/pp5.py` — `PP5Evaluator` クラス (M)
+### 1.2 `src/acmg_classifier/criteria/pathogenic/pp5.py` — `PP5Evaluator` クラス (M)
 - `CriteriaRegistry._build_evaluators()` で意図的に登録されていない（ClinGen SVI が PP5/BP6 の廃止を勧告したため）。
 - 自動評価ループでは絶対に呼ばれない。
 - テスト (`tests/unit/test_criteria_pathogenic.py`) からのみ参照されている。
 - 互換性のために残すなら現状維持。完全削除するなら enum (`ACMGCriterion.PP5`) と DEFAULT_STRENGTH も併せて要検討。
 - マニュアルサプリメント経由での PP5 注入は `manual.py` 系では対応していない（manual list にも入っていない）。
 
-### 1.4 `src/acmg_classifier/cli.py` — `_make_config()` (H)
+### 1.3 `src/acmg_classifier/cli.py` — `_make_config()` (H)
 - `cli.py` 内で定義のみ、どこからも呼ばれていない。
 - 各サブコマンドが `Config(...)` を直接構築しているため死コード。
 
-### 1.5 `src/acmg_classifier/classification/classifier_2015.py` — `_count()` / `_has()` (M)
+### 1.4 `src/acmg_classifier/classification/classifier_2015.py` — `_count()` / `_has()` (M)
 - どちらもファイル内のみで定義されているが、`Classifier2015.classify()` から呼び出されていない。
 - テストで使われている可能性があるので、削除前に `grep -r "_count\|_has"` で確認推奨。
 

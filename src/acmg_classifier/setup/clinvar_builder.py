@@ -7,6 +7,8 @@ from pathlib import Path
 
 import structlog
 
+from acmg_classifier.utils.progress import progress_bar
+
 log = structlog.get_logger()
 
 _CREATE_TABLE = """
@@ -118,8 +120,13 @@ def build_clinvar_sqlite(xml_gz_path: Path, output_db: Path, assembly: str) -> N
 
     insert_sql = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     n_rows = 0
+    n_seen = 0
     opener = gzip.open if str(xml_gz_path).endswith(".gz") else open
-    with opener(str(xml_gz_path), "rb") as fh:  # type: ignore
+    # ClinVar XML doesn't expose a record count, so we run an indeterminate
+    # progress bar (total=None) — rich shows a spinner + the running tick
+    # count, which is sufficient feedback for a multi-minute build.
+    with opener(str(xml_gz_path), "rb") as fh, \
+            progress_bar("Parsing ClinVar XML", total=None) as advance:  # type: ignore[arg-type]
         # ("start", "end") lets us grab the root element so we can drop processed
         # ClinVarSet shells from it — otherwise cleared elements pile up under root.
         context = ET.iterparse(fh, events=("start", "end"))
@@ -133,10 +140,20 @@ def build_clinvar_sqlite(xml_gz_path: Path, output_db: Path, assembly: str) -> N
                 rows.append(row)
             elem.clear()
             root.clear()  # bound memory: discard the just-processed ClinVarSet
+            n_seen += 1
+            # Advance every 100 ClinVarSets to keep the bar update rate low —
+            # ClinVar has millions of records and per-tick draw cost adds up.
+            if n_seen % 100 == 0:
+                advance(100)
             if len(rows) >= 5000:
                 con.executemany(insert_sql, rows)
                 n_rows += len(rows)
                 rows = []
+        # Final partial-batch advance so the bar accurately reflects the
+        # total number of records processed.
+        leftover = n_seen % 100
+        if leftover:
+            advance(leftover)
 
     if rows:
         con.executemany(insert_sql, rows)

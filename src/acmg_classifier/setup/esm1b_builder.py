@@ -41,6 +41,8 @@ import zipfile
 from pathlib import Path
 from typing import Iterator
 
+from acmg_classifier.utils.progress import progress_bar
+
 _HEADER_CELL = re.compile(r"^([A-Z*])\s+(\d+)$")
 
 
@@ -135,26 +137,29 @@ def build_esm1b_sqlite(
         n_isoforms = 0
         n_rows = 0
         with zipfile.ZipFile(zip_path) as zf:
-            for name in zf.namelist():
-                if not name.endswith(".csv"):
-                    continue
-                uni_id = _uniprot_from_name(name)
-                if uni_id is None:
-                    continue
-                with zf.open(name) as fh:
-                    text = io.TextIOWrapper(fh, encoding="utf-8").read()
-                for tup in _iter_matrix_rows(uni_id, text):
-                    buf.append(tup)
-                    if len(buf) >= batch_size:
-                        conn.executemany(
-                            "INSERT OR IGNORE INTO scores VALUES (?, ?, ?, ?)",
-                            buf,
-                        )
-                        n_rows += len(buf)
-                        buf.clear()
-                n_isoforms += 1
-                if n_isoforms % 1000 == 0:
-                    print(f"  ESM1b: {n_isoforms} isoforms processed...")
+            # Pre-count CSV entries so the progress bar has an accurate total
+            # — the namelist is already in memory once the zip is open, so
+            # this is essentially free.
+            csv_names = [n for n in zf.namelist() if n.endswith(".csv")]
+            with progress_bar("Building ESM1b SQLite", total=len(csv_names)) as advance:
+                for name in csv_names:
+                    uni_id = _uniprot_from_name(name)
+                    if uni_id is None:
+                        advance()
+                        continue
+                    with zf.open(name) as fh:
+                        text = io.TextIOWrapper(fh, encoding="utf-8").read()
+                    for tup in _iter_matrix_rows(uni_id, text):
+                        buf.append(tup)
+                        if len(buf) >= batch_size:
+                            conn.executemany(
+                                "INSERT OR IGNORE INTO scores VALUES (?, ?, ?, ?)",
+                                buf,
+                            )
+                            n_rows += len(buf)
+                            buf.clear()
+                    n_isoforms += 1
+                    advance()
         if buf:
             conn.executemany(
                 "INSERT OR IGNORE INTO scores VALUES (?, ?, ?, ?)",

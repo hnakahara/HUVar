@@ -10,6 +10,7 @@ from acmg_classifier.config import Config
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.enums import ConsequenceType, InSilicoTool, SpliceTool
 from acmg_classifier.models.variant import VariantRecord
+from acmg_classifier.utils.progress import progress_bar
 
 log = structlog.get_logger()
 
@@ -75,15 +76,21 @@ class AnnotationOrchestrator:
 
         with ThreadPoolExecutor(max_workers=self._cfg.workers) as pool:
             futures = {pool.submit(_annotate_single, v): v for v in variants}
-            for future in as_completed(futures):
-                try:
-                    key, ann = future.result()
-                    results[key] = ann
-                except Exception as exc:
-                    # Per-variant failures are isolated: log and continue so a
-                    # single bad record cannot abort the whole batch.
-                    v = futures[future]
-                    log.error("annotation_failed", variant=v.key, error=str(exc))
+            # Wrap as_completed with progress_bar so the user sees one tick
+            # per completed variant rather than a long silent wait. The
+            # context manager is a no-op when stderr is not a tty.
+            with progress_bar("Annotating variants", total=len(variants)) as advance:
+                for future in as_completed(futures):
+                    try:
+                        key, ann = future.result()
+                        results[key] = ann
+                    except Exception as exc:
+                        # Per-variant failures are isolated: log and continue so
+                        # a single bad record cannot abort the whole batch.
+                        v = futures[future]
+                        log.error("annotation_failed", variant=v.key, error=str(exc))
+                    finally:
+                        advance()
 
         return results
 

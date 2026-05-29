@@ -61,6 +61,8 @@ def cli():
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),
               default=None, help="Manual evidence TSV")
 @click.option("--workers", type=int, default=4, show_default=True)
+@click.option("--no-progress", is_flag=True, default=False,
+              help="Disable progress bars (auto-disabled when stderr is not a TTY).")
 @click.pass_context
 def classify(
     ctx: click.Context,
@@ -73,10 +75,16 @@ def classify(
     spliceai_dir: Optional[Path],
     supplement: Optional[Path],
     workers: int,
+    no_progress: bool,
 ) -> None:
     """Classify all variants in VCF_FILE and write results to TSV."""
     from acmg_classifier.config import Config
     from acmg_classifier.pipeline.pipeline import run_pipeline
+    from acmg_classifier.utils import progress
+
+    # --no-progress forces bars off; otherwise auto-detect by tty.
+    if no_progress:
+        progress.set_enabled(False)
 
     cfg = Config(
         data_dir=data_dir,
@@ -162,9 +170,15 @@ def status(data_dir: Path) -> None:
 @click.option("--assembly",
               type=click.Choice([a.value for a in Assembly] + ["both"]),
               default=Assembly.GRCH38.value, show_default=True)
-def setup(data_dir: Path, assembly: str) -> None:
+@click.option("--no-progress", is_flag=True, default=False,
+              help="Disable progress bars (auto-disabled when stderr is not a TTY).")
+def setup(data_dir: Path, assembly: str, no_progress: bool) -> None:
     """Download and build all required local data files."""
     from acmg_classifier.setup.downloader import run_setup
+    from acmg_classifier.utils import progress
+
+    if no_progress:
+        progress.set_enabled(False)
 
     assemblies = list(Assembly) if assembly == "both" else [Assembly(assembly)]
     for asm in assemblies:

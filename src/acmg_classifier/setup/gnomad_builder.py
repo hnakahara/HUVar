@@ -14,6 +14,8 @@ from typing import Any
 
 import structlog
 
+from acmg_classifier.utils.progress import progress_bar
+
 log = structlog.get_logger()
 
 _CREATE_TABLE = """
@@ -187,29 +189,35 @@ def build_gnomad_duckdb(
             for vcf_path in vcf_files
         ]
 
-        if max_workers == 1:
-            for vcf_path, parquet_path in jobs:
-                name, rows = _vcf_to_parquet(
-                    str(vcf_path), str(parquet_path), str(tmp_dir), mem_limit
-                )
-                parquet_paths.append(parquet_path)
-                total_rows += rows
-                log.info("vcf_loaded", file=name, rows=rows, cumulative=total_rows)
-        else:
-            with ProcessPoolExecutor(max_workers=max_workers) as pool:
-                future_to_job = {
-                    pool.submit(
-                        _vcf_to_parquet,
-                        str(vcf_path), str(parquet_path), str(tmp_dir), mem_limit,
-                    ): parquet_path
-                    for vcf_path, parquet_path in jobs
-                }
-                for future in as_completed(future_to_job):
-                    parquet_path = future_to_job[future]
-                    name, rows = future.result()
+        # Per-chromosome progress: each VCF file is one tick. The bar
+        # makes it visible whether the bottleneck is one slow chromosome
+        # (chr1/chr2 dominate runtime in gnomAD).
+        with progress_bar("Loading gnomAD VCFs", total=len(jobs)) as advance:
+            if max_workers == 1:
+                for vcf_path, parquet_path in jobs:
+                    name, rows = _vcf_to_parquet(
+                        str(vcf_path), str(parquet_path), str(tmp_dir), mem_limit
+                    )
                     parquet_paths.append(parquet_path)
                     total_rows += rows
                     log.info("vcf_loaded", file=name, rows=rows, cumulative=total_rows)
+                    advance()
+            else:
+                with ProcessPoolExecutor(max_workers=max_workers) as pool:
+                    future_to_job = {
+                        pool.submit(
+                            _vcf_to_parquet,
+                            str(vcf_path), str(parquet_path), str(tmp_dir), mem_limit,
+                        ): parquet_path
+                        for vcf_path, parquet_path in jobs
+                    }
+                    for future in as_completed(future_to_job):
+                        parquet_path = future_to_job[future]
+                        name, rows = future.result()
+                        parquet_paths.append(parquet_path)
+                        total_rows += rows
+                        log.info("vcf_loaded", file=name, rows=rows, cumulative=total_rows)
+                        advance()
 
         # ---- マージフェーズ: Parquet → DuckDB ----
         log.info("loading_parquet_into_duckdb", files=len(parquet_paths))

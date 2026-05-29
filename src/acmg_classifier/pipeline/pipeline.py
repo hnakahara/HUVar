@@ -9,6 +9,7 @@ from acmg_classifier.io.vcf_reader import read_vcf, detect_assembly_from_header
 from acmg_classifier.io.supplement_reader import read_supplement
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.classification import ClassificationResult
+from acmg_classifier.utils.progress import track
 
 log = structlog.get_logger()
 
@@ -69,7 +70,11 @@ def run_pipeline(
     missing_keys: list[str] = []
     annotated_count = 0
 
-    for variant in variants:
+    # Classification is CPU-cheap relative to annotation but still benefits
+    # from a progress bar when there are many variants — without it the user
+    # only sees the annotation bar finish and then a silent gap until the
+    # final summary line.
+    for variant in track(variants, "Classifying", total=len(variants)):
         ann = annotations.get(variant.key)
         # Annotation failures are non-fatal — we emit a row with an empty
         # AnnotationData and surface the warning in the output so the user
