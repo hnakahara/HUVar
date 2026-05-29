@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 import sys
 from pathlib import Path
 from typing import Optional
@@ -25,16 +26,34 @@ def _make_config(ctx: click.Context, **kwargs):
 
 @click.group()
 @click.version_option()
-def cli():
-    """ACMG 2015 + ClinGen SVI variant pathogenicity classifier (fully local)."""
-    # Structured JSON-ish console logging is configured here (not at import
-    # time) so library users importing acmg_classifier modules don't get
-    # our logging config forced onto their own application.
+@click.option(
+    "--log-level",
+    type=click.Choice(["DEBUG", "INFO", "WARNING", "ERROR"], case_sensitive=False),
+    default="INFO", show_default=True,
+    help="Console log verbosity. DEBUG shows per-batch VEP commands and other "
+         "low-level detail; the default INFO suppresses them.",
+)
+def cli(log_level: str):
+    """ACMG 2015 + ClinGen SVI variant pathogenicity classifier (fully local).
+
+    Pass --log-level before the subcommand, e.g.
+    `acmg-classify --log-level DEBUG classify ...`.
+    """
+    # Structured console logging is configured here (not at import time) so
+    # library users importing acmg_classifier modules don't get our logging
+    # config forced onto their own application.
+    #
+    # make_filtering_bound_logger drops records below the chosen level at the
+    # bound-logger layer (cheaply, before processors run). Without it structlog
+    # emits every level — which is why DEBUG-level `vep_exec` lines appeared.
     structlog.configure(
         processors=[
             structlog.processors.TimeStamper(fmt="iso"),
             structlog.dev.ConsoleRenderer(),
-        ]
+        ],
+        wrapper_class=structlog.make_filtering_bound_logger(
+            getattr(logging, log_level.upper())
+        ),
     )
 
 
