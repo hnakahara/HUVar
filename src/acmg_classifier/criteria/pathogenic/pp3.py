@@ -47,15 +47,11 @@ def _esm1b_pp3(llr: float) -> CriterionStrength | None:
 
 
 def _squirls_pp3(score: float) -> CriterionStrength | None:
-    """SQUIRLS (Danis 2021) splice-pathogenicity thresholds.
+    """SQUIRLS (Danis 2021) splice-pathogenicity threshold.
 
-    Note: these are NOT Walker-calibrated and only reach Moderate — SQUIRLS
-    does not have a published OddsPath calibration for ACMG Strong. README
-    documents this caveat; the warning is also surfaced through the
-    classification result."""
+    Only ≥ 0.50 → Supporting. SQUIRLS lacks a published OddsPath calibration
+    for ACMG Moderate/Strong, so only one conservative tier is applied."""
     if score >= 0.50:
-        return CriterionStrength.MODERATE
-    if score >= 0.20:
         return CriterionStrength.SUPPORTING
     return None
 
@@ -153,7 +149,7 @@ class PP3Evaluator(CriterionEvaluator):
                     strength = _squirls_pp3(sp.raw_score)
                     # Suffix the score string so reviewers see the calibration
                     # caveat inline alongside the trigger evidence.
-                    score_str = f"SQUIRLS={sp.raw_score:.3f} (thresholds approximate)"
+                    score_str = f"SQUIRLS={sp.raw_score:.3f}"
                 else:
                     return CriteriaResult.not_met(ACMGCriterion.PP3, "Splice score unavailable")
 

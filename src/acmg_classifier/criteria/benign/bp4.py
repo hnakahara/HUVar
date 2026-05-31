@@ -48,8 +48,8 @@ def _spliceai_bp4(max_delta: float) -> CriterionStrength | None:
 
 
 def _squirls_bp4(score: float) -> CriterionStrength | None:
-    """SQUIRLS BP4 (approximate, not Walker 2023 calibrated)."""
-    if score < 0.20:
+    """SQUIRLS BP4: score < 0.50 (i.e. below the PP3 Supporting threshold)."""
+    if score < 0.50:
         return CriterionStrength.SUPPORTING
     return None
 
@@ -123,7 +123,7 @@ class BP4Evaluator(CriterionEvaluator):
                     score_str = f"SpliceAI max_delta={sp.max_delta:.3f}"
                 elif sp.tool == "squirls" and sp.raw_score is not None:
                     strength = _squirls_bp4(sp.raw_score)
-                    score_str = f"SQUIRLS={sp.raw_score:.3f} (approximate)"
+                    score_str = f"SQUIRLS={sp.raw_score:.3f}"
                 else:
                     return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score unavailable")
 
