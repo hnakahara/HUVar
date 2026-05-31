@@ -8,7 +8,7 @@ import structlog
 
 from acmg_classifier.config import Config
 from acmg_classifier.models.annotation import AnnotationData
-from acmg_classifier.models.enums import ConsequenceType, InSilicoTool, SpliceTool
+from acmg_classifier.models.enums import ConsequenceType, SpliceTool
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.utils.progress import progress_bar
 
@@ -28,6 +28,15 @@ class AnnotationOrchestrator:
         self._esm1b_path = cfg.esm1b_sqlite
         self._repeat_path = cfg.repeatmasker_bed
         self._splice = self._init_splice()
+        # SQUIRLS predictor for secondary reporting — always initialized so
+        # squirls_score is available in the TSV regardless of which splice tool
+        # is configured as primary. Reuses the same instance when SQUIRLS IS
+        # the primary tool to avoid double DB initialization.
+        if cfg.splice_tool == SpliceTool.SQUIRLS:
+            self._squirls = self._splice
+        else:
+            from acmg_classifier.local_db.splice.squirls_predictor import SquirlsPredictor
+            self._squirls = SquirlsPredictor(cfg.squirls_db_dir)
 
     def _init_vep(self):
         from acmg_classifier.local_db.vep_runner import LocalVEPRunner
@@ -125,21 +134,20 @@ class AnnotationOrchestrator:
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
 
-        # Only one missense predictor is queried per variant — config picks
-        # either ESM1b or AlphaMissense to keep the PP3/BP4 Bayesian sum
-        # honest (combining tools that share training data would inflate
-        # evidence). See PP3Evaluator for the consumer-side enforcement.
-        alphamissense = None
-        esm1b = None
-        if self._cfg.insilico_tool == InSilicoTool.ESM1B:
-            esm1b = self._lookup_esm1b(primary)
-        else:
-            alphamissense = query_alphamissense(
-                self._am_path,
-                variant.chrom, variant.pos, variant.ref, variant.alt,
-            )
+        # Both missense predictors are always queried so the TSV always carries
+        # both scores for manual review. Only the tool selected by insilico_tool
+        # config is used inside the ACMG criteria (PP3/BP4) to avoid inflating
+        # evidence by combining tools that share training data.
+        alphamissense = query_alphamissense(
+            self._am_path,
+            variant.chrom, variant.pos, variant.ref, variant.alt,
+        )
+        esm1b = self._lookup_esm1b(primary)
 
         splice = self._splice.predict(variant)
+        # When SQUIRLS is the primary splice tool, reuse the same result.
+        # When SpliceAI is primary, run SQUIRLS separately for TSV reporting.
+        squirls = splice if self._squirls is self._splice else self._squirls.predict(variant)
 
         repeat = query_repeat(self._repeat_path, variant.chrom, variant.pos)
 
@@ -152,6 +160,7 @@ class AnnotationOrchestrator:
             # unavailable lets downstream criteria treat "no data" as
             # "splice unknown" rather than "splice = 0".
             splice=splice if splice.is_available else None,
+            squirls=squirls if squirls.is_available else None,
             clinvar_vcf=clinvar_vcf_recs,
             repeat=repeat,
         )

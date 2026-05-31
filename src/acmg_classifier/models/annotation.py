@@ -115,7 +115,11 @@ class AnnotationData(BaseModel):
     gnomad: Optional[GnomADData] = None
     alphamissense: Optional[AlphaMissenseData] = None
     esm1b: Optional[ESM1bData] = None
+    # Primary splice predictor used for ACMG criteria (SpliceAI or SQUIRLS per config).
     splice: Optional[SpliceScore] = None
+    # SQUIRLS score always stored separately for TSV reporting regardless of which
+    # splice tool is configured as primary.
+    squirls: Optional[SpliceScore] = None
     clinvar_vcf: list[ClinVarRecord] = []      # for PP5
     clinvar_sqlite: list[ClinVarRecord] = []   # for PS1 / PM5 (same-AA or same-codon)
     repeat: Optional[RepeatMaskerRegion] = None

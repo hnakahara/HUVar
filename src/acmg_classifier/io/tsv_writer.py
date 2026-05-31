@@ -23,6 +23,7 @@ _ANNOTATION_HEADER = [
     "clinvar_variation_id", "clinvar_significance", "clinvar_stars",
     "alphamissense_score", "alphamissense_classification",
     "esm1b_llr",
+    "squirls_score",
     "splice_tool", "splice_score",
     "in_repeat", "repeat_class",
 ]
@@ -148,6 +149,11 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
         _fmt(es.llr, ".4f") if es and es.llr is not None else "",
     ]
 
+    sq = ann.squirls
+    squirls_cols = [
+        _fmt(sq.raw_score, ".4f") if sq and sq.raw_score is not None else "",
+    ]
+
     sp = ann.splice
     if sp and sp.is_available:
         score = sp.raw_score if sp.raw_score is not None else sp.max_delta
@@ -161,7 +167,7 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
         rep.repeat_class or "" if rep else "",
     ]
 
-    return gnomad_cols + clinvar_cols + am_cols + esm1b_cols + splice_cols + repeat_cols
+    return gnomad_cols + clinvar_cols + am_cols + esm1b_cols + squirls_cols + splice_cols + repeat_cols
 
 
 def _build_row(result: ClassificationResult) -> list[str]:

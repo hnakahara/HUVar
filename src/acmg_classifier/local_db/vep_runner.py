@@ -258,14 +258,29 @@ class LocalVEPRunner:
             self._exec_vep(input_path, output_path)
             parsed = self._parse_output(output_path)
             annotatable = [v for v in variants if self._is_annotatable(v)]
-            if len(parsed) < len(annotatable):
-                input_keys = {v.key for v in annotatable}
-                missing = [k for k in input_keys if k not in parsed]
+            # Compare against the DEDUPLICATED key set, not len(annotatable):
+            # duplicate CHROM:POS:REF:ALT rows in the batch (repeated VCF lines,
+            # multi-allelic splits collapsing to the same key, multi-sample
+            # duplicates) collapse to a single VEP output record. That is
+            # correct behaviour, so a genuine drop is only a *unique* input key
+            # that never appears in `parsed`.
+            input_keys = {v.key for v in annotatable}
+            missing = [k for k in input_keys if k not in parsed]
+            if missing:
                 log.warning(
                     "vep_batch_undercount",
-                    input=len(annotatable),
+                    unique_input=len(input_keys),
                     output=len(parsed),
+                    missing=len(missing),
                     missing_sample=missing[:5],
+                )
+            elif len(annotatable) != len(input_keys):
+                # Pure duplicates — no variant was lost. Debug-only so it is
+                # suppressed at the default INFO log level.
+                log.debug(
+                    "vep_batch_duplicate_keys",
+                    rows=len(annotatable),
+                    unique=len(input_keys),
                 )
             return parsed
 
