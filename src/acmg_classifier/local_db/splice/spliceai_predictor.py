@@ -25,6 +25,17 @@ class SpliceAIPredictor(SplicePredictor):
     def __init__(self, snv_vcf: Optional[Path], indel_vcf: Optional[Path] = None) -> None:
         self._snv_vcf = snv_vcf
         self._indel_vcf = indel_vcf
+        # Warn once at construction (not per-variant) when SpliceAI was selected
+        # but no score file is reachable — otherwise splice evidence is silently
+        # skipped and users can't tell why (e.g. forgot --spliceai-dir).
+        if not self.is_available():
+            log.warning(
+                "spliceai_unavailable",
+                snv_vcf=str(snv_vcf) if snv_vcf else None,
+                indel_vcf=str(indel_vcf) if indel_vcf else None,
+                hint="SpliceAI scoring will be skipped. Pass --spliceai-dir <dir> "
+                     "or place the VCF(s) under data/<assembly>/spliceai/.",
+            )
 
     def is_available(self) -> bool:
         snv_ok = self._snv_vcf is not None and self._snv_vcf.exists()
