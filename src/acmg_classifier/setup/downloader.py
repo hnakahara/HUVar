@@ -36,9 +36,10 @@ _AM_FILE = {
 _ESM1B_REL = "esm1b/esm1b_llr.sqlite"
 
 # SQUIRLS DB directories (assembly-specific, user must place *.db file inside)
+# Directory name follows the GCS zip naming convention: {version}_{suffix}
 _SQUIRLS_DIR = {
-    Assembly.GRCH38: "squirls/squirls-2309-hg38",
-    Assembly.GRCH37: "squirls/squirls-2309-hg19",
+    Assembly.GRCH38: "squirls/2203_hg38",
+    Assembly.GRCH37: "squirls/2203_hg19",
 }
 
 

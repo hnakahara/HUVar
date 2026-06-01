@@ -96,9 +96,11 @@ class Config(BaseSettings):
 
     @property
     def squirls_db_dir(self) -> Path:
+        # Directory name follows the GCS zip naming: {version}_{suffix}
+        # e.g. data/GRCh38/squirls/2203_hg38/
         names = {
-            Assembly.GRCH38: "squirls-2309-hg38",
-            Assembly.GRCH37: "squirls-2309-hg19",
+            Assembly.GRCH38: "2203_hg38",
+            Assembly.GRCH37: "2203_hg19",
         }
         return self.assembly_dir / "squirls" / names[self.assembly]
 

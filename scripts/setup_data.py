@@ -35,7 +35,9 @@ from pathlib import Path
 
 ENSEMBL_RELEASE = 111
 
-SQUIRLS_VERSION = "2309"
+# SQUIRLS DB version. Files hosted at storage.googleapis.com/squirls/
+# URL format: {SQUIRLS_VERSION}_{suffix}.zip  (e.g. 2203_hg38.zip)
+SQUIRLS_VERSION = "2203"
 
 URLS: dict[str, dict[str, str]] = {
     "GRCh38": {
@@ -55,9 +57,7 @@ URLS: dict[str, dict[str, str]] = {
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
             "ALL_hum_isoforms_ESM1b_LLR.zip"
         ),
-        "squirls_zip": (
-            f"https://squirls.s3.amazonaws.com/squirls-{SQUIRLS_VERSION}-hg38.zip"
-        ),
+        "squirls_zip": f"https://storage.googleapis.com/squirls/{SQUIRLS_VERSION}_hg38.zip",
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/"
             "gnomad.v4.1.constraint_metrics.tsv"
@@ -89,9 +89,7 @@ URLS: dict[str, dict[str, str]] = {
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
             "ALL_hum_isoforms_ESM1b_LLR.zip"
         ),
-        "squirls_zip": (
-            f"https://squirls.s3.amazonaws.com/squirls-{SQUIRLS_VERSION}-hg19.zip"
-        ),
+        "squirls_zip": f"https://storage.googleapis.com/squirls/{SQUIRLS_VERSION}_hg19.zip",
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/"
             "gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz"
@@ -512,7 +510,8 @@ def step_squirls(asm_dir: Path, assembly: str, urls: dict, squirls_db: Path | No
     (no download). Use --skip-squirls when using SpliceAI instead.
     """
     suffix = "hg38" if assembly == "GRCh38" else "hg19"
-    dest_dir = asm_dir / "squirls" / f"squirls-{SQUIRLS_VERSION}-{suffix}"
+    # Directory name matches the GCS zip name: {version}_{suffix}
+    dest_dir = asm_dir / "squirls" / f"{SQUIRLS_VERSION}_{suffix}"
 
     # 既存 .db を確認
     existing_db = next(dest_dir.glob("*.db"), None) if dest_dir.exists() else None
@@ -525,7 +524,7 @@ def step_squirls(asm_dir: Path, assembly: str, urls: dict, squirls_db: Path | No
 
     dest_dir.mkdir(parents=True, exist_ok=True)
 
-    # --squirls-db で既存ファイルを指定された場合はコピー/シンボリックリンク
+    # --squirls-db で既存ファイルを指定された場合はシンボリックリンク
     if squirls_db and squirls_db.exists():
         dest = dest_dir / squirls_db.name
         print(f"  シンボリックリンク作成: {squirls_db} → {dest}")
@@ -534,7 +533,7 @@ def step_squirls(asm_dir: Path, assembly: str, urls: dict, squirls_db: Path | No
 
     # zip をダウンロードして展開
     import zipfile
-    zip_path = dest_dir / f"squirls-{SQUIRLS_VERSION}-{suffix}.zip"
+    zip_path = dest_dir / f"{SQUIRLS_VERSION}_{suffix}.zip"
     _verify_size(zip_path, min_bytes=1_000_000_000, label=f"SQUIRLS {suffix} zip")
     if not zip_path.exists():
         _download(urls["squirls_zip"], zip_path, f"SQUIRLS {suffix} (~4 GB)")
