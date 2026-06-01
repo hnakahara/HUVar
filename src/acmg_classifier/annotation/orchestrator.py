@@ -58,15 +58,19 @@ class AnnotationOrchestrator:
         if self._cfg.splice_tool == SpliceTool.SPLICEAI:
             from acmg_classifier.local_db.splice.spliceai_predictor import SpliceAIPredictor
             return SpliceAIPredictor(self._cfg.spliceai_vcf, self._cfg.spliceai_indel_vcf)
+        if self._cfg.splice_tool == SpliceTool.SQUIRLS:
+            # Retained for when the SQUIRLS DB is downloadable again. Not the
+            # default and not currently selectable from the CLI.
+            from acmg_classifier.local_db.splice.squirls_predictor import SquirlsPredictor
+            return SquirlsPredictor(self._cfg.squirls_db_dir)
         # MMSplice DISABLED (dependency conflict). Code retained, commented out:
         # if self._cfg.splice_tool == SpliceTool.MMSPLICE:
         #     from acmg_classifier.local_db.splice.mmsplice_predictor import MMSplicePredictor
         #     return MMSplicePredictor(self._cfg.mmsplice_gtf, self._cfg.genome_fasta)
-        # Default: SQUIRLS. On hold until its precomputed DB is downloadable
-        # again — with no DB present, is_available()=False and splice scoring is
-        # skipped, so no splice-based evidence is contributed.
-        from acmg_classifier.local_db.splice.squirls_predictor import SquirlsPredictor
-        return SquirlsPredictor(self._cfg.squirls_db_dir)
+        # Default (SpliceTool.NONE): splice evaluation is disabled — no splice
+        # predictor, so no splice-based evidence is contributed.
+        from acmg_classifier.local_db.splice.base import NullSplicePredictor
+        return NullSplicePredictor()
 
     def annotate_batch(
         self,

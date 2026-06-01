@@ -5,7 +5,7 @@ from pathlib import Path
 import structlog
 
 from acmg_classifier.config import Config
-from acmg_classifier.models.enums import Assembly, InSilicoTool, SpliceTool
+from acmg_classifier.models.enums import Assembly, InSilicoTool
 
 log = structlog.get_logger()
 
@@ -70,10 +70,10 @@ def validate_data_dir(cfg: Config) -> bool:
         else:
             log.info("data_file_ok", path=str(p))
 
-    # Splice tool data checks are intentionally absent: SQUIRLS (default) is on
-    # hold (no downloadable DB → predictor unavailable → splice scoring skipped),
-    # SpliceAI scores are licence-gated and placed manually, and MMSplice is
-    # disabled. MMSplice GTF check retained, commented out, for later:
+    # Splice tool data checks are intentionally absent: the default is NONE
+    # (splice evaluation disabled), SpliceAI scores are licence-gated and placed
+    # manually, SQUIRLS is retained but its DB is not downloadable, and MMSplice
+    # is disabled. MMSplice GTF check retained, commented out, for later:
     # if cfg.splice_tool == SpliceTool.MMSPLICE:
     #     p = cfg.mmsplice_gtf
     #     if not p.exists():

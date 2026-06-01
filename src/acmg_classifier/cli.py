@@ -76,8 +76,8 @@ def cli(log_level: str):
               type=click.Choice([SpliceTool.SPLICEAI.value]),
               default=None,
               help="Splice predictor. Only 'spliceai' is selectable (requires an "
-                   "Illumina licence). If omitted, splice scoring is on hold "
-                   "(SQUIRLS default, skipped until its DB is available again).")
+                   "Illumina licence). If omitted, splice evaluation is disabled "
+                   "(no splice-based evidence is contributed).")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel). Overrides default data-dir lookup.")
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),
@@ -114,9 +114,9 @@ def classify(
     if no_progress:
         progress.set_enabled(False)
 
-    # --splice-tool omitted → SQUIRLS (on hold: no DB ⇒ splice scoring skipped).
+    # --splice-tool omitted → NONE (splice evaluation disabled).
     # Only 'spliceai' can be opted into explicitly.
-    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.SQUIRLS
+    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.NONE
     cfg = Config(
         data_dir=data_dir,
         assembly=Assembly(assembly) if assembly else Assembly.GRCH38,
@@ -153,8 +153,8 @@ def classify(
               type=click.Choice([SpliceTool.SPLICEAI.value]),
               default=None,
               help="Splice predictor. Only 'spliceai' is selectable (requires an "
-                   "Illumina licence). If omitted, splice scoring is on hold "
-                   "(SQUIRLS default, skipped until its DB is available again).")
+                   "Illumina licence). If omitted, splice evaluation is disabled "
+                   "(no splice-based evidence is contributed).")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel).")
 @click.pass_context
@@ -174,7 +174,7 @@ def explain(
     from acmg_classifier.config import Config
     from acmg_classifier.pipeline.pipeline import run_single
 
-    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.SQUIRLS
+    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.NONE
     cfg = Config(
         data_dir=data_dir,
         assembly=Assembly(assembly),

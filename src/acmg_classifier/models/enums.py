@@ -81,16 +81,16 @@ class InSilicoTool(str, Enum):
 
 
 class SpliceTool(str, Enum):
-    # MMSplice is currently DISABLED: its dependency chain (numpy<2,
-    # cyvcf2<=0.30.x, pyranges 0.0.x) conflicts with this project's cyvcf2/numpy.
-    # The integration code is retained (commented out across the codebase) so it
-    # can be re-enabled if the dependency situation is resolved.
-    # MMSPLICE = "mmsplice"
+    # Default: no splice evaluation at all (no splice-based evidence).
+    NONE = "none"
     SPLICEAI = "spliceai"  # requires Illumina commercial license (opt-in only)
-    # SQUIRLS is the default, but on hold until its precomputed DB is downloadable
-    # again. With no DB present the predictor reports unavailable and splice
-    # scoring is simply skipped (no splice-based evidence is contributed).
+    # SQUIRLS retained for when its precomputed DB is downloadable again; not
+    # the default and not currently selectable from the CLI.
     SQUIRLS = "squirls"
+    # MMSplice DISABLED: its dependency chain (numpy<2, cyvcf2<=0.30.x, pyranges
+    # 0.0.x) conflicts with this project's cyvcf2/numpy. The integration code is
+    # retained (commented out across the codebase) to re-enable later.
+    # MMSPLICE = "mmsplice"
 
 
 class VariantType(str, Enum):

@@ -29,3 +29,17 @@ class SplicePredictor(ABC):
         over the entire batch and cache the results, which predict() then reads.
         """
         return None
+
+
+class NullSplicePredictor(SplicePredictor):
+    """Disabled splice predictor — the default when splice evaluation is off.
+
+    Always reports unavailable so the orchestrator drops the splice record and
+    every splice-dependent criterion (PVS1 splice branch, PP3/BP4/BP7) treats
+    splice as "no data". Selected when SpliceTool.NONE is configured."""
+
+    def is_available(self) -> bool:
+        return False
+
+    def predict(self, variant: VariantRecord) -> SpliceScore:
+        return SpliceScore(tool="none", is_available=False)

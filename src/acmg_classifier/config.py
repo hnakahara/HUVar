@@ -23,7 +23,7 @@ class Config(BaseSettings):
     workers: int = 4
     vep_batch_size: int = 500
     insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
-    splice_tool: SpliceTool = SpliceTool.SQUIRLS
+    splice_tool: SpliceTool = SpliceTool.NONE
     spliceai_dir: Optional[Path] = None
 
     @field_validator("data_dir")
