@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 
 - BS2 inheritance-aware homozygote thresholds.
-- SpliceAI fallback when AlphaMissense disagrees with splice prediction
-  (SpliceAI ≥ 0.20 takes precedence).
+- `--clinvar-workers N` flag in `scripts/setup_data.py` (default 4, max 24) to
+  control ClinVar XML parse parallelism.
 - **ESM1b missense predictor** (Brandes et al. 2023, MIT-licensed) for
   PP3 / BP4 with Bergquist 2024 Table 2 strengths. Enables commercial
   deployments where AlphaMissense's CC BY-NC-SA 4.0 licence is a blocker.
@@ -23,8 +23,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **ClinVar SQLite build is now parallelized** across a worker process pool
+  (previously a single-threaded `iterparse`), substantially reducing build
+  time on multi-core machines. Worker count defaults to 4 (max 24); override
+  with `--clinvar-workers`.
+- Splice evaluation is **disabled by default** (`--splice-tool none`).
+  SpliceAI is opt-in (Illumina-licensed); when enabled it overrides the
+  missense call — including on missense variants — once its score ≥ 0.20.
 - GRCh37 transcript IDs in TSV output are now RefSeq (NM_) by default,
   matching GRCh38 behaviour.
+
+### Removed
+
+- **MMSplice integration disabled** due to a dependency conflict. The code is
+  retained (commented out) for future re-enablement.
+- **SQUIRLS** is no longer CLI-selectable; its precomputed database is no
+  longer downloadable. The predictor code is retained for when it returns.
 
 ### Fixed
 

@@ -106,13 +106,19 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 - **Inheritance-aware PM2** (BS1/BS2 also) thresholds switch between dominant
   and recessive frequencies using a per-gene inheritance table.
 - **In silico prediction**: AlphaMissense (default, non-commercial) or
-  **ESM1b** (MIT-licensed, commercial-use ready) for missense; SQUIRLS
-  (default) or SpliceAI for splice. SpliceAI overrides the missense call
-  when its score crosses the high-impact threshold. Both missense
-  predictors use Bergquist 2024 Table 2 strengths.
+  **ESM1b** (MIT-licensed, commercial-use ready) for missense. Splice
+  prediction is **disabled by default** (`--splice-tool none`); **SpliceAI**
+  can be enabled opt-in (Illumina-licensed). When enabled, SpliceAI overrides
+  the missense call — including on missense variants — when its score crosses
+  the high-impact threshold (≥ 0.20). Both missense predictors use Bergquist
+  2024 Table 2 strengths.
+  > _SQUIRLS is retained in the code but currently unavailable (its precomputed
+  > DB is no longer downloadable). MMSplice integration exists but is disabled
+  > due to a dependency conflict._
 - **Fully offline** at classification time. Local databases include:
   Ensembl reference genome, VEP cache, gnomAD (DuckDB), ClinVar (VCF +
-  derived SQLite for PS1/PM5), AlphaMissense, RepeatMasker, optional SpliceAI.
+  derived SQLite for PS1/PM5), AlphaMissense, RepeatMasker, and optional
+  SpliceAI (opt-in, Illumina-licensed).
 - **Manual evidence supplement**: per-variant TSV overrides for PS3/PP1/PM3/
   etc. that the auto-pipeline cannot derive (functional studies, family
   segregation, etc.).
@@ -156,7 +162,6 @@ Required:
 Optional:
 
 - **wget** or **curl** — data download (one of them is required)
-- **java** (>= 11) — only needed if SQUIRLS is used as the splice predictor
 
 ### Python dependencies
 
@@ -224,6 +229,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--gnomad-vcf-dir PATH` | Use existing gnomAD `*.vcf.bgz` files |
 | `--gnomad-chromosomes CHR ...` | Subset of chromosomes (default all 24) |
 | `--gnomad-workers N` | DuckDB build parallelism (default = CPU - 1) |
+| `--clinvar-workers N` | ClinVar XML parse parallelism (default 4, max 24) |
 | `--skip-gnomad` | Skip gnomAD download (~ 300 GB) |
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
@@ -275,8 +281,8 @@ Full option list:
 | `--data-dir PATH` | path | `./data` | Data root |
 | `--assembly {GRCh37,GRCh38}` | str | auto-detect from VCF header → fallback `GRCh38` | Force a specific assembly |
 | `--insilico-tool {alphamissense,esm1b}` | str | `alphamissense` | Missense predictor used for PP3/BP4 |
-| `--splice-tool {squirls,spliceai}` | str | `squirls` | Splice predictor used for PP3/BP4. SpliceAI takes precedence over AlphaMissense when its score ≥ 0.20. |
-| `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory |
+| `--splice-tool spliceai` | str | _none_ (splice eval disabled) | Splice predictor used for PP3/BP4. Only `spliceai` is selectable (Illumina-licensed); omit it to disable splice scoring entirely. SpliceAI takes precedence over the missense call — including on missense variants — when its score ≥ 0.20. |
+| `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory (required if VCFs are not in the default location) |
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
@@ -287,7 +293,7 @@ acmg-classify classify panel.vcf.gz \
     -o panel_results.tsv \
     --assembly GRCh38 \
     --insilico-tool alphamissense \
-    --splice-tool squirls \
+    --splice-tool spliceai --spliceai-dir /path/to/spliceai \
     --supplement manual_evidence.tsv \
     --workers 8
 ```

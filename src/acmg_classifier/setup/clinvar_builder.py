@@ -1,8 +1,11 @@
 """Build ClinVar SQLite from XML for PS1/PM5/PS3/PP1/PS4 lookups."""
 from __future__ import annotations
+import gzip
+import multiprocessing as mp
 import re
 import sqlite3
 import xml.etree.ElementTree as ET
+from collections.abc import Iterator
 from pathlib import Path
 
 import structlog
@@ -10,6 +13,11 @@ import structlog
 from acmg_classifier.utils.progress import progress_bar
 
 log = structlog.get_logger()
+
+# Each parse task carries this many <ClinVarSet> records. Batching keeps the
+# inter-process pickling/IPC overhead negligible relative to the parse+regex
+# cost that the workers actually do.
+_BATCH_SIZE = 200
 
 _CREATE_TABLE = """
 CREATE TABLE IF NOT EXISTS variants (
@@ -113,10 +121,86 @@ def _parse_aa_change(hgvs_p: str | None) -> tuple[str | None, int | None]:
     return None, None
 
 
-def build_clinvar_sqlite(xml_gz_path: Path, output_db: Path, assembly: str) -> None:
-    """Parse ClinVar XML and populate SQLite for PS1/PM5 queries."""
-    import gzip
+def _iter_clinvarset_chunks(fh, read_size: int = 1 << 20) -> Iterator[str]:
+    """Yield each ``<ClinVarSet>...</ClinVarSet>`` block as a self-contained string.
 
+    This is a cheap text scan — no XML parsing — so the (single-threaded,
+    gzip-bound) main process spends almost nothing here and the expensive
+    ElementTree parse + regex mining happens in the worker pool. Each
+    ClinVarSet element is independent, so a sliced block parses standalone
+    via ``ET.fromstring``.
+    """
+    buf = ""
+    start_tag = "<ClinVarSet"
+    end_tag = "</ClinVarSet>"
+    while True:
+        data = fh.read(read_size)
+        if not data:
+            break
+        buf += data
+        while True:
+            end = buf.find(end_tag)
+            if end == -1:
+                break  # need more data for a complete block
+            end += len(end_tag)
+            start = buf.find(start_tag)
+            if start == -1 or start > end:
+                # Stray closing tag with no matching open in the buffer — drop
+                # the consumed prefix and keep scanning. (Should not happen on
+                # well-formed ClinVar XML.)
+                buf = buf[end:]
+                continue
+            yield buf[start:end]
+            buf = buf[end:]  # trim so the buffer stays ~one record long
+
+
+def _batched(it: Iterator[str], n: int) -> Iterator[list[str]]:
+    batch: list[str] = []
+    for item in it:
+        batch.append(item)
+        if len(batch) >= n:
+            yield batch
+            batch = []
+    if batch:
+        yield batch
+
+
+def _parse_chunk_batch(args: tuple[list[str], str]) -> tuple[int, list[tuple]]:
+    """Worker: parse a batch of ClinVarSet strings into row tuples.
+
+    Returns ``(n_chunks, rows)`` — n_chunks drives the progress bar (rows is
+    already filtered, so it under-counts processed records).
+    """
+    chunks, assembly = args
+    rows: list[tuple] = []
+    for chunk in chunks:
+        try:
+            elem = ET.fromstring(chunk)
+        except ET.ParseError:
+            continue
+        row = _parse_clinvarset(elem, assembly)
+        if row:
+            rows.append(row)
+    return len(chunks), rows
+
+
+def build_clinvar_sqlite(
+    xml_gz_path: Path,
+    output_db: Path,
+    assembly: str,
+    workers: int | None = None,
+) -> None:
+    """Parse ClinVar XML and populate SQLite for PS1/PM5 queries.
+
+    Parsing is parallelized across a process pool: the main process streams the
+    gzip and splits it into per-record strings (cheap), workers do the costly
+    ElementTree parse + free-text regex mining, and the main process inserts the
+    returned rows. This keeps all cores busy instead of bottlenecking on a
+    single-threaded ``iterparse``.
+
+    ``workers`` sets the number of parse processes. ``None`` (default) uses 4.
+    Values are clamped to the range 1..24.
+    """
     log.info("building_clinvar_sqlite", output=str(output_db))
     output_db.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(str(output_db))
@@ -131,39 +215,33 @@ def build_clinvar_sqlite(xml_gz_path: Path, output_db: Path, assembly: str) -> N
     insert_sql = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     n_rows = 0
     n_seen = 0
-    opener = gzip.open if str(xml_gz_path).endswith(".gz") else open
+    # Default to 4 parse processes; cap at 24 so the main process (gzip
+    # decompression + SQLite inserts) isn't starved and IPC stays manageable.
+    n_workers = min(24, max(1, workers if workers is not None else 4))
+    # Read decompressed text directly; ClinVar XML is declared UTF-8.
+    if str(xml_gz_path).endswith(".gz"):
+        fh = gzip.open(str(xml_gz_path), "rt", encoding="utf-8")
+    else:
+        fh = open(str(xml_gz_path), "rt", encoding="utf-8")
+
     # ClinVar XML doesn't expose a record count, so we run an indeterminate
     # progress bar (total=None) — rich shows a spinner + the running tick
     # count, which is sufficient feedback for a multi-minute build.
-    with opener(str(xml_gz_path), "rb") as fh, \
-            progress_bar("Parsing ClinVar XML", total=None) as advance:  # type: ignore[arg-type]
-        # ("start", "end") lets us grab the root element so we can drop processed
-        # ClinVarSet shells from it — otherwise cleared elements pile up under root.
-        context = ET.iterparse(fh, events=("start", "end"))
-        _, root = next(context)  # ReleaseSet root element
-        rows = []
-        for event, elem in context:
-            if event != "end" or elem.tag != "ClinVarSet":
-                continue
-            row = _parse_clinvarset(elem, assembly)
-            if row:
-                rows.append(row)
-            elem.clear()
-            root.clear()  # bound memory: discard the just-processed ClinVarSet
-            n_seen += 1
-            # Advance every 100 ClinVarSets to keep the bar update rate low —
-            # ClinVar has millions of records and per-tick draw cost adds up.
-            if n_seen % 100 == 0:
-                advance(100)
-            if len(rows) >= 5000:
-                con.executemany(insert_sql, rows)
-                n_rows += len(rows)
-                rows = []
-        # Final partial-batch advance so the bar accurately reflects the
-        # total number of records processed.
-        leftover = n_seen % 100
-        if leftover:
-            advance(leftover)
+    rows: list[tuple] = []
+    with fh, progress_bar("Parsing ClinVar XML", total=None) as advance, \
+            mp.Pool(processes=n_workers) as pool:  # type: ignore[arg-type]
+        batches = ((b, assembly) for b in _batched(_iter_clinvarset_chunks(fh), _BATCH_SIZE))
+        # imap_unordered: results stream back as workers finish, overlapping
+        # parsing with the main thread's SQLite inserts.
+        for n_chunks, batch_rows in pool.imap_unordered(_parse_chunk_batch, batches):
+            n_seen += n_chunks
+            advance(n_chunks)
+            if batch_rows:
+                rows.extend(batch_rows)
+                if len(rows) >= 5000:
+                    con.executemany(insert_sql, rows)
+                    n_rows += len(rows)
+                    rows = []
 
     if rows:
         con.executemany(insert_sql, rows)
@@ -171,7 +249,7 @@ def build_clinvar_sqlite(xml_gz_path: Path, output_db: Path, assembly: str) -> N
     con.commit()
 
     # Build indexes once, on the fully loaded table.
-    log.info("clinvar_building_indexes", rows=n_rows)
+    log.info("clinvar_building_indexes", rows=n_rows, seen=n_seen)
     con.executescript(_CREATE_INDEXES)
     con.commit()
     con.close()
