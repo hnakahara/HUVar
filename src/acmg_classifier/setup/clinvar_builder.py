@@ -64,7 +64,17 @@ _FUNCTIONAL_NEG = re.compile(
     r"\bnot\b[^.]{0,30}?(affect|damaging|deleterious|pathogenic|functional)|"
     r"without[^.]{0,30}?(affect|alter|impair|effect|chang)|"
     r"functionally (neutral|benign|tolerated|silent)|\btolerated\b|"
-    r"no effect on (protein |enzyme |splic\w* )?function",
+    r"no effect on (protein |enzyme |splic\w* )?function|"
+    # In-silico / computational predictions are NOT functional assays. PS3
+    # requires wet-lab evidence, so exclude SCVs whose damaging signal comes
+    # from prediction tools (e.g. "tools predict the variant abolishes a
+    # splicing donor site"), and those explicitly stating the effect is
+    # unconfirmed by functional studies or lacks experimental evidence.
+    r"\bin[\s-]?silico\b|"
+    r"computational (tool|method|analys|predict|algorithm|approach|program|software)|"
+    r"predict\w*[^.]{0,60}?(abolish|disrupt|damag|impact|affect|effect|splic|donor|acceptor|function)|"
+    r"yet to be (confirmed|validated|established|proven)|"
+    r"no (experimental|functional)[^.]{0,40}?(evidence|stud|data|assay)",
     re.IGNORECASE,
 )
 # Positive indicators of cosegregation (PP1).
