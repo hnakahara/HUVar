@@ -142,6 +142,16 @@ def classify(
 @click.option("--data-dir", type=click.Path(path_type=Path), default=Path("./data"))
 @click.option("--assembly", type=click.Choice([a.value for a in Assembly]),
               default=Assembly.GRCH38.value, show_default=True)
+@click.option("--insilico-tool",
+              type=click.Choice([t.value for t in InSilicoTool]),
+              default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
+@click.option("--splice-tool",
+              type=click.Choice([SpliceTool.MMSPLICE.value, SpliceTool.SPLICEAI.value]),
+              default=SpliceTool.MMSPLICE.value, show_default=True,
+              help="Splice predictor. mmsplice (open-source, runtime; needs the "
+                   "[mmsplice] extra) or spliceai (requires Illumina licence).")
+@click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
+              help="Directory containing SpliceAI VCF files (snv + indel).")
 @click.pass_context
 def explain(
     ctx: click.Context,
@@ -151,12 +161,21 @@ def explain(
     alt: str,
     data_dir: Path,
     assembly: str,
+    insilico_tool: str,
+    splice_tool: str,
+    spliceai_dir: Optional[Path],
 ) -> None:
     """Show detailed classification for a single variant (CHROM POS REF ALT)."""
     from acmg_classifier.config import Config
     from acmg_classifier.pipeline.pipeline import run_single
 
-    cfg = Config(data_dir=data_dir, assembly=Assembly(assembly))
+    cfg = Config(
+        data_dir=data_dir,
+        assembly=Assembly(assembly),
+        insilico_tool=InSilicoTool(insilico_tool),
+        splice_tool=SpliceTool(splice_tool),
+        spliceai_dir=spliceai_dir,
+    )
     run_single(chrom, pos, ref, alt, cfg)
 
 
