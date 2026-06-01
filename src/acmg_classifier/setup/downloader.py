@@ -70,18 +70,18 @@ def validate_data_dir(cfg: Config) -> bool:
         else:
             log.info("data_file_ok", path=str(p))
 
-    if cfg.splice_tool == SpliceTool.MMSPLICE:
-        p = cfg.mmsplice_gtf
-        if not p.exists():
-            log.warning(
-                "missing_mmsplice_gtf",
-                path=str(p),
-                hint="Run setup to fetch the GTF, and install the optional "
-                     "dependency: pip install -e .[mmsplice]",
-            )
-            ok = False
-        else:
-            log.info("mmsplice_gtf_ok", path=str(p))
+    # Splice tool data checks are intentionally absent: SQUIRLS (default) is on
+    # hold (no downloadable DB → predictor unavailable → splice scoring skipped),
+    # SpliceAI scores are licence-gated and placed manually, and MMSplice is
+    # disabled. MMSplice GTF check retained, commented out, for later:
+    # if cfg.splice_tool == SpliceTool.MMSPLICE:
+    #     p = cfg.mmsplice_gtf
+    #     if not p.exists():
+    #         log.warning("missing_mmsplice_gtf", path=str(p),
+    #                     hint="Run setup to fetch the GTF, and: pip install -e .[mmsplice]")
+    #         ok = False
+    #     else:
+    #         log.info("mmsplice_gtf_ok", path=str(p))
 
     return ok
 
@@ -100,10 +100,10 @@ def print_status(data_dir: Path) -> None:
             p = asm_dir / rel
             status = "[green]OK[/green]" if p.exists() else "[red]MISSING[/red]"
             table.add_row(asm.value, rel, status)
-        # MMSplice GTF (open-source splice tool, optional dependency)
-        gtf_p = asm_dir / _MMSPLICE_GTF[asm]
-        status = "[green]OK[/green]" if gtf_p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
-        table.add_row(asm.value, _MMSPLICE_GTF[asm], status)
+        # MMSplice GTF row DISABLED (MMSplice integration is off). Retained:
+        # gtf_p = asm_dir / _MMSPLICE_GTF[asm]
+        # status = "[green]OK[/green]" if gtf_p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
+        # table.add_row(asm.value, _MMSPLICE_GTF[asm], status)
     # ESM1b is assembly-independent; show it once.
     p = data_dir / _ESM1B_REL
     status = "[green]OK[/green]" if p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
@@ -119,11 +119,12 @@ def run_setup(cfg: Config) -> None:
     console.print("Assembly: " + cfg.assembly.value)
     console.print("\nThe following data files are required (~60-65 GB per assembly).")
     console.print("Download and place them in: " + str(cfg.assembly_dir))
-    if cfg.splice_tool == SpliceTool.MMSPLICE:
-        console.print(
-            "\n[yellow]MMSplice:[/yellow] install the optional dependency "
-            "(pip install -e .[mmsplice]) for runtime splice scoring. The "
-            f"protein-coding GTF is fetched automatically to:\n  {cfg.mmsplice_gtf}"
-        )
+    # MMSplice setup guidance DISABLED (integration is off). Retained:
+    # if cfg.splice_tool == SpliceTool.MMSPLICE:
+    #     console.print(
+    #         "\n[yellow]MMSplice:[/yellow] install the optional dependency "
+    #         "(pip install -e .[mmsplice]) for runtime splice scoring. The "
+    #         f"protein-coding GTF is fetched automatically to:\n  {cfg.mmsplice_gtf}"
+    #     )
     console.print("\nSee the project documentation for download URLs and conversion scripts.")
     validate_data_dir(cfg)

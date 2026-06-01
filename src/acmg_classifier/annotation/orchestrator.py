@@ -58,14 +58,15 @@ class AnnotationOrchestrator:
         if self._cfg.splice_tool == SpliceTool.SPLICEAI:
             from acmg_classifier.local_db.splice.spliceai_predictor import SpliceAIPredictor
             return SpliceAIPredictor(self._cfg.spliceai_vcf, self._cfg.spliceai_indel_vcf)
-        if self._cfg.splice_tool == SpliceTool.SQUIRLS:
-            # Retained for backward compatibility; no longer reachable from the
-            # CLI because the SQUIRLS precomputed DB is no longer downloadable.
-            from acmg_classifier.local_db.splice.squirls_predictor import SquirlsPredictor
-            return SquirlsPredictor(self._cfg.squirls_db_dir)
-        # Default open-source tool: MMSplice (runtime computation, optional dep).
-        from acmg_classifier.local_db.splice.mmsplice_predictor import MMSplicePredictor
-        return MMSplicePredictor(self._cfg.mmsplice_gtf, self._cfg.genome_fasta)
+        # MMSplice DISABLED (dependency conflict). Code retained, commented out:
+        # if self._cfg.splice_tool == SpliceTool.MMSPLICE:
+        #     from acmg_classifier.local_db.splice.mmsplice_predictor import MMSplicePredictor
+        #     return MMSplicePredictor(self._cfg.mmsplice_gtf, self._cfg.genome_fasta)
+        # Default: SQUIRLS. On hold until its precomputed DB is downloadable
+        # again — with no DB present, is_available()=False and splice scoring is
+        # skipped, so no splice-based evidence is contributed.
+        from acmg_classifier.local_db.splice.squirls_predictor import SquirlsPredictor
+        return SquirlsPredictor(self._cfg.squirls_db_dir)
 
     def annotate_batch(
         self,
@@ -81,11 +82,10 @@ class AnnotationOrchestrator:
         disk waits rather than CPU work."""
         vep_results = self._vep.annotate_batch(variants, batch_size=self._cfg.vep_batch_size)
 
-        # Runtime splice predictors (MMSplice) score the whole batch in one
-        # model pass here, on the main thread, before the per-variant thread
-        # pool starts — TensorFlow/Keras inference is not thread-safe. For the
-        # tabix-backed predictors (SpliceAI/SQUIRLS) this is a no-op.
-        self._splice.precompute(variants)
+        # MMSplice batch precompute DISABLED (MMSplice integration is off).
+        # The tabix-backed predictors (SpliceAI/SQUIRLS) look up precomputed
+        # scores per variant and need no batch step. Re-enable with MMSplice:
+        # self._splice.precompute(variants)
 
         results: dict[str, AnnotationData] = {}
 

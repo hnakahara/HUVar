@@ -509,7 +509,10 @@ def step_repeatmasker(asm_dir: Path, assembly: str, urls: dict) -> bool:
 
 
 def step_mmsplice_gtf(asm_dir: Path, assembly: str, urls: dict, skip: bool) -> bool:
-    """Download the Ensembl GTF and filter to protein-coding genes for MMSplice.
+    """DISABLED — not registered in the steps list (MMSplice integration is off).
+    Retained for re-enabling later. See the SpliceTool enum for context.
+
+    Download the Ensembl GTF and filter to protein-coding genes for MMSplice.
 
     MMSplice (the open-source runtime splice predictor) needs a gene-annotation
     GTF. The upstream docs recommend filtering to protein-coding genes, which we
@@ -574,8 +577,9 @@ def main() -> None:
                         help="VEP キャッシュダウンロードをスキップ (~14 GB)")
     parser.add_argument("--skip-esm1b", action="store_true",
                         help="ESM1b ダウンロード・構築をスキップ (~1.34 GB)")
-    parser.add_argument("--skip-mmsplice-gtf", action="store_true",
-                        help="MMSplice 用 GTF のダウンロード・フィルタをスキップ (~50 MB)")
+    # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
+    # parser.add_argument("--skip-mmsplice-gtf", action="store_true",
+    #                     help="MMSplice 用 GTF のダウンロード・フィルタをスキップ (~50 MB)")
     args = parser.parse_args()
 
     data_dir = args.data_dir.resolve()
@@ -598,7 +602,8 @@ def main() -> None:
         ("ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls)),
         ("AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
         ("ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
-        ("MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
+        # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
+        # ("MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
         ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
         ("gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.gnomad_workers)),
         ("RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),

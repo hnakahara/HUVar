@@ -59,12 +59,14 @@ dev = [
     "pytest-asyncio>=0.23",
     "pytest-cov>=5.0",
 ]
-# MMSplice runtime splice scoring. Pulls in TensorFlow/Keras, so it is kept
-# optional — only needed when --splice-tool mmsplice (the default open-source
-# tool) is actually used. Install with: pip install -e .[mmsplice]
-mmsplice = [
-    "mmsplice>=2.3",
-]
+# MMSplice DISABLED: its dependency chain (numpy<2, cyvcf2<=0.30.x, pyranges
+# 0.0.x) conflicts with this project's cyvcf2/numpy. Retained, commented out,
+# to re-enable if the dependency situation is resolved. Would also need
+# "setuptools<81" (mmsplice imports pkg_resources at module load).
+# mmsplice = [
+#     "mmsplice>=2.3",
+#     "setuptools<81",
+# ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/acmg_classifier"]

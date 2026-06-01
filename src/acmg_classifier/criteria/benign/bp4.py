@@ -54,14 +54,15 @@ def _squirls_bp4(score: float) -> CriterionStrength | None:
     return None
 
 
-def _mmsplice_bp4(delta_logit_psi: float) -> CriterionStrength | None:
-    """MMSplice BP4: |delta_logit_psi| < 0.5 (minimal predicted splice effect).
-
-    Well below the |delta_logit_psi| ≥ 2 PP3 (splice-impact) threshold, so a
-    near-zero score is conservative evidence of no splice effect."""
-    if abs(delta_logit_psi) < 0.5:
-        return CriterionStrength.SUPPORTING
-    return None
+# MMSplice DISABLED (dependency conflict). Retained, commented out, for later:
+# def _mmsplice_bp4(delta_logit_psi: float) -> CriterionStrength | None:
+#     """MMSplice BP4: |delta_logit_psi| < 0.5 (minimal predicted splice effect).
+#
+#     Well below the |delta_logit_psi| ≥ 2 PP3 (splice-impact) threshold, so a
+#     near-zero score is conservative evidence of no splice effect."""
+#     if abs(delta_logit_psi) < 0.5:
+#         return CriterionStrength.SUPPORTING
+#     return None
 
 
 class BP4Evaluator(CriterionEvaluator):
@@ -134,9 +135,10 @@ class BP4Evaluator(CriterionEvaluator):
                 elif sp.tool == "squirls" and sp.raw_score is not None:
                     strength = _squirls_bp4(sp.raw_score)
                     score_str = f"SQUIRLS={sp.raw_score:.3f}"
-                elif sp.tool == "mmsplice" and sp.raw_score is not None:
-                    strength = _mmsplice_bp4(sp.raw_score)
-                    score_str = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
+                # MMSplice DISABLED — retained, commented out, for later:
+                # elif sp.tool == "mmsplice" and sp.raw_score is not None:
+                #     strength = _mmsplice_bp4(sp.raw_score)
+                #     score_str = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
                 else:
                     return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score unavailable")
 

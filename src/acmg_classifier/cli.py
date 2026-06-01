@@ -73,10 +73,11 @@ def cli(log_level: str):
               type=click.Choice([t.value for t in InSilicoTool]),
               default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
 @click.option("--splice-tool",
-              type=click.Choice([SpliceTool.MMSPLICE.value, SpliceTool.SPLICEAI.value]),
-              default=SpliceTool.MMSPLICE.value, show_default=True,
-              help="Splice predictor. mmsplice (open-source, runtime; needs the "
-                   "[mmsplice] extra) or spliceai (requires Illumina licence).")
+              type=click.Choice([SpliceTool.SPLICEAI.value]),
+              default=None,
+              help="Splice predictor. Only 'spliceai' is selectable (requires an "
+                   "Illumina licence). If omitted, splice scoring is on hold "
+                   "(SQUIRLS default, skipped until its DB is available again).")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel). Overrides default data-dir lookup.")
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),
@@ -113,11 +114,14 @@ def classify(
     if no_progress:
         progress.set_enabled(False)
 
+    # --splice-tool omitted → SQUIRLS (on hold: no DB ⇒ splice scoring skipped).
+    # Only 'spliceai' can be opted into explicitly.
+    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.SQUIRLS
     cfg = Config(
         data_dir=data_dir,
         assembly=Assembly(assembly) if assembly else Assembly.GRCH38,
         insilico_tool=InSilicoTool(insilico_tool),
-        splice_tool=SpliceTool(splice_tool),
+        splice_tool=splice,
         spliceai_dir=spliceai_dir,
         workers=workers,
     )
@@ -146,10 +150,11 @@ def classify(
               type=click.Choice([t.value for t in InSilicoTool]),
               default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
 @click.option("--splice-tool",
-              type=click.Choice([SpliceTool.MMSPLICE.value, SpliceTool.SPLICEAI.value]),
-              default=SpliceTool.MMSPLICE.value, show_default=True,
-              help="Splice predictor. mmsplice (open-source, runtime; needs the "
-                   "[mmsplice] extra) or spliceai (requires Illumina licence).")
+              type=click.Choice([SpliceTool.SPLICEAI.value]),
+              default=None,
+              help="Splice predictor. Only 'spliceai' is selectable (requires an "
+                   "Illumina licence). If omitted, splice scoring is on hold "
+                   "(SQUIRLS default, skipped until its DB is available again).")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel).")
 @click.pass_context
@@ -162,18 +167,19 @@ def explain(
     data_dir: Path,
     assembly: str,
     insilico_tool: str,
-    splice_tool: str,
+    splice_tool: Optional[str],
     spliceai_dir: Optional[Path],
 ) -> None:
     """Show detailed classification for a single variant (CHROM POS REF ALT)."""
     from acmg_classifier.config import Config
     from acmg_classifier.pipeline.pipeline import run_single
 
+    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.SQUIRLS
     cfg = Config(
         data_dir=data_dir,
         assembly=Assembly(assembly),
         insilico_tool=InSilicoTool(insilico_tool),
-        splice_tool=SpliceTool(splice_tool),
+        splice_tool=splice,
         spliceai_dir=spliceai_dir,
     )
     run_single(chrom, pos, ref, alt, cfg)

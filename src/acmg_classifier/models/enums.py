@@ -81,10 +81,15 @@ class InSilicoTool(str, Enum):
 
 
 class SpliceTool(str, Enum):
-    MMSPLICE = "mmsplice"  # open-source default (runtime computation, optional dep)
-    SPLICEAI = "spliceai"  # requires Illumina commercial license
-    # SQUIRLS retained for backward compatibility but no longer selectable:
-    # its precomputed database is no longer downloadable from the upstream host.
+    # MMSplice is currently DISABLED: its dependency chain (numpy<2,
+    # cyvcf2<=0.30.x, pyranges 0.0.x) conflicts with this project's cyvcf2/numpy.
+    # The integration code is retained (commented out across the codebase) so it
+    # can be re-enabled if the dependency situation is resolved.
+    # MMSPLICE = "mmsplice"
+    SPLICEAI = "spliceai"  # requires Illumina commercial license (opt-in only)
+    # SQUIRLS is the default, but on hold until its precomputed DB is downloadable
+    # again. With no DB present the predictor reports unavailable and splice
+    # scoring is simply skipped (no splice-based evidence is contributed).
     SQUIRLS = "squirls"
 
 

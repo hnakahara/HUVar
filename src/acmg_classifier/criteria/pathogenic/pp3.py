@@ -56,17 +56,18 @@ def _squirls_pp3(score: float) -> CriterionStrength | None:
     return None
 
 
-def _mmsplice_pp3(delta_logit_psi: float) -> CriterionStrength | None:
-    """MMSplice (Cheng et al., Genome Biology 2019) splice-effect threshold.
-
-    delta_logit_psi is on a logit scale; |delta_logit_psi| > 2 is a strong
-    splice effect per the MMSplice paper. We judge by absolute value because
-    both strong exclusion (negative) and strong inclusion shifts (positive)
-    are aberrant splicing. No published OddsPath calibration to ACMG tiers
-    exists, so only the conservative Supporting tier is awarded."""
-    if abs(delta_logit_psi) >= 2.0:
-        return CriterionStrength.SUPPORTING
-    return None
+# MMSplice DISABLED (dependency conflict). Retained, commented out, for later:
+# def _mmsplice_pp3(delta_logit_psi: float) -> CriterionStrength | None:
+#     """MMSplice (Cheng et al., Genome Biology 2019) splice-effect threshold.
+#
+#     delta_logit_psi is on a logit scale; |delta_logit_psi| > 2 is a strong
+#     splice effect per the MMSplice paper. We judge by absolute value because
+#     both strong exclusion (negative) and strong inclusion shifts (positive)
+#     are aberrant splicing. No published OddsPath calibration to ACMG tiers
+#     exists, so only the conservative Supporting tier is awarded."""
+#     if abs(delta_logit_psi) >= 2.0:
+#         return CriterionStrength.SUPPORTING
+#     return None
 
 
 def _spliceai_pp3(max_delta: float) -> CriterionStrength | None:
@@ -163,9 +164,10 @@ class PP3Evaluator(CriterionEvaluator):
                     # Suffix the score string so reviewers see the calibration
                     # caveat inline alongside the trigger evidence.
                     score_str = f"SQUIRLS={sp.raw_score:.3f}"
-                elif sp.tool == "mmsplice" and sp.raw_score is not None:
-                    strength = _mmsplice_pp3(sp.raw_score)
-                    score_str = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
+                # MMSplice DISABLED — retained, commented out, for later:
+                # elif sp.tool == "mmsplice" and sp.raw_score is not None:
+                #     strength = _mmsplice_pp3(sp.raw_score)
+                #     score_str = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
                 else:
                     return CriteriaResult.not_met(ACMGCriterion.PP3, "Splice score unavailable")
 

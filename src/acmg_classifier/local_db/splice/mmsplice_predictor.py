@@ -1,4 +1,14 @@
-"""MMSplice runtime splice predictor (open-source default).
+"""MMSplice runtime splice predictor — CURRENTLY DISABLED.
+
+This module is intentionally left in the tree but is NOT wired into the
+pipeline: the orchestrator's MMSplice branch, the SpliceTool.MMSPLICE enum
+value, the criteria branches, the setup-data step, and the pyproject extra are
+all commented out. Reason: mmsplice's dependency chain (numpy<2, cyvcf2<=0.30.x,
+pyranges 0.0.x) conflicts with this project's cyvcf2/numpy. Re-enable by
+uncommenting those references once the dependency conflict is resolved.
+
+----------------------------------------------------------------------------
+MMSplice runtime splice predictor (open-source default).
 
 MMSplice (gagneurlab/MMSplice_MTSplice) computes splice-effect scores at runtime
 from a gene-annotation GTF, a reference FASTA, and the batch VCF. Unlike the

@@ -215,10 +215,11 @@ def _splice_branch(
         elif sp.tool == "squirls" and sp.raw_score is not None:
             splice_lof_predicted = sp.raw_score >= 0.50
             splice_tool_note = f"SQUIRLS={sp.raw_score:.3f} (approx)"
-        elif sp.tool == "mmsplice" and sp.raw_score is not None:
-            # |delta_logit_psi| >= 2 → strong predicted splice effect (MMSplice 2019).
-            splice_lof_predicted = abs(sp.raw_score) >= 2.0
-            splice_tool_note = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
+        # MMSplice DISABLED — retained, commented out, for later:
+        # elif sp.tool == "mmsplice" and sp.raw_score is not None:
+        #     # |delta_logit_psi| >= 2 → strong predicted splice effect (MMSplice 2019).
+        #     splice_lof_predicted = abs(sp.raw_score) >= 2.0
+        #     splice_tool_note = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
 
     if splice_lof_predicted:
         if not alt_rescue:
