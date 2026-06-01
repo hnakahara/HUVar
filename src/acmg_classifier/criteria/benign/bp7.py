@@ -41,6 +41,9 @@ def _splice_benign(annotation: AnnotationData) -> bool:
         return sp.max_delta <= 0.10
     if sp.tool == "squirls" and sp.raw_score is not None:
         return sp.raw_score < 0.20
+    if sp.tool == "mmsplice" and sp.raw_score is not None:
+        # |delta_logit_psi| < 0.5 → minimal predicted splice effect (matches BP4).
+        return abs(sp.raw_score) < 0.5
     return False
 
 

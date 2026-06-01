@@ -19,3 +19,13 @@ class SplicePredictor(ABC):
 
     @abstractmethod
     def is_available(self) -> bool: ...
+
+    def precompute(self, variants: list[VariantRecord]) -> None:
+        """Optionally pre-compute scores for the whole batch before predict().
+
+        No-op by default: tabix-backed predictors (SpliceAI, SQUIRLS) look up
+        precomputed scores per variant, so they need no batch step. Runtime
+        predictors like MMSplice override this to run one expensive model pass
+        over the entire batch and cache the results, which predict() then reads.
+        """
+        return None

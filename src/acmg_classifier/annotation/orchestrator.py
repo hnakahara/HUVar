@@ -58,8 +58,14 @@ class AnnotationOrchestrator:
         if self._cfg.splice_tool == SpliceTool.SPLICEAI:
             from acmg_classifier.local_db.splice.spliceai_predictor import SpliceAIPredictor
             return SpliceAIPredictor(self._cfg.spliceai_vcf, self._cfg.spliceai_indel_vcf)
-        from acmg_classifier.local_db.splice.squirls_predictor import SquirlsPredictor
-        return SquirlsPredictor(self._cfg.squirls_db_dir)
+        if self._cfg.splice_tool == SpliceTool.SQUIRLS:
+            # Retained for backward compatibility; no longer reachable from the
+            # CLI because the SQUIRLS precomputed DB is no longer downloadable.
+            from acmg_classifier.local_db.splice.squirls_predictor import SquirlsPredictor
+            return SquirlsPredictor(self._cfg.squirls_db_dir)
+        # Default open-source tool: MMSplice (runtime computation, optional dep).
+        from acmg_classifier.local_db.splice.mmsplice_predictor import MMSplicePredictor
+        return MMSplicePredictor(self._cfg.mmsplice_gtf, self._cfg.genome_fasta)
 
     def annotate_batch(
         self,
@@ -74,6 +80,12 @@ class AnnotationOrchestrator:
         released during SQLite/tabix calls, and we want to overlap network/
         disk waits rather than CPU work."""
         vep_results = self._vep.annotate_batch(variants, batch_size=self._cfg.vep_batch_size)
+
+        # Runtime splice predictors (MMSplice) score the whole batch in one
+        # model pass here, on the main thread, before the per-variant thread
+        # pool starts — TensorFlow/Keras inference is not thread-safe. For the
+        # tabix-backed predictors (SpliceAI/SQUIRLS) this is a no-op.
+        self._splice.precompute(variants)
 
         results: dict[str, AnnotationData] = {}
 

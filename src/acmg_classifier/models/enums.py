@@ -81,8 +81,11 @@ class InSilicoTool(str, Enum):
 
 
 class SpliceTool(str, Enum):
-    SQUIRLS = "squirls"
+    MMSPLICE = "mmsplice"  # open-source default (runtime computation, optional dep)
     SPLICEAI = "spliceai"  # requires Illumina commercial license
+    # SQUIRLS retained for backward compatibility but no longer selectable:
+    # its precomputed database is no longer downloadable from the upstream host.
+    SQUIRLS = "squirls"
 
 
 class VariantType(str, Enum):

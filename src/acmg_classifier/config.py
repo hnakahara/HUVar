@@ -23,7 +23,7 @@ class Config(BaseSettings):
     workers: int = 4
     vep_batch_size: int = 500
     insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
-    splice_tool: SpliceTool = SpliceTool.SQUIRLS
+    splice_tool: SpliceTool = SpliceTool.MMSPLICE
     spliceai_dir: Optional[Path] = None
 
     @field_validator("data_dir")
@@ -96,13 +96,28 @@ class Config(BaseSettings):
 
     @property
     def squirls_db_dir(self) -> Path:
-        # Directory name follows the GCS zip naming: {version}_{suffix}
-        # e.g. data/GRCh38/squirls/2203_hg38/
+        # Retained for backward compatibility; SQUIRLS is no longer selectable
+        # (its precomputed DB is no longer downloadable). See SpliceTool enum.
         names = {
             Assembly.GRCH38: "2203_hg38",
             Assembly.GRCH37: "2203_hg19",
         }
         return self.assembly_dir / "squirls" / names[self.assembly]
+
+    @property
+    def mmsplice_gtf(self) -> Path:
+        """Ensembl gene annotation GTF used by MMSplice (runtime splice scoring).
+
+        Pre-filtered to protein-coding genes with duplicated exons removed by
+        scripts/setup_data.py (MMSplice's recommended preprocessing). The
+        chromosome naming must match genome_fasta so MMSplice's dataloader can
+        join annotation to reference sequence.
+        """
+        names = {
+            Assembly.GRCH38: "Homo_sapiens.GRCh38.111.protein_coding.gtf",
+            Assembly.GRCH37: "Homo_sapiens.GRCh37.87.protein_coding.gtf",
+        }
+        return self.assembly_dir / "mmsplice" / names[self.assembly]
 
     @property
     def _spliceai_base_dir(self) -> Path:

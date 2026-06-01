@@ -59,6 +59,12 @@ dev = [
     "pytest-asyncio>=0.23",
     "pytest-cov>=5.0",
 ]
+# MMSplice runtime splice scoring. Pulls in TensorFlow/Keras, so it is kept
+# optional — only needed when --splice-tool mmsplice (the default open-source
+# tool) is actually used. Install with: pip install -e .[mmsplice]
+mmsplice = [
+    "mmsplice>=2.3",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/acmg_classifier"]

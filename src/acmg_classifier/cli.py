@@ -73,8 +73,10 @@ def cli(log_level: str):
               type=click.Choice([t.value for t in InSilicoTool]),
               default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
 @click.option("--splice-tool",
-              type=click.Choice([t.value for t in SpliceTool]),
-              default=SpliceTool.SQUIRLS.value, show_default=True)
+              type=click.Choice([SpliceTool.MMSPLICE.value, SpliceTool.SPLICEAI.value]),
+              default=SpliceTool.MMSPLICE.value, show_default=True,
+              help="Splice predictor. mmsplice (open-source, runtime; needs the "
+                   "[mmsplice] extra) or spliceai (requires Illumina licence).")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel). Overrides default data-dir lookup.")
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),

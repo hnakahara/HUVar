@@ -35,9 +35,12 @@ from pathlib import Path
 
 ENSEMBL_RELEASE = 111
 
-# SQUIRLS DB version. Files hosted at storage.googleapis.com/squirls/
-# URL format: {SQUIRLS_VERSION}_{suffix}.zip  (e.g. 2203_hg38.zip)
-SQUIRLS_VERSION = "2203"
+# MMSplice gene-annotation GTF output names (must match config.mmsplice_gtf and
+# downloader._MMSPLICE_GTF). Filtered to protein-coding genes during setup.
+GTF_NAMES = {
+    "GRCh38": "Homo_sapiens.GRCh38.111.protein_coding.gtf",
+    "GRCh37": "Homo_sapiens.GRCh37.87.protein_coding.gtf",
+}
 
 URLS: dict[str, dict[str, str]] = {
     "GRCh38": {
@@ -57,7 +60,10 @@ URLS: dict[str, dict[str, str]] = {
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
             "ALL_hum_isoforms_ESM1b_LLR.zip"
         ),
-        "squirls_zip": f"https://storage.googleapis.com/squirls/{SQUIRLS_VERSION}_hg38.zip",
+        "gtf": (
+            f"https://ftp.ensembl.org/pub/release-{ENSEMBL_RELEASE}/gtf/homo_sapiens/"
+            f"Homo_sapiens.GRCh38.{ENSEMBL_RELEASE}.gtf.gz"
+        ),
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/"
             "gnomad.v4.1.constraint_metrics.tsv"
@@ -89,7 +95,10 @@ URLS: dict[str, dict[str, str]] = {
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
             "ALL_hum_isoforms_ESM1b_LLR.zip"
         ),
-        "squirls_zip": f"https://storage.googleapis.com/squirls/{SQUIRLS_VERSION}_hg19.zip",
+        "gtf": (
+            "https://ftp.ensembl.org/pub/grch37/release-87/gtf/homo_sapiens/"
+            "Homo_sapiens.GRCh37.87.gtf.gz"
+        ),
         "gnomad_constraint": (
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/"
             "gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz"
@@ -499,58 +508,39 @@ def step_repeatmasker(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
-def step_squirls(asm_dir: Path, assembly: str, urls: dict, squirls_db: Path | None, skip: bool) -> bool:
-    """Download and place the SQUIRLS precomputed splice-score database.
+def step_mmsplice_gtf(asm_dir: Path, assembly: str, urls: dict, skip: bool) -> bool:
+    """Download the Ensembl GTF and filter to protein-coding genes for MMSplice.
 
-    SQUIRLS distributes a precomputed SQLite DB (~4 GB) as a zip archive.
-    The zip contains a single .db file which is extracted to:
-      <asm_dir>/squirls/squirls-<version>-<suffix>/
+    MMSplice (the open-source runtime splice predictor) needs a gene-annotation
+    GTF. The upstream docs recommend filtering to protein-coding genes, which we
+    do with a grep so the dataloader emits fewer, cleaner predictions.
 
-    If --squirls-db points to an existing .db file, it is used directly
-    (no download). Use --skip-squirls when using SpliceAI instead.
+    The `mmsplice` Python package itself (TensorFlow/Keras) is an OPTIONAL pip
+    dependency and is intentionally NOT installed here — install it separately
+    with `pip install -e .[mmsplice]` when you want to use --splice-tool mmsplice.
     """
-    suffix = "hg38" if assembly == "GRCh38" else "hg19"
-    # Directory name matches the GCS zip name: {version}_{suffix}
-    dest_dir = asm_dir / "squirls" / f"{SQUIRLS_VERSION}_{suffix}"
-
-    # 既存 .db を確認
-    existing_db = next(dest_dir.glob("*.db"), None) if dest_dir.exists() else None
-    if existing_db:
-        print(f"  [SKIP] {existing_db.name}")
+    dest = asm_dir / "mmsplice" / GTF_NAMES[assembly]
+    if dest.exists():
+        print(f"  [SKIP] {dest.name}")
         return True
     if skip:
-        print("  [SKIP] --skip-squirls 指定")
+        print("  [SKIP] --skip-mmsplice-gtf 指定")
         return True
 
-    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    gz = dest.parent / "ensembl.gtf.gz"
+    _verify_size(gz, min_bytes=10_000_000, label="Ensembl GTF")
+    if not gz.exists():
+        _download(urls["gtf"], gz, f"Ensembl GTF {assembly} (~50 MB)")
 
-    # --squirls-db で既存ファイルを指定された場合はシンボリックリンク
-    if squirls_db and squirls_db.exists():
-        dest = dest_dir / squirls_db.name
-        print(f"  シンボリックリンク作成: {squirls_db} → {dest}")
-        dest.symlink_to(squirls_db.resolve())
-        return True
-
-    # zip をダウンロードして展開
-    import zipfile
-    zip_path = dest_dir / f"{SQUIRLS_VERSION}_{suffix}.zip"
-    _verify_size(zip_path, min_bytes=1_000_000_000, label=f"SQUIRLS {suffix} zip")
-    if not zip_path.exists():
-        _download(urls["squirls_zip"], zip_path, f"SQUIRLS {suffix} (~4 GB)")
-
-    print("  SQUIRLS zip 展開中...")
-    with zipfile.ZipFile(zip_path) as zf:
-        db_names = [n for n in zf.namelist() if n.endswith(".db") or n.endswith(".sqlite")]
-        if not db_names:
-            raise RuntimeError(f"SQUIRLS zip に .db ファイルが見つかりません: {zip_path}")
-        for name in db_names:
-            zf.extract(name, dest_dir)
-            # zipfile が サブディレクトリ付きで展開した場合はフラットに移動
-            extracted = dest_dir / name
-            if extracted.parent != dest_dir:
-                extracted.rename(dest_dir / extracted.name)
-
-    zip_path.unlink(missing_ok=True)
+    print("  protein-coding 遺伝子でフィルタ中...")
+    # Keep header lines (#) and any feature line whose attributes declare
+    # gene_biotype "protein_coding".
+    _run_shell(
+        f"zcat {shlex.quote(str(gz))} | "
+        f"grep -E '^#|gene_biotype \"protein_coding\"' > {shlex.quote(str(dest))}"
+    )
+    gz.unlink(missing_ok=True)
     return True
 
 
@@ -584,10 +574,8 @@ def main() -> None:
                         help="VEP キャッシュダウンロードをスキップ (~14 GB)")
     parser.add_argument("--skip-esm1b", action="store_true",
                         help="ESM1b ダウンロード・構築をスキップ (~1.34 GB)")
-    parser.add_argument("--skip-squirls", action="store_true",
-                        help="SQUIRLS DBダウンロードをスキップ (~4 GB、SpliceAI使用時など)")
-    parser.add_argument("--squirls-db", type=Path, default=None, metavar="PATH",
-                        help="既存の SQUIRLS *.db ファイルパス (ダウンロードをスキップ)")
+    parser.add_argument("--skip-mmsplice-gtf", action="store_true",
+                        help="MMSplice 用 GTF のダウンロード・フィルタをスキップ (~50 MB)")
     args = parser.parse_args()
 
     data_dir = args.data_dir.resolve()
@@ -610,7 +598,7 @@ def main() -> None:
         ("ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls)),
         ("AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
         ("ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
-        ("SQUIRLS",           lambda: step_squirls(asm_dir, assembly, urls, args.squirls_db, args.skip_squirls)),
+        ("MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
         ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
         ("gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.gnomad_workers)),
         ("RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),

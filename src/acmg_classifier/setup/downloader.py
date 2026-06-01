@@ -35,20 +35,12 @@ _AM_FILE = {
 # assembly_dir/) and is shared across GRCh37/GRCh38.
 _ESM1B_REL = "esm1b/esm1b_llr.sqlite"
 
-# SQUIRLS DB directories (assembly-specific, user must place *.db file inside)
-# Directory name follows the GCS zip naming convention: {version}_{suffix}
-_SQUIRLS_DIR = {
-    Assembly.GRCH38: "squirls/2203_hg38",
-    Assembly.GRCH37: "squirls/2203_hg19",
+# MMSplice gene-annotation GTF (assembly-specific). Must match config.mmsplice_gtf.
+# Fetched + protein-coding-filtered by scripts/setup_data.py.
+_MMSPLICE_GTF = {
+    Assembly.GRCH38: "mmsplice/Homo_sapiens.GRCh38.111.protein_coding.gtf",
+    Assembly.GRCH37: "mmsplice/Homo_sapiens.GRCh37.87.protein_coding.gtf",
 }
-
-
-def _squirls_db_exists(assembly_dir: Path, assembly: Assembly) -> bool:
-    """Return True if at least one SQUIRLS *.db / *.sqlite file is present."""
-    d = assembly_dir / _SQUIRLS_DIR[assembly]
-    if not d.exists():
-        return False
-    return any(d.glob("*.db")) or any(d.glob("*.sqlite"))
 
 
 def validate_data_dir(cfg: Config) -> bool:
@@ -78,17 +70,18 @@ def validate_data_dir(cfg: Config) -> bool:
         else:
             log.info("data_file_ok", path=str(p))
 
-    if cfg.splice_tool == SpliceTool.SQUIRLS:
-        if not _squirls_db_exists(cfg.assembly_dir, cfg.assembly):
+    if cfg.splice_tool == SpliceTool.MMSPLICE:
+        p = cfg.mmsplice_gtf
+        if not p.exists():
             log.warning(
-                "missing_squirls_db",
-                path=str(cfg.assembly_dir / _SQUIRLS_DIR[cfg.assembly]),
-                hint="Place the SQUIRLS *.db file inside this directory. "
-                     "Download from https://squirls.readthedocs.io/",
+                "missing_mmsplice_gtf",
+                path=str(p),
+                hint="Run setup to fetch the GTF, and install the optional "
+                     "dependency: pip install -e .[mmsplice]",
             )
             ok = False
         else:
-            log.info("squirls_db_ok", path=str(cfg.assembly_dir / _SQUIRLS_DIR[cfg.assembly]))
+            log.info("mmsplice_gtf_ok", path=str(p))
 
     return ok
 
@@ -107,10 +100,10 @@ def print_status(data_dir: Path) -> None:
             p = asm_dir / rel
             status = "[green]OK[/green]" if p.exists() else "[red]MISSING[/red]"
             table.add_row(asm.value, rel, status)
-        # SQUIRLS (optional splice tool)
-        squirls_ok = _squirls_db_exists(asm_dir, asm)
-        status = "[green]OK[/green]" if squirls_ok else "[yellow]OPTIONAL/MISSING[/yellow]"
-        table.add_row(asm.value, _SQUIRLS_DIR[asm] + "/*.db", status)
+        # MMSplice GTF (open-source splice tool, optional dependency)
+        gtf_p = asm_dir / _MMSPLICE_GTF[asm]
+        status = "[green]OK[/green]" if gtf_p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
+        table.add_row(asm.value, _MMSPLICE_GTF[asm], status)
     # ESM1b is assembly-independent; show it once.
     p = data_dir / _ESM1B_REL
     status = "[green]OK[/green]" if p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
@@ -126,12 +119,11 @@ def run_setup(cfg: Config) -> None:
     console.print("Assembly: " + cfg.assembly.value)
     console.print("\nThe following data files are required (~60-65 GB per assembly).")
     console.print("Download and place them in: " + str(cfg.assembly_dir))
-    if cfg.splice_tool == SpliceTool.SQUIRLS:
-        squirls_dir = cfg.assembly_dir / _SQUIRLS_DIR[cfg.assembly]
+    if cfg.splice_tool == SpliceTool.MMSPLICE:
         console.print(
-            "\n[yellow]SQUIRLS DB:[/yellow] Download the precomputed SQUIRLS database "
-            f"(squirls-2309-hg38 or hg19) and place the *.db file in:\n  {squirls_dir}"
+            "\n[yellow]MMSplice:[/yellow] install the optional dependency "
+            "(pip install -e .[mmsplice]) for runtime splice scoring. The "
+            f"protein-coding GTF is fetched automatically to:\n  {cfg.mmsplice_gtf}"
         )
-        console.print("  Download: https://squirls.readthedocs.io/en/master/setup.html")
     console.print("\nSee the project documentation for download URLs and conversion scripts.")
     validate_data_dir(cfg)
