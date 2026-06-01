@@ -128,25 +128,30 @@ class BP4Evaluator(CriterionEvaluator):
             ConsequenceType.SYNONYMOUS,
         ):
             sp = annotation.splice
-            if sp and sp.is_available:
-                if sp.tool == "spliceai" and sp.max_delta is not None:
-                    strength = _spliceai_bp4(sp.max_delta)
-                    score_str = f"SpliceAI max_delta={sp.max_delta:.3f}"
-                elif sp.tool == "squirls" and sp.raw_score is not None:
-                    strength = _squirls_bp4(sp.raw_score)
-                    score_str = f"SQUIRLS={sp.raw_score:.3f}"
-                # MMSplice DISABLED — retained, commented out, for later:
-                # elif sp.tool == "mmsplice" and sp.raw_score is not None:
-                #     strength = _mmsplice_bp4(sp.raw_score)
-                #     score_str = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
-                else:
-                    return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score unavailable")
+            # No splice predictor (e.g. default --splice-tool none) → say so
+            # explicitly rather than implying a score was computed and rejected.
+            if not (sp and sp.is_available):
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BP4, "No splice prediction (splice evaluation disabled)",
+                )
+            if sp.tool == "spliceai" and sp.max_delta is not None:
+                strength = _spliceai_bp4(sp.max_delta)
+                score_str = f"SpliceAI max_delta={sp.max_delta:.3f}"
+            elif sp.tool == "squirls" and sp.raw_score is not None:
+                strength = _squirls_bp4(sp.raw_score)
+                score_str = f"SQUIRLS={sp.raw_score:.3f}"
+            # MMSplice DISABLED — retained, commented out, for later:
+            # elif sp.tool == "mmsplice" and sp.raw_score is not None:
+            #     strength = _mmsplice_bp4(sp.raw_score)
+            #     score_str = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
+            else:
+                return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score unavailable")
 
-                if strength:
-                    return CriteriaResult.met(
-                        ACMGCriterion.BP4, strength,
-                        f"{score_str} ({strength.value})",
-                    )
+            if strength:
+                return CriteriaResult.met(
+                    ACMGCriterion.BP4, strength,
+                    f"{score_str} ({strength.value})",
+                )
             return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score not in benign range")
 
         return CriteriaResult.not_met(ACMGCriterion.BP4, "Consequence not applicable for BP4")
