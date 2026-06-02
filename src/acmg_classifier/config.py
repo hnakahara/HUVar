@@ -86,7 +86,7 @@ class Config(BaseSettings):
 
     @property
     def esm1b_sqlite(self) -> Path:
-        """Brandes 2023 ESM1b LLR scores indexed by Ensembl transcript ID.
+        """Brandes 2023 ESM1b LLR scores indexed by UniProt accession.
 
         Built from `ALL_hum_isoforms_ESM1b_LLR.zip` (see scripts/setup_data.py).
         Stored under `data_dir/esm1b/` rather than `assembly_dir/` because

@@ -30,6 +30,14 @@ Output SQLite (no isoform mapping needed):
         PRIMARY KEY (uniprot_id, aa_pos, alt_aa)
     ) WITHOUT ROWID;
     CREATE INDEX idx_scores_uni_pos ON scores(uniprot_id, aa_pos);
+
+    -- UniProt entry-name (mnemonic) → accession, built from isoform_list.csv.
+    -- Lets the lookup normalise tokens like 'PK3CD_HUMAN' that some VEP caches
+    -- emit instead of the accession 'O00329' the scores table is keyed on.
+    CREATE TABLE aliases (
+        entry_name TEXT PRIMARY KEY,
+        uniprot_id TEXT NOT NULL
+    ) WITHOUT ROWID;
 """
 from __future__ import annotations
 
@@ -44,6 +52,56 @@ from typing import Iterator
 from acmg_classifier.utils.progress import progress_bar
 
 _HEADER_CELL = re.compile(r"^([A-Z*])\s+(\d+)$")
+_MNEMONIC = re.compile(r"\(([^)]+)\)")
+
+
+def _iter_aliases(zip_path: Path) -> Iterator[tuple[str, str]]:
+    """Yield (entry_name, uniprot_id) pairs from the Brandes isoform_list.csv.
+
+    VEP --uniprot on some caches (observed: GRCh37 release 111) reports the
+    UniProt *entry name* / mnemonic (e.g. ``PK3CD_HUMAN``) instead of the
+    accession (``O00329``) that the score table is keyed on. isoform_list.csv
+    maps each accession to a display string of the form
+    ``GENE (MNEMONIC) | ACCESSION``, so the parenthesised mnemonic + ``_HUMAN``
+    reconstructs the entry name VEP emits, letting the query normalise it back
+    to the accession.
+
+    The CSV is looked up next to the zip first (the Brandes download ships it
+    alongside the archive), then inside the zip as a fallback.
+    """
+    text: str | None = None
+    sidecar = zip_path.parent / "isoform_list.csv"
+    if sidecar.exists():
+        text = sidecar.read_text(encoding="utf-8")
+    else:
+        try:
+            with zipfile.ZipFile(zip_path) as zf:
+                for name in zf.namelist():
+                    if Path(name).name == "isoform_list.csv":
+                        with zf.open(name) as fh:
+                            text = io.TextIOWrapper(fh, encoding="utf-8").read()
+                        break
+        except (zipfile.BadZipFile, OSError):
+            return
+    if not text:
+        return
+
+    reader = csv.reader(io.StringIO(text))
+    next(reader, None)  # header: id,txt
+    for row in reader:
+        if len(row) < 2:
+            continue
+        accession = row[0].strip()
+        if not accession:
+            continue
+        # The display column can itself contain commas — rejoin the remainder.
+        display = ",".join(row[1:]).split("|", 1)[0]
+        mnemonics = _MNEMONIC.findall(display)
+        if not mnemonics:
+            continue
+        entry_name = mnemonics[-1].strip() + "_HUMAN"
+        if entry_name != "_HUMAN":
+            yield entry_name, accession
 
 
 def _parse_header(header: list[str]) -> list[tuple[str, int] | None]:
@@ -132,6 +190,20 @@ def build_esm1b_sqlite(
             " PRIMARY KEY (uniprot_id, aa_pos, alt_aa)"
             ") WITHOUT ROWID"
         )
+        # Entry-name → accession map so the lookup can normalise UniProt
+        # mnemonics (e.g. PK3CD_HUMAN) that some VEP caches emit instead of
+        # the accession (O00329) the score table is keyed on.
+        conn.execute(
+            "CREATE TABLE aliases ("
+            " entry_name TEXT PRIMARY KEY,"
+            " uniprot_id TEXT NOT NULL"
+            ") WITHOUT ROWID"
+        )
+        alias_rows = list(_iter_aliases(zip_path))
+        if alias_rows:
+            conn.executemany(
+                "INSERT OR IGNORE INTO aliases VALUES (?, ?)", alias_rows
+            )
 
         buf: list[tuple[str, int, str, float]] = []
         n_isoforms = 0
@@ -172,6 +244,9 @@ def build_esm1b_sqlite(
             "ON scores(uniprot_id, aa_pos)"
         )
         conn.commit()
-        print(f"  ESM1b: {n_isoforms} isoforms, {n_rows:,} rows → {dest.name}")
+        print(
+            f"  ESM1b: {n_isoforms} isoforms, {n_rows:,} rows, "
+            f"{len(alias_rows):,} aliases → {dest.name}"
+        )
     finally:
         conn.close()

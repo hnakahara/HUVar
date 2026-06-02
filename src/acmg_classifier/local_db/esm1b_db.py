@@ -11,11 +11,15 @@ Schema produced by `scripts/setup_data.py` from
         PRIMARY KEY (uniprot_id, aa_pos, alt_aa)
     );
     CREATE INDEX idx_scores_uni_pos ON scores(uniprot_id, aa_pos);
+    CREATE TABLE aliases (entry_name TEXT PRIMARY KEY, uniprot_id TEXT NOT NULL);
 
 `uniprot_id` is the SwissProt/TrEMBL accession that the Brandes archive
 uses as its file-name key (e.g. `P38398`, or `P38398-2` for alternative
-isoforms). VEP --uniprot emits the same accession (the version suffix
-"P38398.4" is stripped upstream in vep_runner._parse_transcript).
+isoforms). VEP --uniprot usually emits the same accession (the version
+suffix "P38398.4" is stripped upstream in vep_runner._parse_transcript),
+but some caches (observed: GRCh37 release 111) emit the UniProt entry name
+/ mnemonic instead (e.g. `PK3CD_HUMAN`). `_resolve_accession` normalises
+those back to the accession via the `aliases` table before querying.
 """
 from __future__ import annotations
 import sqlite3
@@ -27,6 +31,32 @@ import structlog
 from acmg_classifier.models.annotation import ESM1bData
 
 log = structlog.get_logger()
+
+
+def _resolve_accession(conn: sqlite3.Connection, uniprot_id: str) -> str:
+    """Normalise a VEP UniProt token to the accession the scores table uses.
+
+    Most caches emit the accession directly (e.g. ``O00329``) and are returned
+    unchanged. Some caches (observed: GRCh37 release 111) emit the UniProt
+    *entry name* / mnemonic instead:
+      - SwissProt: ``PK3CD_HUMAN`` → resolved via the ``aliases`` table.
+      - TrEMBL: ``B7ZM44_HUMAN`` → the accession is the prefix, so stripping
+        ``_HUMAN`` recovers it when no alias row exists.
+    Falls back to stripping ``_HUMAN`` if the ``aliases`` table is absent
+    (older DB build) so the lookup degrades gracefully rather than raising.
+    """
+    if not uniprot_id.endswith("_HUMAN"):
+        return uniprot_id
+    try:
+        row = conn.execute(
+            "SELECT uniprot_id FROM aliases WHERE entry_name = ? LIMIT 1",
+            (uniprot_id,),
+        ).fetchone()
+    except sqlite3.Error:
+        row = None
+    if row:
+        return row[0]
+    return uniprot_id[: -len("_HUMAN")]
 
 
 def query_esm1b(
@@ -54,10 +84,11 @@ def query_esm1b(
         # measurably faster under concurrent access.
         conn = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
         try:
+            accession = _resolve_accession(conn, uniprot_id)
             cur = conn.execute(
                 "SELECT llr FROM scores "
                 "WHERE uniprot_id = ? AND aa_pos = ? AND alt_aa = ? LIMIT 1",
-                (uniprot_id, int(aa_pos), alt_aa),
+                (accession, int(aa_pos), alt_aa),
             )
             row = cur.fetchone()
         finally:
