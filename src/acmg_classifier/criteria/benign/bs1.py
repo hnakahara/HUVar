@@ -60,8 +60,14 @@ class BS1Evaluator(CriterionEvaluator):
         if gd is None or not gd.filter_pass:
             return CriteriaResult.not_met(ACMGCriterion.BS1, "No valid gnomAD record")
 
-        # Prefer FAF95 (conservative), fall back to popmax, then global AF.
-        faf = gd.faf95_popmax or gd.popmax_af or gd.af or 0.0
+        # Prefer FAF95 (the conservative 95% CI lower bound). Use it as-is when
+        # present — including a legitimate 0.0 — and only fall back to raw
+        # popmax/global AF when FAF95 is genuinely absent (None). This mirrors
+        # BA1; the previous `faf95 or popmax or af` chain collapsed a real
+        # FAF95 of 0.0 to the raw AF, over-firing BS1 on wide-CI rare variants.
+        faf = gd.faf95_popmax
+        if faf is None:
+            faf = gd.popmax_af or gd.af or 0.0
 
         # Per-gene threshold lookup: if the gene appears in the prevalence
         # table, use its calibrated cutoff; otherwise the default applies.

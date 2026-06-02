@@ -53,6 +53,38 @@ class TestPM2:
         r = self.evaluator.evaluate(_snv(), ann)
         assert not r.triggered
 
+    def test_pm2_uses_raw_af_not_faf95(self):
+        """PM2 judges on the RAW grpmax AF (ClinGen Hearing Loss VCEP), not the
+        FAF95 lower bound. Raw AF above the dominant cutoff → NOT met, even
+        though the conservative FAF95 is tiny."""
+        gd = GnomADData(ac=10, af=0.0005, popmax_af=0.0005,
+                        faf95_popmax=0.00001, filter_pass=True)
+        ann = AnnotationData(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+    def test_pm2_faf95_zero_not_absent_when_raw_af_present(self):
+        """A FAF95 of 0.0 must NOT be read as "absent" when the variant is
+        actually observed (raw AF 0.0005). PM2 uses the raw AF → NOT met."""
+        gd = GnomADData(ac=10, af=0.0005, popmax_af=0.0005,
+                        faf95_popmax=0.0, filter_pass=True)
+        ann = AnnotationData(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+    def test_pm2_raw_af_below_threshold_met(self):
+        gd = GnomADData(ac=5, af=0.00005, popmax_af=0.00005, filter_pass=True)
+        ann = AnnotationData(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert r.triggered
+        assert r.strength == CriterionStrength.SUPPORTING
+
+    def test_pm2_popmax_af_none_falls_back_to_global_af(self):
+        gd = GnomADData(ac=10, af=0.0005, popmax_af=None, filter_pass=True)
+        ann = AnnotationData(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered  # raw global AF 0.0005 >= dominant cutoff
+
 
 class TestPP3:
     def setup_method(self):

@@ -8,12 +8,15 @@ from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
-# SVI recommendation: use FAF95 < 0.0001 for Supporting (dominant default).
-_FAF95_ABSENT = 0.0001
+# PM2 judges on the RAW grpmax allele frequency, not a FAF/CI estimate:
+# ClinGen Hearing Loss VCEP specifies that BA1/BS1 use the Filtering Allele
+# Frequency (95% CI lower bound) but PM2 uses the observed gnomAD frequency
+# directly. SVI dominant default: raw AF < 0.0001 → Supporting.
+_RAW_AF_ABSENT = 0.0001
 # Recessive / X-linked phenotypes tolerate higher carrier frequencies, so a
 # pathogenic variant (e.g. a founder allele) can sit well above the dominant
-# threshold. Use a relaxed FAF95 cutoff for genes flagged recessive in the map.
-_FAF95_RECESSIVE = 0.005
+# threshold. Use a relaxed cutoff for genes flagged recessive in the map.
+_RAW_AF_RECESSIVE = 0.005
 
 
 class PM2Evaluator(CriterionEvaluator):
@@ -38,8 +41,8 @@ class PM2Evaluator(CriterionEvaluator):
         if gene:
             inh = load_inheritance_map(self._cfg.gene_inheritance_tsv).get(gene)
             if is_recessive(inh):
-                return _FAF95_RECESSIVE, f"recessive ({inh})"
-        return _FAF95_ABSENT, "dominant/unknown"
+                return _RAW_AF_RECESSIVE, f"recessive ({inh})"
+        return _RAW_AF_ABSENT, "dominant/unknown"
 
     def evaluate(
         self,
@@ -61,16 +64,18 @@ class PM2Evaluator(CriterionEvaluator):
         if not gd.filter_pass:
             return CriteriaResult.not_met(ACMGCriterion.PM2, "gnomAD filter failed")
 
-        # Prefer FAF95_popmax (Karczewski 2020) — it gives a conservative
-        # upper bound that doesn't over-fire on tiny populations. Fall back to
-        # popmax_af then global AF if FAF is missing (very rare variants).
-        faf = gd.faf95_popmax
-        if faf is None:
-            faf = gd.popmax_af or gd.af or 0.0
+        # PM2 uses the RAW grpmax allele frequency (no FAF/CI), per the ClinGen
+        # Hearing Loss VCEP. Prefer the grpmax (popmax) raw AF; fall back to the
+        # global raw AF only when grpmax is genuinely absent (None). A real 0.0
+        # is kept as-is — it means the variant is unobserved in the grpmax
+        # group, which is the strongest PM2 signal.
+        raw_af = gd.popmax_af
+        if raw_af is None:
+            raw_af = gd.af if gd.af is not None else 0.0
 
         # AC=0 means "observed only in samples that failed QC" — effectively
-        # absent for ACMG purposes, so we treat it the same as FAF=0.
-        if faf == 0.0 or gd.ac == 0:
+        # absent for ACMG purposes, so we treat it the same as raw AF == 0.
+        if raw_af == 0.0 or gd.ac == 0:
             return CriteriaResult.met(
                 ACMGCriterion.PM2,
                 CriterionStrength.SUPPORTING,
@@ -78,13 +83,13 @@ class PM2Evaluator(CriterionEvaluator):
             )
 
         threshold, basis = self._threshold(annotation)
-        if faf < threshold:
+        if raw_af < threshold:
             return CriteriaResult.met(
                 ACMGCriterion.PM2,
                 CriterionStrength.SUPPORTING,
-                f"gnomAD FAF95={faf:.2e} < {threshold} [{basis}]",
+                f"gnomAD AF={raw_af:.2e} < {threshold} [{basis}]",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.PM2,
-            f"gnomAD FAF95={faf:.2e} ≥ {threshold} [{basis}]",
+            f"gnomAD AF={raw_af:.2e} ≥ {threshold} [{basis}]",
         )

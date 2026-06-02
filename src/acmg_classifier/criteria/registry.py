@@ -9,6 +9,40 @@ from acmg_classifier.models.enums import ACMGCriterion
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
+# Allele-frequency criteria are mutually exclusive (ClinGen SVI): a variant
+# gets at most ONE. Ordered by frequency-evidence strength — BA1 (>5%,
+# stand-alone benign) outranks BS1 (benign) which outranks PM2 (rare,
+# pathogenic-supporting).
+_AF_EXCLUSIVE_PRIORITY = (ACMGCriterion.BA1, ACMGCriterion.BS1, ACMGCriterion.PM2)
+
+
+def _apply_af_mutual_exclusion(results: list[CriteriaResult]) -> None:
+    """Enforce BA1 > BS1 > PM2 mutual exclusivity, in place.
+
+    The highest-priority triggered allele-frequency criterion wins; any
+    lower-priority triggered ones are suppressed (retained in the audit trail,
+    contributing 0 points) so the same allele-frequency observation is never
+    double-counted or counted in both the benign and pathogenic directions.
+    """
+    active = next(
+        (
+            c
+            for c in _AF_EXCLUSIVE_PRIORITY
+            if any(
+                r.criterion == c and r.triggered and not r.suppressed
+                for r in results
+            )
+        ),
+        None,
+    )
+    if active is None:
+        return
+    losers = set(_AF_EXCLUSIVE_PRIORITY[_AF_EXCLUSIVE_PRIORITY.index(active) + 1:])
+    for r in results:
+        if r.criterion in losers and r.triggered and not r.suppressed:
+            r.suppressed = True
+            r.evidence = (r.evidence + f" [suppressed: {active.value} active]").strip()
+
 
 class CriteriaRegistry:
     """Loads and runs all automated criterion evaluators for a given config."""
@@ -106,5 +140,9 @@ class CriteriaRegistry:
                 if r.criterion == ACMGCriterion.PP3 and r.triggered:
                     r.suppressed = True
                     r.evidence = (r.evidence + " [suppressed: PVS1 active]").strip()
+
+        # BA1 / BS1 / PM2 are mutually exclusive frequency criteria — keep only
+        # the highest-priority one (see _apply_af_mutual_exclusion).
+        _apply_af_mutual_exclusion(results)
 
         return results

@@ -58,6 +58,55 @@ class TestBA1:
         assert not r.triggered
 
 
+class TestBS1:
+    def setup_method(self):
+        from unittest.mock import MagicMock
+        cfg = MagicMock()
+        # No per-gene overrides → the conservative default (0.5%) applies.
+        cfg.disease_prevalence_tsv.exists.return_value = False
+        self.cfg = cfg
+        from acmg_classifier.criteria.benign.bs1 import BS1Evaluator
+        self.evaluator = BS1Evaluator(cfg)
+
+    def test_bs1_triggered_high_faf(self):
+        gd = GnomADData(faf95_popmax=0.01, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert r.triggered
+        assert r.criterion == ACMGCriterion.BS1
+
+    def test_bs1_not_triggered_rare(self):
+        gd = GnomADData(faf95_popmax=0.001, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+    def test_bs1_faf95_zero_does_not_fall_back_to_raw_af(self):
+        """FAF95=0.0 (a real value, not "missing") must be used as-is.
+
+        Regression: the old `faf95_popmax or popmax_af or af` chain treated a
+        FAF95 lower bound of 0.0 as falsy and silently fell back to the raw
+        grpmax/global AF, over-firing BS1 on wide-CI variants. The conservative
+        FAF95 of 0.0 is below threshold, so BS1 must NOT trigger here."""
+        gd = GnomADData(faf95_popmax=0.0, popmax_af=0.006, af=0.006, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+    def test_bs1_faf95_missing_falls_back_to_popmax(self):
+        """When FAF95 is genuinely absent (None), fall back to raw AF — same
+        None-aware behaviour as BA1, so very-rare records still get evaluated."""
+        gd = GnomADData(faf95_popmax=None, popmax_af=0.01, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert r.triggered
+
+    def test_bs1_no_gnomad(self):
+        ann = _annotation(consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+
 class TestBS2:
     def setup_method(self):
         from unittest.mock import MagicMock
