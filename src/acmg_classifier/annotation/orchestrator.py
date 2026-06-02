@@ -15,6 +15,39 @@ from acmg_classifier.utils.progress import progress_bar
 log = structlog.get_logger()
 
 
+def _resolve_uniprot_id(primary, consequences):
+    """Resolve the UniProt accession used as the ESM1b lookup key.
+
+    VEP's --merged cache only attaches swissprot/trembl xrefs to Ensembl
+    (ENST) transcripts, not RefSeq (NM_). Because `primary_consequence`
+    prefers the RefSeq MANE transcript, `primary.uniprot_id` is frequently
+    None for perfectly scorable missense variants (e.g. TP53 R248W). Fall
+    back to a sibling transcript describing the *same* substitution — same
+    protein_position and amino_acids — so the variant can still be scored.
+
+    Returns the primary's own accession when present, otherwise the first
+    matching sibling's, or None when nothing carries a UniProt xref.
+    """
+    if primary is None:
+        return None
+    if primary.uniprot_id:
+        return primary.uniprot_id
+    for c in consequences or ():
+        if c is primary or not c.uniprot_id:
+            continue
+        if c.consequence != ConsequenceType.MISSENSE:
+            continue
+        # Same residue position and same WT/alt pair guarantees the sibling
+        # describes the identical protein substitution, so its UniProt
+        # accession (and shared residue numbering) is safe to reuse.
+        if c.protein_position != primary.protein_position:
+            continue
+        if c.amino_acids != primary.amino_acids:
+            continue
+        return c.uniprot_id
+    return None
+
+
 class AnnotationOrchestrator:
     """Coordinates all local database queries for a batch of variants."""
 
@@ -158,7 +191,7 @@ class AnnotationOrchestrator:
             self._am_path,
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
-        esm1b = self._lookup_esm1b(primary)
+        esm1b = self._lookup_esm1b(primary, consequences)
 
         splice = self._splice.predict(variant)
         # When SQUIRLS is the primary splice tool, reuse the same result.
@@ -181,26 +214,25 @@ class AnnotationOrchestrator:
             repeat=repeat,
         )
 
-    def _lookup_esm1b(self, primary):
+    def _lookup_esm1b(self, primary, consequences):
         """Lookup ESM1b LLR using UniProt accession + protein position + alt AA.
 
         Brandes 2023 archives are keyed by UniProt (SwissProt/TrEMBL), so we
-        depend on VEP --uniprot. Variants on a transcript without a UniProt
-        match (rare for protein-coding MANE transcripts) cannot be scored.
+        depend on VEP --uniprot. The UniProt accession is resolved by
+        `_resolve_uniprot_id`, which falls back to a sibling Ensembl
+        transcript when the primary (RefSeq) one carries no UniProt xref.
         """
         # Cascade of gates — each `return None` represents a precondition the
         # ESM1b archive needs. We bail early rather than fall through so the
         # actual DB lookup is reached only when every required field is
         # present and well-formed:
         #   - missense only (Brandes archive is missense-substitution scored)
-        #   - UniProt ID is the file-name key in the archive
         #   - protein_position + alt amino acid identify the substitution
         #   - alt_aa must be a single 1-letter code (Brandes uses 1-letter)
+        #   - UniProt ID is the file-name key in the archive
         if primary is None:
             return None
         if primary.consequence != ConsequenceType.MISSENSE:
-            return None
-        if not primary.uniprot_id:
             return None
         if primary.protein_position is None or not primary.amino_acids:
             return None
@@ -210,11 +242,14 @@ class AnnotationOrchestrator:
         alt_aa = parts[1].strip()
         if not alt_aa or len(alt_aa) != 1:
             return None
+        uniprot_id = _resolve_uniprot_id(primary, consequences)
+        if not uniprot_id:
+            return None
 
         from acmg_classifier.local_db.esm1b_db import query_esm1b
         return query_esm1b(
             self._esm1b_path,
-            primary.uniprot_id,
+            uniprot_id,
             primary.protein_position,
             alt_aa,
         )
