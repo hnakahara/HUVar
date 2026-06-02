@@ -53,7 +53,6 @@ URLS: dict[str, dict[str, str]] = {
             f"homo_sapiens_merged_vep_{ENSEMBL_RELEASE}_GRCh38.tar.gz"
         ),
         "clinvar_vcf": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz",
-        "clinvar_vcf_tbi": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz.tbi",
         "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_xml_old_format/ClinVarFullRelease_00-latest.xml.gz",
         "alphamissense": "https://storage.googleapis.com/dm_alphamissense/AlphaMissense_hg38.tsv.gz",
         "esm1b_zip": (
@@ -88,7 +87,6 @@ URLS: dict[str, dict[str, str]] = {
             f"homo_sapiens_merged_vep_{ENSEMBL_RELEASE}_GRCh37.tar.gz"
         ),
         "clinvar_vcf": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz",
-        "clinvar_vcf_tbi": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz.tbi",
         "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_xml_old_format/ClinVarFullRelease_00-latest.xml.gz",
         "alphamissense": "https://storage.googleapis.com/dm_alphamissense/AlphaMissense_hg19.tsv.gz",
         "esm1b_zip": (
@@ -262,7 +260,8 @@ def _add_src_to_path() -> None:
 def step_genome(asm_dir: Path, assembly: str, urls: dict, genome_fasta: Path | None, skip: bool) -> bool:
     fa_name = _GENOME_NAMES[assembly]
     dest = asm_dir / "genome" / fa_name
-    if dest.exists():
+    fai = Path(str(dest) + ".fai")
+    if dest.exists() and fai.exists():
         print(f"  [SKIP] {dest.name}")
         return True
     if skip:
@@ -272,25 +271,29 @@ def step_genome(asm_dir: Path, assembly: str, urls: dict, genome_fasta: Path | N
     _require("samtools")
     dest.parent.mkdir(parents=True, exist_ok=True)
 
-    existing = genome_fasta
-    if existing is None:
-        patterns = [f"*{assembly}*primary*assembly*.fa", f"*{assembly}*primary*assembly*.fasta",
-                    "hg38.fa" if assembly == "GRCh38" else "hg19.fa"]
-        existing = _find_existing(_GENOME_SEARCH, patterns)
+    # The .fai is derived locally from the FASTA, so a missing index never
+    # implies a version mismatch — only re-acquire the (large) FASTA when the
+    # FASTA itself is absent, then always (re)build the index below.
+    if not dest.exists():
+        existing = genome_fasta
+        if existing is None:
+            patterns = [f"*{assembly}*primary*assembly*.fa", f"*{assembly}*primary*assembly*.fasta",
+                        "hg38.fa" if assembly == "GRCh38" else "hg19.fa"]
+            existing = _find_existing(_GENOME_SEARCH, patterns)
 
-    if existing and existing.exists():
-        if str(existing).endswith(".gz"):
-            print(f"  Decompressing: {existing.name} → {fa_name} (~3 GB)...")
-            _run_shell(f"zcat {shlex.quote(str(existing))} > {shlex.quote(str(dest))}")
+        if existing and existing.exists():
+            if str(existing).endswith(".gz"):
+                print(f"  Decompressing: {existing.name} → {fa_name} (~3 GB)...")
+                _run_shell(f"zcat {shlex.quote(str(existing))} > {shlex.quote(str(dest))}")
+            else:
+                print(f"  Creating symlink: {existing} → {dest}")
+                dest.symlink_to(existing.resolve())
         else:
-            print(f"  Creating symlink: {existing} → {dest}")
-            dest.symlink_to(existing.resolve())
-    else:
-        gz = dest.with_suffix(".fa.gz")
-        _download(urls["genome"], gz, f"Ensembl {assembly} primary assembly FASTA (~880 MB)")
-        print("  Decompressing (~3 GB)...")
-        _run_shell(f"zcat {shlex.quote(str(gz))} > {shlex.quote(str(dest))}")
-        gz.unlink(missing_ok=True)
+            gz = dest.with_suffix(".fa.gz")
+            _download(urls["genome"], gz, f"Ensembl {assembly} primary assembly FASTA (~880 MB)")
+            print("  Decompressing (~3 GB)...")
+            _run_shell(f"zcat {shlex.quote(str(gz))} > {shlex.quote(str(dest))}")
+            gz.unlink(missing_ok=True)
 
     print("  Indexing with samtools faidx...")
     _run(["samtools", "faidx", str(dest)])
@@ -325,14 +328,18 @@ def step_clinvar_vcf(asm_dir: Path, assembly: str, urls: dict) -> bool:
 
     _require("tabix")
     dest.parent.mkdir(parents=True, exist_ok=True)
-    if not dest.exists():
-        _download(urls["clinvar_vcf"], dest, "ClinVar VCF (~120 MB)")
-    if not tbi.exists():
-        try:
-            _download(urls["clinvar_vcf_tbi"], tbi, "ClinVar VCF .tbi")
-        except subprocess.CalledProcessError:
-            print("  Rebuilding index with tabix...")
-            _run(["tabix", "-p", "vcf", str(dest)])
+    # Coupled set: the .vcf.gz and its .tbi MUST come from the same ClinVar
+    # release. ClinVar is a rolling weekly release at a fixed URL, so a
+    # separately-downloaded .tbi can index a newer release than the local
+    # .vcf.gz, producing "Invalid BGZF header" errors on tabix random access.
+    # If the set is incomplete, re-acquire the whole set: drop any orphaned
+    # remnant, re-download the .vcf.gz, and (re)build the .tbi locally from the
+    # on-disk bytes so the pair is guaranteed consistent.
+    tbi.unlink(missing_ok=True)
+    dest.unlink(missing_ok=True)
+    _download(urls["clinvar_vcf"], dest, "ClinVar VCF (~120 MB)")
+    print("  Building index with tabix...")
+    _run(["tabix", "-p", "vcf", str(dest)])
     return True
 
 
