@@ -41,12 +41,15 @@ class BA1Evaluator(CriterionEvaluator):
         gene = pc.gene_symbol if pc else ""
         threshold = self._thresholds.get(gene).ba1
 
+        # 3 significant figures rather than 4 fixed decimals — disease-specific
+        # BA1 cutoffs can be ~1e-3/1e-5, which ".4f" rounds misleadingly. The
+        # comparison uses full float precision regardless of this display.
         if faf >= threshold:
             return CriteriaResult.met(
                 ACMGCriterion.BA1,
-                evidence=f"gnomAD FAF95_popmax={faf:.4f} >= BA1 threshold {threshold:.4f} for {gene or 'default'}",
+                evidence=f"gnomAD FAF95_popmax={faf:.3g} >= BA1 threshold {threshold:.3g} for {gene or 'default'}",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.BA1,
-            f"gnomAD FAF95_popmax={faf:.4f} < BA1 threshold {threshold:.4f}",
+            f"gnomAD FAF95_popmax={faf:.3g} < BA1 threshold {threshold:.3g}",
         )

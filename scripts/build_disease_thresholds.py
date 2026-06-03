@@ -54,33 +54,46 @@ _OP_NUM = re.compile(
 _PAREN = re.compile(r"\(\s*(?:or\s*)?([0-9]*\.[0-9]+)\s*(%?)\s*\)")
 # Any number(+%) — used only as a last resort on short descriptions.
 _ANY = re.compile(r"([0-9]*\.?[0-9]+)\s*(%?)")
+# Legacy ACMG-2015 stand-alone-benign boilerplate: "above 5% in [Exome
+# Sequencing Project | 1000 Genomes | Exome Aggregation Consortium]". This 5%
+# is a pre-gnomAD catch-all, NOT the VCEP's operative gnomAD cutoff. When a spec
+# also lists a gnomAD-specific number (e.g. KCNQ1 BA1 "≥0.004"), the 5% must be
+# dropped or it shadows the real, lower cutoff (causing BA1 to never fire in the
+# 0.4–5% band). Removed only when something else remains to parse (RPGR-style
+# specs whose *only* number is this males "5%" keep it via the fallback below).
+_LEGACY_5PCT = re.compile(
+    r"(?:is\s+)?(?:above|over|greater than(?:\s+or\s+equal\s+to)?|>=?|≥)\s*5\s*%"
+    r"[^.\n]*?(?:Exome Sequencing Project|1000\s*Genomes|"
+    r"Exome Aggregation Consortium|\bESP\b|\bExAC\b)[^.\n]*",
+    re.IGNORECASE,
+)
+# Sub-population application rule (Rett/Angelman-like panels, e.g. GN032-037):
+# "...present at ≥0.000083 (0.0083%) in any sub-population." This is the VCEP's
+# operative gnomAD cutoff and takes precedence over a generic "Allele frequency
+# above 0.05%" headline in the same description (the headline is ACMG
+# boilerplate, exactly like KCNQ1's legacy "5%"). Captures the number (and an
+# optional '%') immediately preceding "in any sub[-]population".
+_SUBPOP = re.compile(
+    r"(?:≥|≧|>=|&ge;|>|greater than or equal to)\s*"
+    r"([0-9]*\.?[0-9]+)\s*(%?)\s*(?:\([^)]*\))?\s*in any sub-?population",
+    re.IGNORECASE,
+)
 
 
-def _applicable_strengths(code: dict) -> list[dict]:
-    return [
-        es for es in code.get("evidenceStrengths", [])
-        if str(es.get("applicability", "")).lower().startswith("applic")
-        and es.get("description")
-    ]
+def _to_prop(num: str, pct: str) -> Optional[float]:
+    """A numeric token (+ optional '%') as a proportion in (0, 1), else None."""
+    try:
+        v = float(num)
+    except ValueError:
+        return None
+    if pct:
+        v /= 100.0
+    return v if 0.0 < v < 1.0 else None
 
 
-def _threshold_from_desc(desc: str) -> tuple[Optional[float], bool]:
-    """Return (threshold, multi_value_flag) parsed from a description.
-
-    Collects every operator-anchored frequency in (0, 1) — converting a
-    trailing '%' to a proportion — and returns the FIRST one (specs state the
-    operative cutoff first; for multi-MOI descriptions the autosomal-recessive,
-    i.e. higher/conservative, value is listed first). A second distinct value
-    sets the flag so the row can be spot-checked.
-    """
-    def _pct(num: str, pct: str) -> Optional[float]:
-        try:
-            v = float(num)
-        except ValueError:
-            return None
-        if pct:
-            v /= 100.0
-        return v if 0.0 < v < 1.0 else None
+def _collect_cands(desc: str) -> list[float]:
+    """Frequency candidates in (0, 1) from a description, by parser tier."""
+    _pct = _to_prop
 
     # Tier 1: scientific notation (very specific; e.g. "≥8 x 10^-3", "1.11 x 10^-5").
     sci = [a * 10 ** int(b) for a, b in
@@ -102,9 +115,63 @@ def _threshold_from_desc(desc: str) -> tuple[Optional[float], bool]:
     # already resolved above, so stray penetrance %s are not a concern here.
     if not cands:
         cands = [v for v in (_pct(n, p) for n, p in _ANY.findall(desc)) if v is not None]
+    return cands
+
+
+def _applicable_strengths(code: dict) -> list[dict]:
+    return [
+        es for es in code.get("evidenceStrengths", [])
+        if str(es.get("applicability", "")).lower().startswith("applic")
+        and es.get("description")
+    ]
+
+
+def _threshold_from_desc(desc: str) -> tuple[Optional[float], bool]:
+    """Return (threshold, multi_value_flag) parsed from a description.
+
+    Collects every operator-anchored frequency in (0, 1) — converting a
+    trailing '%' to a proportion — and returns the FIRST one (specs state the
+    operative cutoff first; for multi-MOI descriptions the autosomal-recessive,
+    i.e. higher/conservative, value is listed first). A second distinct value
+    sets the flag so the row can be spot-checked.
+
+    Exception — *range* descriptions ("Allele frequency between X and Y"):
+    these state a BS1 band whose operative cutoff is the LOWER edge (BS1 fires
+    when AF ≥ that edge, up to the BA1 ceiling). The textual order of the two
+    bounds is inconsistent across specs (RUNX1 lists lower-first, RPE65 lists
+    upper-first), so the lower bound is taken as min(...) rather than by
+    position to avoid silently adopting the upper bound (an effective BS1 = BA1
+    that never fires).
+
+    Exception — *legacy 5%* boilerplate ("above 5% in ESP/1000 Genomes/ExAC"):
+    dropped when a gnomAD-specific cutoff is also present, so the operative
+    gnomAD number wins (e.g. KCNQ1 BA1 → 0.004, not 0.05). If that legacy clause
+    is the *only* number (RPGR-style males "5%"), it is retained as a fallback.
+
+    Exception — *sub-population* application rule ("present at ≥X in any
+    sub-population"): X is the VCEP's operative gnomAD cutoff and wins outright
+    over any generic "above 0.05%" headline (e.g. Rett/Angelman-like panels →
+    BA1 0.000083, not 0.0005).
+    """
+    # Highest precedence: an explicit "≥X in any sub-population" gnomAD rule.
+    sub = _SUBPOP.search(desc)
+    if sub:
+        v = _to_prop(sub.group(1), sub.group(2))
+        if v is not None:
+            return v, False
+
+    # Prefer the description with the legacy 5%/ESP clause removed; fall back to
+    # the original only if stripping leaves nothing parseable.
+    cands = _collect_cands(_LEGACY_5PCT.sub(" ", desc))
+    if not cands:
+        cands = _collect_cands(desc)
 
     if not cands:
         return None, False
+    # Range band ("between X and Y"): the BS1 cutoff is the lower edge,
+    # independent of which bound is written first.
+    if re.search(r"\bbetween\b", desc, re.IGNORECASE) and len(set(cands)) > 1:
+        return min(cands), True
     return cands[0], len(set(cands)) > 1
 
 
@@ -157,6 +224,14 @@ def parse_spec(path: str) -> list[dict]:
     vcep = (d.get("affiliation") or {}).get("label") or d.get("label", gn)
     url = _ui_url(d.get("@id", ""), gn)
     status = d.get("cspecStatus", "")
+    # Spec specificity: how many distinct genes this whole spec covers. A
+    # single-gene VCEP (e.g. GN035 FOXG1) is more gene-specific — and therefore
+    # authoritative for that gene — than a grouped panel (e.g. GN016, 6 genes).
+    # Used to resolve a gene appearing in multiple specs (see main()).
+    n_spec_genes = len({
+        g.get("label") for rs in d.get("ruleSets", [])
+        for g in rs.get("genes", []) if g.get("label")
+    })
     rows: list[dict] = []
     for rs in d.get("ruleSets", []):
         bs1, bs1_note = _criterion_threshold(rs, "BS1")
@@ -175,6 +250,9 @@ def parse_spec(path: str) -> list[dict]:
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
+                # Transient (not a TSV column; dropped at write time via
+                # extrasaction="ignore"): drives multi-spec resolution.
+                "_specificity": n_spec_genes,
             })
     return rows
 
@@ -210,19 +288,32 @@ def main() -> None:
             if g not in by_gene:
                 by_gene[g] = row
                 continue
-            # Duplicate gene across specs — keep the most conservative BA1.
+            # Duplicate gene across specs. Prefer the more gene-specific spec
+            # (fewer genes in scope): a single-gene VCEP supersedes a grouped
+            # panel for that gene. Only on a specificity tie do we fall back to
+            # keeping the most conservative (highest) BA1.
             prev = by_gene[g]
-            new_ba1 = _to_float(row["ba1_threshold"])
-            old_ba1 = _to_float(prev["ba1_threshold"])
-            if new_ba1 is not None and (old_ba1 is None or new_ba1 > old_ba1):
-                row["notes"] = (row["notes"] + "; multiple specs (kept conservative)").strip("; ")
+            new_spec = row["_specificity"]
+            old_spec = prev["_specificity"]
+            if new_spec < old_spec:
+                row["notes"] = (row["notes"] + "; multiple specs (gene-specific kept)").strip("; ")
                 by_gene[g] = row
-            else:
+            elif new_spec > old_spec:
                 prev["notes"] = (prev["notes"] + "; multiple specs").strip("; ")
+            else:
+                new_ba1 = _to_float(row["ba1_threshold"])
+                old_ba1 = _to_float(prev["ba1_threshold"])
+                if new_ba1 is not None and (old_ba1 is None or new_ba1 > old_ba1):
+                    row["notes"] = (row["notes"] + "; multiple specs (kept conservative)").strip("; ")
+                    by_gene[g] = row
+                else:
+                    prev["notes"] = (prev["notes"] + "; multiple specs").strip("; ")
 
     rows = [by_gene[g] for g in sorted(by_gene)]
     with open(args.out, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=COLUMNS, delimiter="\t")
+        # extrasaction="ignore": rows carry a transient "_specificity" key that
+        # is not a TSV column.
+        w = csv.DictWriter(fh, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
 

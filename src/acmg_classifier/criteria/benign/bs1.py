@@ -48,12 +48,16 @@ class BS1Evaluator(CriterionEvaluator):
         gene = pc.gene_symbol if pc else ""
         threshold = self._thresholds.get(gene).bs1
 
+        # Format with 3 significant figures (not fixed 4 decimals): disease-
+        # specific cutoffs are often ~1e-4, where ".4f" rounds both the FAF and
+        # the threshold to misleadingly coarse values (0.000358 → "0.0004",
+        # 0.000316 → "0.0003"). The comparison itself uses full float precision.
         if faf >= threshold:
             return CriteriaResult.met(
                 ACMGCriterion.BS1,
-                evidence=f"gnomAD FAF95={faf:.4f} >= BS1 threshold {threshold:.4f} for {gene or 'default'}",
+                evidence=f"gnomAD FAF95={faf:.3g} >= BS1 threshold {threshold:.3g} for {gene or 'default'}",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.BS1,
-            f"gnomAD FAF95={faf:.4f} < BS1 threshold {threshold:.4f}",
+            f"gnomAD FAF95={faf:.3g} < BS1 threshold {threshold:.3g}",
         )
