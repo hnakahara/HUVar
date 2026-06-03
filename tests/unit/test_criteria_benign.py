@@ -107,6 +107,55 @@ class TestBS1:
         assert not r.triggered
 
 
+class TestMalesAlleleFrequency:
+    """X-linked genes whose VCEP states the cutoff "in males" compare against
+    gnomAD AF_XY (RPGR/RS1/ABCD1/SLC6A8/OTC), falling back to overall FAF when
+    AF_XY is unavailable (gnomAD DB predating the af_xy column)."""
+
+    def _cfg(self, tmp_path):
+        from unittest.mock import MagicMock
+        cfg = MagicMock()
+        tsv = tmp_path / "disease_prevalence.tsv"
+        tsv.write_text(
+            "gene_symbol\tbs1_threshold\tba1_threshold\taf_basis\n"
+            "RPGR\t0.000083\t0.05\tmales\n",
+            encoding="utf-8",
+        )
+        cfg.disease_prevalence_tsv = tsv
+        return cfg
+
+    def test_ba1_uses_male_af_over_overall_faf(self, tmp_path):
+        from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+        ev = BA1Evaluator(self._cfg(tmp_path))
+        # Overall FAF (0.04) < 5%, but male AF (0.06) ≥ 5% → BA1 fires on males.
+        gd = GnomADData(faf95_popmax=0.04, af_xy=0.06, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="RPGR")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered
+        assert "AF_XY (males)" in r.evidence
+
+    def test_ba1_falls_back_to_overall_when_af_xy_missing(self, tmp_path):
+        from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+        ev = BA1Evaluator(self._cfg(tmp_path))
+        # af_xy None (old DB) → use overall FAF 0.06 ≥ 5% → still fires, but the
+        # evidence reflects the overall-FAF fallback, not AF_XY.
+        gd = GnomADData(faf95_popmax=0.06, af_xy=None, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="RPGR")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered
+        assert "AF_XY" not in r.evidence
+
+    def test_bs1_uses_male_af(self, tmp_path):
+        from acmg_classifier.criteria.benign.bs1 import BS1Evaluator
+        ev = BS1Evaluator(self._cfg(tmp_path))
+        # Overall FAF below BS1 (8.3e-5) but male AF above it → BS1 fires.
+        gd = GnomADData(faf95_popmax=0.00001, af_xy=0.0002, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="RPGR")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered
+        assert "AF_XY (males)" in r.evidence
+
+
 class TestBS2:
     def setup_method(self):
         from unittest.mock import MagicMock

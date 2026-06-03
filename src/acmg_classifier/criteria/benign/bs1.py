@@ -46,7 +46,16 @@ class BS1Evaluator(CriterionEvaluator):
         # table, use its disease-specific cutoff; otherwise the default applies.
         pc = annotation.primary_consequence
         gene = pc.gene_symbol if pc else ""
-        threshold = self._thresholds.get(gene).bs1
+        gt = self._thresholds.get(gene)
+        threshold = gt.bs1
+
+        # X-linked "in males" genes (RPGR, RS1, ABCD1, SLC6A8, OTC): the VCEP
+        # cutoff is on the male (XY) allele frequency. Fall back to the overall
+        # FAF when AF_XY is unavailable (gnomAD DB predating the af_xy column).
+        metric = "gnomAD FAF95"
+        if gt.af_basis == "males" and gd.af_xy is not None:
+            faf = gd.af_xy
+            metric = "gnomAD AF_XY (males)"
 
         # Format with 3 significant figures (not fixed 4 decimals): disease-
         # specific cutoffs are often ~1e-4, where ".4f" rounds both the FAF and
@@ -55,9 +64,9 @@ class BS1Evaluator(CriterionEvaluator):
         if faf >= threshold:
             return CriteriaResult.met(
                 ACMGCriterion.BS1,
-                evidence=f"gnomAD FAF95={faf:.3g} >= BS1 threshold {threshold:.3g} for {gene or 'default'}",
+                evidence=f"{metric}={faf:.3g} >= BS1 threshold {threshold:.3g} for {gene or 'default'}",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.BS1,
-            f"gnomAD FAF95={faf:.3g} < BS1 threshold {threshold:.3g}",
+            f"{metric}={faf:.3g} < BS1 threshold {threshold:.3g}",
         )

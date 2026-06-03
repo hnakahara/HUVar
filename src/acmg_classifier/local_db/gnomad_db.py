@@ -19,6 +19,10 @@ class GnomADDB:
         self._constraint: dict[str, tuple[float | None, float | None, float | None]] = {}
         if constraint_tsv.exists():
             self._constraint = _load_constraint(constraint_tsv)
+        # Whether the variants table carries the af_xy column (added for X-linked
+        # "in males" BA1/BS1). Probed once and cached; a DB built before this
+        # column lacks it, so we degrade gracefully to NULL rather than erroring.
+        self._has_af_xy: bool | None = None
 
     def query(self, chrom: str, pos: int, ref: str, alt: str) -> Optional[GnomADData]:
         """Fetch population statistics for a specific variant.
@@ -36,10 +40,13 @@ class GnomADDB:
         c1, c2 = chrom_candidates(chrom)
         try:
             con = duckdb.connect(str(self._db_path), read_only=True)
+            # Select af_xy only when the schema has it; otherwise NULL keeps the
+            # result tuple shape constant for older DBs.
+            xy_expr = "af_xy" if self._af_xy_available(con) else "NULL AS af_xy"
             row = con.execute(
-                """
+                f"""
                 SELECT af, an, ac, nhomalt, nhemi,
-                       popmax_af, popmax_pop, faf95_popmax,
+                       popmax_af, popmax_pop, faf95_popmax, {xy_expr},
                        filters
                 FROM variants
                 WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
@@ -59,7 +66,7 @@ class GnomADDB:
             return GnomADData(af=0.0, ac=0, an=0, filter_pass=True)
 
         (af, an, ac, nhomalt, nhemi,
-         popmax_af, popmax_pop, faf95_popmax, filters) = row
+         popmax_af, popmax_pop, faf95_popmax, af_xy, filters) = row
 
         # gnomAD FILTER column conventions: None / "" / "PASS" / "." all
         # mean "passed QC". Anything else (e.g. "AC0", "InbreedingCoeff")
@@ -74,8 +81,16 @@ class GnomADDB:
             popmax_af=popmax_af,
             popmax_pop=popmax_pop,
             faf95_popmax=faf95_popmax,
+            af_xy=af_xy,
             filter_pass=filter_pass,
         )
+
+    def _af_xy_available(self, con) -> bool:
+        """True if the variants table has the af_xy column (cached per instance)."""
+        if self._has_af_xy is None:
+            cols = {r[1] for r in con.execute("PRAGMA table_info('variants')").fetchall()}
+            self._has_af_xy = "af_xy" in cols
+        return self._has_af_xy
 
     def get_constraint(
         self, gene_symbol: str

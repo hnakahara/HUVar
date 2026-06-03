@@ -47,6 +47,11 @@ class GnomADData(BaseModel):
     popmax_af: Optional[float] = None
     popmax_pop: Optional[str] = None
     faf95_popmax: Optional[float] = None
+    # Male (XY/hemizygous) allele frequency — used by BA1/BS1 for genes whose
+    # VCEP defines the cutoff "in males" (X-linked: RPGR, RS1, ABCD1, SLC6A8,
+    # OTC). None when the gnomAD DB predates the AF_XY column (graceful
+    # fallback to the overall FAF in those evaluators).
+    af_xy: Optional[float] = None
     filter_pass: bool = True
 
     # Gene-level constraint (from gnomAD constraint table)

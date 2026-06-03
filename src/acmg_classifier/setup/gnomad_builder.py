@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS variants (
     popmax_af DOUBLE,
     popmax_pop TEXT,
     faf95_popmax DOUBLE,
+    af_xy DOUBLE,
     filters TEXT
 );
 """
@@ -48,7 +49,7 @@ _CREATE_INDEX = """
 CREATE INDEX IF NOT EXISTS idx_variants ON variants (chrom, pos, ref, alt);
 """
 
-_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 _BATCH_SIZE = 50_000
 
@@ -301,6 +302,9 @@ def _vcf_to_parquet(
                         _to_float(_info(v, "AF_grpmax", "AF_popmax")),
                         _to_str(_info(v, "grpmax", "popmax")),
                         _to_float(_info(v, "faf95_grpmax", "faf95_popmax")),
+                        # Male (XY) allele frequency for X-linked "in males"
+                        # BA1/BS1 (RPGR etc.). gnomAD provides AF_XY directly.
+                        _to_float(_info(v, "AF_XY")),
                         filter_val,
                     )
                     batch.append(row)

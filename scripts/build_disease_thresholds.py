@@ -32,9 +32,16 @@ from typing import Optional
 
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
-    "penetrance", "bs1_threshold", "ba1_threshold", "source_vcep", "cspec_url",
-    "notes",
+    "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "source_vcep",
+    "cspec_url", "notes",
 ]
+
+# Genes whose BA1/BS1 spec defines the cutoff on the *male* (XY/hemizygous)
+# allele frequency rather than the overall population FAF — detected from
+# "in males" / "hemizygous" wording in the applicable BA1/BS1 descriptions
+# (e.g. RPGR, RS1, ABCD1, SLC6A8, OTC, all X-linked). Emitted in the af_basis
+# column so the BA1/BS1 evaluators compare against gnomAD AF_XY for these genes.
+_MALES_BASIS = re.compile(r"\bin males\b|hemizyg", re.IGNORECASE)
 
 # A frequency cutoff is the number directly after a ≥ / > operator, optionally
 # followed by '%'. Anchoring on the operator avoids the many *non-threshold*
@@ -198,6 +205,18 @@ def _criterion_threshold(rule_set: dict, label: str) -> tuple[Optional[float], s
     return None, f"{label}: code absent"
 
 
+def _af_basis(rule_set: dict) -> str:
+    """"males" if the applicable BA1/BS1 descriptions define the cutoff on the
+    male (XY/hemizygous) allele frequency; otherwise "" (overall population)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") not in ("BA1", "BS1"):
+            continue
+        for es in _applicable_strengths(code):
+            if _MALES_BASIS.search(es.get("description", "")):
+                return "males"
+    return ""
+
+
 def _moi(gene: dict) -> str:
     out: set[str] = set()
     for dis in gene.get("diseases", []):
@@ -236,6 +255,7 @@ def parse_spec(path: str) -> list[dict]:
     for rs in d.get("ruleSets", []):
         bs1, bs1_note = _criterion_threshold(rs, "BS1")
         ba1, ba1_note = _criterion_threshold(rs, "BA1")
+        af_basis = _af_basis(rs)
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -247,6 +267,7 @@ def parse_spec(path: str) -> list[dict]:
                 "prevalence": "", "allelic_het": "", "genetic_het": "", "penetrance": "",
                 "bs1_threshold": "" if bs1 is None else _fmt(bs1),
                 "ba1_threshold": "" if ba1 is None else _fmt(ba1),
+                "af_basis": af_basis,
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
@@ -268,7 +289,18 @@ def main() -> None:
     ap.add_argument("--out", default="resources/clingen/disease_prevalence.tsv")
     ap.add_argument("--released-only", action="store_true",
                     help="Only emit specs whose cspecStatus is 'Released'.")
+    ap.add_argument(
+        "--override", action="append", default=[],
+        metavar="GENE:field=val[,field=val]",
+        help="Manually override a gene's resolved values, applied AFTER "
+             "multi-spec resolution. Repeatable. Fields: ba1, bs1, af_basis, "
+             "inheritance. Example: --override RYR1:ba1=0.0038,bs1=0.0007 . "
+             "Use this to pin a disease-appropriate cutoff for genes whose "
+             "multi-spec ambiguity is kept conservative (highest threshold) by "
+             "default.",
+    )
     args = ap.parse_args()
+    overrides = _parse_overrides(args.override)
 
     files = sorted(glob.glob(os.path.join(args.json_dir, "GN*.json")))
     by_gene: dict[str, dict] = {}
@@ -290,8 +322,12 @@ def main() -> None:
                 continue
             # Duplicate gene across specs. Prefer the more gene-specific spec
             # (fewer genes in scope): a single-gene VCEP supersedes a grouped
-            # panel for that gene. Only on a specificity tie do we fall back to
-            # keeping the most conservative (highest) BA1.
+            # panel for that gene. On a specificity tie (e.g. RYR1/ACTA1 — the
+            # same gene in distinct single-gene VCEPs for different diseases)
+            # the ambiguity cannot be auto-resolved, so we default to the most
+            # CONSERVATIVE cutoff — the highest BA1 (then highest BS1) — which
+            # minimises false-positive benign calls. Use --override to pin a
+            # disease-appropriate value instead.
             prev = by_gene[g]
             new_spec = row["_specificity"]
             old_spec = prev["_specificity"]
@@ -303,12 +339,21 @@ def main() -> None:
             else:
                 new_ba1 = _to_float(row["ba1_threshold"])
                 old_ba1 = _to_float(prev["ba1_threshold"])
-                if new_ba1 is not None and (old_ba1 is None or new_ba1 > old_ba1):
+                new_bs1 = _to_float(row["bs1_threshold"])
+                old_bs1 = _to_float(prev["bs1_threshold"])
+                # Conservative (FP-minimising) tie-break: higher BA1 wins; if
+                # BA1 ties, higher BS1 wins.
+                new_key = (new_ba1 if new_ba1 is not None else -1.0,
+                           new_bs1 if new_bs1 is not None else -1.0)
+                old_key = (old_ba1 if old_ba1 is not None else -1.0,
+                           old_bs1 if old_bs1 is not None else -1.0)
+                if new_key > old_key:
                     row["notes"] = (row["notes"] + "; multiple specs (kept conservative)").strip("; ")
                     by_gene[g] = row
                 else:
                     prev["notes"] = (prev["notes"] + "; multiple specs").strip("; ")
 
+    _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
     with open(args.out, "w", newline="", encoding="utf-8") as fh:
         # extrasaction="ignore": rows carry a transient "_specificity" key that
@@ -327,6 +372,58 @@ def _to_float(s: str) -> Optional[float]:
         return float(s)
     except (TypeError, ValueError):
         return None
+
+
+# CLI override field → TSV column.
+_OVERRIDE_FIELDS = {
+    "ba1": "ba1_threshold",
+    "bs1": "bs1_threshold",
+    "af_basis": "af_basis",
+    "inheritance": "inheritance",
+}
+
+
+def _parse_overrides(specs: list[str]) -> dict[str, dict[str, str]]:
+    """Parse ``--override GENE:field=val[,field=val]`` strings into a
+    {gene: {column: value}} map. Raises ValueError on a malformed spec or an
+    unknown field so a typo fails loudly rather than being silently ignored."""
+    out: dict[str, dict[str, str]] = {}
+    for spec in specs:
+        gene, sep, kvs = spec.partition(":")
+        gene = gene.strip()
+        if not sep or not gene:
+            raise ValueError(f"--override '{spec}': expected GENE:field=value[,...]")
+        fields: dict[str, str] = {}
+        for kv in kvs.split(","):
+            if not kv.strip():
+                continue
+            key, eq, val = kv.partition("=")
+            key = key.strip().lower()
+            if not eq or key not in _OVERRIDE_FIELDS:
+                raise ValueError(
+                    f"--override '{spec}': bad field '{kv.strip()}' "
+                    f"(allowed: {', '.join(sorted(_OVERRIDE_FIELDS))})"
+                )
+            fields[_OVERRIDE_FIELDS[key]] = val.strip()
+        out.setdefault(gene, {}).update(fields)
+    return out
+
+
+def _apply_overrides(by_gene: dict[str, dict], overrides: dict[str, dict[str, str]]) -> None:
+    """Apply manual per-gene overrides in place (last word on a value).
+
+    For multi-spec genes whose ambiguity cannot be auto-resolved (e.g. RYR1,
+    ACTA1 — same specificity across distinct diseases), this lets the operator
+    pin the disease-appropriate cutoff. A gene not produced by any spec is
+    created so an override can also add a brand-new row."""
+    for gene, fields in overrides.items():
+        row = by_gene.get(gene)
+        if row is None:
+            row = {c: "" for c in COLUMNS}
+            row["gene_symbol"] = gene
+            by_gene[gene] = row
+        row.update(fields)
+        row["notes"] = (row.get("notes", "") + "; manual override").strip("; ")
 
 
 if __name__ == "__main__":

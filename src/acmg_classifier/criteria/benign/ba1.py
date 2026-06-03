@@ -31,15 +31,25 @@ class BA1Evaluator(CriterionEvaluator):
         if gd is None or not gd.filter_pass:
             return CriteriaResult.not_met(ACMGCriterion.BA1, "No valid gnomAD record")
 
+        pc = annotation.primary_consequence
+        gene = pc.gene_symbol if pc else ""
+        gt = self._thresholds.get(gene)
+        threshold = gt.ba1
+
         # Same prefer-FAF95 logic as PM2/PS4: FAF gives the most conservative
         # estimate; only fall back to raw AF if FAF is unavailable.
         faf = gd.faf95_popmax
         if faf is None:
             faf = gd.popmax_af or gd.af or 0.0
 
-        pc = annotation.primary_consequence
-        gene = pc.gene_symbol if pc else ""
-        threshold = self._thresholds.get(gene).ba1
+        # X-linked genes whose VCEP defines the cutoff "in males" (RPGR, RS1,
+        # ABCD1, SLC6A8, OTC): compare against the male (XY) allele frequency.
+        # Fall back to the overall FAF when AF_XY is unavailable (e.g. a gnomAD
+        # DB built before the af_xy column).
+        metric = "gnomAD FAF95_popmax"
+        if gt.af_basis == "males" and gd.af_xy is not None:
+            faf = gd.af_xy
+            metric = "gnomAD AF_XY (males)"
 
         # 3 significant figures rather than 4 fixed decimals — disease-specific
         # BA1 cutoffs can be ~1e-3/1e-5, which ".4f" rounds misleadingly. The
@@ -47,9 +57,9 @@ class BA1Evaluator(CriterionEvaluator):
         if faf >= threshold:
             return CriteriaResult.met(
                 ACMGCriterion.BA1,
-                evidence=f"gnomAD FAF95_popmax={faf:.3g} >= BA1 threshold {threshold:.3g} for {gene or 'default'}",
+                evidence=f"{metric}={faf:.3g} >= BA1 threshold {threshold:.3g} for {gene or 'default'}",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.BA1,
-            f"gnomAD FAF95_popmax={faf:.3g} < BA1 threshold {threshold:.3g}",
+            f"{metric}={faf:.3g} < BA1 threshold {threshold:.3g}",
         )

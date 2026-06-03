@@ -72,10 +72,17 @@ def compute_max_credible_af(
 
 @dataclass(frozen=True)
 class GeneThresholds:
-    """Resolved BA1/BS1 allele-frequency cutoffs for one gene."""
+    """Resolved BA1/BS1 allele-frequency cutoffs for one gene.
+
+    ``af_basis`` selects which gnomAD frequency the BA1/BS1 evaluators compare
+    against: "" (default) → overall population FAF95; "males" → male (XY)
+    allele frequency, for X-linked genes whose VCEP states the cutoff "in
+    males" (RPGR, RS1, ABCD1, SLC6A8, OTC).
+    """
 
     ba1: float
     bs1: float
+    af_basis: str = ""
 
 
 _DEFAULT_THRESHOLDS = GeneThresholds(ba1=_DEFAULT_BA1, bs1=_DEFAULT_BS1)
@@ -131,7 +138,8 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
     else:
         ba1 = _DEFAULT_BA1
 
-    return GeneThresholds(ba1=ba1, bs1=bs1)
+    af_basis = (row.get("af_basis") or "").strip().lower()
+    return GeneThresholds(ba1=ba1, bs1=bs1, af_basis=af_basis)
 
 
 class DiseaseThresholds:

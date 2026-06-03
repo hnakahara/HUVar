@@ -105,6 +105,18 @@ class TestDiseaseThresholds:
         t = DiseaseThresholds(tsv).get("GENEE")
         assert t == GeneThresholds(ba1=0.05, bs1=0.005)
 
+    def test_af_basis_males_read_from_column(self, tmp_path: Path):
+        tsv = _write_tsv(
+            tmp_path,
+            "gene_symbol\tbs1_threshold\tba1_threshold\taf_basis\n"
+            "RPGR\t0.000083\t0.05\tmales\n"
+            "MECP2\t0.0000083\t0.000083\t\n",
+        )
+        dt = DiseaseThresholds(tsv)
+        assert dt.get("RPGR").af_basis == "males"
+        assert dt.get("MECP2").af_basis == ""        # blank → overall population
+        assert dt.get("UNKNOWN").af_basis == ""      # default thresholds
+
     def test_het_defaults_to_one_when_omitted(self, tmp_path: Path):
         # Only prevalence + penetrance given; het defaults to 1.0.
         # maxAF (AD) = 0.001*1*1/1 /2 = 5e-4 → bs1 = max(5e-4,5e-4)=5e-4
