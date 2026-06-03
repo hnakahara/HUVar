@@ -34,7 +34,10 @@ results/
 output/
 tmp/
 scratch/
-paper
+paper/
+resources/clingen/cspec_json/
+resources/clingen/CSpecList.tsv
+
 
 # Exception: keep tiny test fixtures shipped with the repo
 !tests/fixtures/*.vcf

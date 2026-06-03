@@ -7,17 +7,17 @@ from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
-
-# The 5% threshold is the original ACMG 2015 stand-alone benign cutoff.
-# It is intentionally NOT lowered for recessive genes (unlike PM2): if a
-# variant is at 5% population frequency it cannot be a Mendelian disease
-# allele under any inheritance model.
-_BA1_FAF95_THRESHOLD = 0.05
+from acmg_classifier.criteria.allele_frequency import DiseaseThresholds
 
 
 class BA1Evaluator(CriterionEvaluator):
+    """BA1 cutoff is disease-specific (Whiffin/Ware: min(0.05, 10 x maxAF)),
+    falling back to the ACMG 2015 stand-alone benign 5% when no per-gene
+    parameters are available."""
+
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        self._thresholds = DiseaseThresholds(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -37,12 +37,16 @@ class BA1Evaluator(CriterionEvaluator):
         if faf is None:
             faf = gd.popmax_af or gd.af or 0.0
 
-        if faf >= _BA1_FAF95_THRESHOLD:
+        pc = annotation.primary_consequence
+        gene = pc.gene_symbol if pc else ""
+        threshold = self._thresholds.get(gene).ba1
+
+        if faf >= threshold:
             return CriteriaResult.met(
                 ACMGCriterion.BA1,
-                evidence=f"gnomAD FAF95_popmax={faf:.4f} >= {_BA1_FAF95_THRESHOLD}",
+                evidence=f"gnomAD FAF95_popmax={faf:.4f} >= BA1 threshold {threshold:.4f} for {gene or 'default'}",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.BA1,
-            f"gnomAD FAF95_popmax={faf:.4f} < {_BA1_FAF95_THRESHOLD}",
+            f"gnomAD FAF95_popmax={faf:.4f} < BA1 threshold {threshold:.4f}",
         )

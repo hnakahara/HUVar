@@ -1,0 +1,132 @@
+gene_symbol	inheritance	prevalence	allelic_het	genetic_het	penetrance	bs1_threshold	ba1_threshold	source_vcep	cspec_url	notes
+ABCA4	AR					0.0163	0.163	ABCA4 Variant Curation Expert Panel 	https://cspec.genome.network/cspec/ui/svi/svi/GN164	GN164 Released
+ABCD1	XL					0.000017	0.00017	Peroxisomal Disorders Variant Curation Expert Panel 	https://cspec.genome.network/cspec/ui/svi/svi/GN105	GN105 Released
+ACADVL	AR					0.0035	0.007	ACADVL Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN021	GN021 Released
+ACTA1	AR					0.00025	0.0025	Congenital Myopathies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN169	GN169 Released; multiple specs (kept conservative)
+ACTC1	AD					0.0001	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN101	GN101 Released
+ACVRL1	AD					0.002	0.01	Hereditary Hemorrhagic Telangiectasia Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN135	GN135 Released
+ADA	AR					0.00161	0.00721	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN114	GN114 Released
+AIPL1	AR					0.00057	0.0057	Leber Congenital Amaurosis/early onset Retinal Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN208	GN208 Released; BS1: multiple cutoffs in desc — verify
+AKT3						0.000185	0.000926	Brain Malformations Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN018	GN018 Released
+ANO5	AR					0.001	0.003	Limb Girdle Muscular Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN188	GN188 Released
+APC						0.00001	0.001	InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN089	GN089 Released
+ATM	AD,AR					0.0005	0.005	Hereditary Breast, Ovarian and Pancreatic Cancer Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN020	GN020 Released
+BMPR2	AD					0.001	0.01	Pulmonary Hypertension Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN125	GN125 Released
+BRAF						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+BRCA1	AD					0.0001	0.001	ENIGMA BRCA1 and BRCA2 Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN092	GN092 Released
+BRCA2	AD					0.0001	0.001	ENIGMA BRCA1 and BRCA2 Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN097	GN097 Released
+CAPN3	AR					0.001	0.003	Limb Girdle Muscular Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN187	GN187 Released
+CDH1						0.001	0.002	Gastric Cancer Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN007	GN007 Released
+CDH23						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+CDKL5						0.00008	0.0005	Rett and Angelman-like Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN016	GN016 Released; BA1: multiple cutoffs in desc — verify; multiple specs
+COCH						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+CTLA4	AD					0.00000111	0.0000111	Antibody Deficiencies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN122	GN122 Released
+CYP1B1	AR					0.01	0.05	Glaucoma Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN104	GN104 Released
+DCLRE1C	AR					0.00078	0.00346	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN116	GN116 Released
+DICER1	AD					0.0003	0.003	DICER1 and miRNA-Processing Gene Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN024	GN024 Released
+DNM2	AD					0.00000015	0.0000015	Congenital Myopathies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN148	GN148 Released
+DYSF	AR					0.001	0.003	Limb Girdle Muscular Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN180	GN180 Released
+ENG	AD					0.002	0.01	Hereditary Hemorrhagic Telangiectasia Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN136	GN136 Released
+ETHE1						0.0002	0.001	Mitochondrial Diseases Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN014	GN014 Released
+F8	XL					0.0000333	0.000333	Coagulation Factor Deficiency Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN071	GN071 Released
+F9	XL					0.00000556	0.0000556	Coagulation Factor Deficiency Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN080	GN080 Released
+FBN1						0.00005	0.001	FBN1 Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN022	GN022 Released
+FOXG1						0.00008	0.0005	Rett and Angelman-like Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN016	GN016 Released; BA1: multiple cutoffs in desc — verify; multiple specs
+FOXN1	AD					0.00141	0.00447	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN113	GN113 Released
+GAA						0.005	0.01	Lysosomal Diseases Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN010	GN010 Released
+GALT	AR					0.005	0.01	Galactosemia Variant Curation Expert Panel 	https://cspec.genome.network/cspec/ui/svi/svi/GN158	GN158 Released
+GAMT						0.001	0.003	Cerebral Creatine Deficiency Syndromes Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN026	GN026 Released
+GATM	AR					0.0001	0.0005	Cerebral Creatine Deficiency Syndromes Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN025	GN025 Released
+GCK	AD					0.00004	0.0001	Monogenic Diabetes Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN086	GN086 Released
+GJB2						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+GP1BA	AR					0.0005	0.001	Platelet Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN079	GN079 Released
+GP1BB	AR					0.0005	0.001	Platelet Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN082	GN082 Released
+GP9	AR					0.0007	0.001	Platelet Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN083	GN083 Released
+GUCY2D	AR					0.0016	0.016	Leber Congenital Amaurosis/early onset Retinal Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN167	GN167 Released; BS1: multiple cutoffs in desc — verify
+HBA2	AR					0.001	0.005	Hemoglobinopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN173	GN173 Released
+HBB	AR					0.001	0.005	Hemoglobinopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN170	GN170 Released
+HNF1A						0.000033	0.0001	Monogenic Diabetes Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN017	GN017 Released
+HNF4A	AD					0.000033	0.0001	Monogenic Diabetes Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN085	GN085 Released
+HRAS						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+IDUA	AR					0.0025	0.005	Lysosomal Diseases Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN091	GN091 Released
+IL2RG	XL					0.00249	0.0111	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN129	GN129 Released
+IL7R	AR					0.00126	0.00566	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN119	GN119 Released
+ITGA2B						0.00158	0.0024	Platelet Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN011	GN011 Released
+ITGB3						0.00158	0.0024	Platelet Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN011	GN011 Released
+JAK3	AR					0.001	0.00447	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN121	GN121 Released
+KCNQ1	AD,AR					0.0004	0.05	Potassium Channel Arrhythmia Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN112	GN112 Released; BA1: multiple cutoffs in desc — verify
+KCNQ4						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+KRAS						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+LDLR						0.002	0.005	Familial Hypercholesterolemia Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN013	GN013 Released
+LZTR1	AD,AR					0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN094	GN094 Released
+MAP2K1						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+MAP2K2						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+MECP2						0.00008	0.0005	Rett and Angelman-like Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN016	GN016 Released; BA1: multiple cutoffs in desc — verify; multiple specs
+MLH1	AD,AR					0.0001	0.001	InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN115	GN115 Released
+MRAS	AD					0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN087	GN087 Released
+MSH2	AD,AR					0.0001	0.001	InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN137	GN137 Released
+MSH6	AD,AR					0.00022	0.0022	InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN138	GN138 Released
+MTM1	XL					0.0000016	0.000016	Congenital Myopathies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN149	GN149 Released
+MTOR						0.000185	0.000926	Brain Malformations Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN018	GN018 Released
+MYBPC3	AD					0.0002	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN095	GN095 Released
+MYH7	AD					0.0001	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN002	GN002 Released
+MYL2	AD					0.0001	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN102	GN102 Released
+MYL3	AD					0.0001	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN103	GN103 Released
+MYO15A						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN023	GN023 Released
+MYO6						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+MYO7A						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+MYOC	AD					0.001	0.01	Glaucoma Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN019	GN019 Released
+NEB	AR					0.000237	0.00559	Congenital Myopathies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN146	GN146 Released
+NRAS						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+OTC	XL					0.002	0.01	Urea Cycle Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN156	GN156 Released
+OTOF						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN023	GN023 Released
+PAH						0.002	0.015	Phenylketonuria Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN006	GN006 Released
+PALB2	AD,AR					0.0001	0.001	Hereditary Breast, Ovarian and Pancreatic Cancer Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN077	GN077 Released
+PDHA1						0.000092	0.00092	Mitochondrial Diseases Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN014	GN014 Released
+PIK3CA						0.000185	0.000926	Brain Malformations Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN018	GN018 Released
+PIK3CD	AD					0.000316	0.00316	Antibody Deficiencies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN141	GN141 Released; BS1: multiple cutoffs in desc — verify
+PIK3R1	AD					0.000316	0.00316	Antibody Deficiencies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN160	GN160 Released; BS1: multiple cutoffs in desc — verify
+PIK3R2						0.000185	0.000926	Brain Malformations Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN018	GN018 Released
+PMS2	AD,AR					0.00028	0.0028	InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN139	GN139 Released
+POLG						0.005	0.01	Mitochondrial Diseases Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN014	GN014 Released
+PPP1CB	AD					0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN128	GN128 Released
+PTEN	AD					0.000043	0.00056	PTEN Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN003	GN003 Released; BS1: multiple cutoffs in desc — verify
+PTPN11						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+RAF1						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+RAG1	AR					0.00195	0.00872	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN123	GN123 Released
+RAG2	AR					0.00195	0.00872	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN124	GN124 Released
+RIT1						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+RMRP	AR					0.00089	0.004	Severe Combined Immunodeficiency Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN088	GN088 Released
+RPE65	AR					0.008	0.008	Leber Congenital Amaurosis/early onset Retinal Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN120	GN120 Released; BS1: multiple cutoffs in desc — verify
+RPGR	XL					0.000083	0.05	X-linked Inherited Retinal Disease Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN106	GN106 Released
+RRAS2	AD					0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN127	GN127 Released
+RS1	XL					0.00002	0.0002	X-linked Inherited Retinal Disease Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN126	GN126 Released
+RUNX1	AD					0.00015	0.0015	Myeloid Malignancy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN008	GN008 Released; BS1: multiple cutoffs in desc — verify
+RYR1	AR					0.000697	0.00697	Congenital Myopathies Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN179	GN179 Released; multiple specs (kept conservative)
+SCN1A	AD					0.000004	0.0002	Epilepsy Sodium Channel Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN067	GN067 Released
+SCN1B	AD,AR					0.0001	0.003	Epilepsy Sodium Channel Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN076	GN076 Released
+SCN2A	AD					0.000002	0.0001	Epilepsy Sodium Channel Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN068	GN068 Released
+SCN3A	AD					0.000002	0.0001	Epilepsy Sodium Channel Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN069	GN069 Released
+SCN8A	AD					0.000002	0.0001	Epilepsy Sodium Channel Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN070	GN070 Released
+SERPINC1	AD					0.0002	0.002	Thrombosis Variant Curation Expert Panel 	https://cspec.genome.network/cspec/ui/svi/svi/GN084	GN084 Released
+SGCA	AR					0.0009	0.002	Limb Girdle Muscular Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN189	GN189 Released
+SGCB	AR					0.0009	0.002	Limb Girdle Muscular Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN184	GN184 Released
+SGCD	AR					0.0009	0.002	Limb Girdle Muscular Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN186	GN186 Released
+SGCG	AR					0.0009	0.002	Limb Girdle Muscular Dystrophy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN185	GN185 Released
+SHOC2						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+SLC19A3						0.0005	0.001	Mitochondrial Diseases Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN014	GN014 Released
+SLC26A4						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+SLC6A8	XL					0.0002	0.002	Cerebral Creatine Deficiency Syndromes Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN027	GN027 Released
+SLC9A6						0.00008	0.0005	Rett and Angelman-like Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN016	GN016 Released; BA1: multiple cutoffs in desc — verify; multiple specs
+SOS1						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+SOS2						0.00025	0.0005	RASopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN004	GN004 Released; multiple specs
+TCF4						0.00008	0.0005	Rett and Angelman-like Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN016	GN016 Released; BA1: multiple cutoffs in desc — verify; multiple specs
+TECTA						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+TNNI3	AD					0.0001	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN098	GN098 Released
+TNNT2	AD					0.0001	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN099	GN099 Released
+TP53	AD					0.0003	0.001	TP53 Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN009	GN009 Released
+TPM1	AD					0.0001	0.001	Cardiomyopathy Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN100	GN100 Released
+UBE3A						0.00008	0.0005	Rett and Angelman-like Disorders Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN016	GN016 Released; BA1: multiple cutoffs in desc — verify; multiple specs
+USH2A						0.003	0.005	Hearing Loss Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN005	GN005 Released; BA1: multiple cutoffs in desc — verify; BS1: multiple cutoffs in desc — verify
+VHL	AD					0.0000156	0.000156	VHL Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN078	GN078 Released
+VWF	AD					0.01	0.1	von Willebrand Disease  Variant Curation Expert Panel	https://cspec.genome.network/cspec/ui/svi/svi/GN081	GN081 Released; multiple specs
