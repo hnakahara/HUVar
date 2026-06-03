@@ -33,6 +33,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **PP2 now honours ClinGen VCEP applicability first.** New `pp2` column in
+  `disease_prevalence.tsv` extracted from each VCEP's PP2 criteria code
+  (`applicable` / `not_applicable`, with description-level blanket negations and
+  per-gene exclusions like GN018 "but not PIK3R2"). The PP2 evaluator fires for
+  `applicable` genes, suppresses `not_applicable` ones, and only falls back to
+  the statistical heuristic for genes no VCEP covers — the dominant fix for PP2
+  over-assignment (23 VCEP-applicable vs 108 not-applicable genes).
+- **PP2 gene-specific co-requirements** (`pp2_requires` column). When a VCEP
+  makes PP2 conditional on other criteria (BMPR2 / GN125: "PM2_supporting and
+  PP3 must be met" → `PM2,PP3`), the registry suppresses PP2 post-hoc unless
+  every required criterion is also triggered for the variant.
+- **PP2 statistical fallback tightened** (used only for non-VCEP genes) to curb
+  over-assignment: minimum P/LP missense `5 → 10`, maximum benign-missense
+  fraction `0.10 → 0.05`, and the gnomAD missense-Z rescue branch now also
+  requires a benign-missense rate ≤ 15% (a gene swamped with benign missense is
+  no longer PP2-eligible on constraint alone). Thresholds are named constants in
+  `clinvar_sqlite.py` for re-tuning.
 - **Disease-specific BA1/BS1 thresholds rebuilt from ClinGen VCEP specs.**
   Multi-spec genes now prefer the more gene-specific VCEP (a single-gene panel
   supersedes a grouped panel); genuine ties across distinct diseases (RYR1,
@@ -62,6 +79,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `score ≤ 0.070`; per Bergquist 2024 Table 2 there is no Strong (-4)
   category for AlphaMissense BP4. Capped at `ThreePoint`. Existing
   Bayesian sums for very-benign AlphaMissense calls drop by 1 point.
+- **PM5 fired on truncating comparators.** A pathogenic nonsense/frameshift
+  variant that merely shared the residue number (`codon_position`) with the
+  query satisfied PM5, which by definition requires a different *missense* at
+  the same residue. The same-codon comparator is now restricted to genuine
+  missense — removing a large class of false-positive PM5 calls.
 - **BA1/BS1 threshold extraction** from VCEP free-text descriptions, which
   previously adopted the wrong cutoff in several specs:
   - KCNQ1 BA1 took the legacy "above 5%" (`0.05`) instead of the gnomAD-specific

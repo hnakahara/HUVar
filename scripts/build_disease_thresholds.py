@@ -32,8 +32,8 @@ from typing import Optional
 
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
-    "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "source_vcep",
-    "cspec_url", "notes",
+    "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "pp2",
+    "pp2_requires", "source_vcep", "cspec_url", "notes",
 ]
 
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* (XY/hemizygous)
@@ -205,6 +205,87 @@ def _criterion_threshold(rule_set: dict, label: str) -> tuple[Optional[float], s
     return None, f"{label}: code absent"
 
 
+# --- PP2 gene-level applicability (from the per-VCEP PP2 criteria code) ---
+# A VCEP marks PP2 Applicable / Not Applicable per gene. The applicability flag
+# lives on the evidence strengths, but gene-specific decisions are *also* in the
+# free-text description: a whole-description "not applicable" (KCNQ1: "Not
+# applicable due to … z-score 1.83") or a single-gene exclusion (GN018:
+# "applicable to MTOR, PIK3CA and AKT3 but not PIK3R2"). Both are parsed below.
+# These heuristics are validated against the current Released specs.
+_PP2_NOT_APPLICABLE = re.compile(r"not applicable", re.IGNORECASE)
+# A *positive* "applicable" not preceded by "not" — its presence means a
+# "not applicable" elsewhere is a scoped exception, not a blanket negation.
+_PP2_POSITIVE_APPLICABLE = re.compile(r"(?<!not )applicable", re.IGNORECASE)
+
+
+def _pp2_gene_excluded(desc: str, gene: str) -> bool:
+    """True if *desc* singles out *gene* as not-applicable ("(but) not GENE",
+    "not applicable to GENE"). The gene may be wrapped in markdown underscores."""
+    pat = r"\bnot\s+(?:applicable\s+(?:to|for|in)\s+)?_?" + re.escape(gene) + r"_?\b"
+    return re.search(pat, desc, re.IGNORECASE) is not None
+
+
+def _pp2_blanket_negation(desc: str) -> bool:
+    """True if the description negates PP2 for the whole rule set — a "not
+    applicable" with no positive "applicable to …" clause to scope it."""
+    return bool(_PP2_NOT_APPLICABLE.search(desc)) and not _PP2_POSITIVE_APPLICABLE.search(desc)
+
+
+def _pp2_applicability(rule_set: dict) -> dict[str, str]:
+    """{gene: "applicable"|"not_applicable"} from the rule set's PP2 code.
+
+    A gene is `applicable` when the PP2 code has an Applicable strength and the
+    description neither blanket-negates nor excludes that gene; `not_applicable`
+    when the VCEP carries a PP2 code but declined it (no Applicable strength) or
+    negated/excluded the gene. Genes whose VCEP has no PP2 code are omitted."""
+    genes = [g.get("label") for g in rule_set.get("genes", []) if g.get("label")]
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PP2":
+            continue
+        applic = _applicable_strengths(code)
+        if not applic:
+            return {g: "not_applicable" for g in genes}
+        desc = applic[0].get("description", "") or ""
+        out: dict[str, str] = {}
+        for g in genes:
+            if _pp2_gene_excluded(desc, g) or _pp2_blanket_negation(desc):
+                out[g] = "not_applicable"
+            else:
+                out[g] = "applicable"
+        return out
+    return {}
+
+
+# A PP2 description may make the criterion *conditional* on other criteria
+# (BMPR2/GN125: "PM2_supporting and PP3 must be met."). We capture the required
+# ACMG codes so the registry can suppress PP2 unless they are also triggered.
+_PP2_REQ_TRIGGER = re.compile(r"must be met|must also be|required|requires", re.IGNORECASE)
+_ACMG_CODE = re.compile(
+    r"\b(PVS1|PS[1-4]|PM[1-6]|PP[1-5]|BA1|BS[1-4]|BP[1-7])(?:_[a-z]+)?\b",
+    re.IGNORECASE,
+)
+
+
+def _pp2_requires(rule_set: dict) -> str:
+    """Comma-joined ACMG codes PP2 is conditional on (e.g. "PM2,PP3"), or ""."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PP2":
+            continue
+        applic = _applicable_strengths(code)
+        if not applic:
+            return ""
+        desc = applic[0].get("description", "") or ""
+        if not _PP2_REQ_TRIGGER.search(desc):
+            return ""
+        out: list[str] = []
+        for m in _ACMG_CODE.finditer(desc):
+            c = m.group(1).upper()
+            if c != "PP2" and c not in out:
+                out.append(c)
+        return ",".join(out)
+    return ""
+
+
 def _af_basis(rule_set: dict) -> str:
     """"males" if the applicable BA1/BS1 descriptions define the cutoff on the
     male (XY/hemizygous) allele frequency; otherwise "" (overall population)."""
@@ -256,6 +337,8 @@ def parse_spec(path: str) -> list[dict]:
         bs1, bs1_note = _criterion_threshold(rs, "BS1")
         ba1, ba1_note = _criterion_threshold(rs, "BA1")
         af_basis = _af_basis(rs)
+        pp2_map = _pp2_applicability(rs)
+        pp2_req = _pp2_requires(rs)
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -268,12 +351,17 @@ def parse_spec(path: str) -> list[dict]:
                 "bs1_threshold": "" if bs1 is None else _fmt(bs1),
                 "ba1_threshold": "" if ba1 is None else _fmt(ba1),
                 "af_basis": af_basis,
+                "pp2": "",
+                "pp2_requires": "",
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
-                # Transient (not a TSV column; dropped at write time via
-                # extrasaction="ignore"): drives multi-spec resolution.
+                # Transient (not TSV columns; dropped at write time via
+                # extrasaction="ignore"): drive multi-spec resolution and the
+                # cross-spec PP2 aggregation in main().
                 "_specificity": n_spec_genes,
+                "_pp2": pp2_map.get(sym, ""),
+                "_pp2_requires": pp2_req,
             })
     return rows
 
@@ -304,6 +392,15 @@ def main() -> None:
 
     files = sorted(glob.glob(os.path.join(args.json_dir, "GN*.json")))
     by_gene: dict[str, dict] = {}
+    # PP2 applicability is aggregated across ALL specs for a gene, independently
+    # of which spec wins the BA1/BS1 row: if ANY VCEP applies PP2 to the gene it
+    # is "applicable" (highest rank), else "not_applicable" if some VCEP carries
+    # a PP2 code it declined. Rank: applicable(2) > not_applicable(1) > none(0).
+    pp2_rank = {"applicable": 2, "not_applicable": 1, "": 0}
+    pp2_by_gene: dict[str, str] = {}
+    # Co-requirement codes recorded from the spec that first made the gene
+    # applicable (e.g. BMPR2 → "PM2,PP3").
+    pp2_requires_by_gene: dict[str, str] = {}
     n_specs = 0
     for path in files:
         try:
@@ -317,6 +414,11 @@ def main() -> None:
         n_specs += 1
         for row in parse_spec(path):
             g = row["gene_symbol"]
+            cur = pp2_by_gene.get(g, "")
+            if pp2_rank[row["_pp2"]] > pp2_rank[cur]:
+                pp2_by_gene[g] = row["_pp2"]
+                if row["_pp2"] == "applicable":
+                    pp2_requires_by_gene[g] = row["_pp2_requires"]
             if g not in by_gene:
                 by_gene[g] = row
                 continue
@@ -353,6 +455,12 @@ def main() -> None:
                 else:
                     prev["notes"] = (prev["notes"] + "; multiple specs").strip("; ")
 
+    # Stamp the cross-spec PP2 applicability onto each gene's resolved row
+    # (before overrides, so a manual --override pp2=… still wins).
+    for g, row in by_gene.items():
+        row["pp2"] = pp2_by_gene.get(g, "")
+        row["pp2_requires"] = pp2_requires_by_gene.get(g, "")
+
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
     with open(args.out, "w", newline="", encoding="utf-8") as fh:
@@ -379,6 +487,8 @@ _OVERRIDE_FIELDS = {
     "ba1": "ba1_threshold",
     "bs1": "bs1_threshold",
     "af_basis": "af_basis",
+    "pp2": "pp2",
+    "pp2_requires": "pp2_requires",
     "inheritance": "inheritance",
 }
 

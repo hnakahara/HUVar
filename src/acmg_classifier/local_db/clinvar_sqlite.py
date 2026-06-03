@@ -154,6 +154,11 @@ def query_same_codon_different_aa(
         log.error("clinvar_sqlite_error", op="same_codon", error=str(exc))
         return []
 
+    # PM5 compares to an established pathogenic *missense* at the same residue.
+    # codon_position is also populated for truncating changes (p.ArgNNNTer / *),
+    # so a pathogenic nonsense/frameshift at this residue would otherwise fire
+    # PM5 spuriously. Restrict the comparator to genuine missense (hgvs_p ending
+    # in a 3-letter amino acid, not Ter/*) via _is_missense_p.
     return [
         ClinVarRecord(
             variation_id=str(r[0]),
@@ -166,6 +171,7 @@ def query_same_codon_different_aa(
             amino_acid_change=r[7],
         )
         for r in rows
+        if _is_missense_p(r[6])
     ]
 
 
@@ -284,9 +290,16 @@ def query_hotspot_cluster(
 # --- PP2: missense is a common disease mechanism with low benign missense rate ---
 _PP2_PATH = ("Pathogenic", "Likely pathogenic", "Pathogenic/Likely pathogenic")
 _PP2_BENIGN = ("Benign", "Likely benign", "Benign/Likely benign")
-_PP2_MIN_PATH = 5            # missense must be a recurrent pathogenic mechanism
-_PP2_MAX_BENIGN_FRAC = 0.10  # gene must have a low rate of benign missense
+# Eligibility thresholds — tightened to curb PP2 over-assignment (the gene-level
+# heuristic previously qualified ~4x as many genes as the eRepo truth set).
+# Tune these against the validation set if precision/recall need rebalancing.
+_PP2_MIN_PATH = 10           # missense must be a *recurrent* pathogenic mechanism
+_PP2_MAX_BENIGN_FRAC = 0.05  # gene must have a low rate of benign missense
 _PP2_MIN_MIS_Z = 3.09        # gnomAD missense Z-score qualifying a constrained gene
+# The Z-score rescue must still see a modest benign-missense rate: a gene with
+# many benign missense variants is not PP2-eligible no matter how constrained
+# gnomAD says it is. Without this ceiling the Z branch let such genes through.
+_PP2_Z_MAX_BENIGN_FRAC = 0.15
 
 # Match a missense protein change (p.Val377Ile); the trailing AA must not be
 # Ter (stop). We use the 3-letter HGVS form because ClinVar normalises to it;
@@ -358,7 +371,11 @@ def query_pp2_eligible(
 
     frac = benign / total if total else 0.0
     benign_ok = frac <= _PP2_MAX_BENIGN_FRAC
-    z_ok = mis_z is not None and mis_z >= _PP2_MIN_MIS_Z
+    z_ok = (
+        mis_z is not None
+        and mis_z >= _PP2_MIN_MIS_Z
+        and frac <= _PP2_Z_MAX_BENIGN_FRAC
+    )
 
     if benign_ok:
         return True, (
@@ -369,10 +386,19 @@ def query_pp2_eligible(
         return True, (
             f"{gene_symbol}: {path} P/LP missense, missense Z={mis_z:.2f} "
             f">= {_PP2_MIN_MIS_Z} (constrained against missense; benign rate {frac:.0%} "
-            f"{benign}/{total} is permitted via Z-score branch)"
+            f"{benign}/{total} <= {_PP2_Z_MAX_BENIGN_FRAC:.0%} permitted via Z-score branch)"
         )
-    # Neither branch qualifies — report both negative signals so it is clear why.
-    z_note = f", missense Z={mis_z:.2f} < {_PP2_MIN_MIS_Z}" if mis_z is not None else ", missense Z unavailable"
+    # Neither branch qualifies — report why, distinguishing a low Z-score from a
+    # high-Z gene blocked by the benign-rate ceiling on the rescue branch.
+    if mis_z is None:
+        z_note = ", missense Z unavailable"
+    elif mis_z < _PP2_MIN_MIS_Z:
+        z_note = f", missense Z={mis_z:.2f} < {_PP2_MIN_MIS_Z}"
+    else:
+        z_note = (
+            f", missense Z={mis_z:.2f} but benign rate {frac:.0%} "
+            f"> {_PP2_Z_MAX_BENIGN_FRAC:.0%} Z-rescue ceiling"
+        )
     return False, (
         f"{gene_symbol}: benign missense rate {frac:.0%} > {_PP2_MAX_BENIGN_FRAC:.0%} "
         f"({benign}/{total}){z_note} — PP2 not applicable"

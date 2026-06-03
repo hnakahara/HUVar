@@ -50,6 +50,9 @@ class CriteriaRegistry:
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
         self._evaluators: list[CriterionEvaluator] = self._build_evaluators()
+        # Gene-specific PP2 co-requirements (e.g. BMPR2 needs PM2 + PP3).
+        from acmg_classifier.criteria.pp2_genes import PP2Applicability
+        self._pp2 = PP2Applicability(cfg.disease_prevalence_tsv)
 
     def _build_evaluators(self) -> list[CriterionEvaluator]:
         # Local imports avoid an import cycle: each evaluator module imports
@@ -141,8 +144,33 @@ class CriteriaRegistry:
                     r.suppressed = True
                     r.evidence = (r.evidence + " [suppressed: PVS1 active]").strip()
 
+        # PP2 gene-specific co-requirements (e.g. BMPR2 / GN125: "PM2_supporting
+        # and PP3 must be met"). When a VCEP makes PP2 conditional on other
+        # criteria, suppress PP2 unless every required criterion is itself
+        # triggered (and not suppressed) for this variant. Run after the PVS1↔PP3
+        # pass so a PP3 already suppressed there counts as not-met here.
+        self._apply_pp2_co_requirements(results, annotation)
+
         # BA1 / BS1 / PM2 are mutually exclusive frequency criteria — keep only
         # the highest-priority one (see _apply_af_mutual_exclusion).
         _apply_af_mutual_exclusion(results)
 
         return results
+
+    def _apply_pp2_co_requirements(
+        self, results: list[CriteriaResult], annotation: AnnotationData
+    ) -> None:
+        pc = annotation.primary_consequence
+        gene = pc.gene_symbol if pc else None
+        required = self._pp2.requires(gene)
+        if not required:
+            return
+        active = {r.criterion for r in results if r.triggered and not r.suppressed}
+        missing = [c for c in required if c not in active]
+        if not missing:
+            return
+        need = "+".join(c.value for c in required)
+        for r in results:
+            if r.criterion == ACMGCriterion.PP2 and r.triggered and not r.suppressed:
+                r.suppressed = True
+                r.evidence = (r.evidence + f" [suppressed: PP2 requires {need}]").strip()

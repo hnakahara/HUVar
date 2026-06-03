@@ -18,6 +18,8 @@ the flat defaults (BA1 = 0.05, BS1 = 0.005).
 | `bs1_threshold` | optional | **Direct override.** If set, used verbatim for BS1. |
 | `ba1_threshold` | optional | **Direct override.** If set, used verbatim for BA1. |
 | `af_basis`      | optional | `males` → BA1/BS1 compare against the **male (XY) allele frequency** (gnomAD `AF_XY`) instead of the overall population FAF. For X-linked genes whose VCEP states the cutoff "in males" (RPGR, RS1, ABCD1, SLC6A8, OTC). Blank → overall FAF95. Falls back to overall FAF when the gnomAD DB predates the `af_xy` column. |
+| `pp2`           | optional | VCEP PP2 decision: `applicable` → PP2 fires for missense in this gene; `not_applicable` → PP2 suppressed (VCEP declined it). Blank → no VCEP covers the gene; PP2 uses its statistical heuristic. |
+| `pp2_requires`  | optional | Co-criteria PP2 is conditional on, comma-separated (e.g. `PM2,PP3` for BMPR2). PP2 is suppressed post-hoc unless all listed criteria are also triggered for the variant. Blank → unconditional. |
 | `source_vcep`   | optional | Provenance (e.g. `RASopathy VCEP v2.1`). Not read by the tool. |
 | `cspec_url`     | optional | Link to the criteria specification. Not read by the tool. |
 | `notes`         | optional | Free text. Not read by the tool. |
@@ -70,6 +72,17 @@ few precedence rules (all verified against the released specs):
 - **Range bands take the lower edge.** `"between X and Y"` → the BS1 cutoff is
   `min(X, Y)`, independent of which bound is written first (RPE65, RUNX1).
 - **`af_basis=males`** is set when the description says "in males"/"hemizygous".
+- **`pp2`** records each VCEP's gene-level PP2 decision from the PP2 criteria
+  code: `applicable` when a PP2 strength is Applicable, `not_applicable` when the
+  VCEP carries a PP2 code but declined it, blanket-negated the description
+  (KCNQ1: "Not applicable due to … z-score 1.83"), or excluded the gene by name
+  (GN018: "applicable to MTOR, PIK3CA and AKT3 but **not PIK3R2**"). Aggregated
+  across specs so `applicable` in any VCEP wins. This authoritative list is what
+  the PP2 evaluator uses to avoid over-assigning the (gene-level) criterion;
+  genes no VCEP covers fall back to a ClinVar/gnomAD statistical heuristic.
+- **`pp2_requires`** captures co-criteria a VCEP makes PP2 conditional on
+  ("PM2_supporting and PP3 must be met" → `PM2,PP3` for BMPR2). The registry
+  suppresses PP2 post-hoc unless every listed criterion is also triggered.
 
 ### Multi-spec genes and `--override`
 
