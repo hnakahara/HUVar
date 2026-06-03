@@ -20,8 +20,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   ~1.34 GB Brandes archive download.
 - VEP runner now passes `--uniprot`, so `ConsequenceInfo.uniprot_id` is
   populated and the ESM1b lookup can key on the SwissProt accession.
+- **X-linked male-AF for BA1/BS1.** New `af_basis` column in
+  `disease_prevalence.tsv` (`males`) and gnomAD `af_xy` column / `GnomADData.af_xy`
+  field. For genes whose VCEP states the cutoff "in males" (RPGR, RS1, ABCD1,
+  SLC6A8, OTC) BA1/BS1 now compare against the gnomAD male (XY) allele
+  frequency. Requires a gnomAD DB rebuild to populate `af_xy`; older DBs fall
+  back to the overall FAF gracefully.
+- `--override GENE:field=val[,...]` flag in
+  `scripts/build_disease_thresholds.py` to manually pin a gene's BA1/BS1/
+  `af_basis`/inheritance after multi-spec resolution (e.g. selecting the
+  disease-appropriate RYR1 cutoff).
 
 ### Changed
+
+- **Disease-specific BA1/BS1 thresholds rebuilt from ClinGen VCEP specs.**
+  Multi-spec genes now prefer the more gene-specific VCEP (a single-gene panel
+  supersedes a grouped panel); genuine ties across distinct diseases (RYR1,
+  ACTA1) default to the most conservative — highest — cutoff to minimise
+  false-positive benign calls.
 
 - **ClinVar SQLite build is now parallelized** across a worker process pool
   (previously a single-threaded `iterparse`), substantially reducing build
@@ -46,6 +62,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `score ≤ 0.070`; per Bergquist 2024 Table 2 there is no Strong (-4)
   category for AlphaMissense BP4. Capped at `ThreePoint`. Existing
   Bayesian sums for very-benign AlphaMissense calls drop by 1 point.
+- **BA1/BS1 threshold extraction** from VCEP free-text descriptions, which
+  previously adopted the wrong cutoff in several specs:
+  - KCNQ1 BA1 took the legacy "above 5%" (`0.05`) instead of the gnomAD-specific
+    `≥0.004` — now `0.004`.
+  - RPE65 / RUNX1 "between X and Y" BS1 bands took the upper bound — now the
+    lower edge (RPE65 BS1 `0.008` → `0.0008`).
+  - Rett/Angelman-like panels (CDKL5, FOXG1, MECP2, SLC9A6, TCF4, UBE3A) took a
+    generic "above 0.05%" headline instead of the operative "≥0.000083 in any
+    sub-population" cutoff — now `0.000083`.
 
 ### Known issues
 

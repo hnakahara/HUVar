@@ -105,6 +105,9 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   including NMD prediction, last-exon rescue, and biological-relevance gating.
 - **Inheritance-aware PM2** (BS1/BS2 also) thresholds switch between dominant
   and recessive frequencies using a per-gene inheritance table.
+- **Disease-specific BA1/BS1** cutoffs transcribed from ClinGen VCEP criteria
+  specifications (`resources/clingen/`), with X-linked "in males" genes compared
+  against the gnomAD male (XY) allele frequency. See that folder's README.
 - **In silico prediction**: AlphaMissense (default, non-commercial) or
   **ESM1b** (MIT-licensed, commercial-use ready) for missense. Splice
   prediction is **disabled by default** (`--splice-tool none`); **SpliceAI**

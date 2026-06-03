@@ -17,6 +17,7 @@ the flat defaults (BA1 = 0.05, BS1 = 0.005).
 | `penetrance`    | optional | Penetrance 0–1. Blank → cannot compute (falls back to default). |
 | `bs1_threshold` | optional | **Direct override.** If set, used verbatim for BS1. |
 | `ba1_threshold` | optional | **Direct override.** If set, used verbatim for BA1. |
+| `af_basis`      | optional | `males` → BA1/BS1 compare against the **male (XY) allele frequency** (gnomAD `AF_XY`) instead of the overall population FAF. For X-linked genes whose VCEP states the cutoff "in males" (RPGR, RS1, ABCD1, SLC6A8, OTC). Blank → overall FAF95. Falls back to overall FAF when the gnomAD DB predates the `af_xy` column. |
 | `source_vcep`   | optional | Provenance (e.g. `RASopathy VCEP v2.1`). Not read by the tool. |
 | `cspec_url`     | optional | Link to the criteria specification. Not read by the tool. |
 | `notes`         | optional | Free text. Not read by the tool. |
@@ -29,6 +30,10 @@ Resolution order **per criterion, per gene**:
    - `BS1 = max(maxAF, 0.0005)` (0.05% floor)
    - `BA1 = min(0.05, 10 × maxAF)` (5% ceiling)
 3. Else flat default (BS1 0.005 / BA1 0.05).
+
+Independently, `af_basis` selects **which** gnomAD frequency the resolved cutoff
+is compared against: `males` → `AF_XY` (X-linked "in males" genes), blank →
+overall FAF95.
 
 ## Recommended: auto-generate from cspec GN*.json exports
 
@@ -47,13 +52,56 @@ filtering-AF thresholds. To build the whole table automatically:
        --out resources/clingen/disease_prevalence.tsv --released-only
    ```
    One row per gene, BA1/BS1 taken from the *Applicable* evidence-strength
-   descriptions. Rows whose description packs multiple cutoffs (some multi-MOI
-   specs) are flagged `verify` in `notes` and keep the most conservative
-   (highest) value — spot-check those. PM2 is not emitted (the tool derives PM2
-   from raw AF separately).
+   descriptions. PM2 is not emitted (the tool derives PM2 from raw AF
+   separately).
+
+### How the threshold is parsed from each description
+
+The free-text BA1/BS1 descriptions are not uniform, so the extractor applies a
+few precedence rules (all verified against the released specs):
+
+- **Sub-population rule wins.** `"present at ≥X in any sub-population"` is the
+  VCEP's operative gnomAD cutoff and overrides a generic `"above 0.05%"`
+  headline (Rett/Angelman-like panels → BA1 `0.000083`, not `0.0005`).
+- **Legacy 5% dropped.** `"above 5% in ESP / 1000 Genomes / ExAC"` is pre-gnomAD
+  boilerplate; it is ignored when a gnomAD-specific number is also present
+  (KCNQ1 BA1 → `0.004`, not `0.05`), but kept when it is the only value
+  (RPGR-style males "5%").
+- **Range bands take the lower edge.** `"between X and Y"` → the BS1 cutoff is
+  `min(X, Y)`, independent of which bound is written first (RPE65, RUNX1).
+- **`af_basis=males`** is set when the description says "in males"/"hemizygous".
+
+### Multi-spec genes and `--override`
+
+When a gene appears in several specs, the **more gene-specific** spec wins (a
+single-gene VCEP supersedes a grouped panel — fixes FOXG1/MECP2/etc.). On a
+specificity tie across distinct diseases (e.g. RYR1: Malignant Hyperthermia vs
+Congenital Myopathies; ACTA1), the conflict cannot be auto-resolved, so the
+build defaults to the **most conservative** cutoff — the highest BA1 (then
+highest BS1) — which **minimises false-positive benign calls**. Such rows are
+flagged in `notes`; pin a disease-appropriate value with `--override`:
+
+```bash
+python scripts/build_disease_thresholds.py \
+    --json-dir resources/clingen \
+    --out resources/clingen/disease_prevalence.tsv --released-only \
+    --override "RYR1:ba1=0.0038,bs1=0.0007"
+```
+
+`--override GENE:field=val[,field=val]` is repeatable, applied after multi-spec
+resolution, accepts `ba1` / `bs1` / `af_basis` / `inheritance`, can add a gene
+absent from every spec, records `manual override` in `notes`, and fails loudly
+on an unknown field.
+
+> **X-linked "in males" genes need gnomAD `AF_XY`.** Rows with `af_basis=males`
+> are compared against the male (XY) allele frequency. That requires the gnomAD
+> DuckDB to carry the `af_xy` column (built from VCF `AF_XY`); a DB built before
+> that column was added still works — the evaluators fall back to the overall
+> FAF. Rebuild the gnomAD DB (`scripts/setup_data.py`) to activate male-AF.
 
 This regenerates the whole file from JSON, so it overwrites any hand-curated
-rows — keep curation in the JSON source or in override columns of dedicated rows.
+rows — keep curation in the JSON source, the `--override` flags, or override
+columns of dedicated rows.
 
 ## How to populate (authoritative, verified)
 
