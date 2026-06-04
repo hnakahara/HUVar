@@ -53,7 +53,7 @@ URLS: dict[str, dict[str, str]] = {
             f"homo_sapiens_merged_vep_{ENSEMBL_RELEASE}_GRCh38.tar.gz"
         ),
         "clinvar_vcf": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz",
-        "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_xml_old_format/ClinVarFullRelease_00-latest.xml.gz",
+        "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_release/ClinVarRCVRelease_00-latest.xml.gz",
         "alphamissense": "https://storage.googleapis.com/dm_alphamissense/AlphaMissense_hg38.tsv.gz",
         "esm1b_zip": (
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
@@ -87,7 +87,7 @@ URLS: dict[str, dict[str, str]] = {
             f"homo_sapiens_merged_vep_{ENSEMBL_RELEASE}_GRCh37.tar.gz"
         ),
         "clinvar_vcf": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz",
-        "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_xml_old_format/ClinVarFullRelease_00-latest.xml.gz",
+        "clinvar_xml": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/RCV_release/ClinVarRCVRelease_00-latest.xml.gz",
         "alphamissense": "https://storage.googleapis.com/dm_alphamissense/AlphaMissense_hg19.tsv.gz",
         "esm1b_zip": (
             "https://huggingface.co/spaces/ntranoslab/esm_variants/resolve/main/"
@@ -349,8 +349,13 @@ def step_clinvar_sqlite(asm_dir: Path, assembly: str, urls: dict, workers: int |
         print(f"  [SKIP] {dest.name}")
         return True
 
-    xml_gz = asm_dir / "clinvar" / "ClinVarFullRelease.xml.gz"
-    # ClinVarFullRelease is ~5 GB; treat anything under 1 GB as corrupt
+    # ClinVarRCVRelease (RCV_release) — the current, weekly/monthly-updated RCV
+    # XML. The legacy RCV_xml_old_format/ClinVarFullRelease_00-latest is frozen
+    # (its content stopped at 2025-07), so PM5/PS1 comparators built from it lag
+    # ClinVar by ~a year. The distinct local name ensures a stale, previously
+    # downloaded ClinVarFullRelease.xml.gz is not silently reused.
+    xml_gz = asm_dir / "clinvar" / "ClinVarRCVRelease.xml.gz"
+    # ClinVarRCVRelease is ~6 GB; treat anything under 1 GB as corrupt
     _verify_size(xml_gz, min_bytes=1_000_000_000, label="ClinVar XML")
     if not xml_gz.exists():
         _download(urls["clinvar_xml"], xml_gz, "ClinVar XML (~5 GB)")

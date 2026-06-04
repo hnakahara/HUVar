@@ -107,6 +107,46 @@ def _star_rating(review_status: str) -> int:
     return 0
 
 
+def _rcv_classification(ref_assert: ET.Element) -> tuple[str, str, str]:
+    """(significance, review_status, date_last_evaluated) for an RCV record.
+
+    Supports both ClinVar XML schemas. The new RCV release (ClinVar_RCV_2.3.xsd,
+    ``RCV_release/ClinVarRCVRelease_*``) nests the aggregate germline call under
+    ``Classifications/GermlineClassification`` (ReviewStatus + Description, the
+    latter carrying DateLastEvaluated); the legacy ``RCV_xml_old_format`` release
+    used a flat ``ClinicalSignificance`` element. We try the new path first and
+    fall back to the legacy one so either download builds correctly."""
+    gc = ref_assert.find(".//Classifications/GermlineClassification")
+    if gc is not None:
+        desc = gc.find("Description")
+        rev = gc.find("ReviewStatus")
+        sig = desc.text if desc is not None and desc.text else ""
+        rs = rev.text if rev is not None and rev.text else ""
+        dle = desc.get("DateLastEvaluated", "") if desc is not None else ""
+        return sig, rs, dle
+    cs = ref_assert.find(".//ClinicalSignificance")
+    if cs is not None:
+        desc = cs.find("Description")
+        rev = cs.find("ReviewStatus")
+        sig = desc.text if desc is not None and desc.text else ""
+        rs = rev.text if rev is not None and rev.text else ""
+        return sig, rs, cs.get("DateLastEvaluated", "")
+    return "", "", ""
+
+
+def _scv_significance(scv: ET.Element) -> str:
+    """Lower-cased SCV germline significance, both schemas.
+
+    New schema: ``Classification/GermlineClassification`` is the significance
+    text itself (a sibling of ReviewStatus). Legacy schema:
+    ``ClinicalSignificance/Description``."""
+    gc = scv.find(".//Classification/GermlineClassification")
+    if gc is not None and gc.text:
+        return gc.text.strip().lower()
+    d = scv.find(".//ClinicalSignificance/Description")
+    return (d.text or "").strip().lower() if d is not None else ""
+
+
 def _parse_aa_change(hgvs_p: str | None) -> tuple[str | None, int | None]:
     """Extract amino_acid_change ('R175H') and codon_position (175) from HGVS p."""
     import re
@@ -263,15 +303,11 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
             return None
 
         var_id = ref_assert.get("ID", "")
-        clinsig_elem = ref_assert.find(".//ClinicalSignificance/Description")
-        clinsig = clinsig_elem.text if clinsig_elem is not None else ""
-
-        rev_elem = ref_assert.find(".//ClinicalSignificance/ReviewStatus")
-        rev_status = rev_elem.text if rev_elem is not None else ""
+        # Aggregate germline classification — schema-agnostic (new RCV release
+        # nests it under Classifications/GermlineClassification, legacy used a
+        # flat ClinicalSignificance). See _rcv_classification.
+        clinsig, rev_status, last_eval = _rcv_classification(ref_assert)
         stars = _star_rating(rev_status)
-
-        last_elem = ref_assert.find(".//ClinicalSignificance")
-        last_eval = last_elem.get("DateLastEvaluated", "") if last_elem is not None else ""
 
         gene_elem = ref_assert.find(".//MeasureSet/Measure/MeasureRelationship/Symbol/ElementValue")
         gene = gene_elem.text if gene_elem is not None else ""
@@ -305,8 +341,7 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
             # PS4 counts affected probands ONLY from P/LP submissions. An affected
             # individual reported by a Benign/VUS submitter is an incidental finding,
             # not evidence that the variant causes disease, so it must not be counted.
-            scv_sig_elem = scv.find(".//ClinicalSignificance/Description")
-            scv_sig = (scv_sig_elem.text or "").strip().lower() if scv_sig_elem is not None else ""
+            scv_sig = _scv_significance(scv)
             scv_is_plp = scv_sig.startswith("pathogenic") or scv_sig.startswith("likely pathogenic")
             if scv_is_plp:
                 for status_elem in scv.findall(".//ObservedIn/Sample/AffectedStatus"):
