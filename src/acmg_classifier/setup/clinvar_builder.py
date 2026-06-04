@@ -94,6 +94,44 @@ _SEGREGATION_NEG = re.compile(
 )
 
 
+# Non-coding / uncharacterised locus prefixes. When a variant overlaps such a
+# locus AND a real gene, the real gene is the functionally relevant one.
+_NONCODING_GENE_PREFIX = ("LOC", "LINC", "MIR", "LNC", "SNORD", "SNORA")
+
+
+def _gene_symbol(ref_assert: ET.Element) -> str:
+    """Best gene symbol for the variant, robust to ClinVar overlapping loci.
+
+    ClinVar tags each gene with a ``MeasureRelationship Type``: ``variant in
+    gene`` / ``within single gene`` is the functional gene, ``within multiple
+    genes by overlap`` is an incidental neighbour (often a LOC/LINC locus). The
+    legacy code took the FIRST ``Symbol`` in document order, so for a gene
+    overlapped by such a locus (e.g. PAH vs LOC126861615) it picked the wrong
+    symbol and silently broke PS1/PM5 gene matching (the comparator was stored
+    under LOC…, so ``WHERE gene_symbol='PAH'`` found nothing). Prefer the
+    functional relationship, then a non-LOC symbol."""
+    best = ""
+    best_rank = (99, 99)
+    for rel in ref_assert.findall(".//MeasureSet/Measure/MeasureRelationship"):
+        sym = rel.find("./Symbol/ElementValue[@Type='Preferred']")
+        if sym is None:
+            sym = rel.find("./Symbol/ElementValue")
+        if sym is None or not sym.text:
+            continue
+        name = sym.text.strip()
+        t = (rel.get("Type") or "").lower()
+        type_score = (
+            0 if ("single gene" in t or "variant in gene" in t)
+            else 2 if "overlap" in t
+            else 1
+        )
+        loc_penalty = 1 if name.upper().startswith(_NONCODING_GENE_PREFIX) else 0
+        rank = (type_score, loc_penalty)
+        if rank < best_rank:
+            best, best_rank = name, rank
+    return best
+
+
 def _star_rating(review_status: str) -> int:
     rs = review_status.lower()
     if "practice guideline" in rs:
@@ -309,8 +347,9 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
         clinsig, rev_status, last_eval = _rcv_classification(ref_assert)
         stars = _star_rating(rev_status)
 
-        gene_elem = ref_assert.find(".//MeasureSet/Measure/MeasureRelationship/Symbol/ElementValue")
-        gene = gene_elem.text if gene_elem is not None else ""
+        # Functional gene symbol, preferring 'variant in gene' over an
+        # incidental 'within multiple genes by overlap' locus (see _gene_symbol).
+        gene = _gene_symbol(ref_assert)
 
         hgvs_c, hgvs_p = None, None
         for attr in ref_assert.findall(".//MeasureSet/Measure/AttributeSet/Attribute"):

@@ -10,7 +10,8 @@ build correctly.
 import xml.etree.ElementTree as ET
 
 from acmg_classifier.setup.clinvar_builder import (
-    _parse_clinvarset, _rcv_classification, _scv_significance, _star_rating,
+    _gene_symbol, _parse_clinvarset, _rcv_classification, _scv_significance,
+    _star_rating,
 )
 
 # New RCV_release format (ClinVar_RCV_2.3): expert-panel-style record with a
@@ -112,6 +113,56 @@ class TestRcvClassification:
         assert rev == "criteria provided, multiple submitters, no conflicts"
         assert dle == "2025-07-01"
         assert _star_rating(rev) == 2
+
+
+_OVERLAP_GENE = """
+<ClinVarSet ID="3">
+  <ReferenceClinVarAssertion ID="9003">
+    <MeasureSet Type="Variant" ID="1">
+      <Measure Type="single nucleotide variant" ID="1">
+        <MeasureRelationship Type="within multiple genes by overlap">
+          <Symbol><ElementValue Type="Preferred">LOC126861615</ElementValue></Symbol>
+        </MeasureRelationship>
+        <MeasureRelationship Type="variant in gene">
+          <Symbol><ElementValue Type="Preferred">PAH</ElementValue></Symbol>
+        </MeasureRelationship>
+      </Measure>
+    </MeasureSet>
+  </ReferenceClinVarAssertion>
+</ClinVarSet>
+"""
+
+# Both relationships are 'overlap' — fall back to the non-LOC symbol.
+_OVERLAP_BOTH = """
+<ClinVarSet ID="4">
+  <ReferenceClinVarAssertion ID="9004">
+    <MeasureSet Type="Variant" ID="1">
+      <Measure Type="single nucleotide variant" ID="1">
+        <MeasureRelationship Type="within multiple genes by overlap">
+          <Symbol><ElementValue Type="Preferred">LOC100</ElementValue></Symbol>
+        </MeasureRelationship>
+        <MeasureRelationship Type="within multiple genes by overlap">
+          <Symbol><ElementValue Type="Preferred">BRCA1</ElementValue></Symbol>
+        </MeasureRelationship>
+      </Measure>
+    </MeasureSet>
+  </ReferenceClinVarAssertion>
+</ClinVarSet>
+"""
+
+
+class TestGeneSymbol:
+    def test_variant_in_gene_beats_overlap_locus(self):
+        ra = ET.fromstring(_OVERLAP_GENE).find(".//ReferenceClinVarAssertion")
+        assert _gene_symbol(ra) == "PAH"   # not LOC126861615 (the first listed)
+
+    def test_non_loc_preferred_on_type_tie(self):
+        ra = ET.fromstring(_OVERLAP_BOTH).find(".//ReferenceClinVarAssertion")
+        assert _gene_symbol(ra) == "BRCA1"
+
+    def test_single_gene(self):
+        ra = ET.fromstring(_NEW).find(".//ReferenceClinVarAssertion")
+        assert _gene_symbol(ra) == "PIK3CD"
 
 
 class TestScvSignificance:
