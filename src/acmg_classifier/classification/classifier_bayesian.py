@@ -6,12 +6,13 @@ from acmg_classifier.models.enums import Pathogenicity
 
 class ClassifierBayesian:
     """
-    Score thresholds:
-        ≥ 10  → Pathogenic
-        6–9   → Likely Pathogenic
-        -5–5  → VUS
-        -6–-9 → Likely Benign
-        ≤ -10 → Benign
+    Score thresholds (Tavtigian 2020, prior P=0.10 — asymmetric: the benign side
+    needs less evidence because the prior already favours benign):
+        ≥ 10   → Pathogenic
+        6–9    → Likely Pathogenic
+        0–5    → VUS
+        -1–-6  → Likely Benign
+        ≤ -7   → Benign
     """
 
     def classify(
@@ -42,9 +43,9 @@ class ClassifierBayesian:
             classification = Pathogenicity.PATHOGENIC
         elif score >= 6:
             classification = Pathogenicity.LIKELY_PATHOGENIC
-        elif score >= -5:
+        elif score >= 0:
             classification = Pathogenicity.VUS
-        elif score >= -9:
+        elif score >= -6:
             classification = Pathogenicity.LIKELY_BENIGN
         else:
             classification = Pathogenicity.BENIGN

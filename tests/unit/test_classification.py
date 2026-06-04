@@ -92,3 +92,37 @@ class TestClassifierBayesian:
         score, path = clf_bay.classify([_ba1()])
         assert score == -8
         assert path == Pathogenicity.BENIGN
+
+    # Benign-side thresholds (Tavtigian 2020, asymmetric): VUS 0..5,
+    # Likely Benign -1..-6, Benign <= -7. Exercised via non-BA1 criteria so the
+    # point-sum threshold logic runs (BA1 is stand-alone benign).
+    def test_supporting_benign_minus1_is_likely_benign(self):
+        score, path = clf_bay.classify([_bp4()])           # -1
+        assert score == -1
+        assert path == Pathogenicity.LIKELY_BENIGN
+
+    def test_minus5_is_likely_benign(self):
+        score, path = clf_bay.classify([_bs1(), _bp4()])   # -4 + -1
+        assert score == -5
+        assert path == Pathogenicity.LIKELY_BENIGN
+
+    def test_minus6_is_likely_benign(self):
+        score, path = clf_bay.classify(
+            [_bs1(), _bp4(), CriteriaResult.met(ACMGCriterion.BP1)]  # -4 -1 -1
+        )
+        assert score == -6
+        assert path == Pathogenicity.LIKELY_BENIGN
+
+    def test_minus7_is_benign(self):
+        score, path = clf_bay.classify([
+            _bs1(), _bp4(),
+            CriteriaResult.met(ACMGCriterion.BP1),
+            CriteriaResult.met(ACMGCriterion.BP7),
+        ])                                                  # -4 -1 -1 -1
+        assert score == -7
+        assert path == Pathogenicity.BENIGN
+
+    def test_minus8_is_benign(self):
+        score, path = clf_bay.classify([_bs1(), CriteriaResult.met(ACMGCriterion.BS2)])
+        assert score == -8
+        assert path == Pathogenicity.BENIGN
