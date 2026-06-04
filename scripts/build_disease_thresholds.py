@@ -33,7 +33,8 @@ from typing import Optional
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "pp2",
-    "pp2_requires", "pm5_grantham", "source_vcep", "cspec_url", "notes",
+    "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max",
+    "source_vcep", "cspec_url", "notes",
 ]
 
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* (XY/hemizygous)
@@ -266,6 +267,15 @@ _ACMG_CODE = re.compile(
 )
 
 
+def _pp2_more_specific(cand: tuple[int, str, str], cur: tuple[int, str, str]) -> bool:
+    """True if PP2 decision *cand* should replace *cur*. Fewer-genes (more
+    gene-specific) spec wins; on a specificity tie the conservative
+    "not_applicable" wins (minimises false-positive PP2)."""
+    if cand[0] != cur[0]:
+        return cand[0] < cur[0]
+    return cand[1] == "not_applicable" and cur[1] != "not_applicable"
+
+
 def _pp2_requires(rule_set: dict) -> str:
     """Comma-joined ACMG codes PP2 is conditional on (e.g. "PM2,PP3"), or ""."""
     for code in rule_set.get("criteriaCodes", []):
@@ -317,6 +327,54 @@ def _pm5_grantham_op(rule_set: dict) -> str:
             elif not op:
                 op = "ge"  # Grantham-conditioned but no explicit operator → inclusive
         return op
+    return ""
+
+
+# A PM5 description may forbid combining PM5 with PM1 (RUNX1: "PM5 cannot be
+# used if PM1 was applied"; RASopathy/Cardiomyopathy: "PM5 should not be combined
+# with PM1") and, for DICER1, also PS1. "Not mutually exclusive with PM1" is the
+# opposite (PM5 *may* combine) and must NOT be read as an exclusion.
+_PM5_EXCL_PM1 = re.compile(
+    r"(?:should|can|must|may)\s*not\s+be\s+(?:combined|applied|used)"
+    r"[^.]*?\b(?:with|if|in combination with|in conjunction with)\b[^.]*?\bPM1\b"
+    r"|cannot be used if PM1",
+    re.IGNORECASE,
+)
+_PM5_EXCL_PS1 = re.compile(r"PM1 or PS1|PS1 or PM1", re.IGNORECASE)
+_PM5_NOT_MUTEX = re.compile(r"not mutually exclusive with pm1", re.IGNORECASE)
+_STRENGTH_RANK = {"Supporting": 1, "Moderate": 2, "Strong": 3,
+                  "Very Strong": 4, "Stand Alone": 5}
+
+
+def _pm5_excludes(rule_set: dict) -> str:
+    """Comma-joined criteria PM5 may not be combined with (e.g. "PM1",
+    "PM1,PS1"), or "". Enforced as a registry post-hoc PM5 suppression."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PM5":
+            continue
+        descs = " ".join(es.get("description", "") or "" for es in _applicable_strengths(code))
+        if _PM5_NOT_MUTEX.search(descs) or not _PM5_EXCL_PM1.search(descs):
+            return ""
+        out = ["PM1"]
+        if _PM5_EXCL_PS1.search(descs):
+            out.append("PS1")
+        return ",".join(out)
+    return ""
+
+
+def _pm5_max(rule_set: dict) -> str:
+    """Per-spec PM5 strength ceiling: "Supporting" (only Supporting applicable —
+    ATM, CDH1, PALB2), "Moderate" (Moderate or higher applicable), or "" (no
+    applicable PM5). Aggregated across specs in main(): "Moderate" outranks
+    "Supporting" so a gene that any VCEP allows at Moderate keeps the default."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PM5":
+            continue
+        ranks = [_STRENGTH_RANK[es["label"]] for es in _applicable_strengths(code)
+                 if es.get("label") in _STRENGTH_RANK]
+        if not ranks:
+            return ""
+        return "Supporting" if max(ranks) == _STRENGTH_RANK["Supporting"] else "Moderate"
     return ""
 
 
@@ -374,6 +432,8 @@ def parse_spec(path: str) -> list[dict]:
         pp2_map = _pp2_applicability(rs)
         pp2_req = _pp2_requires(rs)
         pm5_op = _pm5_grantham_op(rs)
+        pm5_excl = _pm5_excludes(rs)
+        pm5_max = _pm5_max(rs)
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -389,6 +449,8 @@ def parse_spec(path: str) -> list[dict]:
                 "pp2": "",
                 "pp2_requires": "",
                 "pm5_grantham": "",
+                "pm5_excludes": "",
+                "pm5_max": "",
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
@@ -399,6 +461,8 @@ def parse_spec(path: str) -> list[dict]:
                 "_pp2": pp2_map.get(sym, ""),
                 "_pp2_requires": pp2_req,
                 "_pm5_grantham": pm5_op,
+                "_pm5_excludes": pm5_excl,
+                "_pm5_max": pm5_max,
             })
     return rows
 
@@ -429,19 +493,25 @@ def main() -> None:
 
     files = sorted(glob.glob(os.path.join(args.json_dir, "GN*.json")))
     by_gene: dict[str, dict] = {}
-    # PP2 applicability is aggregated across ALL specs for a gene, independently
-    # of which spec wins the BA1/BS1 row: if ANY VCEP applies PP2 to the gene it
-    # is "applicable" (highest rank), else "not_applicable" if some VCEP carries
-    # a PP2 code it declined. Rank: applicable(2) > not_applicable(1) > none(0).
-    pp2_rank = {"applicable": 2, "not_applicable": 1, "": 0}
-    pp2_by_gene: dict[str, str] = {}
-    # Co-requirement codes recorded from the spec that first made the gene
-    # applicable (e.g. BMPR2 → "PM2,PP3").
-    pp2_requires_by_gene: dict[str, str] = {}
+    # PP2 applicability resolves to the MOST GENE-SPECIFIC spec's decision, the
+    # same specificity rule used for BA1/BS1: a single-gene VCEP supersedes a
+    # grouped panel. This is essential — the grouped RASopathy spec (GN004, 12
+    # genes) declares PP2 "applicable to all", but the single-gene RASopathy
+    # specs (NRAS/GN039, SOS1/GN041, …) explicitly decline it; the gene-specific
+    # "not_applicable" must win. On a specificity tie the conservative
+    # (FP-minimising) "not_applicable" wins. pp2_choice[g] = (specificity,
+    # decision, requires); only specs that carry an actual PP2 decision count.
+    pp2_choice: dict[str, tuple[int, str, str]] = {}
     # PM5 Grantham gate, aggregated across specs: inclusive "ge" outranks strict
     # "gt" (the spec's primary, less-strict rule wins on a cross-spec conflict).
     pm5_rank = {"ge": 2, "gt": 1, "": 0}
     pm5_by_gene: dict[str, str] = {}
+    # PM5 exclusions (union of criteria across specs) and strength ceiling
+    # ("Moderate" outranks "Supporting": a gene any VCEP allows at Moderate is
+    # not capped to Supporting).
+    pm5_excludes_by_gene: dict[str, set[str]] = {}
+    pm5_max_rank = {"Moderate": 2, "Supporting": 1, "": 0}
+    pm5_max_by_gene: dict[str, str] = {}
     n_specs = 0
     for path in files:
         try:
@@ -455,13 +525,18 @@ def main() -> None:
         n_specs += 1
         for row in parse_spec(path):
             g = row["gene_symbol"]
-            cur = pp2_by_gene.get(g, "")
-            if pp2_rank[row["_pp2"]] > pp2_rank[cur]:
-                pp2_by_gene[g] = row["_pp2"]
-                if row["_pp2"] == "applicable":
-                    pp2_requires_by_gene[g] = row["_pp2_requires"]
+            if row["_pp2"] in ("applicable", "not_applicable"):
+                cand = (row["_specificity"], row["_pp2"], row["_pp2_requires"])
+                if g not in pp2_choice or _pp2_more_specific(cand, pp2_choice[g]):
+                    pp2_choice[g] = cand
             if pm5_rank[row["_pm5_grantham"]] > pm5_rank[pm5_by_gene.get(g, "")]:
                 pm5_by_gene[g] = row["_pm5_grantham"]
+            if row["_pm5_excludes"]:
+                pm5_excludes_by_gene.setdefault(g, set()).update(
+                    row["_pm5_excludes"].split(",")
+                )
+            if pm5_max_rank[row["_pm5_max"]] > pm5_max_rank[pm5_max_by_gene.get(g, "")]:
+                pm5_max_by_gene[g] = row["_pm5_max"]
             if g not in by_gene:
                 by_gene[g] = row
                 continue
@@ -501,9 +576,15 @@ def main() -> None:
     # Stamp the cross-spec PP2 applicability onto each gene's resolved row
     # (before overrides, so a manual --override pp2=… still wins).
     for g, row in by_gene.items():
-        row["pp2"] = pp2_by_gene.get(g, "")
-        row["pp2_requires"] = pp2_requires_by_gene.get(g, "")
+        choice = pp2_choice.get(g)
+        row["pp2"] = choice[1] if choice else ""
+        row["pp2_requires"] = choice[2] if choice and choice[1] == "applicable" else ""
         row["pm5_grantham"] = pm5_by_gene.get(g, "")
+        # PM1[,PS1] union; canonical order. "Supporting" ceiling only when no
+        # VCEP allowed Moderate (pm5_max_by_gene resolved to "Supporting").
+        excl = pm5_excludes_by_gene.get(g, set())
+        row["pm5_excludes"] = ",".join(c for c in ("PM1", "PS1") if c in excl)
+        row["pm5_max"] = "Supporting" if pm5_max_by_gene.get(g, "") == "Supporting" else ""
 
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
@@ -534,6 +615,8 @@ _OVERRIDE_FIELDS = {
     "pp2": "pp2",
     "pp2_requires": "pp2_requires",
     "pm5_grantham": "pm5_grantham",
+    "pm5_excludes": "pm5_excludes",
+    "pm5_max": "pm5_max",
     "inheritance": "inheritance",
 }
 

@@ -15,15 +15,6 @@ from acmg_classifier.models.supplement import SupplementEntry
 # pathogenic-supporting).
 _AF_EXCLUSIVE_PRIORITY = (ACMGCriterion.BA1, ACMGCriterion.BS1, ACMGCriterion.PM2)
 
-# Gene-specific PM5 exclusions from the ClinGen VCEP specs: PM5 may not be
-# combined with these criteria for the listed genes. RUNX1 (GN008): "PM5 cannot
-# be used if PM1 was applied". DICER1 (GN024): "cannot be applied in combination
-# with PM1 or PS1". Enforced as a post-hoc suppression of PM5 in the registry.
-_PM5_EXCLUSIONS: dict[str, tuple[ACMGCriterion, ...]] = {
-    "RUNX1": (ACMGCriterion.PM1,),
-    "DICER1": (ACMGCriterion.PM1, ACMGCriterion.PS1),
-}
-
 
 def _apply_af_mutual_exclusion(results: list[CriteriaResult]) -> None:
     """Enforce BA1 > BS1 > PM2 mutual exclusivity, in place.
@@ -62,6 +53,10 @@ class CriteriaRegistry:
         # Gene-specific PP2 co-requirements (e.g. BMPR2 needs PM2 + PP3).
         from acmg_classifier.criteria.pp2_genes import PP2Applicability
         self._pp2 = PP2Applicability(cfg.disease_prevalence_tsv)
+        # Gene-specific PM5 exclusions (e.g. RUNX1: not with PM1; DICER1: not
+        # with PM1/PS1; RASopathy/Cardiomyopathy genes: not with PM1).
+        from acmg_classifier.criteria.pm5_genes import PM5Spec
+        self._pm5 = PM5Spec(cfg.disease_prevalence_tsv)
 
     def _build_evaluators(self) -> list[CriterionEvaluator]:
         # Local imports avoid an import cycle: each evaluator module imports
@@ -175,7 +170,7 @@ class CriteriaRegistry:
     ) -> None:
         pc = annotation.primary_consequence
         gene = pc.gene_symbol if pc else None
-        excluded = _PM5_EXCLUSIONS.get(gene or "")
+        excluded = self._pm5.excludes(gene)
         if not excluded:
             return
         active = {r.criterion for r in results if r.triggered and not r.suppressed}

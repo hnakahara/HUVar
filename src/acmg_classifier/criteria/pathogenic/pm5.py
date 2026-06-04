@@ -6,7 +6,7 @@ import re
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.criteria.grantham import AA3_TO_AA1, grantham_distance
-from acmg_classifier.criteria.pm5_genes import GT, PM5Grantham
+from acmg_classifier.criteria.pm5_genes import GT, PM5Spec
 from acmg_classifier.models.annotation import AnnotationData, ClinVarRecord
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
@@ -17,17 +17,17 @@ from acmg_classifier.models.supplement import SupplementEntry
 # "NP_000298.6:p.Arg156His"). Captures wild-type and variant residues.
 _COMP_P = re.compile(r"p\.([A-Z][a-z]{2})\d+([A-Z][a-z]{2})")
 
-# ClinVar significances that count as "pathogenic" (PM5 default Moderate). A
-# "Likely pathogenic"-only comparator drops PM5 to Supporting per the VCEP texts.
+# ClinVar significances that count as "pathogenic" (PM5 default Moderate). When
+# every same-codon comparator is only "Likely pathogenic" the strength drops to
+# Supporting, per the VCEP specifications.
 _PATHOGENIC = {"Pathogenic", "Pathogenic/Likely pathogenic"}
 
 
 class PM5Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
-        # Per-gene Grantham-distance gate (PIK3CD, PIK3R1, VHL, …). Genes absent
-        # from the table keep the plain same-codon-different-AA behaviour.
-        self._grantham = PM5Grantham(cfg.disease_prevalence_tsv)
+        # Per-gene PM5 spec: Grantham gate, PM1/PS1 exclusions, strength ceiling.
+        self._spec = PM5Spec(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -43,90 +43,89 @@ class PM5Evaluator(CriterionEvaluator):
         if pc is None or pc.consequence != ConsequenceType.MISSENSE:
             return CriteriaResult.not_met(ACMGCriterion.PM5, "Not a missense variant")
 
-        # Look for ClinVar P/LP variants at the same protein position with a
-        # DIFFERENT amino-acid substitution (pc.hgvs_p is passed so the query
-        # can exclude exact-match variants — those are PS1, not PM5).
-        # min_stars=1 enforces the ACMG requirement for a reviewed assertion.
-        from acmg_classifier.local_db.clinvar_sqlite import query_same_codon_different_aa
+        from acmg_classifier.local_db.clinvar_sqlite import (
+            has_benign_at_codon,
+            query_same_codon_different_aa,
+        )
+
+        # Same-codon P/LP missense comparators with a DIFFERENT amino-acid
+        # change (an exact match would be PS1, not PM5). min_stars defaults to 2
+        # (multiple submitters / expert) so single-submitter assertions do not
+        # anchor PM5 — the dominant source of PM5 over-assignment.
         hits = query_same_codon_different_aa(
             self._cfg.clinvar_sqlite,
             pc.gene_symbol,
             pc.protein_position,
             pc.hgvs_p,
-            min_stars=1,
+            min_stars=self._cfg.pm5_min_stars,
         )
         if not hits:
             return CriteriaResult.not_met(
-                ACMGCriterion.PM5, "No ClinVar >=1 star same-codon different-AA hit"
+                ACMGCriterion.PM5,
+                f"No ClinVar >={self._cfg.pm5_min_stars} star same-codon different-AA hit",
             )
 
-        op = self._grantham.operator(pc.gene_symbol)
-        if not op:
-            # No VCEP Grantham gate for this gene — plain PM5 at default Moderate.
-            evidence = "ClinVar same codon, diff AA: " + ", ".join(
-                h.variation_id or "" for h in hits[:3]
-            )
-            return CriteriaResult.met(ACMGCriterion.PM5, evidence=evidence)
-
-        return self._evaluate_grantham(pc, hits, op)
-
-    def _evaluate_grantham(
-        self, pc, hits: list[ClinVarRecord], op: str
-    ) -> CriteriaResult:
-        """Apply the VCEP Grantham-distance gate (PIK3CD-style genes).
-
-        The candidate must be chemically as different (``ge``) or more different
-        (``gt``) from the wild-type residue than the comparator, no benign
-        variant may be known at the codon, and the strength follows the
-        comparator's classification (Pathogenic → Moderate, Likely pathogenic →
-        Supporting)."""
-        from acmg_classifier.local_db.clinvar_sqlite import has_benign_at_codon
-
-        # VCEP caveat: do not apply at a codon where any benign variant is known.
+        # Do not apply at a codon where any benign variant is known (a VCEP
+        # caveat for the Grantham-gated genes, applied to every gene here as a
+        # conservative, false-positive-reducing constraint).
         if has_benign_at_codon(
-            self._cfg.clinvar_sqlite, pc.gene_symbol, pc.protein_position
+            self._cfg.clinvar_sqlite, pc.gene_symbol, pc.protein_position,
+            min_stars=self._cfg.pm5_min_stars,
         ):
             return CriteriaResult.not_met(
-                ACMGCriterion.PM5, "Grantham-gated gene: benign variant known at codon"
+                ACMGCriterion.PM5, "Benign variant known at codon"
             )
 
+        # Grantham-distance gate (PIK3CD, PIK3R1, VHL, …): keep only comparators
+        # the candidate is chemically as/more different from the wild type than.
+        op = self._spec.operator(pc.gene_symbol)
+        if op:
+            qualifying = self._grantham_filter(pc, hits, op)
+            if qualifying is None:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM5, "Grantham distance unavailable for candidate"
+                )
+            if not qualifying:
+                sym = ">" if op == GT else ">="
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM5, f"Grantham gate failed: candidate not {sym} comparator"
+                )
+            tag = f"Grantham-gated ({'>' if op == GT else '>='})"
+        else:
+            qualifying = hits
+            tag = "same codon, diff AA"
+
+        # Strength: Moderate if any qualifying comparator is Pathogenic, else
+        # (only Likely pathogenic comparators) Supporting. Capped per the VCEP
+        # ceiling (ATM/CDH1/PALB2: Supporting only).
+        pathogenic = any(h.clinical_significance in _PATHOGENIC for h in qualifying)
+        strength = CriterionStrength.MODERATE if pathogenic else CriterionStrength.SUPPORTING
+        cap = self._spec.max_strength(pc.gene_symbol)
+        if cap == CriterionStrength.SUPPORTING:
+            strength = CriterionStrength.SUPPORTING
+        ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
+        return CriteriaResult.met(
+            ACMGCriterion.PM5, strength=strength, evidence=f"ClinVar {tag}: {ids}"
+        )
+
+    def _grantham_filter(
+        self, pc, hits: list[ClinVarRecord], op: str
+    ) -> list[ClinVarRecord] | None:
+        """Comparators the candidate satisfies the Grantham gate against.
+
+        Returns ``None`` when the candidate's own Grantham distance cannot be
+        computed (the mandated comparison is impossible → withhold PM5)."""
         cand = _candidate_distance(pc.amino_acids)
         if cand is None:
-            # Cannot run the mandated comparison → withhold PM5 (precision-first).
-            return CriteriaResult.not_met(
-                ACMGCriterion.PM5, "Grantham distance unavailable for candidate"
-            )
-
-        qualifying: list[tuple[ClinVarRecord, int]] = []
+            return None
+        out: list[ClinVarRecord] = []
         for h in hits:
             comp = _comparator_distance(h.hgvs_p)
             if comp is None:
                 continue
             if (cand > comp) if op == GT else (cand >= comp):
-                qualifying.append((h, comp))
-
-        if not qualifying:
-            sym = ">" if op == GT else ">="
-            return CriteriaResult.not_met(
-                ACMGCriterion.PM5,
-                f"Grantham gate failed: candidate {cand} not {sym} any comparator",
-            )
-
-        # Strength: Moderate if a Pathogenic comparator qualifies, else (only
-        # Likely pathogenic comparators) Supporting, per the VCEP specifications.
-        pathogenic = [
-            (h, d) for h, d in qualifying if h.clinical_significance in _PATHOGENIC
-        ]
-        chosen = pathogenic or qualifying
-        strength = (
-            CriterionStrength.MODERATE if pathogenic else CriterionStrength.SUPPORTING
-        )
-        ids = ", ".join(h.variation_id or "" for h, _ in chosen[:3])
-        evidence = (
-            f"Grantham-gated PM5 (cand {cand} {'>' if op == GT else '>='} "
-            f"comparator): {ids}"
-        )
-        return CriteriaResult.met(ACMGCriterion.PM5, strength=strength, evidence=evidence)
+                out.append(h)
+        return out
 
 
 def _candidate_distance(amino_acids: str | None) -> int | None:

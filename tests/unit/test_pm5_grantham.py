@@ -1,10 +1,11 @@
-"""PM5 Grantham-distance gating: matrix, cspec extraction, loader, evaluator.
+"""PM5 precision controls: Grantham gate, comparator quality, strength, exclusions.
 
-A subset of ClinGen VCEPs (PIK3CD, PIK3R1, RYR1, VHL, HNF1A, …) require PM5 to
-clear a Grantham-distance test against the same-codon comparator. These tests
-cover the embedded Grantham 1974 matrix, the ``pm5_grantham`` cspec extraction,
-the per-gene loader, the benign-at-codon caveat, and the evaluator's gate and
-strength assignment.
+A subset of ClinGen VCEPs require PM5 to clear a Grantham-distance test against
+the same-codon comparator; all VCEPs anchor PM5 on an *established* comparator
+and several forbid combining PM5 with PM1/PS1 or cap it at Supporting. These
+tests cover the embedded Grantham 1974 matrix, the ``pm5_*`` cspec extraction,
+the per-gene loader, the comparator-quality / benign / strength gates, and the
+registry exclusion pass.
 """
 import importlib.util
 import sqlite3
@@ -12,9 +13,9 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 from acmg_classifier.criteria.grantham import grantham_distance
-from acmg_classifier.criteria.pm5_genes import PM5Grantham
+from acmg_classifier.criteria.pm5_genes import PM5Spec
 from acmg_classifier.criteria.pathogenic.pm5 import PM5Evaluator
-from acmg_classifier.criteria.registry import CriteriaRegistry, _PM5_EXCLUSIONS
+from acmg_classifier.criteria.registry import CriteriaRegistry
 from acmg_classifier.local_db.clinvar_sqlite import has_benign_at_codon
 from acmg_classifier.models.annotation import (
     AnnotationData, GnomADData, ConsequenceInfo,
@@ -52,79 +53,138 @@ class TestGranthamMatrix:
         assert grantham_distance("Xyz", "A") is None
 
 
-class TestPm5GranthamExtraction:
-    def _pm5_code(self, *strengths):
-        return {"label": "PM5", "evidenceStrengths": [
-            {"label": lbl, "applicability": "Applicable", "description": desc}
-            for lbl, desc in strengths
-        ]}
+# --------------------------- cspec extraction --------------------------------
 
+def _pm5_code(*strengths):
+    return {"label": "PM5", "evidenceStrengths": [
+        {"label": lbl, "applicability": "Applicable", "description": desc}
+        for lbl, desc in strengths
+    ]}
+
+
+class TestPm5GranthamExtraction:
     def test_inclusive_ge(self):
-        rs = {"criteriaCodes": [self._pm5_code(
-            ("Moderate", "Variant must have a Grantham distance greater than or "
-                         "equal to the previously classified pathogenic variant."),
+        rs = {"criteriaCodes": [_pm5_code(
+            ("Moderate", "Grantham distance greater than or equal to the variant."),
         )]}
         assert bdt._pm5_grantham_op(rs) == "ge"
 
     def test_strict_gt_higher(self):
-        rs = {"criteriaCodes": [self._pm5_code(
-            ("Moderate", "The variant of interest must have a higher Grantham "
-                         "score than the Pathogenic comparison variant."),
+        rs = {"criteriaCodes": [_pm5_code(
+            ("Moderate", "must have a higher Grantham score than the comparison variant."),
         )]}
         assert bdt._pm5_grantham_op(rs) == "gt"
 
     def test_strict_gt_less_than(self):
-        rs = {"criteriaCodes": [self._pm5_code(
-            ("Moderate", "Grantham score for alternate pathogenic variant must "
-                         "be less than for variant being assessed."),
+        rs = {"criteriaCodes": [_pm5_code(
+            ("Moderate", "Grantham score for alternate variant must be less than for "
+                         "variant being assessed."),
         )]}
         assert bdt._pm5_grantham_op(rs) == "gt"
 
     def test_ge_wins_when_mixed(self):
-        # A gene whose strengths mix an "equal" clause and a strict clause keeps
-        # the inclusive operator (the spec's primary rule).
-        rs = {"criteriaCodes": [self._pm5_code(
+        rs = {"criteriaCodes": [_pm5_code(
             ("Moderate", "Grantham distance greater than or equal to the variant."),
             ("Supporting", "pathogenic but has a greater Grantham distance."),
         )]}
         assert bdt._pm5_grantham_op(rs) == "ge"
 
     def test_no_grantham_is_empty(self):
-        rs = {"criteriaCodes": [self._pm5_code(
+        rs = {"criteriaCodes": [_pm5_code(
             ("Moderate", "Novel missense at a residue with a known pathogenic change."),
         )]}
         assert bdt._pm5_grantham_op(rs) == ""
 
-    def test_no_pm5_code_is_empty(self):
-        assert bdt._pm5_grantham_op({"criteriaCodes": [{"label": "PM1"}]}) == ""
+
+class TestPm5ExcludesExtraction:
+    def test_pm1_exclusion(self):
+        rs = {"criteriaCodes": [_pm5_code(("Moderate", "PM5 should not be combined with PM1."))]}
+        assert bdt._pm5_excludes(rs) == "PM1"
+
+    def test_pm1_if_applied(self):
+        rs = {"criteriaCodes": [_pm5_code(("Moderate", "PM5 cannot be used if PM1 was applied."))]}
+        assert bdt._pm5_excludes(rs) == "PM1"
+
+    def test_pm1_and_ps1(self):
+        rs = {"criteriaCodes": [_pm5_code(
+            ("Moderate", "This rule cannot be applied in combination with PM1 or PS1."),
+        )]}
+        assert bdt._pm5_excludes(rs) == "PM1,PS1"
+
+    def test_not_mutually_exclusive_is_not_an_exclusion(self):
+        rs = {"criteriaCodes": [_pm5_code(("Moderate", "Not mutually exclusive with PM1."))]}
+        assert bdt._pm5_excludes(rs) == ""
+
+    def test_no_pm1_mention(self):
+        rs = {"criteriaCodes": [_pm5_code(("Moderate", "Different missense at the residue."))]}
+        assert bdt._pm5_excludes(rs) == ""
 
 
-class TestPm5GranthamLoader:
+class TestPm5MaxExtraction:
+    def test_supporting_only(self):
+        rs = {"criteriaCodes": [_pm5_code(("Supporting", "PM5_Supporting for an LP comparator."))]}
+        assert bdt._pm5_max(rs) == "Supporting"
+
+    def test_moderate_present(self):
+        rs = {"criteriaCodes": [_pm5_code(
+            ("Supporting", "..."), ("Moderate", "..."),
+        )]}
+        assert bdt._pm5_max(rs) == "Moderate"
+
+    def test_no_applicable_pm5(self):
+        rs = {"criteriaCodes": [{"label": "PM5", "evidenceStrengths": [
+            {"label": "Moderate", "applicability": "Not Applicable for this VCEP"},
+        ]}]}
+        assert bdt._pm5_max(rs) == ""
+
+
+# ------------------------------ loader ---------------------------------------
+
+class TestPm5SpecLoader:
     def _tsv(self, tmp_path):
         tsv = tmp_path / "dp.tsv"
         tsv.write_text(
-            "gene_symbol\tpm5_grantham\n"
-            "PIK3CD\tge\n"
-            "PIK3R1\tgt\n"
-            "BRCA1\t\n"
-            "BADVAL\tnonsense\n",
+            "gene_symbol\tpm5_grantham\tpm5_excludes\tpm5_max\n"
+            "PIK3CD\tge\t\t\n"
+            "PIK3R1\tgt\t\t\n"
+            "RUNX1\tge\tPM1\t\n"
+            "DICER1\tge\tPM1,PS1\t\n"
+            "ATM\t\t\tSupporting\n"
+            "MYH7\t\tPM1\t\n",
             encoding="utf-8",
         )
         return tsv
 
-    def test_operators_loaded(self, tmp_path):
-        g = PM5Grantham(self._tsv(tmp_path))
-        assert g.operator("PIK3CD") == "ge"
-        assert g.operator("PIK3R1") == "gt"
-        assert g.operator("BRCA1") == ""       # blank cell
-        assert g.operator("BADVAL") == ""      # invalid value ignored
-        assert g.operator("UNSEEN") == ""
-        assert g.operator(None) == ""
+    def test_operators(self, tmp_path):
+        s = PM5Spec(self._tsv(tmp_path))
+        assert s.operator("PIK3CD") == "ge"
+        assert s.operator("PIK3R1") == "gt"
+        assert s.operator("MYH7") == ""
+        assert s.operator("UNSEEN") == ""
+        assert s.operator(None) == ""
+
+    def test_excludes(self, tmp_path):
+        s = PM5Spec(self._tsv(tmp_path))
+        assert s.excludes("RUNX1") == (ACMGCriterion.PM1,)
+        assert s.excludes("DICER1") == (ACMGCriterion.PM1, ACMGCriterion.PS1)
+        assert s.excludes("MYH7") == (ACMGCriterion.PM1,)
+        assert s.excludes("PIK3CD") == ()
+        assert s.excludes(None) == ()
+
+    def test_max_strength(self, tmp_path):
+        s = PM5Spec(self._tsv(tmp_path))
+        assert s.max_strength("ATM") == CriterionStrength.SUPPORTING
+        assert s.max_strength("MYH7") is None
+        assert s.max_strength("UNSEEN") is None
 
     def test_missing_file_is_empty(self, tmp_path):
-        g = PM5Grantham(tmp_path / "nope.tsv")
-        assert g.operator("PIK3CD") == ""
+        s = PM5Spec(tmp_path / "nope.tsv")
+        assert s.operator("PIK3CD") == ""
+        assert s.excludes("RUNX1") == ()
+        assert s.max_strength("ATM") is None
 
+
+# --------------------------- ClinVar fixtures --------------------------------
 
 _SCHEMA = """
 CREATE TABLE variants (
@@ -151,7 +211,7 @@ def _db(tmp_path: Path, rows: list[tuple]) -> Path:
     return p
 
 
-def _row(vid, gene, hgvs_p, aa, codon, sig, stars=1):
+def _row(vid, gene, hgvs_p, aa, codon, sig, stars=2):
     return (vid, gene, hgvs_p, aa, codon, sig, "criteria provided", stars)
 
 
@@ -168,19 +228,28 @@ class TestHasBenignAtCodon:
         db = _db(tmp_path, [_row("1", "G", "NM:p.Arg175His", "R175H", 175, "Pathogenic")])
         assert has_benign_at_codon(db, "G", 175) is False
 
+    def test_star_threshold(self, tmp_path):
+        db = _db(tmp_path, [_row("1", "G", "NM:p.Arg175Ser", "R175S", 175, "Benign", stars=1)])
+        assert has_benign_at_codon(db, "G", 175, min_stars=2) is False
+        assert has_benign_at_codon(db, "G", 175, min_stars=1) is True
 
-def _cfg(tmp_path, clinvar: Path):
+
+# ------------------------------ evaluator ------------------------------------
+
+def _cfg(tmp_path, clinvar: Path, min_stars: int = 1):
     tsv = tmp_path / "disease_prevalence.tsv"
     tsv.write_text(
-        "gene_symbol\tpm5_grantham\n"
-        "PIK3CD\tge\n"
-        "RYR1\tgt\n"
-        "BRCA1\t\n",
+        "gene_symbol\tpm5_grantham\tpm5_excludes\tpm5_max\n"
+        "PIK3CD\tge\t\t\n"
+        "RYR1\tgt\t\t\n"
+        "ATM\t\t\tSupporting\n"
+        "BRCA1\t\t\t\n",
         encoding="utf-8",
     )
     cfg = MagicMock()
     cfg.disease_prevalence_tsv = tsv
     cfg.clinvar_sqlite = clinvar
+    cfg.pm5_min_stars = min_stars
     return cfg
 
 
@@ -193,8 +262,6 @@ _AA1_TO_AA3 = {
 
 
 def _consequence(gene, amino_acids, codon=175, hgvs_p=None):
-    # Derive the candidate's own hgvs_p from its REF/ALT pair so it never
-    # collides with the comparator (a same-AA hit would be excluded as PS1).
     if hgvs_p is None and amino_acids and "/" in amino_acids:
         ref, alt = (p.strip() for p in amino_acids.split("/"))
         hgvs_p = f"NM:p.{_AA1_TO_AA3[ref]}{codon}{_AA1_TO_AA3[alt]}"
@@ -218,92 +285,114 @@ def _snv():
 
 class TestPm5GranthamEvaluator:
     def test_ge_pass_pathogenic_is_moderate(self, tmp_path):
-        # candidate R->C (180) >= comparator R->H (29), comparator Pathogenic.
         db = _db(tmp_path, [_row("1", "PIK3CD", "NM:p.Arg175His", "R175H", 175, "Pathogenic")])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("PIK3CD", "R/C"))
-        assert r.triggered
-        assert r.strength == CriterionStrength.MODERATE
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("PIK3CD", "R/C"))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
         assert "Grantham-gated" in r.evidence
 
     def test_ge_fail_when_candidate_milder(self, tmp_path):
-        # candidate R->H (29) NOT >= comparator R->C (180).
         db = _db(tmp_path, [_row("1", "PIK3CD", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic")])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("PIK3CD", "R/H"))
-        assert not r.triggered
-        assert "Grantham gate failed" in r.evidence
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("PIK3CD", "R/H"))
+        assert not r.triggered and "Grantham gate failed" in r.evidence
 
     def test_likely_pathogenic_comparator_is_supporting(self, tmp_path):
         db = _db(tmp_path, [_row("1", "PIK3CD", "NM:p.Arg175His", "R175H", 175, "Likely pathogenic")])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("PIK3CD", "R/C"))
-        assert r.triggered
-        assert r.strength == CriterionStrength.SUPPORTING
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("PIK3CD", "R/C"))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
 
     def test_gt_rejects_equal_distance(self, tmp_path):
-        # RYR1 is strict-greater: candidate R->I (97) NOT > comparator R->F (97).
         db = _db(tmp_path, [_row("1", "RYR1", "NM:p.Arg175Phe", "R175F", 175, "Pathogenic")])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("RYR1", "R/I"))
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("RYR1", "R/I"))
         assert not r.triggered
 
     def test_gt_passes_when_strictly_greater(self, tmp_path):
-        # candidate R->C (180) > comparator R->F (97).
         db = _db(tmp_path, [_row("1", "RYR1", "NM:p.Arg175Phe", "R175F", 175, "Pathogenic")])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("RYR1", "R/C"))
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("RYR1", "R/C"))
         assert r.triggered
-
-    def test_benign_at_codon_blocks(self, tmp_path):
-        db = _db(tmp_path, [
-            _row("1", "PIK3CD", "NM:p.Arg175His", "R175H", 175, "Pathogenic"),
-            _row("2", "PIK3CD", "NM:p.Arg175Ser", "R175S", 175, "Benign"),
-        ])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("PIK3CD", "R/C"))
-        assert not r.triggered
-        assert "benign variant known" in r.evidence
 
     def test_candidate_distance_unavailable_withheld(self, tmp_path):
         db = _db(tmp_path, [_row("1", "PIK3CD", "NM:p.Arg175His", "R175H", 175, "Pathogenic")])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("PIK3CD", None))
-        assert not r.triggered
-        assert "Grantham distance unavailable" in r.evidence
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("PIK3CD", None))
+        assert not r.triggered and "unavailable" in r.evidence
 
-    def test_non_gated_gene_keeps_plain_pm5(self, tmp_path):
-        # BRCA1 has no Grantham gate: a same-codon different-AA hit meets PM5 at
-        # the default Moderate strength regardless of Grantham distances.
-        db = _db(tmp_path, [_row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic")])
-        ev = PM5Evaluator(_cfg(tmp_path, db))
-        r = ev.evaluate(_snv(), _ann("BRCA1", "R/H"))  # candidate milder, still met
+
+class TestPm5ComparatorQuality:
+    def test_benign_at_codon_blocks_any_gene(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic"),
+            _row("2", "BRCA1", "NM:p.Arg175Ser", "R175S", 175, "Benign"),
+        ])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("BRCA1", "R/H"))
+        assert not r.triggered and "Benign variant known" in r.evidence
+
+    def test_min_stars_excludes_single_submitter(self, tmp_path):
+        # A 1-star comparator does not anchor PM5 at the default min_stars=2.
+        db = _db(tmp_path, [_row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic", stars=1)])
+        r = PM5Evaluator(_cfg(tmp_path, db, min_stars=2)).evaluate(_snv(), _ann("BRCA1", "R/H"))
+        assert not r.triggered and "star" in r.evidence
+
+    def test_min_stars_override_admits_single_submitter(self, tmp_path):
+        db = _db(tmp_path, [_row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic", stars=1)])
+        r = PM5Evaluator(_cfg(tmp_path, db, min_stars=1)).evaluate(_snv(), _ann("BRCA1", "R/H"))
         assert r.triggered
-        assert r.strength == CriterionStrength.MODERATE
+
+
+class TestPm5StrengthForPlainGenes:
+    def test_pathogenic_comparator_moderate(self, tmp_path):
+        db = _db(tmp_path, [_row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic")])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("BRCA1", "R/H"))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
         assert "same codon" in r.evidence
+
+    def test_likely_pathogenic_only_drops_to_supporting(self, tmp_path):
+        db = _db(tmp_path, [_row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Likely pathogenic")])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("BRCA1", "R/H"))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+
+    def test_supporting_only_gene_capped(self, tmp_path):
+        # ATM's VCEP caps PM5 at Supporting even with a Pathogenic comparator.
+        db = _db(tmp_path, [_row("1", "ATM", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic")])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("ATM", "R/H"))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
 
 
 class TestRegistryPm5Exclusions:
-    def _registry(self):
-        return object.__new__(CriteriaRegistry)
+    def _registry(self, tmp_path):
+        tsv = tmp_path / "dp.tsv"
+        tsv.write_text(
+            "gene_symbol\tpm5_excludes\n"
+            "RUNX1\tPM1\n"
+            "DICER1\tPM1,PS1\n"
+            "MYH7\tPM1\n"
+            "PIK3CD\t\n",
+            encoding="utf-8",
+        )
+        reg = object.__new__(CriteriaRegistry)
+        reg._pm5 = PM5Spec(tsv)
+        return reg
 
-    def test_table_lists_runx1_and_dicer1(self):
-        assert _PM5_EXCLUSIONS["RUNX1"] == (ACMGCriterion.PM1,)
-        assert _PM5_EXCLUSIONS["DICER1"] == (ACMGCriterion.PM1, ACMGCriterion.PS1)
-
-    def test_pm5_suppressed_when_pm1_present(self):
-        reg = self._registry()
+    def test_pm5_suppressed_when_pm1_present(self, tmp_path):
+        reg = self._registry(tmp_path)
         results = [
             CriteriaResult.met(ACMGCriterion.PM5),
             CriteriaResult.met(ACMGCriterion.PM1),
         ]
         reg._apply_pm5_exclusions(results, _ann("RUNX1", "R/C"))
         pm5 = next(r for r in results if r.criterion == ACMGCriterion.PM5)
-        assert pm5.suppressed
-        assert "not with PM1" in pm5.evidence
+        assert pm5.suppressed and "not with PM1" in pm5.evidence
 
-    def test_dicer1_suppressed_by_ps1(self):
-        reg = self._registry()
+    def test_rasopathy_gene_generalised(self, tmp_path):
+        # MYH7 (Cardiomyopathy VCEP) also forbids PM5+PM1 — not hardcoded.
+        reg = self._registry(tmp_path)
+        results = [
+            CriteriaResult.met(ACMGCriterion.PM5),
+            CriteriaResult.met(ACMGCriterion.PM1),
+        ]
+        reg._apply_pm5_exclusions(results, _ann("MYH7", "R/C"))
+        assert results[0].suppressed
+
+    def test_dicer1_suppressed_by_ps1(self, tmp_path):
+        reg = self._registry(tmp_path)
         results = [
             CriteriaResult.met(ACMGCriterion.PM5),
             CriteriaResult.met(ACMGCriterion.PS1),
@@ -311,14 +400,14 @@ class TestRegistryPm5Exclusions:
         reg._apply_pm5_exclusions(results, _ann("DICER1", "R/C"))
         assert results[0].suppressed
 
-    def test_pm5_kept_without_clash(self):
-        reg = self._registry()
+    def test_pm5_kept_without_clash(self, tmp_path):
+        reg = self._registry(tmp_path)
         results = [CriteriaResult.met(ACMGCriterion.PM5)]
         reg._apply_pm5_exclusions(results, _ann("RUNX1", "R/C"))
         assert not results[0].suppressed
 
-    def test_non_listed_gene_untouched(self):
-        reg = self._registry()
+    def test_non_listed_gene_untouched(self, tmp_path):
+        reg = self._registry(tmp_path)
         results = [
             CriteriaResult.met(ACMGCriterion.PM5),
             CriteriaResult.met(ACMGCriterion.PM1),

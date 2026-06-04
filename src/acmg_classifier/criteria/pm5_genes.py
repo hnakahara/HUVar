@@ -1,39 +1,38 @@
-"""Per-gene PM5 Grantham-distance gating from ClinGen VCEP specs.
+"""Per-gene PM5 specifications from ClinGen VCEPs (``disease_prevalence.tsv``).
 
-A subset of VCEPs require PM5 to clear a Grantham-distance test against the
-known same-codon pathogenic/likely-pathogenic comparator: the variant under
-evaluation must be chemically *as different or more different* from the
-wild-type residue than the comparator. The ``pm5_grantham`` column of
-``disease_prevalence.tsv`` records the comparison operator per gene:
+Three PM5 columns are loaded here, the PM5 counterpart to
+:class:`~acmg_classifier.criteria.pp2_genes.PP2Applicability`:
 
-* ``ge`` — candidate distance must be >= comparator distance (most VCEPs;
-  "equal or greater / equal or worse" wording, e.g. PIK3CD, VHL, HNF1A).
-* ``gt`` — candidate distance must be strictly greater (PIK3R1: "higher
-  Grantham score"; RYR1: comparator "must be less than" the candidate).
-* (blank/absent) — no Grantham gate; the PM5 evaluator uses its plain
-  same-codon-different-AA rule.
-
-This is the PM5 counterpart to :class:`~acmg_classifier.criteria.pp2_genes.PP2Applicability`.
+* ``pm5_grantham`` — Grantham-distance gate operator: ``ge`` (candidate >=
+  comparator) or ``gt`` (strictly greater — PIK3R1, RYR1). Blank = no gate.
+* ``pm5_excludes`` — criteria PM5 may not be combined with for the gene
+  (``PM1`` or ``PM1,PS1``; e.g. RASopathy/Cardiomyopathy genes, RUNX1, DICER1).
+* ``pm5_max`` — strength ceiling: ``Supporting`` when the VCEP only allows
+  PM5_Supporting (ATM, CDH1, PALB2); blank = default Moderate ceiling.
 """
 from __future__ import annotations
 
 import csv
 from pathlib import Path
 
+from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
+
 GE = "ge"  # candidate Grantham distance >= comparator
 GT = "gt"  # candidate Grantham distance strictly > comparator
-_VALID = {GE, GT}
+_VALID_OP = {GE, GT}
 
 
-class PM5Grantham:
-    """VCEP PM5 Grantham-gating operator per gene, loaded once from the TSV.
+class PM5Spec:
+    """VCEP PM5 specifications per gene, loaded once from the TSV.
 
-    A missing file or column degrades to "no gating" (every gene resolves to
-    ""), so minimal setups and pre-Grantham TSVs keep the plain PM5 behaviour.
+    A missing file or column degrades to "no spec" (every gene resolves to its
+    empty default), so minimal setups and older TSVs keep plain PM5 behaviour.
     """
 
     def __init__(self, tsv_path: Path) -> None:
-        self._by_gene: dict[str, str] = {}
+        self._op: dict[str, str] = {}
+        self._excludes: dict[str, tuple[ACMGCriterion, ...]] = {}
+        self._max: dict[str, CriterionStrength] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -45,11 +44,44 @@ class PM5Grantham:
                 if not gene:
                     continue
                 op = (row.get("pm5_grantham") or "").strip().lower()
-                if op in _VALID:
-                    self._by_gene[gene] = op
+                if op in _VALID_OP:
+                    self._op[gene] = op
+                excl = self._parse_excludes(row.get("pm5_excludes") or "")
+                if excl:
+                    self._excludes[gene] = excl
+                if (row.get("pm5_max") or "").strip().lower() == "supporting":
+                    self._max[gene] = CriterionStrength.SUPPORTING
+
+    @staticmethod
+    def _parse_excludes(raw: str) -> tuple[ACMGCriterion, ...]:
+        out: list[ACMGCriterion] = []
+        for code in raw.split(","):
+            code = code.strip().upper()
+            if not code:
+                continue
+            try:
+                crit = ACMGCriterion(code)
+            except ValueError:
+                continue  # unknown code in the table — skip defensively
+            if crit not in out:
+                out.append(crit)
+        return tuple(out)
 
     def operator(self, gene: str | None) -> str:
         """Grantham operator for *gene*: ``ge`` / ``gt`` / "" (no gate)."""
         if not gene:
             return ""
-        return self._by_gene.get(gene, "")
+        return self._op.get(gene, "")
+
+    def excludes(self, gene: str | None) -> tuple[ACMGCriterion, ...]:
+        """Criteria PM5 may not be combined with for *gene* (may be empty)."""
+        if not gene:
+            return ()
+        return self._excludes.get(gene, ())
+
+    def max_strength(self, gene: str | None) -> CriterionStrength | None:
+        """PM5 strength ceiling for *gene* (``Supporting``), or ``None`` for the
+        default Moderate ceiling."""
+        if not gene:
+            return None
+        return self._max.get(gene)

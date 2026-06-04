@@ -22,6 +22,11 @@ class Config(BaseSettings):
     assembly: Assembly = Assembly.GRCH38
     workers: int = 4
     vep_batch_size: int = 500
+    # Minimum ClinVar review stars for a PM5 same-codon comparator. Default 2
+    # (multiple submitters / expert) excludes single-submitter (1-star) P/LP
+    # assertions, which inflated PM5 over-assignment. Override via
+    # ACMG_PM5_MIN_STARS to trade precision for recall.
+    pm5_min_stars: int = 2
     insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
     splice_tool: SpliceTool = SpliceTool.NONE
     spliceai_dir: Optional[Path] = None

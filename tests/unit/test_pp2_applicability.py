@@ -78,6 +78,35 @@ class TestPP2Extraction:
         assert bdt._pp2_applicability(rs) == {}
 
 
+class TestPP2SpecificityResolution:
+    """The most gene-specific spec's PP2 decision wins (single-gene VCEP over a
+    grouped panel); on a specificity tie the conservative not_applicable wins."""
+
+    def test_single_gene_not_applicable_beats_grouped_applicable(self):
+        # RASopathy: grouped GN004 (12 genes) "applicable" vs single-gene
+        # GN039 NRAS "not_applicable" — the gene-specific decision must win.
+        grouped = (12, "applicable", "")
+        specific = (1, "not_applicable", "")
+        assert bdt._pp2_more_specific(specific, grouped)
+        assert not bdt._pp2_more_specific(grouped, specific)
+
+    def test_single_gene_applicable_beats_grouped(self):
+        grouped = (12, "not_applicable", "")
+        specific = (1, "applicable", "PM2,PP3")
+        assert bdt._pp2_more_specific(specific, grouped)
+
+    def test_tie_prefers_not_applicable(self):
+        # Two single-gene specs disagree (e.g. ACTA1 GN147 vs GN169) — keep the
+        # conservative not_applicable.
+        na = (1, "not_applicable", "")
+        ap = (1, "applicable", "")
+        assert bdt._pp2_more_specific(na, ap)
+        assert not bdt._pp2_more_specific(ap, na)
+
+    def test_tie_same_decision_is_not_replaced(self):
+        assert not bdt._pp2_more_specific((1, "applicable", ""), (1, "applicable", ""))
+
+
 class TestPP2Requires:
     def test_co_requirement_extracted(self):
         rs = {
