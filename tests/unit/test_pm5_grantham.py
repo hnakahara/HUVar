@@ -317,12 +317,12 @@ class TestPm5GranthamEvaluator:
 
 
 class TestPm5ComparatorQuality:
-    def test_default_min_stars_is_one(self):
-        # Default keeps single-submitter (1-star) P/LP comparators — they are
-        # often the only legitimate PM5 anchor and a local ClinVar build lags the
-        # VCEP expert re-review. ACMG_PM5_MIN_STARS=2 opts into the strict policy.
+    def test_default_min_stars_is_two(self):
+        # Default excludes single-submitter (1-star) comparators for precision;
+        # relies on a current RCV_release ClinVar build so expert-panel re-reviews
+        # are 3-star. ACMG_PM5_MIN_STARS=1 opts into the higher-recall policy.
         from acmg_classifier.config import Config
-        assert Config().pm5_min_stars == 1
+        assert Config().pm5_min_stars == 2
 
     def test_benign_at_codon_blocks_any_gene(self, tmp_path):
         db = _db(tmp_path, [

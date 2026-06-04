@@ -22,16 +22,16 @@ class Config(BaseSettings):
     assembly: Assembly = Assembly.GRCH38
     workers: int = 4
     vep_batch_size: int = 500
-    # Minimum ClinVar review stars for a PM5 same-codon comparator. Default 1
-    # ("criteria provided"; excludes only 0-star no-assertion records). A
-    # single-submitter (1-star) P/LP is often the only — and a legitimate —
-    # PM5 anchor (e.g. PIK3CD Tyr524Asn, used by the eRepo truth set), and a
-    # local ClinVar build commonly lags the VCEP expert-panel re-review that
-    # would raise its star count, so requiring 2 stars drops real PM5 calls.
-    # Precision is instead handled by the surgical PM5 gates (benign-at-codon,
-    # Grantham, LP->Supporting, PM1 exclusion). Set ACMG_PM5_MIN_STARS=2 for a
-    # stricter, expert/multi-submitter-only comparator policy.
-    pm5_min_stars: int = 1
+    # Minimum ClinVar review stars for a PM5 same-codon comparator. Default 2
+    # (multiple submitters / expert panel) excludes single-submitter (1-star)
+    # P/LP assertions, which inflate PM5 over-assignment. This relies on the
+    # ClinVar SQLite being built from the CURRENT RCV_release XML: the legacy
+    # RCV_xml_old_format build was frozen at 2025-07, so VCEP expert-panel
+    # re-reviews (e.g. PIK3CD Tyr524Asn -> 3-star) were missing and 2 stars
+    # dropped real PM5 calls. With the up-to-date build those comparators are
+    # 3-star and pass. Set ACMG_PM5_MIN_STARS=1 to also admit single-submitter
+    # comparators (higher recall, lower precision).
+    pm5_min_stars: int = 2
     insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
     splice_tool: SpliceTool = SpliceTool.NONE
     spliceai_dir: Optional[Path] = None
