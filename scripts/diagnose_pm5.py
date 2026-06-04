@@ -25,8 +25,11 @@ def main() -> None:
     ap.add_argument("--db", required=True, type=Path, help="clinvar_ps1_pm5_*.sqlite path")
     ap.add_argument("--gene", required=True)
     ap.add_argument("--codon", required=True, type=int)
-    ap.add_argument("--window", type=int, default=2,
-                    help="also show +/- this many residues (default 2)")
+    ap.add_argument("--hgvsp", default=None,
+                    help="also list EVERY row whose hgvs_p contains this substring "
+                         "(e.g. 'Tyr524Asn'), across all codon_position values "
+                         "including NULL — reveals a comparator dropped/mis-rated "
+                         "by the builder regardless of codon parsing")
     args = ap.parse_args()
 
     con = sqlite3.connect(f"file:{args.db.as_posix()}?mode=ro", uri=True)
@@ -59,6 +62,20 @@ def main() -> None:
     ).fetchall()
     _dump(near)
 
+    # 2b) Every row for a specific protein change, regardless of codon_position —
+    #     shows ALL RCV records (per-condition) for the comparator and their raw
+    #     review_status, so a missing expert-panel record or a star mis-rating is
+    #     visible directly.
+    if args.hgvsp:
+        print(f"\n== {args.gene} rows with hgvs_p LIKE %{args.hgvsp}% (all RCVs) ==")
+        _dump(con.execute(
+            "SELECT variation_id, hgvs_p, amino_acid_change, codon_position, "
+            "clinical_significance, review_status, star_rating "
+            "FROM variants WHERE gene_symbol=? AND hgvs_p LIKE ? "
+            "ORDER BY star_rating DESC",
+            (args.gene, f"%{args.hgvsp}%"),
+        ).fetchall())
+
     # 3) Coverage sanity: how many of this gene's rows have a NULL codon_position?
     total, nullc = con.execute(
         "SELECT COUNT(*), SUM(CASE WHEN codon_position IS NULL THEN 1 ELSE 0 END) "
@@ -75,7 +92,11 @@ def _dump(rows: list[tuple]) -> None:
         print("   (none)")
         return
     for vid, hp, aa, cp, sig, rs, st in rows:
-        print(f"   id={vid} star={st} cp={cp!s:>5} sig={sig!r} aa={aa} hgvs_p={hp!r}")
+        # review_status is the raw text _star_rating maps to a star count; print
+        # it so a star mis-rating (text says "expert panel" but star != 3) is
+        # distinguishable from stale/absent data (text says "single submitter").
+        print(f"   id={vid} star={st} review_status={rs!r} cp={cp!s:>5} "
+              f"sig={sig!r} hgvs_p={hp!r}")
 
 
 if __name__ == "__main__":

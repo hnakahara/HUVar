@@ -317,6 +317,13 @@ class TestPm5GranthamEvaluator:
 
 
 class TestPm5ComparatorQuality:
+    def test_default_min_stars_is_one(self):
+        # Default keeps single-submitter (1-star) P/LP comparators — they are
+        # often the only legitimate PM5 anchor and a local ClinVar build lags the
+        # VCEP expert re-review. ACMG_PM5_MIN_STARS=2 opts into the strict policy.
+        from acmg_classifier.config import Config
+        assert Config().pm5_min_stars == 1
+
     def test_benign_at_codon_blocks_any_gene(self, tmp_path):
         db = _db(tmp_path, [
             _row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic"),

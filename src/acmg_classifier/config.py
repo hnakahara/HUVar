@@ -22,11 +22,16 @@ class Config(BaseSettings):
     assembly: Assembly = Assembly.GRCH38
     workers: int = 4
     vep_batch_size: int = 500
-    # Minimum ClinVar review stars for a PM5 same-codon comparator. Default 2
-    # (multiple submitters / expert) excludes single-submitter (1-star) P/LP
-    # assertions, which inflated PM5 over-assignment. Override via
-    # ACMG_PM5_MIN_STARS to trade precision for recall.
-    pm5_min_stars: int = 2
+    # Minimum ClinVar review stars for a PM5 same-codon comparator. Default 1
+    # ("criteria provided"; excludes only 0-star no-assertion records). A
+    # single-submitter (1-star) P/LP is often the only — and a legitimate —
+    # PM5 anchor (e.g. PIK3CD Tyr524Asn, used by the eRepo truth set), and a
+    # local ClinVar build commonly lags the VCEP expert-panel re-review that
+    # would raise its star count, so requiring 2 stars drops real PM5 calls.
+    # Precision is instead handled by the surgical PM5 gates (benign-at-codon,
+    # Grantham, LP->Supporting, PM1 exclusion). Set ACMG_PM5_MIN_STARS=2 for a
+    # stricter, expert/multi-submitter-only comparator policy.
+    pm5_min_stars: int = 1
     insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
     splice_tool: SpliceTool = SpliceTool.NONE
     spliceai_dir: Optional[Path] = None
