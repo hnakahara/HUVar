@@ -33,7 +33,7 @@ from typing import Optional
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "pp2",
-    "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max",
+    "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp",
     "source_vcep", "cspec_url", "notes",
 ]
 
@@ -378,6 +378,28 @@ def _pm5_max(rule_set: dict) -> str:
     return ""
 
 
+def _pm5_lp_comparator(rule_set: dict) -> str:
+    """PM5 same-codon comparator-significance policy for this rule set:
+
+    * ``"no"``  — PM5 offers no applicable Supporting strength (only Moderate /
+      Strong), so per these specs the comparator must reach **Pathogenic**; a
+      merely Likely-pathogenic comparator must NOT trigger PM5 (e.g. PTEN, VHL,
+      KCNQ1, the RASopathy single-gene specs).
+    * ``"yes"`` — a Supporting PM5 strength is applicable, so a Likely-pathogenic
+      comparator may trigger PM5 (at Supporting; e.g. ABCA4, RPE65).
+    * ``""``    — no applicable PM5 strength (skipped in cross-spec resolution).
+    """
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PM5":
+            continue
+        applic = _applicable_strengths(code)
+        if not applic:
+            return ""
+        labels = {es.get("label") for es in applic}
+        return "yes" if "Supporting" in labels else "no"
+    return ""
+
+
 def _af_basis(rule_set: dict) -> str:
     """"males" if the applicable BA1/BS1 descriptions define the cutoff on the
     male (XY/hemizygous) allele frequency; otherwise "" (overall population)."""
@@ -434,6 +456,7 @@ def parse_spec(path: str) -> list[dict]:
         pm5_op = _pm5_grantham_op(rs)
         pm5_excl = _pm5_excludes(rs)
         pm5_max = _pm5_max(rs)
+        pm5_lp = _pm5_lp_comparator(rs)
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -451,6 +474,7 @@ def parse_spec(path: str) -> list[dict]:
                 "pm5_grantham": "",
                 "pm5_excludes": "",
                 "pm5_max": "",
+                "pm5_lp": "",
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
@@ -463,6 +487,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm5_grantham": pm5_op,
                 "_pm5_excludes": pm5_excl,
                 "_pm5_max": pm5_max,
+                "_pm5_lp": pm5_lp,
             })
     return rows
 
@@ -512,6 +537,10 @@ def main() -> None:
     pm5_excludes_by_gene: dict[str, set[str]] = {}
     pm5_max_rank = {"Moderate": 2, "Supporting": 1, "": 0}
     pm5_max_by_gene: dict[str, str] = {}
+    # PM5 comparator-significance policy, resolved to the most gene-specific spec
+    # (a single-gene VCEP supersedes a grouped panel), like PP2. Stores
+    # (specificity, "yes"/"no"); a "no" gene requires a Pathogenic comparator.
+    pm5_lp_choice: dict[str, tuple[int, str]] = {}
     n_specs = 0
     for path in files:
         try:
@@ -537,6 +566,14 @@ def main() -> None:
                 )
             if pm5_max_rank[row["_pm5_max"]] > pm5_max_rank[pm5_max_by_gene.get(g, "")]:
                 pm5_max_by_gene[g] = row["_pm5_max"]
+            if row["_pm5_lp"] in ("yes", "no"):
+                spec = row["_specificity"]
+                cur = pm5_lp_choice.get(g)
+                # Most gene-specific spec wins; on a tie the conservative
+                # "no" (Pathogenic comparator required) wins.
+                if (cur is None or spec < cur[0]
+                        or (spec == cur[0] and row["_pm5_lp"] == "no" and cur[1] != "no")):
+                    pm5_lp_choice[g] = (spec, row["_pm5_lp"])
             if g not in by_gene:
                 by_gene[g] = row
                 continue
@@ -585,6 +622,10 @@ def main() -> None:
         excl = pm5_excludes_by_gene.get(g, set())
         row["pm5_excludes"] = ",".join(c for c in ("PM1", "PS1") if c in excl)
         row["pm5_max"] = "Supporting" if pm5_max_by_gene.get(g, "") == "Supporting" else ""
+        # Only "no" (Pathogenic comparator required) is recorded; "yes"/none
+        # leave the column blank (LP comparator accepted — the default).
+        lp = pm5_lp_choice.get(g)
+        row["pm5_lp"] = "no" if lp and lp[1] == "no" else ""
 
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
@@ -617,6 +658,7 @@ _OVERRIDE_FIELDS = {
     "pm5_grantham": "pm5_grantham",
     "pm5_excludes": "pm5_excludes",
     "pm5_max": "pm5_max",
+    "pm5_lp": "pm5_lp",
     "inheritance": "inheritance",
 }
 

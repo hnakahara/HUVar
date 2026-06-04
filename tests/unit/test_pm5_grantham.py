@@ -140,17 +140,39 @@ class TestPm5MaxExtraction:
 
 # ------------------------------ loader ---------------------------------------
 
+class TestPm5LpExtraction:
+    def test_no_supporting_requires_pathogenic(self):
+        rs = {"criteriaCodes": [_pm5_code(
+            ("Moderate", "comparison variant must reach a Pathogenic classification"),
+        )]}
+        assert bdt._pm5_lp_comparator(rs) == "no"
+
+    def test_supporting_present_allows_lp(self):
+        rs = {"criteriaCodes": [_pm5_code(
+            ("Moderate", "comparison variant must reach a Pathogenic classification"),
+            ("Supporting", "comparison variant must reach a Likely Pathogenic classification"),
+        )]}
+        assert bdt._pm5_lp_comparator(rs) == "yes"
+
+    def test_no_applicable_pm5_is_blank(self):
+        rs = {"criteriaCodes": [{"label": "PM5", "evidenceStrengths": [
+            {"label": "Moderate", "applicability": "Not Applicable for this VCEP"},
+        ]}]}
+        assert bdt._pm5_lp_comparator(rs) == ""
+
+
 class TestPm5SpecLoader:
     def _tsv(self, tmp_path):
         tsv = tmp_path / "dp.tsv"
         tsv.write_text(
-            "gene_symbol\tpm5_grantham\tpm5_excludes\tpm5_max\n"
-            "PIK3CD\tge\t\t\n"
-            "PIK3R1\tgt\t\t\n"
-            "RUNX1\tge\tPM1\t\n"
-            "DICER1\tge\tPM1,PS1\t\n"
-            "ATM\t\t\tSupporting\n"
-            "MYH7\t\tPM1\t\n",
+            "gene_symbol\tpm5_grantham\tpm5_excludes\tpm5_max\tpm5_lp\n"
+            "PIK3CD\tge\t\t\t\n"
+            "PIK3R1\tgt\t\t\t\n"
+            "RUNX1\tge\tPM1\t\t\n"
+            "DICER1\tge\tPM1,PS1\t\tno\n"
+            "ATM\t\t\tSupporting\t\n"
+            "MYH7\t\tPM1\t\t\n"
+            "PTEN\t\t\t\tno\n",
             encoding="utf-8",
         )
         return tsv
@@ -177,11 +199,20 @@ class TestPm5SpecLoader:
         assert s.max_strength("MYH7") is None
         assert s.max_strength("UNSEEN") is None
 
+    def test_requires_pathogenic(self, tmp_path):
+        s = PM5Spec(self._tsv(tmp_path))
+        assert s.requires_pathogenic("PTEN") is True
+        assert s.requires_pathogenic("DICER1") is True
+        assert s.requires_pathogenic("PIK3CD") is False   # blank -> LP accepted
+        assert s.requires_pathogenic("UNSEEN") is False
+        assert s.requires_pathogenic(None) is False
+
     def test_missing_file_is_empty(self, tmp_path):
         s = PM5Spec(tmp_path / "nope.tsv")
         assert s.operator("PIK3CD") == ""
         assert s.excludes("RUNX1") == ()
         assert s.max_strength("ATM") is None
+        assert s.requires_pathogenic("PTEN") is False
 
 
 # --------------------------- ClinVar fixtures --------------------------------
@@ -239,11 +270,12 @@ class TestHasBenignAtCodon:
 def _cfg(tmp_path, clinvar: Path, min_stars: int = 1):
     tsv = tmp_path / "disease_prevalence.tsv"
     tsv.write_text(
-        "gene_symbol\tpm5_grantham\tpm5_excludes\tpm5_max\n"
-        "PIK3CD\tge\t\t\n"
-        "RYR1\tgt\t\t\n"
-        "ATM\t\t\tSupporting\n"
-        "BRCA1\t\t\t\n",
+        "gene_symbol\tpm5_grantham\tpm5_excludes\tpm5_max\tpm5_lp\n"
+        "PIK3CD\tge\t\t\t\n"
+        "RYR1\tgt\t\t\t\n"
+        "ATM\t\t\tSupporting\t\n"
+        "BRCA1\t\t\t\t\n"
+        "PTEN\t\t\t\tno\n",
         encoding="utf-8",
     )
     cfg = MagicMock()
@@ -360,6 +392,27 @@ class TestPm5StrengthForPlainGenes:
         # ATM's VCEP caps PM5 at Supporting even with a Pathogenic comparator.
         db = _db(tmp_path, [_row("1", "ATM", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic")])
         r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("ATM", "R/H"))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+
+
+class TestPm5PathogenicComparatorRequired:
+    """Genes whose VCEP offers no Supporting PM5 (pm5_lp=no) require a Pathogenic
+    comparator; a Likely-pathogenic-only comparator must not trigger PM5."""
+
+    def test_lp_only_comparator_blocked(self, tmp_path):
+        db = _db(tmp_path, [_row("1", "PTEN", "NM:p.Arg175Cys", "R175C", 175, "Likely pathogenic")])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("PTEN", "R/H"))
+        assert not r.triggered and "No Pathogenic same-codon comparator" in r.evidence
+
+    def test_pathogenic_comparator_fires_moderate(self, tmp_path):
+        db = _db(tmp_path, [_row("1", "PTEN", "NM:p.Arg175Cys", "R175C", 175, "Pathogenic")])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("PTEN", "R/H"))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+
+    def test_unrestricted_gene_still_accepts_lp(self, tmp_path):
+        # BRCA1 (blank pm5_lp) keeps the LP->Supporting behaviour.
+        db = _db(tmp_path, [_row("1", "BRCA1", "NM:p.Arg175Cys", "R175C", 175, "Likely pathogenic")])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("BRCA1", "R/H"))
         assert r.triggered and r.strength == CriterionStrength.SUPPORTING
 
 

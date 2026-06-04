@@ -95,6 +95,18 @@ class PM5Evaluator(CriterionEvaluator):
             qualifying = hits
             tag = "same codon, diff AA"
 
+        # Comparator-significance policy: VCEPs that offer no Supporting PM5
+        # strength require the comparator to reach Pathogenic (PTEN, VHL, KCNQ1,
+        # RASopathy genes, …) — a Likely-pathogenic-only comparator must not
+        # trigger PM5. Genes without this restriction keep the LP->Supporting path.
+        if self._spec.requires_pathogenic(pc.gene_symbol):
+            qualifying = [h for h in qualifying if h.clinical_significance in _PATHOGENIC]
+            if not qualifying:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM5,
+                    "No Pathogenic same-codon comparator (LP not accepted for this gene)",
+                )
+
         # Strength: Moderate if any qualifying comparator is Pathogenic, else
         # (only Likely pathogenic comparators) Supporting. Capped per the VCEP
         # ceiling (ATM/CDH1/PALB2: Supporting only).

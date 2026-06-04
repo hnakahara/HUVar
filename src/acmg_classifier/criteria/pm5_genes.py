@@ -9,6 +9,10 @@ Three PM5 columns are loaded here, the PM5 counterpart to
   (``PM1`` or ``PM1,PS1``; e.g. RASopathy/Cardiomyopathy genes, RUNX1, DICER1).
 * ``pm5_max`` — strength ceiling: ``Supporting`` when the VCEP only allows
   PM5_Supporting (ATM, CDH1, PALB2); blank = default Moderate ceiling.
+* ``pm5_lp`` — ``no`` when the VCEP offers no Supporting PM5 strength, so the
+  same-codon comparator must reach **Pathogenic**; a Likely-pathogenic-only
+  comparator must not trigger PM5 (PTEN, VHL, KCNQ1, RASopathy genes, …).
+  Blank = a Likely-pathogenic comparator is accepted (at Supporting).
 """
 from __future__ import annotations
 
@@ -33,6 +37,7 @@ class PM5Spec:
         self._op: dict[str, str] = {}
         self._excludes: dict[str, tuple[ACMGCriterion, ...]] = {}
         self._max: dict[str, CriterionStrength] = {}
+        self._require_p: set[str] = set()
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -51,6 +56,8 @@ class PM5Spec:
                     self._excludes[gene] = excl
                 if (row.get("pm5_max") or "").strip().lower() == "supporting":
                     self._max[gene] = CriterionStrength.SUPPORTING
+                if (row.get("pm5_lp") or "").strip().lower() == "no":
+                    self._require_p.add(gene)
 
     @staticmethod
     def _parse_excludes(raw: str) -> tuple[ACMGCriterion, ...]:
@@ -85,3 +92,9 @@ class PM5Spec:
         if not gene:
             return None
         return self._max.get(gene)
+
+    def requires_pathogenic(self, gene: str | None) -> bool:
+        """True if *gene*'s VCEP requires a Pathogenic same-codon comparator
+        (no Supporting PM5 strength) — a Likely-pathogenic-only comparator must
+        not trigger PM5."""
+        return bool(gene) and gene in self._require_p
