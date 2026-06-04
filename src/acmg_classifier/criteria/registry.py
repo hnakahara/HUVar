@@ -15,6 +15,15 @@ from acmg_classifier.models.supplement import SupplementEntry
 # pathogenic-supporting).
 _AF_EXCLUSIVE_PRIORITY = (ACMGCriterion.BA1, ACMGCriterion.BS1, ACMGCriterion.PM2)
 
+# Gene-specific PM5 exclusions from the ClinGen VCEP specs: PM5 may not be
+# combined with these criteria for the listed genes. RUNX1 (GN008): "PM5 cannot
+# be used if PM1 was applied". DICER1 (GN024): "cannot be applied in combination
+# with PM1 or PS1". Enforced as a post-hoc suppression of PM5 in the registry.
+_PM5_EXCLUSIONS: dict[str, tuple[ACMGCriterion, ...]] = {
+    "RUNX1": (ACMGCriterion.PM1,),
+    "DICER1": (ACMGCriterion.PM1, ACMGCriterion.PS1),
+}
+
 
 def _apply_af_mutual_exclusion(results: list[CriteriaResult]) -> None:
     """Enforce BA1 > BS1 > PM2 mutual exclusivity, in place.
@@ -151,11 +160,33 @@ class CriteriaRegistry:
         # pass so a PP3 already suppressed there counts as not-met here.
         self._apply_pp2_co_requirements(results, annotation)
 
+        # Gene-specific PM5 exclusions (RUNX1: not with PM1; DICER1: not with
+        # PM1/PS1). Suppress PM5 when an excluded criterion fired for the gene.
+        self._apply_pm5_exclusions(results, annotation)
+
         # BA1 / BS1 / PM2 are mutually exclusive frequency criteria — keep only
         # the highest-priority one (see _apply_af_mutual_exclusion).
         _apply_af_mutual_exclusion(results)
 
         return results
+
+    def _apply_pm5_exclusions(
+        self, results: list[CriteriaResult], annotation: AnnotationData
+    ) -> None:
+        pc = annotation.primary_consequence
+        gene = pc.gene_symbol if pc else None
+        excluded = _PM5_EXCLUSIONS.get(gene or "")
+        if not excluded:
+            return
+        active = {r.criterion for r in results if r.triggered and not r.suppressed}
+        clash = [c for c in excluded if c in active]
+        if not clash:
+            return
+        with_ = "+".join(c.value for c in clash)
+        for r in results:
+            if r.criterion == ACMGCriterion.PM5 and r.triggered and not r.suppressed:
+                r.suppressed = True
+                r.evidence = (r.evidence + f" [suppressed: PM5 not with {with_}]").strip()
 
     def _apply_pp2_co_requirements(
         self, results: list[CriteriaResult], annotation: AnnotationData

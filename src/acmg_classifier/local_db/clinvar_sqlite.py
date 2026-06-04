@@ -175,6 +175,40 @@ def query_same_codon_different_aa(
     ]
 
 
+def has_benign_at_codon(
+    db_path: Path,
+    gene_symbol: str,
+    codon_position: Optional[int],
+    min_stars: int = 1,
+) -> bool:
+    """True if any Benign/Likely benign variant is recorded at this codon.
+
+    Several PM5-Grantham VCEPs (PIK3CD, PIK3R1, GALT, …) bar PM5 at a codon where
+    *any* benign variant is known. Restricted to genuine missense comparators
+    (via ``_is_missense_p``) for parity with the same-codon pathogenic query."""
+    if not db_path.exists() or codon_position is None:
+        return False
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT hgvs_p
+            FROM variants
+            WHERE gene_symbol = ?
+              AND codon_position = ?
+              AND star_rating >= ?
+              AND clinical_significance IN (
+                  'Benign', 'Likely benign', 'Benign/Likely benign'
+              )
+            """,
+            (gene_symbol, codon_position, min_stars),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="benign_at_codon", error=str(exc))
+        return False
+    return any(_is_missense_p(r[0]) for r in rows)
+
+
 def _sum_column(db_path: Path, column: str, chrom: str, pos: int, ref: str, alt: str) -> int:
     """Return SUM(column) across SCV rows for a variant; 0 if column/DB missing.
 

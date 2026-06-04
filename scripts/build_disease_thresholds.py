@@ -33,7 +33,7 @@ from typing import Optional
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "pp2",
-    "pp2_requires", "source_vcep", "cspec_url", "notes",
+    "pp2_requires", "pm5_grantham", "source_vcep", "cspec_url", "notes",
 ]
 
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* (XY/hemizygous)
@@ -286,6 +286,40 @@ def _pp2_requires(rule_set: dict) -> str:
     return ""
 
 
+# --- PM5 Grantham-distance gate (from the per-VCEP PM5 criteria code) ---
+# A subset of VCEPs require PM5 to clear a Grantham-distance comparison against
+# the same-codon pathogenic/likely-pathogenic comparator. The comparison
+# operator is encoded per gene: "ge" (candidate >= comparator; "equal or
+# greater/worse" wording, the common case) or "gt" (strictly greater — PIK3R1
+# "higher Grantham score", RYR1 comparator "must be less than" the candidate).
+_PM5_GT = re.compile(r"higher grantham|less than", re.IGNORECASE)
+
+
+def _pm5_grantham_op(rule_set: dict) -> str:
+    """"ge"/"gt"/"" — the PM5 Grantham gate operator for this rule set's gene(s).
+
+    Returns "" when no applicable PM5 strength mentions Grantham. When the
+    description carries an "equal" clause the gate is inclusive (``ge``); a
+    strict "higher/less than" phrasing with no "equal" yields ``gt``. If both
+    appear across strengths the inclusive ``ge`` wins (the spec's primary rule)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PM5":
+            continue
+        op = ""
+        for es in _applicable_strengths(code):
+            desc = es.get("description", "") or ""
+            if "grantham" not in desc.lower():
+                continue
+            if "equal" in desc.lower():
+                return "ge"  # inclusive clause is the operative gate
+            if _PM5_GT.search(desc):
+                op = "gt"
+            elif not op:
+                op = "ge"  # Grantham-conditioned but no explicit operator → inclusive
+        return op
+    return ""
+
+
 def _af_basis(rule_set: dict) -> str:
     """"males" if the applicable BA1/BS1 descriptions define the cutoff on the
     male (XY/hemizygous) allele frequency; otherwise "" (overall population)."""
@@ -339,6 +373,7 @@ def parse_spec(path: str) -> list[dict]:
         af_basis = _af_basis(rs)
         pp2_map = _pp2_applicability(rs)
         pp2_req = _pp2_requires(rs)
+        pm5_op = _pm5_grantham_op(rs)
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -353,15 +388,17 @@ def parse_spec(path: str) -> list[dict]:
                 "af_basis": af_basis,
                 "pp2": "",
                 "pp2_requires": "",
+                "pm5_grantham": "",
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
                 # Transient (not TSV columns; dropped at write time via
                 # extrasaction="ignore"): drive multi-spec resolution and the
-                # cross-spec PP2 aggregation in main().
+                # cross-spec PP2/PM5 aggregation in main().
                 "_specificity": n_spec_genes,
                 "_pp2": pp2_map.get(sym, ""),
                 "_pp2_requires": pp2_req,
+                "_pm5_grantham": pm5_op,
             })
     return rows
 
@@ -401,6 +438,10 @@ def main() -> None:
     # Co-requirement codes recorded from the spec that first made the gene
     # applicable (e.g. BMPR2 → "PM2,PP3").
     pp2_requires_by_gene: dict[str, str] = {}
+    # PM5 Grantham gate, aggregated across specs: inclusive "ge" outranks strict
+    # "gt" (the spec's primary, less-strict rule wins on a cross-spec conflict).
+    pm5_rank = {"ge": 2, "gt": 1, "": 0}
+    pm5_by_gene: dict[str, str] = {}
     n_specs = 0
     for path in files:
         try:
@@ -419,6 +460,8 @@ def main() -> None:
                 pp2_by_gene[g] = row["_pp2"]
                 if row["_pp2"] == "applicable":
                     pp2_requires_by_gene[g] = row["_pp2_requires"]
+            if pm5_rank[row["_pm5_grantham"]] > pm5_rank[pm5_by_gene.get(g, "")]:
+                pm5_by_gene[g] = row["_pm5_grantham"]
             if g not in by_gene:
                 by_gene[g] = row
                 continue
@@ -460,6 +503,7 @@ def main() -> None:
     for g, row in by_gene.items():
         row["pp2"] = pp2_by_gene.get(g, "")
         row["pp2_requires"] = pp2_requires_by_gene.get(g, "")
+        row["pm5_grantham"] = pm5_by_gene.get(g, "")
 
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
@@ -489,6 +533,7 @@ _OVERRIDE_FIELDS = {
     "af_basis": "af_basis",
     "pp2": "pp2",
     "pp2_requires": "pp2_requires",
+    "pm5_grantham": "pm5_grantham",
     "inheritance": "inheritance",
 }
 
