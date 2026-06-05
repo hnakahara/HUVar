@@ -27,6 +27,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -157,6 +158,21 @@ _GNOMAD_VER = {"GRCh38": "4.1", "GRCh37": "2.1.1"}
 # release, so exomes AND genomes are both loaded and merged at query time.
 _GNOMAD_KIND = {"GRCh38": "joint", "GRCh37": "exome_genome"}
 
+# gnomAD is mirrored byte-identically on Google Cloud and AWS: the object key
+# after the bucket prefix is the same on both, so we can swap only the prefix.
+# Downloading from both mirrors in parallel roughly doubles throughput.
+# Verified 2026-06: both return HTTP 200 for v4.1 (joint) and v2.1.1
+# (exomes/genomes). The URLS dict above stores the Google form.
+_GNOMAD_GCS_PREFIX = "https://storage.googleapis.com/gcp-public-data--gnomad/"
+_GNOMAD_AWS_PREFIX = "https://gnomad-public-us-east-1.s3.amazonaws.com/"
+# (label, base URL) pairs, in round-robin assignment order.
+_GNOMAD_MIRRORS: list[tuple[str, str]] = [
+    ("google", _GNOMAD_GCS_PREFIX),
+    ("amazon", _GNOMAD_AWS_PREFIX),
+]
+# Concurrent downloads per mirror (2 google + 2 amazon = 4 total in flight).
+_GNOMAD_PER_MIRROR = 2
+
 # ---------------------------------------------------------------------------
 # Utilities
 # ---------------------------------------------------------------------------
@@ -194,6 +210,105 @@ def _download(url: str, dest: Path, label: str = "") -> None:
         _run(["curl", "-C", "-", "-L", "--progress-bar", "-o", str(dest), url])
     else:
         sys.exit("[ERROR] wget or curl is required")
+
+
+def _download_quiet(url: str, dest: Path, label: str = "") -> None:
+    """Download without an interactive progress bar.
+
+    Used by the parallel gnomAD downloader where four concurrent wget/curl
+    progress bars would otherwise interleave into unreadable output. Keeps
+    the resume flag (wget -c / curl -C -) so interrupted transfers continue.
+    """
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if _has("wget"):
+        cmd = ["wget", "-c", "--no-verbose", "-O", str(dest), url]
+    elif _has("curl"):
+        cmd = ["curl", "-C", "-", "-L", "-s", "-S", "-o", str(dest), url]
+    else:
+        sys.exit("[ERROR] wget or curl is required")
+    subprocess.run([str(x) for x in cmd], check=True)
+
+
+def _download_gnomad_chrom(
+    label: str,
+    base: str,
+    name: str,
+    chrom: str,
+    vcf_suffix: str,
+    tbi_suffix: str,
+    vcf_f: Path,
+    tbi_f: Path,
+) -> str:
+    """Download one chromosome's VCF + .tbi from the assigned mirror.
+
+    On failure, falls back to the other mirror (the gnomAD GCS/AWS mirrors are
+    byte-identical) before giving up. Runs in a worker thread; returns a short
+    status string for logging. Already-present, non-corrupt files are skipped.
+    """
+    # Re-download existing files that are suspiciously small (corrupt/partial).
+    _verify_size(vcf_f, min_bytes=10_000_000, label=f"gnomAD {name} {chrom} VCF")
+    _verify_size(tbi_f, min_bytes=1_000, label=f"gnomAD {name} {chrom} .tbi")
+
+    def _fetch(suffix: str, dest: Path, what: str) -> None:
+        if dest.exists():
+            return
+        # Try the assigned mirror first, then the other mirror as a fallback.
+        attempts = [(label, base)] + [m for m in _GNOMAD_MIRRORS if m[0] != label]
+        last_exc: Exception | None = None
+        for mlabel, mbase in attempts:
+            try:
+                print(f"  ↓  gnomAD {name} {chrom} {what}  [{mlabel}]")
+                _download_quiet(mbase + suffix, dest, f"gnomAD {name} {chrom} {what}")
+                return
+            except subprocess.CalledProcessError as exc:
+                last_exc = exc
+                print(f"  [WARN] {mlabel} failed for {name} {chrom} {what}; trying next mirror")
+        raise RuntimeError(f"All mirrors failed for gnomAD {name} {chrom} {what}") from last_exc
+
+    _fetch(vcf_suffix, vcf_f, "VCF")
+    _fetch(tbi_suffix, tbi_f, ".tbi")
+    return f"{name} {chrom} [{label}]"
+
+
+def _download_gnomad_parallel(jobs: list[tuple], per_mirror: int = _GNOMAD_PER_MIRROR) -> None:
+    """Download all gnomAD chromosome jobs across both mirrors in parallel.
+
+    Each job is one chromosome (VCF + .tbi). Jobs are assigned round-robin to
+    the mirrors, and each mirror gets its own thread pool of `per_mirror`
+    workers — so at steady state there are `per_mirror` downloads in flight
+    from each mirror simultaneously.
+    """
+    buckets: dict[str, list[tuple]] = {label: [] for label, _ in _GNOMAD_MIRRORS}
+    for i, job in enumerate(jobs):
+        label = _GNOMAD_MIRRORS[i % len(_GNOMAD_MIRRORS)][0]
+        buckets[label].append(job)
+
+    base_by_label = dict(_GNOMAD_MIRRORS)
+    pools: list[ThreadPoolExecutor] = []
+    futures = []
+    try:
+        for label, _ in _GNOMAD_MIRRORS:
+            if not buckets[label]:
+                continue
+            pool = ThreadPoolExecutor(max_workers=per_mirror, thread_name_prefix=f"dl-{label}")
+            pools.append(pool)
+            base = base_by_label[label]
+            for job in buckets[label]:
+                futures.append(pool.submit(_download_gnomad_chrom, label, base, *job))
+
+        errors: list[Exception] = []
+        for fut in as_completed(futures):
+            try:
+                done = fut.result()
+                print(f"  ✓  {done}")
+            except Exception as exc:  # noqa: BLE001 — aggregate and report below
+                errors.append(exc)
+                print(f"  [ERROR] {exc}")
+        if errors:
+            raise errors[0]
+    finally:
+        for pool in pools:
+            pool.shutdown()
 
 
 def _verify_size(path: Path, min_bytes: int, label: str = "") -> bool:
@@ -491,21 +606,23 @@ def step_gnomad_duckdb(
             print(f"  Once the VCFs are ready, re-run with --gnomad-vcf-dir <path>")
             return False
         print(f"  Downloading gnomAD v{ver} ({', '.join(n for n, *_ in sources)}; "
-              f"~300+ GB total). Ctrl+C to interrupt; re-run to resume.")
+              f"~300+ GB total) from {len(_GNOMAD_MIRRORS)} mirrors, "
+              f"{_GNOMAD_PER_MIRROR} concurrent each. Ctrl+C to interrupt; re-run to resume.")
         staging.mkdir(parents=True, exist_ok=True)
+
+        # Build one job per chromosome (VCF + .tbi). URL suffixes are derived by
+        # stripping the Google prefix so each job can be fetched from either
+        # mirror; _download_gnomad_parallel splits them across both.
+        jobs: list[tuple] = []
         for name, vcf_tmpl, tbi_tmpl, src_chroms in sources:
             for chrom in src_chroms:
-                vcf_url = vcf_tmpl.format(chrom=chrom)
-                tbi_url = tbi_tmpl.format(chrom=chrom)
+                vcf_suffix = vcf_tmpl.format(chrom=chrom).removeprefix(_GNOMAD_GCS_PREFIX)
+                tbi_suffix = tbi_tmpl.format(chrom=chrom).removeprefix(_GNOMAD_GCS_PREFIX)
                 vcf_f = staging / f"gnomad.{name}.v{ver}.sites.{chrom}.vcf.bgz"
                 tbi_f = Path(str(vcf_f) + ".tbi")
-                # Re-download existing files that are suspiciously small (corrupt)
-                _verify_size(vcf_f, min_bytes=10_000_000, label=f"gnomAD {name} {chrom} VCF")
-                _verify_size(tbi_f, min_bytes=1_000, label=f"gnomAD {name} {chrom} .tbi")
-                if not vcf_f.exists():
-                    _download(vcf_url, vcf_f, f"gnomAD {name} {chrom}")
-                if not tbi_f.exists():
-                    _download(tbi_url, tbi_f, f"gnomAD {name} {chrom} .tbi")
+                jobs.append((name, chrom, vcf_suffix, tbi_suffix, vcf_f, tbi_f))
+
+        _download_gnomad_parallel(jobs)
         vcf_dir = staging
 
     n_workers = workers if workers is not None else max(1, (os.cpu_count() or 2) - 1)
