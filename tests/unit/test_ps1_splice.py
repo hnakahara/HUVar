@@ -78,9 +78,23 @@ class TestQuerySameSpliceSite:
         assert query_same_splice_site(db, "HNF1A", "chr12", 120989033, "G", "T") == []
 
 
-def _cfg(db):
+# Standard PS1 spec fixture: HNF1A extends to canonical splice, MSH2 only to
+# non-canonical, GAA is missense-only, CDH1 declines PS1 entirely.
+_PS1_TSV = (
+    "gene_symbol\tps1\tps1_splice\n"
+    "HNF1A\tapplicable\tcanonical\n"
+    "MSH2\tapplicable\tnoncanonical\n"
+    "GAA\tapplicable\t\n"
+    "CDH1\tnot_applicable\t\n"
+)
+
+
+def _cfg(db, tmp_path):
     cfg = MagicMock()
     cfg.clinvar_sqlite = db
+    tsv = tmp_path / "disease_prevalence.tsv"
+    tsv.write_text(_PS1_TSV, encoding="utf-8")
+    cfg.disease_prevalence_tsv = tsv
     return cfg
 
 
@@ -103,7 +117,7 @@ class TestPs1SpliceEvaluator:
         db = _db(tmp_path, [
             _row("1", "12", 120989033, "G", "C", "HNF1A", "c.526+1G>C", "Pathogenic"),
         ])
-        r = PS1Evaluator(_cfg(db)).evaluate(_variant(), _ann(ConsequenceType.SPLICE_DONOR))
+        r = PS1Evaluator(_cfg(db, tmp_path)).evaluate(_variant(), _ann(ConsequenceType.SPLICE_DONOR))
         assert r.triggered
         assert "same splice-site position" in r.evidence
 
@@ -112,14 +126,14 @@ class TestPs1SpliceEvaluator:
         db = _db(tmp_path, [
             _row("1", "12", 999, "A", "G", "HNF1A", "c.1+5A>G", "Likely pathogenic"),
         ])
-        r = PS1Evaluator(_cfg(db)).evaluate(
+        r = PS1Evaluator(_cfg(db, tmp_path)).evaluate(
             _variant(pos=999, ref="A", alt="T"), _ann(ConsequenceType.SPLICE_REGION)
         )
         assert r.triggered
 
     def test_no_same_site_hit_not_met(self, tmp_path):
         db = _db(tmp_path, [])
-        r = PS1Evaluator(_cfg(db)).evaluate(_variant(), _ann(ConsequenceType.SPLICE_DONOR))
+        r = PS1Evaluator(_cfg(db, tmp_path)).evaluate(_variant(), _ann(ConsequenceType.SPLICE_DONOR))
         assert not r.triggered
         assert "same-splice-site" in r.evidence
 
@@ -127,7 +141,83 @@ class TestPs1SpliceEvaluator:
         db = _db(tmp_path, [
             _row("1", "12", 500, "A", "C", "HNF1A", "c.1-12A>C", "Pathogenic"),
         ])
-        r = PS1Evaluator(_cfg(db)).evaluate(
+        r = PS1Evaluator(_cfg(db, tmp_path)).evaluate(
             _variant(pos=500, ref="A", alt="G"), _ann(ConsequenceType.INTRON)
         )
         assert r.triggered
+
+
+class TestPs1NotApplicable:
+    """A VCEP may decline PS1 entirely for its gene (CDH1)."""
+
+    def test_not_applicable_blocks_missense(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "16", 68800000, "C", "G", "CDH1", "c.1A>G", "Pathogenic"),
+        ])
+        tsv = tmp_path / "disease_prevalence.tsv"
+        tsv.write_text("gene_symbol\tps1\nCDH1\tnot_applicable\n", encoding="utf-8")
+        cfg = MagicMock()
+        cfg.clinvar_sqlite = db
+        cfg.disease_prevalence_tsv = tsv
+        r = PS1Evaluator(cfg).evaluate(_variant(), _ann(ConsequenceType.MISSENSE, gene="CDH1"))
+        assert not r.triggered
+        assert "not applicable" in r.evidence
+
+
+class TestPs1SpliceNonCanonicalOnly:
+    """InSiGHT MMR genes restrict PS1-splice to non-canonical nucleotides; a
+    canonical ±1/±2 variant must not receive PS1 (it is PVS1 territory)."""
+
+    def test_canonical_blocked(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "12", 120989033, "G", "C", "MSH2", "c.1+1G>C", "Pathogenic"),
+        ])
+        cfg = _cfg(db, tmp_path)
+        r = PS1Evaluator(cfg).evaluate(_variant(), _ann(ConsequenceType.SPLICE_DONOR, gene="MSH2"))
+        assert not r.triggered
+        assert "non-canonical" in r.evidence
+
+    def test_noncanonical_still_fires(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "12", 999, "A", "G", "MSH2", "c.1+5A>G", "Pathogenic"),
+        ])
+        cfg = _cfg(db, tmp_path)
+        r = PS1Evaluator(cfg).evaluate(
+            _variant(pos=999, ref="A", alt="T"), _ann(ConsequenceType.SPLICE_REGION, gene="MSH2")
+        )
+        assert r.triggered
+
+    def test_unrestricted_gene_canonical_fires(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "12", 120989033, "G", "C", "HNF1A", "c.1+1G>C", "Pathogenic"),
+        ])
+        cfg = _cfg(db, tmp_path)  # restriction not for HNF1A
+        r = PS1Evaluator(cfg).evaluate(_variant(), _ann(ConsequenceType.SPLICE_DONOR, gene="HNF1A"))
+        assert r.triggered
+
+
+class TestPs1SpliceMissenseOnly:
+    """Genes whose PS1 is the original missense-only ACMG rule (no splice
+    extension — e.g. GAA, the HCM genes) must not receive PS1 for a splice
+    variant even when a same-site P/LP comparator exists."""
+
+    def test_missense_only_gene_splice_withheld(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "17", 80110841, "G", "C", "GAA", "c.1551+1G>C", "Pathogenic"),
+        ])
+        cfg = _cfg(db, tmp_path)  # GAA -> ps1_splice blank (missense-only)
+        r = PS1Evaluator(cfg).evaluate(
+            VariantRecord(chrom="chr17", pos=80110841, ref="G", alt="T", assembly=Assembly.GRCH38),
+            _ann(ConsequenceType.SPLICE_DONOR, gene="GAA"),
+        )
+        assert not r.triggered
+        assert "missense-only" in r.evidence
+
+    def test_gene_absent_from_tsv_is_missense_only(self, tmp_path):
+        # A gene with no VCEP PS1 spec defaults to missense-only for splice.
+        db = _db(tmp_path, [
+            _row("1", "12", 120989033, "G", "C", "NOVCEP", "c.1+1G>C", "Pathogenic"),
+        ])
+        cfg = _cfg(db, tmp_path)
+        r = PS1Evaluator(cfg).evaluate(_variant(), _ann(ConsequenceType.SPLICE_DONOR, gene="NOVCEP"))
+        assert not r.triggered and "missense-only" in r.evidence

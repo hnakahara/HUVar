@@ -2,6 +2,7 @@
 from __future__ import annotations
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
+from acmg_classifier.criteria.pm1_hotspots import PM1Hotspots
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType
@@ -12,6 +13,9 @@ from acmg_classifier.models.supplement import SupplementEntry
 class PM1Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        # Per-gene VCEP hotspot definitions (residue ranges / residues / strength)
+        # mined from the cspec summaries. Authoritative where present.
+        self._hotspots = PM1Hotspots(cfg.pm1_hotspots_tsv)
 
     def evaluate(
         self,
@@ -31,14 +35,36 @@ class PM1Evaluator(CriterionEvaluator):
         ):
             return CriteriaResult.not_met(ACMGCriterion.PM1, "Not a missense/in-frame variant")
 
-        # Operationally we approximate "mutational hotspot or critical
-        # functional domain" by counting nearby pathogenic ClinVar entries at
-        # the same protein position / cluster window. The cluster definition
-        # itself lives in clinvar_sqlite.query_hotspot_cluster.
+        gene = pc.gene_symbol
+
+        # 1. VCEP declared PM1 not applicable for the gene (benign variation
+        #    throughout / no defined hotspot — e.g. ABCA4, ATM, RASopathy genes).
+        if self._hotspots.is_not_applicable(gene):
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM1, f"{gene}: VCEP designates PM1 not applicable"
+            )
+
+        # 2. VCEP-curated hotspot regions are authoritative where defined: a hit
+        #    awards PM1 at the VCEP strength; a miss withholds PM1 (do NOT fall
+        #    back to the statistical heuristic, which the VCEP regions supersede).
+        if self._hotspots.has_gene(gene):
+            strength = self._hotspots.lookup(gene, pc.protein_position)
+            if strength is None:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM1, f"{gene}: not in a VCEP PM1 hotspot region"
+                )
+            return CriteriaResult.met(
+                ACMGCriterion.PM1,
+                strength=strength,
+                evidence=f"{gene} residue {pc.protein_position} in VCEP PM1 hotspot",
+            )
+
+        # 3. No curated VCEP data for the gene — fall back to the statistical
+        #    hotspot heuristic (nearby pathogenic ClinVar clustering).
         from acmg_classifier.local_db.clinvar_sqlite import query_hotspot_cluster
         is_hotspot, evidence = query_hotspot_cluster(
             self._cfg.clinvar_sqlite,
-            pc.gene_symbol,
+            gene,
             pc.protein_position,
         )
         if not is_hotspot:

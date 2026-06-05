@@ -12,6 +12,10 @@ from acmg_classifier.models.supplement import SupplementEntry
 class PS1Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        # Per-gene PS1 spec: some VCEPs restrict the splice extension to
+        # non-canonical splice nucleotides (InSiGHT MMR genes).
+        from acmg_classifier.criteria.ps1_genes import PS1Spec
+        self._spec = PS1Spec(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -31,6 +35,12 @@ class PS1Evaluator(CriterionEvaluator):
         pc = annotation.primary_consequence
         if pc is None:
             return CriteriaResult.not_met(ACMGCriterion.PS1, "No primary consequence")
+
+        # VCEP gate: a VCEP that declined PS1 for the gene withholds it (CDH1).
+        if self._spec.is_not_applicable(pc.gene_symbol):
+            return CriteriaResult.not_met(
+                ACMGCriterion.PS1, f"{pc.gene_symbol}: VCEP designates PS1 not applicable"
+            )
 
         if pc.consequence == ConsequenceType.MISSENSE:
             return self._evaluate_missense(variant, pc)
@@ -64,6 +74,27 @@ class PS1Evaluator(CriterionEvaluator):
         return CriteriaResult.met(ACMGCriterion.PS1, evidence=evidence)
 
     def _evaluate_splice(self, variant: VariantRecord, pc) -> CriteriaResult:
+        # PS1's splice extension is opt-in per VCEP. Genes whose PS1 is the
+        # original missense-only ACMG rule (no splice extension — e.g. GAA, the
+        # HCM genes) must NOT receive PS1 for a splice/intronic variant.
+        mode = self._spec.splice_mode(pc.gene_symbol)
+        if not mode:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PS1,
+                f"{pc.gene_symbol}: PS1 is missense-only (no splice extension)",
+            )
+        # A "noncanonical" extension excludes canonical ±1/±2 sites
+        # (SPLICE_DONOR / SPLICE_ACCEPTOR) — those are PVS1 territory.
+        if mode == "noncanonical" and pc.consequence in (
+            ConsequenceType.SPLICE_ACCEPTOR,
+            ConsequenceType.SPLICE_DONOR,
+        ):
+            return CriteriaResult.not_met(
+                ACMGCriterion.PS1,
+                f"{pc.gene_symbol}: PS1 splice limited to non-canonical sites "
+                "(canonical ±1/±2 is PVS1)",
+            )
+
         # A different nucleotide change at the SAME splice-site position as a
         # known P/LP variant — the splicing counterpart of PS1.
         from acmg_classifier.local_db.clinvar_sqlite import query_same_splice_site

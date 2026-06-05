@@ -1,0 +1,110 @@
+gene_symbol	strength	regions	residues
+ABCA4	not_applicable		
+ABCD1	Moderate	507-520;617-641	
+ACADVL	Moderate		326,429,441,459
+ACTA1	not_applicable		
+ACTC1	not_applicable		
+ACVRL1	Moderate	209-216;329-335;348-351	40,54,56,57,58,59,66,71,72,73,75,76,78,79,80,82,83,84,85,87,229,242
+ADA	not_applicable		
+AIPL1	not_applicable		
+ANO5	not_applicable		
+APC	not_applicable		
+ATM	not_applicable		
+BMPR2	Moderate	33-131;203-504	
+BMPR2	Strong		34,60,66,84,94,99,116,117,118,123,210,212,230,245,333,338,351,353,386,405,410,485,486,487,488,489,490,491,492
+BRAF	not_applicable		
+BRCA1	not_applicable		
+BRCA2	not_applicable		
+CAPN3	not_applicable		
+CDH1	not_applicable		
+CDKL5	Moderate	19-43;169-171	
+CTLA4	Moderate	134-139	
+CYP1B1	Moderate	51-61;460-493	
+CYP1B1	Supporting	253-282;339-365	
+DCLRE1C	not_applicable		
+DICER1	Moderate		1344,1705,1709,1713,1809,1810,1813
+DICER1	Supporting		1682,1846
+DNM2	not_applicable		
+DYSF	not_applicable		
+ENG	Moderate	350-382	207,278,282,394,412,516,549,582
+ETHE1	not_applicable		
+F8	Moderate	2267-2304	1332,1667
+F8	Strong	391-392;759-760;1701-1705;1708-1709	737,742,1683,1689
+F9	Strong	191-192;226-227	267,315,411
+FOXG1	Moderate	181-275	
+FOXN1	Moderate	270-367	
+GAA	Moderate		282,376,404,405,441,481,516,518,519,600,613,616,618,649,650,674
+GALT	Moderate		171,188
+GAMT	not_applicable		
+GATM	not_applicable		
+GCK	Moderate	78-85;151-153;168-169;204-206;225-229;225-231;254-258;295-296;331-333;410-416	287,290,336
+GP1BA	Moderate		20,33,225,227,264,280,526,527
+GP1BB	Moderate		93,95,118,141
+GP9	not_applicable		
+GUCY2D	Moderate		883,885,890,905,925,927,929,932,976,995,997,998,999,1000,1003,1004,1008,1010
+HNF1A	Moderate		130,131,132,143,144,145,146,147,148,149,155,156,157,158,203,204,205,206,263,264,265,270,271,272,273
+HNF1A	Supporting	1-32;107-174;201-280	
+HNF4A	Moderate		38,41,43,49,50,51,55,56,57,58,59,63,64,67,70,72,74,75,80,87,88,89,90,91,93,94,109,111,112,113
+HNF4A	Supporting	33-36;33-113;37-113;180-220;300-350	
+HRAS	not_applicable		
+IDUA	Moderate		89,91,181,182,262,264,299,301,305,306,349,363,372
+KRAS	not_applicable		
+LZTR1	not_applicable		
+MAP2K1	Moderate	43-61;124-134	
+MAP2K2	Moderate	47-65;128-138	
+MECP2	Moderate	90-162;302-306	
+MLH1	not_applicable		
+MRAS	not_applicable		
+MSH2	not_applicable		
+MSH6	not_applicable		
+MTM1	not_applicable		
+MYBPC3	Moderate	485-502;1248-1266	
+MYH7	Moderate	167-931	
+MYL2	not_applicable		
+MYL3	not_applicable		
+MYOC	not_applicable		
+NEB	not_applicable		
+NRAS	not_applicable		
+OTC	Moderate		268
+PAH	Moderate	46-48;63-69;246-266;280-283;322-326;377-379	138,158,245,268,278,279,285,289,290,300,315,330,331,345,346,349
+PALB2	not_applicable		
+PIK3CD	not_applicable		
+PIK3R1	not_applicable		
+PMS2	not_applicable		
+POLG	not_applicable		
+PPP1CB	not_applicable		
+PTEN	Moderate	90-94;123-130;166-168	
+PTPN11	not_applicable		
+RAF1	not_applicable		
+RAG1	Moderate	394-460;461-517	
+RAG1	Supporting	387-1011	
+RAG2	Moderate	414-487	
+RAG2	Supporting	1-383	
+RIT1	not_applicable		
+RPE65	Moderate		107,125,180,182,241,313,417,527
+RPGR	not_applicable		
+RRAS2	not_applicable		
+RS1	Moderate		72,122,163,200,215
+RS1	Strong		40,59,63,110,142,219,223
+RUNX1	Strong		107,110,134,162,166,167,169,170,194,196,198,201,204
+RUNX1	Supporting	89-204	
+RYR1	Moderate	1-552;2101-2458;4800-4950	
+RYR1	Supporting	1-552;2101-2458;4631-4991	
+SCN1B	not_applicable		
+SERPINC1	Moderate		39,40,53,56,73,79,127,160,224,279,414,416,462
+SGCA	not_applicable		
+SGCB	not_applicable		
+SGCD	not_applicable		
+SGCG	not_applicable		
+SHOC2	not_applicable		
+SLC19A3	not_applicable		
+SLC6A8	not_applicable		
+SLC9A6	not_applicable		
+SOS1	not_applicable		
+SOS2	not_applicable		
+TCF4	Moderate	564-617	
+TNNI3	Moderate	141-209	
+TNNT2	Supporting	79-179;89-189	
+TP53	Moderate		175,245,248,249,273,282
+TPM1	not_applicable		
+VWF	not_applicable		

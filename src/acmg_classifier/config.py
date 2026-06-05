@@ -30,6 +30,14 @@ class Config(BaseSettings):
     # PM5 gates (benign-at-codon, Grantham, LP->Supporting, PM1 exclusion). Set
     # ACMG_PM5_MIN_STARS=2 for a stricter expert/multi-submitter-only policy.
     pm5_min_stars: int = 1
+    # BS2 (observed in a healthy individual) gnomAD count thresholds, by the
+    # gene's inheritance mode. Recessive counts homozygotes, X-linked counts
+    # hemizygotes, dominant counts heterozygous carriers (AC - nhomalt). Defaults
+    # mirror the "5+ is hard to explain by chance" heuristic; override via
+    # ACMG_BS2_MIN_HOMALT / ACMG_BS2_MIN_HEMI / ACMG_BS2_MIN_HET.
+    bs2_min_homalt: int = 5
+    bs2_min_hemi: int = 5
+    bs2_min_het: int = 5
     insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
     splice_tool: SpliceTool = SpliceTool.NONE
     spliceai_dir: Optional[Path] = None
@@ -166,3 +174,9 @@ class Config(BaseSettings):
     def gene_inheritance_tsv(self) -> Path:
         """gene -> inheritance (AD/AR/XL...) map for inheritance-aware PM2 thresholds."""
         return self.data_dir / "shared" / "gene_inheritance.tsv"
+
+    @property
+    def pm1_hotspots_tsv(self) -> Path:
+        """Per-gene PM1 hotspot regions/residues mined from the VCEP cspec
+        summaries (see scripts/build_pm1_hotspots.py)."""
+        return self.data_dir / "shared" / "pm1_hotspots.tsv"

@@ -33,8 +33,8 @@ from typing import Optional
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "pp2",
-    "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp",
-    "source_vcep", "cspec_url", "notes",
+    "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
+    "ps1", "ps1_splice", "source_vcep", "cspec_url", "notes",
 ]
 
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* (XY/hemizygous)
@@ -400,6 +400,87 @@ def _pm5_lp_comparator(rule_set: dict) -> str:
     return ""
 
 
+# BS2 (observed in a healthy individual) gene-level applicability. A VCEP may
+# carry a BS2 code but decline general-population/gnomAD data for it (RASopathy
+# GN004: "general population data should not be used for this criterion" — due
+# to variable expressivity). Since our BS2 evaluator is gnomAD-based, treat that
+# as not_applicable.
+_BS2_NO_POPDATA = re.compile(
+    r"population data should not be used|should not be used for this criterion",
+    re.IGNORECASE,
+)
+
+
+def _bs2_applicability(rule_set: dict) -> str:
+    """"applicable" / "not_applicable" / "" for the rule set's BS2 code.
+
+    Applicable when the BS2 code has an Applicable strength whose description
+    does not bar population data; not_applicable when the VCEP carries a BS2
+    code it declined (or barred population data); "" when no BS2 code exists."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BS2":
+            continue
+        applic = _applicable_strengths(code)
+        if not applic:
+            return "not_applicable"
+        if _BS2_NO_POPDATA.search(applic[0].get("description", "") or ""):
+            return "not_applicable"
+        return "applicable"
+    return ""
+
+
+# PS1 splice handling, classified per gene into three states:
+#   ""            -- no splice extension; PS1 is missense-only (original ACMG;
+#                    e.g. GAA, ABCD1). A splice variant must NOT receive PS1.
+#   "canonical"   -- splice extension that explicitly covers canonical splice
+#                    sites (HNF1A/GCK/HNF4A "canonical and non-canonical",
+#                    PIK3R1, SLC6A8).
+#   "noncanonical"-- splice extension limited to non-canonical positions (InSiGHT
+#                    MMR "non-canonical splice nucleotide", BMPR2/RS1 "outside
+#                    splice donor/acceptor +/-1,2", splice-region only).
+# Caveat / exclusion sentences mentioning splicing (the standard "beware of
+# changes that impact splicing", "should be excluded", comparison-variant notes)
+# are stripped first so they are not mistaken for an extension.
+_PS1_CAVEAT_SENT = re.compile(
+    r"[^.]*\b(?:beware|should be excluded|should not be used|should not be provided"
+    r"|not a predicted or confirmed splice defect"
+    r"|rather than (?:at )?the amino acid|truly is a splice defect"
+    r"|investigated[^.]*splic|predictions? \(by spliceai\)|spliceai scores? for both)"
+    r"[^.]*\.?",
+    re.IGNORECASE,
+)
+_PS1_SPLICE_MENTION = re.compile(r"splic|intronic", re.IGNORECASE)
+# Positive "canonical" splice application (not "non-canonical").
+_PS1_CANONICAL = re.compile(
+    r"(?<!non-)(?<!non )canonical[^.]{0,40}splic|splic[^.]{0,40}(?<!non-)(?<!non )canonical",
+    re.IGNORECASE,
+)
+
+
+def _ps1_applicability(rule_set: dict) -> str:
+    """"applicable" / "not_applicable" / "" for the rule set's PS1 code. A VCEP
+    that carries a PS1 code with no applicable strength declined it (e.g. CDH1)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PS1":
+            continue
+        return "applicable" if _applicable_strengths(code) else "not_applicable"
+    return ""
+
+
+def _ps1_splice(rule_set: dict) -> str:
+    """PS1 splice-extension state for the gene: "" (missense-only) / "canonical"
+    / "noncanonical" — see the module-level note above."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PS1":
+            continue
+        descs = " ".join(es.get("description", "") or "" for es in _applicable_strengths(code))
+        stripped = _PS1_CAVEAT_SENT.sub(" ", descs)
+        if not _PS1_SPLICE_MENTION.search(stripped):
+            return ""
+        return "canonical" if _PS1_CANONICAL.search(stripped) else "noncanonical"
+    return ""
+
+
 def _af_basis(rule_set: dict) -> str:
     """"males" if the applicable BA1/BS1 descriptions define the cutoff on the
     male (XY/hemizygous) allele frequency; otherwise "" (overall population)."""
@@ -457,6 +538,9 @@ def parse_spec(path: str) -> list[dict]:
         pm5_excl = _pm5_excludes(rs)
         pm5_max = _pm5_max(rs)
         pm5_lp = _pm5_lp_comparator(rs)
+        bs2 = _bs2_applicability(rs)
+        ps1 = _ps1_applicability(rs)
+        ps1_splice = _ps1_splice(rs)
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -475,6 +559,9 @@ def parse_spec(path: str) -> list[dict]:
                 "pm5_excludes": "",
                 "pm5_max": "",
                 "pm5_lp": "",
+                "bs2": "",
+                "ps1": "",
+                "ps1_splice": "",
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
@@ -488,6 +575,9 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm5_excludes": pm5_excl,
                 "_pm5_max": pm5_max,
                 "_pm5_lp": pm5_lp,
+                "_bs2": bs2,
+                "_ps1": ps1,
+                "_ps1_splice": ps1_splice,
             })
     return rows
 
@@ -541,6 +631,16 @@ def main() -> None:
     # (a single-gene VCEP supersedes a grouped panel), like PP2. Stores
     # (specificity, "yes"/"no"); a "no" gene requires a Pathogenic comparator.
     pm5_lp_choice: dict[str, tuple[int, str]] = {}
+    # BS2 applicability, resolved to the most gene-specific spec (single-gene
+    # VCEP over a grouped panel), like PP2; on a tie the conservative
+    # not_applicable wins. bs2_choice[g] = (specificity, decision).
+    bs2_choice: dict[str, tuple[int, str, str]] = {}
+    # PS1 splice "non-canonical only" restriction (union across specs).
+    # PS1 splice-extension state, resolved to the most gene-specific spec that
+    # carries a PS1 code; on a tie an explicit extension beats "" (missense-only).
+    ps1_splice_choice: dict[str, tuple[int, str]] = {}
+    # PS1 applicability, resolved to the most gene-specific spec (like PP2/BS2).
+    ps1_choice: dict[str, tuple[int, str, str]] = {}
     n_specs = 0
     for path in files:
         try:
@@ -574,6 +674,20 @@ def main() -> None:
                 if (cur is None or spec < cur[0]
                         or (spec == cur[0] and row["_pm5_lp"] == "no" and cur[1] != "no")):
                     pm5_lp_choice[g] = (spec, row["_pm5_lp"])
+            if row["_bs2"] in ("applicable", "not_applicable"):
+                cand = (row["_specificity"], row["_bs2"], "")
+                if g not in bs2_choice or _pp2_more_specific(cand, bs2_choice[g]):
+                    bs2_choice[g] = cand
+            if row["_ps1"] in ("applicable", "not_applicable"):
+                cand = (row["_specificity"], row["_ps1"], "")
+                if g not in ps1_choice or _pp2_more_specific(cand, ps1_choice[g]):
+                    ps1_choice[g] = cand
+                # Splice mode comes from a spec that actually carries a PS1 code.
+                spec, mode = row["_specificity"], row["_ps1_splice"]
+                cur = ps1_splice_choice.get(g)
+                if (cur is None or spec < cur[0]
+                        or (spec == cur[0] and mode and not cur[1])):
+                    ps1_splice_choice[g] = (spec, mode)
             if g not in by_gene:
                 by_gene[g] = row
                 continue
@@ -626,6 +740,11 @@ def main() -> None:
         # leave the column blank (LP comparator accepted — the default).
         lp = pm5_lp_choice.get(g)
         row["pm5_lp"] = "no" if lp and lp[1] == "no" else ""
+        bchoice = bs2_choice.get(g)
+        row["bs2"] = bchoice[1] if bchoice else ""
+        pchoice = ps1_choice.get(g)
+        row["ps1"] = pchoice[1] if pchoice else ""
+        row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
 
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
@@ -659,6 +778,9 @@ _OVERRIDE_FIELDS = {
     "pm5_excludes": "pm5_excludes",
     "pm5_max": "pm5_max",
     "pm5_lp": "pm5_lp",
+    "bs2": "bs2",
+    "ps1": "ps1",
+    "ps1_splice": "ps1_splice",
     "inheritance": "inheritance",
 }
 

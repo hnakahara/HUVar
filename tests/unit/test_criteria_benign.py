@@ -156,24 +156,79 @@ class TestMalesAlleleFrequency:
         assert "AF_XY (males)" in r.evidence
 
 
-class TestBS2:
-    def setup_method(self):
-        from unittest.mock import MagicMock
-        self.cfg = MagicMock()
-        from acmg_classifier.criteria.benign.bs2 import BS2Evaluator
-        self.evaluator = BS2Evaluator(self.cfg)
+_BS2_TSV = (
+    "gene_symbol\tbs2\tinheritance\n"
+    "PTEN\tapplicable\tAD\n"
+    "MYH7\tnot_applicable\tAD\n"
+    "ABCA4\tapplicable\tAR\n"
+    "RPGR\tapplicable\tXL\n"
+)
 
-    def test_bs2_triggered_homozygotes(self):
-        gd = GnomADData(nhomalt=10, filter_pass=True)
-        ann = _annotation(gnomad=gd)
-        r = self.evaluator.evaluate(_snv(), ann)
+
+class TestBS2:
+    def _cfg(self, tmp_path, write_tsv=False):
+        from unittest.mock import MagicMock
+        cfg = MagicMock()
+        p = tmp_path / "disease_prevalence.tsv"
+        if write_tsv:
+            p.write_text(_BS2_TSV, encoding="utf-8")
+        cfg.disease_prevalence_tsv = p   # absent -> empty loader (mode-agnostic)
+        cfg.bs2_min_homalt = 5
+        cfg.bs2_min_hemi = 5
+        cfg.bs2_min_het = 5
+        return cfg
+
+    def _ev(self, cfg):
+        from acmg_classifier.criteria.benign.bs2 import BS2Evaluator
+        return BS2Evaluator(cfg)
+
+    def _ann(self, gene=None, **gd):
+        kw = {"gnomad": GnomADData(filter_pass=True, **gd)}
+        if gene:
+            kw["consequences"] = [_consequence(gene=gene)]
+        return _annotation(**kw)
+
+    # --- mode-agnostic fallback (no VCEP row) ---
+    def test_homozygotes_fallback_triggers(self, tmp_path):
+        r = self._ev(self._cfg(tmp_path)).evaluate(_snv(), self._ann(nhomalt=10))
         assert r.triggered
 
-    def test_bs2_not_triggered_low_nhomalt(self):
-        gd = GnomADData(nhomalt=2, filter_pass=True)
-        ann = _annotation(gnomad=gd)
-        r = self.evaluator.evaluate(_snv(), ann)
+    def test_low_nhomalt_not_met(self, tmp_path):
+        r = self._ev(self._cfg(tmp_path)).evaluate(_snv(), self._ann(nhomalt=2))
         assert not r.triggered
+
+    # --- dominant rule (heterozygous carriers) ---
+    def test_dominant_carriers_trigger(self, tmp_path):
+        ev = self._ev(self._cfg(tmp_path, write_tsv=True))
+        r = ev.evaluate(_snv(), self._ann(gene="PTEN", ac=6, nhomalt=0))  # 6 carriers
+        assert r.triggered
+        assert "dominant" in r.evidence
+
+    def test_dominant_below_threshold(self, tmp_path):
+        ev = self._ev(self._cfg(tmp_path, write_tsv=True))
+        r = ev.evaluate(_snv(), self._ann(gene="PTEN", ac=3, nhomalt=0))
+        assert not r.triggered
+
+    # --- VCEP applicability gate ---
+    def test_not_applicable_blocks(self, tmp_path):
+        ev = self._ev(self._cfg(tmp_path, write_tsv=True))
+        r = ev.evaluate(_snv(), self._ann(gene="MYH7", ac=50, nhomalt=20))
+        assert not r.triggered
+        assert "not applicable" in r.evidence
+
+    # --- recessive ignores heterozygotes ---
+    def test_recessive_uses_homozygotes_not_carriers(self, tmp_path):
+        ev = self._ev(self._cfg(tmp_path, write_tsv=True))
+        # Many heterozygous carriers but few homozygotes -> AR must NOT fire.
+        r = ev.evaluate(_snv(), self._ann(gene="ABCA4", ac=100, nhomalt=2))
+        assert not r.triggered
+        r2 = ev.evaluate(_snv(), self._ann(gene="ABCA4", ac=20, nhomalt=8))
+        assert r2.triggered
+
+    def test_xlinked_uses_hemizygotes(self, tmp_path):
+        ev = self._ev(self._cfg(tmp_path, write_tsv=True))
+        r = ev.evaluate(_snv(), self._ann(gene="RPGR", nhemi=7, ac=7))
+        assert r.triggered and "X-linked" in r.evidence
 
 
 class TestBP3:
