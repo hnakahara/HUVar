@@ -47,6 +47,14 @@ def _spliceai_bp4(max_delta: float) -> CriterionStrength | None:
     return None
 
 
+def _openspliceai_bp4(max_delta: float) -> CriterionStrength | None:
+    """OpenSpliceAI BP4. Same 0–1 delta scale as SpliceAI, so the Walker 2023
+    <= 0.10 "no impact" cutoff applies; awarded as Supporting."""
+    if max_delta <= 0.10:
+        return CriterionStrength.SUPPORTING
+    return None
+
+
 def _squirls_bp4(score: float) -> CriterionStrength | None:
     """SQUIRLS BP4: score < 0.50 (i.e. below the PP3 Supporting threshold)."""
     if score < 0.50:
@@ -88,11 +96,12 @@ class BP4Evaluator(CriterionEvaluator):
             # A missense with predicted splice impact (SpliceAI ≥ 0.20)
             # cannot be claimed as benign by computation alone — the splice
             # mechanism overrides the protein-level prediction.
-            if sp and sp.is_available and sp.tool == "spliceai" and sp.max_delta is not None:
+            if sp and sp.is_available and sp.tool in ("spliceai", "openspliceai") and sp.max_delta is not None:
                 if sp.max_delta >= 0.20:
+                    tool_label = "SpliceAI" if sp.tool == "spliceai" else "OpenSpliceAI"
                     return CriteriaResult.not_met(
                         ACMGCriterion.BP4,
-                        f"SpliceAI max_delta={sp.max_delta:.3f} — predicted splice impact, BP4 not applicable",
+                        f"{tool_label} max_delta={sp.max_delta:.3f} — predicted splice impact, BP4 not applicable",
                     )
             if self._cfg.insilico_tool == InSilicoTool.ESM1B:
                 es = annotation.esm1b
@@ -137,6 +146,9 @@ class BP4Evaluator(CriterionEvaluator):
             if sp.tool == "spliceai" and sp.max_delta is not None:
                 strength = _spliceai_bp4(sp.max_delta)
                 score_str = f"SpliceAI max_delta={sp.max_delta:.3f}"
+            elif sp.tool == "openspliceai" and sp.max_delta is not None:
+                strength = _openspliceai_bp4(sp.max_delta)
+                score_str = f"OpenSpliceAI max_delta={sp.max_delta:.3f}"
             elif sp.tool == "squirls" and sp.raw_score is not None:
                 strength = _squirls_bp4(sp.raw_score)
                 score_str = f"SQUIRLS={sp.raw_score:.3f}"

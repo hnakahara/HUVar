@@ -73,11 +73,16 @@ def cli(log_level: str):
               type=click.Choice([t.value for t in InSilicoTool]),
               default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
 @click.option("--splice-tool",
-              type=click.Choice([SpliceTool.SPLICEAI.value]),
-              default=None,
-              help="Splice predictor. Only 'spliceai' is selectable (requires an "
-                   "Illumina licence). If omitted, splice evaluation is disabled "
-                   "(no splice-based evidence is contributed).")
+              type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
+              default=SpliceTool.OPENSPLICEAI.value, show_default=True,
+              help="Splice predictor. 'openspliceai' (default) runs OSAI_MANE at inference time "
+                   "(pip install openspliceai); 'spliceai' uses precomputed VCFs (Illumina licence required).")
+@click.option("--openspliceai-model-dir", type=click.Path(path_type=Path), default=None,
+              help="Directory containing OSAI_MANE model files. "
+                   "Overrides default data/<assembly>/openspliceai/<flanking-size>nt/ lookup.")
+@click.option("--openspliceai-flanking-size", type=int, default=2000, show_default=True,
+              help="Model context length (nt). Must match the downloaded OSAI_MANE model variant "
+                   "(80/400/2000/10000). Also selects the default model subdirectory.")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel). Overrides default data-dir lookup.")
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),
@@ -98,6 +103,8 @@ def classify(
     assembly: Optional[str],
     insilico_tool: str,
     splice_tool: str,
+    openspliceai_model_dir: Optional[Path],
+    openspliceai_flanking_size: int,
     spliceai_dir: Optional[Path],
     supplement: Optional[Path],
     workers: int,
@@ -110,18 +117,16 @@ def classify(
     from acmg_classifier.pipeline.pipeline import run_pipeline
     from acmg_classifier.utils import progress
 
-    # --no-progress forces bars off; otherwise auto-detect by tty.
     if no_progress:
         progress.set_enabled(False)
 
-    # --splice-tool omitted → NONE (splice evaluation disabled).
-    # Only 'spliceai' can be opted into explicitly.
-    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.NONE
     cfg = Config(
         data_dir=data_dir,
         assembly=Assembly(assembly) if assembly else Assembly.GRCH38,
         insilico_tool=InSilicoTool(insilico_tool),
-        splice_tool=splice,
+        splice_tool=SpliceTool(splice_tool),
+        openspliceai_model_dir=openspliceai_model_dir,
+        openspliceai_flanking_size=openspliceai_flanking_size,
         spliceai_dir=spliceai_dir,
         workers=workers,
     )
@@ -150,11 +155,14 @@ def classify(
               type=click.Choice([t.value for t in InSilicoTool]),
               default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
 @click.option("--splice-tool",
-              type=click.Choice([SpliceTool.SPLICEAI.value]),
-              default=None,
-              help="Splice predictor. Only 'spliceai' is selectable (requires an "
-                   "Illumina licence). If omitted, splice evaluation is disabled "
-                   "(no splice-based evidence is contributed).")
+              type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
+              default=SpliceTool.OPENSPLICEAI.value, show_default=True,
+              help="Splice predictor. 'openspliceai' (default) runs OSAI_MANE at inference time "
+                   "(pip install openspliceai); 'spliceai' uses precomputed VCFs (Illumina licence required).")
+@click.option("--openspliceai-model-dir", type=click.Path(path_type=Path), default=None,
+              help="Directory containing OSAI_MANE model files.")
+@click.option("--openspliceai-flanking-size", type=int, default=2000, show_default=True,
+              help="Model context length (nt). Must match the downloaded OSAI_MANE model variant (80/400/2000/10000).")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel).")
 @click.pass_context
@@ -167,19 +175,22 @@ def explain(
     data_dir: Path,
     assembly: str,
     insilico_tool: str,
-    splice_tool: Optional[str],
+    splice_tool: str,
+    openspliceai_model_dir: Optional[Path],
+    openspliceai_flanking_size: int,
     spliceai_dir: Optional[Path],
 ) -> None:
     """Show detailed classification for a single variant (CHROM POS REF ALT)."""
     from acmg_classifier.config import Config
     from acmg_classifier.pipeline.pipeline import run_single
 
-    splice = SpliceTool(splice_tool) if splice_tool else SpliceTool.NONE
     cfg = Config(
         data_dir=data_dir,
         assembly=Assembly(assembly),
         insilico_tool=InSilicoTool(insilico_tool),
-        splice_tool=splice,
+        splice_tool=SpliceTool(splice_tool),
+        openspliceai_model_dir=openspliceai_model_dir,
+        openspliceai_flanking_size=openspliceai_flanking_size,
         spliceai_dir=spliceai_dir,
     )
     run_single(chrom, pos, ref, alt, cfg)

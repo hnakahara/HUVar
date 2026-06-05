@@ -81,9 +81,9 @@ class InSilicoTool(str, Enum):
 
 
 class SpliceTool(str, Enum):
-    # Default: no splice evaluation at all (no splice-based evidence).
     NONE = "none"
-    SPLICEAI = "spliceai"  # requires Illumina commercial license (opt-in only)
+    OPENSPLICEAI = "openspliceai"  # GPL-3.0; runtime inference via openspliceai CLI
+    SPLICEAI = "spliceai"          # requires Illumina commercial license (opt-in only)
     # SQUIRLS retained for when its precomputed DB is downloadable again; not
     # the default and not currently selectable from the CLI.
     SQUIRLS = "squirls"

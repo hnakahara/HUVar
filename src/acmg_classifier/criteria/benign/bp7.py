@@ -39,6 +39,10 @@ def _splice_benign(annotation: AnnotationData) -> bool:
         return False
     if sp.tool == "spliceai" and sp.max_delta is not None:
         return sp.max_delta <= 0.10
+    # OpenSpliceAI shares SpliceAI's 0–1 delta scale, so the same <= 0.10
+    # "no impact" cutoff applies.
+    if sp.tool == "openspliceai" and sp.max_delta is not None:
+        return sp.max_delta <= 0.10
     if sp.tool == "squirls" and sp.raw_score is not None:
         return sp.raw_score < 0.20
     # MMSplice DISABLED — retained, commented out, for later:

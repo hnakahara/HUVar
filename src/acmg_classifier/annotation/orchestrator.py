@@ -88,6 +88,13 @@ class AnnotationOrchestrator:
         return GnomADDB(self._cfg.gnomad_duckdb, self._cfg.gnomad_constraint_tsv)
 
     def _init_splice(self):
+        if self._cfg.splice_tool == SpliceTool.OPENSPLICEAI:
+            from acmg_classifier.local_db.splice.openspliceai_predictor import OpenSpliceAIPredictor
+            return OpenSpliceAIPredictor(
+                self._cfg.openspliceai_model_path,
+                self._cfg.assembly,
+                self._cfg.openspliceai_flanking_size,
+            )
         if self._cfg.splice_tool == SpliceTool.SPLICEAI:
             from acmg_classifier.local_db.splice.spliceai_predictor import SpliceAIPredictor
             return SpliceAIPredictor(self._cfg.spliceai_vcf, self._cfg.spliceai_indel_vcf)
@@ -100,8 +107,7 @@ class AnnotationOrchestrator:
         # if self._cfg.splice_tool == SpliceTool.MMSPLICE:
         #     from acmg_classifier.local_db.splice.mmsplice_predictor import MMSplicePredictor
         #     return MMSplicePredictor(self._cfg.mmsplice_gtf, self._cfg.genome_fasta)
-        # Default (SpliceTool.NONE): splice evaluation is disabled — no splice
-        # predictor, so no splice-based evidence is contributed.
+        # SpliceTool.NONE: splice evaluation is disabled.
         from acmg_classifier.local_db.splice.base import NullSplicePredictor
         return NullSplicePredictor()
 
@@ -119,10 +125,10 @@ class AnnotationOrchestrator:
         disk waits rather than CPU work."""
         vep_results = self._vep.annotate_batch(variants, batch_size=self._cfg.vep_batch_size)
 
-        # MMSplice batch precompute DISABLED (MMSplice integration is off).
-        # The tabix-backed predictors (SpliceAI/SQUIRLS) look up precomputed
-        # scores per variant and need no batch step. Re-enable with MMSplice:
-        # self._splice.precompute(variants)
+        # OpenSpliceAI runs the model at inference time and caches all scores
+        # in one subprocess call. Tabix-backed predictors (SpliceAI/SQUIRLS)
+        # have a no-op precompute(), so this is safe to call unconditionally.
+        self._splice.precompute(variants)
 
         results: dict[str, AnnotationData] = {}
 

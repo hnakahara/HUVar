@@ -39,8 +39,10 @@ class Config(BaseSettings):
     bs2_min_hemi: int = 5
     bs2_min_het: int = 5
     insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
-    splice_tool: SpliceTool = SpliceTool.NONE
+    splice_tool: SpliceTool = SpliceTool.OPENSPLICEAI
     spliceai_dir: Optional[Path] = None
+    openspliceai_model_dir: Optional[Path] = None
+    openspliceai_flanking_size: int = 2000
 
     @field_validator("data_dir")
     @classmethod
@@ -160,6 +162,18 @@ class Config(BaseSettings):
         }
         p = self._spliceai_base_dir / names[self.assembly]
         return p if p.exists() else None
+
+    @property
+    def openspliceai_model_path(self) -> Path:
+        """Path to the OpenSpliceAI model directory.
+
+        If --openspliceai-model-dir is given, that path is used as-is.
+        Otherwise defaults to data/<assembly>/openspliceai/<flanking_size>nt/,
+        which matches the OSAI_MANE directory layout from the openspliceai repo.
+        """
+        if self.openspliceai_model_dir:
+            return self.openspliceai_model_dir.resolve()
+        return self.assembly_dir / "openspliceai" / f"{self.openspliceai_flanking_size}nt"
 
     @property
     def repeatmasker_bed(self) -> Path:

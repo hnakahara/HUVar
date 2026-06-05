@@ -81,6 +81,19 @@ def _spliceai_pp3(max_delta: float) -> CriterionStrength | None:
     return None
 
 
+def _openspliceai_pp3(max_delta: float) -> CriterionStrength | None:
+    """OpenSpliceAI (Chao 2025) PP3 cutoff.
+
+    OpenSpliceAI reimplements SpliceAI in PyTorch and emits delta scores on
+    the same 0–1 scale, so the same >= 0.20 trigger applies. But unlike
+    SpliceAI there is no Walker-style OddsPath calibration to the ACMG
+    Moderate tier yet, so we award only Supporting — the conservative tier
+    matching SQUIRLS' treatment."""
+    if max_delta >= 0.20:
+        return CriterionStrength.SUPPORTING
+    return None
+
+
 class PP3Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
@@ -102,13 +115,20 @@ class PP3Evaluator(CriterionEvaluator):
         # independent of the protein-level damage signal.
         if pc.consequence == ConsequenceType.MISSENSE:
             sp = annotation.splice
-            # Only SpliceAI has a Walker-calibrated cutoff for this scenario;
-            # SQUIRLS is not used here to avoid uncertain dual-counting.
+            # SpliceAI (Walker-calibrated, Moderate) and OpenSpliceAI (same
+            # scale, conservative Supporting) are used here; SQUIRLS is not,
+            # to avoid uncertain dual-counting.
             if sp and sp.is_available and sp.tool == "spliceai" and sp.max_delta is not None:
                 if sp.max_delta >= 0.20:
                     return CriteriaResult.met(
                         ACMGCriterion.PP3, CriterionStrength.MODERATE,
                         f"SpliceAI max_delta={sp.max_delta:.3f} (Moderate) — missense with predicted splice impact",
+                    )
+            if sp and sp.is_available and sp.tool == "openspliceai" and sp.max_delta is not None:
+                if sp.max_delta >= 0.20:
+                    return CriteriaResult.met(
+                        ACMGCriterion.PP3, CriterionStrength.SUPPORTING,
+                        f"OpenSpliceAI max_delta={sp.max_delta:.3f} (Supporting) — missense with predicted splice impact",
                     )
             # Protein-level missense predictor: the user picks exactly ONE in
             # cfg.insilico_tool to avoid combining tools that share training
@@ -164,6 +184,9 @@ class PP3Evaluator(CriterionEvaluator):
             if sp.tool == "spliceai" and sp.max_delta is not None:
                 strength = _spliceai_pp3(sp.max_delta)
                 score_str = f"SpliceAI max_delta={sp.max_delta:.3f}"
+            elif sp.tool == "openspliceai" and sp.max_delta is not None:
+                strength = _openspliceai_pp3(sp.max_delta)
+                score_str = f"OpenSpliceAI max_delta={sp.max_delta:.3f}"
             elif sp.tool == "squirls" and sp.raw_score is not None:
                 strength = _squirls_pp3(sp.raw_score)
                 # Suffix the score string so reviewers see the calibration

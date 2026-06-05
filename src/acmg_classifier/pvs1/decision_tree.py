@@ -212,6 +212,11 @@ def _splice_branch(
         if sp.tool == "spliceai" and sp.max_delta is not None:
             splice_lof_predicted = sp.max_delta >= 0.20
             splice_tool_note = f"SpliceAI={sp.max_delta:.3f}"
+        elif sp.tool == "openspliceai" and sp.max_delta is not None:
+            # Same 0–1 delta scale as SpliceAI; this is a LoF-prediction gate
+            # (not a strength-tier calibration), so the same 0.20 cutoff applies.
+            splice_lof_predicted = sp.max_delta >= 0.20
+            splice_tool_note = f"OpenSpliceAI={sp.max_delta:.3f}"
         elif sp.tool == "squirls" and sp.raw_score is not None:
             splice_lof_predicted = sp.raw_score >= 0.50
             splice_tool_note = f"SQUIRLS={sp.raw_score:.3f} (approx)"

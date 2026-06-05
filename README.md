@@ -76,16 +76,29 @@ pip install -e .
 > `screen` or as a background job.
 
 ```bash
-python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --workers 6
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --workers 12
 ```
 
-**Step 4: Verify installation**
+**Step 4: Install the curated gene-rule tables**
+
+Copy the VCEP-derived gene rule tables into `data/shared/` (the criteria
+evaluators read them from there):
+
+```bash
+mkdir -p /path/to/download/directory/data/shared
+cp resources/gene_inheritance.tsv \
+   resources/clingen/disease_prevalence.tsv \
+   resources/clingen/pm1_hotspots.tsv \
+   /path/to/download/directory/data/shared/
+```
+
+**Step 5: Verify installation**
 
 ```bash
 acmg-classify status --data-dir /path/to/download/directory/data
 ```
 
-**Step 5: Classify variants**
+**Step 6: Classify variants**
 
 ```bash
 acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /path/to/download/directory/data --workers 12
@@ -105,9 +118,17 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   including NMD prediction, last-exon rescue, and biological-relevance gating.
 - **Inheritance-aware PM2** (BS1/BS2 also) thresholds switch between dominant
   and recessive frequencies using a per-gene inheritance table.
-- **Disease-specific BA1/BS1** cutoffs transcribed from ClinGen VCEP criteria
-  specifications (`resources/clingen/`), with X-linked "in males" genes compared
-  against the gnomAD male (XY) allele frequency. See that folder's README.
+- **Per-gene ClinGen VCEP rules** mined from the cspec specifications
+  (`resources/clingen/disease_prevalence.tsv`, `pm1_hotspots.tsv`): disease-
+  specific BA1/BS1 cutoffs, PP2 applicability, PM5 Grantham-distance gating,
+  PM1 hotspot regions, inheritance-aware BS2 (incl. a dominant heterozygote
+  rule), the PS1 splice extension (canonical vs non-canonical), and BP1/BP3
+  applicability. X-linked "in males" genes are compared against the gnomAD
+  male (XY) allele frequency. See `resources/clingen/README.md`.
+- **gnomAD frequencies** use the v4.1 **joint** (combined exome+genome) release
+  on GRCh38; on GRCh37 (no joint release) the exome and genome callsets are both
+  loaded and merged per-field, and BA1/BS1/PM2 compare against the GrpMax
+  filtering allele frequency (FAF95).
 - **In silico prediction**: AlphaMissense (default, non-commercial) or
   **ESM1b** (MIT-licensed, commercial-use ready) for missense. Splice
   prediction is **disabled by default** (`--splice-tool none`); **SpliceAI**
@@ -139,7 +160,7 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 |-----------|---------|-------|
 | Linux / WSL2 | — | Tested on Rocky Linux 9.6; Windows native is **not** supported (uses bash & POSIX tools) |
 | Python | ≥ 3.11 | 3.12 recommended |
-| Disk | ~ 350 GB free | gnomAD v4.1 exomes dominate the footprint |
+| Disk | ~ 350 GB free | gnomAD dominates the footprint (v4.1 joint on GRCh38; exomes + genomes on GRCh37) |
 | RAM | ≥ 16 GB | DuckDB build of gnomAD spikes briefly to ~10 GB |
 | CPU | ≥ 4 cores | `--workers` defaults to 4 |
 
@@ -203,19 +224,20 @@ A one-shot setup script downloads and builds everything required:
 
 ```bash
 # Default: GRCh38 only, downloads everything (~ 350 GB, takes hours)
-python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --workers 12
 
 # Both assemblies
-python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38
-python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh37
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --workers 12
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh37 --workers 12
 
 # If you already have a reference genome / gnomAD VCFs locally, point to them
 python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --genome-fasta /db/reference/GRCh38/hg38.fa \
-    --gnomad-vcf-dir /db/gnomad/v4.1/exomes/vcf
+    --gnomad-vcf-dir /db/gnomad/v4.1/joint/vcf \
+    --workers 12
 
 # Skip the gigantic gnomAD download (~300 GB)
-python scripts/setup_data.py --data-dir /path/to/download/directory/data --skip-gnomad
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --skip-gnomad --workers 12
 
 # Pick specific chromosomes for gnomAD (testing/partial setup)
 python scripts/setup_data.py --data-dir /path/to/download/directory/data \
@@ -241,8 +263,10 @@ After setup, the expected layout is:
 
 ```
 data/
-├── shared/
-│   └── gene_inheritance.tsv         # gene → AD/AR/XL (ships in repo)
+├── shared/                          # curated gene-rule tables (copied from resources/)
+│   ├── gene_inheritance.tsv         #   gene → AD/AR/XL
+│   ├── disease_prevalence.tsv       #   per-gene VCEP rules (BA1/BS1, PP2, PM5, BS2, PS1, BP1/BP3, …)
+│   └── pm1_hotspots.tsv             #   per-gene PM1 hotspot residues/regions
 ├── vep_cache/                       # VEP indexed cache, both assemblies
 ├── esm1b/                           # (optional) protein-coordinate, shared across assemblies
 │   └── esm1b_llr.sqlite             #   built from Brandes 2023 archive
@@ -250,7 +274,7 @@ data/
     ├── genome/GRCh38.p14.fa(+.fai)
     ├── clinvar/clinvar_GRCh38.vcf.gz(+.tbi)
     ├── clinvar/clinvar_ps1_pm5_GRCh38.sqlite
-    ├── gnomad/gnomad_v4.1_exomes.duckdb
+    ├── gnomad/gnomad_v4.1_joint.duckdb   # GRCh37: gnomad_v2.1.1_exome_genome.duckdb
     ├── gnomad/gnomad_v4.1_constraint.tsv
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
     ├── repeats/repeatmasker_dfam_hg38.bed.gz
@@ -297,7 +321,7 @@ acmg-classify classify panel.vcf.gz \
     --insilico-tool alphamissense \
     --splice-tool spliceai --spliceai-dir /path/to/spliceai \
     --supplement manual_evidence.tsv \
-    --workers 8
+    --workers 12
 ```
 
 ### `explain` — single-variant detail
@@ -374,12 +398,14 @@ Bayesian thresholds:
 ```
 ≥ +10  → Pathogenic
 +6..+9 → Likely Pathogenic
-−5..+5 → VUS
-−9..−6 → Likely Benign
-≤ −10  → Benign
+ 0..+5 → VUS
+−1..−6 → Likely Benign
+≤ −7   → Benign
 ```
 
-`BA1` triggers stand-alone Benign regardless of the sum (per Tavtigian 2020).
+The benign side is asymmetric (prior P = 0.10): less evidence is needed to reach
+benign, per Tavtigian 2020. `BA1` triggers stand-alone Benign regardless of the
+sum.
 
 ### Annotation snapshot
 
@@ -529,13 +555,19 @@ HUHVar/
 │   ├── setup/                       # Programmatic setup / validate / status
 │   └── utils/
 ├── scripts/
-│   └── setup_data.py                # Database download & build script
+│   ├── setup_data.py                # Database download & build script
+│   ├── build_disease_thresholds.py  # cspec GN*.json → disease_prevalence.tsv
+│   └── build_pm1_hotspots.py        # cspec_summary.json → pm1_hotspots.tsv
+├── resources/                       # tracked curated rule tables (copied to data/shared/)
+│   ├── gene_inheritance.tsv         #   gene → AD/AR/XL
+│   └── clingen/                     #   VCEP cspec exports + derived tables
+│       ├── disease_prevalence.tsv   #     per-gene VCEP rules
+│       └── pm1_hotspots.tsv         #     per-gene PM1 hotspots
 ├── tests/
 │   ├── unit/                        # pytest unit tests
 │   ├── integration/                 # end-to-end pipeline tests (require data/)
 │   └── fixtures/                    # sample.vcf, sample_supplement.tsv
 ├── data/                            # (NOT versioned) annotation databases
-│   └── shared/gene_inheritance.tsv  # tracked: gene → AD/AR/XL map
 ├── pyproject.toml
 ├── LICENSE
 ├── NOTICE
@@ -555,6 +587,12 @@ export ACMG_ASSEMBLY=GRCh38
 export ACMG_WORKERS=8
 export ACMG_INSILICO_TOOL=alphamissense
 export ACMG_SPLICE_TOOL=squirls
+
+# Criterion tunables (sensible defaults; override only to trade precision/recall)
+export ACMG_PM5_MIN_STARS=1        # min ClinVar review stars for a PM5 comparator
+export ACMG_BS2_MIN_HOMALT=5       # BS2 healthy-homozygote count (recessive)
+export ACMG_BS2_MIN_HEMI=5         # BS2 healthy-hemizygote count (X-linked)
+export ACMG_BS2_MIN_HET=5          # BS2 healthy-carrier count (dominant)
 ```
 
 CLI flags take precedence over environment variables.
