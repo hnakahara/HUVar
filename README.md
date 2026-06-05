@@ -129,23 +129,29 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   on GRCh38; on GRCh37 (no joint release) the exome and genome callsets are both
   loaded and merged per-field, and BA1/BS1/PM2 compare against the GrpMax
   filtering allele frequency (FAF95).
-- **In silico prediction**: AlphaMissense (default, non-commercial) or
-  **ESM1b** (MIT-licensed, commercial-use ready) for missense. Splice
-  prediction is **disabled by default** (`--splice-tool none`); **SpliceAI**
-  can be enabled opt-in (Illumina-licensed). When enabled, SpliceAI overrides
-  the missense call — including on missense variants — when its score crosses
-  the high-impact threshold (≥ 0.20). Both missense predictors use Bergquist
-  2024 Table 2 strengths.
-  > _SQUIRLS is retained in the code but currently unavailable (its precomputed
-  > DB is no longer downloadable). MMSplice integration exists but is disabled
-  > due to a dependency conflict._
-- **Fully offline** at classification time. Local databases include:
-  Ensembl reference genome, VEP cache, gnomAD (DuckDB), ClinVar (VCF +
-  derived SQLite for PS1/PM5), AlphaMissense, RepeatMasker, and optional
-  SpliceAI (opt-in, Illumina-licensed).
-- **Manual evidence supplement**: per-variant TSV overrides for PS3/PP1/PM3/
-  etc. that the auto-pipeline cannot derive (functional studies, family
-  segregation, etc.).
+- **In silico prediction**: **ESM1b** (default; Brandes 2023, MIT-licensed,
+  commercial-use ready) or **AlphaMissense** (non-commercial) for missense.
+  Splice prediction defaults to **OpenSpliceAI** (Chao 2025, GPL-3.0; runtime
+  inference via the `openspliceai` CLI); **SpliceAI** (Illumina-licensed) is an
+  opt-in alternative. The splice predictor overrides the missense call —
+  including on missense variants — when its score crosses the high-impact
+  threshold (≥ 0.20). The missense predictors use Bergquist 2024 Table 2
+  strengths.
+  > _OpenSpliceAI reuses SpliceAI's 0–1 delta scale; lacking an OddsPath
+  > calibration of its own, its PP3 is awarded at the conservative Supporting
+  > tier (vs SpliceAI's Moderate). SQUIRLS and MMSplice are retained in the
+  > code but disabled (SQUIRLS' precomputed DB is no longer downloadable;
+  > MMSplice has a dependency conflict)._
+- **Fully offline** at classification time (OpenSpliceAI runs locally too).
+  Local databases include: Ensembl reference genome, VEP cache, gnomAD
+  (DuckDB), ClinVar (VCF + derived SQLite for PS1/PM5), ESM1b / AlphaMissense,
+  RepeatMasker, and optional SpliceAI (opt-in, Illumina-licensed).
+- **Manual evidence supplement**: per-variant TSV that can **override any
+  criterion** (functional studies, family segregation, expert strength
+  adjustments, etc.). Two combination modes (`--supplement-mode`): `merge`
+  (default — curator entries override/add on top of the tool's calls) or
+  `manual-only` (listed variants are classified purely from the supplement;
+  variants not listed fall back to the tool's automated calls).
 - **GRCh37 and GRCh38** both supported with separate database trees.
 - **Deterministic / reproducible**: no remote API calls, no randomness in the
   scoring logic; output is byte-stable for a fixed (code, data) pair.
@@ -214,13 +220,22 @@ conda activate acmg
 
 # 3. Install the package (editable install for development)
 pip install -e .
+
+# Optional: install the default splice predictor (OpenSpliceAI, GPL-3.0).
+# Required for --splice-tool openspliceai (the default); skip to run without
+# splice scoring or to use --splice-tool spliceai instead.
+pip install -e ".[openspliceai]"
 ```
 
 ---
 
 ## Data setup
 
-A one-shot setup script downloads and builds everything required:
+A one-shot setup script downloads and builds everything required. The gnomAD
+per-chromosome VCFs are fetched from the **Google Cloud and AWS mirrors in
+parallel** (one concurrent download from each, byte-identical), and interrupted
+downloads **resume** on re-run (size-verified against the remote, so a partial
+file left by Ctrl+C is completed rather than skipped):
 
 ```bash
 # Default: GRCh38 only, downloads everything (~ 350 GB, takes hours)
@@ -278,8 +293,16 @@ data/
     ├── gnomad/gnomad_v4.1_constraint.tsv
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
     ├── repeats/repeatmasker_dfam_hg38.bed.gz
-    └── (optional) spliceai/spliceai_scores.raw.{snv,indel}.hg38.vcf.gz
+    ├── (default splice) openspliceai/2000nt/   # OSAI_MANE model dir (see note below)
+    └── (optional)        spliceai/spliceai_scores.raw.{snv,indel}.hg38.vcf.gz
 ```
+
+> **OpenSpliceAI models are not downloaded by `setup_data.py`.** Install the
+> CLI (`pip install openspliceai`) and place the OSAI_MANE model files under
+> `data/<asm>/openspliceai/<flanking-size>nt/` (default `2000nt/`), or point
+> `--openspliceai-model-dir` at them. Download models from
+> <https://github.com/Kuanhao-Chao/openspliceai>. If neither the CLI nor a
+> model directory is present, splice scoring is skipped (no splice evidence).
 
 Validate the install at any time:
 
@@ -306,10 +329,13 @@ Full option list:
 | `-o, --output PATH` | path | stdout | Output TSV path |
 | `--data-dir PATH` | path | `./data` | Data root |
 | `--assembly {GRCh37,GRCh38}` | str | auto-detect from VCF header → fallback `GRCh38` | Force a specific assembly |
-| `--insilico-tool {alphamissense,esm1b}` | str | `alphamissense` | Missense predictor used for PP3/BP4 |
-| `--splice-tool spliceai` | str | _none_ (splice eval disabled) | Splice predictor used for PP3/BP4. Only `spliceai` is selectable (Illumina-licensed); omit it to disable splice scoring entirely. SpliceAI takes precedence over the missense call — including on missense variants — when its score ≥ 0.20. |
-| `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory (required if VCFs are not in the default location) |
+| `--insilico-tool {esm1b,alphamissense}` | str | `esm1b` | Missense predictor used for PP3/BP4 |
+| `--splice-tool {openspliceai,spliceai}` | str | `openspliceai` | Splice predictor used for PP3/BP4/PVS1. `openspliceai` (default, GPL-3.0) runs OSAI_MANE at inference time; `spliceai` (Illumina-licensed) uses precomputed VCFs. The splice call takes precedence over the missense call — including on missense variants — when its score ≥ 0.20. |
+| `--openspliceai-model-dir PATH` | path | `<data-dir>/<asm>/openspliceai/<flank>nt/` | OSAI_MANE model directory |
+| `--openspliceai-flanking-size N` | int | `2000` | Model context length (must match the downloaded model: 80/400/2000/10000) |
+| `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory (only when `--splice-tool spliceai`) |
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
+| `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
 Example for a panel sequencing run with manual segregation evidence:
@@ -318,9 +344,9 @@ Example for a panel sequencing run with manual segregation evidence:
 acmg-classify classify panel.vcf.gz \
     -o panel_results.tsv \
     --assembly GRCh38 \
-    --insilico-tool alphamissense \
-    --splice-tool spliceai --spliceai-dir /path/to/spliceai \
-    --supplement manual_evidence.tsv \
+    --insilico-tool esm1b \
+    --splice-tool openspliceai --openspliceai-flanking-size 2000 \
+    --supplement manual_evidence.tsv --supplement-mode merge \
     --workers 12
 ```
 
@@ -360,16 +386,29 @@ chr17:43044295:G:A	PP1	Supporting	3 affected family members segregating variant
 ```
 
 - `variant_id` must match the canonical `chrom:pos:ref:alt` used in the output.
-- `criterion` is any ACMG code (e.g. `PS3`, `PP1`, `BS3`, `BP5`).
+- `criterion` is any ACMG code (e.g. `PVS1`, `PS1`, `PS3`, `PM2`, `PP1`, `BP1`).
 - `strength` is one of `VeryStrong`, `Strong`, `ThreePoint`, `Moderate`,
   `Supporting`.
 - `evidence` is a free-text rationale shown in the `*_evidence` column.
 
-Manual entries **override** automated evaluations for the same variant /
-criterion pair (auto-evaluated PS3 from ClinVar SCV is replaced by the manual
-PS3 line, for example). This is the recommended path for incorporating
-unpublished functional data, segregation analysis, or expert-panel
-de novo assessments (PS2/PM6).
+Manual entries can override **any** criterion — including ones the tool
+evaluates automatically (PVS1, PS1, PM2, BP1, …), not just the curation-only
+ones. How they combine with the tool's calls is controlled by
+`--supplement-mode`:
+
+| Mode | Behaviour |
+|------|-----------|
+| `merge` (default) | Keep the tool's automated calls; for every criterion a curator names, **override its strength** (e.g. PVS1 Strong → Moderate) or **add it** if the tool left it not-met. Other criteria are untouched. |
+| `manual-only` | For variants **listed** in the supplement, discard all automated evidence and classify **purely from the supplement**. Variants **not listed** fall back to the tool's automated calls. |
+
+The override is applied **before** the ACMG combination rules (PVS1↔PP3
+mutual exclusion, BA1/BS1/PM2 exclusivity, PP2 / PM5 gene gating), so those
+rules operate on the curator-adjusted evidence. The audit trail records the
+change (e.g. `[manual override Strong→Moderate] …`).
+
+This is the recommended path for incorporating unpublished functional data,
+segregation analysis, expert-panel de novo assessments (PS2/PM6), or expert
+strength adjustments to any automated criterion.
 
 A reference example lives at `tests/fixtures/sample_supplement.tsv`.
 
@@ -418,9 +457,10 @@ sum.
 `splice_tool`, `splice_score`,
 `in_repeat`, `repeat_class`
 
-`alphamissense_*` is populated when `--insilico-tool alphamissense` (default);
-`esm1b_llr` is populated when `--insilico-tool esm1b`. The other column is
-left empty for the non-active tool.
+`esm1b_llr` is populated when `--insilico-tool esm1b` (default);
+`alphamissense_*` is populated when `--insilico-tool alphamissense`. The other
+column is left empty for the non-active tool. `splice_tool` / `splice_score`
+reflect the active `--splice-tool` (`openspliceai` by default).
 
 ### Per-criterion columns
 
@@ -492,44 +532,52 @@ Strengths are calibrated to Bergquist et al. *Genet Med* 2024 Table 2.
 
 **Missense predictor** — pick one with `--insilico-tool`:
 
-- **AlphaMissense** (default): Strong / ThreePoint / Moderate / Supporting
-  for PP3 (`≥0.990 / ≥0.972 / ≥0.906 / ≥0.792`); ThreePoint / Moderate /
-  Supporting for BP4 (`≤0.070 / ≤0.099 / ≤0.169`). No Strong BP4 category.
-- **ESM1b** (`--insilico-tool esm1b`): Strong / ThreePoint / Moderate /
+- **ESM1b** (default, `--insilico-tool esm1b`): Strong / ThreePoint / Moderate /
   Supporting for PP3 (LLR `≤−24.0 / ≤−14.0 / ≤−12.2 / ≤−10.7`); ThreePoint /
   Moderate / Supporting for BP4 (LLR `≥8.8 / ≥−3.2 / ≥−6.3`). Lower LLR ⇒
-  more pathogenic. Use this path for **commercial deployments** — see
-  [Commercial use](#commercial-use).
+  more pathogenic. MIT-licensed → commercial-use ready (see
+  [Commercial use](#commercial-use)).
+- **AlphaMissense** (`--insilico-tool alphamissense`): Strong / ThreePoint /
+  Moderate / Supporting for PP3 (`≥0.990 / ≥0.972 / ≥0.906 / ≥0.792`);
+  ThreePoint / Moderate / Supporting for BP4 (`≤0.070 / ≤0.099 / ≤0.169`). No
+  Strong BP4 category. Scores are CC BY-NC-SA 4.0 (non-commercial).
 
-**Splice predictor** — default **SQUIRLS**. When `--splice-tool spliceai` or
-pre-computed SpliceAI VCFs are present at `data/<asm>/spliceai/`, SpliceAI
-takes precedence over the missense predictor when its max Δscore ≥ 0.20.
-Below that threshold the missense predictor's call is retained.
+**Splice predictor** — default **OpenSpliceAI**. The splice call takes
+precedence over the missense predictor when its max Δscore ≥ 0.20; below that
+threshold the missense predictor's call is retained. The same Δscore also feeds
+the PVS1 splice branch (≥ 0.20 supports splice-LoF).
 
-- **SQUIRLS** (default): PP3 raw_score `≥0.50` → Moderate, `≥0.20` →
-  Supporting. BP4 raw_score `<0.20` → Supporting. Strong / ThreePoint are
-  intentionally **not** assigned — there is no SQUIRLS-specific Walker /
-  Bergquist calibration, so thresholds are kept approximate and capped at
-  Moderate. Output evidence strings explicitly flag this with
-  `(thresholds approximate)`.
+- **OpenSpliceAI** (default): PP3 max_delta `≥0.20` → **Supporting**; BP4 /
+  BP7 max_delta `≤0.10` → no-impact (Supporting). Shares SpliceAI's 0–1 delta
+  scale, but lacking its own OddsPath calibration, PP3 is capped at Supporting
+  (vs SpliceAI's Moderate). GPL-3.0; runtime inference via `openspliceai`.
 - **SpliceAI** (`--splice-tool spliceai`): PP3 max_delta `≥0.20` → Moderate;
   BP4 max_delta `≤0.10` → Supporting (Walker *Am J Hum Genet* 2023).
+- _SQUIRLS / MMSplice: retained in code but disabled (see overview note)._
 
 ### Commercial use
 
-The tool itself is Apache-2.0, but **AlphaMissense scores are CC BY-NC-SA 4.0
-(non-commercial)**. For commercial deployments, switch the missense
-predictor to **ESM1b** (Brandes et al. 2023, MIT-licensed), which has full
-Bergquist 2024 strength calibration in this implementation:
+The tool itself is Apache-2.0, and the **defaults are commercial-use ready**:
+ESM1b (MIT, missense) and OpenSpliceAI (GPL-3.0, splice) replace the
+non-commercial AlphaMissense and the Illumina-licensed SpliceAI as defaults.
 
 ```bash
+# This is the default configuration — shown explicitly for clarity.
 acmg-classify classify input.vcf -o results.tsv \
     --assembly GRCh38 --data-dir /path/to/download/directory/data \
-    --insilico-tool esm1b --splice-tool squirls
+    --insilico-tool esm1b --splice-tool openspliceai
 ```
 
-All other defaults (gnomAD, ClinVar, VEP, SQUIRLS) are commercially
-permissive. SpliceAI remains a separate Illumina-licensed option.
+Notes:
+- **AlphaMissense** (`--insilico-tool alphamissense`) is CC BY-NC-SA 4.0 —
+  non-commercial only.
+- **OpenSpliceAI** is GPL-3.0. Running it locally to produce classifications
+  (a service/report) does not trigger GPL source-disclosure; redistributing
+  the tool would. Do **not** use the Illumina SpliceAI model weights bundled in
+  the openspliceai repo (CC BY-NC 4.0) for commercial work — use OSAI_MANE.
+- **SpliceAI** (`--splice-tool spliceai`) remains a separate
+  Illumina-licensed option.
+- gnomAD, ClinVar, VEP are commercially permissive.
 
 ---
 
@@ -585,8 +633,9 @@ or a `.env` file in the working directory. Examples:
 export ACMG_DATA_DIR=/db/acmg
 export ACMG_ASSEMBLY=GRCh38
 export ACMG_WORKERS=8
-export ACMG_INSILICO_TOOL=alphamissense
-export ACMG_SPLICE_TOOL=squirls
+export ACMG_INSILICO_TOOL=esm1b
+export ACMG_SPLICE_TOOL=openspliceai
+export ACMG_SUPPLEMENT_MODE=merge   # or manual-only
 
 # Criterion tunables (sensible defaults; override only to trade precision/recall)
 export ACMG_PM5_MIN_STARS=1        # min ClinVar review stars for a PM5 comparator
@@ -608,14 +657,18 @@ CLI flags take precedence over environment variables.
   This is overly conservative for common variants and can lead to false LP
   calls. A fix is in the backlog; in the meantime cross-check any
   Bayesian-LP call where `gnomad_af` is high.
-- **AlphaMissense license.** Scores are CC BY-NC-SA 4.0 — commercial use
-  requires direct arrangement with DeepMind/Google. The tool itself is
-  Apache-2.0 but the bundled annotation source is not. Switch to
-  `--insilico-tool esm1b` for commercial settings (see
+- **AlphaMissense license.** The non-default `--insilico-tool alphamissense`
+  uses scores that are CC BY-NC-SA 4.0 — commercial use requires direct
+  arrangement with DeepMind/Google. The default `esm1b` is MIT-licensed (see
   [Commercial use](#commercial-use)).
-- **SpliceAI.** Pre-computed score VCFs are not redistributed. Users with an
-  Illumina license can place them under `data/<asm>/spliceai/` and pass
-  `--splice-tool spliceai`.
+- **OpenSpliceAI models are a separate install.** The default `--splice-tool
+  openspliceai` needs the `openspliceai` CLI (`pip install openspliceai`) and
+  OSAI_MANE model files placed under `data/<asm>/openspliceai/<flank>nt/` (not
+  fetched by `setup_data.py`). If absent, splice scoring is silently skipped
+  (no splice evidence) and a warning is logged.
+- **SpliceAI.** The non-default `--splice-tool spliceai` uses pre-computed
+  score VCFs that are not redistributed. Users with an Illumina license can
+  place them under `data/<asm>/spliceai/`.
 - **No DUP/CNV support.** Only SNV / small INDEL / MNV are classified. SV
   callers should be paired with a dedicated CNV interpreter.
 - **Single-sample input.** Multi-sample joint VCFs are accepted but only

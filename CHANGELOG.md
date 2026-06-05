@@ -30,8 +30,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `scripts/build_disease_thresholds.py` to manually pin a gene's BA1/BS1/
   `af_basis`/inheritance after multi-spec resolution (e.g. selecting the
   disease-appropriate RYR1 cutoff).
+- **OpenSpliceAI splice predictor** (Chao et al. 2025, GPL-3.0) as the new
+  **default** `--splice-tool`. Runs the OSAI_MANE model at inference time via
+  the `openspliceai` CLI (`pip install openspliceai`); models live under
+  `data/<asm>/openspliceai/<flank>nt/` (default `2000nt`) and are configurable
+  via `--openspliceai-model-dir` / `--openspliceai-flanking-size`. Shares
+  SpliceAI's 0–1 Δscale; PP3 is awarded at the conservative Supporting tier
+  (no OddsPath calibration), BP4/BP7 at `≤0.10`, PVS1 splice-LoF at `≥0.20`.
+  Temp-VCF headers include `##contig` lines so OpenSpliceAI's pysam writer
+  accepts them.
+- **`--supplement-mode {merge,manual-only}`** and supplement override extended
+  to **all** criteria (previously only PS3/PP1/PP2 and the curation-only
+  criteria honoured the supplement). `merge` (default): curator entries
+  override the strength of any named criterion and add criteria the tool left
+  not-met. `manual-only`: listed variants are classified purely from the
+  supplement; variants not listed fall back to the tool's automated calls.
+  Applied before the ACMG combination rules; the audit trail records overrides.
+- **Dual-mirror parallel gnomAD download** in `scripts/setup_data.py`: per-
+  chromosome VCFs are fetched from the Google Cloud and AWS mirrors in parallel
+  (one concurrent download each), with automatic fallback to the other mirror
+  on failure. Interrupted downloads now **resume** — the local file size is
+  verified against the remote `Content-Length`, so a partial file from a
+  Ctrl+C is completed (`wget -c`) instead of being mistaken for complete.
 
 ### Changed
+
+- **Default missense predictor is now ESM1b** (was AlphaMissense). ESM1b is
+  MIT-licensed, making the out-of-the-box configuration commercial-use ready.
+  `--insilico-tool alphamissense` (CC BY-NC-SA 4.0) remains selectable.
 
 - **PP2 now honours ClinGen VCEP applicability first.** New `pp2` column in
   `disease_prevalence.tsv` extracted from each VCEP's PP2 criteria code
@@ -60,9 +86,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   (previously a single-threaded `iterparse`), substantially reducing build
   time on multi-core machines. Worker count defaults to 4 (max 24); override
   with `--clinvar-workers`.
-- Splice evaluation is **disabled by default** (`--splice-tool none`).
-  SpliceAI is opt-in (Illumina-licensed); when enabled it overrides the
-  missense call — including on missense variants — once its score ≥ 0.20.
+- **Default splice predictor is now OpenSpliceAI** (was: splice evaluation
+  disabled / `none`). SpliceAI remains opt-in (`--splice-tool spliceai`,
+  Illumina-licensed). The active splice call overrides the missense call —
+  including on missense variants — once its score ≥ 0.20.
 - GRCh37 transcript IDs in TSV output are now RefSeq (NM_) by default,
   matching GRCh38 behaviour.
 
