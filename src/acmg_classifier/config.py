@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from acmg_classifier.models.enums import Assembly, InSilicoTool, SpliceTool
+from acmg_classifier.models.enums import Assembly, InSilicoTool, SpliceTool, SupplementMode
 
 
 class Config(BaseSettings):
@@ -38,8 +38,9 @@ class Config(BaseSettings):
     bs2_min_homalt: int = 5
     bs2_min_hemi: int = 5
     bs2_min_het: int = 5
-    insilico_tool: InSilicoTool = InSilicoTool.ALPHAMISSENSE
+    insilico_tool: InSilicoTool = InSilicoTool.ESM1B
     splice_tool: SpliceTool = SpliceTool.OPENSPLICEAI
+    supplement_mode: SupplementMode = SupplementMode.MERGE
     spliceai_dir: Optional[Path] = None
     openspliceai_model_dir: Optional[Path] = None
     openspliceai_flanking_size: int = 2000

@@ -135,6 +135,13 @@ class CriteriaRegistry:
             else:
                 results.append(result)
 
+        # Fold manual curator evidence in BEFORE the combination rules below,
+        # so PVS1↔PP3 / AF-exclusion / PP2 / PM5 operate on the final,
+        # curator-adjusted evidence set. This is what lets a manual entry
+        # override (or, in manual-only mode, fully replace) the tool's calls
+        # for ANY criterion — not just the historically supplement-aware ones.
+        self._apply_supplement_override(results, supplement)
+
         # PVS1 ↔ PP3 mutual exclusion (Walker 2023, ClinGen SVI splicing WG):
         # PVS1 already encodes null-variant/splice-disruption evidence at
         # Very Strong, which subsumes in-silico splicing/missense evidence
@@ -166,6 +173,75 @@ class CriteriaRegistry:
         _apply_af_mutual_exclusion(results)
 
         return results
+
+    def _apply_supplement_override(
+        self,
+        results: list[CriteriaResult],
+        supplement: list[SupplementEntry] | None,
+    ) -> None:
+        """Fold manual curator evidence into the automated results, in place.
+
+        Modes (cfg.supplement_mode):
+          - MERGE: keep the tool's calls, but for every criterion the curator
+            supplied force it triggered at the curator's strength (override on
+            a strength clash, add when the tool left it not-met).
+          - MANUAL_ONLY: for variants the curator DID supply entries for,
+            discard all automated evidence — every criterion is not-met unless
+            the curator supplied it. Variants with NO supplement entries fall
+            back to the tool's automated calls (handled by the early return
+            below: an empty supplement is a no-op in either mode).
+
+        Each criterion appears exactly once in `results` (automated evaluators
+        emit one each; the Manual* evaluators cover PS2/PM3/PM6/PP4 and
+        BS3/BS4/BP2/BP5), so matching by criterion is unambiguous. Criteria the
+        curator names that have no result row (e.g. PP5/BP6, which have no
+        evaluator) are appended.
+        """
+        from acmg_classifier.models.enums import CriterionStrength, SupplementMode
+
+        # First curator row per criterion wins (rows are expected unique per
+        # (variant, criterion)); matches the manual.py "entries[0]" convention.
+        sup_by_crit: dict[ACMGCriterion, SupplementEntry] = {}
+        for e in (supplement or []):
+            sup_by_crit.setdefault(e.criterion, e)
+
+        mode = self._cfg.supplement_mode
+        # No curator input for this variant → keep the tool's automated calls
+        # unchanged, in BOTH modes. This is what lets manual-only classify only
+        # the variants the curator listed and fall back to the tool elsewhere.
+        if not sup_by_crit:
+            return
+
+        seen: set[ACMGCriterion] = set()
+        for r in results:
+            seen.add(r.criterion)
+            entry = sup_by_crit.get(r.criterion)
+            if entry is not None:
+                was_triggered = r.triggered
+                old_strength = r.strength
+                r.triggered = True
+                r.strength = entry.strength
+                r.suppressed = False
+                if was_triggered and old_strength != entry.strength:
+                    r.evidence = (
+                        f"[manual override {old_strength.value}→{entry.strength.value}] "
+                        f"{entry.evidence}"
+                    )
+                else:
+                    r.evidence = f"[manual] {entry.evidence}"
+            elif mode == SupplementMode.MANUAL_ONLY:
+                # No curator entry → drop any automated evidence for this row.
+                r.triggered = False
+                r.strength = CriterionStrength.NOT_MET
+                r.suppressed = False
+                r.evidence = "Manual-only mode: no curator entry"
+
+        # Curator-named criteria with no automated evaluator (PP5/BP6): add them.
+        for crit, entry in sup_by_crit.items():
+            if crit not in seen:
+                results.append(
+                    CriteriaResult.met(crit, entry.strength, f"[manual] {entry.evidence}")
+                )
 
     def _apply_pm5_exclusions(
         self, results: list[CriteriaResult], annotation: AnnotationData

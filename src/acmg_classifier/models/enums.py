@@ -93,6 +93,18 @@ class SpliceTool(str, Enum):
     # MMSPLICE = "mmsplice"
 
 
+class SupplementMode(str, Enum):
+    """How manual curator evidence (the supplement TSV) combines with the
+    tool's automated criteria."""
+    # Keep automated results; the curator's entries override the strength of
+    # any criterion they name and add criteria the tool left not-met.
+    MERGE = "merge"
+    # For variants the curator listed, discard all automated evidence and
+    # classify purely from the supplement. Variants with no supplement entry
+    # fall back to the tool's automated calls.
+    MANUAL_ONLY = "manual-only"
+
+
 class VariantType(str, Enum):
     SNV = "SNV"
     INDEL = "INDEL"

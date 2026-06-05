@@ -7,7 +7,7 @@ from typing import Optional
 import click
 import structlog
 
-from acmg_classifier.models.enums import Assembly, InSilicoTool, SpliceTool
+from acmg_classifier.models.enums import Assembly, InSilicoTool, SpliceTool, SupplementMode
 
 log = structlog.get_logger()
 
@@ -71,7 +71,7 @@ def cli(log_level: str):
               default=None, help="Override assembly detection from VCF header")
 @click.option("--insilico-tool",
               type=click.Choice([t.value for t in InSilicoTool]),
-              default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
+              default=InSilicoTool.ESM1B.value, show_default=True)
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
@@ -87,6 +87,14 @@ def cli(log_level: str):
               help="Directory containing SpliceAI VCF files (snv + indel). Overrides default data-dir lookup.")
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),
               default=None, help="Manual evidence TSV")
+@click.option("--supplement-mode",
+              type=click.Choice([m.value for m in SupplementMode]),
+              default=SupplementMode.MERGE.value, show_default=True,
+              help="How --supplement combines with the tool's calls. 'merge': curator "
+                   "entries override the strength of any criterion they name and add "
+                   "criteria the tool left not-met. 'manual-only': for variants listed in "
+                   "the supplement, classify purely from it; variants not listed fall back "
+                   "to the tool's automated calls.")
 @click.option("--workers", type=int, default=4, show_default=True)
 @click.option("--no-progress", is_flag=True, default=False,
               help="Disable progress bars (auto-disabled when stderr is not a TTY).")
@@ -107,6 +115,7 @@ def classify(
     openspliceai_flanking_size: int,
     spliceai_dir: Optional[Path],
     supplement: Optional[Path],
+    supplement_mode: str,
     workers: int,
     no_progress: bool,
     limit: Optional[int],
@@ -128,6 +137,7 @@ def classify(
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
         spliceai_dir=spliceai_dir,
+        supplement_mode=SupplementMode(supplement_mode),
         workers=workers,
     )
     run_pipeline(
@@ -153,7 +163,7 @@ def classify(
               default=Assembly.GRCH38.value, show_default=True)
 @click.option("--insilico-tool",
               type=click.Choice([t.value for t in InSilicoTool]),
-              default=InSilicoTool.ALPHAMISSENSE.value, show_default=True)
+              default=InSilicoTool.ESM1B.value, show_default=True)
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
