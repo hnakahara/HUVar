@@ -433,13 +433,16 @@ def _bs2_applicability(rule_set: dict) -> str:
 
 # PS1 splice handling, classified per gene into three states:
 #   ""            -- no splice extension; PS1 is missense-only (original ACMG;
-#                    e.g. GAA, ABCD1). A splice variant must NOT receive PS1.
-#   "canonical"   -- splice extension that explicitly covers canonical splice
-#                    sites (HNF1A/GCK/HNF4A "canonical and non-canonical",
-#                    PIK3R1, SLC6A8).
-#   "noncanonical"-- splice extension limited to non-canonical positions (InSiGHT
-#                    MMR "non-canonical splice nucleotide", BMPR2/RS1 "outside
-#                    splice donor/acceptor +/-1,2", splice-region only).
+#                    e.g. GAA, the HCM genes). A splice variant must NOT get PS1.
+#   "canonical"   -- splice extension covering canonical sites too. This is the
+#                    DEFAULT for any extension: the ClinGen SVI splicing
+#                    framework (Walker 2023, PMID 37352859) applies PS1 at
+#                    canonical ±1/±2 sites in conjunction with PVS1 (RPE65, DYSF,
+#                    IDUA, ACADVL, ADA, RPGR, HNF1A, RS1, …).
+#   "noncanonical"-- splice extension EXPLICITLY limited to non-canonical
+#                    positions (InSiGHT MMR / DICER1 "non-canonical splice"; BMPR2
+#                    "outside the splice donor/acceptor +/-1,2") with no canonical
+#                    handling.
 # Caveat / exclusion sentences mentioning splicing (the standard "beware of
 # changes that impact splicing", "should be excluded", comparison-variant notes)
 # are stripped first so they are not mistaken for an extension.
@@ -452,9 +455,18 @@ _PS1_CAVEAT_SENT = re.compile(
     re.IGNORECASE,
 )
 _PS1_SPLICE_MENTION = re.compile(r"splic|intronic", re.IGNORECASE)
-# Positive "canonical" splice application (not "non-canonical").
-_PS1_CANONICAL = re.compile(
-    r"(?<!non-)(?<!non )canonical[^.]{0,40}splic|splic[^.]{0,40}(?<!non-)(?<!non )canonical",
+# Explicit restriction to non-canonical positions only.
+_PS1_NONCANON_ONLY = re.compile(r"non[- ]?canonical (?:splice|intronic)", re.IGNORECASE)
+_PS1_OUTSIDE_ONLY = re.compile(
+    r"outside[^.]{0,30}splice (?:donor|acceptor)[^.]{0,25}1,?\s*2", re.IGNORECASE
+)
+# Evidence that canonical ±1/±2 sites ARE handled (so the rule is not
+# non-canonical-only): explicit "canonical splice", PS1 used with PVS1, or PS1
+# applied AT/WITHIN the splice donor/acceptor ±1,2 positions.
+_PS1_CANON_HANDLING = re.compile(
+    r"(?<!non-)(?<!non )canonical[^.]{0,40}splic"
+    r"|in conjunction with pvs1"
+    r"|(?:located )?(?:at|within)[^.]{0,60}splice (?:donor|acceptor)[^.]{0,40}1,?\s*2",
     re.IGNORECASE,
 )
 
@@ -479,7 +491,10 @@ def _ps1_splice(rule_set: dict) -> str:
         stripped = _PS1_CAVEAT_SENT.sub(" ", descs)
         if not _PS1_SPLICE_MENTION.search(stripped):
             return ""
-        return "canonical" if _PS1_CANONICAL.search(stripped) else "noncanonical"
+        restricted = _PS1_NONCANON_ONLY.search(stripped) or _PS1_OUTSIDE_ONLY.search(stripped)
+        if restricted and not _PS1_CANON_HANDLING.search(stripped):
+            return "noncanonical"
+        return "canonical"
     return ""
 
 
