@@ -70,9 +70,12 @@ class Config(BaseSettings):
 
     @property
     def gnomad_duckdb(self) -> Path:
+        # GRCh38 uses the gnomAD v4.1 JOINT (combined exome+genome) build; v2.1.1
+        # has no joint release, so exomes + genomes are both loaded and merged at
+        # query time (per-field MAX — see gnomad_db._merge_rows).
         names = {
-            Assembly.GRCH38: "gnomad_v4.1_exomes.duckdb",
-            Assembly.GRCH37: "gnomad_v2.1.1_exomes.duckdb",
+            Assembly.GRCH38: "gnomad_v4.1_joint.duckdb",
+            Assembly.GRCH37: "gnomad_v2.1.1_exome_genome.duckdb",
         }
         return self.assembly_dir / "gnomad" / names[self.assembly]
 

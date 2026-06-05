@@ -67,13 +67,15 @@ URLS: dict[str, dict[str, str]] = {
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/"
             "gnomad.v4.1.constraint_metrics.tsv"
         ),
+        # JOINT (combined exome+genome) sites VCF — de-duplicated frequencies
+        # (AF_joint / fafmax_faf95_max_joint) used for BA1/BS1/PM2/BS2.
         "gnomad_vcf": (
-            "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/vcf/exomes/"
-            "gnomad.exomes.v4.1.sites.{chrom}.vcf.bgz"
+            "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/vcf/joint/"
+            "gnomad.joint.v4.1.sites.{chrom}.vcf.bgz"
         ),
         "gnomad_vcf_tbi": (
-            "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/vcf/exomes/"
-            "gnomad.exomes.v4.1.sites.{chrom}.vcf.bgz.tbi"
+            "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/vcf/joint/"
+            "gnomad.joint.v4.1.sites.{chrom}.vcf.bgz.tbi"
         ),
         "repeatmasker": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/rmsk.txt.gz",
     },
@@ -109,6 +111,16 @@ URLS: dict[str, dict[str, str]] = {
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/vcf/exomes/"
             "gnomad.exomes.r2.1.1.sites.{chrom}.vcf.bgz.tbi"
         ),
+        # v2.1.1 has no joint release, so the genomes callset is loaded alongside
+        # exomes and merged at query time (per-field MAX). Genomes have no chrY.
+        "gnomad_vcf_genomes": (
+            "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/vcf/genomes/"
+            "gnomad.genomes.r2.1.1.sites.{chrom}.vcf.bgz"
+        ),
+        "gnomad_vcf_genomes_tbi": (
+            "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/vcf/genomes/"
+            "gnomad.genomes.r2.1.1.sites.{chrom}.vcf.bgz.tbi"
+        ),
         "repeatmasker": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/rmsk.txt.gz",
     },
 }
@@ -140,6 +152,10 @@ _GENOME_NAMES = {
     "GRCh37": "GRCh37.p13.fa",
 }
 _GNOMAD_VER = {"GRCh38": "4.1", "GRCh37": "2.1.1"}
+# gnomAD release "kind" per assembly (drives the DuckDB filename): v4.1 (GRCh38)
+# uses the JOINT (combined exome+genome) sites VCF; v2.1.1 (GRCh37) has no joint
+# release, so exomes AND genomes are both loaded and merged at query time.
+_GNOMAD_KIND = {"GRCh38": "joint", "GRCh37": "exome_genome"}
 
 # ---------------------------------------------------------------------------
 # Utilities
@@ -444,14 +460,26 @@ def step_gnomad_duckdb(
     workers: int | None = None,
 ) -> bool:
     ver = _GNOMAD_VER[assembly]
-    dest = asm_dir / "gnomad" / f"gnomad_v{ver}_exomes.duckdb"
+    kind = _GNOMAD_KIND[assembly]
+    dest = asm_dir / "gnomad" / f"gnomad_v{ver}_{kind}.duckdb"
     if _verify_duckdb_has_rows(dest):
         print(f"  [SKIP] {dest.name}")
         return True
 
-    # Look for an existing VCF directory
+    # gnomAD callsets to load. GRCh38: the single joint VCF. GRCh37: exomes AND
+    # genomes (no joint release; merged at query time). genomes have no chrY.
+    primary = "joint" if assembly == "GRCh38" else "exomes"
+    sources = [(primary, urls["gnomad_vcf"], urls["gnomad_vcf_tbi"], chromosomes)]
+    if "gnomad_vcf_genomes" in urls:
+        genome_chroms = [c for c in chromosomes if c not in ("chrY", "Y", "chrM", "MT")]
+        sources.append((
+            "genomes", urls["gnomad_vcf_genomes"], urls["gnomad_vcf_genomes_tbi"],
+            genome_chroms,
+        ))
+
+    # Look for an existing VCF directory (any gnomAD callset VCFs present).
     if vcf_dir is None:
-        found = _find_existing(_GNOMAD_SEARCH, ["gnomad.exomes*.vcf.bgz"])
+        found = _find_existing(_GNOMAD_SEARCH, [f"gnomad.{name}*.vcf.bgz" for name, *_ in sources])
         if found:
             vcf_dir = found.parent
 
@@ -462,22 +490,22 @@ def step_gnomad_duckdb(
             print(f"  [SKIP] Skipping gnomAD VCF download (--skip-gnomad)")
             print(f"  Once the VCFs are ready, re-run with --gnomad-vcf-dir <path>")
             return False
-        total = len(chromosomes)
-        print(f"  Downloading gnomAD v{ver} exomes ({total} chromosomes, ~300 GB total)")
-        print("  This takes a while. Ctrl+C to interrupt; re-run to resume.")
+        print(f"  Downloading gnomAD v{ver} ({', '.join(n for n, *_ in sources)}; "
+              f"~300+ GB total). Ctrl+C to interrupt; re-run to resume.")
         staging.mkdir(parents=True, exist_ok=True)
-        for chrom in chromosomes:
-            vcf_url = urls["gnomad_vcf"].format(chrom=chrom)
-            tbi_url = urls["gnomad_vcf_tbi"].format(chrom=chrom)
-            vcf_f = staging / f"gnomad.exomes.v{ver}.sites.{chrom}.vcf.bgz"
-            tbi_f = Path(str(vcf_f) + ".tbi")
-            # Re-download existing files that are suspiciously small (corrupt)
-            _verify_size(vcf_f, min_bytes=10_000_000, label=f"gnomAD {chrom} VCF")
-            _verify_size(tbi_f, min_bytes=1_000, label=f"gnomAD {chrom} .tbi")
-            if not vcf_f.exists():
-                _download(vcf_url, vcf_f, f"gnomAD {chrom}")
-            if not tbi_f.exists():
-                _download(tbi_url, tbi_f, f"gnomAD {chrom} .tbi")
+        for name, vcf_tmpl, tbi_tmpl, src_chroms in sources:
+            for chrom in src_chroms:
+                vcf_url = vcf_tmpl.format(chrom=chrom)
+                tbi_url = tbi_tmpl.format(chrom=chrom)
+                vcf_f = staging / f"gnomad.{name}.v{ver}.sites.{chrom}.vcf.bgz"
+                tbi_f = Path(str(vcf_f) + ".tbi")
+                # Re-download existing files that are suspiciously small (corrupt)
+                _verify_size(vcf_f, min_bytes=10_000_000, label=f"gnomAD {name} {chrom} VCF")
+                _verify_size(tbi_f, min_bytes=1_000, label=f"gnomAD {name} {chrom} .tbi")
+                if not vcf_f.exists():
+                    _download(vcf_url, vcf_f, f"gnomAD {name} {chrom}")
+                if not tbi_f.exists():
+                    _download(tbi_url, tbi_f, f"gnomAD {name} {chrom} .tbi")
         vcf_dir = staging
 
     n_workers = workers if workers is not None else max(1, (os.cpu_count() or 2) - 1)
@@ -579,10 +607,9 @@ def main() -> None:
                         help="Directory of existing gnomAD *.vcf.bgz files")
     parser.add_argument("--gnomad-chromosomes", nargs="+", default=None, metavar="CHR",
                         help="Chromosomes to download (default: all 24)")
-    parser.add_argument("--gnomad-workers", type=int, default=None, metavar="N",
-                        help="DuckDB build parallelism (default: CPU cores - 1)")
-    parser.add_argument("--clinvar-workers", type=int, default=None, metavar="N",
-                        help="ClinVar XML parse parallelism (default: 4, max: 24)")
+    parser.add_argument("--workers", type=int, default=None, metavar="N",
+                        help="Build parallelism for the ClinVar (XML parse, max 24) "
+                             "and gnomAD (DuckDB) steps (default: CPU cores - 1)")
     parser.add_argument("--skip-gnomad", action="store_true",
                         help="Skip gnomAD download (~300 GB)")
     parser.add_argument("--skip-genome", action="store_true",
@@ -613,13 +640,13 @@ def main() -> None:
         ("Reference genome",  lambda: step_genome(asm_dir, assembly, urls, args.genome_fasta, args.skip_genome)),
         ("VEP cache",         lambda: step_vep_cache(data_dir, assembly, urls, args.skip_vep_cache)),
         ("ClinVar VCF",       lambda: step_clinvar_vcf(asm_dir, assembly, urls)),
-        ("ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls, args.clinvar_workers)),
+        ("ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls, args.workers)),
         ("AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
         ("ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
         # ("MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
         ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
-        ("gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.gnomad_workers)),
+        ("gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
         ("RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
     ]
 

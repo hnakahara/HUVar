@@ -3,13 +3,47 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-import duckdb
 import structlog
 
 from acmg_classifier.models.annotation import GnomADData
 from acmg_classifier.utils.chrom import chrom_candidates
 
 log = structlog.get_logger()
+
+
+def _pass_filter(filters) -> bool:
+    """gnomAD FILTER conventions: None / "" / "PASS" / "." mean passed QC."""
+    return filters is None or str(filters).strip().upper() in ("", "PASS", ".")
+
+
+def _merge_rows(rows: list) -> GnomADData:
+    """Merge multiple gnomAD rows for one variant by per-field MAX.
+
+    Row layout: (af, an, ac, nhomalt, nhemi, popmax_af, popmax_pop,
+    faf95_popmax, af_xy, filters). Only PASS rows are merged when any exist
+    (a filtered record must not contribute a frequency); if every row is
+    filtered the variant is reported as filter-failed."""
+    pass_rows = [r for r in rows if _pass_filter(r[9])]
+    use = pass_rows or rows
+
+    def fmax(idx: int):
+        vals = [r[idx] for r in use if r[idx] is not None]
+        return max(vals) if vals else None
+
+    # popmax_pop comes from whichever used row has the highest popmax AF.
+    best = max(use, key=lambda r: (r[5] if r[5] is not None else -1.0))
+    return GnomADData(
+        af=fmax(0),
+        an=fmax(1),
+        ac=fmax(2),
+        nhomalt=fmax(3),
+        nhemi=fmax(4),
+        popmax_af=fmax(5),
+        popmax_pop=best[6],
+        faf95_popmax=fmax(7),
+        af_xy=fmax(8),
+        filter_pass=bool(pass_rows),
+    )
 
 
 class GnomADDB:
@@ -39,21 +73,21 @@ class GnomADDB:
         # historically used both depending on version/source.
         c1, c2 = chrom_candidates(chrom)
         try:
+            import duckdb  # lazy: keeps the merge helpers importable without duckdb
             con = duckdb.connect(str(self._db_path), read_only=True)
             # Select af_xy only when the schema has it; otherwise NULL keeps the
             # result tuple shape constant for older DBs.
             xy_expr = "af_xy" if self._af_xy_available(con) else "NULL AS af_xy"
-            row = con.execute(
+            rows = con.execute(
                 f"""
                 SELECT af, an, ac, nhomalt, nhemi,
                        popmax_af, popmax_pop, faf95_popmax, {xy_expr},
                        filters
                 FROM variants
                 WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
-                LIMIT 1
                 """,
                 [c1, c2, pos, ref, alt],
-            ).fetchone()
+            ).fetchall()
             con.close()
         except Exception as exc:
             log.error("gnomad_query_error", error=str(exc))
@@ -62,28 +96,16 @@ class GnomADDB:
         # "Absent from gnomAD" is the most-informative PM2 signal — emit a
         # well-formed record rather than None so callers don't need a special
         # branch for the missing-record case.
-        if row is None:
+        if not rows:
             return GnomADData(af=0.0, ac=0, an=0, filter_pass=True)
 
-        (af, an, ac, nhomalt, nhemi,
-         popmax_af, popmax_pop, faf95_popmax, af_xy, filters) = row
-
-        # gnomAD FILTER column conventions: None / "" / "PASS" / "." all
-        # mean "passed QC". Anything else (e.g. "AC0", "InbreedingCoeff")
-        # is a quality flag that should disqualify the variant from BA1/BS*.
-        filter_pass = filters is None or filters.strip().upper() in ("", "PASS", ".")
-        return GnomADData(
-            af=af,
-            an=an,
-            ac=ac,
-            nhomalt=nhomalt,
-            nhemi=nhemi,
-            popmax_af=popmax_af,
-            popmax_pop=popmax_pop,
-            faf95_popmax=faf95_popmax,
-            af_xy=af_xy,
-            filter_pass=filter_pass,
-        )
+        # A variant may have several rows: the GRCh37 build loads gnomAD exomes
+        # AND genomes (no joint release at v2.1.1), so a variant present in both
+        # appears twice. Merge by per-field MAX over the PASS records — this is
+        # the "either dataset meets the criterion" semantics (the higher AF wins
+        # for BA1/BS1, and PM2's rarity check sees the higher AF too). GRCh38's
+        # joint build has a single row, so the merge is a no-op there.
+        return _merge_rows(rows)
 
     def _af_xy_available(self, con) -> bool:
         """True if the variants table has the af_xy column (cached per instance)."""

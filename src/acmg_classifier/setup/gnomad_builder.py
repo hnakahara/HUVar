@@ -294,17 +294,33 @@ def _vcf_to_parquet(
                         int(v.POS),
                         ref,
                         alt,
-                        _to_float(_info(v, "AF")),
-                        _to_int(_info(v, "AN")),
-                        _to_int(_info(v, "AC")),
-                        _to_int(_info(v, "nhomalt")),
-                        _to_int(_info(v, "nhemi")),
-                        _to_float(_info(v, "AF_grpmax", "AF_popmax")),
-                        _to_str(_info(v, "grpmax", "popmax")),
-                        _to_float(_info(v, "faf95_grpmax", "faf95_popmax")),
+                        # gnomAD v4.1 "joint" (combined exome+genome) frequencies
+                        # are preferred where present — they de-duplicate the
+                        # overlapping samples that a naive exome+genome max would
+                        # double-count. Falls back to the exome-only field so an
+                        # exomes-only VCF (or v2.1.1) still builds.
+                        _to_float(_info(v, "AF_joint", "AF")),
+                        _to_int(_info(v, "AN_joint", "AN")),
+                        _to_int(_info(v, "AC_joint", "AC")),
+                        _to_int(_info(v, "nhomalt_joint", "nhomalt")),
+                        _to_int(_info(v, "nhemi_joint", "nhemi")),
+                        _to_float(_info(v, "AF_grpmax_joint", "AF_grpmax", "AF_popmax")),
+                        _to_str(_info(v, "grpmax_joint", "grpmax", "popmax")),
+                        # GrpMax filtering allele frequency (95% CI). gnomAD v4.x
+                        # exposes this as `fafmax_faf95_max` (NOT `faf95_grpmax`,
+                        # which does not exist in v4.1); v2.1.1 uses
+                        # `faf95_popmax`. Without `fafmax_faf95_max`, FAF95 was
+                        # NULL for every v4.1 variant, so BS1/BA1 fell back to the
+                        # POINT grpmax AF (popmax_af) and over-fired near the
+                        # threshold (e.g. PIK3CD p.Arg38Cys: point AF 0.00032 >
+                        # 0.000316 fired BS1, but FAF95 0.00022 should not).
+                        _to_float(_info(
+                            v, "fafmax_faf95_max_joint", "fafmax_faf95_max",
+                            "faf95_grpmax", "faf95_popmax",
+                        )),
                         # Male (XY) allele frequency for X-linked "in males"
                         # BA1/BS1 (RPGR etc.). gnomAD provides AF_XY directly.
-                        _to_float(_info(v, "AF_XY")),
+                        _to_float(_info(v, "AF_joint_XY", "AF_XY")),
                         filter_val,
                     )
                     batch.append(row)

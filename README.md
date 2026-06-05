@@ -76,7 +76,7 @@ pip install -e .
 > `screen` or as a background job.
 
 ```bash
-python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --gnomad-workers 6
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --workers 6
 ```
 
 **Step 4: Verify installation**
@@ -231,8 +231,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--genome-fasta PATH` | Use an existing FASTA instead of downloading |
 | `--gnomad-vcf-dir PATH` | Use existing gnomAD `*.vcf.bgz` files |
 | `--gnomad-chromosomes CHR ...` | Subset of chromosomes (default all 24) |
-| `--gnomad-workers N` | DuckDB build parallelism (default = CPU - 1) |
-| `--clinvar-workers N` | ClinVar XML parse parallelism (default 4, max 24) |
+| `--workers N` | Build parallelism for the ClinVar (XML parse, max 24) and gnomAD (DuckDB) steps (default = CPU - 1) |
 | `--skip-gnomad` | Skip gnomAD download (~ 300 GB) |
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
