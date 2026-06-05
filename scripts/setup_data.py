@@ -170,8 +170,8 @@ _GNOMAD_MIRRORS: list[tuple[str, str]] = [
     ("google", _GNOMAD_GCS_PREFIX),
     ("amazon", _GNOMAD_AWS_PREFIX),
 ]
-# Concurrent downloads per mirror (2 google + 2 amazon = 4 total in flight).
-_GNOMAD_PER_MIRROR = 2
+# Concurrent downloads per mirror (1 google + 1 amazon = 2 total in flight).
+_GNOMAD_PER_MIRROR = 1
 
 # ---------------------------------------------------------------------------
 # Utilities
@@ -212,12 +212,48 @@ def _download(url: str, dest: Path, label: str = "") -> None:
         sys.exit("[ERROR] wget or curl is required")
 
 
+def _remote_size(url: str) -> int | None:
+    """Return the remote file's Content-Length in bytes, or None if unknown.
+
+    Used to tell a fully-downloaded file from a partial one left by an
+    interrupted run: a partial VCF can be larger than the corruption
+    threshold yet still be incomplete, so existence alone is not enough.
+    """
+    try:
+        if _has("curl"):
+            out = subprocess.run(
+                ["curl", "-sIL", "-m", "30", url],
+                capture_output=True, text=True, check=True,
+            ).stdout
+        elif _has("wget"):
+            # --spider does a HEAD; server response goes to stderr.
+            out = subprocess.run(
+                ["wget", "--spider", "--server-response", "-T", "30", "-t", "1", url],
+                capture_output=True, text=True,
+            ).stderr
+        else:
+            return None
+    except subprocess.SubprocessError:
+        return None
+    # With redirects there can be several Content-Length lines; the final one
+    # corresponds to the actual object (200 response).
+    size: int | None = None
+    for line in out.splitlines():
+        if line.lower().strip().startswith("content-length:"):
+            try:
+                size = int(line.split(":", 1)[1].strip())
+            except ValueError:
+                pass
+    return size
+
+
 def _download_quiet(url: str, dest: Path, label: str = "") -> None:
     """Download without an interactive progress bar.
 
-    Used by the parallel gnomAD downloader where four concurrent wget/curl
-    progress bars would otherwise interleave into unreadable output. Keeps
-    the resume flag (wget -c / curl -C -) so interrupted transfers continue.
+    Used by the parallel gnomAD downloader where concurrent wget/curl progress
+    bars would otherwise interleave into unreadable output. Keeps the resume
+    flag (wget -c / curl -C -) so an interrupted transfer continues from its
+    current offset instead of restarting.
     """
     dest.parent.mkdir(parents=True, exist_ok=True)
     if _has("wget"):
@@ -245,22 +281,32 @@ def _download_gnomad_chrom(
     byte-identical) before giving up. Runs in a worker thread; returns a short
     status string for logging. Already-present, non-corrupt files are skipped.
     """
-    # Re-download existing files that are suspiciously small (corrupt/partial).
-    _verify_size(vcf_f, min_bytes=10_000_000, label=f"gnomAD {name} {chrom} VCF")
-    _verify_size(tbi_f, min_bytes=1_000, label=f"gnomAD {name} {chrom} .tbi")
-
     def _fetch(suffix: str, dest: Path, what: str) -> None:
-        if dest.exists():
-            return
         # Try the assigned mirror first, then the other mirror as a fallback.
         attempts = [(label, base)] + [m for m in _GNOMAD_MIRRORS if m[0] != label]
         last_exc: Exception | None = None
         for mlabel, mbase in attempts:
-            try:
-                print(f"  ↓  gnomAD {name} {chrom} {what}  [{mlabel}]")
-                _download_quiet(mbase + suffix, dest, f"gnomAD {name} {chrom} {what}")
+            url = mbase + suffix
+            remote = _remote_size(url)
+            local = dest.stat().st_size if dest.exists() else 0
+            # Skip ONLY when the local file matches the remote size exactly. A
+            # partial file from an interrupted run (local < remote) falls
+            # through to wget -c, which resumes from the current offset rather
+            # than being mistaken for complete and skipped.
+            if dest.exists() and remote is not None and local == remote:
                 return
-            except subprocess.CalledProcessError as exc:
+            try:
+                action = "resuming" if local > 0 else "downloading"
+                print(f"  ↓  gnomAD {name} {chrom} {what}  [{mlabel}] ({action})")
+                _download_quiet(url, dest, f"gnomAD {name} {chrom} {what}")
+                # Confirm completeness against the remote size when known.
+                if remote is not None and dest.exists() and dest.stat().st_size != remote:
+                    raise RuntimeError(
+                        f"size mismatch after download "
+                        f"({dest.stat().st_size} != {remote})"
+                    )
+                return
+            except (subprocess.CalledProcessError, RuntimeError) as exc:
                 last_exc = exc
                 print(f"  [WARN] {mlabel} failed for {name} {chrom} {what}; trying next mirror")
         raise RuntimeError(f"All mirrors failed for gnomAD {name} {chrom} {what}") from last_exc
