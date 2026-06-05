@@ -44,6 +44,23 @@ class TestBp1Extraction:
         ]}]}
         assert bdt._bp1_applicability(rs) == ("not_applicable", "")
 
+    def test_text_not_applicable_overrides_flag(self):
+        # KCNQ1 / ITGA2B / ITGB3: "Applicable" flag but the text declines it.
+        rs = {"criteriaCodes": [_bp1_code(
+            "Applicable",
+            "Missense variant ... Not applicable, as pathogenic variants are not "
+            "limited to truncating variants, but can be missense as well.",
+        )]}
+        assert bdt._bp1_applicability(rs) == ("not_applicable", "")
+
+    def test_text_does_not_apply_overrides_flag(self):
+        rs = {"criteriaCodes": [_bp1_code(
+            "Applicable",
+            "Rule does not apply as truncating variants do not predominate and "
+            "missense variants are a known cause of disease.",
+        )]}
+        assert bdt._bp1_applicability(rs) == ("not_applicable", "")
+
     def test_no_code(self):
         assert bdt._bp1_applicability({"criteriaCodes": [{"label": "PM1"}]}) == ("", "")
 

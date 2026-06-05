@@ -504,12 +504,16 @@ def _ps1_splice(rule_set: dict) -> str:
 # RASopathy genes where loss-of-function is benign — TRUNCATING variants.
 _BP1_TRUNCATING = re.compile(r"truncating", re.IGNORECASE)
 _BP1_GOF = re.compile(r"gain[- ]of[- ]function", re.IGNORECASE)
+# Some VCEPs leave a BP1/BP3 strength flagged "Applicable" but state in the text
+# that the rule does not apply for the gene (KCNQ1, ITGA2B, ITGB3: missense also
+# causes disease). The free-text decision overrides the flag.
+_BP_TEXT_NA = re.compile(r"not applicable|does not apply", re.IGNORECASE)
 
 
 def _bp1_applicability(rule_set: dict) -> tuple[str, str]:
     """(status, target) for the rule set's BP1 code: status is
     "applicable"/"not_applicable"/""; target is "truncating" (RASopathy GoF) or
-    "missense" (default) when applicable, else ""."""
+    "missense"/"broad" (default) when applicable, else ""."""
     for code in rule_set.get("criteriaCodes", []):
         if code.get("label") != "BP1":
             continue
@@ -517,6 +521,8 @@ def _bp1_applicability(rule_set: dict) -> tuple[str, str]:
         if not applic:
             return "not_applicable", ""
         desc = " ".join(es.get("description", "") or "" for es in applic)
+        if _BP_TEXT_NA.search(desc):
+            return "not_applicable", ""
         if "silent" in desc.lower():
             target = "broad"  # BRCA1/2: silent + missense + in-frame
         elif _BP1_TRUNCATING.search(desc) and _BP1_GOF.search(desc):
@@ -533,7 +539,11 @@ def _bp3_applicability(rule_set: dict) -> str:
     for code in rule_set.get("criteriaCodes", []):
         if code.get("label") != "BP3":
             continue
-        return "applicable" if _applicable_strengths(code) else "not_applicable"
+        applic = _applicable_strengths(code)
+        if not applic:
+            return "not_applicable"
+        desc = " ".join(es.get("description", "") or "" for es in applic)
+        return "not_applicable" if _BP_TEXT_NA.search(desc) else "applicable"
     return ""
 
 
