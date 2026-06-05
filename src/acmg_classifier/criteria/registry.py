@@ -81,6 +81,7 @@ class CriteriaRegistry:
         from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
         from acmg_classifier.criteria.benign.bs1 import BS1Evaluator
         from acmg_classifier.criteria.benign.bs2 import BS2Evaluator
+        from acmg_classifier.criteria.benign.bp1 import BP1Evaluator
         from acmg_classifier.criteria.benign.bp3 import BP3Evaluator
         from acmg_classifier.criteria.benign.bp4 import BP4Evaluator
         from acmg_classifier.criteria.benign.bp7 import BP7Evaluator
@@ -102,6 +103,7 @@ class CriteriaRegistry:
             BA1Evaluator(self._cfg),
             BS1Evaluator(self._cfg),
             BS2Evaluator(self._cfg),
+            BP1Evaluator(self._cfg),
             BP3Evaluator(self._cfg),
             BP4Evaluator(self._cfg),
             BP7Evaluator(self._cfg),

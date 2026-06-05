@@ -34,7 +34,9 @@ COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
-    "ps1", "ps1_splice", "source_vcep", "cspec_url", "notes",
+    "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
+    "bp1_no_splice", "bp3", "bp3_regions",
+    "source_vcep", "cspec_url", "notes",
 ]
 
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* (XY/hemizygous)
@@ -481,6 +483,113 @@ def _ps1_splice(rule_set: dict) -> str:
     return ""
 
 
+# BP1 ("missense in a gene where another mechanism dominates") gene-level
+# applicability and TARGET consequence. Most VCEPs decline BP1; those that apply
+# it target either missense (PALB2, APC, BRCA1/2) or — for gain-of-function
+# RASopathy genes where loss-of-function is benign — TRUNCATING variants.
+_BP1_TRUNCATING = re.compile(r"truncating", re.IGNORECASE)
+_BP1_GOF = re.compile(r"gain[- ]of[- ]function", re.IGNORECASE)
+
+
+def _bp1_applicability(rule_set: dict) -> tuple[str, str]:
+    """(status, target) for the rule set's BP1 code: status is
+    "applicable"/"not_applicable"/""; target is "truncating" (RASopathy GoF) or
+    "missense" (default) when applicable, else ""."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BP1":
+            continue
+        applic = _applicable_strengths(code)
+        if not applic:
+            return "not_applicable", ""
+        desc = " ".join(es.get("description", "") or "" for es in applic)
+        if "silent" in desc.lower():
+            target = "broad"  # BRCA1/2: silent + missense + in-frame
+        elif _BP1_TRUNCATING.search(desc) and _BP1_GOF.search(desc):
+            target = "truncating"  # gain-of-function RASopathy genes
+        else:
+            target = "missense"
+        return "applicable", target
+    return "", ""
+
+
+def _bp3_applicability(rule_set: dict) -> str:
+    """"applicable"/"not_applicable"/"" for the rule set's BP3 code (in-frame
+    indel in a repetitive region). A VCEP that declined BP3 → not_applicable."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BP3":
+            continue
+        return "applicable" if _applicable_strengths(code) else "not_applicable"
+    return ""
+
+
+# Residue ranges from a criterion description (BP1 excluded domains, BP3 allowed
+# regions). Strips thousands separators, SpliceAI decimals, figure/PMID refs, and
+# "N-M bp" indel-size ranges so only residue ranges remain.
+_BP_NUM_RANGE = re.compile(r"(?<![\d.])(\d{1,4})\s*[-–]\s*(\d{1,4})(?!\d)")
+_BP_AA = "Ala|Arg|Asn|Asp|Cys|Gln|Glu|Gly|His|Ile|Leu|Lys|Met|Phe|Pro|Ser|Thr|Trp|Tyr|Val"
+_BP_AA_RANGE = re.compile(
+    rf"(?:p\.)?(?:{_BP_AA})(\d{{1,4}})\s*[-–]\s*(?:p\.)?(?:{_BP_AA})(\d{{1,4}})", re.IGNORECASE
+)
+
+
+def _bp_residue_ranges(text: str) -> str:
+    """";"-joined residue ranges parsed from *text* (e.g. "1021-1035",
+    "2-101;1391-1424"). Empty string when none are found."""
+    t = re.sub(r"(\d),(\d{3})\b", r"\1\2", text)
+    t = re.sub(r"\d+\s*[-–]\s*\d+\s*bp|\d+\s*bp", " ", t, flags=re.IGNORECASE)  # indel sizes
+    t = re.sub(r"\d+\.\d+|figure\s*\d+\w*|pmid:?\s*\d+|[≤<>]=?\s*[\d.]+", " ", t, flags=re.IGNORECASE)
+    ranges: set[tuple[int, int]] = set()
+    for m in list(_BP_AA_RANGE.finditer(t)) + list(_BP_NUM_RANGE.finditer(t)):
+        a, b = int(m.group(1)), int(m.group(2))
+        if 0 < a < b <= 9999 and b > 4 and b - a < 4000:
+            ranges.add((a, b))
+    return ";".join(f"{a}-{b}" for a, b in sorted(ranges))
+
+
+def _bp1_exclude(rule_set: dict) -> str:
+    """Residue ranges where BP1 is NOT applied — APC's β-catenin repeat
+    (1021-1035) and the BRCA1/2 clinically-important functional domains."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") == "BP1":
+            return _bp_residue_ranges(
+                " ".join(es.get("description", "") or "" for es in _applicable_strengths(code))
+            )
+    return ""
+
+
+def _bp1_strength(rule_set: dict) -> str:
+    """"Strong" when the VCEP applies BP1 at Strong (BRCA1/2); else "" (default
+    Supporting)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") == "BP1":
+            labels = {es.get("label") for es in _applicable_strengths(code)}
+            return "Strong" if "Strong" in labels else ""
+    return ""
+
+
+_BP1_NOSPLICE = re.compile(r"no splic\w*\s+predicted|spliceai\s*[≤<]", re.IGNORECASE)
+
+
+def _bp1_no_splice(rule_set: dict) -> str:
+    """"yes" when BP1 requires no predicted splice impact (BRCA1/2: SpliceAI <=0.1)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") == "BP1":
+            desc = " ".join(es.get("description", "") or "" for es in _applicable_strengths(code))
+            return "yes" if _BP1_NOSPLICE.search(desc) else ""
+    return ""
+
+
+def _bp3_regions(rule_set: dict) -> str:
+    """Residue ranges BP3 is RESTRICTED to (RPGR ORF15 585-1078; FOXG1 poly-AA
+    tracts). Empty when BP3 is the generic repeat rule (any repeat region)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") == "BP3":
+            return _bp_residue_ranges(
+                " ".join(es.get("description", "") or "" for es in _applicable_strengths(code))
+            )
+    return ""
+
+
 def _af_basis(rule_set: dict) -> str:
     """"males" if the applicable BA1/BS1 descriptions define the cutoff on the
     male (XY/hemizygous) allele frequency; otherwise "" (overall population)."""
@@ -541,6 +650,12 @@ def parse_spec(path: str) -> list[dict]:
         bs2 = _bs2_applicability(rs)
         ps1 = _ps1_applicability(rs)
         ps1_splice = _ps1_splice(rs)
+        bp1, bp1_target = _bp1_applicability(rs)
+        bp1_exclude = _bp1_exclude(rs)
+        bp1_strength = _bp1_strength(rs)
+        bp1_no_splice = _bp1_no_splice(rs)
+        bp3 = _bp3_applicability(rs)
+        bp3_regions = _bp3_regions(rs)
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -562,6 +677,13 @@ def parse_spec(path: str) -> list[dict]:
                 "bs2": "",
                 "ps1": "",
                 "ps1_splice": "",
+                "bp1": "",
+                "bp1_target": "",
+                "bp1_exclude": "",
+                "bp1_strength": "",
+                "bp1_no_splice": "",
+                "bp3": "",
+                "bp3_regions": "",
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
@@ -578,6 +700,13 @@ def parse_spec(path: str) -> list[dict]:
                 "_bs2": bs2,
                 "_ps1": ps1,
                 "_ps1_splice": ps1_splice,
+                "_bp1": bp1,
+                "_bp1_target": bp1_target,
+                "_bp1_exclude": bp1_exclude,
+                "_bp1_strength": bp1_strength,
+                "_bp1_no_splice": bp1_no_splice,
+                "_bp3": bp3,
+                "_bp3_regions": bp3_regions,
             })
     return rows
 
@@ -641,6 +770,12 @@ def main() -> None:
     ps1_splice_choice: dict[str, tuple[int, str]] = {}
     # PS1 applicability, resolved to the most gene-specific spec (like PP2/BS2).
     ps1_choice: dict[str, tuple[int, str, str]] = {}
+    # BP1 / BP3 applicability, most-specific spec (like PP2); BP1 also carries the
+    # target consequence (missense / truncating).
+    bp1_choice: dict[str, tuple[int, str, str]] = {}
+    bp1_fields_by_gene: dict[str, dict] = {}
+    bp3_choice: dict[str, tuple[int, str, str]] = {}
+    bp3_regions_by_gene: dict[str, str] = {}
     n_specs = 0
     for path in files:
         try:
@@ -678,6 +813,27 @@ def main() -> None:
                 cand = (row["_specificity"], row["_bs2"], "")
                 if g not in bs2_choice or _pp2_more_specific(cand, bs2_choice[g]):
                     bs2_choice[g] = cand
+            if row["_bp1"] in ("applicable", "not_applicable"):
+                cand = (row["_specificity"], row["_bp1"], "")
+                if g not in bp1_choice or _pp2_more_specific(cand, bp1_choice[g]):
+                    bp1_choice[g] = cand
+                    bp1_fields_by_gene[g] = (
+                        {
+                            "bp1_target": row["_bp1_target"],
+                            "bp1_exclude": row["_bp1_exclude"],
+                            "bp1_strength": row["_bp1_strength"],
+                            "bp1_no_splice": row["_bp1_no_splice"],
+                        }
+                        if row["_bp1"] == "applicable"
+                        else {}
+                    )
+            if row["_bp3"] in ("applicable", "not_applicable"):
+                cand = (row["_specificity"], row["_bp3"], "")
+                if g not in bp3_choice or _pp2_more_specific(cand, bp3_choice[g]):
+                    bp3_choice[g] = cand
+                    bp3_regions_by_gene[g] = (
+                        row["_bp3_regions"] if row["_bp3"] == "applicable" else ""
+                    )
             if row["_ps1"] in ("applicable", "not_applicable"):
                 cand = (row["_specificity"], row["_ps1"], "")
                 if g not in ps1_choice or _pp2_more_specific(cand, ps1_choice[g]):
@@ -745,6 +901,16 @@ def main() -> None:
         pchoice = ps1_choice.get(g)
         row["ps1"] = pchoice[1] if pchoice else ""
         row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
+        bp1c = bp1_choice.get(g)
+        row["bp1"] = bp1c[1] if bp1c else ""
+        bp1f = bp1_fields_by_gene.get(g, {}) if bp1c and bp1c[1] == "applicable" else {}
+        row["bp1_target"] = bp1f.get("bp1_target", "")
+        row["bp1_exclude"] = bp1f.get("bp1_exclude", "")
+        row["bp1_strength"] = bp1f.get("bp1_strength", "")
+        row["bp1_no_splice"] = bp1f.get("bp1_no_splice", "")
+        bp3c = bp3_choice.get(g)
+        row["bp3"] = bp3c[1] if bp3c else ""
+        row["bp3_regions"] = bp3_regions_by_gene.get(g, "") if bp3c and bp3c[1] == "applicable" else ""
 
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
@@ -781,6 +947,13 @@ _OVERRIDE_FIELDS = {
     "bs2": "bs2",
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
+    "bp1": "bp1",
+    "bp1_target": "bp1_target",
+    "bp1_exclude": "bp1_exclude",
+    "bp1_strength": "bp1_strength",
+    "bp1_no_splice": "bp1_no_splice",
+    "bp3": "bp3",
+    "bp3_regions": "bp3_regions",
     "inheritance": "inheritance",
 }
 
