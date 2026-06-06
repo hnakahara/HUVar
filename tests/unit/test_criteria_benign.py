@@ -354,6 +354,52 @@ class TestBP7:
         r = self.evaluator.evaluate(_snv(), ann)
         assert r.triggered
 
+    def test_bp7_deep_intronic_without_splice_not_met(self):
+        # Walker 2023: deep-intronic BP7 still requires a splice prediction of
+        # no impact. With no splice predictor, distance alone must NOT fire.
+        c = _consequence(ConsequenceType.INTRON)
+        c = c.model_copy(update={"intron_distance_from_splice": 15})
+        ann = _annotation(consequences=[c], splice=None)
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+    def test_bp7_deep_intronic_with_splice_impact_not_met(self):
+        # Deep-intronic but the splice tool predicts impact → BP7 withheld.
+        c = _consequence(ConsequenceType.INTRON)
+        c = c.model_copy(update={"intron_distance_from_splice": 15})
+        sp = SpliceScore(tool="openspliceai", is_available=True, max_delta=0.8)
+        ann = _annotation(consequences=[c], splice=sp)
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+    def _phylop_stub(self, score):
+        class _Stub:
+            def is_available(self_inner):
+                return True
+
+            def value(self_inner, chrom, pos):
+                return score
+        return _Stub()
+
+    def test_bp7_synonymous_highly_conserved_blocked(self):
+        # Splice benign but the nucleotide is highly conserved → BP7 withheld.
+        self.cfg.bp7_phylop_max = 2.0
+        self.evaluator._phylop = self._phylop_stub(7.5)
+        sp = SpliceScore(tool="openspliceai", is_available=True, max_delta=0.02)
+        ann = _annotation(consequences=[_consequence(ConsequenceType.SYNONYMOUS)], splice=sp)
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+        assert "conserved" in r.evidence.lower()
+
+    def test_bp7_synonymous_not_conserved_fires(self):
+        # Splice benign and NOT highly conserved → BP7 fires.
+        self.cfg.bp7_phylop_max = 2.0
+        self.evaluator._phylop = self._phylop_stub(0.3)
+        sp = SpliceScore(tool="openspliceai", is_available=True, max_delta=0.02)
+        ann = _annotation(consequences=[_consequence(ConsequenceType.SYNONYMOUS)], splice=sp)
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert r.triggered
+
     def test_bp7_missense_not_triggered(self):
         ann = _annotation(consequences=[_consequence(ConsequenceType.MISSENSE)])
         r = self.evaluator.evaluate(_snv(), ann)

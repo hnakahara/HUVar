@@ -55,9 +55,15 @@ class BS2Evaluator(CriterionEvaluator):
         het_carriers = max(0, ac - nhomalt)  # individuals carrying >=1 allele (AD)
 
         modes = self._vcep.modes(gene)
-        hom_thr = self._cfg.bs2_min_homalt
-        hemi_thr = self._cfg.bs2_min_hemi
-        het_thr = self._cfg.bs2_min_het
+        # A per-gene VCEP count (e.g. CDH1 >=10, TP53 >=8) overrides ALL mode
+        # thresholds; otherwise use the inheritance-mode global defaults.
+        vcep_count = self._vcep.count(gene)
+        if vcep_count is not None:
+            hom_thr = hemi_thr = het_thr = vcep_count
+        else:
+            hom_thr = self._cfg.bs2_min_homalt
+            hemi_thr = self._cfg.bs2_min_hemi
+            het_thr = self._cfg.bs2_min_het
 
         # When the inheritance mode is known, restrict to the count that mode
         # implies (a dominant gene's homozygotes are irrelevant; a recessive

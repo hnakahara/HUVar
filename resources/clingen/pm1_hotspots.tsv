@@ -12,7 +12,7 @@ APC	not_applicable
 ATM	not_applicable		
 BMPR2	Moderate	33-131;203-504	
 BMPR2	Strong		34,60,66,84,94,99,116,117,118,123,210,212,230,245,333,338,351,353,386,405,410,485,486,487,488,489,490,491,492
-BRAF	not_applicable		
+BRAF	Moderate	459-474;594-627	
 BRCA1	not_applicable		
 BRCA2	not_applicable		
 CAPN3	not_applicable		
@@ -46,15 +46,15 @@ HNF1A	Moderate		130,131,132,143,144,145,146,147,148,149,155,156,157,158,203,204,
 HNF1A	Supporting	1-32;107-174;201-280	
 HNF4A	Moderate		38,41,43,49,50,51,55,56,57,58,59,63,64,67,70,72,74,75,80,87,88,89,90,91,93,94,109,111,112,113
 HNF4A	Supporting	33-36;33-113;37-113;180-220;300-350	
-HRAS	not_applicable		
+HRAS	Moderate	10-17;25-40;57-64;145-156	
 IDUA	Moderate		89,91,181,182,262,264,299,301,305,306,349,363,372
-KRAS	not_applicable		
+KRAS	Moderate	10-17;25-40;57-64;145-156	
 LZTR1	not_applicable		
 MAP2K1	Moderate	43-61;124-134	
 MAP2K2	Moderate	47-65;128-138	
 MECP2	Moderate	90-162;302-306	
 MLH1	not_applicable		
-MRAS	not_applicable		
+MRAS	Moderate	20-27;35-50;67-74	
 MSH2	not_applicable		
 MSH6	not_applicable		
 MTM1	not_applicable		
@@ -64,7 +64,7 @@ MYL2	not_applicable
 MYL3	not_applicable		
 MYOC	not_applicable		
 NEB	not_applicable		
-NRAS	not_applicable		
+NRAS	Moderate	10-17;25-40;57-64;145-156	
 OTC	Moderate		268
 PAH	Moderate	46-48;63-69;246-266;280-283;322-326;377-379	138,158,245,268,278,279,285,289,290,300,315,330,331,345,346,349
 PALB2	not_applicable		
@@ -74,16 +74,16 @@ PMS2	not_applicable
 POLG	not_applicable		
 PPP1CB	not_applicable		
 PTEN	Moderate	90-94;123-130;166-168	
-PTPN11	not_applicable		
-RAF1	not_applicable		
+PTPN11	Moderate	7-9;58-63;69-77;278-281	247,251,255,256,258,261,265,284
+RAF1	Moderate	251-266	
 RAG1	Moderate	394-460;461-517	
 RAG1	Supporting	387-1011	
 RAG2	Moderate	414-487	
 RAG2	Supporting	1-383	
-RIT1	not_applicable		
+RIT1	Moderate	28-35;43-58;75-82	
 RPE65	Moderate		107,125,180,182,241,313,417,527
 RPGR	not_applicable		
-RRAS2	not_applicable		
+RRAS2	Moderate	21-28;36-51;68-75	
 RS1	Moderate		72,122,163,200,215
 RS1	Strong		40,59,63,110,142,219,223
 RUNX1	Strong		107,110,134,162,166,167,169,170,194,196,198,201,204
@@ -100,11 +100,12 @@ SHOC2	not_applicable
 SLC19A3	not_applicable		
 SLC6A8	not_applicable		
 SLC9A6	not_applicable		
-SOS1	not_applicable		
-SOS2	not_applicable		
+SOS1	Moderate	420-500	
+SOS2	Moderate	418-498	
 TCF4	Moderate	564-617	
 TNNI3	Moderate	141-209	
 TNNT2	Supporting	79-179;89-189	
 TP53	Moderate		175,245,248,249,273,282
 TPM1	not_applicable		
+UBE3A	Moderate		820
 VWF	not_applicable		

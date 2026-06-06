@@ -54,8 +54,14 @@ class PM5Spec:
                 excl = self._parse_excludes(row.get("pm5_excludes") or "")
                 if excl:
                     self._excludes[gene] = excl
-                if (row.get("pm5_max") or "").strip().lower() == "supporting":
-                    self._max[gene] = CriterionStrength.SUPPORTING
+                cap = (row.get("pm5_max") or "").strip().lower()
+                cap_map = {
+                    "supporting": CriterionStrength.SUPPORTING,
+                    "moderate": CriterionStrength.MODERATE,
+                    "strong": CriterionStrength.STRONG,
+                }
+                if cap in cap_map:
+                    self._max[gene] = cap_map[cap]
                 if (row.get("pm5_lp") or "").strip().lower() == "no":
                     self._require_p.add(gene)
 
@@ -87,8 +93,10 @@ class PM5Spec:
         return self._excludes.get(gene, ())
 
     def max_strength(self, gene: str | None) -> CriterionStrength | None:
-        """PM5 strength ceiling for *gene* (``Supporting``), or ``None`` for the
-        default Moderate ceiling."""
+        """PM5 strength ceiling for *gene*: ``Supporting`` / ``Moderate`` /
+        ``Strong`` from the VCEP, or ``None`` when no VCEP covers it (the
+        evaluator then defaults to a Moderate ceiling — PM5_Strong is granted
+        only when a VCEP explicitly allows it)."""
         if not gene:
             return None
         return self._max.get(gene)

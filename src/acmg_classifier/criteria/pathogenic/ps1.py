@@ -4,9 +4,25 @@ from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
-from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType
+from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
+
+
+def _ps1_strength(hits) -> CriterionStrength:
+    """PS1 strength from the comparator's ClinVar classification (ClinGen SVI).
+
+    Strong when at least one same-change comparator is classified Pathogenic
+    (or the P-containing aggregate 'Pathogenic/Likely pathogenic'); Moderate
+    when every comparator is only Likely pathogenic. Without this tiering PS1
+    always fired at its Strong default, over-weighting LP-only comparators.
+    """
+    has_pathogenic = any(
+        "pathogenic" in (h.clinical_significance or "").lower()
+        and (h.clinical_significance or "").lower() != "likely pathogenic"
+        for h in hits
+    )
+    return CriterionStrength.STRONG if has_pathogenic else CriterionStrength.MODERATE
 
 
 class PS1Evaluator(CriterionEvaluator):
@@ -70,8 +86,12 @@ class PS1Evaluator(CriterionEvaluator):
         )
         if not hits:
             return CriteriaResult.not_met(ACMGCriterion.PS1, "No ClinVar >=1 star same-AA hit (excluding self)")
-        evidence = f"ClinVar same AA (different nucleotide): {', '.join(h.variation_id or '' for h in hits[:3])}"
-        return CriteriaResult.met(ACMGCriterion.PS1, evidence=evidence)
+        strength = _ps1_strength(hits)
+        evidence = (
+            f"ClinVar same AA (different nucleotide), comparator {strength.value}: "
+            f"{', '.join(h.variation_id or '' for h in hits[:3])}"
+        )
+        return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
 
     def _evaluate_splice(self, variant: VariantRecord, pc) -> CriteriaResult:
         # PS1's splice extension is opt-in per VCEP. Genes whose PS1 is the
@@ -108,8 +128,9 @@ class PS1Evaluator(CriterionEvaluator):
             return CriteriaResult.not_met(
                 ACMGCriterion.PS1, "No ClinVar >=1 star same-splice-site P/LP hit"
             )
+        strength = _ps1_strength(hits)
         evidence = (
-            "ClinVar same splice-site position (different nucleotide): "
+            f"ClinVar same splice-site position (different nucleotide), comparator {strength.value}: "
             + ", ".join(h.variation_id or "" for h in hits[:3])
         )
-        return CriteriaResult.met(ACMGCriterion.PS1, evidence=evidence)
+        return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)

@@ -474,3 +474,46 @@ class TestRegistryPm5Exclusions:
         ]
         reg._apply_pm5_exclusions(results, _ann("PIK3CD", "R/C"))
         assert not results[0].suppressed
+
+
+def _cfg_strong(tmp_path, clinvar: Path):
+    """cfg whose TSV grants PM5_Strong (HNF1A) vs a Moderate-capped gene (GENE_M)."""
+    tsv = tmp_path / "disease_prevalence.tsv"
+    tsv.write_text(
+        "gene_symbol\tpm5_grantham\tpm5_excludes\tpm5_max\tpm5_lp\n"
+        "HNF1A\t\t\tStrong\t\n"
+        "GENE_M\t\t\tModerate\t\n",
+        encoding="utf-8",
+    )
+    cfg = MagicMock()
+    cfg.disease_prevalence_tsv = tsv
+    cfg.clinvar_sqlite = clinvar
+    cfg.pm5_min_stars = 1
+    return cfg
+
+
+class TestPM5Strong:
+    def test_two_distinct_pathogenic_is_strong(self, tmp_path):
+        # HNF1A allows PM5_Strong; two DIFFERENT pathogenic missense at codon 175.
+        db = _db(tmp_path, [
+            _row("1", "HNF1A", "NM:p.Arg175His", "R175H", 175, "Pathogenic"),
+            _row("2", "HNF1A", "NM:p.Arg175Pro", "R175P", 175, "Pathogenic"),
+        ])
+        r = PM5Evaluator(_cfg_strong(tmp_path, db)).evaluate(_snv(), _ann("HNF1A", "R/C"))
+        assert r.triggered and r.strength == CriterionStrength.STRONG
+
+    def test_single_pathogenic_is_moderate(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "HNF1A", "NM:p.Arg175His", "R175H", 175, "Pathogenic"),
+        ])
+        r = PM5Evaluator(_cfg_strong(tmp_path, db)).evaluate(_snv(), _ann("HNF1A", "R/C"))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+
+    def test_moderate_cap_clamps_two_pathogenic(self, tmp_path):
+        # GENE_M caps PM5 at Moderate, so even 2 distinct pathogenic stays Moderate.
+        db = _db(tmp_path, [
+            _row("1", "GENE_M", "NM:p.Arg175His", "R175H", 175, "Pathogenic"),
+            _row("2", "GENE_M", "NM:p.Arg175Pro", "R175P", 175, "Pathogenic"),
+        ])
+        r = PM5Evaluator(_cfg_strong(tmp_path, db)).evaluate(_snv(), _ann("GENE_M", "R/C"))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE

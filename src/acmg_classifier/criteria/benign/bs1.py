@@ -49,9 +49,9 @@ class BS1Evaluator(CriterionEvaluator):
         gt = self._thresholds.get(gene)
         threshold = gt.bs1
 
-        # X-linked "in males" genes (RPGR, RS1, ABCD1, SLC6A8, OTC): the VCEP
-        # cutoff is on the male (XY) allele frequency. Fall back to the overall
-        # FAF when AF_XY is unavailable (gnomAD DB predating the af_xy column).
+        # X-linked "in males" genes (RPGR, RS1): the VCEP cutoff is on the male
+        # (XY) allele frequency. Fall back to the overall FAF when AF_XY is
+        # unavailable (gnomAD DB predating the af_xy column).
         metric = "gnomAD FAF95"
         if gt.af_basis == "males" and gd.af_xy is not None:
             faf = gd.af_xy
@@ -64,7 +64,9 @@ class BS1Evaluator(CriterionEvaluator):
         if faf >= threshold:
             return CriteriaResult.met(
                 ACMGCriterion.BS1,
-                evidence=f"{metric}={faf:.3g} >= BS1 threshold {threshold:.3g} for {gene or 'default'}",
+                strength=gt.bs1_strength,
+                evidence=f"{metric}={faf:.3g} >= BS1 threshold {threshold:.3g} "
+                         f"({gt.bs1_strength.value}) for {gene or 'default'}",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.BS1,

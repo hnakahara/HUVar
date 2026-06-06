@@ -23,9 +23,16 @@ from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, Criteri
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
+# For gain-of-function genes (RASopathy) the VCEP applies BP1 to ANY loss-of-
+# function variant: "nonsense, frameshift, affects canonical splice sites,
+# initiation codon, entire gene or multi-exon deletion".
 _TRUNCATING = (
     ConsequenceType.STOP_GAINED,
     ConsequenceType.FRAMESHIFT,
+    ConsequenceType.SPLICE_ACCEPTOR,
+    ConsequenceType.SPLICE_DONOR,
+    ConsequenceType.START_LOST,
+    ConsequenceType.TRANSCRIPT_ABLATION,
 )
 # "broad" target (BRCA1/2): silent substitution, missense, or in-frame indel.
 _BROAD = (

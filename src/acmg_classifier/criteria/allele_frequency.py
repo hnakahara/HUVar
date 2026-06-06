@@ -21,6 +21,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
+from acmg_classifier.models.enums import CriterionStrength
+
 # Flat fallbacks (pre-Whiffin behaviour) when no per-gene data is available.
 _DEFAULT_BS1 = 0.005
 _DEFAULT_BA1 = 0.05
@@ -83,9 +85,20 @@ class GeneThresholds:
     ba1: float
     bs1: float
     af_basis: str = ""
+    # Strength the BS1 cutoff fires at — the spec's BS1 tier (e.g. MYO15A/OTOF
+    # fire VeryStrong at >=0.3%); defaults to the ACMG BS1 Strong level.
+    bs1_strength: CriterionStrength = CriterionStrength.STRONG
 
 
 _DEFAULT_THRESHOLDS = GeneThresholds(ba1=_DEFAULT_BA1, bs1=_DEFAULT_BS1)
+
+# TSV bs1_strength value → CriterionStrength (blank → the Strong default).
+_BS1_STRENGTH = {
+    "VeryStrong": CriterionStrength.VERY_STRONG,
+    "Strong": CriterionStrength.STRONG,
+    "Moderate": CriterionStrength.MODERATE,
+    "Supporting": CriterionStrength.SUPPORTING,
+}
 
 
 def _to_float(row: dict[str, str], key: str) -> Optional[float]:
@@ -139,7 +152,10 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
         ba1 = _DEFAULT_BA1
 
     af_basis = (row.get("af_basis") or "").strip().lower()
-    return GeneThresholds(ba1=ba1, bs1=bs1, af_basis=af_basis)
+    bs1_strength = _BS1_STRENGTH.get(
+        (row.get("bs1_strength") or "").strip(), CriterionStrength.STRONG
+    )
+    return GeneThresholds(ba1=ba1, bs1=bs1, af_basis=af_basis, bs1_strength=bs1_strength)
 
 
 class DiseaseThresholds:

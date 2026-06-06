@@ -9,9 +9,29 @@ from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
 
+def _load_pm4_not_applicable(tsv_path) -> frozenset[str]:
+    """Genes whose VCEP declined PM4 (the ``pm4`` column == ``not_applicable``).
+    A missing file/column degrades to "no gene declined" (empty set)."""
+    import csv
+    out: set[str] = set()
+    try:
+        if not tsv_path.exists():
+            return frozenset()
+        with tsv_path.open(encoding="utf-8") as fh:
+            for row in csv.DictReader(fh, delimiter="\t"):
+                if (row.get("pm4") or "").strip().lower() == "not_applicable":
+                    gene = (row.get("gene_symbol") or "").strip()
+                    if gene:
+                        out.add(gene)
+    except OSError:
+        return frozenset()
+    return frozenset(out)
+
+
 class PM4Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        self._not_applicable = _load_pm4_not_applicable(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -22,6 +42,13 @@ class PM4Evaluator(CriterionEvaluator):
         pc = annotation.primary_consequence
         if pc is None:
             return CriteriaResult.not_met(ACMGCriterion.PM4, "No consequence")
+
+        # VCEP gate: cancer panels (BRCA1/2, MMR, TP53, APC, PALB2) and the
+        # PI3K-pathway specs decline PM4 — withhold it for those genes.
+        if pc.gene_symbol in self._not_applicable:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM4, f"{pc.gene_symbol}: VCEP designates PM4 not applicable"
+            )
 
         # PM4 fires for changes that alter protein length without truncation
         # (frameshift/stop-gain are PVS1). For in-frame indels inside a

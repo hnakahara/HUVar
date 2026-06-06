@@ -62,6 +62,10 @@ dev = [
 openspliceai = [
     "openspliceai",
 ]
+# BP7 conservation gate: per-base phyloP100way lookup from a UCSC bigWig.
+conservation = [
+    "pyBigWig>=0.3",
+]
 # MMSplice DISABLED: its dependency chain (numpy<2, cyvcf2<=0.30.x, pyranges
 # 0.0.x) conflicts with this project's cyvcf2/numpy. Retained, commented out,
 # to re-enable if the dependency situation is resolved. Would also need

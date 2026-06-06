@@ -1,0 +1,69 @@
+"""Per-gene PM2 specifications from ClinGen VCEP specs (``disease_prevalence.tsv``).
+
+* ``pm2_threshold`` — the VCEP's allele-frequency cutoff for the gene. ``"0"``
+  means the variant must be ABSENT (only a truly absent / AC=0 variant
+  qualifies). Blank → no VCEP cutoff; the evaluator keeps its global default.
+* ``pm2_strength``  — ``Moderate`` for the handful of VCEPs that set PM2 at
+  Moderate (GAA, LDLR, ETHE1, PDHA1, POLG, SLC19A3, ITGA2B, ITGB3); blank →
+  the SVI default of Supporting.
+* ``pm2_basis``     — ``faf`` when the VCEP states the cutoff on the GrpMax
+  Filtering Allele Frequency (FAF95); blank → the raw popmax allele frequency.
+"""
+from __future__ import annotations
+
+import csv
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Optional
+
+from acmg_classifier.models.enums import CriterionStrength
+
+
+@dataclass(frozen=True)
+class PM2Rule:
+    threshold: Optional[float]      # None → no per-gene cutoff (use global default)
+    strength: CriterionStrength     # Moderate or Supporting
+    use_faf: bool                   # compare FAF95 instead of raw popmax AF
+
+
+class PM2Spec:
+    """VCEP PM2 cutoff/strength/basis per gene, loaded once from the TSV.
+
+    A missing file/column degrades to "no per-gene rule" for every gene, so the
+    PM2 evaluator simply keeps its global thresholds.
+    """
+
+    def __init__(self, tsv_path: Path) -> None:
+        self._by_gene: dict[str, PM2Rule] = {}
+        self._load(tsv_path)
+
+    def _load(self, tsv_path: Path) -> None:
+        if not tsv_path.exists():
+            return
+        with tsv_path.open(encoding="utf-8") as fh:
+            for row in csv.DictReader(fh, delimiter="\t"):
+                gene = (row.get("gene_symbol") or "").strip()
+                if not gene:
+                    continue
+                raw = (row.get("pm2_threshold") or "").strip()
+                threshold: Optional[float] = None
+                if raw:
+                    try:
+                        threshold = float(raw)
+                    except ValueError:
+                        threshold = None
+                strength = (
+                    CriterionStrength.MODERATE
+                    if (row.get("pm2_strength") or "").strip().lower() == "moderate"
+                    else CriterionStrength.SUPPORTING
+                )
+                use_faf = (row.get("pm2_basis") or "").strip().lower() == "faf"
+                # Only record a rule when the gene carries at least one PM2
+                # specialisation; otherwise leave it to the global default.
+                if raw or strength == CriterionStrength.MODERATE or use_faf:
+                    self._by_gene[gene] = PM2Rule(threshold, strength, use_faf)
+
+    def get(self, gene: Optional[str]) -> Optional[PM2Rule]:
+        if not gene:
+            return None
+        return self._by_gene.get(gene)

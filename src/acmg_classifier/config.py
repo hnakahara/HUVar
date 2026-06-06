@@ -33,17 +33,28 @@ class Config(BaseSettings):
     # BS2 (observed in a healthy individual) gnomAD count thresholds, by the
     # gene's inheritance mode. Recessive counts homozygotes, X-linked counts
     # hemizygotes, dominant counts heterozygous carriers (AC - nhomalt). Defaults
-    # mirror the "5+ is hard to explain by chance" heuristic; override via
-    # ACMG_BS2_MIN_HOMALT / ACMG_BS2_MIN_HEMI / ACMG_BS2_MIN_HET.
-    bs2_min_homalt: int = 5
-    bs2_min_hemi: int = 5
-    bs2_min_het: int = 5
+    # follow the modal ClinGen VCEP BS2 counts (most fire on 1-2 homozygotes /
+    # ~3 unaffected heterozygotes — "homozygous in a healthy adult"); the prior
+    # flat 5 was too strict and missed benign evidence. Genes whose VCEP states
+    # a higher bar (cancer panels: CDH1 >=10, TP53 >=8) carry a per-gene
+    # `bs2_count` in disease_prevalence.tsv that overrides these. Override the
+    # global defaults via ACMG_BS2_MIN_HOMALT / ACMG_BS2_MIN_HEMI / ACMG_BS2_MIN_HET.
+    bs2_min_homalt: int = 2
+    bs2_min_hemi: int = 2
+    bs2_min_het: int = 3
     insilico_tool: InSilicoTool = InSilicoTool.ESM1B
     splice_tool: SpliceTool = SpliceTool.OPENSPLICEAI
     supplement_mode: SupplementMode = SupplementMode.MERGE
     spliceai_dir: Optional[Path] = None
     openspliceai_model_dir: Optional[Path] = None
     openspliceai_flanking_size: int = 2000
+    # BP7 conservation gate: a synonymous/deep-intronic variant may only reach
+    # BP7 when the nucleotide is NOT highly conserved (Walker 2023 / ACMG 2015).
+    # phyloP100way is the conservation source (UCSC, commercial-use OK). A
+    # position with phyloP >= this value is "highly conserved" and blocks BP7.
+    # The gate is applied only when the phyloP file is present (graceful
+    # degradation); otherwise BP7 falls back to the splice-only logic.
+    bp7_phylop_max: float = 2.0
 
     @field_validator("data_dir")
     @classmethod
@@ -175,6 +186,19 @@ class Config(BaseSettings):
         if self.openspliceai_model_dir:
             return self.openspliceai_model_dir.resolve()
         return self.assembly_dir / "openspliceai" / f"{self.openspliceai_flanking_size}nt"
+
+    @property
+    def phylop_bigwig(self) -> Optional[Path]:
+        """phyloP100way conservation bigWig for the BP7 conservation gate, or
+        None when not downloaded (BP7 then uses its splice-only logic).
+
+        UCSC tracks: hg38.phyloP100way.bw / hg19.phyloP100way.bw."""
+        names = {
+            Assembly.GRCH38: "hg38.phyloP100way.bw",
+            Assembly.GRCH37: "hg19.phyloP100way.bw",
+        }
+        p = self.assembly_dir / "conservation" / names[self.assembly]
+        return p if p.exists() else None
 
     @property
     def repeatmasker_bed(self) -> Path:

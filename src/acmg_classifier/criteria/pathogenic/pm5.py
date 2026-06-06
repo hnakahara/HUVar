@@ -107,14 +107,26 @@ class PM5Evaluator(CriterionEvaluator):
                     "No Pathogenic same-codon comparator (LP not accepted for this gene)",
                 )
 
-        # Strength: Moderate if any qualifying comparator is Pathogenic, else
-        # (only Likely pathogenic comparators) Supporting. Capped per the VCEP
-        # ceiling (ATM/CDH1/PALB2: Supporting only).
-        pathogenic = any(h.clinical_significance in _PATHOGENIC for h in qualifying)
-        strength = CriterionStrength.MODERATE if pathogenic else CriterionStrength.SUPPORTING
-        cap = self._spec.max_strength(pc.gene_symbol)
-        if cap == CriterionStrength.SUPPORTING:
-            strength = CriterionStrength.SUPPORTING
+        # Strength (ClinGen SVI):
+        #   >=2 DIFFERENT pathogenic missense at the codon -> Strong
+        #   1 pathogenic comparator                         -> Moderate
+        #   only likely-pathogenic comparators              -> Supporting
+        # then clamped to the gene's VCEP ceiling. PM5_Strong is granted only
+        # when the VCEP explicitly allows it (cap == Strong); genes without a
+        # VCEP keep the historical Moderate ceiling.
+        pathogenic_hits = [h for h in qualifying if h.clinical_significance in _PATHOGENIC]
+        n_distinct_path = len({
+            _comparator_change(h.hgvs_p) for h in pathogenic_hits if _comparator_change(h.hgvs_p)
+        })
+        if n_distinct_path >= 2:
+            base = CriterionStrength.STRONG
+        elif pathogenic_hits:
+            base = CriterionStrength.MODERATE
+        else:
+            base = CriterionStrength.SUPPORTING
+
+        cap = self._spec.max_strength(pc.gene_symbol) or CriterionStrength.MODERATE
+        strength = _min_strength(base, cap)
         ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
         return CriteriaResult.met(
             ACMGCriterion.PM5, strength=strength, evidence=f"ClinVar {tag}: {ids}"
@@ -138,6 +150,28 @@ class PM5Evaluator(CriterionEvaluator):
             if (cand > comp) if op == GT else (cand >= comp):
                 out.append(h)
         return out
+
+
+_STRENGTH_ORDER = {
+    CriterionStrength.SUPPORTING: 1,
+    CriterionStrength.MODERATE: 2,
+    CriterionStrength.STRONG: 3,
+}
+
+
+def _min_strength(a: CriterionStrength, b: CriterionStrength) -> CriterionStrength:
+    """The weaker of two strengths (clamp a base strength to a ceiling)."""
+    return a if _STRENGTH_ORDER[a] <= _STRENGTH_ORDER[b] else b
+
+
+def _comparator_change(hgvs_p: str | None) -> str | None:
+    """The comparator's amino-acid change (e.g. "ArgHis") from its protein
+    HGVS, used to count DISTINCT pathogenic missense at the codon for the
+    PM5_Strong (>=2 different missense) tier."""
+    if not hgvs_p:
+        return None
+    m = _COMP_P.search(hgvs_p)
+    return (m.group(1) + m.group(2)) if m else None
 
 
 def _candidate_distance(amino_acids: str | None) -> int | None:

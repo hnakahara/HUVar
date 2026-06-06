@@ -22,6 +22,10 @@ _RAW_AF_RECESSIVE = 0.005
 class PM2Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        # Per-gene VCEP PM2 cutoff / strength (Moderate for a handful) / basis
+        # (FAF vs raw AF). Genes absent from the spec use the global defaults.
+        from acmg_classifier.criteria.pm2_genes import PM2Spec
+        self._spec = PM2Spec(cfg.disease_prevalence_tsv)
 
     def _threshold(self, annotation: AnnotationData) -> tuple[float, str]:
         """Select the FAF95 cutoff based on the gene's inheritance pattern.
@@ -51,45 +55,60 @@ class PM2Evaluator(CriterionEvaluator):
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
         gd = annotation.gnomad
+        pc = annotation.primary_consequence
+        gene = pc.gene_symbol if pc else None
+        rule = self._spec.get(gene)
+        # Strength is Supporting by default (SVI); a few VCEPs set PM2 Moderate.
+        strength = rule.strength if rule else CriterionStrength.SUPPORTING
+
         # Total absence from gnomAD is the strongest possible PM2 signal — it
         # implies neither presence nor a failed filter, just no record at all.
         if gd is None:
             return CriteriaResult.met(
-                ACMGCriterion.PM2,
-                CriterionStrength.SUPPORTING,
-                "Absent from gnomAD (no record)",
+                ACMGCriterion.PM2, strength, "Absent from gnomAD (no record)",
             )
         # A failed gnomAD QC filter means we cannot trust the AF estimate, so
         # we abstain rather than assert PM2 on dubious data.
         if not gd.filter_pass:
             return CriteriaResult.not_met(ACMGCriterion.PM2, "gnomAD filter failed")
 
-        # PM2 uses the RAW grpmax allele frequency (no FAF/CI), per the ClinGen
-        # Hearing Loss VCEP. Prefer the grpmax (popmax) raw AF; fall back to the
-        # global raw AF only when grpmax is genuinely absent (None). A real 0.0
-        # is kept as-is — it means the variant is unobserved in the grpmax
-        # group, which is the strongest PM2 signal.
-        raw_af = gd.popmax_af
-        if raw_af is None:
-            raw_af = gd.af if gd.af is not None else 0.0
+        # Comparison metric: most VCEPs (and the global default) judge PM2 on the
+        # RAW grpmax allele frequency, but some state the cutoff on the GrpMax
+        # Filtering Allele Frequency (FAF95) — e.g. HNF1A/HNF4A/GCK. Prefer the
+        # spec's metric; fall back through popmax→global AF when it is absent.
+        if rule and rule.use_faf:
+            value = gd.faf95_popmax
+            if value is None:
+                value = gd.popmax_af if gd.popmax_af is not None else (gd.af or 0.0)
+            metric = "FAF95"
+        else:
+            value = gd.popmax_af
+            if value is None:
+                value = gd.af if gd.af is not None else 0.0
+            metric = "AF"
 
         # AC=0 means "observed only in samples that failed QC" — effectively
-        # absent for ACMG purposes, so we treat it the same as raw AF == 0.
-        if raw_af == 0.0 or gd.ac == 0:
+        # absent for ACMG purposes, so we treat it the same as value == 0.
+        if value == 0.0 or gd.ac == 0:
             return CriteriaResult.met(
-                ACMGCriterion.PM2,
-                CriterionStrength.SUPPORTING,
-                "Absent from gnomAD (AC=0)",
+                ACMGCriterion.PM2, strength, "Absent from gnomAD (AC=0)",
             )
 
-        threshold, basis = self._threshold(annotation)
-        if raw_af < threshold:
+        # Threshold: the VCEP's per-gene cutoff when set (threshold 0 means the
+        # variant must be ABSENT — only the AC=0 branch above qualifies), else
+        # the inheritance-aware global default.
+        if rule and rule.threshold is not None:
+            threshold = rule.threshold
+            basis = f"{gene} VCEP"
+        else:
+            threshold, basis = self._threshold(annotation)
+
+        if value < threshold:
             return CriteriaResult.met(
-                ACMGCriterion.PM2,
-                CriterionStrength.SUPPORTING,
-                f"gnomAD AF={raw_af:.2e} < {threshold} [{basis}]",
+                ACMGCriterion.PM2, strength,
+                f"gnomAD {metric}={value:.2e} < {threshold} [{basis}]",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.PM2,
-            f"gnomAD AF={raw_af:.2e} ≥ {threshold} [{basis}]",
+            f"gnomAD {metric}={value:.2e} ≥ {threshold} [{basis}]",
         )

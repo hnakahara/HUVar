@@ -76,10 +76,15 @@ few precedence rules (all verified against the released specs):
   code: `applicable` when a PP2 strength is Applicable, `not_applicable` when the
   VCEP carries a PP2 code but declined it, blanket-negated the description
   (KCNQ1: "Not applicable due to … z-score 1.83"), or excluded the gene by name
-  (GN018: "applicable to MTOR, PIK3CA and AKT3 but **not PIK3R2**"). Aggregated
-  across specs so `applicable` in any VCEP wins. This authoritative list is what
-  the PP2 evaluator uses to avoid over-assigning the (gene-level) criterion;
-  genes no VCEP covers fall back to a ClinVar/gnomAD statistical heuristic.
+  (GN018: "applicable to MTOR, PIK3CA and AKT3 but **not PIK3R2**"). Resolved to
+  the **most gene-specific** spec (a single-gene VCEP supersedes a grouped
+  panel); on a specificity **tie** across distinct diseases the conservative
+  `not_applicable` wins (it suppresses PP2 → fewer false pathogenic-supporting
+  calls). A gene whose disease-appropriate decision is `applicable` but loses a
+  tie (e.g. ACTA1: GN147 applicable vs GN169 not-applicable) can be pinned with
+  `--override ACTA1:pp2=applicable`. This authoritative list is what the PP2
+  evaluator uses to avoid over-assigning the (gene-level) criterion; genes no
+  VCEP covers fall back to a ClinVar/gnomAD statistical heuristic.
 - **`pp2_requires`** captures co-criteria a VCEP makes PP2 conditional on
   ("PM2_supporting and PP3 must be met" → `PM2,PP3` for BMPR2). The registry
   suppresses PP2 post-hoc unless every listed criterion is also triggered.

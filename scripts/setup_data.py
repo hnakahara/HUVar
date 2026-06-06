@@ -79,6 +79,7 @@ URLS: dict[str, dict[str, str]] = {
             "gnomad.joint.v4.1.sites.{chrom}.vcf.bgz.tbi"
         ),
         "repeatmasker": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/rmsk.txt.gz",
+        "phylop": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
     },
     "GRCh37": {
         "genome": (
@@ -123,6 +124,7 @@ URLS: dict[str, dict[str, str]] = {
             "gnomad.genomes.r2.1.1.sites.{chrom}.vcf.bgz.tbi"
         ),
         "repeatmasker": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/rmsk.txt.gz",
+        "phylop": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/phyloP100way/hg19.phyloP100way.bw",
     },
 }
 
@@ -711,6 +713,24 @@ def step_repeatmasker(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
+def step_phylop(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
+    """Download the phyloP100way conservation bigWig for the BP7 conservation
+    gate. OPT-IN (--with-phylop) because the track is ~9.2 GB. Skipped by
+    default; BP7 then falls back to its splice-only logic."""
+    suffix = "hg38" if assembly == "GRCh38" else "hg19"
+    dest = asm_dir / "conservation" / f"{suffix}.phyloP100way.bw"
+    if dest.exists():
+        print(f"  [SKIP] {dest.name}")
+        return True
+    if not enabled:
+        print("  [SKIP] phyloP not requested (pass --with-phylop to enable the "
+              "BP7 conservation gate; ~9.2 GB)")
+        return True
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    _download(urls["phylop"], dest, f"UCSC phyloP100way {suffix} bigWig (~9.2 GB)")
+    return True
+
+
 def step_mmsplice_gtf(asm_dir: Path, assembly: str, urls: dict, skip: bool) -> bool:
     """DISABLED — not registered in the steps list (MMSplice integration is off).
     Retained for re-enabling later. See the SpliceTool enum for context.
@@ -779,6 +799,10 @@ def main() -> None:
                         help="Skip genome FASTA download (~880 MB)")
     parser.add_argument("--skip-vep-cache", action="store_true",
                         help="Skip VEP cache download (~14 GB)")
+    parser.add_argument("--with-phylop", action="store_true",
+                        help="Download the phyloP100way bigWig (~9.2 GB) for the BP7 "
+                             "conservation gate. Off by default; BP7 uses splice-only "
+                             "logic without it. Also: pip install -e '.[conservation]'.")
     parser.add_argument("--skip-esm1b", action="store_true",
                         help="Skip ESM1b download/build (~1.34 GB)")
     # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
@@ -811,6 +835,7 @@ def main() -> None:
         ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
         ("gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
         ("RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
+        ("phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.with_phylop)),
     ]
 
     ok_steps, failed_steps = [], []

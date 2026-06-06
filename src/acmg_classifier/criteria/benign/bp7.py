@@ -61,6 +61,22 @@ class BP7Evaluator(CriterionEvaluator):
 
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        from acmg_classifier.local_db.conservation import PhyloPReader
+        self._phylop = PhyloPReader(cfg.phylop_bigwig)
+
+    def _conservation_block(self, variant: VariantRecord) -> str | None:
+        """Return a not-met reason when the position is highly conserved (so BP7
+        must not fire), or None when the gate passes or is unavailable.
+
+        ACMG/Walker BP7 requires the nucleotide to be NOT highly conserved. The
+        gate is applied only when phyloP is available; otherwise it is skipped
+        (graceful degradation) — see PhyloPReader."""
+        if not self._phylop.is_available():
+            return None
+        score = self._phylop.value(variant.chrom, variant.pos)
+        if score is not None and score >= self._cfg.bp7_phylop_max:
+            return f"highly conserved (phyloP={score:.2f} >= {self._cfg.bp7_phylop_max})"
+        return None
 
     def evaluate(
         self,
@@ -78,34 +94,50 @@ class BP7Evaluator(CriterionEvaluator):
         # behaviour and is now known to mis-classify exonic splice variants.
         if pc.consequence == ConsequenceType.SYNONYMOUS:
             if _splice_benign(annotation):
+                blocked = self._conservation_block(variant)
+                if blocked:
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.BP7, f"Synonymous, splice benign, but {blocked}",
+                    )
                 sp = annotation.splice
                 return CriteriaResult.met(
                     ACMGCriterion.BP7,
-                    evidence=f"Synonymous + {sp.tool} score benign",
+                    evidence=f"Synonymous + {sp.tool} score benign + not highly conserved",
                 )
             return CriteriaResult.not_met(
                 ACMGCriterion.BP7,
                 "Synonymous but splice impact not ruled out",
             )
 
-        # Intronic branch: distance alone is enough to fire if the variant
-        # is well outside the splice consensus. If a splice predictor *also*
-        # agrees the variant is benign we still fire BP7 (just with stronger
-        # evidence in the message) — distance is independently sufficient.
+        # Intronic branch: BP7 requires BOTH that the variant is outside the
+        # splice consensus (distance) AND that splicing-prediction algorithms
+        # predict no impact (Walker 2023 / ClinGen SVI). Distance alone is NOT
+        # sufficient — a deep-intronic variant can still create a cryptic splice
+        # site — so we withhold BP7 when no splice predictor confirms no impact.
         if pc.consequence == ConsequenceType.INTRON:
-            if _is_deep_intronic(pc):
-                if _splice_benign(annotation):
-                    return CriteriaResult.met(
-                        ACMGCriterion.BP7,
-                        evidence=(
-                            f"Deep intronic (dist={pc.intron_distance_from_splice}) "
-                            "and splice score benign (Walker 2023)"
-                        ),
-                    )
-                return CriteriaResult.met(
+            if not _is_deep_intronic(pc):
+                return CriteriaResult.not_met(
                     ACMGCriterion.BP7,
-                    evidence=f"Deep intronic (dist={pc.intron_distance_from_splice}; Walker 2023)",
+                    f"Intronic but within splice consensus (dist={pc.intron_distance_from_splice})",
                 )
+            if not _splice_benign(annotation):
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BP7,
+                    "Deep intronic but splice impact not ruled out "
+                    "(no splice prediction of no impact)",
+                )
+            blocked = self._conservation_block(variant)
+            if blocked:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BP7, f"Deep intronic, splice benign, but {blocked}",
+                )
+            return CriteriaResult.met(
+                ACMGCriterion.BP7,
+                evidence=(
+                    f"Deep intronic (dist={pc.intron_distance_from_splice}) "
+                    "and splice score benign + not highly conserved (Walker 2023)"
+                ),
+            )
 
         return CriteriaResult.not_met(
             ACMGCriterion.BP7,

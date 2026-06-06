@@ -8,11 +8,35 @@ import sqlite3
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from acmg_classifier.criteria.pathogenic.ps1 import PS1Evaluator
+from acmg_classifier.criteria.pathogenic.ps1 import PS1Evaluator, _ps1_strength
 from acmg_classifier.local_db.clinvar_sqlite import query_same_splice_site
-from acmg_classifier.models.annotation import AnnotationData, GnomADData, ConsequenceInfo
-from acmg_classifier.models.enums import Assembly, ACMGCriterion, ConsequenceType
+from acmg_classifier.models.annotation import AnnotationData, GnomADData, ConsequenceInfo, ClinVarRecord
+from acmg_classifier.models.enums import Assembly, ACMGCriterion, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
+
+
+def _rec(sig: str) -> ClinVarRecord:
+    return ClinVarRecord(
+        variation_id="1", clinical_significance=sig, review_status="x", star_rating=2,
+    )
+
+
+class TestPS1Strength:
+    """ClinGen SVI: Pathogenic comparator -> Strong; Likely-pathogenic only -> Moderate."""
+
+    def test_pathogenic_comparator_strong(self):
+        assert _ps1_strength([_rec("Pathogenic")]) == CriterionStrength.STRONG
+
+    def test_lp_only_comparator_moderate(self):
+        assert _ps1_strength([_rec("Likely pathogenic")]) == CriterionStrength.MODERATE
+
+    def test_p_lp_aggregate_is_strong(self):
+        # 'Pathogenic/Likely pathogenic' contains a P assertion -> Strong.
+        assert _ps1_strength([_rec("Pathogenic/Likely pathogenic")]) == CriterionStrength.STRONG
+
+    def test_any_pathogenic_among_lp_wins_strong(self):
+        hits = [_rec("Likely pathogenic"), _rec("Pathogenic")]
+        assert _ps1_strength(hits) == CriterionStrength.STRONG
 
 _SCHEMA = """
 CREATE TABLE variants (

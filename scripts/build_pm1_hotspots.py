@@ -30,9 +30,15 @@ _AA1 = "ACDEFGHIKLMNPQRSTVWY"
 
 # Tokens that carry stray numbers (transcripts, PMIDs, citations, HTML, coding
 # HGVS) — stripped before parsing so they are not mistaken for residues.
+# NOTE: the bracket rule strips ONLY numeric-citation brackets ("[12]",
+# "[1-3]", "[10, 11]"). VCEPs (RASopathy etc.) write the actual hotspot ranges
+# inside square brackets as "[AA 10-17]" — those contain letters and MUST be
+# preserved, or every bracketed-domain PM1 (KRAS/HRAS/PTPN11/RAF1/…) loses its
+# regions and then trips the not-applicable fallback. So the bracket class is
+# restricted to digits/whitespace/separators only.
 _NOISE = re.compile(
     r"ENS[TPG]\d+(?:\.\d+)?|N[MPR]_?\d+(?:\.\d+)?|c\.-?\d+|PMID:?\s*\d+|pmid_\d+"
-    r"|\[[^\]]*\]|<[^>]+>|&[a-z]+;",
+    r"|\[[\s\d,;.–-]+\]|<[^>]+>|&[a-z]+;",
     re.IGNORECASE,
 )
 # An "AA<n> - AA<m>" span (e.g. "Ser151 - Pro153") → residue range.
@@ -44,6 +50,10 @@ _AA_RANGE = re.compile(
 _RANGE = re.compile(r"(?<![\d.])(\d{1,4})\s*[-–]\s*(\d{1,4})(?!\d)")
 _AA3_RES = re.compile(rf"\b(?:{_AA3})\s?(\d{{1,4}})\b")
 _AA1_RES = re.compile(rf"\b([{_AA1}])(\d{{2,4}})\b")
+# "AA <n>"-prefixed single residues (e.g. PTPN11 "AA 247, AA 251, AA 256").
+# Ranges in this notation ("AA 10-17") are already captured by _RANGE; this
+# picks up the isolated residues a VCEP lists alongside them.
+_AA_PREFIX_RES = re.compile(r"\bAA\s?(\d{1,4})\b", re.IGNORECASE)
 # A comma-separated bare-number list introduced by codon/residue wording.
 _CODON_LIST = re.compile(
     r"(?:codons?|residues?|amino acids?)[^:.\n]*?[:\s]\s*((?:\d{1,4}\s*,\s*)+\d{1,4})",
@@ -54,6 +64,11 @@ _OCCURRENCE = re.compile(r"\b(occurrence|instances?|somatic occurrence)", re.IGN
 _NOT_APPLICABLE = re.compile(
     r"does not apply|not applicable|highly polymorphic", re.IGNORECASE
 )
+# A positive applicability clause ("Applicable only to ... domains/residues").
+# When present, a trailing "Not applicable to specific amino acid residues
+# (see PM5)" is a PM5 redirect for the *rest* of the gene — NOT a gene-level
+# negation — so the gene must NOT be marked not_applicable.
+_POSITIVE_APPLICABLE = re.compile(r"\bapplicable\b\s+(?:only\s+)?to\b", re.IGNORECASE)
 
 _VALID_STRENGTH = {"Supporting", "Moderate", "Strong"}
 
@@ -94,6 +109,8 @@ def parse_regions(text: str) -> tuple[list[tuple[int, int]], list[int]]:
         residues.add(int(m.group(1)))
     for m in _AA1_RES.finditer(t):
         residues.add(int(m.group(2)))
+    for m in _AA_PREFIX_RES.finditer(t):
+        residues.add(int(m.group(1)))
     for m in _CODON_LIST.finditer(t):
         for n in re.findall(r"\d{1,4}", m.group(1)):
             residues.add(int(n))
@@ -136,8 +153,10 @@ def build(summary_path: str) -> dict[tuple[str, str], tuple[set, set]]:
             ranges, residues = parse_regions(text)
             if not ranges and not residues:
                 # No resolvable region. Record an explicit not-applicable only
-                # when the VCEP says the rule does not apply for the gene.
-                if _NOT_APPLICABLE.search(text):
+                # when the VCEP negates the rule for the WHOLE gene — not when
+                # "not applicable" is merely a PM5 redirect sub-clause sitting
+                # next to a positive "Applicable only to … domains" statement.
+                if _NOT_APPLICABLE.search(text) and not _POSITIVE_APPLICABLE.search(text):
                     not_applicable.add(gene)
                 continue
             key = (gene, strength)

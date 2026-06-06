@@ -32,19 +32,24 @@ from typing import Optional
 
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
-    "penetrance", "bs1_threshold", "ba1_threshold", "af_basis", "pp2",
+    "penetrance", "bs1_threshold", "bs1_strength", "ba1_threshold", "af_basis",
+    "pm2_threshold", "pm2_strength", "pm2_basis", "pm4", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
+    "bs2_count",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions",
     "source_vcep", "cspec_url", "notes",
 ]
 
-# Genes whose BA1/BS1 spec defines the cutoff on the *male* (XY/hemizygous)
-# allele frequency rather than the overall population FAF — detected from
-# "in males" / "hemizygous" wording in the applicable BA1/BS1 descriptions
-# (e.g. RPGR, RS1, ABCD1, SLC6A8, OTC, all X-linked). Emitted in the af_basis
-# column so the BA1/BS1 evaluators compare against gnomAD AF_XY for these genes.
-_MALES_BASIS = re.compile(r"\bin males\b|hemizyg", re.IGNORECASE)
+# Genes whose BA1/BS1 spec defines the cutoff on the *male* allele frequency
+# rather than the overall population FAF — detected from "in males" wording that
+# qualifies the FREQUENCY (RPGR, RS1). Emitted in af_basis so the BA1/BS1
+# evaluators compare against gnomAD AF_XY for these genes.
+# NB: the bare token "hemizyg" must NOT be used — several X-linked specs that
+# actually use the overall "Total Grpmax FAF" merely mention "hemizygotes" in a
+# count rule (OTC, SLC6A8) or a prevalence note (ABCD1), and were wrongly
+# flagged males, making BA1/BS1 compare AF_XY and under-fire.
+_MALES_BASIS = re.compile(r"\bin males\b", re.IGNORECASE)
 
 # A frequency cutoff is the number directly after a ≥ / > operator, optionally
 # followed by '%'. Anchoring on the operator avoids the many *non-threshold*
@@ -208,6 +213,33 @@ def _criterion_threshold(rule_set: dict, label: str) -> tuple[Optional[float], s
     return None, f"{label}: code absent"
 
 
+# cspec strength label → CriterionStrength value emitted in the TSV.
+_CSPEC_TO_STRENGTH = {
+    "Very Strong": "VeryStrong", "Strong": "Strong",
+    "Moderate": "Moderate", "Supporting": "Supporting",
+}
+
+
+def _bs1_strength(rule_set: dict) -> str:
+    """The strength of the BS1 tier whose threshold was chosen by
+    _criterion_threshold (same selection: prefer Strong, else the first
+    applicable). Lets the evaluator emit the spec's tier strength instead of
+    always defaulting to BS1_Strong — e.g. MYO15A/OTOF (GN023) whose only BS1
+    tiers are Very Strong (>=0.3%) and Supporting. "" when BS1 is not applicable
+    (the evaluator then uses the Strong default)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BS1":
+            continue
+        strengths = _applicable_strengths(code)
+        if not strengths:
+            return ""
+        chosen = next(
+            (s for s in strengths if s.get("label") == "Strong"), strengths[0]
+        )
+        return _CSPEC_TO_STRENGTH.get(chosen.get("label", ""), "")
+    return ""
+
+
 # --- PP2 gene-level applicability (from the per-VCEP PP2 criteria code) ---
 # A VCEP marks PP2 Applicable / Not Applicable per gene. The applicability flag
 # lives on the evidence strengths, but gene-specific decisions are *also* in the
@@ -365,10 +397,11 @@ def _pm5_excludes(rule_set: dict) -> str:
 
 
 def _pm5_max(rule_set: dict) -> str:
-    """Per-spec PM5 strength ceiling: "Supporting" (only Supporting applicable —
-    ATM, CDH1, PALB2), "Moderate" (Moderate or higher applicable), or "" (no
-    applicable PM5). Aggregated across specs in main(): "Moderate" outranks
-    "Supporting" so a gene that any VCEP allows at Moderate keeps the default."""
+    """Per-spec PM5 strength ceiling: the highest applicable PM5 strength —
+    "Supporting" (ATM/CDH1/PALB2), "Moderate", or "Strong" (VCEPs that grant
+    PM5_Strong for >=2 different pathogenic missense at the codon — RUNX1,
+    HNF1A, GCK, HNF4A, …); "" when PM5 is not applicable. Aggregated across
+    specs in main() by MAX rank, so the most permissive ceiling wins."""
     for code in rule_set.get("criteriaCodes", []):
         if code.get("label") != "PM5":
             continue
@@ -376,7 +409,12 @@ def _pm5_max(rule_set: dict) -> str:
                  if es.get("label") in _STRENGTH_RANK]
         if not ranks:
             return ""
-        return "Supporting" if max(ranks) == _STRENGTH_RANK["Supporting"] else "Moderate"
+        top = max(ranks)
+        if top <= _STRENGTH_RANK["Supporting"]:
+            return "Supporting"
+        if top == _STRENGTH_RANK["Moderate"]:
+            return "Moderate"
+        return "Strong"  # Strong or higher applicable
     return ""
 
 
@@ -428,6 +466,56 @@ def _bs2_applicability(rule_set: dict) -> str:
         if _BS2_NO_POPDATA.search(applic[0].get("description", "") or ""):
             return "not_applicable"
         return "applicable"
+    return ""
+
+
+# BS2 minimum observation count. Most VCEPs fire BS2 on 1-2 homozygotes (handled
+# by the global default), but cancer/strict panels demand many more (CDH1 >=10
+# individuals, TP53 >=8, PDHA1 >=16 hemizygotes) — under-counting there would
+# FALSELY mark a pathogenic variant benign. Only operator-anchored integers tied
+# to an observation noun are taken (never "allele" counts or "20x coverage"),
+# the MAX is kept (the strictest gnomAD-applicable bar), and the value is
+# sanity-bounded. ">N" means N+1 (">1 homozygote" → 2).
+_BS2_COUNT = re.compile(
+    r"(≥|≧|>=|&ge;|>|at least)\s*(\d{1,3})\b"
+    r"(?!\s*[:/])"                                  # exclude ratios ("≥ 40:1")
+    r"(?!\s*(?:year|yr|y\b|yo\b|month|week|day|%|x\b|×))"  # exclude ages/units (">18 years")
+    r"(?=[^.]{0,30}(?:homozyg|hemizyg|heterozyg|individual|carrier|observ|"
+    r"unrelated|proband|male|female|adult|case))",
+    re.IGNORECASE,
+)
+_BS2_COUNT_MAX = 200  # reject mis-parsed large numbers (allele counts, ages)
+
+
+def _pm4_applicability(rule_set: dict) -> str:
+    """"applicable" / "not_applicable" / "" for the rule set's PM4 code.
+
+    PM4 (protein-length change from in-frame indel / stop-loss) is declined by
+    several VCEPs — notably cancer panels (BRCA1/2, the MMR genes, TP53, APC,
+    PALB2) and the PI3K-pathway specs — where firing PM4 on an in-frame indel
+    would wrongly add pathogenic weight. "" when the spec carries no PM4 code."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PM4":
+            continue
+        return "applicable" if _applicable_strengths(code) else "not_applicable"
+    return ""
+
+
+def _bs2_count(rule_set: dict) -> str:
+    """The VCEP's minimum BS2 observation count for the gene, or "" (use the
+    global default). The strictest (max) operator-anchored count wins."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BS2":
+            continue
+        strs = _applicable_strengths(code)
+        if not strs:
+            return ""
+        vals: list[int] = []
+        for op, num in _BS2_COUNT.findall(strs[0].get("description", "")):
+            n = int(num) + (1 if op == ">" else 0)
+            if 1 <= n <= _BS2_COUNT_MAX:
+                vals.append(n)
+        return str(max(vals)) if vals else ""
     return ""
 
 
@@ -508,6 +596,10 @@ _BP1_GOF = re.compile(r"gain[- ]of[- ]function", re.IGNORECASE)
 # that the rule does not apply for the gene (KCNQ1, ITGA2B, ITGB3: missense also
 # causes disease). The free-text decision overrides the flag.
 _BP_TEXT_NA = re.compile(r"not applicable|does not apply", re.IGNORECASE)
+# A positive BP3 clause ("BP3 can be applied to … / applies to …"): when present
+# a trailing "not applicable" is a scoped exception (the rest of the gene), not a
+# gene-level negation (VHL).
+_BP3_POSITIVE = re.compile(r"can be applied|is applicable|applies to|may be applied", re.IGNORECASE)
 
 
 def _bp1_applicability(rule_set: dict) -> tuple[str, str]:
@@ -543,7 +635,12 @@ def _bp3_applicability(rule_set: dict) -> str:
         if not applic:
             return "not_applicable"
         desc = " ".join(es.get("description", "") or "" for es in applic)
-        return "not_applicable" if _BP_TEXT_NA.search(desc) else "applicable"
+        # A "not applicable" sub-clause does NOT negate the gene when a positive
+        # "BP3 can be applied to … <region>" clause is also present (VHL: applies
+        # to the GXEEX repeat AA14-48, "not applicable" only for the rest).
+        if _BP_TEXT_NA.search(desc) and not _BP3_POSITIVE.search(desc):
+            return "not_applicable"
+        return "applicable"
     return ""
 
 
@@ -555,6 +652,9 @@ _BP_AA = "Ala|Arg|Asn|Asp|Cys|Gln|Glu|Gly|His|Ile|Leu|Lys|Met|Phe|Pro|Ser|Thr|Tr
 _BP_AA_RANGE = re.compile(
     rf"(?:p\.)?(?:{_BP_AA})(\d{{1,4}})\s*[-–]\s*(?:p\.)?(?:{_BP_AA})(\d{{1,4}})", re.IGNORECASE
 )
+# "AA<n>-(AA)<m>" notation (VHL "AA14-AA48"). _BP_NUM_RANGE misses these because
+# the dash is followed by "AA48", not a bare digit.
+_BP_AA_PREFIX_RANGE = re.compile(r"AA\s?(\d{1,4})\s*[-–]\s*(?:AA\s?)?(\d{1,4})", re.IGNORECASE)
 
 
 def _bp_residue_ranges(text: str) -> str:
@@ -564,7 +664,9 @@ def _bp_residue_ranges(text: str) -> str:
     t = re.sub(r"\d+\s*[-–]\s*\d+\s*bp|\d+\s*bp", " ", t, flags=re.IGNORECASE)  # indel sizes
     t = re.sub(r"\d+\.\d+|figure\s*\d+\w*|pmid:?\s*\d+|[≤<>]=?\s*[\d.]+", " ", t, flags=re.IGNORECASE)
     ranges: set[tuple[int, int]] = set()
-    for m in list(_BP_AA_RANGE.finditer(t)) + list(_BP_NUM_RANGE.finditer(t)):
+    for m in (list(_BP_AA_PREFIX_RANGE.finditer(t))
+              + list(_BP_AA_RANGE.finditer(t))
+              + list(_BP_NUM_RANGE.finditer(t))):
         a, b = int(m.group(1)), int(m.group(2))
         if 0 < a < b <= 9999 and b > 4 and b - a < 4000:
             ranges.add((a, b))
@@ -627,6 +729,123 @@ def _af_basis(rule_set: dict) -> str:
     return ""
 
 
+# PM2 per-gene extraction. PM2 strength is Supporting for almost every VCEP;
+# only a handful set Moderate (GAA, LDLR, ETHE1, PDHA1, POLG, SLC19A3, ITGA2B,
+# ITGB3). The cutoff is gene-specific and several VCEPs compare against the
+# GrpMax Filtering Allele Frequency (FAF) rather than the raw popmax AF.
+_PM2_FAF = re.compile(r"filtering allele frequency|grpmax\s+faf|\bFAF\b", re.IGNORECASE)
+_PM2_ABSENT = re.compile(r"\babsent\b", re.IGNORECASE)
+_PM2_AR = re.compile(r"recessive", re.IGNORECASE)
+_PM2_AD = re.compile(r"dominant", re.IGNORECASE)
+# PM2 cutoffs are stated with a LESS-THAN operator ("<", "≤", "less than",
+# "below"). The shared _OP_NUM only matches GREATER-than (it was built for
+# BA1/BS1), so PM2 needs its own. Using ONLY operator-anchored numbers — never
+# the last-resort "any number" tier — is essential: PM2 descriptions are often
+# long narratives ("prevalence 1/500", "accounts for ≤2% of variants") whose
+# stray numbers would otherwise be mistaken for the cutoff.
+_PM2_LT = re.compile(
+    r"(?:≤|≦|<=|&le;|<|≲|less than or equal to|less than|below|at or below)\s*"
+    r"([0-9]*\.?[0-9]+)\s*(%?)",
+    re.IGNORECASE,
+)
+# Operator-led fraction cutoffs only ("≤ 1/300,000", "< 1:333,000",
+# "≤ One out of 100,000"). A leading operator is required so a bare prevalence
+# fraction in narrative ("(1/500 or lower)") is NOT picked up.
+_PM2_FRACTION = re.compile(
+    r"(?:≤|≦|<=|<|less than or equal to|less than)\s*"
+    r"(?:1\s*[/:]\s*|one out of\s*)([0-9][0-9,]{2,})",
+    re.IGNORECASE,
+)
+# PM2 is a rarity criterion; a credible cutoff is well below this. The bound
+# rejects mis-parsed narrative numbers (e.g. "2%" → 0.02, "1/500" → 0.002 when
+# operator-led). The few VCEPs that set a higher PM2 cutoff (cardiomyopathy
+# 0.02, IDUA 0.025) state it only in an external table, so they fall back to
+# the evaluator's global default — safe (stricter, never over-fires PM2).
+_PM2_MAX_CREDIBLE = 0.01
+
+
+def _pm2_cands(desc: str) -> list[float]:
+    """PM2 frequency candidates (0, _PM2_MAX_CREDIBLE), operator-anchored only."""
+    out: list[float] = []
+    for m in _SCI.finditer(desc):
+        v = float(m.group(1)) * 10 ** int(m.group(2))
+        out.append(v)
+    for n, p in _PM2_LT.findall(desc):
+        v = _to_prop(n, p)
+        if v is not None:
+            out.append(v)
+    for m in _PM2_FRACTION.finditer(desc):
+        try:
+            out.append(1.0 / int(m.group(1).replace(",", "")))
+        except (ValueError, ZeroDivisionError):
+            pass
+    return sorted({v for v in out if 0.0 < v < _PM2_MAX_CREDIBLE})
+
+
+def _pm2_code(rule_set: dict) -> Optional[dict]:
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") == "PM2":
+            return code
+    return None
+
+
+def _pm2_strength(rule_set: dict) -> str:
+    """VCEP PM2 strength: "Moderate" when the spec sets PM2 at Moderate (or
+    higher), else "Supporting" when PM2 is applicable at Supporting, else ""
+    (PM2 not applicable / no code). Aggregated across specs in main()."""
+    code = _pm2_code(rule_set)
+    if code is None:
+        return ""
+    ranks = [
+        _STRENGTH_RANK[es["label"]]
+        for es in _applicable_strengths(code)
+        if es.get("label") in _STRENGTH_RANK
+    ]
+    if not ranks:
+        return ""
+    return "Moderate" if max(ranks) >= _STRENGTH_RANK["Moderate"] else "Supporting"
+
+
+def _pm2_basis(rule_set: dict) -> str:
+    """"faf" when the VCEP states the PM2 cutoff on the GrpMax Filtering Allele
+    Frequency (HNF1A/HNF4A/GCK/SLC6A8/FBN1/LDLR…); else "" (raw popmax AF)."""
+    code = _pm2_code(rule_set)
+    if code is None:
+        return ""
+    desc = " ".join(es.get("description", "") or "" for es in _applicable_strengths(code))
+    return "faf" if _PM2_FAF.search(desc) else ""
+
+
+def _pm2_threshold(rule_set: dict, moi: str) -> str:
+    """PM2 allele-frequency cutoff for a gene with mode-of-inheritance *moi*.
+
+    Returns "" when no PM2 cutoff can be resolved (the evaluator then keeps its
+    global default). "0" means the VCEP requires the variant to be ABSENT (only
+    a truly absent/AC=0 variant qualifies). For MOI-split descriptions
+    ("≤X for recessive, ≤Y for dominant") the gene's own MOI selects the value.
+    """
+    code = _pm2_code(rule_set)
+    if code is None:
+        return ""
+    strs = _applicable_strengths(code)
+    if not strs:
+        return ""
+    desc = strs[0].get("description", "")
+    cands = _pm2_cands(desc)
+    if not cands:
+        # No numeric cutoff: an "absent from controls" rule means threshold 0.
+        return "0" if _PM2_ABSENT.search(desc) else ""
+    # MOI-split: the recessive cutoff is the higher value, dominant the lower.
+    if len(cands) > 1 and _PM2_AR.search(desc) and _PM2_AD.search(desc):
+        if "AR" in moi and "AD" not in moi:
+            return _fmt(max(cands))
+        if "AD" in moi or "XL" in moi:
+            return _fmt(min(cands))
+        return _fmt(min(cands))  # unknown MOI → stricter (FP-minimising) value
+    # Single operative cutoff (specs state the operative number first).
+    return _fmt(cands[0])
+
+
 def _moi(gene: dict) -> str:
     out: set[str] = set()
     for dis in gene.get("diseases", []):
@@ -665,7 +884,11 @@ def parse_spec(path: str) -> list[dict]:
     for rs in d.get("ruleSets", []):
         bs1, bs1_note = _criterion_threshold(rs, "BS1")
         ba1, ba1_note = _criterion_threshold(rs, "BA1")
+        bs1_strength = _bs1_strength(rs)
         af_basis = _af_basis(rs)
+        pm2_strength = _pm2_strength(rs)
+        pm2_basis = _pm2_basis(rs)
+        pm4 = _pm4_applicability(rs)
         pp2_map = _pp2_applicability(rs)
         pp2_req = _pp2_requires(rs)
         pm5_op = _pm5_grantham_op(rs)
@@ -673,6 +896,7 @@ def parse_spec(path: str) -> list[dict]:
         pm5_max = _pm5_max(rs)
         pm5_lp = _pm5_lp_comparator(rs)
         bs2 = _bs2_applicability(rs)
+        bs2_count = _bs2_count(rs)
         ps1 = _ps1_applicability(rs)
         ps1_splice = _ps1_splice(rs)
         bp1, bp1_target = _bp1_applicability(rs)
@@ -686,13 +910,20 @@ def parse_spec(path: str) -> list[dict]:
             sym = gene.get("label")
             if not sym:
                 continue
+            moi = _moi(gene)
+            pm2_threshold = _pm2_threshold(rs, moi)
             rows.append({
                 "gene_symbol": sym,
-                "inheritance": _moi(gene),
+                "inheritance": moi,
                 "prevalence": "", "allelic_het": "", "genetic_het": "", "penetrance": "",
                 "bs1_threshold": "" if bs1 is None else _fmt(bs1),
+                "bs1_strength": bs1_strength,
                 "ba1_threshold": "" if ba1 is None else _fmt(ba1),
                 "af_basis": af_basis,
+                "pm2_threshold": "",
+                "pm2_strength": "",
+                "pm2_basis": "",
+                "pm4": "",
                 "pp2": "",
                 "pp2_requires": "",
                 "pm5_grantham": "",
@@ -700,6 +931,7 @@ def parse_spec(path: str) -> list[dict]:
                 "pm5_max": "",
                 "pm5_lp": "",
                 "bs2": "",
+                "bs2_count": "",
                 "ps1": "",
                 "ps1_splice": "",
                 "bp1": "",
@@ -716,6 +948,10 @@ def parse_spec(path: str) -> list[dict]:
                 # extrasaction="ignore"): drive multi-spec resolution and the
                 # cross-spec PP2/PM5 aggregation in main().
                 "_specificity": n_spec_genes,
+                "_pm2_threshold": pm2_threshold,
+                "_pm2_strength": pm2_strength,
+                "_pm2_basis": pm2_basis,
+                "_pm4": pm4,
                 "_pp2": pp2_map.get(sym, ""),
                 "_pp2_requires": pp2_req,
                 "_pm5_grantham": pm5_op,
@@ -723,6 +959,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm5_max": pm5_max,
                 "_pm5_lp": pm5_lp,
                 "_bs2": bs2,
+                "_bs2_count": bs2_count,
                 "_ps1": ps1,
                 "_ps1_splice": ps1_splice,
                 "_bp1": bp1,
@@ -779,7 +1016,7 @@ def main() -> None:
     # ("Moderate" outranks "Supporting": a gene any VCEP allows at Moderate is
     # not capped to Supporting).
     pm5_excludes_by_gene: dict[str, set[str]] = {}
-    pm5_max_rank = {"Moderate": 2, "Supporting": 1, "": 0}
+    pm5_max_rank = {"Strong": 3, "Moderate": 2, "Supporting": 1, "": 0}
     pm5_max_by_gene: dict[str, str] = {}
     # PM5 comparator-significance policy, resolved to the most gene-specific spec
     # (a single-gene VCEP supersedes a grouped panel), like PP2. Stores
@@ -801,6 +1038,13 @@ def main() -> None:
     bp1_fields_by_gene: dict[str, dict] = {}
     bp3_choice: dict[str, tuple[int, str, str]] = {}
     bp3_regions_by_gene: dict[str, str] = {}
+    # PM2 threshold/strength/basis, resolved to the most gene-specific spec that
+    # carries an applicable PM2 code (like PP2/BS2/PS1). pm2_choice[g] =
+    # (specificity, threshold, strength, basis).
+    pm2_choice: dict[str, tuple[int, str, str, str]] = {}
+    # PM4 applicability, most-specific spec (like PP2/BS2); on a tie the
+    # conservative not_applicable wins.
+    pm4_choice: dict[str, tuple[int, str, str]] = {}
     n_specs = 0
     for path in files:
         try:
@@ -834,10 +1078,26 @@ def main() -> None:
                 if (cur is None or spec < cur[0]
                         or (spec == cur[0] and row["_pm5_lp"] == "no" and cur[1] != "no")):
                     pm5_lp_choice[g] = (spec, row["_pm5_lp"])
+            if row["_pm4"] in ("applicable", "not_applicable"):
+                cand = (row["_specificity"], row["_pm4"], "")
+                if g not in pm4_choice or _pp2_more_specific(cand, pm4_choice[g]):
+                    pm4_choice[g] = cand
             if row["_bs2"] in ("applicable", "not_applicable"):
-                cand = (row["_specificity"], row["_bs2"], "")
+                # Carry bs2_count in the 3rd slot so the count comes from the
+                # same (most-specific) spec that decided applicability.
+                cand = (row["_specificity"], row["_bs2"], row["_bs2_count"])
                 if g not in bs2_choice or _pp2_more_specific(cand, bs2_choice[g]):
                     bs2_choice[g] = cand
+            # PM2: only specs with an applicable PM2 code contribute. Most
+            # gene-specific spec wins; on a specificity tie keep the first
+            # (deterministic by file order).
+            if row["_pm2_strength"]:
+                spec = row["_specificity"]
+                cur = pm2_choice.get(g)
+                if cur is None or spec < cur[0]:
+                    pm2_choice[g] = (
+                        spec, row["_pm2_threshold"], row["_pm2_strength"], row["_pm2_basis"],
+                    )
             if row["_bp1"] in ("applicable", "not_applicable"):
                 cand = (row["_specificity"], row["_bp1"], "")
                 if g not in bp1_choice or _pp2_more_specific(cand, bp1_choice[g]):
@@ -916,13 +1176,25 @@ def main() -> None:
         # VCEP allowed Moderate (pm5_max_by_gene resolved to "Supporting").
         excl = pm5_excludes_by_gene.get(g, set())
         row["pm5_excludes"] = ",".join(c for c in ("PM1", "PS1") if c in excl)
-        row["pm5_max"] = "Supporting" if pm5_max_by_gene.get(g, "") == "Supporting" else ""
+        # Surface the actual ceiling (Supporting caps PM5; Strong unlocks the
+        # PM5_Strong tier; Moderate/"" keep the default Moderate ceiling).
+        row["pm5_max"] = pm5_max_by_gene.get(g, "")
         # Only "no" (Pathogenic comparator required) is recorded; "yes"/none
         # leave the column blank (LP comparator accepted — the default).
         lp = pm5_lp_choice.get(g)
         row["pm5_lp"] = "no" if lp and lp[1] == "no" else ""
         bchoice = bs2_choice.get(g)
         row["bs2"] = bchoice[1] if bchoice else ""
+        # Emit the per-gene BS2 count only when BS2 is applicable for the gene.
+        row["bs2_count"] = bchoice[2] if (bchoice and bchoice[1] == "applicable") else ""
+        pm4c = pm4_choice.get(g)
+        row["pm4"] = pm4c[1] if pm4c else ""
+        pm2c = pm2_choice.get(g)
+        # Emit pm2_strength only when Moderate (Supporting is the global default
+        # the evaluator already applies); always emit the resolved threshold/basis.
+        row["pm2_threshold"] = pm2c[1] if pm2c else ""
+        row["pm2_strength"] = pm2c[2] if (pm2c and pm2c[2] == "Moderate") else ""
+        row["pm2_basis"] = pm2c[3] if pm2c else ""
         pchoice = ps1_choice.get(g)
         row["ps1"] = pchoice[1] if pchoice else ""
         row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
@@ -962,7 +1234,12 @@ def _to_float(s: str) -> Optional[float]:
 _OVERRIDE_FIELDS = {
     "ba1": "ba1_threshold",
     "bs1": "bs1_threshold",
+    "bs1_strength": "bs1_strength",
     "af_basis": "af_basis",
+    "pm2_threshold": "pm2_threshold",
+    "pm2_strength": "pm2_strength",
+    "pm2_basis": "pm2_basis",
+    "pm4": "pm4",
     "pp2": "pp2",
     "pp2_requires": "pp2_requires",
     "pm5_grantham": "pm5_grantham",
@@ -970,6 +1247,7 @@ _OVERRIDE_FIELDS = {
     "pm5_max": "pm5_max",
     "pm5_lp": "pm5_lp",
     "bs2": "bs2",
+    "bs2_count": "bs2_count",
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
     "bp1": "bp1",

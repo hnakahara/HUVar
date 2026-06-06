@@ -44,6 +44,29 @@ class TestParseRegions:
         ranges, res = bp.parse_regions("Exons 1-3 and exons 1-4; critical Gly between Cys2-Cys3.")
         assert ranges == [] and res == []
 
+    def test_bracketed_aa_ranges_preserved(self):
+        # RASopathy-style "[AA 10-17]" notation: brackets carry the real
+        # hotspot ranges and must NOT be stripped as citation noise.
+        ranges, _ = bp.parse_regions(
+            "Applicable only to domains in the supplementary table "
+            "(P-loop \\[AA 10-17\\], SW1 \\[AA 25-40\\], SW2 \\[AA 57-64\\], "
+            "SAK \\[AA 145-156\\]). Not applicable to specific amino acid residues (see PM5)."
+        )
+        assert (10, 17) in ranges and (25, 40) in ranges
+        assert (57, 64) in ranges and (145, 156) in ranges
+
+    def test_aa_prefixed_single_residues(self):
+        # PTPN11-style isolated "AA 247" residues alongside bracketed ranges.
+        _, res = bp.parse_regions(
+            "Interacting residues \\[AA 7-9, AA 247, AA 251, AA 256\\]."
+        )
+        assert {247, 251, 256} <= set(res)
+
+    def test_numeric_citation_brackets_still_stripped(self):
+        # Pure-number citation brackets ("[12, 13]", "[1-3]") remain noise.
+        ranges, res = bp.parse_regions("Critical domain per references \\[12, 13\\] \\[1-3\\].")
+        assert ranges == [] and res == []
+
 
 def _tsv(tmp_path):
     p = tmp_path / "pm1_hotspots.tsv"

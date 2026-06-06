@@ -37,6 +37,7 @@ class BS2Applicability:
     def __init__(self, tsv_path: Path) -> None:
         self._status: dict[str, str] = {}
         self._modes: dict[str, frozenset[str]] = {}
+        self._count: dict[str, int] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -57,6 +58,12 @@ class BS2Applicability:
                 )
                 if modes:
                     self._modes[gene] = modes
+                raw_count = (row.get("bs2_count") or "").strip()
+                if raw_count:
+                    try:
+                        self._count[gene] = int(raw_count)
+                    except ValueError:
+                        pass
 
     def status(self, gene: str | None) -> str:
         """VCEP BS2 status for *gene*: ``applicable`` / ``not_applicable`` / ""."""
@@ -69,3 +76,12 @@ class BS2Applicability:
         if not gene:
             return frozenset()
         return self._modes.get(gene, frozenset())
+
+    def count(self, gene: str | None) -> int | None:
+        """The VCEP's minimum BS2 observation count for *gene*, or None (use the
+        global default). When set it overrides the mode-specific count threshold
+        — important for cancer panels (CDH1 >=10, TP53 >=8) where the lower
+        global default would FALSELY fire BS2 on a pathogenic variant."""
+        if not gene:
+            return None
+        return self._count.get(gene)
