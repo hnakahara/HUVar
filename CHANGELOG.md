@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **Automated OpenSpliceAI setup.** `openspliceai` is now a core dependency
+  (installed with the package; it bundles the grch37/grch38 gene annotations the
+  `-A` flag resolves, so no annotation file download is needed), and
+  `scripts/setup_data.py` downloads the OSAI_MANE 5-model ensemble for **all four
+  flanking sizes** (80 / 400 / 2000 / 10000 nt) from the JHU CCB FTP into
+  `data/<asm>/openspliceai/<flank>nt/`. The model download runs by default
+  (OpenSpliceAI is the default splice tool); opt out with `--skip-openspliceai`.
+  Previously both the CLI install and model placement were manual steps.
 - **REVEL missense predictor** (Ioannidis et al. 2016) for PP3 / BP4 with
   Bergquist 2024 Table 2 strengths (PP3 `≥0.644 / 0.773 / 0.879 / 0.932`;
   BP4 `≤0.290 / 0.183 / 0.052 / 0.016`; no Very Strong tier). Select with

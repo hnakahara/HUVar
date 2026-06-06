@@ -621,6 +621,54 @@ def step_revel(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
     return True
 
 
+# OpenSpliceAI OSAI_MANE pretrained models. Each flanking size has a 5-model
+# ensemble (random seeds rs10–rs14), mirroring SpliceAI's 5-model averaging.
+# Hosted on the JHU CCB FTP; the openspliceai CLI takes the per-flank directory
+# via -m and averages every .pt it finds.
+_OSAI_FLANKS = (80, 400, 2000, 10000)
+_OSAI_SEEDS = (10, 11, 12, 13, 14)
+_OSAI_FTP = (
+    "ftp://ftp.ccb.jhu.edu/pub/data/OpenSpliceAI/OSAI-MANE/"
+    "{flank}nt/model_{flank}nt_rs{seed}.pt"
+)
+
+
+def step_openspliceai(asm_dir: Path, assembly: str, skip: bool) -> bool:
+    """Download the OSAI_MANE model ensembles for OpenSpliceAI.
+
+    The default --splice-tool is openspliceai, so this runs by default (opt out
+    with --skip-openspliceai). It downloads the 5-model ensemble for ALL four
+    flanking sizes (80/400/2000/10000 nt) into data/<asm>/openspliceai/<flank>nt/,
+    exactly the layout OpenSpliceAIPredictor / Config.openspliceai_model_path
+    expect. The model weights are sequence-based (assembly-independent); the
+    GRCh37/GRCh38 distinction is handled by the CLI's -A annotation at runtime,
+    which resolves to a gene table bundled in the `openspliceai` pip package
+    (a project dependency) — so no annotation file is downloaded here.
+
+    The `openspliceai` CLI itself is a regular project dependency (pyproject),
+    installed with the package; this step only stages the model weights."""
+    if skip:
+        print("  [SKIP] --skip-openspliceai specified")
+        return True
+
+    base = asm_dir / "openspliceai"
+    n_have = 0
+    for flank in _OSAI_FLANKS:
+        d = base / f"{flank}nt"
+        d.mkdir(parents=True, exist_ok=True)
+        for seed in _OSAI_SEEDS:
+            dest = d / f"model_{flank}nt_rs{seed}.pt"
+            if dest.exists():
+                n_have += 1
+                continue
+            _download(_OSAI_FTP.format(flank=flank, seed=seed), dest,
+                      f"OSAI_MANE {flank}nt rs{seed}")
+            n_have += 1
+    print(f"  OSAI_MANE models ready: {n_have}/{len(_OSAI_FLANKS) * len(_OSAI_SEEDS)} "
+          f"across {len(_OSAI_FLANKS)} flanking sizes")
+    return True
+
+
 def step_esm1b(data_dir: Path, urls: dict, skip: bool) -> bool:
     """Build ESM1b LLR SQLite from Brandes 2023 archive.
 
@@ -865,6 +913,12 @@ def main() -> None:
                              "the default in-silico tool).")
     parser.add_argument("--skip-esm1b", action="store_true",
                         help="Skip ESM1b download/build (~1.34 GB)")
+    parser.add_argument("--skip-openspliceai", action="store_true",
+                        help="Skip the OSAI_MANE model download (all 4 flanking sizes). "
+                             "The default --splice-tool is openspliceai, so skip only if "
+                             "supplying models another way (e.g. --openspliceai-model-dir). "
+                             "The openspliceai CLI is a package dependency, installed with "
+                             "the tool regardless of this flag.")
     # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
     # parser.add_argument("--skip-mmsplice-gtf", action="store_true",
     #                     help="Skip MMSplice GTF download/filter (~50 MB)")
@@ -891,6 +945,7 @@ def main() -> None:
         ("AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
         ("ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
         ("REVEL",             lambda: step_revel(asm_dir, assembly, urls, args.with_revel)),
+        ("OpenSpliceAI",      lambda: step_openspliceai(asm_dir, assembly, args.skip_openspliceai)),
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
         # ("MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
         ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),

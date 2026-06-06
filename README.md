@@ -220,13 +220,10 @@ conda create -n acmg -c bioconda -c conda-forge \
     python=3.12 samtools tabix bcftools htslib ensembl-vep=111
 conda activate acmg
 
-# 3. Install the package (editable install for development)
+# 3. Install the package (editable install for development).
+# This pulls in OpenSpliceAI (the default splice predictor, GPL-3.0) and its
+# bundled grch37/grch38 gene annotations as a regular dependency.
 pip install -e .
-
-# Optional: install the default splice predictor (OpenSpliceAI, GPL-3.0).
-# Required for --splice-tool openspliceai (the default); skip to run without
-# splice scoring or to use --splice-tool spliceai instead.
-pip install -e ".[openspliceai]"
 ```
 
 ---
@@ -275,6 +272,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
 | `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
+| `--skip-openspliceai` | Skip the OSAI_MANE model download (all 4 flanking sizes). Default tool, so skip only when supplying models another way. The `openspliceai` CLI itself ships as a package dependency. |
 | `--with-revel` | Download REVEL (~ 600 MB zip) and build the per-assembly TSV for `--insilico-tool revel` (opt-in; ESM1b is the default tool) |
 
 After setup, the expected layout is:
@@ -297,16 +295,20 @@ data/
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
     ├── (optional) revel/revel_grch38.tsv.gz(+.tbi)   # built with --with-revel
     ├── repeats/repeatmasker_dfam_hg38.bed.gz
-    ├── (default splice) openspliceai/2000nt/   # OSAI_MANE model dir (see note below)
+    ├── (default splice) openspliceai/{80,400,2000,10000}nt/   # OSAI_MANE 5-model ensembles
     └── (optional)        spliceai/spliceai_scores.raw.{snv,indel}.hg38.vcf.gz
 ```
 
-> **OpenSpliceAI models are not downloaded by `setup_data.py`.** Install the
-> CLI (`pip install openspliceai`) and place the OSAI_MANE model files under
-> `data/<asm>/openspliceai/<flanking-size>nt/` (default `2000nt/`), or point
-> `--openspliceai-model-dir` at them. Download models from
-> <https://github.com/Kuanhao-Chao/openspliceai>. If neither the CLI nor a
-> model directory is present, splice scoring is skipped (no splice evidence).
+> **OpenSpliceAI is set up automatically.** The `openspliceai` CLI is a package
+> dependency (installed by `pip install -e .`), and it bundles the grch37/grch38
+> gene annotations the `-A` flag resolves — so no annotation file is downloaded.
+> `setup_data.py` then downloads the OSAI_MANE 5-model ensemble for **all four
+> flanking sizes** (80 / 400 / 2000 / 10000 nt) from the JHU CCB FTP into
+> `data/<asm>/openspliceai/<flanking-size>nt/`. The classifier uses the
+> `--openspliceai-flanking-size` model (default `2000`); the OpenSpliceAI authors
+> recommend `10000` for best accuracy. Opt out of the model download with
+> `--skip-openspliceai` (e.g. when supplying models via `--openspliceai-model-dir`).
+> If the model directory is absent, splice scoring is skipped.
 
 Validate the install at any time:
 
@@ -686,11 +688,13 @@ CLI flags take precedence over environment variables.
   **separate licence** from the REVEL authors (Weiva Sieh —
   <https://sites.google.com/site/revelgenomics/>). The default `esm1b` is
   MIT-licensed and commercial-use ready.
-- **OpenSpliceAI models are a separate install.** The default `--splice-tool
-  openspliceai` needs the `openspliceai` CLI (`pip install openspliceai`) and
-  OSAI_MANE model files placed under `data/<asm>/openspliceai/<flank>nt/` (not
-  fetched by `setup_data.py`). If absent, splice scoring is silently skipped
-  (no splice evidence) and a warning is logged.
+- **OpenSpliceAI is provisioned automatically.** The default `--splice-tool
+  openspliceai` needs the `openspliceai` CLI (a package dependency, installed
+  with `pip install -e .`, bundling the grch37/grch38 annotations) and OSAI_MANE
+  model files (downloaded by `setup_data.py` for all four flanking sizes into
+  `data/<asm>/openspliceai/<flank>nt/`; opt out with `--skip-openspliceai`). If
+  the model dir is nonetheless absent at classification time, splice scoring is
+  silently skipped and a warning logged.
 - **SpliceAI.** The non-default `--splice-tool spliceai` uses pre-computed
   score VCFs that are not redistributed. Users with an Illumina license can
   place them under `data/<asm>/spliceai/`.

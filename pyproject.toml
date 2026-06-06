@@ -42,6 +42,10 @@ dependencies = [
     "structlog>=24.1",
     "rich>=13.7",
     "tenacity>=8.2",
+    # Default splice predictor; the package bundles the grch37/grch38 gene
+    # annotations the `variant -A` flag resolves, so no separate annotation
+    # download is needed. setup_data.py only fetches the OSAI_MANE model weights.
+    "openspliceai",
 ]
 
 [project.urls]
@@ -58,9 +62,6 @@ dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
     "pytest-cov>=5.0",
-]
-openspliceai = [
-    "openspliceai",
 ]
 # BP7 conservation gate: per-base phyloP100way lookup from a UCSC bigWig.
 conservation = [
