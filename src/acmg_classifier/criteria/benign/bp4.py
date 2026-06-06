@@ -26,6 +26,32 @@ def _alphamissense_bp4(score: float) -> CriterionStrength | None:
     return None
 
 
+# REVEL genome-wide BP4 thresholds — Bergquist et al. 2024 Table 2 (same source
+# and tier scheme as AlphaMissense/ESM1b above, including the ThreePoint (−3)
+# tier). Lower REVEL ⇒ more benign; REVEL reaches Strong but has no Very Strong
+# tier. Overridden per-gene when a VCEP states its own cutoff (revel_genes.py).
+_REVEL_BP4_DEFAULT: dict[CriterionStrength, float] = {
+    CriterionStrength.STRONG: 0.016,
+    CriterionStrength.THREE_POINT: 0.052,
+    CriterionStrength.MODERATE: 0.183,
+    CriterionStrength.SUPPORTING: 0.290,
+}
+
+
+def _revel_bp4(score: float, tiers: dict[CriterionStrength, float] | None) -> CriterionStrength | None:
+    """Strongest BP4 strength whose ``REVEL <= cutoff`` holds.
+
+    Iterates tiers by ascending cutoff (the smallest cutoff is the strongest
+    benign tier), so the first satisfied tier is the strongest one met.
+    ``tiers`` is the gene's VCEP cutoff map when one exists, else None → the
+    Pejaver defaults; a VCEP that only grants Supporting caps the gene there."""
+    table = tiers if tiers else _REVEL_BP4_DEFAULT
+    for strength, cutoff in sorted(table.items(), key=lambda kv: kv[1]):
+        if score <= cutoff:
+            return strength
+    return None
+
+
 def _esm1b_bp4(llr: float) -> CriterionStrength | None:
     """Bergquist 2024 Table 2 ESM1b BP4 thresholds (higher LLR ⇒ more benign).
 
@@ -76,6 +102,9 @@ def _squirls_bp4(score: float) -> CriterionStrength | None:
 class BP4Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        # Gene-specific REVEL cutoffs (only consulted when insilico_tool=revel).
+        from acmg_classifier.criteria.revel_genes import RevelSpec
+        self._revel_spec = RevelSpec(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -103,6 +132,24 @@ class BP4Evaluator(CriterionEvaluator):
                         ACMGCriterion.BP4,
                         f"{tool_label} max_delta={sp.max_delta:.3f} — predicted splice impact, BP4 not applicable",
                     )
+            if self._cfg.insilico_tool == InSilicoTool.REVEL:
+                rv = annotation.revel
+                if rv and rv.score is not None:
+                    rule = self._revel_spec.get(pc.gene_symbol)
+                    tiers = rule.bp4 if (rule and rule.bp4) else None
+                    strength = _revel_bp4(rv.score, tiers)
+                    if strength:
+                        src = f" [{pc.gene_symbol} VCEP cutoff]" if tiers else ""
+                        return CriteriaResult.met(
+                            ACMGCriterion.BP4, strength,
+                            f"REVEL={rv.score:.3f} ({strength.value}){src}",
+                        )
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.BP4,
+                        f"REVEL={rv.score:.3f} (not in benign range)",
+                    )
+                return CriteriaResult.not_met(ACMGCriterion.BP4, "No in-silico score available")
+
             if self._cfg.insilico_tool == InSilicoTool.ESM1B:
                 es = annotation.esm1b
                 if es and es.llr is not None:

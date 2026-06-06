@@ -118,6 +118,21 @@ class Config(BaseSettings):
         return self.assembly_dir / "alphamissense" / names[self.assembly]
 
     @property
+    def revel_tsv(self) -> Path:
+        """REVEL scores, converted to a 5-column tabix-indexed TSV
+        (chrom, pos, ref, alt, REVEL) by scripts/setup_data.py.
+
+        REVEL is distributed as a single file carrying both hg19 and GRCh38
+        coordinates; setup_data builds one per-assembly TSV indexed on the
+        matching position column, so the query side stays assembly-agnostic.
+        """
+        names = {
+            Assembly.GRCH38: "revel_grch38.tsv.gz",
+            Assembly.GRCH37: "revel_grch37.tsv.gz",
+        }
+        return self.assembly_dir / "revel" / names[self.assembly]
+
+    @property
     def esm1b_sqlite(self) -> Path:
         """Brandes 2023 ESM1b LLR scores indexed by UniProt accession.
 

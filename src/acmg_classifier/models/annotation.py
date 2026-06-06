@@ -70,6 +70,13 @@ class AlphaMissenseData(BaseModel):
     classification: Optional[str] = None  # "likely_pathogenic" / "ambiguous" / "likely_benign"
 
 
+class RevelData(BaseModel):
+    """REVEL ensemble pathogenicity score (Ioannidis et al. 2016) for a
+    missense variant. Higher score ⇒ more pathogenic (0–1 scale)."""
+
+    score: Optional[float] = None
+
+
 class ESM1bData(BaseModel):
     """ESM1b log-likelihood ratio (LLR) score for a missense variant.
 
@@ -120,6 +127,7 @@ class AnnotationData(BaseModel):
     gnomad: Optional[GnomADData] = None
     alphamissense: Optional[AlphaMissenseData] = None
     esm1b: Optional[ESM1bData] = None
+    revel: Optional[RevelData] = None
     # Primary splice predictor used for ACMG criteria (SpliceAI or SQUIRLS per config).
     splice: Optional[SpliceScore] = None
     # SQUIRLS score always stored separately for TSV reporting regardless of which

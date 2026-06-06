@@ -80,6 +80,8 @@ URLS: dict[str, dict[str, str]] = {
         ),
         "repeatmasker": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/rmsk.txt.gz",
         "phylop": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
+        # REVEL ships a single zip carrying BOTH hg19 and GRCh38 coordinates.
+        "revel": "https://rothsj06.dmz.hpc.mssm.edu/revel-v1.3_all_chromosomes.zip",
     },
     "GRCh37": {
         "genome": (
@@ -125,6 +127,9 @@ URLS: dict[str, dict[str, str]] = {
         ),
         "repeatmasker": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/rmsk.txt.gz",
         "phylop": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/phyloP100way/hg19.phyloP100way.bw",
+        # Same single REVEL zip as GRCh38; the hg19 position column is selected
+        # when building the per-assembly TSV.
+        "revel": "https://rothsj06.dmz.hpc.mssm.edu/revel-v1.3_all_chromosomes.zip",
     },
 }
 
@@ -565,6 +570,57 @@ def step_alphamissense(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
+def step_revel(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
+    """Build the per-assembly REVEL TSV for PP3/BP4 (--insilico-tool revel).
+
+    REVEL distributes one zip (`revel_with_transcript_ids`, a CSV carrying both
+    hg19 and GRCh38 coordinates). We extract a clean, tab-separated, position-
+    sorted, bgzipped 5-column file (chrom, pos, ref, alt, REVEL) indexed on the
+    assembly's coordinate column, so the query side stays assembly-agnostic.
+
+    OPT-IN (--with-revel): the source zip is ~600 MB and ESM1b is the default
+    in-silico tool, so REVEL is only fetched when explicitly requested."""
+    suffix = "grch38" if assembly == "GRCh38" else "grch37"
+    dest = asm_dir / "revel" / f"revel_{suffix}.tsv.gz"
+    tbi = Path(str(dest) + ".tbi")
+    if dest.exists() and tbi.exists():
+        print(f"  [SKIP] {dest.name}")
+        return True
+    if not enabled:
+        print("  [SKIP] REVEL not requested (pass --with-revel to enable "
+              "--insilico-tool revel; ~600 MB zip)")
+        return True
+
+    _require("unzip", "awk", "sort", "bgzip", "tabix")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    zip_path = dest.parent / "revel-v1.3_all_chromosomes.zip"
+    if not zip_path.exists():
+        _download(urls["revel"], zip_path, "REVEL v1.3 (~600 MB)")
+
+    if not dest.exists():
+        # CSV columns: chr,hg19_pos,grch38_pos,ref,alt,aaref,aaalt,REVEL,txids.
+        # GRCh38 reads the grch38_pos column (3) and drops un-lifted rows ('.');
+        # GRCh37 reads hg19_pos (2). REVEL is column 8.
+        pos_col = "$3" if assembly == "GRCh38" else "$2"
+        guard = '$3!="" && $3!="."' if assembly == "GRCh38" else '$2!="" && $2!="."'
+        print("  Converting REVEL CSV to sorted TSV + bgzip...")
+        awk = (
+            f"BEGIN{{OFS=\"\\t\"}} NR>1 && {guard} "
+            f"{{print $1, {pos_col}, $4, $5, $8}}"
+        )
+        cmd = (
+            f"unzip -p {shlex.quote(str(zip_path))} | "
+            f"awk -F, {shlex.quote(awk)} | "
+            f"sort -k1,1 -k2,2n | bgzip > {shlex.quote(str(dest))}"
+        )
+        subprocess.run(["bash", "-c", cmd], check=True)
+
+    if not tbi.exists():
+        _run(["tabix", "-s", "1", "-b", "2", "-e", "2", "-f", str(dest)])
+    return True
+
+
 def step_esm1b(data_dir: Path, urls: dict, skip: bool) -> bool:
     """Build ESM1b LLR SQLite from Brandes 2023 archive.
 
@@ -803,6 +859,10 @@ def main() -> None:
                         help="Download the phyloP100way bigWig (~9.2 GB) for the BP7 "
                              "conservation gate. Off by default; BP7 uses splice-only "
                              "logic without it. Also: pip install -e '.[conservation]'.")
+    parser.add_argument("--with-revel", action="store_true",
+                        help="Download REVEL (~600 MB zip) and build the per-assembly "
+                             "TSV for --insilico-tool revel. Off by default (ESM1b is "
+                             "the default in-silico tool).")
     parser.add_argument("--skip-esm1b", action="store_true",
                         help="Skip ESM1b download/build (~1.34 GB)")
     # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
@@ -830,6 +890,7 @@ def main() -> None:
         ("ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls, args.workers)),
         ("AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
         ("ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
+        ("REVEL",             lambda: step_revel(asm_dir, assembly, urls, args.with_revel)),
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
         # ("MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
         ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),

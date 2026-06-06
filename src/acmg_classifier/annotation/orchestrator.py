@@ -59,6 +59,7 @@ class AnnotationOrchestrator:
         self._clinvar_sqlite_path = cfg.clinvar_sqlite
         self._am_path = cfg.alphamissense_tsv
         self._esm1b_path = cfg.esm1b_sqlite
+        self._revel_path = cfg.revel_tsv
         self._repeat_path = cfg.repeatmasker_bed
         self._splice = self._init_splice()
         # SQUIRLS predictor for secondary reporting — always initialized so
@@ -167,6 +168,7 @@ class AnnotationOrchestrator:
         DB clients without throughput gain."""
         from acmg_classifier.local_db.clinvar_vcf import query_clinvar_vcf
         from acmg_classifier.local_db.alphamissense_db import query_alphamissense
+        from acmg_classifier.local_db.revel_db import query_revel
         from acmg_classifier.local_db.repeatmasker_db import query_repeat
 
         gnomad = self._gnomad.query(variant.chrom, variant.pos, variant.ref, variant.alt)
@@ -189,8 +191,8 @@ class AnnotationOrchestrator:
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
 
-        # Both missense predictors are always queried so the TSV always carries
-        # both scores for manual review. Only the tool selected by insilico_tool
+        # All missense predictors are always queried so the TSV always carries
+        # every score for manual review. Only the tool selected by insilico_tool
         # config is used inside the ACMG criteria (PP3/BP4) to avoid inflating
         # evidence by combining tools that share training data.
         alphamissense = query_alphamissense(
@@ -198,6 +200,10 @@ class AnnotationOrchestrator:
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
         esm1b = self._lookup_esm1b(primary, consequences)
+        revel = query_revel(
+            self._revel_path,
+            variant.chrom, variant.pos, variant.ref, variant.alt,
+        )
 
         splice = self._splice.predict(variant)
         # When SQUIRLS is the primary splice tool, reuse the same result.
@@ -211,6 +217,7 @@ class AnnotationOrchestrator:
             gnomad=gnomad,
             alphamissense=alphamissense,
             esm1b=esm1b,
+            revel=revel,
             # Dropping the splice record entirely when the predictor was
             # unavailable lets downstream criteria treat "no data" as
             # "splice unknown" rather than "splice = 0".

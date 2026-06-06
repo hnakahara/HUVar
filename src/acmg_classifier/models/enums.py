@@ -78,6 +78,10 @@ class Inheritance(str, Enum):
 class InSilicoTool(str, Enum):
     ALPHAMISSENSE = "alphamissense"
     ESM1B = "esm1b"
+    # REVEL meta-predictor (Ioannidis 2016). Thresholds default to the Bergquist
+    # 2024 Table 2 calibration (same source as AlphaMissense/ESM1b); VCEPs that
+    # state a gene-specific REVEL cutoff override it (revel_genes.py).
+    REVEL = "revel"
 
 
 class SpliceTool(str, Enum):

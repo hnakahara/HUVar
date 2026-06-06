@@ -29,6 +29,31 @@ def _alphamissense_pp3(score: float) -> CriterionStrength | None:
     return None
 
 
+# REVEL genome-wide PP3 thresholds — Bergquist et al. 2024 Table 2 (same source
+# and tier scheme as AlphaMissense/ESM1b above, including the ThreePoint (+3)
+# tier). REVEL reaches Strong for pathogenicity but has no Very Strong tier.
+# Overridden per-gene when a VCEP states its own cutoff (revel_genes.py).
+_REVEL_PP3_DEFAULT: dict[CriterionStrength, float] = {
+    CriterionStrength.STRONG: 0.932,
+    CriterionStrength.THREE_POINT: 0.879,
+    CriterionStrength.MODERATE: 0.773,
+    CriterionStrength.SUPPORTING: 0.644,
+}
+
+
+def _revel_pp3(score: float, tiers: dict[CriterionStrength, float] | None) -> CriterionStrength | None:
+    """Highest PP3 strength whose ``REVEL >= cutoff`` holds.
+
+    ``tiers`` is the gene's VCEP cutoff map when one exists, else None → the
+    Pejaver defaults. A VCEP that only grants Supporting carries just that tier,
+    so the gene is capped at Supporting (no promotion on a high score)."""
+    table = tiers if tiers else _REVEL_PP3_DEFAULT
+    for strength, cutoff in sorted(table.items(), key=lambda kv: kv[1], reverse=True):
+        if score >= cutoff:
+            return strength
+    return None
+
+
 def _esm1b_pp3(llr: float) -> CriterionStrength | None:
     """Bergquist 2024 Table 2 ESM1b PP3 thresholds.
 
@@ -97,6 +122,9 @@ def _openspliceai_pp3(max_delta: float) -> CriterionStrength | None:
 class PP3Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        # Gene-specific REVEL cutoffs (only consulted when insilico_tool=revel).
+        from acmg_classifier.criteria.revel_genes import RevelSpec
+        self._revel_spec = RevelSpec(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -134,6 +162,24 @@ class PP3Evaluator(CriterionEvaluator):
             # cfg.insilico_tool to avoid combining tools that share training
             # data (which would inflate evidence). ESM1b is preferred when
             # licence-compatible because it is fully open-source.
+            if self._cfg.insilico_tool == InSilicoTool.REVEL:
+                rv = annotation.revel
+                if rv and rv.score is not None:
+                    rule = self._revel_spec.get(pc.gene_symbol)
+                    tiers = rule.pp3 if (rule and rule.pp3) else None
+                    strength = _revel_pp3(rv.score, tiers)
+                    if strength:
+                        src = f" [{pc.gene_symbol} VCEP cutoff]" if tiers else ""
+                        return CriteriaResult.met(
+                            ACMGCriterion.PP3, strength,
+                            f"REVEL={rv.score:.3f} ({strength.value}){src}",
+                        )
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.PP3,
+                        f"REVEL={rv.score:.3f} (indeterminate or benign)",
+                    )
+                return CriteriaResult.not_met(ACMGCriterion.PP3, "No in-silico score available")
+
             if self._cfg.insilico_tool == InSilicoTool.ESM1B:
                 es = annotation.esm1b
                 if es and es.llr is not None:

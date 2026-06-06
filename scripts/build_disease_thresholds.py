@@ -38,6 +38,8 @@ COLUMNS = [
     "bs2_count",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions",
+    "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
+    "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
     "source_vcep", "cspec_url", "notes",
 ]
 
@@ -717,6 +719,134 @@ def _bp3_regions(rule_set: dict) -> str:
     return ""
 
 
+# --- REVEL per-gene PP3/BP4 thresholds (from the PP3 / BP4 criteria codes) ---
+# Many VCEPs state a gene-specific REVEL cutoff for PP3/BP4 in place of the
+# genome-wide Pejaver 2022 defaults. Each *applicable* evidence strength
+# (Supporting/Moderate/Strong/Very Strong) of the PP3 (pathogenic, REVEL>=X) or
+# BP4 (benign, REVEL<=X) code carries the cutoff for that tier. All numbers are
+# anchored on the word "REVEL" so co-mentioned SpliceAI/CADD/AlphaMissense
+# cutoffs in the same description are not mistaken for the REVEL value.
+_REVEL_STRENGTH_COL = {
+    "Supporting": "supporting", "Moderate": "moderate",
+    "Strong": "strong", "Very Strong": "strong",  # no separate PP3 VS tier
+}
+# A REVEL score is a decimal in (0,1) — the leading-dot form excludes citation
+# years ("2016"), superscript refs ("14"), and PMIDs, which are integers.
+_REVEL_NUM = r"([01]?\.[0-9]+)"
+# Other predictor names co-mentioned in the same PP3/BP4 description. The REVEL
+# window is truncated at the first of these so e.g. "SpliceAI ≥0.2" or "CADD
+# ≥20" is never mistaken for the REVEL cutoff.
+_OTHER_TOOLS = re.compile(
+    r"SpliceAI|CADD|AlphaMissense|BayesDel|phyloP|phastCons|GERP|MaxEntScan|"
+    r"PolyPhen|\bSIFT\b|MutPred|\bVEST|PrimateAI|MetaLR|MetaSVM|PROVEAN|"
+    r"MutationTaster|\bM-CAP\b",
+    re.IGNORECASE)
+_REVEL_TOKEN = re.compile(r"REVEL", re.IGNORECASE)
+_PP3_OP = re.compile(
+    r"(?:≥|≧|&ge;|&gt;=|\\?&gt;|>=|>|greater than or equal to|greater than|"
+    r"at or above|above)\s*" + _REVEL_NUM, re.IGNORECASE)
+_BP4_OP = re.compile(
+    r"(?:≤|≦|&le;|&lt;=|\\?&lt;|<=|<|less than or equal to|less than|"
+    r"at or below|below)\s*" + _REVEL_NUM, re.IGNORECASE)
+_REVEL_RANGE = re.compile(_REVEL_NUM + r"\s*[-–]\s*" + _REVEL_NUM)
+_REVEL_BETWEEN = re.compile(r"between\s+" + _REVEL_NUM + r"\s+and\s+" + _REVEL_NUM, re.IGNORECASE)
+# Operator-free cutoff phrasing ("Use 0.75 as a discriminatory cut-off value",
+# "a threshold of 0.7"). Used only as a fallback after operator/range parsing.
+_REVEL_CUTOFF = re.compile(
+    r"(?:cut[- ]?off|cutoff|threshold|discriminat\w*|\buse\b|\bat\b|score of)"
+    r"\D{0,25}?" + _REVEL_NUM, re.IGNORECASE)
+
+
+def _revel_windows(desc: str):
+    """Yield text windows that begin at each "REVEL" mention and stop at the
+    next other-tool name, so cutoff numbers stay attributed to REVEL alone."""
+    for m in _REVEL_TOKEN.finditer(desc):
+        w = desc[m.start(): m.start() + 200]
+        other = _OTHER_TOOLS.search(w, m.end() - m.start())
+        if other:
+            w = w[: other.start()]
+        yield w
+
+
+def _revel_value(desc: str, pathogenic: bool) -> Optional[float]:
+    """The REVEL firing cutoff in a description for the given direction.
+
+    For a tier stated as a range/band the *firing edge* is taken: the lower
+    bound for PP3 (REVEL >= edge) and the upper bound for BP4 (REVEL <= edge).
+    Otherwise the directional operator value (">=" for PP3, "<=" for BP4) is
+    used, and as a last resort an operator-free "cut-off" number. Numbers are
+    only read from REVEL-attributed windows. Returns None when no REVEL value
+    in (0, 1) is present."""
+    op_re = _PP3_OP if pathogenic else _BP4_OP
+    windows = list(_revel_windows(desc))
+    for w in windows:
+        for rng in (_REVEL_BETWEEN.search(w), _REVEL_RANGE.search(w)):
+            if rng:
+                vals = [v for v in (float(rng.group(1)), float(rng.group(2))) if 0.0 < v < 1.0]
+                if vals:
+                    return min(vals) if pathogenic else max(vals)
+        op = op_re.search(w)
+        if op:
+            v = float(op.group(1))
+            if 0.0 < v < 1.0:
+                return v
+    # Fallback: operator-free cutoff phrasing (e.g. FBN1 "Use 0.75 as a cut-off").
+    for w in windows:
+        cut = _REVEL_CUTOFF.search(w)
+        if cut:
+            v = float(cut.group(1))
+            if 0.0 < v < 1.0:
+                return v
+    return None
+
+
+def _revel_tiers(rule_set: dict, label: str) -> dict[str, float]:
+    """{"supporting"/"moderate"/"strong": cutoff} parsed from the gene's PP3 or
+    BP4 code, per applicable strength tier. Empty when the code is absent, not
+    applicable, or carries no numeric REVEL cutoff (e.g. SCN1A's "follow ClinGen
+    recommendations" prose → the evaluator then keeps the Pejaver defaults).
+
+    A monotonicity guard drops any tier that contradicts its neighbours
+    (PP3 cutoffs must rise Supporting<=Moderate<=Strong; BP4 cutoffs must fall),
+    which rejects data-entry errors such as GN208's "0.774 - 0.092" Moderate."""
+    pathogenic = label == "PP3"
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != label:
+            continue
+        out: dict[str, float] = {}
+        for es in _applicable_strengths(code):
+            col = _REVEL_STRENGTH_COL.get(es.get("label", ""))
+            desc = es.get("description", "") or ""
+            if not col or "REVEL" not in desc.upper():
+                continue
+            v = _revel_value(desc, pathogenic)
+            if v is not None:
+                # A stronger tier overrides a weaker one if both map to "strong"
+                # (Strong + Very Strong); keep the more extreme firing edge.
+                if col in out:
+                    out[col] = min(out[col], v) if pathogenic else max(out[col], v)
+                else:
+                    out[col] = v
+        return _revel_monotonic(out, pathogenic)
+    return {}
+
+
+def _revel_monotonic(tiers: dict[str, float], pathogenic: bool) -> dict[str, float]:
+    """Drop tiers that break the expected ordering (guards parse/typo errors)."""
+    order = ["supporting", "moderate", "strong"]
+    present = [(t, tiers[t]) for t in order if t in tiers]
+    kept: dict[str, float] = {}
+    prev: Optional[float] = None
+    for name, val in present:
+        if prev is not None:
+            # PP3: each stronger tier's cutoff must be >= the previous; BP4: <=.
+            if (pathogenic and val < prev) or (not pathogenic and val > prev):
+                continue  # contradictory tier — skip it
+        kept[name] = val
+        prev = val
+    return kept
+
+
 def _af_basis(rule_set: dict) -> str:
     """"males" if the applicable BA1/BS1 descriptions define the cutoff on the
     male (XY/hemizygous) allele frequency; otherwise "" (overall population)."""
@@ -905,6 +1035,8 @@ def parse_spec(path: str) -> list[dict]:
         bp1_no_splice = _bp1_no_splice(rs)
         bp3 = _bp3_applicability(rs)
         bp3_regions = _bp3_regions(rs)
+        revel_pp3 = _revel_tiers(rs, "PP3")
+        revel_bp4 = _revel_tiers(rs, "BP4")
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
         for gene in rs.get("genes", []):
             sym = gene.get("label")
@@ -941,6 +1073,12 @@ def parse_spec(path: str) -> list[dict]:
                 "bp1_no_splice": "",
                 "bp3": "",
                 "bp3_regions": "",
+                "revel_pp3_supporting": "",
+                "revel_pp3_moderate": "",
+                "revel_pp3_strong": "",
+                "revel_bp4_supporting": "",
+                "revel_bp4_moderate": "",
+                "revel_bp4_strong": "",
                 "source_vcep": vcep,
                 "cspec_url": url,
                 "notes": "; ".join(x for x in (f"{gn} {status}", notes) if x),
@@ -969,6 +1107,8 @@ def parse_spec(path: str) -> list[dict]:
                 "_bp1_no_splice": bp1_no_splice,
                 "_bp3": bp3,
                 "_bp3_regions": bp3_regions,
+                "_revel_pp3": revel_pp3,
+                "_revel_bp4": revel_bp4,
             })
     return rows
 
@@ -1045,6 +1185,12 @@ def main() -> None:
     # PM4 applicability, most-specific spec (like PP2/BS2); on a tie the
     # conservative not_applicable wins.
     pm4_choice: dict[str, tuple[int, str, str]] = {}
+    # REVEL PP3/BP4 per-gene cutoffs, resolved to the most gene-specific spec
+    # that states a numeric REVEL threshold (like PM2). revel_choice[g] =
+    # (specificity, pp3_tiers, bp4_tiers). On a specificity tie the first spec
+    # (file order) is kept; genuinely conflicting same-specificity specs (e.g.
+    # RYR1 across GN012/GN150) need a manual --override.
+    revel_choice: dict[str, tuple[int, dict, dict]] = {}
     n_specs = 0
     for path in files:
         try:
@@ -1098,6 +1244,13 @@ def main() -> None:
                     pm2_choice[g] = (
                         spec, row["_pm2_threshold"], row["_pm2_strength"], row["_pm2_basis"],
                     )
+            # REVEL: only specs that state a numeric REVEL cutoff contribute.
+            # Most gene-specific spec wins; on a tie keep the first (file order).
+            if row["_revel_pp3"] or row["_revel_bp4"]:
+                spec = row["_specificity"]
+                cur = revel_choice.get(g)
+                if cur is None or spec < cur[0]:
+                    revel_choice[g] = (spec, row["_revel_pp3"], row["_revel_bp4"])
             if row["_bp1"] in ("applicable", "not_applicable"):
                 cand = (row["_specificity"], row["_bp1"], "")
                 if g not in bp1_choice or _pp2_more_specific(cand, bp1_choice[g]):
@@ -1208,6 +1361,12 @@ def main() -> None:
         bp3c = bp3_choice.get(g)
         row["bp3"] = bp3c[1] if bp3c else ""
         row["bp3_regions"] = bp3_regions_by_gene.get(g, "") if bp3c and bp3c[1] == "applicable" else ""
+        rvc = revel_choice.get(g)
+        rv_pp3 = rvc[1] if rvc else {}
+        rv_bp4 = rvc[2] if rvc else {}
+        for tier in ("supporting", "moderate", "strong"):
+            row[f"revel_pp3_{tier}"] = _fmt(rv_pp3[tier]) if tier in rv_pp3 else ""
+            row[f"revel_bp4_{tier}"] = _fmt(rv_bp4[tier]) if tier in rv_bp4 else ""
 
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
@@ -1257,6 +1416,12 @@ _OVERRIDE_FIELDS = {
     "bp1_no_splice": "bp1_no_splice",
     "bp3": "bp3",
     "bp3_regions": "bp3_regions",
+    "revel_pp3_supporting": "revel_pp3_supporting",
+    "revel_pp3_moderate": "revel_pp3_moderate",
+    "revel_pp3_strong": "revel_pp3_strong",
+    "revel_bp4_supporting": "revel_bp4_supporting",
+    "revel_bp4_moderate": "revel_bp4_moderate",
+    "revel_bp4_strong": "revel_bp4_strong",
     "inheritance": "inheritance",
 }
 
