@@ -20,6 +20,8 @@ the flat defaults (BA1 = 0.05, BS1 = 0.005).
 | `af_basis`      | optional | `males` → BA1/BS1 compare against the **male (XY) allele frequency** (gnomAD `AF_XY`) instead of the overall population FAF. For X-linked genes whose VCEP states the cutoff "in males" (RPGR, RS1, ABCD1, SLC6A8, OTC). Blank → overall FAF95. Falls back to overall FAF when the gnomAD DB predates the `af_xy` column. |
 | `pp2`           | optional | VCEP PP2 decision: `applicable` → PP2 fires for missense in this gene; `not_applicable` → PP2 suppressed (VCEP declined it). Blank → no VCEP covers the gene; PP2 uses its statistical heuristic. |
 | `pp2_requires`  | optional | Co-criteria PP2 is conditional on, comma-separated (e.g. `PM2,PP3` for BMPR2). PP2 is suppressed post-hoc unless all listed criteria are also triggered for the variant. Blank → unconditional. |
+| `revel_pp3_supporting` / `revel_pp3_moderate` / `revel_pp3_strong` | optional | VCEP gene-specific REVEL **PP3** cutoffs (`REVEL ≥ value` fires at that strength). Only consulted when `--insilico-tool revel`. A spec that grants PP3 only at Supporting fills just `*_supporting`, capping the gene at Supporting. All blank → the genome-wide Bergquist 2024 default tiers apply. |
+| `revel_bp4_supporting` / `revel_bp4_moderate` / `revel_bp4_strong` | optional | VCEP gene-specific REVEL **BP4** cutoffs (`REVEL ≤ value` fires at that strength). Same single-tier capping and default-fallback rules as the PP3 columns. |
 | `source_vcep`   | optional | Provenance (e.g. `RASopathy VCEP v2.1`). Not read by the tool. |
 | `cspec_url`     | optional | Link to the criteria specification. Not read by the tool. |
 | `notes`         | optional | Free text. Not read by the tool. |
@@ -88,6 +90,16 @@ few precedence rules (all verified against the released specs):
 - **`pp2_requires`** captures co-criteria a VCEP makes PP2 conditional on
   ("PM2_supporting and PP3 must be met" → `PM2,PP3` for BMPR2). The registry
   suppresses PP2 post-hoc unless every listed criterion is also triggered.
+- **`revel_pp3_*` / `revel_bp4_*`** are mined from the PP3 / BP4 criteria-code
+  descriptions: each *Applicable* strength tier (Supporting / Moderate / Strong;
+  Very Strong folds into Strong) contributes its REVEL cutoff. Numbers are read
+  only from REVEL-anchored text (other tools' cutoffs — SpliceAI, CADD,
+  AlphaMissense — are skipped), a range/band yields the **firing edge** (lower
+  bound for PP3, upper for BP4), and a monotonicity guard drops contradictory
+  tiers (e.g. a Moderate cutoff below Supporting from a data-entry typo).
+  Resolved to the **most gene-specific** spec, like PM2. Specs that cite REVEL
+  without a number (e.g. SCN1A "follow ClinGen recommendations") leave the
+  columns blank → the genome-wide Bergquist 2024 default applies.
 
 ### Multi-spec genes and `--override`
 

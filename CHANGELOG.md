@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **REVEL missense predictor** (Ioannidis et al. 2016) for PP3 / BP4 with
+  Bergquist 2024 Table 2 strengths (PP3 `≥0.644 / 0.773 / 0.879 / 0.932`;
+  BP4 `≤0.290 / 0.183 / 0.052 / 0.016`; no Very Strong tier). Select with
+  `--insilico-tool revel`. When a ClinGen VCEP states a gene-specific REVEL
+  cutoff, it overrides the genome-wide default — these are mined from cspec into
+  new `revel_pp3_*` / `revel_bp4_*` columns of `disease_prevalence.tsv` (104 of
+  131 released genes), and a VCEP granting only one strength caps the gene
+  there. New `revel_score` column in the output TSV. `--with-revel` flag in
+  `scripts/setup_data.py` downloads REVEL (~600 MB) and builds the per-assembly
+  TSV (opt-in; ESM1b remains the default tool).
+  **REVEL scores are free for non-commercial use only — commercial use requires
+  a separate licence from the REVEL authors.**
 - BS2 inheritance-aware homozygote thresholds.
 - `--clinvar-workers N` flag in `scripts/setup_data.py` (default 4, max 24) to
   control ClinVar XML parse parallelism.

@@ -130,13 +130,15 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   loaded and merged per-field, and BA1/BS1/PM2 compare against the GrpMax
   filtering allele frequency (FAF95).
 - **In silico prediction**: **ESM1b** (default; Brandes 2023, MIT-licensed,
-  commercial-use ready) or **AlphaMissense** (non-commercial) for missense.
-  Splice prediction defaults to **OpenSpliceAI** (Chao 2025, GPL-3.0; runtime
-  inference via the `openspliceai` CLI); **SpliceAI** (Illumina-licensed) is an
-  opt-in alternative. The splice predictor overrides the missense call —
-  including on missense variants — when its score crosses the high-impact
-  threshold (≥ 0.20). The missense predictors use Bergquist 2024 Table 2
-  strengths.
+  commercial-use ready), **AlphaMissense** (non-commercial), or **REVEL**
+  (Ioannidis 2016; free for non-commercial use, commercial use needs a separate
+  licence) for missense. Splice prediction defaults to **OpenSpliceAI** (Chao
+  2025, GPL-3.0; runtime inference via the `openspliceai` CLI); **SpliceAI**
+  (Illumina-licensed) is an opt-in alternative. The splice predictor overrides
+  the missense call — including on missense variants — when its score crosses
+  the high-impact threshold (≥ 0.20). The missense predictors use Bergquist 2024
+  Table 2 strengths; for REVEL a VCEP-specified gene cutoff (mined from cspec
+  into `disease_prevalence.tsv`) overrides the genome-wide default when present.
   > _OpenSpliceAI reuses SpliceAI's 0–1 delta scale; lacking an OddsPath
   > calibration of its own, its PP3 is awarded at the conservative Supporting
   > tier (vs SpliceAI's Moderate). SQUIRLS and MMSplice are retained in the
@@ -273,6 +275,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
 | `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
+| `--with-revel` | Download REVEL (~ 600 MB zip) and build the per-assembly TSV for `--insilico-tool revel` (opt-in; ESM1b is the default tool) |
 
 After setup, the expected layout is:
 
@@ -292,6 +295,7 @@ data/
     ├── gnomad/gnomad_v4.1_joint.duckdb   # GRCh37: gnomad_v2.1.1_exome_genome.duckdb
     ├── gnomad/gnomad_v4.1_constraint.tsv
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
+    ├── (optional) revel/revel_grch38.tsv.gz(+.tbi)   # built with --with-revel
     ├── repeats/repeatmasker_dfam_hg38.bed.gz
     ├── (default splice) openspliceai/2000nt/   # OSAI_MANE model dir (see note below)
     └── (optional)        spliceai/spliceai_scores.raw.{snv,indel}.hg38.vcf.gz
@@ -329,7 +333,7 @@ Full option list:
 | `-o, --output PATH` | path | stdout | Output TSV path |
 | `--data-dir PATH` | path | `./data` | Data root |
 | `--assembly {GRCh37,GRCh38}` | str | auto-detect from VCF header → fallback `GRCh38` | Force a specific assembly |
-| `--insilico-tool {esm1b,alphamissense}` | str | `esm1b` | Missense predictor used for PP3/BP4 |
+| `--insilico-tool {esm1b,alphamissense,revel}` | str | `esm1b` | Missense predictor used for PP3/BP4 (`revel` needs `setup_data.py --with-revel`) |
 | `--splice-tool {openspliceai,spliceai}` | str | `openspliceai` | Splice predictor used for PP3/BP4/PVS1. `openspliceai` (default, GPL-3.0) runs OSAI_MANE at inference time; `spliceai` (Illumina-licensed) uses precomputed VCFs. The splice call takes precedence over the missense call — including on missense variants — when its score ≥ 0.20. |
 | `--openspliceai-model-dir PATH` | path | `<data-dir>/<asm>/openspliceai/<flank>nt/` | OSAI_MANE model directory |
 | `--openspliceai-flanking-size N` | int | `2000` | Model context length (must match the downloaded model: 80/400/2000/10000) |
@@ -454,13 +458,16 @@ sum.
 `clinvar_variation_id`, `clinvar_significance`, `clinvar_stars`,
 `alphamissense_score`, `alphamissense_classification`,
 `esm1b_llr`,
+`revel_score`,
 `splice_tool`, `splice_score`,
 `in_repeat`, `repeat_class`
 
 `esm1b_llr` is populated when `--insilico-tool esm1b` (default);
-`alphamissense_*` is populated when `--insilico-tool alphamissense`. The other
-column is left empty for the non-active tool. `splice_tool` / `splice_score`
-reflect the active `--splice-tool` (`openspliceai` by default).
+`alphamissense_*` when `--insilico-tool alphamissense`; `revel_score` when REVEL
+data is present. All three score columns are emitted for review whenever the
+corresponding data file is available, but only the tool selected by
+`--insilico-tool` feeds PP3/BP4. `splice_tool` / `splice_score` reflect the
+active `--splice-tool` (`openspliceai` by default).
 
 ### Per-criterion columns
 
@@ -541,6 +548,15 @@ Strengths are calibrated to Bergquist et al. *Genet Med* 2024 Table 2.
   Moderate / Supporting for PP3 (`≥0.990 / ≥0.972 / ≥0.906 / ≥0.792`);
   ThreePoint / Moderate / Supporting for BP4 (`≤0.070 / ≤0.099 / ≤0.169`). No
   Strong BP4 category. Scores are CC BY-NC-SA 4.0 (non-commercial).
+- **REVEL** (`--insilico-tool revel`): Strong / ThreePoint / Moderate /
+  Supporting for PP3 (`≥0.932 / ≥0.879 / ≥0.773 / ≥0.644`); Strong / ThreePoint
+  / Moderate / Supporting for BP4 (`≤0.016 / ≤0.052 / ≤0.183 / ≤0.290`). No Very
+  Strong category. When a ClinGen VCEP specifies its own REVEL cutoff for the
+  gene (mined from cspec into the `revel_pp3_*` / `revel_bp4_*` columns of
+  `disease_prevalence.tsv`), that gene-specific cutoff is used instead of the
+  genome-wide default — and a VCEP that grants only a single strength caps the
+  gene at that strength. REVEL scores are free for non-commercial use; see
+  [Commercial use](#commercial-use). Requires `setup_data.py --with-revel`.
 
 **Splice predictor** — default **OpenSpliceAI**. The splice call takes
 precedence over the missense predictor when its max Δscore ≥ 0.20; below that
@@ -571,6 +587,10 @@ acmg-classify classify input.vcf -o results.tsv \
 Notes:
 - **AlphaMissense** (`--insilico-tool alphamissense`) is CC BY-NC-SA 4.0 —
   non-commercial only.
+- **REVEL** (`--insilico-tool revel`) scores are **free for non-commercial use
+  only**; commercial use requires a **separate licence** (contact the REVEL
+  authors / Weiva Sieh — see <https://sites.google.com/site/revelgenomics/>).
+  Not downloaded by default; opt in with `setup_data.py --with-revel`.
 - **OpenSpliceAI** is GPL-3.0. Running it locally to produce classifications
   (a service/report) does not trigger GPL source-disclosure; redistributing
   the tool would. Do **not** use the Illumina SpliceAI model weights bundled in
@@ -661,6 +681,11 @@ CLI flags take precedence over environment variables.
   uses scores that are CC BY-NC-SA 4.0 — commercial use requires direct
   arrangement with DeepMind/Google. The default `esm1b` is MIT-licensed (see
   [Commercial use](#commercial-use)).
+- **REVEL license.** The non-default `--insilico-tool revel` uses REVEL scores
+  that are **free for non-commercial use only**; commercial use requires a
+  **separate licence** from the REVEL authors (Weiva Sieh —
+  <https://sites.google.com/site/revelgenomics/>). The default `esm1b` is
+  MIT-licensed and commercial-use ready.
 - **OpenSpliceAI models are a separate install.** The default `--splice-tool
   openspliceai` needs the `openspliceai` CLI (`pip install openspliceai`) and
   OSAI_MANE model files placed under `data/<asm>/openspliceai/<flank>nt/` (not
