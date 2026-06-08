@@ -54,6 +54,23 @@ class BS2Evaluator(CriterionEvaluator):
         ac = gd.ac or 0
         het_carriers = max(0, ac - nhomalt)  # individuals carrying >=1 allele (AD)
 
+        # A VCEP whose BS2 counts only females (TP53: ">=8 unrelated females ...
+        # without cancer") must not count male carriers. Use gnomAD's female
+        # allele/homozygote counts: female carriers = AC_XX - nhomalt_XX. When the
+        # gnomAD DB predates these columns (ac_xx is None), we cannot confirm the
+        # female count, so BS2 is withheld rather than counting both sexes — the
+        # conservative choice that avoids a false benign call on a pathogenic
+        # variant (the whole reason these VCEPs restrict to females).
+        female_only = self._vcep.female_only(gene)
+        if female_only:
+            if gd.ac_xx is None:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BS2,
+                    f"{gene}: VCEP counts only females, but gnomAD female counts "
+                    "(AC_XX) unavailable in this DB build",
+                )
+            het_carriers = max(0, (gd.ac_xx or 0) - (gd.nhomalt_xx or 0))
+
         modes = self._vcep.modes(gene)
         # A per-gene VCEP count (e.g. CDH1 >=10, TP53 >=8) overrides ALL mode
         # thresholds; otherwise use the inheritance-mode global defaults.
@@ -81,7 +98,8 @@ class BS2Evaluator(CriterionEvaluator):
         if "XL" in modes and nhemi >= hemi_thr:
             return self._met(f"X-linked: nhemi={nhemi} >= {hemi_thr}")
         if "AD" in modes and het_carriers >= het_thr:
-            return self._met(f"dominant: healthy carriers={het_carriers} >= {het_thr}")
+            who = "healthy female carriers" if female_only else "healthy carriers"
+            return self._met(f"dominant: {who}={het_carriers} >= {het_thr}")
         return self._not_met(nhomalt, nhemi, het_carriers)
 
     def _met(self, detail: str) -> CriteriaResult:

@@ -3,9 +3,11 @@ from acmg_classifier.local_db.gnomad_db import _merge_rows, _pass_filter
 
 
 # Row layout: (af, an, ac, nhomalt, nhemi, popmax_af, popmax_pop, faf95_popmax,
-#              af_xy, filters)
-def _row(af, popmax_af, faf95, nhomalt=0, pop="afr", filters="PASS", af_xy=None):
-    return (af, 100000, int(af * 100000), nhomalt, 0, popmax_af, pop, faf95, af_xy, filters)
+#              af_xy, ac_xx, nhomalt_xx, filters)
+def _row(af, popmax_af, faf95, nhomalt=0, pop="afr", filters="PASS", af_xy=None,
+         ac_xx=None, nhomalt_xx=None):
+    return (af, 100000, int(af * 100000), nhomalt, 0, popmax_af, pop, faf95,
+            af_xy, ac_xx, nhomalt_xx, filters)
 
 
 class TestPassFilter:
@@ -42,3 +44,11 @@ class TestMergeRows:
     def test_all_filtered_reports_filter_failed(self):
         gd = _merge_rows([_row(0.01, 0.02, 0.015, filters="AC0")])
         assert not gd.filter_pass
+
+    def test_female_counts_merged_by_max(self):
+        # ac_xx / nhomalt_xx (female counts for BS2) are merged by per-field MAX
+        # like the other counts; None contributes nothing.
+        a = _row(0.0003, 0.0003, 0.0002, ac_xx=5, nhomalt_xx=0)
+        b = _row(0.0001, 0.0001, 0.0001, ac_xx=None, nhomalt_xx=1)
+        gd = _merge_rows([a, b])
+        assert gd.ac_xx == 5 and gd.nhomalt_xx == 1

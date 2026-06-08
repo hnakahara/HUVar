@@ -20,10 +20,10 @@ def _merge_rows(rows: list) -> GnomADData:
     """Merge multiple gnomAD rows for one variant by per-field MAX.
 
     Row layout: (af, an, ac, nhomalt, nhemi, popmax_af, popmax_pop,
-    faf95_popmax, af_xy, filters). Only PASS rows are merged when any exist
-    (a filtered record must not contribute a frequency); if every row is
-    filtered the variant is reported as filter-failed."""
-    pass_rows = [r for r in rows if _pass_filter(r[9])]
+    faf95_popmax, af_xy, ac_xx, nhomalt_xx, filters). Only PASS rows are merged
+    when any exist (a filtered record must not contribute a frequency); if every
+    row is filtered the variant is reported as filter-failed."""
+    pass_rows = [r for r in rows if _pass_filter(r[11])]
     use = pass_rows or rows
 
     def fmax(idx: int):
@@ -42,6 +42,8 @@ def _merge_rows(rows: list) -> GnomADData:
         popmax_pop=best[6],
         faf95_popmax=fmax(7),
         af_xy=fmax(8),
+        ac_xx=fmax(9),
+        nhomalt_xx=fmax(10),
         filter_pass=bool(pass_rows),
     )
 
@@ -53,10 +55,11 @@ class GnomADDB:
         self._constraint: dict[str, tuple[float | None, float | None, float | None]] = {}
         if constraint_tsv.exists():
             self._constraint = _load_constraint(constraint_tsv)
-        # Whether the variants table carries the af_xy column (added for X-linked
-        # "in males" BA1/BS1). Probed once and cached; a DB built before this
-        # column lacks it, so we degrade gracefully to NULL rather than erroring.
-        self._has_af_xy: bool | None = None
+        # The variants table's columns, probed once and cached. A DB built before
+        # af_xy (X-linked "in males" BA1/BS1) or ac_xx/nhomalt_xx (female-only
+        # BS2, e.g. TP53) lacks them, so query() degrades gracefully to NULL
+        # rather than erroring (a female-only BS2 gene then withholds BS2).
+        self._cols: set[str] | None = None
 
     def query(self, chrom: str, pos: int, ref: str, alt: str) -> Optional[GnomADData]:
         """Fetch population statistics for a specific variant.
@@ -75,13 +78,17 @@ class GnomADDB:
         try:
             import duckdb  # lazy: keeps the merge helpers importable without duckdb
             con = duckdb.connect(str(self._db_path), read_only=True)
-            # Select af_xy only when the schema has it; otherwise NULL keeps the
-            # result tuple shape constant for older DBs.
-            xy_expr = "af_xy" if self._af_xy_available(con) else "NULL AS af_xy"
+            # Select af_xy / ac_xx / nhomalt_xx only when the schema has them;
+            # otherwise NULL keeps the result tuple shape constant for older DBs.
+            cols = self._columns(con)
+            xy_expr = "af_xy" if "af_xy" in cols else "NULL AS af_xy"
+            has_xx = "ac_xx" in cols and "nhomalt_xx" in cols
+            xx_expr = "ac_xx, nhomalt_xx" if has_xx else "NULL AS ac_xx, NULL AS nhomalt_xx"
             rows = con.execute(
                 f"""
                 SELECT af, an, ac, nhomalt, nhemi,
                        popmax_af, popmax_pop, faf95_popmax, {xy_expr},
+                       {xx_expr},
                        filters
                 FROM variants
                 WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
@@ -107,12 +114,14 @@ class GnomADDB:
         # joint build has a single row, so the merge is a no-op there.
         return _merge_rows(rows)
 
-    def _af_xy_available(self, con) -> bool:
-        """True if the variants table has the af_xy column (cached per instance)."""
-        if self._has_af_xy is None:
-            cols = {r[1] for r in con.execute("PRAGMA table_info('variants')").fetchall()}
-            self._has_af_xy = "af_xy" in cols
-        return self._has_af_xy
+    def _columns(self, con) -> set[str]:
+        """The variants table's column names (cached per instance). Used to
+        degrade gracefully against DBs built before af_xy / ac_xx / nhomalt_xx."""
+        if self._cols is None:
+            self._cols = {
+                r[1] for r in con.execute("PRAGMA table_info('variants')").fetchall()
+            }
+        return self._cols
 
     def get_constraint(
         self, gene_symbol: str

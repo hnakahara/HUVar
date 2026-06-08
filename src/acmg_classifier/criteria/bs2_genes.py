@@ -38,6 +38,7 @@ class BS2Applicability:
         self._status: dict[str, str] = {}
         self._modes: dict[str, frozenset[str]] = {}
         self._count: dict[str, int] = {}
+        self._female_only: set[str] = set()
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -64,6 +65,11 @@ class BS2Applicability:
                         self._count[gene] = int(raw_count)
                     except ValueError:
                         pass
+                # A VCEP whose BS2 counts only females (e.g. TP53: ">=8 unrelated
+                # females ... without cancer"). The evaluator then counts female
+                # carriers (gnomAD AC_XX) instead of all-sex carriers.
+                if (row.get("bs2_female_only") or "").strip() in ("1", "true", "yes"):
+                    self._female_only.add(gene)
 
     def status(self, gene: str | None) -> str:
         """VCEP BS2 status for *gene*: ``applicable`` / ``not_applicable`` / ""."""
@@ -85,3 +91,11 @@ class BS2Applicability:
         if not gene:
             return None
         return self._count.get(gene)
+
+    def female_only(self, gene: str | None) -> bool:
+        """True if the gene's VCEP counts only females toward BS2 (e.g. TP53).
+        The evaluator then counts female carriers (gnomAD AC_XX - nhomalt_XX)
+        rather than all-sex carriers."""
+        if not gene:
+            return False
+        return gene in self._female_only

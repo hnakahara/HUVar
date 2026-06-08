@@ -35,7 +35,7 @@ COLUMNS = [
     "penetrance", "bs1_threshold", "bs1_strength", "ba1_threshold", "af_basis",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm4", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
-    "bs2_count",
+    "bs2_count", "bs2_female_only",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
@@ -518,6 +518,29 @@ def _bs2_count(rule_set: dict) -> str:
             if 1 <= n <= _BS2_COUNT_MAX:
                 vals.append(n)
         return str(max(vals)) if vals else ""
+    return ""
+
+
+# A VCEP whose BS2 counts only females (TP53: ">=8 unrelated females ... without
+# cancer"; DICER1: "40+ unrelated females ... tumor-free"). Detected when the
+# applicable BS2 descriptions mention "female"/"women" but NOT "male"/"men" —
+# OTC ("(female) homozygotes or (male) hemizygotes") names both, so it stays a
+# standard mode-based count, not female-only.
+_BS2_FEMALE = re.compile(r"\bfemales?\b|\bwom[ae]n\b", re.IGNORECASE)
+_BS2_MALE = re.compile(r"\bmales?\b|\bmen\b", re.IGNORECASE)
+
+
+def _bs2_female_only(rule_set: dict) -> str:
+    """"1" if the rule set's BS2 counts only females, else "" (count all sexes)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BS2":
+            continue
+        joined = " ".join(
+            es.get("description", "") for es in _applicable_strengths(code)
+        )
+        if _BS2_FEMALE.search(joined) and not _BS2_MALE.search(joined):
+            return "1"
+        return ""
     return ""
 
 
@@ -1027,6 +1050,7 @@ def parse_spec(path: str) -> list[dict]:
         pm5_lp = _pm5_lp_comparator(rs)
         bs2 = _bs2_applicability(rs)
         bs2_count = _bs2_count(rs)
+        bs2_female_only = _bs2_female_only(rs)
         ps1 = _ps1_applicability(rs)
         ps1_splice = _ps1_splice(rs)
         bp1, bp1_target = _bp1_applicability(rs)
@@ -1064,6 +1088,7 @@ def parse_spec(path: str) -> list[dict]:
                 "pm5_lp": "",
                 "bs2": "",
                 "bs2_count": "",
+                "bs2_female_only": "",
                 "ps1": "",
                 "ps1_splice": "",
                 "bp1": "",
@@ -1098,6 +1123,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm5_lp": pm5_lp,
                 "_bs2": bs2,
                 "_bs2_count": bs2_count,
+                "_bs2_female_only": bs2_female_only,
                 "_ps1": ps1,
                 "_ps1_splice": ps1_splice,
                 "_bp1": bp1,
@@ -1229,9 +1255,11 @@ def main() -> None:
                 if g not in pm4_choice or _pp2_more_specific(cand, pm4_choice[g]):
                     pm4_choice[g] = cand
             if row["_bs2"] in ("applicable", "not_applicable"):
-                # Carry bs2_count in the 3rd slot so the count comes from the
-                # same (most-specific) spec that decided applicability.
-                cand = (row["_specificity"], row["_bs2"], row["_bs2_count"])
+                # Carry bs2_count (3rd slot) and female-only flag (4th slot) so
+                # both come from the same (most-specific) spec that decided
+                # applicability.
+                cand = (row["_specificity"], row["_bs2"], row["_bs2_count"],
+                        row["_bs2_female_only"])
                 if g not in bs2_choice or _pp2_more_specific(cand, bs2_choice[g]):
                     bs2_choice[g] = cand
             # PM2: only specs with an applicable PM2 code contribute. Most
@@ -1338,8 +1366,11 @@ def main() -> None:
         row["pm5_lp"] = "no" if lp and lp[1] == "no" else ""
         bchoice = bs2_choice.get(g)
         row["bs2"] = bchoice[1] if bchoice else ""
-        # Emit the per-gene BS2 count only when BS2 is applicable for the gene.
-        row["bs2_count"] = bchoice[2] if (bchoice and bchoice[1] == "applicable") else ""
+        # Emit the per-gene BS2 count and female-only flag only when BS2 is
+        # applicable for the gene.
+        _bs2_applic = bool(bchoice and bchoice[1] == "applicable")
+        row["bs2_count"] = bchoice[2] if _bs2_applic else ""
+        row["bs2_female_only"] = bchoice[3] if _bs2_applic else ""
         pm4c = pm4_choice.get(g)
         row["pm4"] = pm4c[1] if pm4c else ""
         pm2c = pm2_choice.get(g)
@@ -1407,6 +1438,7 @@ _OVERRIDE_FIELDS = {
     "pm5_lp": "pm5_lp",
     "bs2": "bs2",
     "bs2_count": "bs2_count",
+    "bs2_female_only": "bs2_female_only",
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
     "bp1": "bp1",
