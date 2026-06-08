@@ -1,7 +1,9 @@
 """Rule-based ACMG 2015 classification."""
 from __future__ import annotations
 from acmg_classifier.models.criteria import CriteriaResult
-from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength, Pathogenicity
+from acmg_classifier.models.enums import (
+    ACMGCriterion, CriterionDirection, CriterionStrength, Pathogenicity,
+)
 
 
 def _count(
@@ -31,15 +33,58 @@ def _has(results: list[CriteriaResult], criterion: ACMGCriterion) -> bool:
     )
 
 
+def _bucket(direction: CriterionDirection, strength: CriterionStrength) -> str | None:
+    """Map a (direction, strength) pair to an ACMG 2015 evidence bucket.
+
+    The 2015 combination table (Richards et al. 2015, Table 5) only knows
+    four native strength tiers per direction:
+        Pathogenic : Very Strong (pvs) > Strong (ps) > Moderate (pm) > Supporting (pp)
+        Benign     : Stand-alone (ba)  > Strong (bs) >       —       > Supporting (bp)
+    so we bucket by the *actual* strength a criterion fired at — not its name.
+    This is what makes e.g. PM2 (SVI default: Supporting) count as Supporting
+    rather than Moderate, and lets PP3/BP4 fired at Moderate/Strong (Bergquist
+    2024 in-silico tiers) count at their true level.
+
+    THREE_POINT (a Bergquist 2024 extension, +3) has no native 2015 tier, and
+    the benign side has no Moderate tier at all. Both are resolved by rounding
+    DOWN to the nearest weaker native tier — the conservative choice that never
+    inflates evidence beyond what the original framework can express:
+        pathogenic ThreePoint   -> Moderate (pm)
+        benign ThreePoint/Moderate -> Supporting (bp)
+
+    Returns None for NOT_MET / INDETERMINATE (no contribution)."""
+    if direction == CriterionDirection.PATHOGENIC:
+        if strength == CriterionStrength.VERY_STRONG:
+            return "pvs"
+        if strength == CriterionStrength.STRONG:
+            return "ps"
+        if strength in (CriterionStrength.THREE_POINT, CriterionStrength.MODERATE):
+            return "pm"
+        if strength == CriterionStrength.SUPPORTING:
+            return "pp"
+        return None
+    # Benign
+    if strength == CriterionStrength.VERY_STRONG:
+        return "ba"
+    if strength == CriterionStrength.STRONG:
+        return "bs"
+    if strength in (
+        CriterionStrength.THREE_POINT,
+        CriterionStrength.MODERATE,
+        CriterionStrength.SUPPORTING,
+    ):
+        return "bp"
+    return None
+
+
 def _triggered(results: list[CriteriaResult]) -> dict[str, list[str]]:
     """Group triggered criteria into ACMG 2015 evidence buckets.
 
     The buckets (pvs/ps/pm/pp/ba/bs/bp) are what the rule table in
-    Classifier2015.classify counts against. PVS1 with a *downgraded*
-    strength (e.g. PVS1 capped to Moderate per the ClinGen SVI cap) is
-    re-bucketed to the lower tier so the 2015 combination rules treat
-    it correctly — otherwise a capped PVS1 would still count as 'pvs'
-    and trigger Pathogenic with only one extra Moderate evidence."""
+    Classifier2015.classify counts against. Every criterion is bucketed by the
+    *strength it actually fired at* (see _bucket), not by its name prefix — so a
+    strength-modified criterion (PVS1 capped to Moderate, PM2 at Supporting,
+    PP3 promoted to Strong, etc.) is counted at its true tier."""
     out: dict[str, list[str]] = {
         "pvs": [], "ps": [], "pm": [], "pp": [],
         "ba": [], "bs": [], "bp": [],
@@ -47,31 +92,9 @@ def _triggered(results: list[CriteriaResult]) -> dict[str, list[str]]:
     for r in results:
         if not r.triggered or r.suppressed:
             continue
-        c = r.criterion.value
-        if c == "PVS1":
-            # PVS1 is the only criterion with a sliding strength (per the
-            # ClinGen 2019 decision tree). Re-bucket based on the actual
-            # strength that fired, not the criterion name.
-            if r.strength in (CriterionStrength.VERY_STRONG,):
-                out["pvs"].append(c)
-            elif r.strength == CriterionStrength.STRONG:
-                out["ps"].append(c)
-            elif r.strength == CriterionStrength.MODERATE:
-                out["pm"].append(c)
-            else:
-                out["pp"].append(c)
-        elif c.startswith("PS"):
-            out["ps"].append(c)
-        elif c.startswith("PM"):
-            out["pm"].append(c)
-        elif c.startswith("PP"):
-            out["pp"].append(c)
-        elif c == "BA1":
-            out["ba"].append(c)
-        elif c.startswith("BS"):
-            out["bs"].append(c)
-        elif c.startswith("BP"):
-            out["bp"].append(c)
+        bucket = _bucket(r.direction, r.strength)
+        if bucket is not None:
+            out[bucket].append(r.criterion.value)
     return out
 
 

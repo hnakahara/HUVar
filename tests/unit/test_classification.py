@@ -38,15 +38,32 @@ class TestClassifier2015:
         path, _ = clf_2015.classify(results)
         assert path == Pathogenicity.BENIGN
 
-    def test_pvs1_pm2_likely_pathogenic(self):
+    def test_pvs1_pm2_supporting_vus(self):
+        # PM2 fires at Supporting (SVI default), so the 2015 classifier now
+        # buckets it as Supporting — not Moderate. PVS1 + 1 Supporting does not
+        # reach any Pathogenic/Likely-Pathogenic combination in Table 5 → VUS.
         results = [_pvs1(), _pm2()]
         path, _ = clf_2015.classify(results)
+        assert path == Pathogenicity.VUS
+
+    def test_pvs1_pm2_moderate_likely_pathogenic(self):
+        # A VCEP that grants PM2 at Moderate restores the PVS1 + 1 Moderate
+        # → Likely Pathogenic combination.
+        pm2_mod = CriteriaResult.met(ACMGCriterion.PM2, CriterionStrength.MODERATE)
+        path, _ = clf_2015.classify([_pvs1(), pm2_mod])
         assert path == Pathogenicity.LIKELY_PATHOGENIC
 
     def test_pvs1_ps1_pathogenic(self):
         results = [_pvs1(), _ps1()]
         path, _ = clf_2015.classify(results)
         assert path == Pathogenicity.PATHOGENIC
+
+    def test_pp3_moderate_buckets_as_moderate(self):
+        # PP3 promoted to Moderate (Bergquist in-silico tier) must count in the
+        # Moderate bucket: PVS1 + PP3(Moderate) → Likely Pathogenic.
+        pp3_mod = CriteriaResult.met(ACMGCriterion.PP3, CriterionStrength.MODERATE)
+        path, _ = clf_2015.classify([_pvs1(), pp3_mod])
+        assert path == Pathogenicity.LIKELY_PATHOGENIC
 
     def test_two_strong_pathogenic(self):
         ps1 = CriteriaResult.met(ACMGCriterion.PS1)
