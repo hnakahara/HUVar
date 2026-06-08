@@ -80,9 +80,10 @@ def cli(log_level: str):
 @click.option("--openspliceai-model-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing OSAI_MANE model files. "
                    "Overrides default data/<assembly>/openspliceai/<flanking-size>nt/ lookup.")
-@click.option("--openspliceai-flanking-size", type=int, default=2000, show_default=True,
-              help="Model context length (nt). Must match the downloaded OSAI_MANE model variant "
-                   "(80/400/2000/10000). Also selects the default model subdirectory.")
+@click.option("--openspliceai-flanking-size", type=int, default=80, show_default=True,
+              help="Model context length (nt). Default 80 for fast CPU inference; raise to "
+                   "400/2000/10000 for higher splice sensitivity. Must match a downloaded "
+                   "OSAI_MANE model variant. Also selects the default model subdirectory.")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel). Overrides default data-dir lookup.")
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path),
@@ -171,8 +172,10 @@ def classify(
                    "(pip install openspliceai); 'spliceai' uses precomputed VCFs (Illumina licence required).")
 @click.option("--openspliceai-model-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing OSAI_MANE model files.")
-@click.option("--openspliceai-flanking-size", type=int, default=2000, show_default=True,
-              help="Model context length (nt). Must match the downloaded OSAI_MANE model variant (80/400/2000/10000).")
+@click.option("--openspliceai-flanking-size", type=int, default=80, show_default=True,
+              help="Model context length (nt). Default 80 for fast CPU inference; raise to "
+                   "400/2000/10000 for higher splice sensitivity. Must match a downloaded "
+                   "OSAI_MANE model variant.")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel).")
 @click.pass_context

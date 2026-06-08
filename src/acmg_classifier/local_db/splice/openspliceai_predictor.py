@@ -69,7 +69,7 @@ class OpenSpliceAIPredictor(SplicePredictor):
         self,
         model_dir: Optional[Path],
         assembly: Assembly,
-        flanking_size: int = 2000,
+        flanking_size: int = 80,
         ref_genome: Optional[Path] = None,
         annotation_file: Optional[Path] = None,
     ) -> None:
@@ -145,27 +145,87 @@ class OpenSpliceAIPredictor(SplicePredictor):
                 "--model-type", "pytorch",
                 "-f", str(self._flanking_size),
             ]
+            if self._run(cmd, out_vcf, total=len(variants)):
+                self._cache = _parse_output_vcf(out_vcf)
+
+    def _run(self, cmd: list[str], out_vcf: Path, total: int) -> bool:
+        """Run the openspliceai subprocess, returning True on success.
+
+        When progress bars are enabled we drive a determinate bar by polling the
+        output VCF as openspliceai writes one record per scored variant (CPU
+        inference is slow and otherwise gives no feedback). When disabled we just
+        block on the call — no polling overhead. Child stdout/stderr go to a file
+        rather than a PIPE so the poll loop can never deadlock on a full buffer."""
+        from acmg_classifier.utils import progress
+
+        if not progress.is_enabled():
             try:
                 subprocess.run(cmd, capture_output=True, text=True, check=True)
+                return True
             except subprocess.CalledProcessError as exc:
-                log.error(
-                    "openspliceai_failed",
-                    returncode=exc.returncode,
-                    stderr=(exc.stderr or "")[-2000:],
-                )
-                return
+                log.error("openspliceai_failed", returncode=exc.returncode,
+                          stderr=(exc.stderr or "")[-2000:])
+                return False
             except FileNotFoundError:
                 log.error("openspliceai_not_found")
                 self._available = False
-                return
+                return False
 
-            self._cache = _parse_output_vcf(out_vcf)
+        import time
+        log_path = out_vcf.parent / "openspliceai.log"
+        try:
+            with log_path.open("w") as logf, progress.progress_bar(
+                f"OpenSpliceAI inference ({total} variants, {self._flanking_size}nt)",
+                total=total,
+            ) as advance:
+                proc = subprocess.Popen(cmd, stdout=logf, stderr=logf, text=True)
+                done = 0
+                while True:
+                    try:
+                        proc.wait(timeout=0.5)
+                        finished = True
+                    except subprocess.TimeoutExpired:
+                        finished = False
+                    n = min(_count_records(out_vcf), total)
+                    if n > done:
+                        advance(n - done)
+                        done = n
+                    if finished:
+                        break
+        except FileNotFoundError:
+            log.error("openspliceai_not_found")
+            self._available = False
+            return False
+        if proc.returncode != 0:
+            tail = ""
+            try:
+                tail = log_path.read_text()[-2000:]
+            except OSError:
+                pass
+            log.error("openspliceai_failed", returncode=proc.returncode, stderr=tail)
+            return False
+        return True
 
     def predict(self, variant: VariantRecord) -> SpliceScore:
         return self._cache.get(
             variant.key,
             SpliceScore(tool="openspliceai", is_available=False),
         )
+
+
+def _count_records(path: Path) -> int:
+    """Number of variant records (non-header lines) written so far to a VCF.
+
+    Used to drive the progress bar from openspliceai's incremental output. A
+    missing/locked file simply reads as 0; if openspliceai buffers its writes
+    the count lags and the bar advances in bursts, which is harmless."""
+    if not path.exists():
+        return 0
+    try:
+        with path.open() as f:
+            return sum(1 for line in f if line and not line.startswith("#"))
+    except OSError:
+        return 0
 
 
 def _write_temp_vcf(path: Path, variants: list[VariantRecord], assembly: Assembly) -> None:

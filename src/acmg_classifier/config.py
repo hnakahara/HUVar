@@ -47,7 +47,12 @@ class Config(BaseSettings):
     supplement_mode: SupplementMode = SupplementMode.MERGE
     spliceai_dir: Optional[Path] = None
     openspliceai_model_dir: Optional[Path] = None
-    openspliceai_flanking_size: int = 2000
+    # OpenSpliceAI model context length (nt). Default 80 (the smallest OSAI_MANE
+    # variant) for fast CPU inference — runtime scales with the flanking window,
+    # so 80nt is ~25x lighter than 2000nt. Raise to 400/2000/10000 (all staged
+    # by setup_data.py) for higher splice-prediction sensitivity on GPU or when
+    # throughput is not a concern. Must match a downloaded model subdirectory.
+    openspliceai_flanking_size: int = 80
     # BP7 conservation gate: a synonymous/deep-intronic variant may only reach
     # BP7 when the nucleotide is NOT highly conserved (Walker 2023 / ACMG 2015).
     # phyloP100way is the conservation source (UCSC, commercial-use OK). A

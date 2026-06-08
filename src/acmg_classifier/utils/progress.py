@@ -59,6 +59,14 @@ def _is_enabled() -> bool:
     return sys.stderr.isatty()
 
 
+def is_enabled() -> bool:
+    """Public predicate: will progress bars actually render this run?
+
+    Lets callers skip extra work that only exists to feed a bar (e.g. polling a
+    subprocess's output file) when bars are disabled (non-tty / --no-progress)."""
+    return _is_enabled()
+
+
 def make_progress() -> Progress:
     """Build a Progress instance with our standard column layout.
 
