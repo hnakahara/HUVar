@@ -43,6 +43,11 @@ _REFRESH_HZ = 4
 # progress-aware call. `None` keeps the automatic tty detection in effect.
 _FORCE: Optional[bool] = None
 
+# Number of live displays (bars/spinners) currently active. rich allows only
+# one live display at a time, so `status()` consults this to skip its spinner
+# when a bar is already on screen — a console-instance-agnostic check.
+_LIVE_DEPTH = 0
+
 
 def set_enabled(enabled: Optional[bool]) -> None:
     """Force progress bars on (True) / off (False), or restore auto (None)."""
@@ -110,11 +115,38 @@ def track(
         except TypeError:
             total = None
 
+    global _LIVE_DEPTH
     with make_progress() as progress:
         task = progress.add_task(description, total=total)
-        for item in iterable:
-            yield item
-            progress.advance(task)
+        _LIVE_DEPTH += 1
+        try:
+            for item in iterable:
+                yield item
+                progress.advance(task)
+        finally:
+            _LIVE_DEPTH -= 1
+
+
+@contextmanager
+def status(description: str) -> Iterator[None]:
+    """Indeterminate spinner for a single slow blocking call (no count).
+
+    Use for opaque one-shot work like opening a multi-GB file, where there is
+    nothing to count. No-op when progress is disabled, and silently skips the
+    spinner if another live display (e.g. a progress bar) is already active —
+    rich allows only one live display at a time, so nesting would error."""
+    global _LIVE_DEPTH
+    if not _is_enabled() or _LIVE_DEPTH > 0:
+        # Disabled, or a bar is already on screen (only one live display is
+        # allowed) — run the work without a spinner.
+        yield
+        return
+    with Console(stderr=True).status(description):
+        _LIVE_DEPTH += 1
+        try:
+            yield
+        finally:
+            _LIVE_DEPTH -= 1
 
 
 @contextmanager
@@ -143,6 +175,11 @@ def progress_bar(
         yield lambda n=1: None
         return
 
+    global _LIVE_DEPTH
     with make_progress() as progress:
         task = progress.add_task(description, total=total)
-        yield lambda n=1: progress.advance(task, n)
+        _LIVE_DEPTH += 1
+        try:
+            yield lambda n=1: progress.advance(task, n)
+        finally:
+            _LIVE_DEPTH -= 1

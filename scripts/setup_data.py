@@ -838,15 +838,15 @@ def step_repeatmasker(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
-def step_phylop(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
+def step_phylop(asm_dir: Path, assembly: str, urls: dict, skip: bool) -> bool:
     """Download the phyloP100way conservation bigWig for the BP7 conservation
-    gate. OPT-IN (--with-phylop) because the track is ~9.2 GB. Skipped by
-    default; BP7 then falls back to its splice-only logic."""
+    gate. Downloaded BY DEFAULT (~9.2 GB); pass --skip-phylop to opt out, in
+    which case BP7 falls back to its splice-only logic."""
     suffix = "hg38" if assembly == "GRCh38" else "hg19"
     dest = asm_dir / "conservation" / f"{suffix}.phyloP100way.bw"
-    if not enabled and not dest.exists():
-        print("  [SKIP] phyloP not requested (pass --with-phylop to enable the "
-              "BP7 conservation gate; ~9.2 GB)")
+    if skip and not dest.exists():
+        print("  [SKIP] --skip-phylop specified (BP7 uses splice-only logic; "
+              "the ~9.2 GB conservation gate is disabled)")
         return True
     # Skip ONLY when the local file matches the remote size exactly. A partial
     # file from an interrupted run (local < remote) must NOT be treated as
@@ -937,11 +937,12 @@ def main() -> None:
                         help="Skip genome FASTA download (~880 MB)")
     parser.add_argument("--skip-vep-cache", action="store_true",
                         help="Skip VEP cache download (~14 GB)")
-    parser.add_argument("--with-phylop", action="store_true",
-                        help="Download the phyloP100way bigWig (~9.2 GB) for the BP7 "
-                             "conservation gate. Off by default; BP7 uses splice-only "
-                             "logic without it. The pyBigWig reader is installed by "
-                             "default, so the gate activates once this file is present.")
+    parser.add_argument("--skip-phylop", action="store_true",
+                        help="Skip the phyloP100way bigWig download (~9.2 GB) for the BP7 "
+                             "conservation gate. Downloaded by default; without it BP7 "
+                             "falls back to splice-only logic. The pyBigWig reader ships "
+                             "as a default dependency, so the gate activates automatically "
+                             "once this file is present.")
     parser.add_argument("--with-revel", action="store_true",
                         help="Download REVEL (~600 MB zip) and build the per-assembly "
                              "TSV for --insilico-tool revel. Off by default (ESM1b is "
@@ -994,7 +995,7 @@ def main() -> None:
         ("gnomad-constraint", "gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
         ("gnomad",            "gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
         ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
-        ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.with_phylop)),
+        ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
     ]
 
     if args.only:
