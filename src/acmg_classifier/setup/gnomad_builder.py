@@ -108,6 +108,33 @@ def _info(variant, *field_names: str) -> Any:
     return None
 
 
+# gnomAD v2.1.1 has NO single popmax-FAF field. FAF is stored per continental
+# population (asj/fin/oth already excluded by gnomAD), and the "Popmax Filtering
+# AF" is the MAX over these five. Missing this, BA1/BS1/PM2 fell back to the
+# POINT popmax AF (popmax_af), which lacks the 95% CI sparse-data correction and
+# over-fired on rare variants seen in only a handful of individuals (e.g. a
+# CDKL5 synonymous variant in 5 people would wrongly meet BA1).
+_FAF95_V2_POPS = ("afr", "amr", "eas", "nfe", "sas")
+
+
+def _faf95_popmax(variant) -> float | None:
+    """GrpMax filtering allele frequency (95% CI), version-agnostic.
+
+    v4.x exposes it directly (fafmax_faf95_max[_joint]); v2.1.1 does not, so we
+    take the max over the per-population faf95_<pop> fields."""
+    direct = _info(
+        variant, "fafmax_faf95_max_joint", "fafmax_faf95_max",
+        "faf95_grpmax", "faf95_popmax",
+    )
+    if direct is not None:
+        return _to_float(direct)
+    vals = [
+        _to_float(_info(variant, f"faf95_{pop}")) for pop in _FAF95_V2_POPS
+    ]
+    vals = [v for v in vals if v is not None]
+    return max(vals) if vals else None
+
+
 def _detect_total_ram_gb() -> float | None:
     """物理メモリ総量 (GB) を best-effort で取得。失敗時は None。"""
     try:
@@ -308,18 +335,14 @@ def _vcf_to_parquet(
                         _to_int(_info(v, "nhemi_joint", "nhemi")),
                         _to_float(_info(v, "AF_grpmax_joint", "AF_grpmax", "AF_popmax")),
                         _to_str(_info(v, "grpmax_joint", "grpmax", "popmax")),
-                        # GrpMax filtering allele frequency (95% CI). gnomAD v4.x
-                        # exposes this as `fafmax_faf95_max` (NOT `faf95_grpmax`,
-                        # which does not exist in v4.1); v2.1.1 uses
-                        # `faf95_popmax`. Without `fafmax_faf95_max`, FAF95 was
-                        # NULL for every v4.1 variant, so BS1/BA1 fell back to the
-                        # POINT grpmax AF (popmax_af) and over-fired near the
-                        # threshold (e.g. PIK3CD p.Arg38Cys: point AF 0.00032 >
-                        # 0.000316 fired BS1, but FAF95 0.00022 should not).
-                        _to_float(_info(
-                            v, "fafmax_faf95_max_joint", "fafmax_faf95_max",
-                            "faf95_grpmax", "faf95_popmax",
-                        )),
+                        # GrpMax filtering allele frequency (95% CI). v4.x exposes
+                        # it directly (fafmax_faf95_max[_joint]); v2.1.1 has NO
+                        # popmax-FAF field, so _faf95_popmax computes the max over
+                        # the per-population faf95_<pop> fields. Without this,
+                        # GRCh37 FAF95 was NULL and BA1/BS1/PM2 fell back to the
+                        # POINT popmax AF, over-firing on sparse variants (e.g. a
+                        # CDKL5 synonymous variant seen in 5 people wrongly met BA1).
+                        _faf95_popmax(v),
                         # Male (XY) allele frequency for X-linked "in males"
                         # BA1/BS1 (RPGR etc.). gnomAD provides AF_XY directly.
                         _to_float(_info(v, "AF_joint_XY", "AF_XY")),

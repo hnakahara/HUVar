@@ -39,8 +39,10 @@ class BS1Evaluator(CriterionEvaluator):
         # BA1; the previous `faf95 or popmax or af` chain collapsed a real
         # FAF95 of 0.0 to the raw AF, over-firing BS1 on wide-CI rare variants.
         faf = gd.faf95_popmax
+        metric = "gnomAD FAF95"
         if faf is None:
-            faf = gd.popmax_af or gd.af or 0.0
+            faf = gd.popmax_af if gd.popmax_af is not None else (gd.af or 0.0)
+            metric = "gnomAD popmax AF (FAF95 unavailable)"
 
         # Per-gene threshold lookup: if the gene appears in the prevalence
         # table, use its disease-specific cutoff; otherwise the default applies.
@@ -52,7 +54,6 @@ class BS1Evaluator(CriterionEvaluator):
         # X-linked "in males" genes (RPGR, RS1): the VCEP cutoff is on the male
         # (XY) allele frequency. Fall back to the overall FAF when AF_XY is
         # unavailable (gnomAD DB predating the af_xy column).
-        metric = "gnomAD FAF95"
         if gt.af_basis == "males" and gd.af_xy is not None:
             faf = gd.af_xy
             metric = "gnomAD AF_XY (males)"

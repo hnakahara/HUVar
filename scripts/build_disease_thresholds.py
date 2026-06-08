@@ -43,6 +43,19 @@ COLUMNS = [
     "source_vcep", "cspec_url", "notes",
 ]
 
+# Spec-preference overrides: gene -> the ONLY spec (GN id) allowed to supply its
+# values. Normally the most gene-specific spec wins, but a few genes have empty
+# single-gene specs (In-Prep/Pilot, 0 criteriaCodes) that would shadow a fully
+# populated grouped spec. Pinning the authoritative spec makes it win every
+# criterion (and the base row) for that gene.
+#   ITGA2B / ITGB3: GN011 (Platelet Disorders VCEP, Released, 28 codes) states
+#   e.g. BP1 not_applicable ("missense variants are a known cause of disease");
+#   the empty GN059/GN060/GN221-223 single-gene specs must NOT override it.
+_FORCE_SPEC: dict[str, str] = {
+    "ITGA2B": "GN011",
+    "ITGB3": "GN011",
+}
+
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* allele frequency
 # rather than the overall population FAF — detected from "in males" wording that
 # qualifies the FREQUENCY (RPGR, RS1). Emitted in af_basis so the BA1/BS1
@@ -442,30 +455,45 @@ def _pm5_lp_comparator(rule_set: dict) -> str:
     return ""
 
 
-# BS2 (observed in a healthy individual) gene-level applicability. A VCEP may
-# carry a BS2 code but decline general-population/gnomAD data for it (RASopathy
-# GN004: "general population data should not be used for this criterion" — due
-# to variable expressivity). Since our BS2 evaluator is gnomAD-based, treat that
-# as not_applicable.
-_BS2_NO_POPDATA = re.compile(
-    r"population data should not be used|should not be used for this criterion",
+# BS2 (observed in a healthy individual) gene-level applicability. Our BS2
+# evaluator is gnomAD-based, so a VCEP must be treated as not_applicable whenever
+# its BS2 cannot be derived from gnomAD population counts:
+#   (a) it explicitly declines / bars general-population data, e.g.
+#         GN004 RASopathy : "general population data should not be used ..."
+#         GN120 RPE65     : "Presence in databases such as gnomAD are not considered"
+#         GN112 KCNQ1     : "Not applicable due to incomplete penetrance"
+#   (b) it scores BS2 purely on clinical phenotyping / point-based family
+#       evaluation with NO gnomAD-countable rule, e.g. the single-gene RASopathy
+#       specs (GN039 NRAS etc., "-4 Points." inherited from GN004) and the
+#       Fanconi-Anemia "points per proband" cancer specs (BRCA1/2, PALB2).
+# A spec that DOES offer a homozygote/hemizygote/gnomAD count path stays
+# applicable even if it also mentions points (e.g. APC ">=10 points OR >=2 in
+# homozygous state"; PDHA1 ">=16 hemizygotes in gnomAD").
+_BS2_DECLINE = re.compile(
+    r"should not be used|not considered|not applicable due to",
     re.IGNORECASE,
 )
+_BS2_POINTS = re.compile(r"\bpoints?\b", re.IGNORECASE)
+_BS2_GNOMAD_COUNTABLE = re.compile(r"homozyg|hemizyg|gnomad", re.IGNORECASE)
 
 
 def _bs2_applicability(rule_set: dict) -> str:
     """"applicable" / "not_applicable" / "" for the rule set's BS2 code.
 
-    Applicable when the BS2 code has an Applicable strength whose description
-    does not bar population data; not_applicable when the VCEP carries a BS2
-    code it declined (or barred population data); "" when no BS2 code exists."""
+    not_applicable when the VCEP declines BS2, bars population data, or scores it
+    purely on clinical phenotype/points with no gnomAD-countable rule — none of
+    which a gnomAD-based evaluator can assess. "" when no BS2 code exists."""
     for code in rule_set.get("criteriaCodes", []):
         if code.get("label") != "BS2":
             continue
         applic = _applicable_strengths(code)
         if not applic:
             return "not_applicable"
-        if _BS2_NO_POPDATA.search(applic[0].get("description", "") or ""):
+        desc = " ".join(es.get("description", "") or "" for es in applic)
+        if _BS2_DECLINE.search(desc):
+            return "not_applicable"
+        # Pure point/phenotype scoring with no gnomAD-countable observation rule.
+        if _BS2_POINTS.search(desc) and not _BS2_GNOMAD_COUNTABLE.search(desc):
             return "not_applicable"
         return "applicable"
     return ""
@@ -1110,6 +1138,7 @@ def parse_spec(path: str) -> list[dict]:
                 # Transient (not TSV columns; dropped at write time via
                 # extrasaction="ignore"): drive multi-spec resolution and the
                 # cross-spec PP2/PM5 aggregation in main().
+                "_gn": gn,
                 "_specificity": n_spec_genes,
                 "_pm2_threshold": pm2_threshold,
                 "_pm2_strength": pm2_strength,
@@ -1230,6 +1259,14 @@ def main() -> None:
         n_specs += 1
         for row in parse_spec(path):
             g = row["gene_symbol"]
+            # Spec-preference override: a handful of genes have empty single-gene
+            # specs (In-Prep/Pilot, 0 criteriaCodes) that would otherwise win the
+            # "most gene-specific spec" rule and shadow a fully-populated grouped
+            # spec. For those genes we PIN the authoritative spec so it wins every
+            # criterion (and the base row). E.g. ITGA2B/ITGB3 → GN011 (Platelet
+            # Disorders, Released, 28 codes) over the empty GN059/GN060/GN221-223.
+            if g in _FORCE_SPEC and row["_gn"] != _FORCE_SPEC[g]:
+                continue
             if row["_pp2"] in ("applicable", "not_applicable"):
                 cand = (row["_specificity"], row["_pp2"], row["_pp2_requires"])
                 if g not in pp2_choice or _pp2_more_specific(cand, pp2_choice[g]):
@@ -1401,10 +1438,13 @@ def main() -> None:
 
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
-    with open(args.out, "w", newline="", encoding="utf-8") as fh:
+    # newline="\n" forces LF on every platform; csv otherwise emits CRLF on
+    # Windows, which would rewrite every line of the committed LF-normalised TSV.
+    with open(args.out, "w", newline="\n", encoding="utf-8") as fh:
         # extrasaction="ignore": rows carry a transient "_specificity" key that
         # is not a TSV column.
-        w = csv.DictWriter(fh, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
+        w = csv.DictWriter(fh, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore",
+                           lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
 

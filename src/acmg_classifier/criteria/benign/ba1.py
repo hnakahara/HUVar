@@ -37,16 +37,19 @@ class BA1Evaluator(CriterionEvaluator):
         threshold = gt.ba1
 
         # Same prefer-FAF95 logic as PM2/PS4: FAF gives the most conservative
-        # estimate; only fall back to raw AF if FAF is unavailable.
+        # estimate; only fall back to the POINT popmax AF if FAF is unavailable.
+        # The fallback is flagged in the metric label because the point AF lacks
+        # the 95% CI sparse-data correction and can over-fire.
         faf = gd.faf95_popmax
+        metric = "gnomAD FAF95_popmax"
         if faf is None:
-            faf = gd.popmax_af or gd.af or 0.0
+            faf = gd.popmax_af if gd.popmax_af is not None else (gd.af or 0.0)
+            metric = "gnomAD popmax AF (FAF95 unavailable)"
 
         # X-linked genes whose VCEP defines the cutoff "in males" (RPGR, RS1,
         # ABCD1, SLC6A8, OTC): compare against the male (XY) allele frequency.
         # Fall back to the overall FAF when AF_XY is unavailable (e.g. a gnomAD
         # DB built before the af_xy column).
-        metric = "gnomAD FAF95_popmax"
         if gt.af_basis == "males" and gd.af_xy is not None:
             faf = gd.af_xy
             metric = "gnomAD AF_XY (males)"
