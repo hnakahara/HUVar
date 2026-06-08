@@ -825,13 +825,26 @@ def step_phylop(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool
     default; BP7 then falls back to its splice-only logic."""
     suffix = "hg38" if assembly == "GRCh38" else "hg19"
     dest = asm_dir / "conservation" / f"{suffix}.phyloP100way.bw"
-    if dest.exists():
-        print(f"  [SKIP] {dest.name}")
-        return True
-    if not enabled:
+    if not enabled and not dest.exists():
         print("  [SKIP] phyloP not requested (pass --with-phylop to enable the "
               "BP7 conservation gate; ~9.2 GB)")
         return True
+    # Skip ONLY when the local file matches the remote size exactly. A partial
+    # file from an interrupted run (local < remote) must NOT be treated as
+    # complete — it falls through to wget -c, which resumes from the current
+    # offset rather than being mistakenly skipped.
+    if dest.exists():
+        remote = _remote_size(urls["phylop"])
+        local = dest.stat().st_size
+        if remote is not None and local == remote:
+            print(f"  [SKIP] {dest.name}")
+            return True
+        if remote is None:
+            # Cannot verify size; assume an existing file is complete to avoid
+            # re-downloading ~9 GB on every run when the server omits a HEAD size.
+            print(f"  [SKIP] {dest.name} (remote size unknown; assuming complete)")
+            return True
+        print(f"  ↻  {dest.name} is partial ({local}/{remote} bytes) — resuming")
     dest.parent.mkdir(parents=True, exist_ok=True)
     _download(urls["phylop"], dest, f"UCSC phyloP100way {suffix} bigWig (~9.2 GB)")
     return True
