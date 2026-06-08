@@ -940,7 +940,8 @@ def main() -> None:
     parser.add_argument("--with-phylop", action="store_true",
                         help="Download the phyloP100way bigWig (~9.2 GB) for the BP7 "
                              "conservation gate. Off by default; BP7 uses splice-only "
-                             "logic without it. Also: pip install -e '.[conservation]'.")
+                             "logic without it. The pyBigWig reader is installed by "
+                             "default, so the gate activates once this file is present.")
     parser.add_argument("--with-revel", action="store_true",
                         help="Download REVEL (~600 MB zip) and build the per-assembly "
                              "TSV for --insilico-tool revel. Off by default (ESM1b is "

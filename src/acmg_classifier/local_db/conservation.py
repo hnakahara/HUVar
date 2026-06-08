@@ -1,12 +1,13 @@
 """phyloP conservation lookup for the BP7 "not highly conserved" gate.
 
 Reads per-base phyloP100way scores from a UCSC bigWig (commercial-use OK). The
-bigWig is large (~9 GB) and OPTIONAL: when absent, or when the pyBigWig package
-is not installed, the reader reports "unavailable" and BP7 falls back to its
-splice-only logic.
+bigWig is large (~9 GB) and OPTIONAL: when absent the reader reports
+"unavailable" and BP7 falls back to its splice-only logic. The reader library
+(pyBigWig) is a default dependency, so the gate activates automatically once the
+bigWig file is present.
 
-Install the optional dependency with: pip install -e ".[conservation]"
 Download the track: hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/
+(or run: setup_data.py --with-phylop)
 """
 from __future__ import annotations
 
@@ -33,10 +34,13 @@ class PhyloPReader:
         try:
             import pyBigWig  # type: ignore
         except ImportError:
+            # pyBigWig is a default dependency, so a missing import means a
+            # broken/partial install (or a build failure of its libcurl/zlib
+            # extension) rather than an opt-in the user skipped.
             log.warning(
                 "phylop_unavailable",
-                reason="pyBigWig not installed",
-                hint='pip install -e ".[conservation]" to enable the BP7 conservation gate',
+                reason="pyBigWig not importable",
+                hint='reinstall to restore the BP7 conservation gate: pip install pyBigWig',
             )
             return
         try:

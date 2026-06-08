@@ -42,10 +42,17 @@ dependencies = [
     "structlog>=24.1",
     "rich>=13.7",
     "tenacity>=8.2",
-    # Default splice predictor; the package bundles the grch37/grch38 gene
-    # annotations the `variant -A` flag resolves, so no separate annotation
-    # download is needed. setup_data.py only fetches the OSAI_MANE model weights.
+    # Default splice predictor. setup_data.py stages BOTH the OSAI_MANE model
+    # weights AND the gene annotation table (grch37.txt/grch38.txt) — the
+    # `variant -A grch38` keyword resolves to a relative path that does not
+    # exist in an installed package, so an explicit annotation file is required.
     "openspliceai",
+    # BP7 conservation gate: per-base phyloP100way lookup from a UCSC bigWig.
+    # A default dependency so the gate works automatically once the (optional,
+    # ~9 GB) phyloP bigWig is downloaded — without it, an installed-but-unread
+    # bigWig silently disables BP7. Builds against libcurl/zlib (preinstalled on
+    # typical Linux); reading is no-op when the bigWig file is absent.
+    "pyBigWig>=0.3",
 ]
 
 [project.urls]
@@ -63,7 +70,9 @@ dev = [
     "pytest-asyncio>=0.23",
     "pytest-cov>=5.0",
 ]
-# BP7 conservation gate: per-base phyloP100way lookup from a UCSC bigWig.
+# BP7 conservation gate reader. pyBigWig is now a DEFAULT dependency (see
+# [project].dependencies); this extra is retained only for backward
+# compatibility so `pip install -e ".[conservation]"` keeps working.
 conservation = [
     "pyBigWig>=0.3",
 ]
