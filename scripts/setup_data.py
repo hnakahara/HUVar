@@ -126,7 +126,9 @@ URLS: dict[str, dict[str, str]] = {
             "gnomad.genomes.r2.1.1.sites.{chrom}.vcf.bgz.tbi"
         ),
         "repeatmasker": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/rmsk.txt.gz",
-        "phylop": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/phyloP100way/hg19.phyloP100way.bw",
+        # hg19's bigWig is named hg19.100way.phyloP100way.bw (unlike hg38's
+        # hg38.phyloP100way.bw); we still save it locally as hg19.phyloP100way.bw.
+        "phylop": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/phyloP100way/hg19.100way.phyloP100way.bw",
         # Same single REVEL zip as GRCh38; the hg19 position column is selected
         # when building the per-assembly TSV.
         "revel": "https://rothsj06.dmz.hpc.mssm.edu/revel-v1.3_all_chromosomes.zip",
