@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS variants (
     popmax_pop TEXT,
     faf95_popmax DOUBLE,
     af_xy DOUBLE,
+    ac_xx INTEGER,
+    nhomalt_xx INTEGER,
     filters TEXT
 );
 """
@@ -49,7 +51,7 @@ _CREATE_INDEX = """
 CREATE INDEX IF NOT EXISTS idx_variants ON variants (chrom, pos, ref, alt);
 """
 
-_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 _BATCH_SIZE = 50_000
 
@@ -321,6 +323,12 @@ def _vcf_to_parquet(
                         # Male (XY) allele frequency for X-linked "in males"
                         # BA1/BS1 (RPGR etc.). gnomAD provides AF_XY directly.
                         _to_float(_info(v, "AF_joint_XY", "AF_XY")),
+                        # Female (XX) allele count and female homozygote count for
+                        # VCEPs whose BS2 counts only females (e.g. TP53: ">=8
+                        # unrelated females ... without cancer"). Female carriers =
+                        # AC_XX - nhomalt_XX (mirrors the overall AC - nhomalt).
+                        _to_int(_info(v, "AC_joint_XX", "AC_XX")),
+                        _to_int(_info(v, "nhomalt_joint_XX", "nhomalt_XX")),
                         filter_val,
                     )
                     batch.append(row)

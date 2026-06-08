@@ -70,9 +70,19 @@ class OpenSpliceAIPredictor(SplicePredictor):
         model_dir: Optional[Path],
         assembly: Assembly,
         flanking_size: int = 2000,
+        ref_genome: Optional[Path] = None,
+        annotation_file: Optional[Path] = None,
     ) -> None:
         self._model_dir = model_dir
-        self._annotation = _ASSEMBLY_ANNOTATION[assembly]
+        self._ref_genome = ref_genome
+        # The `-A grch38` / `grch37` KEYWORDS are unusable: openspliceai's
+        # Annotator maps them to the relative path "./data/vcf/<asm>.txt", which
+        # only resolves if the CWD happens to be the openspliceai source tree.
+        # We therefore pass an explicit annotation-table path (downloaded by
+        # setup_data.step_openspliceai). The keyword is kept only for the
+        # warning hint below.
+        self._annotation_keyword = _ASSEMBLY_ANNOTATION[assembly]
+        self._annotation_file = annotation_file
         self._flanking_size = flanking_size
         self._assembly = assembly
         self._cache: dict[str, SpliceScore] = {}
@@ -82,11 +92,15 @@ class OpenSpliceAIPredictor(SplicePredictor):
             log.warning(
                 "openspliceai_unavailable",
                 model_dir=str(model_dir) if model_dir else None,
+                ref_genome=str(ref_genome) if ref_genome else None,
+                annotation_file=str(annotation_file) if annotation_file else None,
                 hint=(
-                    "OpenSpliceAI scoring will be skipped. "
-                    "Install with `pip install openspliceai` and place OSAI_MANE model "
-                    "files under data/<assembly>/openspliceai/<flanking_size>nt/ "
-                    "(or pass --openspliceai-model-dir)."
+                    "OpenSpliceAI scoring will be skipped. Requires: `pip install "
+                    "openspliceai`; OSAI_MANE model files under "
+                    "data/<assembly>/openspliceai/<flanking_size>nt/; the reference "
+                    "genome FASTA (`-R`); and the gene annotation table "
+                    f"{self._annotation_keyword}.txt (`-A`) — both staged by "
+                    "`setup_data.py`."
                 ),
             )
 
@@ -94,6 +108,16 @@ class OpenSpliceAIPredictor(SplicePredictor):
         if shutil.which("openspliceai") is None:
             return False
         if self._model_dir is None or not self._model_dir.exists():
+            return False
+        # `openspliceai variant` REQUIRES a reference genome FASTA (-R). Without
+        # it the subprocess exits non-zero and every variant silently scores as
+        # unavailable, so treat a missing reference as "tool unavailable".
+        if self._ref_genome is None or not self._ref_genome.exists():
+            return False
+        # The annotation table (-A) is likewise required: the built-in keyword
+        # resolves to a non-existent relative path, so without an explicit file
+        # openspliceai crashes on every batch.
+        if self._annotation_file is None or not self._annotation_file.exists():
             return False
         return True
 
@@ -113,11 +137,12 @@ class OpenSpliceAIPredictor(SplicePredictor):
 
             cmd = [
                 "openspliceai", "variant",
-                "-A", self._annotation,
+                "-R", str(self._ref_genome),
+                "-A", str(self._annotation_file),
                 "-I", str(in_vcf),
                 "-O", str(out_vcf),
                 "-m", str(self._model_dir),
-                "-t", "pytorch",
+                "--model-type", "pytorch",
                 "-f", str(self._flanking_size),
             ]
             try:

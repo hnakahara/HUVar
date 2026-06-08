@@ -203,6 +203,17 @@ class Config(BaseSettings):
         return self.assembly_dir / "openspliceai" / f"{self.openspliceai_flanking_size}nt"
 
     @property
+    def openspliceai_annotation(self) -> Path:
+        """Gene annotation table for `openspliceai variant -A`.
+
+        The CLI's `-A grch38` / `grch37` keywords resolve to a relative path
+        inside the openspliceai source tree and do NOT work from an installed
+        package, so we pass an explicit file. setup_data.py downloads
+        grch38.txt / grch37.txt (from the OpenSpliceAI repo) to this path."""
+        name = {Assembly.GRCH38: "grch38.txt", Assembly.GRCH37: "grch37.txt"}[self.assembly]
+        return self.assembly_dir / "openspliceai" / name
+
+    @property
     def phylop_bigwig(self) -> Optional[Path]:
         """phyloP100way conservation bigWig for the BP7 conservation gate, or
         None when not downloaded (BP7 then uses its splice-only logic).

@@ -95,6 +95,8 @@ class AnnotationOrchestrator:
                 self._cfg.openspliceai_model_path,
                 self._cfg.assembly,
                 self._cfg.openspliceai_flanking_size,
+                self._cfg.genome_fasta,
+                self._cfg.openspliceai_annotation,
             )
         if self._cfg.splice_tool == SpliceTool.SPLICEAI:
             from acmg_classifier.local_db.splice.spliceai_predictor import SpliceAIPredictor

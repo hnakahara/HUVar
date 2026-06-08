@@ -633,22 +633,30 @@ _OSAI_FTP = (
     "ftp://ftp.ccb.jhu.edu/pub/data/OpenSpliceAI/OSAI-MANE/"
     "{flank}nt/model_{flank}nt_rs{seed}.pt"
 )
+# Gene annotation tables (#NAME/CHROM/STRAND/TX_START/TX_END/EXON_START/EXON_END),
+# passed to `openspliceai variant -A`. Distributed in the OpenSpliceAI repo.
+_OSAI_ANNOTATION = (
+    "https://raw.githubusercontent.com/Kuanhao-Chao/OpenSpliceAI/main/data/{name}"
+)
 
 
 def step_openspliceai(asm_dir: Path, assembly: str, skip: bool) -> bool:
-    """Download the OSAI_MANE model ensembles for OpenSpliceAI.
+    """Download the OSAI_MANE model ensembles AND the gene annotation table.
 
     The default --splice-tool is openspliceai, so this runs by default (opt out
     with --skip-openspliceai). It downloads the 5-model ensemble for ALL four
     flanking sizes (80/400/2000/10000 nt) into data/<asm>/openspliceai/<flank>nt/,
     exactly the layout OpenSpliceAIPredictor / Config.openspliceai_model_path
-    expect. The model weights are sequence-based (assembly-independent); the
-    GRCh37/GRCh38 distinction is handled by the CLI's -A annotation at runtime,
-    which resolves to a gene table bundled in the `openspliceai` pip package
-    (a project dependency) — so no annotation file is downloaded here.
+    expect. The model weights are sequence-based (assembly-independent).
+
+    It ALSO downloads the gene annotation table (grch38.txt / grch37.txt). The
+    `openspliceai variant -A grch38` keyword is NOT usable from an installed
+    package — openspliceai maps it to the relative path "./data/vcf/<asm>.txt"
+    which only resolves inside the openspliceai source tree — so we stage the
+    table explicitly and pass its path via Config.openspliceai_annotation.
 
     The `openspliceai` CLI itself is a regular project dependency (pyproject),
-    installed with the package; this step only stages the model weights."""
+    installed with the package; this step stages the runtime data files."""
     if skip:
         print("  [SKIP] --skip-openspliceai specified")
         return True
@@ -668,6 +676,17 @@ def step_openspliceai(asm_dir: Path, assembly: str, skip: bool) -> bool:
             n_have += 1
     print(f"  OSAI_MANE models ready: {n_have}/{len(_OSAI_FLANKS) * len(_OSAI_SEEDS)} "
           f"across {len(_OSAI_FLANKS)} flanking sizes")
+
+    # Gene annotation table (-A): explicit file, required because the keyword is
+    # broken from an installed package (see docstring).
+    ann_name = "grch38.txt" if assembly == "GRCh38" else "grch37.txt"
+    ann_dest = base / ann_name
+    if ann_dest.exists():
+        print(f"  [SKIP] {ann_name}")
+    else:
+        base.mkdir(parents=True, exist_ok=True)
+        _download(_OSAI_ANNOTATION.format(name=ann_name), ann_dest,
+                  f"OpenSpliceAI annotation table {ann_name}")
     return True
 
 
@@ -937,6 +956,14 @@ def main() -> None:
     # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
     # parser.add_argument("--skip-mmsplice-gtf", action="store_true",
     #                     help="Skip MMSplice GTF download/filter (~50 MB)")
+    parser.add_argument("--only", nargs="+", default=None, metavar="STEP",
+                        help="Run only the named step(s) and skip the rest. Step "
+                             "keys: genome, vep, clinvar-vcf, clinvar-sqlite, "
+                             "alphamissense, esm1b, revel, openspliceai, "
+                             "gnomad-constraint, gnomad, repeatmasker, phylop. "
+                             "Each step is idempotent: it checks for existing "
+                             "files and downloads only what is missing. Example: "
+                             "--only openspliceai")
     args = parser.parse_args()
 
     data_dir = args.data_dir.resolve()
@@ -952,25 +979,34 @@ def main() -> None:
     print(f"  Assembly       : {assembly}")
     print(f"{sep}\n")
 
-    steps: list[tuple[str, object]] = [
-        ("Reference genome",  lambda: step_genome(asm_dir, assembly, urls, args.genome_fasta, args.skip_genome)),
-        ("VEP cache",         lambda: step_vep_cache(data_dir, assembly, urls, args.skip_vep_cache)),
-        ("ClinVar VCF",       lambda: step_clinvar_vcf(asm_dir, assembly, urls)),
-        ("ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls, args.workers)),
-        ("AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
-        ("ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
-        ("REVEL",             lambda: step_revel(asm_dir, assembly, urls, args.with_revel)),
-        ("OpenSpliceAI",      lambda: step_openspliceai(asm_dir, assembly, args.skip_openspliceai)),
+    steps: list[tuple[str, str, object]] = [
+        ("genome",            "Reference genome",  lambda: step_genome(asm_dir, assembly, urls, args.genome_fasta, args.skip_genome)),
+        ("vep",               "VEP cache",         lambda: step_vep_cache(data_dir, assembly, urls, args.skip_vep_cache)),
+        ("clinvar-vcf",       "ClinVar VCF",       lambda: step_clinvar_vcf(asm_dir, assembly, urls)),
+        ("clinvar-sqlite",    "ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls, args.workers)),
+        ("alphamissense",     "AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
+        ("esm1b",             "ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
+        ("revel",             "REVEL",             lambda: step_revel(asm_dir, assembly, urls, args.with_revel)),
+        ("openspliceai",      "OpenSpliceAI",      lambda: step_openspliceai(asm_dir, assembly, args.skip_openspliceai)),
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
-        # ("MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
-        ("gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
-        ("gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
-        ("RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
-        ("phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.with_phylop)),
+        # ("mmsplice-gtf",      "MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
+        ("gnomad-constraint", "gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
+        ("gnomad",            "gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
+        ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
+        ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.with_phylop)),
     ]
 
+    if args.only:
+        valid = {key for key, _, _ in steps}
+        requested = set(args.only)
+        unknown = requested - valid
+        if unknown:
+            sys.exit(f"[ERROR] Unknown --only step(s): {', '.join(sorted(unknown))}. "
+                     f"Valid keys: {', '.join(k for k, _, _ in steps)}")
+        steps = [s for s in steps if s[0] in requested]
+
     ok_steps, failed_steps = [], []
-    for name, fn in steps:
+    for _key, name, fn in steps:
         print(f"── {name} ──")
         try:
             result = fn()

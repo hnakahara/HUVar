@@ -52,6 +52,12 @@ class GnomADData(BaseModel):
     # OTC). None when the gnomAD DB predates the AF_XY column (graceful
     # fallback to the overall FAF in those evaluators).
     af_xy: Optional[float] = None
+    # Female (XX) allele count and female homozygote count, used by BS2 for VCEPs
+    # that count only females (e.g. TP53). Female carriers = ac_xx - nhomalt_xx.
+    # None when the gnomAD DB predates these columns (graceful fallback: a
+    # female-only BS2 gene then withholds BS2 rather than counting both sexes).
+    ac_xx: Optional[int] = None
+    nhomalt_xx: Optional[int] = None
     filter_pass: bool = True
 
     # Gene-level constraint (from gnomAD constraint table)
