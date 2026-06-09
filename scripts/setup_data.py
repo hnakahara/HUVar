@@ -803,8 +803,12 @@ def step_gnomad_duckdb(
     _add_src_to_path()
     from acmg_classifier.setup.gnomad_builder import build_gnomad_duckdb  # type: ignore
     dest.parent.mkdir(parents=True, exist_ok=True)
+    # Load only the callsets this assembly declares (GRCh38: joint only;
+    # GRCh37: exomes + genomes). Without this, a stray exome VCF left in the
+    # staging dir would be globbed alongside joint and double-count variants.
+    load_callsets = tuple(name for name, *_ in sources)
     build_gnomad_duckdb(vcf_dir, dest, assembly=assembly, gnomad_version=ver,
-                        max_workers=n_workers)
+                        max_workers=n_workers, callsets=load_callsets)
     return True
 
 

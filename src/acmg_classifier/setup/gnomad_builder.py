@@ -55,6 +55,13 @@ _INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 _BATCH_SIZE = 50_000
 
+# Sub-chromosome window size for region-parallel loading. chr1/chr2 in gnomAD
+# v4.1 hold tens of millions of sites; processing each whole chromosome in a
+# single worker made the per-chromosome scheme bottleneck on the largest
+# contig. Splitting every contig into fixed windows (default 10 Mb) lets chr1
+# spread across multiple cores and balances the worker pool.
+_WINDOW_SIZE = 10_000_000
+
 
 def _to_scalar(val: Any) -> Any:
     """cyvcf2 は multi-allelic で tuple を返すので先頭要素を取り出す。"""
@@ -172,12 +179,94 @@ def _per_worker_mem_limit(max_workers: int) -> str:
     return f"{per:.1f}GB"
 
 
+def _select_vcf_files(
+    vcf_dir: Path,
+    callsets: tuple[str, ...] | None,
+) -> list[Path]:
+    """ロード対象の VCF を選ぶ。
+
+    callsets 指定時は ``gnomad.{callset}.*.vcf.bgz`` だけを集める。GRCh38 で
+    joint と exome が同居していても joint のみを拾い、二重登録を防ぐ。指定の
+    callset に 1 件も一致しない場合のみ、従来通り全 ``*.vcf.bgz`` へフォール
+    バックする (例: exomes-only を別ディレクトリで明示指定したケース)。
+    """
+    if callsets:
+        selected: list[Path] = []
+        seen: set[Path] = set()
+        for cs in callsets:
+            for f in sorted(vcf_dir.glob(f"gnomad.{cs}.*.vcf.bgz")):
+                if f not in seen:
+                    seen.add(f)
+                    selected.append(f)
+        if selected:
+            return selected
+        log.warning("callset_filter_no_match", callsets=list(callsets),
+                    vcf_dir=str(vcf_dir))
+    return sorted(vcf_dir.glob("*.vcf.bgz"))
+
+
+def _make_region_jobs(
+    vcf_files: list[Path],
+    tmp_dir: Path,
+    window_size: int,
+) -> list[tuple[str, str | None, str]]:
+    """VCF をサブ染色体リージョンに分割したジョブ列を作る。
+
+    各 VCF が保持する contig 長 (header の ##contig) を窓幅で割り、
+    ``(vcf_path, region, parquet_path)`` のジョブを生成する。region は
+    cyvcf2 のランダムアクセス用 ``"chr1:1-10000000"`` 形式 (.tbi が必須)。
+    contig 長が取れない / 空ファイルの場合は region=None で丸ごと 1 ジョブ。
+    """
+    from cyvcf2 import VCF
+
+    jobs: list[tuple[str, str | None, str]] = []
+    for vcf_path in vcf_files:
+        stem = vcf_path.stem
+        vcf = VCF(str(vcf_path))
+        try:
+            try:
+                seqlens = dict(zip(vcf.seqnames, vcf.seqlens))
+            except Exception:
+                seqlens = {}
+            # この VCF が実際に保持する contig を先頭レコードから特定する。
+            # header は全 contig を列挙するため、名前だけでは判別できない。
+            contig: str | None = None
+            for v in vcf:
+                contig = v.CHROM
+                break
+        finally:
+            vcf.close()
+
+        if contig is None:
+            # 変異が 1 件も無い VCF はスキップ (空 parquet を作らない)。
+            log.info("vcf_empty_skipped", file=vcf_path.name)
+            continue
+
+        length = seqlens.get(contig)
+        if not length:
+            # contig 長が無ければ region 分割せず丸ごと 1 ジョブ。
+            jobs.append((str(vcf_path), None, str(tmp_dir / f"{stem}.parquet")))
+            continue
+
+        part = 0
+        for start in range(1, length + 1, window_size):
+            end = min(start + window_size - 1, length)
+            region = f"{contig}:{start}-{end}"
+            parquet = tmp_dir / f"{stem}.part{part:04d}.parquet"
+            jobs.append((str(vcf_path), region, str(parquet)))
+            part += 1
+
+    return jobs
+
+
 def build_gnomad_duckdb(
     vcf_dir: Path,
     output_db: Path,
     assembly: str,
     gnomad_version: str,
     max_workers: int | None = None,
+    window_size: int = _WINDOW_SIZE,
+    callsets: tuple[str, ...] | None = None,
 ) -> None:
     """
     gnomAD VCF (per-chromosome *.vcf.bgz) を DuckDB に取り込む。
@@ -185,6 +274,10 @@ def build_gnomad_duckdb(
     DuckDB コアには read_vcf が無いため cyvcf2 で 1 変異ずつ読み出す。
     染色体ごとにプロセス並列で Parquet へ書き出し、最後に read_parquet で
     一括ロードする。gnomAD v4.x の grpmax と v2.1.1 の popmax を自動で吸収する。
+
+    ``callsets`` を渡すと ``gnomad.{callset}.*.vcf.bgz`` に一致するファイルだけを
+    ロードする。GRCh38 は joint のみ (exome+genome 統合済み) を使うべきで、
+    staging に残った exome VCF を巻き込んで二重登録するのを防ぐ。
     """
     import duckdb
     from datetime import date
@@ -193,60 +286,62 @@ def build_gnomad_duckdb(
     log.info("building_gnomad_db", output=str(output_db), assembly=assembly,
              version=gnomad_version)
 
-    vcf_files = sorted(vcf_dir.glob("*.vcf.bgz"))
+    vcf_files = _select_vcf_files(vcf_dir, callsets)
     if not vcf_files:
         raise FileNotFoundError(f"No *.vcf.bgz files found in {vcf_dir}")
-
-    if max_workers is None:
-        max_workers = max(1, (os.cpu_count() or 2) - 1)
-    max_workers = max(1, min(max_workers, len(vcf_files)))
-
-    mem_limit = _per_worker_mem_limit(max_workers)
-    log.info("vcf_files_found", count=len(vcf_files), workers=max_workers,
-             mem_per_worker=mem_limit)
 
     tmp_dir = output_db.parent / "_gnomad_parquet_tmp"
     if tmp_dir.exists():
         shutil.rmtree(tmp_dir, ignore_errors=True)
     tmp_dir.mkdir(parents=True, exist_ok=True)
 
+    # 染色体を窓幅で分割したサブジョブを作る。chr1 等の巨大 contig も複数
+    # worker に分散され、最大 contig 1 本に律速されなくなる。
+    jobs = _make_region_jobs(vcf_files, tmp_dir, window_size)
+    if not jobs:
+        raise RuntimeError(f"No variants found in any VCF under {vcf_dir}")
+
+    if max_workers is None:
+        max_workers = max(1, (os.cpu_count() or 2) - 1)
+    max_workers = max(1, min(max_workers, len(jobs)))
+
+    mem_limit = _per_worker_mem_limit(max_workers)
+    log.info("vcf_files_found", count=len(vcf_files), regions=len(jobs),
+             workers=max_workers, mem_per_worker=mem_limit)
+
     parquet_paths: list[Path] = []
     total_rows = 0
     try:
-        # ---- 並列フェーズ: VCF → Parquet ----
-        jobs = [
-            (vcf_path, tmp_dir / f"{vcf_path.stem}.parquet")
-            for vcf_path in vcf_files
-        ]
-
-        # Per-chromosome progress: each VCF file is one tick. The bar
-        # makes it visible whether the bottleneck is one slow chromosome
-        # (chr1/chr2 dominate runtime in gnomAD).
+        # ---- 並列フェーズ: VCF region → Parquet ----
+        # Per-region progress: each window is one tick, giving finer-grained
+        # progress than the old per-chromosome bar.
         with progress_bar("Loading gnomAD VCFs", total=len(jobs)) as advance:
             if max_workers == 1:
-                for vcf_path, parquet_path in jobs:
+                for vcf_path, region, parquet_path in jobs:
                     name, rows = _vcf_to_parquet(
-                        str(vcf_path), str(parquet_path), str(tmp_dir), mem_limit
+                        vcf_path, region, parquet_path, str(tmp_dir), mem_limit
                     )
-                    parquet_paths.append(parquet_path)
+                    parquet_paths.append(Path(parquet_path))
                     total_rows += rows
-                    log.info("vcf_loaded", file=name, rows=rows, cumulative=total_rows)
+                    log.info("region_loaded", file=name, region=region,
+                             rows=rows, cumulative=total_rows)
                     advance()
             else:
                 with ProcessPoolExecutor(max_workers=max_workers) as pool:
                     future_to_job = {
                         pool.submit(
                             _vcf_to_parquet,
-                            str(vcf_path), str(parquet_path), str(tmp_dir), mem_limit,
+                            vcf_path, region, parquet_path, str(tmp_dir), mem_limit,
                         ): parquet_path
-                        for vcf_path, parquet_path in jobs
+                        for vcf_path, region, parquet_path in jobs
                     }
                     for future in as_completed(future_to_job):
                         parquet_path = future_to_job[future]
                         name, rows = future.result()
-                        parquet_paths.append(parquet_path)
+                        parquet_paths.append(Path(parquet_path))
                         total_rows += rows
-                        log.info("vcf_loaded", file=name, rows=rows, cumulative=total_rows)
+                        log.info("region_loaded", file=name, rows=rows,
+                                 cumulative=total_rows)
                         advance()
 
         # ---- マージフェーズ: Parquet → DuckDB ----
@@ -276,14 +371,17 @@ def build_gnomad_duckdb(
 
 def _vcf_to_parquet(
     vcf_path: str,
+    region: str | None,
     parquet_path: str,
     temp_dir: str,
     mem_limit: str,
 ) -> tuple[str, int]:
-    """1 つの VCF をパースし Parquet へ書き出す (worker プロセスで実行)。
+    """VCF の 1 リージョンをパースし Parquet へ書き出す (worker プロセスで実行)。
 
-    返り値は (ファイル名, 書き出した行数)。各 worker は専用の一時 DuckDB を
-    使い、メモリ超過分は temp_dir へスピルする。
+    region が None なら丸ごと、それ以外は ``"chr1:1-10000000"`` 形式の区間のみ
+    (cyvcf2 のランダムアクセス、.tbi 必須) を処理する。返り値は
+    (ファイル名, 書き出した行数)。各 worker は専用の一時 DuckDB を使い、
+    メモリ超過分は temp_dir へスピルする。
     """
     import duckdb
     from cyvcf2 import VCF
@@ -306,10 +404,24 @@ def _vcf_to_parquet(
         con.execute(f"SET temp_directory='{temp_dir}'")
         con.execute(_CREATE_TABLE)
 
+        # tabix region queries return records that *overlap* the interval, so an
+        # indel anchored in the previous window (POS < start) but whose REF spans
+        # into this one is returned by both adjacent windows. Anchor each variant
+        # to its POS and drop those outside [pos_lo, pos_hi] to count it exactly
+        # once. Windows partition POS space contiguously, so nothing is lost.
+        pos_lo = pos_hi = None
+        if region:
+            coords = region.rsplit(":", 1)[1]
+            lo_s, hi_s = coords.split("-")
+            pos_lo, pos_hi = int(lo_s), int(hi_s)
+
         vcf = VCF(vcf_path)
         batch: list[tuple] = []
         try:
-            for v in vcf:
+            iterator = vcf(region) if region else vcf
+            for v in iterator:
+                if pos_lo is not None and not (pos_lo <= v.POS <= pos_hi):
+                    continue
                 # cyvcf2 returns None for PASS, otherwise the filter string ("AC0", ...)
                 filter_val = v.FILTER if v.FILTER is not None else "PASS"
 
