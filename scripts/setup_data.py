@@ -746,7 +746,6 @@ def step_gnomad_duckdb(
     chromosomes: list[str],
     skip: bool,
     workers: int | None = None,
-    local_scratch: Path | None = None,
 ) -> bool:
     ver = _GNOMAD_VER[assembly]
     kind = _GNOMAD_KIND[assembly]
@@ -808,11 +807,8 @@ def step_gnomad_duckdb(
     # GRCh37: exomes + genomes). Without this, a stray exome VCF left in the
     # staging dir would be globbed alongside joint and double-count variants.
     load_callsets = tuple(name for name, *_ in sources)
-    if local_scratch is not None:
-        print(f"  Using local scratch dir: {local_scratch}")
     build_gnomad_duckdb(vcf_dir, dest, assembly=assembly, gnomad_version=ver,
-                        max_workers=n_workers, callsets=load_callsets,
-                        scratch_dir=local_scratch)
+                        max_workers=n_workers, callsets=load_callsets)
     return True
 
 
@@ -939,12 +935,6 @@ def main() -> None:
     parser.add_argument("--workers", type=int, default=None, metavar="N",
                         help="Build parallelism for the ClinVar (XML parse, max 24) "
                              "and gnomAD (DuckDB) steps (default: CPU cores - 1)")
-    parser.add_argument("--gnomad-local-scratch", type=Path, default=None, metavar="PATH",
-                        help="Local directory for gnomAD build scratch (intermediate "
-                             "parquet, per-worker DuckDB, spill). Use a fast LOCAL disk "
-                             "when the data dir is on a network mount (NFS) to avoid I/O "
-                             "contention; needs tens of GB free. Default: alongside the "
-                             "output DB.")
     parser.add_argument("--skip-gnomad", action="store_true",
                         help="Skip gnomAD download (~300 GB)")
     parser.add_argument("--skip-genome", action="store_true",
@@ -1007,7 +997,7 @@ def main() -> None:
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
         # ("mmsplice-gtf",      "MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
         ("gnomad-constraint", "gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
-        ("gnomad",            "gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers, args.gnomad_local_scratch)),
+        ("gnomad",            "gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
         ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
         ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
     ]

@@ -219,13 +219,8 @@ def _make_region_jobs(
     """
     from cyvcf2 import VCF
 
-    # Per-file job lists, interleaved at the end so the first `workers` in-flight
-    # jobs hit distinct files instead of all piling onto chr1 (which is what
-    # sorted order would do). Spreading concurrent readers across files cuts
-    # same-file random-access contention, important on network storage.
-    per_file: list[list[tuple[str, str | None, str]]] = []
+    jobs: list[tuple[str, str | None, str]] = []
     for vcf_path in vcf_files:
-        file_jobs: list[tuple[str, str | None, str]] = []
         stem = vcf_path.stem
         vcf = VCF(str(vcf_path))
         try:
@@ -250,8 +245,7 @@ def _make_region_jobs(
         length = seqlens.get(contig)
         if not length:
             # contig 長が無ければ region 分割せず丸ごと 1 ジョブ。
-            file_jobs.append((str(vcf_path), None, str(tmp_dir / f"{stem}.parquet")))
-            per_file.append(file_jobs)
+            jobs.append((str(vcf_path), None, str(tmp_dir / f"{stem}.parquet")))
             continue
 
         part = 0
@@ -259,18 +253,10 @@ def _make_region_jobs(
             end = min(start + window_size - 1, length)
             region = f"{contig}:{start}-{end}"
             parquet = tmp_dir / f"{stem}.part{part:04d}.parquet"
-            file_jobs.append((str(vcf_path), region, str(parquet)))
+            jobs.append((str(vcf_path), region, str(parquet)))
             part += 1
-        per_file.append(file_jobs)
 
-    # Round-robin across files: window0 of every file, then window1, ...
-    from itertools import chain, zip_longest
-
-    return [
-        job
-        for job in chain.from_iterable(zip_longest(*per_file))
-        if job is not None
-    ]
+    return jobs
 
 
 def build_gnomad_duckdb(
@@ -281,7 +267,6 @@ def build_gnomad_duckdb(
     max_workers: int | None = None,
     window_size: int = _WINDOW_SIZE,
     callsets: tuple[str, ...] | None = None,
-    scratch_dir: Path | None = None,
 ) -> None:
     """
     gnomAD VCF (per-chromosome *.vcf.bgz) を DuckDB に取り込む。
@@ -293,11 +278,6 @@ def build_gnomad_duckdb(
     ``callsets`` を渡すと ``gnomad.{callset}.*.vcf.bgz`` に一致するファイルだけを
     ロードする。GRCh38 は joint のみ (exome+genome 統合済み) を使うべきで、
     staging に残った exome VCF を巻き込んで二重登録するのを防ぐ。
-
-    ``scratch_dir`` を渡すと中間 parquet・worker 用 DuckDB・spill をそのディレクトリ
-    (高速なローカルディスク想定) に置く。出力先がネットワークマウント (NFS) の場合、
-    24 worker のスクラッチ I/O 競合がボトルネックになるため、ローカルに逃がす。
-    None の場合は従来通り出力 DB と同じ場所に置く。
     """
     import duckdb
     from datetime import date
@@ -310,13 +290,7 @@ def build_gnomad_duckdb(
     if not vcf_files:
         raise FileNotFoundError(f"No *.vcf.bgz files found in {vcf_dir}")
 
-    # Scratch (intermediate parquet, per-worker build DuckDB, spill) goes to a
-    # local disk when scratch_dir is given — on NFS the 24-way scratch I/O
-    # contention dominates. Everything below derives from tmp_dir, so relocating
-    # it moves all scratch at once. The final DuckDB still lands on output_db.
-    scratch_base = scratch_dir if scratch_dir is not None else output_db.parent
-    scratch_base.mkdir(parents=True, exist_ok=True)
-    tmp_dir = scratch_base / "_gnomad_parquet_tmp"
+    tmp_dir = output_db.parent / "_gnomad_parquet_tmp"
     if tmp_dir.exists():
         shutil.rmtree(tmp_dir, ignore_errors=True)
     tmp_dir.mkdir(parents=True, exist_ok=True)
