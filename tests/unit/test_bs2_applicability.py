@@ -71,9 +71,10 @@ class TestBS2StaysApplicable:
         assert bdt._bs2_applicability(rs) == "applicable"
 
     def test_plain_count_based(self):
-        rs = _rs("LDLR", _bs2_code(
-            "Variant is identified in >= 3 heterozygous or >= 1 homozygous "
-            "well-phenotyped, untreated, normolipidemic adults (unrelated)."))
+        # GP1BA-style: plain homozygote/heterozygote count, no clinical qualifier.
+        rs = _rs("GP1BA", _bs2_code(
+            "Variant is identified in >= 1 homozygous or >= 2 heterozygous "
+            "healthy adults (unrelated)."))
         assert bdt._bs2_applicability(rs) == "applicable"
 
     def test_hemizygotes_in_gnomad(self):
@@ -98,3 +99,20 @@ class TestResolvedTSV:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         for gene in ("RPE65", "NRAS", "BRAF", "KCNQ1", "BRCA1", "BRCA2", "PALB2"):
             assert rows[gene]["bs2"] == "not_applicable", gene
+
+    def test_committed_tsv_withholds_bs2_needing_clinical_confirmation(self):
+        # Genes whose VCEP BS2 demands phenotype/lab/functional confirmation or
+        # internal-only cohort data that gnomAD cannot supply — BS2 is withheld so
+        # a population-count BS2 never falsely fires (and never double-counts the
+        # gnomAD individuals that already drove BS1/BA1). See
+        # build_disease_thresholds._BS2_CLINICAL_CONFIRMATION.
+        import csv
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        with tsv.open(encoding="utf-8") as f:
+            rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
+        for gene in ("HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
+                     "CDH1", "UBE3A", "DICER1", "SERPINC1", "TP53"):
+            assert rows[gene]["bs2"] == "not_applicable", gene
+            # Dead count / female-only flags must be cleared once BS2 is off.
+            assert rows[gene]["bs2_count"] == "", gene
+            assert rows[gene]["bs2_female_only"] == "", gene

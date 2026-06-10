@@ -476,6 +476,30 @@ _BS2_DECLINE = re.compile(
 _BS2_POINTS = re.compile(r"\bpoints?\b", re.IGNORECASE)
 _BS2_GNOMAD_COUNTABLE = re.compile(r"homozyg|hemizyg|gnomad", re.IGNORECASE)
 
+# Genes whose VCEP BS2 rule, despite naming a gnomAD-countable genotype
+# (homozygote/hemizygote/heterozygote), additionally REQUIRES phenotype,
+# laboratory, or functional confirmation that gnomAD does not carry — or demands
+# internal/curated clinical data so that reusing the same gnomAD individuals that
+# already drove BS1/BA1 would double-count. A gnomAD-based evaluator cannot
+# satisfy these, so BS2 is forced not_applicable regardless of which spec wins.
+# Curated from the actual cspec BS2 descriptions (not auto-detected: phrases like
+# "normal GAA activity" co-occur with "homozygous", so the generic countable
+# heuristic would wrongly keep them applicable):
+#   HNF4A    GN085 — normoglycemic + age 70+ (blood glucose, age)
+#   RYR1     GN012/GN150 — healthy + negative IVCT/CHCT (functional test)
+#   LDLR     GN013 — well-phenotyped, untreated, normolipidemic (lipids, Tx history)
+#   GAA      GN010 — normal GAA enzyme activity (assay)
+#   ITGA2B/ITGB3 GN011 — unaffected proven by aggregometry (platelet function)
+#   CDH1     GN007 — tumor-free (GC/DGC/SRC/LBC) + family history not HDGC
+#   UBE3A    GN016/GN037 — devoid of neurodevelopmental phenotype, parent-of-origin / internal data
+#   DICER1   GN024 — tumor-free through age 50 + PS4-ratio caveat (internal cohort)
+#   SERPINC1 GN084 — normal antithrombin level > 0.8 IU/mL (lab value)
+#   TP53     GN009 — cancer-free females ≥60y from a single source (internal cohort)
+_BS2_CLINICAL_CONFIRMATION = frozenset({
+    "HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
+    "CDH1", "UBE3A", "DICER1", "SERPINC1", "TP53",
+})
+
 
 def _bs2_applicability(rule_set: dict) -> str:
     """"applicable" / "not_applicable" / "" for the rule set's BS2 code.
@@ -1403,11 +1427,16 @@ def main() -> None:
         row["pm5_lp"] = "no" if lp and lp[1] == "no" else ""
         bchoice = bs2_choice.get(g)
         row["bs2"] = bchoice[1] if bchoice else ""
+        # Genes whose VCEP BS2 needs phenotype/lab/functional confirmation or
+        # internal-only clinical data that gnomAD lacks: force not_applicable so a
+        # gnomAD-count BS2 is never (falsely) fired on a pathogenic variant.
+        if g in _BS2_CLINICAL_CONFIRMATION and row["bs2"]:
+            row["bs2"] = "not_applicable"
         # Emit the per-gene BS2 count and female-only flag only when BS2 is
         # applicable for the gene.
-        _bs2_applic = bool(bchoice and bchoice[1] == "applicable")
-        row["bs2_count"] = bchoice[2] if _bs2_applic else ""
-        row["bs2_female_only"] = bchoice[3] if _bs2_applic else ""
+        _bs2_applic = row["bs2"] == "applicable"
+        row["bs2_count"] = bchoice[2] if (_bs2_applic and bchoice) else ""
+        row["bs2_female_only"] = bchoice[3] if (_bs2_applic and bchoice) else ""
         pm4c = pm4_choice.get(g)
         row["pm4"] = pm4c[1] if pm4c else ""
         pm2c = pm2_choice.get(g)
