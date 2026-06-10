@@ -110,9 +110,33 @@ class TestResolvedTSV:
         tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
-        for gene in ("HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
-                     "CDH1", "UBE3A", "DICER1", "SERPINC1", "TP53"):
+        clinical_confirmation = (
+            # batch 1
+            "HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
+            "CDH1", "UBE3A", "DICER1", "SERPINC1", "TP53",
+            # batch 2 — phase / lab assay / specific phenotype
+            "HNF1A", "GCK", "IDUA", "GP1BA", "GP1BB", "GP9", "VHL", "PTEN",
+            "MLH1", "MSH2", "MSH6", "PMS2",
+            "CDH23", "GJB2", "MYO6", "MYO7A", "SLC26A4", "TECTA", "USH2A",
+            "MYO15A", "OTOF",
+            # batch 2 — "healthy/unaffected adult" not gnomAD-confirmable
+            "ACTA1", "DNM2", "NEB", "SCN1A", "SCN2A", "SCN3A", "SCN8A",
+            "ADA", "DCLRE1C", "IL7R", "RAG1", "RAG2",
+            "ETHE1", "POLG", "GATM", "GAMT", "HBB", "HBA2",
+            "FOXG1", "TCF4", "PAH", "APC",
+        )
+        for gene in clinical_confirmation:
             assert rows[gene]["bs2"] == "not_applicable", gene
             # Dead count / female-only flags must be cleared once BS2 is off.
             assert rows[gene]["bs2_count"] == "", gene
             assert rows[gene]["bs2_female_only"] == "", gene
+
+    def test_committed_tsv_keeps_explicit_gnomad_bs2_applicable(self):
+        # BMPR2 / PIK3R2 sanction gnomAD homozygote counting directly
+        # ("≥3 homozygotes in gnomAD"), so BS2 stays gnomAD-automatable.
+        import csv
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        with tsv.open(encoding="utf-8") as f:
+            rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
+        for gene in ("BMPR2", "PIK3R2"):
+            assert rows[gene]["bs2"] == "applicable", gene

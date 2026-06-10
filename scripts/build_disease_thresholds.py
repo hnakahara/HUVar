@@ -476,28 +476,60 @@ _BS2_DECLINE = re.compile(
 _BS2_POINTS = re.compile(r"\bpoints?\b", re.IGNORECASE)
 _BS2_GNOMAD_COUNTABLE = re.compile(r"homozyg|hemizyg|gnomad", re.IGNORECASE)
 
-# Genes whose VCEP BS2 rule, despite naming a gnomAD-countable genotype
-# (homozygote/hemizygote/heterozygote), additionally REQUIRES phenotype,
-# laboratory, or functional confirmation that gnomAD does not carry — or demands
-# internal/curated clinical data so that reusing the same gnomAD individuals that
-# already drove BS1/BA1 would double-count. A gnomAD-based evaluator cannot
-# satisfy these, so BS2 is forced not_applicable regardless of which spec wins.
-# Curated from the actual cspec BS2 descriptions (not auto-detected: phrases like
-# "normal GAA activity" co-occur with "homozygous", so the generic countable
-# heuristic would wrongly keep them applicable):
-#   HNF4A    GN085 — normoglycemic + age 70+ (blood glucose, age)
-#   RYR1     GN012/GN150 — healthy + negative IVCT/CHCT (functional test)
+# Genes whose VCEP BS2 cannot be derived from gnomAD population counts and is
+# therefore forced not_applicable (a gnomAD-based evaluator would FALSELY fire
+# BS2 on a pathogenic variant). Two reasons, neither auto-detectable by regex
+# (the disqualifying phrases co-occur with "homozygous"/"healthy adult", so the
+# generic countable heuristic would wrongly keep them applicable):
+#
+# (1) The rule needs phase, a lab/functional assay, or a specific clinical
+#     phenotype gnomAD does not carry:
+#   HNF4A/HNF1A GN085/GN017 — normoglycemic + age 70+ (fasting glucose, age)
+#   GCK      GN086 — fasting glucose < 100 mg/dL (lab)
 #   LDLR     GN013 — well-phenotyped, untreated, normolipidemic (lipids, Tx history)
 #   GAA      GN010 — normal GAA enzyme activity (assay)
-#   ITGA2B/ITGB3 GN011 — unaffected proven by aggregometry (platelet function)
+#   IDUA     GN091 — IDUA enzyme activity in unaffected range (assay + reference)
+#   ITGA2B/ITGB3/GP1BA/GP1BB/GP9 GN011/079/082/083 — unaffected proven by
+#            aggregometry / flow cytometry + platelet count & size (function)
 #   CDH1     GN007 — tumor-free (GC/DGC/SRC/LBC) + family history not HDGC
-#   UBE3A    GN016/GN037 — devoid of neurodevelopmental phenotype, parent-of-origin / internal data
 #   DICER1   GN024 — tumor-free through age 50 + PS4-ratio caveat (internal cohort)
-#   SERPINC1 GN084 — normal antithrombin level > 0.8 IU/mL (lab value)
 #   TP53     GN009 — cancer-free females ≥60y from a single source (internal cohort)
+#   VHL      GN078 — ≥65y, full phenotyping & screening for VHL cancers
+#   PTEN     GN003 — homozygous in healthy / PHTS-unaffected (clinical PHTS exclusion)
+#   SERPINC1 GN084 — normal antithrombin level > 0.8 IU/mL (lab value)
+#   MLH1/MSH2/MSH6/PMS2 GN115/137/138/139 — co-occurrence IN TRANS with a known
+#            pathogenic variant + Lynch-cancer phenotype (gnomAD has no phase)
+#   Hearing Loss GN005/GN023 (CDH23, GJB2, MYO6, MYO7A, SLC26A4, TECTA, USH2A,
+#            MYO15A, OTOF) — BIALLELIC with a known pathogenic variant (phase)
+#   UBE3A    GN016/GN037 — unaffected het, parent-of-origin / internal data
+#
+# (2) The rule scores BS2 on an individual confirmed to be a "healthy/unaffected
+#     adult" — a per-individual clinical status gnomAD's aggregate counts do not
+#     establish (gnomAD is *presumed*-healthy, not phenotyped; it also includes
+#     non-adult and disease-cohort samples). Same wording that disqualified RYR1.
+#     Genes that INSTEAD explicitly sanction gnomAD homozygote counting (BMPR2,
+#     PIK3R2: "≥3 homozygotes in gnomAD") are NOT listed — they stay applicable.
+#   Congenital Myopathies: ACTA1, DNM2, NEB (GN147/148/146)
+#   Epilepsy Na-channel:  SCN1A, SCN2A, SCN3A, SCN8A (GN067-070)
+#   SCID:                 ADA, DCLRE1C, IL7R, RAG1, RAG2 (GN114/116/119/123/124)
+#   Mito/CCDS:            ETHE1, POLG, GATM, GAMT (GN014/025/026)
+#   Hemoglobinopathy:     HBB, HBA2 (GN170/173)
+#   Rett/Angelman-like:   FOXG1, TCF4 (GN035/032)
+#   Other:                PAH (GN006), APC (GN089)
 _BS2_CLINICAL_CONFIRMATION = frozenset({
+    # batch 1
     "HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
     "CDH1", "UBE3A", "DICER1", "SERPINC1", "TP53",
+    # batch 2 — reason (1): phase / lab / specific phenotype
+    "HNF1A", "GCK", "IDUA", "GP1BA", "GP1BB", "GP9",
+    "VHL", "PTEN", "MLH1", "MSH2", "MSH6", "PMS2",
+    "CDH23", "GJB2", "MYO6", "MYO7A", "SLC26A4", "TECTA",
+    "USH2A", "MYO15A", "OTOF",
+    # batch 2 — reason (2): "healthy/unaffected adult" not gnomAD-confirmable
+    "ACTA1", "DNM2", "NEB", "SCN1A", "SCN2A", "SCN3A", "SCN8A",
+    "ADA", "DCLRE1C", "IL7R", "RAG1", "RAG2",
+    "ETHE1", "POLG", "GATM", "GAMT", "HBB", "HBA2",
+    "FOXG1", "TCF4", "PAH", "APC",
 })
 
 
