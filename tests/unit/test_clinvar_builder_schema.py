@@ -17,21 +17,35 @@ from acmg_classifier.setup.clinvar_builder import (
 
 class TestParseAaChange:
     """codon_position drives the PS1/PM5 same-codon lookup. A parse miss leaves
-    it NULL and silently withholds PM5 (the TP53 p.Arg248Trp false negative)."""
+    it NULL and silently withholds PM5 (the TP53 p.Arg248Trp false negative).
+    amino_acid_change drives the PS1 same-AA lookup, so its one-letter codes
+    must be correct (Arg->R, not the first letter 'A')."""
 
     def test_plain_three_letter(self):
-        assert _parse_aa_change("NP_000537.3:p.Arg248Gln") == ("A248G", 248)
+        # Arg->R, Gln->Q (the old code[:1] shortcut wrongly produced "A248G").
+        assert _parse_aa_change("NP_000537.3:p.Arg248Gln") == ("R248Q", 248)
 
     def test_parenthesised_predicted_protein(self):
         # ClinVar stores predicted protein changes parenthesised; the leading
         # "(" used to make the regex miss the change -> codon_position NULL.
-        assert _parse_aa_change("NP_000537.3:p.(Arg248Gln)") == ("A248G", 248)
+        assert _parse_aa_change("NP_000537.3:p.(Arg248Gln)") == ("R248Q", 248)
 
     def test_transcript_gene_prefix_parenthesised(self):
-        assert _parse_aa_change("NM_000546.6(TP53):p.(Arg248Trp)") == ("A248T", 248)
+        assert _parse_aa_change("NM_000546.6(TP53):p.(Arg248Trp)") == ("R248W", 248)
+
+    def test_collapsed_residues_now_distinct(self):
+        # These residues share a first letter with another residue, so the old
+        # code[:1] shortcut conflated them (Arg/Asn/Asp->A, Gln/Glu->G,
+        # Lys->L vs Leu, Phe->P vs Pro, Trp/Tyr->T vs Thr). PS1 then matched the
+        # wrong substitution. Each must now map to its true one-letter code.
+        assert _parse_aa_change("p.Asn100Asp") == ("N100D", 100)
+        assert _parse_aa_change("p.Glu100Lys") == ("E100K", 100)
+        assert _parse_aa_change("p.Phe100Tyr") == ("F100Y", 100)
+        assert _parse_aa_change("p.Trp100Cys") == ("W100C", 100)
+        assert _parse_aa_change("p.Ser1028Arg") == ("S1028R", 1028)
 
     def test_stop_gain_still_parses_codon(self):
-        assert _parse_aa_change("p.Arg248Ter")[1] == 248
+        assert _parse_aa_change("p.Arg248Ter") == ("R248*", 248)
 
     def test_no_protein_change(self):
         assert _parse_aa_change("NM_000546.6:c.742C>T") == (None, None)

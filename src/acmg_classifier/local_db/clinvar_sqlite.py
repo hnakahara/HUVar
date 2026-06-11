@@ -55,6 +55,35 @@ def _protein_change_only(hgvs_p: Optional[str]) -> Optional[str]:
     return hgvs_p.split(":", 1)[-1]
 
 
+# A protein change in any HGVS-ish form, tolerant of an accession prefix and
+# ClinVar's predicted-protein parentheses ("...:p.(Arg248Trp)").
+_AA_CHANGE_RE = re.compile(r"p\.\(?([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2}|Ter|\*)")
+
+
+def _aa_change_key(hgvs_p: Optional[str]) -> Optional[str]:
+    """'NP_000537.3:p.Gly175Arg' (or 'p.Gly175Arg') -> 'G175R'.
+
+    Produces the same one-letter key that clinvar_builder._parse_aa_change
+    stores in the ``amino_acid_change`` column, so PS1 can match on that
+    MANE-anchored column instead of a fragile ``hgvs_p`` substring. The old
+    ``hgvs_p LIKE '%:p.Gly175Arg'`` missed every ClinVar entry stored in the
+    predicted-protein form ``:p.(Gly175Arg)`` (the parenthesis breaks the
+    match) and every entry whose hgvs_p carried a non-MANE transcript's
+    residue numbering."""
+    from acmg_classifier.criteria.grantham import AA3_TO_AA1
+    if not hgvs_p:
+        return None
+    m = _AA_CHANGE_RE.search(hgvs_p)
+    if not m:
+        return None
+    aa1 = AA3_TO_AA1.get(m.group(1))
+    raw2 = m.group(3)
+    aa2 = "*" if raw2 in ("Ter", "*") else AA3_TO_AA1.get(raw2)
+    if aa1 is None or aa2 is None:
+        return None
+    return aa1 + m.group(2) + aa2
+
+
 def query_same_aa_change(
     db_path: Path,
     gene_symbol: str,
@@ -70,9 +99,16 @@ def query_same_aa_change(
 
     Excludes rows matching exclude_* (PS1 requires a *different* nucleotide change
     producing the same AA change; otherwise the hit is the variant itself).
+
+    Matches on the MANE-anchored ``amino_acid_change`` column ('G175R'), not on
+    a ``hgvs_p`` substring. The old ``hgvs_p LIKE '%:p.Gly175Arg'`` silently
+    missed comparators stored in ClinVar's predicted-protein form
+    ``:p.(Gly175Arg)`` and those whose hgvs_p used a non-MANE transcript's
+    numbering — which is why same-AA pathogenic siblings (e.g. APC p.Ser1028Arg,
+    MECP2 p.Leu136Phe) were not found even though they exist.
     """
-    p_change = _protein_change_only(hgvs_p)
-    if not db_path.exists() or not p_change:
+    aa_key = _aa_change_key(hgvs_p)
+    if not db_path.exists() or not aa_key:
         return []
 
     excl_chrom = strip_chr(exclude_chrom) if exclude_chrom else exclude_chrom
@@ -85,13 +121,13 @@ def query_same_aa_change(
                    gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
             FROM variants
             WHERE gene_symbol = ?
-              AND hgvs_p LIKE ?
+              AND amino_acid_change = ?
               AND star_rating >= ?
               AND clinical_significance IN (
                   'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
               )
             """,
-            (gene_symbol, "%:" + p_change, min_stars),
+            (gene_symbol, aa_key, min_stars),
         ).fetchall()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="same_aa", error=str(exc))

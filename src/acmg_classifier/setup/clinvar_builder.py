@@ -10,6 +10,7 @@ from pathlib import Path
 
 import structlog
 
+from acmg_classifier.criteria.grantham import AA3_TO_AA1
 from acmg_classifier.utils.progress import progress_bar
 
 log = structlog.get_logger()
@@ -191,17 +192,27 @@ def _parse_aa_change(hgvs_p: str | None) -> tuple[str | None, int | None]:
     Tolerates ClinVar's predicted-protein parenthesis notation
     ``NP_000537.3:p.(Arg248Gln)`` — the leading "(" otherwise made the regex
     miss the change, leaving codon_position NULL and silently breaking the
-    PS1/PM5 same-codon lookup for every variant stored that way."""
-    import re
+    PS1/PM5 same-codon lookup for every variant stored that way.
+
+    The three-letter residue codes are mapped with the full AA3_TO_AA1 table.
+    The previous ``code[:1]`` shortcut collapsed every residue to its first
+    letter, so Arg/Asn/Asp all became "A" and Gln/Glu both "G" (likewise
+    Lys→L, Phe→P, Trp/Tyr→T). That corrupted amino_acid_change for those
+    residues and made the PS1 same-AA lookup match the wrong substitutions."""
     if not hgvs_p:
         return None, None
     m = re.search(r"p\.\(?([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2}|Ter|\*)", hgvs_p)
-    if m:
-        aa1 = m.group(1)[:1].upper()
-        pos = int(m.group(2))
-        aa2 = m.group(3)[:1].upper()
-        return aa1 + str(pos) + aa2, pos
-    return None, None
+    if not m:
+        return None, None
+    pos = int(m.group(2))
+    aa1 = AA3_TO_AA1.get(m.group(1))
+    raw2 = m.group(3)
+    aa2 = "*" if raw2 in ("Ter", "*") else AA3_TO_AA1.get(raw2)
+    if aa1 is None or aa2 is None:
+        # Unknown residue code (e.g. non-standard 'Sec'/'Xaa') — keep the codon
+        # number for the same-codon lookup but leave amino_acid_change NULL.
+        return None, pos
+    return aa1 + str(pos) + aa2, pos
 
 
 # A bare protein change ("p.Arg248Trp"), tolerant of a transcript/accession
