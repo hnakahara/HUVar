@@ -35,7 +35,7 @@ COLUMNS = [
     "penetrance", "bs1_threshold", "bs1_strength", "ba1_threshold", "af_basis",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm4", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
-    "bs2_count", "bs2_female_only",
+    "bs2_count", "bs2_female_only", "bs2_hom_only",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
@@ -511,11 +511,18 @@ _BS2_GNOMAD_COUNTABLE = re.compile(r"homozyg|hemizyg|gnomad", re.IGNORECASE)
 #     PIK3R2: "≥3 homozygotes in gnomAD") are NOT listed — they stay applicable.
 #   Congenital Myopathies: ACTA1, DNM2, NEB (GN147/148/146)
 #   Epilepsy Na-channel:  SCN1A, SCN2A, SCN3A, SCN8A (GN067-070)
-#   SCID:                 ADA, DCLRE1C, IL7R, RAG1, RAG2 (GN114/116/119/123/124)
-#   Mito/CCDS:            ETHE1, POLG, GATM, GAMT (GN014/025/026)
+#   SCID:                 DCLRE1C (GN116)
+#   Mito/CCDS:            GATM (GN025)
 #   Hemoglobinopathy:     HBB, HBA2 (GN170/173)
 #   Rett/Angelman-like:   FOXG1, TCF4 (GN035/032)
-#   Other:                PAH (GN006), APC (GN089)
+#   Other:                APC (GN089)
+#
+# NOT listed (reclassified to *applicable*): IL7R, RAG1, RAG2 (SCID GN119/123/
+# 124), ADA (GN114), PAH (GN006), POLG, ETHE1 (Mito GN014), GAMT (CCDS GN026).
+# Their VCEP BS2 has an explicit gnomAD homozygote-count path ("≥N homozygotes" /
+# "observed in the homozygous state in a healthy adult"), so a gnomAD-derived BS2
+# is legitimate and was previously a FALSE NEGATIVE. They are recessive (or
+# mode-agnostic) genes, so the evaluator counts gnomAD homozygotes (nhomalt).
 _BS2_CLINICAL_CONFIRMATION = frozenset({
     # batch 1
     "HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
@@ -527,9 +534,29 @@ _BS2_CLINICAL_CONFIRMATION = frozenset({
     "USH2A", "MYO15A", "OTOF",
     # batch 2 — reason (2): "healthy/unaffected adult" not gnomAD-confirmable
     "ACTA1", "DNM2", "NEB", "SCN1A", "SCN2A", "SCN3A", "SCN8A",
-    "ADA", "DCLRE1C", "IL7R", "RAG1", "RAG2",
-    "ETHE1", "POLG", "GATM", "GAMT", "HBB", "HBA2",
-    "FOXG1", "TCF4", "PAH", "APC",
+    "DCLRE1C", "GATM", "HBB", "HBA2",
+    "FOXG1", "TCF4", "APC",
+})
+
+
+# X-linked genes whose VCEP BS2 requires an INTERNAL, clinically-phenotyped
+# cohort that gnomAD cannot supply — a documented unaffected adult male with
+# functional/lab confirmation, or phenotyped unaffected het/hemi relatives:
+#   RPGR  GN106 / RS1 GN126 — males >30y with eye exam + functional studies
+#                             (normal ERG/FAF; "without retinoschisis")
+#   F8    GN071 / F9 GN080  — male with normal factor VIII/IX activity (>40% IU)
+#   SLC6A8 GN027            — male with documented normal creatine transport study
+#   PDHA1 GN014             — well-characterized phenotype (explicitly "not just
+#                             seen in database") / Pyruvate enzyme assay
+#   IL2RG GN129             — SCID; unaffected status needs immune phenotyping
+#   CDKL5/MECP2/SLC9A6 GN016 — "N unaffected (related/unrelated) Het/Hemi" Rett-
+#                             like individuals (phenotyped, internal/family data)
+# gnomAD is presumed-healthy and unphenotyped (and, per the hemizygote-count
+# limitation, an unreliable source for X-linked male counts), so a gnomAD-count
+# BS2 would FALSELY fire on a pathogenic X-linked variant. Forced not_applicable.
+_BS2_XLINKED_INTERNAL = frozenset({
+    "CDKL5", "RS1", "PDHA1", "RPGR", "IL2RG",
+    "SLC9A6", "F9", "SLC6A8", "MECP2", "F8",
 })
 
 
@@ -555,13 +582,16 @@ def _bs2_applicability(rule_set: dict) -> str:
     return ""
 
 
-# BS2 minimum observation count. Most VCEPs fire BS2 on 1-2 homozygotes (handled
-# by the global default), but cancer/strict panels demand many more (CDH1 >=10
-# individuals, TP53 >=8, PDHA1 >=16 hemizygotes) — under-counting there would
-# FALSELY mark a pathogenic variant benign. Only operator-anchored integers tied
-# to an observation noun are taken (never "allele" counts or "20x coverage"),
-# the MAX is kept (the strictest gnomAD-applicable bar), and the value is
-# sanity-bounded. ">N" means N+1 (">1 homozygote" → 2).
+# BS2 minimum observation count — the LOWEST count at which the VCEP fires BS2 at
+# any strength. Our evaluator is binary (met / not-met), so the operative bar is
+# the gene's Supporting threshold, not its Strong one: a tiered spec (GUCY2D /
+# AIPL1: Supporting ">=3 homozygotes in gnomAD", Strong ">=6") must fire BS2 at
+# 3, and taking the MAX (6) caused a FALSE NEGATIVE at nhomalt=3. Strict cancer
+# panels that demand many observations (CDH1, TP53) are handled separately —
+# they resolve to not_applicable via _BS2_CLINICAL_CONFIRMATION, so the lower
+# count here cannot leak a false-benign there. Only operator-anchored integers
+# tied to an observation noun are taken (never "allele" counts or "20x
+# coverage"), the MIN is kept, and the value is sanity-bounded. ">N" means N+1.
 _BS2_COUNT = re.compile(
     r"(≥|≧|>=|&ge;|>|at least)\s*(\d{1,3})\b"
     r"(?!\s*[:/])"                                  # exclude ratios ("≥ 40:1")
@@ -589,19 +619,22 @@ def _pm4_applicability(rule_set: dict) -> str:
 
 def _bs2_count(rule_set: dict) -> str:
     """The VCEP's minimum BS2 observation count for the gene, or "" (use the
-    global default). The strictest (max) operator-anchored count wins."""
+    global default). The LOWEST (min) operator-anchored count across all
+    applicable strengths wins — that is the Supporting-level bar at which a
+    binary BS2 first fires (see the comment above)."""
     for code in rule_set.get("criteriaCodes", []):
         if code.get("label") != "BS2":
             continue
         strs = _applicable_strengths(code)
         if not strs:
             return ""
+        joined = " ".join(es.get("description", "") for es in strs)
         vals: list[int] = []
-        for op, num in _BS2_COUNT.findall(strs[0].get("description", "")):
+        for op, num in _BS2_COUNT.findall(joined):
             n = int(num) + (1 if op == ">" else 0)
             if 1 <= n <= _BS2_COUNT_MAX:
                 vals.append(n)
-        return str(max(vals)) if vals else ""
+        return str(min(vals)) if vals else ""
     return ""
 
 
@@ -623,6 +656,32 @@ def _bs2_female_only(rule_set: dict) -> str:
             es.get("description", "") for es in _applicable_strengths(code)
         )
         if _BS2_FEMALE.search(joined) and not _BS2_MALE.search(joined):
+            return "1"
+        return ""
+    return ""
+
+
+# A dominant gene with incomplete penetrance whose BS2 is scored on HOMOZYGOTES,
+# not heterozygous carriers (BMPR2/GN125, PIK3R2: ">=3 homozygotes in gnomAD
+# controls"). Detected when the applicable BS2 descriptions mention homozygotes
+# but NOT heterozygotes/carriers: a healthy het of an incompletely-penetrant
+# dominant gene is not benign evidence, so the evaluator must count homozygotes
+# (the default AD path counts carriers and would FALSELY fire BS2). Recessive /
+# X-linked genes already count homozygotes/hemizygotes, so the flag is a no-op
+# there — it only redirects the dominant (AD) path.
+_BS2_HOM = re.compile(r"homozyg", re.IGNORECASE)
+_BS2_HET = re.compile(r"heterozyg|\bcarrier", re.IGNORECASE)
+
+
+def _bs2_hom_only(rule_set: dict) -> str:
+    """"1" if the rule set's BS2 counts homozygotes only, else ""."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BS2":
+            continue
+        joined = " ".join(
+            es.get("description", "") for es in _applicable_strengths(code)
+        )
+        if _BS2_HOM.search(joined) and not _BS2_HET.search(joined):
             return "1"
         return ""
     return ""
@@ -1135,6 +1194,7 @@ def parse_spec(path: str) -> list[dict]:
         bs2 = _bs2_applicability(rs)
         bs2_count = _bs2_count(rs)
         bs2_female_only = _bs2_female_only(rs)
+        bs2_hom_only = _bs2_hom_only(rs)
         ps1 = _ps1_applicability(rs)
         ps1_splice = _ps1_splice(rs)
         bp1, bp1_target = _bp1_applicability(rs)
@@ -1173,6 +1233,7 @@ def parse_spec(path: str) -> list[dict]:
                 "bs2": "",
                 "bs2_count": "",
                 "bs2_female_only": "",
+                "bs2_hom_only": "",
                 "ps1": "",
                 "ps1_splice": "",
                 "bp1": "",
@@ -1209,6 +1270,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_bs2": bs2,
                 "_bs2_count": bs2_count,
                 "_bs2_female_only": bs2_female_only,
+                "_bs2_hom_only": bs2_hom_only,
                 "_ps1": ps1,
                 "_ps1_splice": ps1_splice,
                 "_bp1": bp1,
@@ -1348,11 +1410,11 @@ def main() -> None:
                 if g not in pm4_choice or _pp2_more_specific(cand, pm4_choice[g]):
                     pm4_choice[g] = cand
             if row["_bs2"] in ("applicable", "not_applicable"):
-                # Carry bs2_count (3rd slot) and female-only flag (4th slot) so
-                # both come from the same (most-specific) spec that decided
-                # applicability.
+                # Carry bs2_count (3rd slot), female-only (4th) and hom-only
+                # (5th) flags so all come from the same (most-specific) spec that
+                # decided applicability.
                 cand = (row["_specificity"], row["_bs2"], row["_bs2_count"],
-                        row["_bs2_female_only"])
+                        row["_bs2_female_only"], row["_bs2_hom_only"])
                 if g not in bs2_choice or _pp2_more_specific(cand, bs2_choice[g]):
                     bs2_choice[g] = cand
             # PM2: only specs with an applicable PM2 code contribute. Most
@@ -1461,14 +1523,17 @@ def main() -> None:
         row["bs2"] = bchoice[1] if bchoice else ""
         # Genes whose VCEP BS2 needs phenotype/lab/functional confirmation or
         # internal-only clinical data that gnomAD lacks: force not_applicable so a
-        # gnomAD-count BS2 is never (falsely) fired on a pathogenic variant.
-        if g in _BS2_CLINICAL_CONFIRMATION and row["bs2"]:
+        # gnomAD-count BS2 is never (falsely) fired on a pathogenic variant. The
+        # X-linked set additionally requires a phenotyped male/hemizygote cohort
+        # gnomAD cannot supply (see _BS2_XLINKED_INTERNAL).
+        if (g in _BS2_CLINICAL_CONFIRMATION or g in _BS2_XLINKED_INTERNAL) and row["bs2"]:
             row["bs2"] = "not_applicable"
         # Emit the per-gene BS2 count and female-only flag only when BS2 is
         # applicable for the gene.
         _bs2_applic = row["bs2"] == "applicable"
         row["bs2_count"] = bchoice[2] if (_bs2_applic and bchoice) else ""
         row["bs2_female_only"] = bchoice[3] if (_bs2_applic and bchoice) else ""
+        row["bs2_hom_only"] = bchoice[4] if (_bs2_applic and bchoice) else ""
         pm4c = pm4_choice.get(g)
         row["pm4"] = pm4c[1] if pm4c else ""
         pm2c = pm2_choice.get(g)
@@ -1540,6 +1605,7 @@ _OVERRIDE_FIELDS = {
     "bs2": "bs2",
     "bs2_count": "bs2_count",
     "bs2_female_only": "bs2_female_only",
+    "bs2_hom_only": "bs2_hom_only",
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
     "bp1": "bp1",

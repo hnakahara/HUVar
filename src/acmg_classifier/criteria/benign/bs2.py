@@ -71,6 +71,12 @@ class BS2Evaluator(CriterionEvaluator):
                 )
             het_carriers = max(0, (gd.ac_xx or 0) - (gd.nhomalt_xx or 0))
 
+        # An incomplete-penetrance dominant gene (BMPR2, PIK3R2) scores BS2 on
+        # HOMOZYGOTES only — a healthy heterozygote is not evidence against the
+        # disease, so counting carriers (the AD default below) would FALSELY fire
+        # BS2 on a pathogenic variant. The VCEP states "≥N homozygotes in gnomAD".
+        hom_only = self._vcep.hom_only(gene)
+
         modes = self._vcep.modes(gene)
         # A per-gene VCEP count (e.g. CDH1 >=10, TP53 >=8) overrides ALL mode
         # thresholds; otherwise use the inheritance-mode global defaults.
@@ -97,9 +103,19 @@ class BS2Evaluator(CriterionEvaluator):
             return self._met(f"recessive: nhomalt={nhomalt} >= {hom_thr}")
         if "XL" in modes and nhemi >= hemi_thr:
             return self._met(f"X-linked: nhemi={nhemi} >= {hemi_thr}")
-        if "AD" in modes and het_carriers >= het_thr:
-            who = "healthy female carriers" if female_only else "healthy carriers"
-            return self._met(f"dominant: {who}={het_carriers} >= {het_thr}")
+        if "AD" in modes:
+            # Incomplete-penetrance dominant gene: count homozygotes, not the
+            # healthy heterozygous carriers that the standard AD path uses.
+            if hom_only:
+                if nhomalt >= hom_thr:
+                    return self._met(
+                        f"dominant (incomplete penetrance): "
+                        f"nhomalt={nhomalt} >= {hom_thr}"
+                    )
+                return self._not_met(nhomalt, nhemi, het_carriers)
+            if het_carriers >= het_thr:
+                who = "healthy female carriers" if female_only else "healthy carriers"
+                return self._met(f"dominant: {who}={het_carriers} >= {het_thr}")
         return self._not_met(nhomalt, nhemi, het_carriers)
 
     def _met(self, detail: str) -> CriteriaResult:

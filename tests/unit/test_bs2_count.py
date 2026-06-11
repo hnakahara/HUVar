@@ -10,12 +10,14 @@ from acmg_classifier.models.enums import Assembly, ConsequenceType
 from acmg_classifier.models.variant import VariantRecord
 
 # CDH1: cancer panel requiring >=10 unaffected individuals (high bar). LDLR: 3.
+# BMPR2: incomplete-penetrance dominant — BS2 counts homozygotes only (>=3).
 _TSV = (
-    "gene_symbol\tbs2\tinheritance\tbs2_count\tbs2_female_only\n"
-    "CDH1\tapplicable\tAD\t10\t\n"
-    "LDLR\tapplicable\tAD\t3\t\n"
-    "GENE0\tapplicable\tAD\t\t\n"   # no per-gene count → global default
-    "TP53\tapplicable\tAD\t8\t1\n"  # counts only females (gnomAD AC_XX), bar >=8
+    "gene_symbol\tbs2\tinheritance\tbs2_count\tbs2_female_only\tbs2_hom_only\n"
+    "CDH1\tapplicable\tAD\t10\t\t\n"
+    "LDLR\tapplicable\tAD\t3\t\t\n"
+    "GENE0\tapplicable\tAD\t\t\t\n"   # no per-gene count → global default
+    "TP53\tapplicable\tAD\t8\t1\t\n"  # counts only females (gnomAD AC_XX), bar >=8
+    "BMPR2\tapplicable\tAD\t3\t\t1\n"  # homozygotes only (incomplete penetrance)
 )
 
 
@@ -113,3 +115,30 @@ class TestBS2FemaleOnly:
         r = ev.evaluate(_snv(), _ann("TP53", ac=20, nhomalt=0))
         assert not r.triggered
         assert "AC_XX" in r.evidence
+
+
+class TestBS2HomOnly:
+    def test_loader_reads_hom_only(self, tmp_path):
+        spec = BS2Applicability(_tsv(tmp_path))
+        assert spec.hom_only("BMPR2") is True
+        assert spec.hom_only("LDLR") is False
+
+    def test_healthy_heterozygotes_do_not_fire(self, tmp_path):
+        # The reported false positive: 666 healthy het carriers (AC=666) on an
+        # incomplete-penetrance dominant gene must NOT meet BS2 — only
+        # homozygotes count, and there are none here.
+        ev = BS2Evaluator(_cfg(tmp_path))
+        r = ev.evaluate(_snv(), _ann("BMPR2", ac=666, nhomalt=0))
+        assert not r.triggered
+
+    def test_homozygotes_at_count_met(self, tmp_path):
+        # >=3 homozygotes in gnomAD controls fires BS2 (BMPR2 VCEP).
+        ev = BS2Evaluator(_cfg(tmp_path))
+        r = ev.evaluate(_snv(), _ann("BMPR2", ac=700, nhomalt=3))
+        assert r.triggered
+        assert "nhomalt=3" in r.evidence
+
+    def test_homozygotes_below_count_not_met(self, tmp_path):
+        ev = BS2Evaluator(_cfg(tmp_path))
+        r = ev.evaluate(_snv(), _ann("BMPR2", ac=700, nhomalt=2))
+        assert not r.triggered

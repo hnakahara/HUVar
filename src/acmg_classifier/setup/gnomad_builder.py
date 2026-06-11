@@ -142,6 +142,24 @@ def _faf95_popmax(variant) -> float | None:
     return max(vals) if vals else None
 
 
+def _nhemi(variant, chrom: str) -> int | None:
+    """Hemizygous alt-allele count, version-agnostic.
+
+    gnomAD exposes NO hemizygote-count INFO field. On non-PAR chrX (and chrY)
+    males are haploid, so the number of hemizygous alt males equals the male
+    allele count AC_XY (one alt allele per hemizygote; nhomalt_XY is 0 there).
+    On autosomes AC_XY is a *diploid* male allele count, NOT a hemizygote count,
+    so we return None there — otherwise the BS2 X-linked / mode-agnostic path
+    would fire on an autosomal variant. Prefer a genuine nhemi field if a future
+    build ever exposes one; else derive from AC_XY (v4) / AC_male (v2.1.1)."""
+    direct = _info(variant, "nhemi_joint", "nhemi")
+    if direct is not None:
+        return _to_int(direct)
+    if chrom in ("X", "Y"):
+        return _to_int(_info(variant, "AC_joint_XY", "AC_XY", "AC_male"))
+    return None
+
+
 def _detect_total_ram_gb() -> float | None:
     """物理メモリ総量 (GB) を best-effort で取得。失敗時は None。"""
     try:
@@ -429,6 +447,9 @@ def _vcf_to_parquet(
                 chrom = chrom_raw[3:] if chrom_raw.startswith("chr") else chrom_raw
 
                 ref = v.REF
+                # gnomAD has no hemizygote-count field; derive it from AC_XY on
+                # the sex chromosomes only (see _nhemi).
+                nhemi_val = _nhemi(v, chrom)
                 for alt in v.ALT:
                     row = (
                         chrom,
@@ -444,7 +465,7 @@ def _vcf_to_parquet(
                         _to_int(_info(v, "AN_joint", "AN")),
                         _to_int(_info(v, "AC_joint", "AC")),
                         _to_int(_info(v, "nhomalt_joint", "nhomalt")),
-                        _to_int(_info(v, "nhemi_joint", "nhemi")),
+                        nhemi_val,
                         _to_float(_info(v, "AF_grpmax_joint", "AF_grpmax", "AF_popmax")),
                         _to_str(_info(v, "grpmax_joint", "grpmax", "popmax")),
                         # GrpMax filtering allele frequency (95% CI). v4.x exposes
