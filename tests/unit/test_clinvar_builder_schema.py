@@ -10,8 +10,8 @@ build correctly.
 import xml.etree.ElementTree as ET
 
 from acmg_classifier.setup.clinvar_builder import (
-    _gene_symbol, _parse_aa_change, _parse_clinvarset, _rcv_classification,
-    _scv_significance, _star_rating,
+    _gene_symbol, _parse_aa_change, _parse_clinvarset, _preferred_protein_change,
+    _rcv_classification, _scv_significance, _star_rating,
 )
 
 
@@ -219,3 +219,69 @@ class TestParseClinvarsetEndToEnd:
         assert _field(row, "clinical_significance") == "Pathogenic"
         assert _field(row, "star_rating") == 2
         assert _field(row, "affected_cases") == 1
+
+
+# TP53 c.742C>T listed against MULTIPLE transcripts: the canonical MANE
+# NM_000546.6/NP_000537.3 (p.Arg248Trp, codon 248) AND a shorter isoform
+# NM_001126114.3/NP_001263628.1 (p.Arg89Trp, codon 89). The Preferred name uses
+# the MANE transcript. The builder must store codon 248 (matching VEP's MANE
+# annotation), not the last-listed isoform's 89 — the real TP53 p.Arg248Trp
+# false negative where PS1/PM5 found no same-codon comparator.
+_TP53_MULTI_TX = """
+<ClinVarSet ID="5">
+  <ReferenceClinVarAssertion ID="9005">
+    <ClinVarAccession Acc="RCV000012356" Type="RCV"/>
+    <ClinicalSignificance DateLastEvaluated="2024-01-01">
+      <ReviewStatus>reviewed by expert panel</ReviewStatus>
+      <Description>Pathogenic</Description>
+    </ClinicalSignificance>
+    <MeasureSet Type="Variant" ID="12356">
+      <Measure Type="single nucleotide variant" ID="12356">
+        <Name>
+          <ElementValue Type="Preferred">NM_000546.6(TP53):c.742C&gt;T (p.Arg248Trp)</ElementValue>
+        </Name>
+        <AttributeSet>
+          <Attribute Type="HGVS, coding, RefSeq">NM_000546.6:c.742C&gt;T</Attribute>
+        </AttributeSet>
+        <AttributeSet>
+          <Attribute Type="HGVS, protein, RefSeq">NP_000537.3:p.Arg248Trp</Attribute>
+        </AttributeSet>
+        <AttributeSet>
+          <Attribute Type="HGVS, coding, RefSeq">NM_001126114.3:c.742C&gt;T</Attribute>
+        </AttributeSet>
+        <AttributeSet>
+          <Attribute Type="HGVS, protein, RefSeq">NP_001263628.1:p.Arg89Trp</Attribute>
+        </AttributeSet>
+        <SequenceLocation Assembly="GRCh38" Chr="17" positionVCF="7674221"
+                          referenceAlleleVCF="G" alternateAlleleVCF="A"/>
+        <MeasureRelationship Type="variant in gene">
+          <Symbol><ElementValue Type="Preferred">TP53</ElementValue></Symbol>
+        </MeasureRelationship>
+      </Measure>
+    </MeasureSet>
+  </ReferenceClinVarAssertion>
+</ClinVarSet>
+"""
+
+
+class TestCanonicalTranscriptSelection:
+    def test_prefers_mane_codon_over_isoform(self):
+        # Without canonical selection the last-listed isoform (p.Arg89Trp) won
+        # and codon_position was 89, so a codon-248 PM5 query missed it.
+        row = _parse_clinvarset(ET.fromstring(_TP53_MULTI_TX), assembly="GRCh38")
+        assert row is not None
+        assert _field(row, "gene_symbol") == "TP53"
+        assert _field(row, "codon_position") == 248
+        assert _field(row, "hgvs_p") == "NP_000537.3:p.Arg248Trp"
+        # hgvs_c is paired to the same canonical transcript.
+        assert _field(row, "hgvs_c") == "NM_000546.6:c.742C>T"
+
+    def test_preferred_protein_change_helper(self):
+        ra = ET.fromstring(_TP53_MULTI_TX).find(".//ReferenceClinVarAssertion")
+        assert _preferred_protein_change(ra) == "p.Arg248Trp"
+
+    def test_no_preferred_name_falls_back(self):
+        # The _NEW fixture has no Preferred <Name>; behaviour is unchanged.
+        row = _parse_clinvarset(ET.fromstring(_NEW), assembly="GRCh38")
+        assert _field(row, "hgvs_p") == "NP_005017.3:p.Tyr524Asn"
+        assert _field(row, "codon_position") == 524

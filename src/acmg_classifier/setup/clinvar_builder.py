@@ -204,6 +204,56 @@ def _parse_aa_change(hgvs_p: str | None) -> tuple[str | None, int | None]:
     return None, None
 
 
+# A bare protein change ("p.Arg248Trp"), tolerant of a transcript/accession
+# prefix and ClinVar's predicted-protein parentheses ("...:p.(Arg248Trp)").
+_PROT_CHANGE_RE = re.compile(
+    r"p\.\(?([A-Z][a-z]{2}\d+(?:[A-Z][a-z]{2}|Ter|\*|=))\)?"
+)
+_PREF_CODING_RE = re.compile(r"(N[MR]_\d+\.\d+)")
+
+
+def _norm_protein(text: str | None) -> str | None:
+    """Canonical bare protein change ('p.Arg248Trp') from any HGVS-ish string,
+    stripping the accession prefix and predicted-protein parentheses so the
+    Preferred-name change and a per-transcript attribute compare equal."""
+    if not text:
+        return None
+    m = _PROT_CHANGE_RE.search(text)
+    return "p." + m.group(1) if m else None
+
+
+def _preferred_protein_change(ref_assert: ET.Element) -> str | None:
+    """The protein change from ClinVar's Preferred variant name, which uses the
+    canonical (MANE) transcript — e.g. ``NM_000546.6(TP53):c.742C>T
+    (p.Arg248Trp)`` -> ``p.Arg248Trp``. This is the numbering VEP's MANE Select
+    annotation uses, so anchoring on it keeps codon_position consistent between
+    the candidate and the stored comparators."""
+    for path in (
+        ".//MeasureSet/Measure/Name/ElementValue[@Type='Preferred']",
+        ".//MeasureSet/Name/ElementValue[@Type='Preferred']",
+    ):
+        for nm in ref_assert.findall(path):
+            change = _norm_protein(nm.text)
+            if change:
+                return change
+    return None
+
+
+def _preferred_coding_accession(ref_assert: ET.Element) -> str | None:
+    """The canonical coding transcript accession (e.g. ``NM_000546.6``) from the
+    Preferred name, used to pair hgvs_c to the same transcript as hgvs_p."""
+    for path in (
+        ".//MeasureSet/Measure/Name/ElementValue[@Type='Preferred']",
+        ".//MeasureSet/Name/ElementValue[@Type='Preferred']",
+    ):
+        for nm in ref_assert.findall(path):
+            if nm.text:
+                m = _PREF_CODING_RE.search(nm.text)
+                if m:
+                    return m.group(1)
+    return None
+
+
 def _iter_clinvarset_chunks(fh, read_size: int = 1 << 20) -> Iterator[str]:
     """Yield each ``<ClinVarSet>...</ClinVarSet>`` block as a self-contained string.
 
@@ -356,15 +406,44 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
         # incidental 'within multiple genes by overlap' locus (see _gene_symbol).
         gene = _gene_symbol(ref_assert)
 
+        # ClinVar lists a coding+protein HGVS for EVERY transcript of the gene.
+        # The old code kept the last-seen protein attribute — an arbitrary
+        # transcript — so TP53 p.Arg248Trp was stored under the NP_001263628.1
+        # isoform as p.Arg89Trp (codon 89). VEP annotates the candidate on MANE
+        # Select (p.Arg248Trp, codon 248), so codon_position disagreed and the
+        # PS1/PM5 same-codon lookup silently found no comparator. Anchor on
+        # ClinVar's Preferred name (the canonical/MANE transcript) and pick the
+        # attribute that matches it, so the stored numbering aligns with VEP.
         hgvs_c, hgvs_p = None, None
+        prot_attrs: list[str] = []
+        cod_attrs: list[str] = []
         for attr in ref_assert.findall(".//MeasureSet/Measure/AttributeSet/Attribute"):
             atype = attr.get("Type", "")
             if atype == "HGVS, coding, RefSeq" and attr.text:
-                hgvs_c = attr.text
+                hgvs_c = attr.text  # legacy last-seen fallback
+                cod_attrs.append(attr.text)
             if atype == "HGVS, protein, RefSeq" and attr.text:
-                hgvs_p = attr.text
+                hgvs_p = attr.text  # legacy last-seen fallback
+                prot_attrs.append(attr.text)
 
-        aa_change, codon_pos = _parse_aa_change(hgvs_p)
+        pref_change = _preferred_protein_change(ref_assert)
+        if pref_change:
+            canon_p = next(
+                (p for p in prot_attrs if _norm_protein(p) == pref_change), None
+            )
+            if canon_p:
+                hgvs_p = canon_p
+            aa_change, codon_pos = _parse_aa_change(canon_p or pref_change)
+            # Pair hgvs_c to the same canonical transcript when identifiable.
+            pref_nm = _preferred_coding_accession(ref_assert)
+            if pref_nm:
+                canon_c = next(
+                    (c for c in cod_attrs if c.startswith(pref_nm)), None
+                )
+                if canon_c:
+                    hgvs_c = canon_c
+        else:
+            aa_change, codon_pos = _parse_aa_change(hgvs_p)
 
         loc = ref_assert.find(
             f".//MeasureSet/Measure/SequenceLocation[@Assembly='{assembly}']"
