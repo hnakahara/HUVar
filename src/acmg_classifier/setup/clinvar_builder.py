@@ -186,11 +186,16 @@ def _scv_significance(scv: ET.Element) -> str:
 
 
 def _parse_aa_change(hgvs_p: str | None) -> tuple[str | None, int | None]:
-    """Extract amino_acid_change ('R175H') and codon_position (175) from HGVS p."""
+    """Extract amino_acid_change ('R175H') and codon_position (175) from HGVS p.
+
+    Tolerates ClinVar's predicted-protein parenthesis notation
+    ``NP_000537.3:p.(Arg248Gln)`` — the leading "(" otherwise made the regex
+    miss the change, leaving codon_position NULL and silently breaking the
+    PS1/PM5 same-codon lookup for every variant stored that way."""
     import re
     if not hgvs_p:
         return None, None
-    m = re.search(r"p\.([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2}|Ter|\*)", hgvs_p)
+    m = re.search(r"p\.\(?([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2}|Ter|\*)", hgvs_p)
     if m:
         aa1 = m.group(1)[:1].upper()
         pos = int(m.group(2))

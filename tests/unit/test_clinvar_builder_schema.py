@@ -10,9 +10,31 @@ build correctly.
 import xml.etree.ElementTree as ET
 
 from acmg_classifier.setup.clinvar_builder import (
-    _gene_symbol, _parse_clinvarset, _rcv_classification, _scv_significance,
-    _star_rating,
+    _gene_symbol, _parse_aa_change, _parse_clinvarset, _rcv_classification,
+    _scv_significance, _star_rating,
 )
+
+
+class TestParseAaChange:
+    """codon_position drives the PS1/PM5 same-codon lookup. A parse miss leaves
+    it NULL and silently withholds PM5 (the TP53 p.Arg248Trp false negative)."""
+
+    def test_plain_three_letter(self):
+        assert _parse_aa_change("NP_000537.3:p.Arg248Gln") == ("A248G", 248)
+
+    def test_parenthesised_predicted_protein(self):
+        # ClinVar stores predicted protein changes parenthesised; the leading
+        # "(" used to make the regex miss the change -> codon_position NULL.
+        assert _parse_aa_change("NP_000537.3:p.(Arg248Gln)") == ("A248G", 248)
+
+    def test_transcript_gene_prefix_parenthesised(self):
+        assert _parse_aa_change("NM_000546.6(TP53):p.(Arg248Trp)") == ("A248T", 248)
+
+    def test_stop_gain_still_parses_codon(self):
+        assert _parse_aa_change("p.Arg248Ter")[1] == 248
+
+    def test_no_protein_change(self):
+        assert _parse_aa_change("NM_000546.6:c.742C>T") == (None, None)
 
 # New RCV_release format (ClinVar_RCV_2.3): expert-panel-style record with a
 # coding+protein HGVS and an affected, P/LP SCV.
