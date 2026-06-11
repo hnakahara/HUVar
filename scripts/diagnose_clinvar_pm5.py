@@ -47,6 +47,10 @@ def main() -> None:
     ap.add_argument("--codon", type=int, required=True)
     ap.add_argument("--min-stars", type=int, default=1)
     ap.add_argument("--variation-id", default=None)
+    ap.add_argument("--chrom", default=None,
+                    help="Candidate chromosome (e.g. 17) for the position lookup.")
+    ap.add_argument("--pos", default=None,
+                    help="Candidate VCF position (e.g. 7674221).")
     args = ap.parse_args()
 
     db = Path(args.db)
@@ -108,6 +112,49 @@ def main() -> None:
         (f"%{args.codon}%",),
     ).fetchall()
     _print_rows(q4, ["gene", "n"])
+
+    # 5b) The CANDIDATE's own row, looked up by genomic position (the key the
+    #     working PS3/PP1 counters use). Reveals the gene_symbol / codon_position
+    #     actually stored for a variant we KNOW is in the DB.
+    if args.chrom and args.pos:
+        print(f"\n[5b] Rows at {args.chrom}:{args.pos} (candidate position, any "
+              f"ref/alt):")
+        q5b = con.execute(
+            """SELECT variation_id, gene_symbol, hgvs_c, hgvs_p, codon_position,
+                      clinical_significance, star_rating
+               FROM variants WHERE chrom IN (?, ?) AND pos = ?""",
+            (args.chrom, "chr" + args.chrom.lstrip("chr"), int(args.pos)),
+        ).fetchall()
+        _print_rows(q5b, ["id", "gene", "hgvs_c", "hgvs_p", "codon", "sig", "stars"])
+
+    # 6) How many rows for the gene at all, and a sample — is the gene present
+    #    under this exact symbol, and is hgvs_p / codon_position populated?
+    n_gene = con.execute(
+        "SELECT COUNT(*) FROM variants WHERE gene_symbol = ?", (args.gene,)
+    ).fetchone()[0]
+    n_gene_codon = con.execute(
+        "SELECT COUNT(*) FROM variants WHERE gene_symbol = ? AND "
+        "codon_position IS NOT NULL", (args.gene,)
+    ).fetchone()[0]
+    print(f"\n[6] gene_symbol='{args.gene}': {n_gene} rows total, "
+          f"{n_gene_codon} with a non-NULL codon_position. Sample:")
+    q6 = con.execute(
+        """SELECT variation_id, gene_symbol, hgvs_c, hgvs_p, codon_position,
+                  clinical_significance, star_rating
+           FROM variants WHERE gene_symbol = ? LIMIT 15""",
+        (args.gene,),
+    ).fetchall()
+    _print_rows(q6, ["id", "gene", "hgvs_c", "hgvs_p", "codon", "sig", "stars"])
+
+    # 7) Which gene_symbol(s) hold the actual comparator protein change, found by
+    #    the residue text in hgvs_p (independent of gene_symbol / codon_position).
+    print(f"\n[7] gene_symbol distribution for hgvs_p LIKE '%Arg{args.codon}%':")
+    q7 = con.execute(
+        """SELECT gene_symbol, COUNT(*) FROM variants
+           WHERE hgvs_p LIKE ? GROUP BY gene_symbol ORDER BY 2 DESC LIMIT 20""",
+        (f"%Arg{args.codon}%",),
+    ).fetchall()
+    _print_rows(q7, ["gene", "n"])
 
     # 5) Direct lookup of a known comparator VariationID, if provided.
     if args.variation_id:
