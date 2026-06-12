@@ -6,6 +6,13 @@
   RASopathy genes where loss-of-function is benign — ``truncating``.
 * ``bp3`` — BP3 (in-frame indel in a repetitive region) applicability. A VCEP that
   declined BP3 resolves to ``not_applicable`` and suppresses the heuristic.
+* ``bp7_phylop`` — the per-gene phyloP policy for BP7. A numeric cutoff defines
+  "not highly conserved" (most VCEPs use the global default phyloP100way 2.0;
+  some tighten it to 0.1 / 0.2 / 0 — the neurodevelopmental and coagulation
+  panels, VHL, RPGR — or 1.5 for the platelet GP genes). The sentinel ``na``
+  means the VCEP declared conservation NON-informative (TP53, GALT, the SCID
+  T-/B-cell genes), so BP7 skips the conservation gate entirely. Blank when the
+  gene has no VCEP policy, so the evaluator keeps its global default.
 
 The BP counterpart to :class:`~acmg_classifier.criteria.pp2_genes.PP2Applicability`.
 """
@@ -30,6 +37,8 @@ class BPApplicability:
         self._bp1_no_splice: set[str] = set()
         self._bp3: dict[str, str] = {}
         self._bp3_regions: dict[str, list[tuple[int, int]]] = {}
+        self._bp7_phylop: dict[str, float] = {}
+        self._bp7_no_conservation: set[str] = set()
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -59,6 +68,17 @@ class BPApplicability:
                 regions = _parse_ranges(row.get("bp3_regions") or "")
                 if regions:
                     self._bp3_regions[gene] = regions
+                raw_phylop = (row.get("bp7_phylop") or "").strip()
+                if raw_phylop.lower() == "na":
+                    # Conservation declared non-informative → BP7 skips the gate.
+                    self._bp7_no_conservation.add(gene)
+                elif raw_phylop:
+                    try:
+                        # "0" is a valid cutoff (RPGR: only accelerated positions
+                        # are BP7-eligible), distinct from "" (no VCEP cutoff).
+                        self._bp7_phylop[gene] = float(raw_phylop)
+                    except ValueError:
+                        pass
 
     def bp1(self, gene: str | None) -> str:
         """VCEP BP1 status: ``applicable`` / ``not_applicable`` / ""."""
@@ -101,6 +121,20 @@ class BPApplicability:
         if not regions:
             return None
         return position is not None and any(a <= position <= b for a, b in regions)
+
+    def bp7_phylop(self, gene: str | None) -> float | None:
+        """The VCEP's per-gene phyloP "highly conserved" cutoff for BP7, or
+        ``None`` (use the global default). A position with phyloP >= this value
+        is highly conserved and blocks BP7."""
+        if not gene:
+            return None
+        return self._bp7_phylop.get(gene)
+
+    def bp7_conservation_na(self, gene: str | None) -> bool:
+        """True if the VCEP declared conservation NON-informative for BP7 (TP53,
+        GALT, the SCID T-/B-cell genes). The evaluator then skips the phyloP
+        conservation gate entirely — BP7 rests on splice + distance alone."""
+        return bool(gene) and gene in self._bp7_no_conservation
 
 
 def _parse_ranges(raw: str) -> list[tuple[int, int]]:

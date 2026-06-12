@@ -62,20 +62,36 @@ class BP7Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
         from acmg_classifier.local_db.conservation import PhyloPReader
+        from acmg_classifier.criteria.bp_genes import BPApplicability
         self._phylop = PhyloPReader(cfg.phylop_bigwig)
+        # Per-gene phyloP "highly conserved" cutoff from the VCEP specs; falls
+        # back to the global default when a gene has no VCEP cutoff.
+        self._spec = BPApplicability(cfg.disease_prevalence_tsv)
 
-    def _conservation_block(self, variant: VariantRecord) -> str | None:
+    def _conservation_block(self, variant: VariantRecord, gene: str | None) -> str | None:
         """Return a not-met reason when the position is highly conserved (so BP7
         must not fire), or None when the gate passes or is unavailable.
 
         ACMG/Walker BP7 requires the nucleotide to be NOT highly conserved. The
-        gate is applied only when phyloP is available; otherwise it is skipped
-        (graceful degradation) — see PhyloPReader."""
+        cutoff is the gene's VCEP phyloP threshold when specified (e.g. CDH1-style
+        neurodev panels 0.1, VHL 0.2, RPGR 0, GP genes 1.5), else the global
+        default ``bp7_phylop_max`` (2.0, phyloP100way). The gate is applied only
+        when phyloP is available; otherwise it is skipped (graceful degradation).
+
+        A VCEP that declared conservation NON-informative (TP53, GALT, the SCID
+        T-/B-cell genes) skips the gate entirely — phyloP is not consulted."""
+        if self._spec.bp7_conservation_na(gene):
+            return None
         if not self._phylop.is_available():
             return None
         score = self._phylop.value(variant.chrom, variant.pos)
-        if score is not None and score >= self._cfg.bp7_phylop_max:
-            return f"highly conserved (phyloP={score:.2f} >= {self._cfg.bp7_phylop_max})"
+        if score is None:
+            return None
+        cutoff = self._spec.bp7_phylop(gene)
+        if cutoff is None:
+            cutoff = self._cfg.bp7_phylop_max
+        if score >= cutoff:
+            return f"highly conserved (phyloP={score:.2f} >= {cutoff})"
         return None
 
     def evaluate(
@@ -94,7 +110,7 @@ class BP7Evaluator(CriterionEvaluator):
         # behaviour and is now known to mis-classify exonic splice variants.
         if pc.consequence == ConsequenceType.SYNONYMOUS:
             if _splice_benign(annotation):
-                blocked = self._conservation_block(variant)
+                blocked = self._conservation_block(variant, pc.gene_symbol)
                 if blocked:
                     return CriteriaResult.not_met(
                         ACMGCriterion.BP7, f"Synonymous, splice benign, but {blocked}",
@@ -126,7 +142,7 @@ class BP7Evaluator(CriterionEvaluator):
                     "Deep intronic but splice impact not ruled out "
                     "(no splice prediction of no impact)",
                 )
-            blocked = self._conservation_block(variant)
+            blocked = self._conservation_block(variant, pc.gene_symbol)
             if blocked:
                 return CriteriaResult.not_met(
                     ACMGCriterion.BP7, f"Deep intronic, splice benign, but {blocked}",

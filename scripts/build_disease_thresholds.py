@@ -37,7 +37,7 @@ COLUMNS = [
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
     "bs2_count", "bs2_female_only", "bs2_hom_only",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
-    "bp1_no_splice", "bp3", "bp3_regions",
+    "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
     "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
     "source_vcep", "cspec_url", "notes",
@@ -560,6 +560,25 @@ _BS2_XLINKED_INTERNAL = frozenset({
 })
 
 
+# BP7 genes whose VCEP declared evolutionary conservation NON-informative (so no
+# phyloP gate), but whose cspec JSON-LD export does not carry that statement in
+# any parseable criteriaCode description. _bp7_phylop() auto-detects the in-text
+# phrasings ("conservation is not required/considered/informative", ...); this
+# curated set covers genes whose policy lives only in the published spec prose.
+# Forced to the "na" sentinel so BP7 skips the conservation gate, like the
+# auto-detected genes.
+#   Leber Congenital Amaurosis / early-onset Retinal Dystrophy VCEP — RPE65
+#   (GN120), GUCY2D (GN167), AIPL1 (GN208). Their BP7/BP4 criteriaCode
+#   descriptions specify only the SpliceAI gate and excluded splice positions;
+#   the "Evolutionary conservation is not considered informative for application
+#   of this code" statement is absent from the JSON-LD (it is in the spec text).
+#   The only phyloP in these files is an unrelated PM4 rule (PhyloP>2.0 for a
+#   conserved residue), so nothing is auto-extracted for BP7.
+_BP7_CONSERVATION_NA = frozenset({
+    "RPE65", "GUCY2D", "AIPL1",
+})
+
+
 def _bs2_applicability(rule_set: dict) -> str:
     """"applicable" / "not_applicable" / "" for the rule set's BS2 code.
 
@@ -885,6 +904,62 @@ def _bp3_regions(rule_set: dict) -> str:
     return ""
 
 
+# --- BP7 per-gene phyloP "not highly conserved" cutoff -----------------------
+# Walker 2023 BP7 requires the nucleotide to be NOT highly conserved. Most VCEPs
+# state a phyloP cutoff X for this, phrased either as the BP7-eligible side
+# ("not highly conserved = phyloP < X") or the conserved side ("conservation =
+# phyloP > X"); either way the boundary value X is the cutoff the evaluator uses
+# (block BP7 when phyloP >= X). All HUHVar phyloP is phyloP100way, matching the
+# specs that say "phyloP100way < 2.0" (== the global default, a no-op). Real
+# per-gene values seen: 0.1 (neurodev / coagulation panels), 0.2 (VHL), 1.5 (the
+# platelet GP genes), 0 (RPGR, accelerated-only). The SpliceAI score and the
+# alignment "OR" clause (1 primate / 3 mammals) are intentionally NOT modelled
+# here — see BP7Evaluator.
+_BP7_PHYLOP_RE = re.compile(
+    r"phylop[^.]{0,45}?(?:<=|>=|<|>|less than|greater than|=)\s*([0-9]+(?:\.[0-9]+)?)",
+    re.IGNORECASE,
+)
+
+# Some VCEPs declare conservation NON-informative for BP7, so phyloP must NOT be
+# required at all (TP53 / ABCD1 / GALT / the SCID T-and-B-cell-development genes,
+# whose poor cross-vertebrate conservation makes phyloP uninformative). These
+# resolve to the sentinel "na" — the evaluator then skips the conservation gate
+# entirely rather than applying any cutoff. Catches the several phrasings seen:
+# "conservation is not required/considered/informative", "no conservation
+# requirement", "Conservation does not have to be considered", "No requirement
+# to assess for nucleotide conservation".
+_BP7_NO_CONS_RE = re.compile(
+    r"conservation[^.]{0,60}?\bnot\b[^.]{0,45}?"
+        r"(considered|informative|required|necessary|relevant|assess|evaluat|applied|used)|"
+    r"\bno\b[^.]{0,25}?conservation[^.]{0,25}?(requirement|required|necessary)|"
+    r"no requirement[^.]{0,45}?conservation|"
+    r"conservation[^.]{0,40}?does not (?:have to|need)|"
+    r"(?:do not|don't|not)[^.]{0,30}?(?:use|consider|assess|require|apply)[^.]{0,30}?conservation",
+    re.IGNORECASE,
+)
+
+
+def _bp7_phylop(rule_set: dict) -> str:
+    """The VCEP's BP7 phyloP policy for a gene:
+
+    * a numeric cutoff string ("0.1", "0", "2.0") — block BP7 when phyloP >= it;
+    * ``"na"`` — conservation is declared non-informative, so no phyloP gate;
+    * ``""`` — the spec states nothing, so the evaluator keeps its global default.
+    """
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BP7":
+            continue
+        for es in _applicable_strengths(code):
+            desc = (es.get("description") or "")
+            desc = desc.replace("≤", "<=").replace("≥", ">=").replace("\\", "")
+            m = _BP7_PHYLOP_RE.search(desc)
+            if m:
+                return m.group(1)
+            if _BP7_NO_CONS_RE.search(desc):
+                return "na"
+    return ""
+
+
 # --- REVEL per-gene PP3/BP4 thresholds (from the PP3 / BP4 criteria codes) ---
 # Many VCEPs state a gene-specific REVEL cutoff for PP3/BP4 in place of the
 # genome-wide Pejaver 2022 defaults. Each *applicable* evidence strength
@@ -1203,6 +1278,7 @@ def parse_spec(path: str) -> list[dict]:
         bp1_no_splice = _bp1_no_splice(rs)
         bp3 = _bp3_applicability(rs)
         bp3_regions = _bp3_regions(rs)
+        bp7_phylop = _bp7_phylop(rs)
         revel_pp3 = _revel_tiers(rs, "PP3")
         revel_bp4 = _revel_tiers(rs, "BP4")
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
@@ -1243,6 +1319,7 @@ def parse_spec(path: str) -> list[dict]:
                 "bp1_no_splice": "",
                 "bp3": "",
                 "bp3_regions": "",
+                "bp7_phylop": "",
                 "revel_pp3_supporting": "",
                 "revel_pp3_moderate": "",
                 "revel_pp3_strong": "",
@@ -1280,6 +1357,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_bp1_no_splice": bp1_no_splice,
                 "_bp3": bp3,
                 "_bp3_regions": bp3_regions,
+                "_bp7_phylop": bp7_phylop,
                 "_revel_pp3": revel_pp3,
                 "_revel_bp4": revel_bp4,
             })
@@ -1351,6 +1429,10 @@ def main() -> None:
     bp1_fields_by_gene: dict[str, dict] = {}
     bp3_choice: dict[str, tuple[int, str, str]] = {}
     bp3_regions_by_gene: dict[str, str] = {}
+    # BP7 per-gene phyloP cutoff, resolved to the most gene-specific spec that
+    # states a phyloP number (like PM2/REVEL). bp7_phylop_choice[g] =
+    # (specificity, cutoff_string).
+    bp7_phylop_choice: dict[str, tuple[int, str]] = {}
     # PM2 threshold/strength/basis, resolved to the most gene-specific spec that
     # carries an applicable PM2 code (like PP2/BS2/PS1). pm2_choice[g] =
     # (specificity, threshold, strength, basis).
@@ -1455,6 +1537,13 @@ def main() -> None:
                     bp3_regions_by_gene[g] = (
                         row["_bp3_regions"] if row["_bp3"] == "applicable" else ""
                     )
+            # BP7 phyloP cutoff: only specs that state a phyloP number contribute;
+            # most gene-specific spec wins, ties keep the first (file order).
+            if row["_bp7_phylop"]:
+                spec = row["_specificity"]
+                cur = bp7_phylop_choice.get(g)
+                if cur is None or spec < cur[0]:
+                    bp7_phylop_choice[g] = (spec, row["_bp7_phylop"])
             if row["_ps1"] in ("applicable", "not_applicable"):
                 cand = (row["_specificity"], row["_ps1"], "")
                 if g not in ps1_choice or _pp2_more_specific(cand, ps1_choice[g]):
@@ -1555,6 +1644,12 @@ def main() -> None:
         bp3c = bp3_choice.get(g)
         row["bp3"] = bp3c[1] if bp3c else ""
         row["bp3_regions"] = bp3_regions_by_gene.get(g, "") if bp3c and bp3c[1] == "applicable" else ""
+        bp7c = bp7_phylop_choice.get(g)
+        row["bp7_phylop"] = bp7c[1] if bp7c else ""
+        # Curated correction for genes whose newer "conservation non-informative"
+        # BP7 wording is absent from the shipped cspec snapshot (e.g. RPE65).
+        if g in _BP7_CONSERVATION_NA:
+            row["bp7_phylop"] = "na"
         rvc = revel_choice.get(g)
         rv_pp3 = rvc[1] if rvc else {}
         rv_bp4 = rvc[2] if rvc else {}
@@ -1615,6 +1710,7 @@ _OVERRIDE_FIELDS = {
     "bp1_no_splice": "bp1_no_splice",
     "bp3": "bp3",
     "bp3_regions": "bp3_regions",
+    "bp7_phylop": "bp7_phylop",
     "revel_pp3_supporting": "revel_pp3_supporting",
     "revel_pp3_moderate": "revel_pp3_moderate",
     "revel_pp3_strong": "revel_pp3_strong",

@@ -337,6 +337,9 @@ class TestBP7:
     def setup_method(self):
         from unittest.mock import MagicMock
         self.cfg = MagicMock()
+        # No VCEP TSV → BPApplicability loads empty, so bp7_phylop falls back to
+        # the global cfg.bp7_phylop_max default.
+        self.cfg.disease_prevalence_tsv.exists.return_value = False
         from acmg_classifier.criteria.benign.bp7 import BP7Evaluator
         self.evaluator = BP7Evaluator(self.cfg)
 
