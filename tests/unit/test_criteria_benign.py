@@ -211,10 +211,13 @@ class TestBS2:
 
     # --- VCEP applicability gate ---
     def test_not_applicable_blocks(self, tmp_path):
+        # A VCEP that bars gnomAD population data blocks the gnomAD-count BS2
+        # path; with no ClinVar expert-panel BS2 for the variant, BS2 stays
+        # not-met (the fallback only fires on a >=3-star BS2 citation).
         ev = self._ev(self._cfg(tmp_path, write_tsv=True))
         r = ev.evaluate(_snv(), self._ann(gene="MYH7", ac=50, nhomalt=20))
         assert not r.triggered
-        assert "not applicable" in r.evidence
+        assert "bars gnomAD-based BS2" in r.evidence
 
     # --- recessive ignores heterozygotes ---
     def test_recessive_uses_homozygotes_not_carriers(self, tmp_path):

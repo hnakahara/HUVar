@@ -38,7 +38,9 @@ CREATE TABLE IF NOT EXISTS variants (
     last_evaluated TEXT,
     affected_cases INTEGER DEFAULT 0,
     functional_evidence INTEGER DEFAULT 0,
-    segregation_evidence INTEGER DEFAULT 0
+    segregation_evidence INTEGER DEFAULT 0,
+    bs2_evidence INTEGER DEFAULT 0,
+    bs2_strength TEXT
 );
 """
 
@@ -93,6 +95,70 @@ _SEGREGATION_NEG = re.compile(
     r"(did not|does not|didn't|doesn't|failed to|no|lack of|without)\s+\w*\s*segregat",
     re.IGNORECASE,
 )
+
+# --- BS2 mining (expert-panel benign "observed in healthy adult") ---
+# Several VCEPs (CDH1, TP53, SERPINC1, ...) apply BS2 from *internal* laboratory
+# cohorts that gnomAD cannot supply, so our gnomAD-based BS2 is forced
+# not_applicable for these genes. When an expert panel (>=3 stars) has already
+# applied BS2 to the specific variant, its review cites the criterion code
+# explicitly ("...without a diagnosis... (BS2)"), so we can harvest that
+# variant-level judgement. Because the code is named verbatim this is far more
+# reliable than the PS3/PP1 free-text heuristics above.
+#
+# The strength modifier ("BS2_Supporting" / "BS2_Moderate" / "BS2_Strong" /
+# "BS2_VeryStrong") is captured when present; a bare "BS2" applies at its ACMG
+# Strong default.
+_BS2_POS = re.compile(
+    r"\bBS2(?:_?(VeryStrong|Very[\s_]Strong|Strong|Moderate|Supporting))?\b",
+    re.IGNORECASE,
+)
+# Skip when BS2 is cited as *not* applied/applicable (so a "BS2 not applicable"
+# statement never reads as positive BS2 evidence). Targets BS2 specifically so a
+# neighbouring "BA1 not applicable" does not suppress a genuine BS2.
+_BS2_NEG = re.compile(
+    r"BS2[\s_]*(?:is\s+|was\s+|were\s+|are\s+)?(?:not\s+(?:applicable|met|applied)|n/?a\b)|"
+    r"(?:not\s+applicable|does\s+not\s+meet|did\s+not\s+meet|cannot\s+(?:be\s+)?"
+    r"(?:applied|met)|unable\s+to\s+(?:apply|meet))[^.]{0,30}?BS2",
+    re.IGNORECASE,
+)
+
+# Benign-direction strength rank, strongest wins when several BS2 mentions differ.
+_BS2_STRENGTH_RANK = {"Supporting": 1, "Moderate": 2, "Strong": 3, "VeryStrong": 4}
+
+
+def _norm_bs2_strength(modifier: str | None) -> str:
+    """Canonical strength label from a captured BS2 modifier; bare BS2 -> Strong
+    (its ACMG default)."""
+    if not modifier:
+        return "Strong"
+    key = re.sub(r"[\s_]", "", modifier).lower()
+    return {
+        "verystrong": "VeryStrong",
+        "strong": "Strong",
+        "moderate": "Moderate",
+        "supporting": "Supporting",
+    }.get(key, "Strong")
+
+
+def _mine_bs2(text: str) -> tuple[int, str | None]:
+    """(hit, strength) for an expert-panel BS2 citation in *text*.
+
+    Returns ``(0, None)`` when BS2 is absent or cited as not-applicable; else
+    ``(1, strength)`` with the strongest cited strength ("Strong" for a bare
+    "BS2"). The caller gates on star_rating >= 3, so this is only mined from
+    expert-panel / practice-guideline reviews."""
+    if not text or _BS2_NEG.search(text):
+        return 0, None
+    best: str | None = None
+    best_rank = -1
+    for m in _BS2_POS.finditer(text):
+        strength = _norm_bs2_strength(m.group(1))
+        rank = _BS2_STRENGTH_RANK[strength]
+        if rank > best_rank:
+            best, best_rank = strength, rank
+    if best is None:
+        return 0, None
+    return 1, best
 
 
 # Non-coding / uncharacterised locus prefixes. When a variant overlaps such a
@@ -356,7 +422,7 @@ def build_clinvar_sqlite(
     con.execute("PRAGMA cache_size = -262144")  # ~256 MB page cache
     con.executescript(_CREATE_TABLE)  # table only; indexes are built after the load
 
-    insert_sql = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    insert_sql = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     n_rows = 0
     n_seen = 0
     # Default to 4 parse processes; cap at 24 so the main process (gzip
@@ -497,8 +563,26 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
                 if _SEGREGATION_POS.search(combined) and not _SEGREGATION_NEG.search(combined):
                     segregation += 1
 
+        # BS2 from an expert-panel (>=3 star) review: harvest the criterion code
+        # the VCEP cited verbatim for this variant. Scanned across the WHOLE
+        # ClinVarSet (RCV + SCV comments/descriptions) since the interpretation
+        # summary may sit at either level. Lower-star records are ignored — an
+        # internal-cohort BS2 is only trustworthy from the expert panel that owns
+        # the data.
+        bs2_evidence = 0
+        bs2_strength: str | None = None
+        if stars >= 3:
+            bs2_texts: list[str] = [
+                c.text for c in elem.findall(".//Comment") if c.text
+            ]
+            bs2_texts += [
+                d.text for d in elem.findall(".//Attribute[@Type='Description']")
+                if d.text
+            ]
+            bs2_evidence, bs2_strength = _mine_bs2(" ".join(bs2_texts))
+
         return (var_id, chrom, pos, ref, alt, gene, hgvs_c, hgvs_p,
                 aa_change, codon_pos, clinsig, rev_status, stars, last_eval,
-                affected, functional, segregation)
+                affected, functional, segregation, bs2_evidence, bs2_strength)
     except Exception:
         return None

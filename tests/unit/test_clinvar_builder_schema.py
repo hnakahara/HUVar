@@ -10,8 +10,8 @@ build correctly.
 import xml.etree.ElementTree as ET
 
 from acmg_classifier.setup.clinvar_builder import (
-    _gene_symbol, _parse_aa_change, _parse_clinvarset, _preferred_protein_change,
-    _rcv_classification, _scv_significance, _star_rating,
+    _gene_symbol, _mine_bs2, _parse_aa_change, _parse_clinvarset,
+    _preferred_protein_change, _rcv_classification, _scv_significance, _star_rating,
 )
 
 
@@ -129,7 +129,7 @@ def _field(row, name):
             "hgvs_c", "hgvs_p", "amino_acid_change", "codon_position",
             "clinical_significance", "review_status", "star_rating",
             "last_evaluated", "affected_cases", "functional_evidence",
-            "segregation_evidence")
+            "segregation_evidence", "bs2_evidence", "bs2_strength")
     return row[cols.index(name)]
 
 
@@ -299,3 +299,112 @@ class TestCanonicalTranscriptSelection:
         row = _parse_clinvarset(ET.fromstring(_NEW), assembly="GRCh38")
         assert _field(row, "hgvs_p") == "NP_005017.3:p.Tyr524Asn"
         assert _field(row, "codon_position") == 524
+
+
+class TestMineBs2:
+    """Harvest a VCEP's variant-level BS2 from its >=3-star ClinVar review text.
+    These genes (CDH1, TP53, SERPINC1) have gnomAD-based BS2 forced
+    not_applicable, so the expert panel's explicit BS2 is the only admissible
+    source."""
+
+    def test_bare_bs2_defaults_to_strong(self):
+        # CDH1 wording — bare "BS2" applies at its ACMG Strong default.
+        txt = ("observed in >10 individuals without a diagnosis of diffuse "
+               "gastric cancer ... (BS2; internal laboratory contributors).")
+        assert _mine_bs2(txt) == (1, "Strong")
+
+    def test_serpinc1_with_ba1(self):
+        # A neighbouring BA1 must not suppress the genuine BS2.
+        txt = "meeting criteria for BA1 (MAF >0.002). ... criteria: BA1, BS2."
+        assert _mine_bs2(txt) == (1, "Strong")
+
+    def test_explicit_supporting_modifier(self):
+        assert _mine_bs2("evidence applied at BS2_Supporting for this variant.") == (
+            1, "Supporting")
+
+    def test_explicit_moderate_modifier(self):
+        assert _mine_bs2("BS2_Moderate applied.") == (1, "Moderate")
+
+    def test_strongest_modifier_wins(self):
+        assert _mine_bs2("BS2_Supporting ... reconsidered as BS2_Strong.") == (
+            1, "Strong")
+
+    def test_not_applicable_suppressed(self):
+        assert _mine_bs2("BS2 not applicable for this gene.") == (0, None)
+
+    def test_does_not_meet_suppressed(self):
+        assert _mine_bs2("the variant does not meet BS2.") == (0, None)
+
+    def test_absent(self):
+        assert _mine_bs2("Pathogenic by PS3, PM1, PP3.") == (0, None)
+
+    def test_other_criterion_not_applicable_does_not_suppress(self):
+        # "BS1 not applicable" must leave a real BS2 intact.
+        assert _mine_bs2("BS1 not applicable. BS2 applied.") == (1, "Strong")
+
+
+# Expert-panel (3-star) record whose interpretation comment cites BS2 — the CDH1
+# / SERPINC1 pattern. The builder must set bs2_evidence=1, bs2_strength='Strong'.
+_BS2_EXPERT = """
+<ClinVarSet ID="6">
+  <ReferenceClinVarAssertion ID="9006">
+    <ClinVarAccession Acc="RCV000000006" Type="RCV"/>
+    <ClinicalSignificance DateLastEvaluated="2024-01-01">
+      <ReviewStatus>reviewed by expert panel</ReviewStatus>
+      <Description>Likely benign</Description>
+    </ClinicalSignificance>
+    <MeasureSet Type="Variant" ID="18399">
+      <Measure Type="single nucleotide variant" ID="33438">
+        <AttributeSet>
+          <Attribute Type="HGVS, protein, RefSeq">NP_004351.1:p.Trp409Arg</Attribute>
+        </AttributeSet>
+        <SequenceLocation Assembly="GRCh38" Chr="16" positionVCF="68812210"
+                          referenceAlleleVCF="T" alternateAlleleVCF="C"/>
+        <MeasureRelationship>
+          <Symbol><ElementValue Type="Preferred">CDH1</ElementValue></Symbol>
+        </MeasureRelationship>
+      </Measure>
+    </MeasureSet>
+  </ReferenceClinVarAssertion>
+  <ClinVarAssertion>
+    <ClinicalSignificance>
+      <ReviewStatus>reviewed by expert panel</ReviewStatus>
+      <Description>Likely benign</Description>
+      <Comment>The variant has been observed in >10 individuals without a
+        diagnosis of diffuse gastric cancer ... (BS2; internal laboratory
+        contributors). Classified as likely benign based on BS2 alone.</Comment>
+    </ClinicalSignificance>
+  </ClinVarAssertion>
+</ClinVarSet>
+"""
+
+# Same BS2 comment but only a single-submitter (1-star) record: the gate
+# (stars>=3) must reject it — an internal-cohort BS2 is only trusted from the
+# panel that owns the data.
+_BS2_SINGLE = _BS2_EXPERT.replace(
+    "<ReviewStatus>reviewed by expert panel</ReviewStatus>",
+    "<ReviewStatus>criteria provided, single submitter</ReviewStatus>",
+)
+
+
+class TestBs2EndToEnd:
+    def test_expert_panel_bs2_mined(self):
+        row = _parse_clinvarset(ET.fromstring(_BS2_EXPERT), assembly="GRCh38")
+        assert row is not None
+        assert _field(row, "gene_symbol") == "CDH1"
+        assert _field(row, "star_rating") == 3
+        assert _field(row, "bs2_evidence") == 1
+        assert _field(row, "bs2_strength") == "Strong"
+
+    def test_single_submitter_bs2_gated_out(self):
+        row = _parse_clinvarset(ET.fromstring(_BS2_SINGLE), assembly="GRCh38")
+        assert row is not None
+        assert _field(row, "star_rating") == 1
+        assert _field(row, "bs2_evidence") == 0
+        assert _field(row, "bs2_strength") is None
+
+    def test_record_without_bs2_unset(self):
+        # The existing _NEW expert-panel fixture has no BS2 text.
+        row = _parse_clinvarset(ET.fromstring(_NEW), assembly="GRCh38")
+        assert _field(row, "bs2_evidence") == 0
+        assert _field(row, "bs2_strength") is None

@@ -350,6 +350,55 @@ def query_segregation_evidence(db_path: Path, chrom: str, pos: int, ref: str, al
     return _sum_column(db_path, "segregation_evidence", chrom, pos, ref, alt)
 
 
+# Benign-direction strength rank — strongest cited BS2 wins across the (possibly
+# several, per-condition) expert-panel RCVs for one variant. Mirrors the
+# clinvar_builder rank so the same ordering is used on both write and read.
+_BS2_STRENGTH_RANK = {"Supporting": 1, "Moderate": 2, "Strong": 3, "VeryStrong": 4}
+
+
+def query_bs2_benign_evidence(
+    db_path: Path, chrom: str, pos: int, ref: str, alt: str
+) -> tuple[bool, Optional[str]]:
+    """Expert-panel (>=3 star) ClinVar BS2 for this variant: ``(has_bs2, strength)``.
+
+    ``strength`` is the strongest cited label (``VeryStrong``/``Strong``/
+    ``Moderate``/``Supporting``); a bare "BS2" was normalised to ``Strong`` at
+    build time. Used as the BS2 fallback for genes whose VCEP bars gnomAD
+    population data (CDH1, TP53, SERPINC1, ...) but whose 3-star review already
+    applied BS2 from an internal cohort. Returns ``(False, None)`` for an old DB
+    built before the bs2 columns existed (OperationalError) — backward
+    compatible, no rebuild forced for callers that don't need BS2."""
+    if not db_path.exists():
+        return False, None
+    c1, c2 = chrom_candidates(chrom)
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT bs2_strength
+            FROM variants
+            WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
+              AND bs2_evidence > 0 AND star_rating >= 3
+            """,
+            (c1, c2, pos, ref, alt),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return False, None  # old ClinVar build without the bs2 columns
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="bs2_benign", error=str(exc))
+        return False, None
+    if not rows:
+        return False, None
+    best: Optional[str] = None
+    best_rank = -1
+    for (strength,) in rows:
+        label = strength or "Strong"  # bare BS2 applies at its Strong default
+        rank = _BS2_STRENGTH_RANK.get(label, 3)
+        if rank > best_rank:
+            best, best_rank = label, rank
+    return True, best
+
+
 def query_hotspot_cluster(
     db_path: Path,
     gene_symbol: str,

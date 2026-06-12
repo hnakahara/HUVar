@@ -19,9 +19,17 @@ from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.criteria.bs2_genes import BS2Applicability, NOT_APPLICABLE
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
-from acmg_classifier.models.enums import ACMGCriterion
+from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
+
+# Expert-panel BS2 strength label (as stored by clinvar_builder) -> ACMG strength.
+_BS2_STRENGTH = {
+    "VeryStrong": CriterionStrength.VERY_STRONG,
+    "Strong": CriterionStrength.STRONG,
+    "Moderate": CriterionStrength.MODERATE,
+    "Supporting": CriterionStrength.SUPPORTING,
+}
 
 
 class BS2Evaluator(CriterionEvaluator):
@@ -35,19 +43,22 @@ class BS2Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        gd = annotation.gnomad
-        if gd is None or not gd.filter_pass:
-            return CriteriaResult.not_met(ACMGCriterion.BS2, "No valid gnomAD record")
-
         pc = annotation.primary_consequence
         gene = pc.gene_symbol if pc else None
 
         # VCEP gate: a VCEP that declined BS2 or barred population data for the
-        # gene withholds it (e.g. RASopathy GN004 — variable expressivity).
+        # gene withholds the gnomAD-count path (e.g. RASopathy GN004; or CDH1 /
+        # TP53 / SERPINC1 whose BS2 needs an internal cohort gnomAD cannot
+        # supply). For those genes the only admissible BS2 is a variant-level
+        # judgement already made by the expert panel — harvested from ClinVar
+        # >=3-star reviews. This path does NOT require a gnomAD record (these
+        # internal-cohort variants are often absent from gnomAD).
         if self._vcep.status(gene) == NOT_APPLICABLE:
-            return CriteriaResult.not_met(
-                ACMGCriterion.BS2, f"{gene}: VCEP designates BS2 not applicable"
-            )
+            return self._clinvar_fallback(variant, gene)
+
+        gd = annotation.gnomad
+        if gd is None or not gd.filter_pass:
+            return CriteriaResult.not_met(ACMGCriterion.BS2, "No valid gnomAD record")
 
         nhomalt = gd.nhomalt or 0
         nhemi = gd.nhemi or 0
@@ -117,6 +128,35 @@ class BS2Evaluator(CriterionEvaluator):
                 who = "healthy female carriers" if female_only else "healthy carriers"
                 return self._met(f"dominant: {who}={het_carriers} >= {het_thr}")
         return self._not_met(nhomalt, nhemi, het_carriers)
+
+    def _clinvar_fallback(
+        self, variant: VariantRecord, gene: str | None
+    ) -> CriteriaResult:
+        """BS2 from an expert-panel (>=3-star) ClinVar review when the VCEP bars
+        the gnomAD-count path. The strength is the one the panel cited (a bare
+        "BS2" applies at its Strong default)."""
+        from acmg_classifier.local_db.clinvar_sqlite import query_bs2_benign_evidence
+
+        has_bs2, strength_label = query_bs2_benign_evidence(
+            self._cfg.clinvar_sqlite,
+            variant.chrom, variant.pos, variant.ref, variant.alt,
+        )
+        if not has_bs2:
+            return CriteriaResult.not_met(
+                ACMGCriterion.BS2,
+                f"{gene}: VCEP bars gnomAD-based BS2 and no ClinVar "
+                "expert-panel (>=3-star) BS2 found for this variant",
+            )
+        strength = _BS2_STRENGTH.get(strength_label or "Strong", CriterionStrength.STRONG)
+        return CriteriaResult.met(
+            ACMGCriterion.BS2,
+            strength,
+            evidence=(
+                f"{gene}: ClinVar expert-panel (>=3-star) applied BS2"
+                f"{'_' + strength_label if strength_label and strength_label != 'Strong' else ''} "
+                "(VCEP internal-cohort evidence)"
+            ),
+        )
 
     def _met(self, detail: str) -> CriteriaResult:
         return CriteriaResult.met(ACMGCriterion.BS2, evidence=f"gnomAD {detail}")
