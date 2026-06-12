@@ -1,5 +1,7 @@
 """BS1 -- allele frequency greater than expected for disorder."""
 from __future__ import annotations
+import re
+
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
@@ -8,6 +10,18 @@ from acmg_classifier.models.enums import ACMGCriterion
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 from acmg_classifier.criteria.allele_frequency import DiseaseThresholds
+
+# Bare protein change from an HGVS p. string, tolerant of a transcript prefix
+# and ClinVar/VEP parentheses; "*" is normalised to "Ter" so p.Gln368* and
+# p.Gln368Ter compare equal. Lower-cased for case-insensitive matching.
+_PCHANGE_RE = re.compile(r"p\.\(?([A-Za-z]{3}\d+(?:[A-Za-z]{3}|Ter|\*|=))\)?")
+
+
+def _norm_pchange(hgvs_p: str | None) -> str:
+    if not hgvs_p:
+        return ""
+    m = _PCHANGE_RE.search(hgvs_p)
+    return m.group(1).replace("*", "Ter").lower() if m else ""
 
 
 class BS1Evaluator(CriterionEvaluator):
@@ -50,6 +64,18 @@ class BS1Evaluator(CriterionEvaluator):
         gene = pc.gene_symbol if pc else ""
         gt = self._thresholds.get(gene)
         threshold = gt.bs1
+
+        # Variant-level BS1 exclusion: a recurrent disease allele the VCEP bars
+        # from BS1 regardless of its population frequency (e.g. MYOC p.Gln368Ter,
+        # whose ~2.6% allelic contribution is disease-driven, not benign).
+        if gt.bs1_exclude:
+            excluded = {_norm_pchange(x) for x in gt.bs1_exclude.split(",")}
+            if _norm_pchange(pc.hgvs_p if pc else None) in excluded:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BS1,
+                    f"{gene}: VCEP excludes BS1 for {gt.bs1_exclude} "
+                    "(recurrent disease allele)",
+                )
 
         # X-linked "in males" genes (RPGR, RS1): the VCEP cutoff is on the male
         # (XY) allele frequency. Fall back to the overall FAF when AF_XY is

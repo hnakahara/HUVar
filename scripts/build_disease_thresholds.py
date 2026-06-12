@@ -32,7 +32,7 @@ from typing import Optional
 
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
-    "penetrance", "bs1_threshold", "bs1_strength", "ba1_threshold", "af_basis",
+    "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "af_basis",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm4", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
     "bs2_count", "bs2_female_only", "bs2_hom_only",
@@ -603,6 +603,32 @@ _BP7_CONSERVATION_NA = frozenset({
 _BP7_INTRONIC_NONCANONICAL = frozenset({
     "RUNX1", "MYOC", "VHL",
 })
+
+
+# Per-gene, VARIANT-LEVEL BS1 exclusions: specific protein changes the VCEP bars
+# from BS1 despite their population frequency, because they are the recurrent
+# disease allele (a founder/common pathogenic variant whose frequency must NOT
+# be read as benign evidence). Stored as the bare protein change; the BS1
+# evaluator withholds BS1 (and the gnomAD-frequency path) for a matching variant.
+#   MYOC (GN019) — "Does not apply to p.Gln368Ter" (the common pathogenic POAG
+#   allele, ~2.6% allelic contribution; its frequency is disease-driven, not
+#   benign). Not present in the JSON-LD BS1 description, so curated here.
+_BS1_EXCLUDE_VARIANTS: dict[str, str] = {
+    "MYOC": "p.Gln368Ter",
+}
+
+
+# Curated threshold corrections for genes whose cspec JSON-LD carries a typo'd or
+# outdated AF threshold that disagrees with the VCEP's published classifications.
+# Applied like a manual --override but persisted here so a rebuild keeps them.
+# Keys are TSV column names; values overwrite the resolved row verbatim.
+#   RPGR (GN106, X-linked IRD) — the cspec lists BS1 ">=8.3x10^-5" and a legacy
+#   ACMG "5%" BA1 boilerplate, but the VCEP's published RPGR classifications use
+#   BS1 > 5x10^-6 and BA1 > 5x10^-5 (BA1 = 10 x BS1), on the male hemizygous AF.
+#   Both cspec numbers are typos; gnomAD male (XY) AF basis is already correct.
+_CURATED_OVERRIDES: dict[str, dict[str, str]] = {
+    "RPGR": {"bs1_threshold": "0.000005", "ba1_threshold": "0.00005"},
+}
 
 
 def _bs2_applicability(rule_set: dict) -> str:
@@ -1305,6 +1331,11 @@ def parse_spec(path: str) -> list[dict]:
     })
     rows: list[dict] = []
     for rs in d.get("ruleSets", []):
+        # A rule set with no criteriaCodes is a Pilot/In-Prep placeholder: it
+        # carries no thresholds or criteria, so it must never shadow a populated
+        # spec's values even when it is more gene-specific (see the base-row
+        # resolution in main()).
+        rs_empty = len(rs.get("criteriaCodes", [])) == 0
         bs1, bs1_note = _criterion_threshold(rs, "BS1")
         ba1, ba1_note = _criterion_threshold(rs, "BA1")
         bs1_strength = _bs1_strength(rs)
@@ -1347,6 +1378,7 @@ def parse_spec(path: str) -> list[dict]:
                 "prevalence": "", "allelic_het": "", "genetic_het": "", "penetrance": "",
                 "bs1_threshold": "" if bs1 is None else _fmt(bs1),
                 "bs1_strength": bs1_strength,
+                "bs1_exclude": "",
                 "ba1_threshold": "" if ba1 is None else _fmt(ba1),
                 "af_basis": af_basis,
                 "pm2_threshold": "",
@@ -1388,6 +1420,7 @@ def parse_spec(path: str) -> list[dict]:
                 # cross-spec PP2/PM5 aggregation in main().
                 "_gn": gn,
                 "_specificity": n_spec_genes,
+                "_empty": rs_empty,
                 "_pm2_threshold": pm2_threshold,
                 "_pm2_strength": pm2_strength,
                 "_pm2_basis": pm2_basis,
@@ -1629,6 +1662,16 @@ def main() -> None:
             # minimises false-positive benign calls. Use --override to pin a
             # disease-appropriate value instead.
             prev = by_gene[g]
+            # An empty Pilot/In-Prep placeholder spec (0 criteriaCodes) must
+            # never shadow a populated spec's thresholds, even when it is more
+            # gene-specific. This generalises the per-gene _FORCE_SPEC pins: e.g.
+            # the empty single-gene GN061 AKT3 / GN050 CDH23 specs no longer
+            # blank out the Released grouped GN018 / GN005 BS1/BA1 values.
+            if row["_empty"] != prev["_empty"]:
+                if prev["_empty"]:  # incoming row is populated → it wins
+                    row["notes"] = (row["notes"] + "; populated over empty placeholder").strip("; ")
+                    by_gene[g] = row
+                continue
             new_spec = row["_specificity"]
             old_spec = prev["_specificity"]
             if new_spec < old_spec:
@@ -1720,6 +1763,8 @@ def main() -> None:
         # position" policy is not phrased as "except canonical splice sites".
         if g in _BP7_INTRONIC_NONCANONICAL:
             row["bp7_intronic"] = "noncanonical"
+        # Curated variant-level BS1 exclusion (e.g. MYOC p.Gln368Ter).
+        row["bs1_exclude"] = _BS1_EXCLUDE_VARIANTS.get(g, "")
         rvc = revel_choice.get(g)
         rv_pp3 = rvc[1] if rvc else {}
         rv_bp4 = rvc[2] if rvc else {}
@@ -1727,6 +1772,9 @@ def main() -> None:
             row[f"revel_pp3_{tier}"] = _fmt(rv_pp3[tier]) if tier in rv_pp3 else ""
             row[f"revel_bp4_{tier}"] = _fmt(rv_bp4[tier]) if tier in rv_bp4 else ""
 
+    # Curated typo/outdated-threshold corrections first, then CLI --override (so
+    # an explicit CLI override still wins over a curated default).
+    _apply_overrides(by_gene, _CURATED_OVERRIDES)
     _apply_overrides(by_gene, overrides)
     rows = [by_gene[g] for g in sorted(by_gene)]
     # newline="\n" forces LF on every platform; csv otherwise emits CRLF on
@@ -1756,6 +1804,7 @@ _OVERRIDE_FIELDS = {
     "ba1": "ba1_threshold",
     "bs1": "bs1_threshold",
     "bs1_strength": "bs1_strength",
+    "bs1_exclude": "bs1_exclude",
     "af_basis": "af_basis",
     "pm2_threshold": "pm2_threshold",
     "pm2_strength": "pm2_strength",

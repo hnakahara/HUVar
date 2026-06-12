@@ -88,6 +88,10 @@ class GeneThresholds:
     # Strength the BS1 cutoff fires at — the spec's BS1 tier (e.g. MYO15A/OTOF
     # fire VeryStrong at >=0.3%); defaults to the ACMG BS1 Strong level.
     bs1_strength: CriterionStrength = CriterionStrength.STRONG
+    # Comma-separated bare protein changes the VCEP bars from BS1 regardless of
+    # frequency (a recurrent disease allele, e.g. MYOC p.Gln368Ter). The BS1
+    # evaluator withholds BS1 for a variant matching one of these.
+    bs1_exclude: str = ""
 
 
 _DEFAULT_THRESHOLDS = GeneThresholds(ba1=_DEFAULT_BA1, bs1=_DEFAULT_BS1)
@@ -155,7 +159,11 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
     bs1_strength = _BS1_STRENGTH.get(
         (row.get("bs1_strength") or "").strip(), CriterionStrength.STRONG
     )
-    return GeneThresholds(ba1=ba1, bs1=bs1, af_basis=af_basis, bs1_strength=bs1_strength)
+    bs1_exclude = (row.get("bs1_exclude") or "").strip()
+    return GeneThresholds(
+        ba1=ba1, bs1=bs1, af_basis=af_basis, bs1_strength=bs1_strength,
+        bs1_exclude=bs1_exclude,
+    )
 
 
 class DiseaseThresholds:
