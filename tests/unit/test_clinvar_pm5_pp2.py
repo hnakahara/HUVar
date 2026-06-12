@@ -59,6 +59,16 @@ class TestPM5MissenseComparator:
         hits = query_same_codon_different_aa(db, "GENE", 175, "NM_1:p.Arg175Gln")
         assert hits == []
 
+    def test_frameshift_comparator_excluded(self, tmp_path):
+        # A frameshift p.Arg175ProfsTer* shares the codon but is not a missense;
+        # _is_missense_p must reject it (the "fs" tail makes "p.Arg175Pro" a
+        # frameshift, not the missense it superficially resembles).
+        db = _db(tmp_path, [
+            _row("2", "GENE", "NM_1:p.Arg175ProfsTer8", "R175P", 175, "Pathogenic", 2),
+        ])
+        hits = query_same_codon_different_aa(db, "GENE", 175, "NM_1:p.Arg175Gln")
+        assert hits == []
+
     def test_mixed_keeps_only_missense(self, tmp_path):
         db = _db(tmp_path, [
             _row("1", "GENE", "NM_1:p.Arg175His", "R175H", 175, "Pathogenic", 1),

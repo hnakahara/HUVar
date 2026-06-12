@@ -50,6 +50,14 @@ class TestParseAaChange:
     def test_no_protein_change(self):
         assert _parse_aa_change("NM_000546.6:c.742C>T") == (None, None)
 
+    def test_frameshift_not_parsed_as_missense(self):
+        # The PTEN PS1 false positive (ClinVar 8376184): a frameshift
+        # p.Pro38LeufsTer* must NOT store the missense key P38L, or a real
+        # missense p.Pro38Leu matches it under PS1.
+        assert _parse_aa_change("NP_000305.3:p.Pro38Leufs") == (None, None)
+        assert _parse_aa_change("NP_000305.3:p.Pro38LeufsTer5") == (None, None)
+        assert _parse_aa_change("p.Arg97ProfsTer23") == (None, None)
+
 # New RCV_release format (ClinVar_RCV_2.3): expert-panel-style record with a
 # coding+protein HGVS and an affected, P/LP SCV.
 _NEW = """

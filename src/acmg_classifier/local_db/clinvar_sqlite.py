@@ -520,9 +520,12 @@ _PP2_MIN_MIS_Z = 3.09        # gnomAD missense Z-score qualifying a constrained 
 _PP2_Z_MAX_BENIGN_FRAC = 0.15
 
 # Match a missense protein change (p.Val377Ile); the trailing AA must not be
-# Ter (stop). We use the 3-letter HGVS form because ClinVar normalises to it;
-# the regex deliberately rejects synonymous (=) and frameshift (fs) syntax.
-_MISSENSE_RE = re.compile(r"p\.[A-Z][a-z]{2}\d+([A-Z][a-z]{2})")
+# Ter (stop). We use the 3-letter HGVS form because ClinVar normalises to it.
+# The ``(?![a-z])`` lookahead rejects a frameshift (``p.Pro38LeufsTer5``) or
+# extension (``...ext...``): without it the regex consumed only the leading
+# "Pro38Leu" and a frameshift read as the missense P38L (the PTEN PS1 false
+# positive, ClinVar 8376184).
+_MISSENSE_RE = re.compile(r"p\.[A-Z][a-z]{2}\d+([A-Z][a-z]{2})(?![a-z])")
 
 
 def _is_missense_p(hgvs_p: Optional[str]) -> bool:

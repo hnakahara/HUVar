@@ -264,10 +264,19 @@ def _parse_aa_change(hgvs_p: str | None) -> tuple[str | None, int | None]:
     The previous ``code[:1]`` shortcut collapsed every residue to its first
     letter, so Arg/Asn/Asp all became "A" and Gln/Glu both "G" (likewise
     Lys→L, Phe→P, Trp/Tyr→T). That corrupted amino_acid_change for those
-    residues and made the PS1 same-AA lookup match the wrong substitutions."""
+    residues and made the PS1 same-AA lookup match the wrong substitutions.
+
+    A FRAMESHIFT ``p.Pro38LeufsTer5`` (or short ``p.Pro38Leufs``) must NOT be
+    parsed as the missense ``p.Pro38Leu`` — the trailing "fs" makes it a
+    different molecular event. The old regex consumed only "Pro38Leu" and
+    silently stored amino_acid_change "P38L", so PS1 matched a real missense
+    p.Pro38Leu against this frameshift (the reported PTEN false positive,
+    ClinVar 8376184). The ``(?![a-z])`` lookahead rejects a residue immediately
+    followed by a lowercase letter (the "fs" of a frameshift / "ext" of an
+    extension), while leaving a clean missense or ``Ter`` stop-gain intact."""
     if not hgvs_p:
         return None, None
-    m = re.search(r"p\.\(?([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2}|Ter|\*)", hgvs_p)
+    m = re.search(r"p\.\(?([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2}|Ter|\*)(?![a-z])", hgvs_p)
     if not m:
         return None, None
     pos = int(m.group(2))
@@ -283,8 +292,11 @@ def _parse_aa_change(hgvs_p: str | None) -> tuple[str | None, int | None]:
 
 # A bare protein change ("p.Arg248Trp"), tolerant of a transcript/accession
 # prefix and ClinVar's predicted-protein parentheses ("...:p.(Arg248Trp)").
+# The ``(?![a-z])`` lookahead keeps a frameshift ("p.Pro38LeufsTer5") from
+# normalising to the missense "p.Pro38Leu" — otherwise the Preferred-name
+# fallback would re-introduce the bogus P38L that _parse_aa_change now rejects.
 _PROT_CHANGE_RE = re.compile(
-    r"p\.\(?([A-Z][a-z]{2}\d+(?:[A-Z][a-z]{2}|Ter|\*|=))\)?"
+    r"p\.\(?([A-Z][a-z]{2}\d+(?:[A-Z][a-z]{2}|Ter|\*|=))(?![a-z])\)?"
 )
 _PREF_CODING_RE = re.compile(r"(N[MR]_\d+\.\d+)")
 
