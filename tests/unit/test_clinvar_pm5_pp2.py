@@ -76,6 +76,66 @@ class TestPM5MissenseComparator:
         assert hits == []
 
 
+class TestPM5TranscriptCollision:
+    """The same codon-proximity guard PS1 uses: a comparator that merely shares
+    codon_position but sits far away is a transcript-numbering collision."""
+
+    _SCHEMA2 = (
+        "CREATE TABLE variants (variation_id TEXT, chrom TEXT, pos INTEGER, "
+        "ref TEXT, alt TEXT, gene_symbol TEXT, hgvs_c TEXT, hgvs_p TEXT, "
+        "amino_acid_change TEXT, codon_position INTEGER, "
+        "clinical_significance TEXT, review_status TEXT, star_rating INTEGER)"
+    )
+
+    def _db2(self, tmp_path, rows):
+        p = tmp_path / "cv2.sqlite"
+        con = sqlite3.connect(p)
+        con.execute(self._SCHEMA2)
+        con.executemany(
+            "INSERT INTO variants (variation_id, chrom, pos, ref, alt, "
+            "gene_symbol, hgvs_p, amino_acid_change, codon_position, "
+            "clinical_significance, review_status, star_rating) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            rows,
+        )
+        con.commit()
+        con.close()
+        return p
+
+    def test_far_codon_collision_rejected(self, tmp_path):
+        db = self._db2(tmp_path, [
+            ("c", "10", 87880000, "C", "A", "PTEN", "NP_x:p.Pro38His", "P38H",
+             38, "Pathogenic", "criteria provided", 2),
+        ])
+        hits = query_same_codon_different_aa(
+            db, "PTEN", 38, "NP_y:p.Pro38Leu",
+            query_chrom="chr10", query_pos=87894058,
+        )
+        assert hits == []
+
+    def test_same_codon_within_window_found(self, tmp_path):
+        db = self._db2(tmp_path, [
+            ("c", "10", 87894059, "C", "G", "PTEN", "NP_x:p.Pro38Arg", "P38R",
+             38, "Pathogenic", "criteria provided", 2),
+        ])
+        hits = query_same_codon_different_aa(
+            db, "PTEN", 38, "NP_y:p.Pro38Leu",
+            query_chrom="chr10", query_pos=87894058,
+        )
+        assert [h.variation_id for h in hits] == ["c"]
+
+    def test_null_pos_comparator_kept(self, tmp_path):
+        db = self._db2(tmp_path, [
+            ("c", None, None, None, None, "PTEN", "NP_x:p.Pro38Arg", "P38R",
+             38, "Pathogenic", "criteria provided", 2),
+        ])
+        hits = query_same_codon_different_aa(
+            db, "PTEN", 38, "NP_y:p.Pro38Leu",
+            query_chrom="chr10", query_pos=87894058,
+        )
+        assert [h.variation_id for h in hits] == ["c"]
+
+
 def _pp2_rows(gene, n_path, n_benign):
     rows = []
     for i in range(n_path):

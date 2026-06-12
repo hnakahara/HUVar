@@ -58,6 +58,8 @@ class PM5Evaluator(CriterionEvaluator):
             pc.protein_position,
             pc.hgvs_p,
             min_stars=self._cfg.pm5_min_stars,
+            query_chrom=variant.chrom,
+            query_pos=variant.pos,
         )
         if not hits:
             return CriteriaResult.not_met(

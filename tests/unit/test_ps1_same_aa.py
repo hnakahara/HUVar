@@ -109,3 +109,48 @@ class TestQuerySameAaChange:
         ])
         hits = query_same_aa_change(db, "GCK", "NP_000153.1:p.Gly175Arg")
         assert hits == []
+
+    def test_transcript_numbering_collision_rejected(self, tmp_path):
+        # The reported PTEN false positive: a comparator that shares the
+        # amino_acid_change STRING 'P38L' but sits far from the candidate is the
+        # SAME residue number on a DIFFERENT transcript (MANE NM_000314.8 codon 38
+        # vs the long isoform NM_001304718, where MANE codon 38 == isoform codon
+        # 211). It is a different residue and must NOT satisfy PS1.
+        db = _db(tmp_path, [
+            _row("collision", "10", 87880000, "C", "T", "PTEN",
+                 "NP_001291647.1:p.Pro38Leu", "P38L", 38, "Pathogenic", 2),
+        ])
+        hits = query_same_aa_change(
+            db, "PTEN", "NP_000305.3:p.Pro38Leu",
+            exclude_chrom="chr10", exclude_pos=87894058,
+            exclude_ref="C", exclude_alt="T",
+        )
+        assert hits == []
+
+    def test_same_codon_sibling_within_window_found(self, tmp_path):
+        # A genuine different-nucleotide sibling lies in the same codon (<=2 bp),
+        # so the proximity guard keeps it.
+        db = _db(tmp_path, [
+            _row("sib", "10", 87894059, "C", "G", "PTEN",
+                 "NP_000305.3:p.Pro38Leu", "P38L", 38, "Pathogenic", 2),
+        ])
+        hits = query_same_aa_change(
+            db, "PTEN", "NP_000305.3:p.Pro38Leu",
+            exclude_chrom="chr10", exclude_pos=87894058,
+            exclude_ref="C", exclude_alt="T",
+        )
+        assert [h.variation_id for h in hits] == ["sib"]
+
+    def test_null_position_comparator_kept(self, tmp_path):
+        # A comparator with no recorded position cannot be disproven as
+        # same-codon → kept (preserves rows the build could not coordinate).
+        db = _db(tmp_path, [
+            _row("nopos", None, None, "C", "G", "GCK",
+                 "NP_000153.1:p.Gly175Arg", "G175R", 175, "Pathogenic", 2),
+        ])
+        hits = query_same_aa_change(
+            db, "GCK", "NP_000153.1:p.Gly175Arg",
+            exclude_chrom="chr7", exclude_pos=44150025,
+            exclude_ref="C", exclude_alt="T",
+        )
+        assert [h.variation_id for h in hits] == ["nopos"]

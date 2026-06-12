@@ -93,6 +93,7 @@ def query_same_aa_change(
     exclude_ref: Optional[str] = None,
     exclude_alt: Optional[str] = None,
     min_stars: int = 1,
+    codon_window: int = 2,
 ) -> list[ClinVarRecord]:
     """
     Return ClinVar records with same AA change (PS1).
@@ -106,12 +107,24 @@ def query_same_aa_change(
     ``:p.(Gly175Arg)`` and those whose hgvs_p used a non-MANE transcript's
     numbering — which is why same-AA pathogenic siblings (e.g. APC p.Ser1028Arg,
     MECP2 p.Leu136Phe) were not found even though they exist.
+
+    Codon-proximity guard (``codon_window``, default 2 bp): a true PS1 sibling
+    arises from a DIFFERENT nucleotide in the SAME codon, so it lies within 2 bp
+    of the candidate on the same chromosome. A comparator that shares the
+    ``amino_acid_change`` *string* but sits far away is a transcript-numbering
+    collision — e.g. PTEN p.Pro38Leu on MANE (NM_000314.8) vs p.Pro38Leu on the
+    long isoform NM_001304718, which is a different residue (codon 211 on MANE).
+    Such a comparator is rejected. The guard only fires when the candidate
+    coordinate (``exclude_chrom``/``exclude_pos``) is known AND the comparator
+    has a recorded position; a comparator with no stored position is kept (it
+    cannot be disproven as same-codon).
     """
     aa_key = _aa_change_key(hgvs_p)
     if not db_path.exists() or not aa_key:
         return []
 
     excl_chrom = strip_chr(exclude_chrom) if exclude_chrom else exclude_chrom
+    proximity = excl_chrom is not None and exclude_pos is not None
 
     try:
         con = _get_conn(db_path)
@@ -140,10 +153,19 @@ def query_same_aa_change(
     # for itself". We strip the chr prefix on both sides because ClinVar
     # historically stored chromosomes both with and without the prefix.
     for r in rows:
+        comp_chrom = strip_chr(str(r[8])) if r[8] is not None else None
+        comp_pos = r[9]
         if (excl_chrom is not None and exclude_pos is not None
                 and exclude_ref is not None and exclude_alt is not None
-                and strip_chr(str(r[8])) == excl_chrom and r[9] == exclude_pos
+                and comp_chrom == excl_chrom and comp_pos == exclude_pos
                 and r[10] == exclude_ref and r[11] == exclude_alt):
+            continue
+        # Codon-proximity guard: reject a far-away comparator that only shares
+        # the amino_acid_change STRING (a transcript-numbering collision). A
+        # comparator with no recorded position is kept (cannot be disproven).
+        if (proximity and comp_pos is not None
+                and (comp_chrom != excl_chrom
+                     or abs(comp_pos - exclude_pos) > codon_window)):
             continue
         results.append(ClinVarRecord(
             variation_id=str(r[0]),
@@ -164,8 +186,18 @@ def query_same_codon_different_aa(
     codon_position: Optional[int],
     hgvs_p: Optional[str],
     min_stars: int = 1,
+    query_chrom: Optional[str] = None,
+    query_pos: Optional[int] = None,
+    codon_window: int = 2,
 ) -> list[ClinVarRecord]:
-    """Return ClinVar records at same codon with different AA change (PM5)."""
+    """Return ClinVar records at same codon with different AA change (PM5).
+
+    Codon-proximity guard (``query_chrom``/``query_pos``, ``codon_window``): like
+    PS1, a genuine same-codon comparator lies within 2 bp of the candidate, so a
+    far-away row that merely shares ``codon_position`` is a transcript-numbering
+    collision (e.g. a PTEN long-isoform residue numbered the same as a MANE
+    codon) and is rejected. The guard only fires when the candidate coordinate is
+    supplied AND the comparator has a recorded position."""
     p_change = _protein_change_only(hgvs_p)
     if not db_path.exists() or codon_position is None:
         return []
@@ -174,7 +206,7 @@ def query_same_codon_different_aa(
         rows = con.execute(
             """
             SELECT variation_id, clinical_significance, review_status, star_rating,
-                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change
+                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos
             FROM variants
             WHERE gene_symbol = ?
               AND codon_position = ?
@@ -190,13 +222,25 @@ def query_same_codon_different_aa(
         log.error("clinvar_sqlite_error", op="same_codon", error=str(exc))
         return []
 
+    q_chrom = strip_chr(query_chrom) if query_chrom else None
+    proximity = q_chrom is not None and query_pos is not None
+
     # PM5 compares to an established pathogenic *missense* at the same residue.
     # codon_position is also populated for truncating changes (p.ArgNNNTer / *),
     # so a pathogenic nonsense/frameshift at this residue would otherwise fire
     # PM5 spuriously. Restrict the comparator to genuine missense (hgvs_p ending
     # in a 3-letter amino acid, not Ter/*) via _is_missense_p.
-    return [
-        ClinVarRecord(
+    out: list[ClinVarRecord] = []
+    for r in rows:
+        if not _is_missense_p(r[6]):
+            continue
+        comp_chrom = strip_chr(str(r[8])) if r[8] is not None else None
+        comp_pos = r[9]
+        if (proximity and comp_pos is not None
+                and (comp_chrom != q_chrom
+                     or abs(comp_pos - query_pos) > codon_window)):
+            continue
+        out.append(ClinVarRecord(
             variation_id=str(r[0]),
             clinical_significance=r[1],
             review_status=r[2],
@@ -205,10 +249,8 @@ def query_same_codon_different_aa(
             hgvs_c=r[5],
             hgvs_p=r[6],
             amino_acid_change=r[7],
-        )
-        for r in rows
-        if _is_missense_p(r[6])
-    ]
+        ))
+    return out
 
 
 def query_same_splice_site(
