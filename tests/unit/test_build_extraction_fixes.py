@@ -245,6 +245,123 @@ class TestRPGRThresholdCorrection:
         assert float(r["ba1_threshold"]) > float(r["bs1_threshold"])
 
 
+class TestPM2TieredThreshold:
+    """PM2 must read the gnomAD numeric cutoff even when it sits in a non-first
+    applicable tier behind a legacy "Absent from ESP/1000G/ExAC" boilerplate
+    (ITGA2B/ITGB3 GN011: Moderate "absent" + Supporting "<0.0001 in gnomAD").
+    eRepo showed ~223 PM2 false negatives from resolving this to threshold 0."""
+
+    def _tiered_pm2(self):
+        return {"criteriaCodes": [{
+            "label": "PM2",
+            "evidenceStrengths": [
+                {"label": "Moderate", "applicability": "Applicable",
+                 "description": "Absent from controls (or at extremely low "
+                                "frequency if recessive) in Exome Sequencing "
+                                "Project, 1000 Genomes Project, or ExAC"},
+                {"label": "Supporting", "applicability": "Applicable",
+                 "description": "Prevalence <1/10,000 (<0.0001) alleles in gnomAD."},
+            ],
+        }]}
+
+    def test_numeric_tier_beats_absent_boilerplate(self):
+        assert b._pm2_threshold(self._tiered_pm2(), "AR") == "0.0001"
+
+    def test_genuine_absent_only_stays_zero(self):
+        rs = _rs("PM2", "Absent from controls in ESP, 1000 Genomes, or ExAC.")
+        assert b._pm2_threshold(rs, "AR") == "0"
+
+    def test_first_tier_numeric_unchanged(self):
+        # A numeric in the first tier still resolves to that number (no regression).
+        rs = _rs("PM2", "Allele frequency <0.00002 in gnomAD.")
+        assert b._pm2_threshold(rs, "AD") == "0.00002"
+
+    def test_committed_tsv(self):
+        import csv
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        with tsv.open(encoding="utf-8") as f:
+            rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
+        assert rows["ITGA2B"]["pm2_threshold"] == "0.0001"
+        assert rows["ITGB3"]["pm2_threshold"] == "0.0001"
+
+
+class TestPM2SubpopMode:
+    """PM2 subpopulation-metric detection: HCM/LGMD "upper bound of the 95% CI"
+    → ci95; RUNX1 "all subpopulations / GrpMax FAF when available" → point."""
+
+    def _pm2(self, desc):
+        return {"criteriaCodes": [{"label": "PM2", "evidenceStrengths": [
+            {"label": "Supporting", "applicability": "Applicable", "description": desc},
+        ]}]}
+
+    def test_ci95_detected(self):
+        rs = self._pm2("A threshold of <=0.00004 in the subpopulation with the "
+                       "highest frequency when using the upper bound of the 95% CI.")
+        assert b._pm2_subpop(rs) == "ci95"
+
+    def test_point_detected(self):
+        rs = self._pm2("If a GrpMax FAF value is not available, require that all "
+                       "subpopulations meet the PM2_supporting threshold.")
+        assert b._pm2_subpop(rs) == "point"
+
+    def test_plain_none(self):
+        rs = self._pm2("Allele frequency <0.0001 in gnomAD.")
+        assert b._pm2_subpop(rs) == ""
+
+    def test_committed_tsv(self):
+        import csv
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        with tsv.open(encoding="utf-8") as f:
+            rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
+        assert rows["RUNX1"]["pm2_subpop"] == "point"
+        for gene in ("MYH7", "MYBPC3", "TNNI3", "TNNT2", "TPM1", "ACTC1",
+                     "MYL2", "MYL3", "DYSF", "CAPN3", "ANO5",
+                     "SGCA", "SGCB", "SGCD", "SGCG"):
+            assert rows[gene]["pm2_subpop"] == "ci95", gene
+
+
+class TestPM2Zygosity:
+    """PM2 homozygote/hemizygote ceiling detection (SLC6A8 et al.)."""
+
+    def _pm2(self, desc):
+        return {"criteriaCodes": [{"label": "PM2", "evidenceStrengths": [
+            {"label": "Supporting", "applicability": "Applicable", "description": desc},
+        ]}]}
+
+    def test_homhemi_zero(self):
+        rs = self._pm2("FAF <=0.00002 AND 0 homo- or hemizygotes are present in gnomAD.")
+        assert b._pm2_zygosity(rs) == "homhemi:0"
+
+    def test_homhemi_one(self):
+        rs = self._pm2("FAF <0.000015 AND <=1 homo- or hemizygote in gnomAD.")
+        assert b._pm2_zygosity(rs) == "homhemi:1"
+
+    def test_hom_only(self):
+        rs = self._pm2("popmax FAF <0.0001 * An additional requirement is that "
+                       "no homozygotes have been observed in gnomAD.")
+        assert b._pm2_zygosity(rs) == "hom:0"
+
+    def test_hemi_only(self):
+        rs = self._pm2("PM2 can be applied if the variant is absent in hemizygotes "
+                       "AND has MAF <0.0000017 in heterozygotes.")
+        assert b._pm2_zygosity(rs) == "hemi:0"
+
+    def test_none(self):
+        rs = self._pm2("Allele frequency <0.0001 in gnomAD.")
+        assert b._pm2_zygosity(rs) == ""
+
+    def test_committed_tsv(self):
+        import csv
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        with tsv.open(encoding="utf-8") as f:
+            rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
+        assert rows["SLC6A8"]["pm2_zygosity"] == "homhemi:0"
+        assert rows["OTC"]["pm2_zygosity"] == "homhemi:1"
+        assert rows["ABCD1"]["pm2_zygosity"] == "hemi:0"
+        for gene in ("ADA", "DCLRE1C", "IL7R", "JAK3", "RAG1", "RAG2", "GATM", "GAMT"):
+            assert rows[gene]["pm2_zygosity"] == "hom:0", gene
+
+
 def test_bp1_truncating_includes_lof_classes():
     """#13: RASopathy GoF BP1 truncating target covers splice / start-loss /
     whole-gene deletion, not only nonsense/frameshift."""

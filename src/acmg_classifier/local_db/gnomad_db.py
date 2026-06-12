@@ -20,9 +20,11 @@ def _merge_rows(rows: list) -> GnomADData:
     """Merge multiple gnomAD rows for one variant by per-field MAX.
 
     Row layout: (af, an, ac, nhomalt, nhemi, popmax_af, popmax_pop,
-    faf95_popmax, af_xy, ac_xx, nhomalt_xx, filters). Only PASS rows are merged
-    when any exist (a filtered record must not contribute a frequency); if every
-    row is filtered the variant is reported as filter-failed."""
+    faf95_popmax, af_xy, ac_xx, nhomalt_xx, filters[, ac_grpmax, an_grpmax]).
+    Only PASS rows are merged when any exist (a filtered record must not
+    contribute a frequency); if every row is filtered the variant is reported as
+    filter-failed. The optional trailing ac_grpmax/an_grpmax are present only for
+    DBs built after that schema addition (older DBs degrade to None)."""
     pass_rows = [r for r in rows if _pass_filter(r[11])]
     use = pass_rows or rows
 
@@ -32,6 +34,10 @@ def _merge_rows(rows: list) -> GnomADData:
 
     # popmax_pop comes from whichever used row has the highest popmax AF.
     best = max(use, key=lambda r: (r[5] if r[5] is not None else -1.0))
+    # GrpMax AC and AN must come from the SAME row (the dataset where the
+    # subpopulation frequency is highest) so the upper-CI is computed on a
+    # consistent count/number pair — never a per-field max that could mix them.
+    has_grpmax = len(best) > 13
     return GnomADData(
         af=fmax(0),
         an=fmax(1),
@@ -44,6 +50,8 @@ def _merge_rows(rows: list) -> GnomADData:
         af_xy=fmax(8),
         ac_xx=fmax(9),
         nhomalt_xx=fmax(10),
+        ac_grpmax=best[12] if has_grpmax else None,
+        an_grpmax=best[13] if has_grpmax else None,
         filter_pass=bool(pass_rows),
     )
 
@@ -84,12 +92,20 @@ class GnomADDB:
             xy_expr = "af_xy" if "af_xy" in cols else "NULL AS af_xy"
             has_xx = "ac_xx" in cols and "nhomalt_xx" in cols
             xx_expr = "ac_xx, nhomalt_xx" if has_xx else "NULL AS ac_xx, NULL AS nhomalt_xx"
+            # GrpMax AC/AN trail after `filters` (indices 12/13) — keep `filters`
+            # at index 11 so the merge's PASS check is unaffected. NULL for DBs
+            # built before these columns were added (graceful degradation).
+            has_grpmax = "ac_grpmax" in cols and "an_grpmax" in cols
+            grpmax_expr = (
+                "ac_grpmax, an_grpmax" if has_grpmax
+                else "NULL AS ac_grpmax, NULL AS an_grpmax"
+            )
             rows = con.execute(
                 f"""
                 SELECT af, an, ac, nhomalt, nhemi,
                        popmax_af, popmax_pop, faf95_popmax, {xy_expr},
                        {xx_expr},
-                       filters
+                       filters, {grpmax_expr}
                 FROM variants
                 WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
                 """,

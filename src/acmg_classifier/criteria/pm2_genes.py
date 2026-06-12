@@ -8,6 +8,15 @@
   the SVI default of Supporting.
 * ``pm2_basis``     — ``faf`` when the VCEP states the cutoff on the GrpMax
   Filtering Allele Frequency (FAF95); blank → the raw popmax allele frequency.
+* ``pm2_subpop``    — highest-subpopulation metric mode that corrects the
+  deflated low-AC FAF95: ``point`` (RUNX1 — also require the GrpMax POINT AF
+  <= threshold) or ``ci95`` (Cardiomyopathy/HCM — require the UPPER bound of the
+  95% CI of the GrpMax AF <= threshold, reconstructed from GrpMax AC/AN); blank
+  for genes with no such rule.
+* ``pm2_zygosity`` — a homozygote/hemizygote ceiling "<scope>:<max>" (scope =
+  hom / hemi / homhemi) PM2 also requires (SLC6A8 ``homhemi:0``, OTC
+  ``homhemi:1``, the SCID genes / GATM / GAMT ``hom:0``, ABCD1 ``hemi:0``);
+  blank when the VCEP states no such requirement.
 """
 from __future__ import annotations
 
@@ -24,6 +33,9 @@ class PM2Rule:
     threshold: Optional[float]      # None → no per-gene cutoff (use global default)
     strength: CriterionStrength     # Moderate or Supporting
     use_faf: bool                   # compare FAF95 instead of raw popmax AF
+    subpop_mode: str = ""           # "" / "point" (RUNX1) / "ci95" (HCM)
+    zyg_scope: str = ""             # "" / "hom" / "hemi" / "homhemi"
+    zyg_max: int = 0                # highest tolerated homo/hemi count
 
 
 class PM2Spec:
@@ -58,10 +70,25 @@ class PM2Spec:
                     else CriterionStrength.SUPPORTING
                 )
                 use_faf = (row.get("pm2_basis") or "").strip().lower() == "faf"
+                subpop_mode = (row.get("pm2_subpop") or "").strip().lower()
+                if subpop_mode not in ("point", "ci95"):
+                    subpop_mode = ""
+                zyg_scope, zyg_max = "", 0
+                raw_zyg = (row.get("pm2_zygosity") or "").strip().lower()
+                if ":" in raw_zyg:
+                    scope, _, mx = raw_zyg.partition(":")
+                    if scope in ("hom", "hemi", "homhemi"):
+                        try:
+                            zyg_scope, zyg_max = scope, int(mx)
+                        except ValueError:
+                            zyg_scope = ""
                 # Only record a rule when the gene carries at least one PM2
                 # specialisation; otherwise leave it to the global default.
-                if raw or strength == CriterionStrength.MODERATE or use_faf:
-                    self._by_gene[gene] = PM2Rule(threshold, strength, use_faf)
+                if (raw or strength == CriterionStrength.MODERATE or use_faf
+                        or subpop_mode or zyg_scope):
+                    self._by_gene[gene] = PM2Rule(
+                        threshold, strength, use_faf, subpop_mode, zyg_scope, zyg_max
+                    )
 
     def get(self, gene: Optional[str]) -> Optional[PM2Rule]:
         if not gene:

@@ -33,7 +33,8 @@ from typing import Optional
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "af_basis",
-    "pm2_threshold", "pm2_strength", "pm2_basis", "pm4", "pp2",
+    "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
+    "pm4", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
     "bs2_count", "bs2_female_only", "bs2_hom_only",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
@@ -1265,6 +1266,85 @@ def _pm2_basis(rule_set: dict) -> str:
     return "faf" if _PM2_FAF.search(desc) else ""
 
 
+# PM2 subpopulation metric mode — the FAF95 (95% CI LOWER bound) is deflated for
+# low-AC variants, so a variant elevated in a single subpopulation can slip under
+# it. Two VCEP families correct this with a stricter highest-subpopulation metric:
+#  * "point"  — RUNX1: "use GrpMax FAF when available, else require ALL
+#               subpopulations meet the threshold." Evaluator additionally
+#               requires the GrpMax POINT AF (popmax_af) <= threshold.
+#  * "ci95"   — Cardiomyopathy/HCM: "<= threshold in the highest subpopulation
+#               using the UPPER bound of the 95% CI." gnomAD shows only the FAF
+#               (lower bound), so the evaluator reconstructs the upper bound from
+#               the GrpMax AC/AN.
+_PM2_SUBPOP_CAVEAT = re.compile(
+    r"all sub-?populations?[^.]{0,30}?(?:meet|threshold)|"
+    r"if a grpmax faf[^.]{0,40}?not\s+available",
+    re.IGNORECASE,
+)
+_PM2_CI_UPPER = re.compile(r"upper bound of\s+(?:the\s+)?95\s*%?\s*(?:ci|confidence)", re.IGNORECASE)
+
+
+def _pm2_subpop(rule_set: dict) -> str:
+    """PM2 subpopulation mode: "ci95" (HCM upper-95%-CI), "point" (RUNX1
+    all-subpopulations point AF), or "" (no special subpopulation rule)."""
+    code = _pm2_code(rule_set)
+    if code is None:
+        return ""
+    desc = " ".join(
+        es.get("description", "") or "" for es in _applicable_strengths(code)
+    ).replace("\\", "")
+    if _PM2_CI_UPPER.search(desc):
+        return "ci95"
+    if _PM2_SUBPOP_CAVEAT.search(desc):
+        return "point"
+    return ""
+
+
+# PM2 homozygote/hemizygote ceiling — several VCEPs additionally require few/no
+# homozygotes or hemizygotes in gnomAD before PM2 applies, because a recurrent
+# homozygous/hemizygous observation argues against rarity-for-pathogenicity even
+# when the allele frequency is low. Encoded "<scope>:<max>" where scope is hom /
+# hemi / homhemi (combined) and max is the highest tolerated count:
+#   SLC6A8 "0 homo- or hemizygotes"  -> homhemi:0
+#   OTC    "<=1 homo- or hemizygote" -> homhemi:1
+#   ADA/DCLRE1C/IL7R/JAK3/RAG1/RAG2 "no homozygotes" -> hom:0
+#   GATM/GAMT "Homozygotes should not be seen"        -> hom:0
+#   ABCD1  "absent in hemizygotes"   -> hemi:0
+_PM2_HOMHEMI = re.compile(
+    r"(no|zero|0|≤\s*1|<=\s*1|one|≤\s*0|1)\s*homo-?\s*(?:or|/)\s*hemizygot",
+    re.IGNORECASE,
+)
+_PM2_HEMI_ONLY = re.compile(
+    r"absent[^.]{0,25}hemizygot|hemizygot[^.]{0,15}(?:absent|0\b|zero|not)",
+    re.IGNORECASE,
+)
+_PM2_HOM_ONLY = re.compile(
+    r"(?:no|zero|0|not)[^.]{0,30}homozygot|"
+    r"homozygot[^.]{0,30}(?:not be seen|not been observed|should not)",
+    re.IGNORECASE,
+)
+
+
+def _pm2_zygosity(rule_set: dict) -> str:
+    """PM2 homozygote/hemizygote ceiling as "<scope>:<max>" (hom/hemi/homhemi),
+    or "" when the VCEP states no such requirement."""
+    code = _pm2_code(rule_set)
+    if code is None:
+        return ""
+    desc = " ".join(
+        es.get("description", "") or "" for es in _applicable_strengths(code)
+    ).replace("\\", "")
+    m = _PM2_HOMHEMI.search(desc)
+    if m:
+        tok = m.group(1).lower().replace(" ", "")
+        return "homhemi:1" if ("1" in tok or "one" in tok) else "homhemi:0"
+    if _PM2_HEMI_ONLY.search(desc):
+        return "hemi:0"
+    if _PM2_HOM_ONLY.search(desc):
+        return "hom:0"
+    return ""
+
+
 def _pm2_threshold(rule_set: dict, moi: str) -> str:
     """PM2 allele-frequency cutoff for a gene with mode-of-inheritance *moi*.
 
@@ -1282,8 +1362,20 @@ def _pm2_threshold(rule_set: dict, moi: str) -> str:
     desc = strs[0].get("description", "")
     cands = _pm2_cands(desc)
     if not cands:
-        # No numeric cutoff: an "absent from controls" rule means threshold 0.
-        return "0" if _PM2_ABSENT.search(desc) else ""
+        # The first tier has no numeric cutoff. Before falling back to
+        # "absent"=0, scan the OTHER applicable tiers for a gnomAD numeric
+        # cutoff: some VCEPs state a legacy "Absent from ESP/1000G/ExAC"
+        # boilerplate at one strength and the operative gnomAD number at another
+        # (ITGA2B/ITGB3 GN011: Moderate "absent" + Supporting "<0.0001 in
+        # gnomAD"). The numeric cutoff governs whether PM2 fires at all, so it
+        # must win over the boilerplate "absent". (strs[0]-with-a-number is left
+        # untouched, so no other gene's resolved threshold changes.)
+        rest = " ".join(es.get("description", "") or "" for es in strs[1:])
+        rest_cands = _pm2_cands(rest)
+        if rest_cands:
+            desc, cands = rest, rest_cands
+        else:
+            return "0" if _PM2_ABSENT.search(desc) else ""
     # MOI-split: the recessive cutoff is the higher value, dominant the lower.
     if len(cands) > 1 and _PM2_AR.search(desc) and _PM2_AD.search(desc):
         if "AR" in moi and "AD" not in moi:
@@ -1342,6 +1434,8 @@ def parse_spec(path: str) -> list[dict]:
         af_basis = _af_basis(rs)
         pm2_strength = _pm2_strength(rs)
         pm2_basis = _pm2_basis(rs)
+        pm2_subpop = _pm2_subpop(rs)
+        pm2_zygosity = _pm2_zygosity(rs)
         pm4 = _pm4_applicability(rs)
         pp2_map = _pp2_applicability(rs)
         pp2_req = _pp2_requires(rs)
@@ -1384,6 +1478,8 @@ def parse_spec(path: str) -> list[dict]:
                 "pm2_threshold": "",
                 "pm2_strength": "",
                 "pm2_basis": "",
+                "pm2_subpop": "",
+                "pm2_zygosity": "",
                 "pm4": "",
                 "pp2": "",
                 "pp2_requires": "",
@@ -1424,6 +1520,8 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm2_threshold": pm2_threshold,
                 "_pm2_strength": pm2_strength,
                 "_pm2_basis": pm2_basis,
+                "_pm2_subpop": pm2_subpop,
+                "_pm2_zygosity": pm2_zygosity,
                 "_pm4": pm4,
                 "_pp2": pp2_map.get(sym, ""),
                 "_pp2_requires": pp2_req,
@@ -1597,7 +1695,8 @@ def main() -> None:
                 cur = pm2_choice.get(g)
                 if cur is None or spec < cur[0]:
                     pm2_choice[g] = (
-                        spec, row["_pm2_threshold"], row["_pm2_strength"], row["_pm2_basis"],
+                        spec, row["_pm2_threshold"], row["_pm2_strength"],
+                        row["_pm2_basis"], row["_pm2_subpop"], row["_pm2_zygosity"],
                     )
             # REVEL: only specs that state a numeric REVEL cutoff contribute.
             # Most gene-specific spec wins; on a tie keep the first (file order).
@@ -1737,6 +1836,8 @@ def main() -> None:
         row["pm2_threshold"] = pm2c[1] if pm2c else ""
         row["pm2_strength"] = pm2c[2] if (pm2c and pm2c[2] == "Moderate") else ""
         row["pm2_basis"] = pm2c[3] if pm2c else ""
+        row["pm2_subpop"] = pm2c[4] if pm2c else ""
+        row["pm2_zygosity"] = pm2c[5] if pm2c else ""
         pchoice = ps1_choice.get(g)
         row["ps1"] = pchoice[1] if pchoice else ""
         row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
@@ -1809,6 +1910,8 @@ _OVERRIDE_FIELDS = {
     "pm2_threshold": "pm2_threshold",
     "pm2_strength": "pm2_strength",
     "pm2_basis": "pm2_basis",
+    "pm2_subpop": "pm2_subpop",
+    "pm2_zygosity": "pm2_zygosity",
     "pm4": "pm4",
     "pp2": "pp2",
     "pp2_requires": "pp2_requires",

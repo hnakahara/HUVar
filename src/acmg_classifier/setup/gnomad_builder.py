@@ -35,7 +35,9 @@ CREATE TABLE IF NOT EXISTS variants (
     af_xy DOUBLE,
     ac_xx INTEGER,
     nhomalt_xx INTEGER,
-    filters TEXT
+    filters TEXT,
+    ac_grpmax INTEGER,
+    an_grpmax INTEGER
 );
 """
 
@@ -51,7 +53,7 @@ _CREATE_INDEX = """
 CREATE INDEX IF NOT EXISTS idx_variants ON variants (chrom, pos, ref, alt);
 """
 
-_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 _BATCH_SIZE = 50_000
 
@@ -486,6 +488,13 @@ def _vcf_to_parquet(
                         _to_int(_info(v, "AC_joint_XX", "AC_XX")),
                         _to_int(_info(v, "nhomalt_joint_XX", "nhomalt_XX")),
                         filter_val,
+                        # GrpMax-population allele count / number, paired so the
+                        # PM2 upper-95%-CI rule (Cardiomyopathy/HCM VCEP) can
+                        # compute the CI of the highest-frequency subpopulation
+                        # (the VCEP needs the CI UPPER bound; gnomAD only displays
+                        # the FAF lower bound, so we reconstruct it from AC/AN).
+                        _to_int(_info(v, "AC_grpmax_joint", "AC_grpmax", "AC_popmax")),
+                        _to_int(_info(v, "AN_grpmax_joint", "AN_grpmax", "AN_popmax")),
                     )
                     batch.append(row)
 

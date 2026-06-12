@@ -85,6 +85,30 @@ class TestPM2:
         r = self.evaluator.evaluate(_snv(), ann)
         assert not r.triggered  # raw global AF 0.0005 >= dominant cutoff
 
+    def test_pm2_filter_failed_ac0_still_met(self):
+        # eRepo: a filter-failed (AC0) record is effectively absent → PM2 applies
+        # (was a blanket false negative when filter failure blocked PM2).
+        gd = GnomADData(ac=0, af=0.0, popmax_af=0.0, filter_pass=False)
+        ann = AnnotationData(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert r.triggered
+        assert "filter" in r.evidence.lower()
+
+    def test_pm2_filter_failed_rare_still_met(self):
+        # Filter-failed but extremely rare (AF 1e-6 < dominant 1e-4) → PM2 applies.
+        gd = GnomADData(ac=1, af=1e-6, popmax_af=1e-6, filter_pass=False)
+        ann = AnnotationData(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert r.triggered
+
+    def test_pm2_filter_failed_common_not_met(self):
+        # A genuinely common filter-failed call (e.g. inflated segdup AF) still
+        # fails the threshold → no false positive introduced by the fix.
+        gd = GnomADData(ac=500, af=0.01, popmax_af=0.01, filter_pass=False)
+        ann = AnnotationData(gnomad=gd, consequences=[_consequence()])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
 
 class TestPP3:
     def setup_method(self):

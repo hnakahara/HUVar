@@ -58,6 +58,12 @@ class GnomADData(BaseModel):
     # female-only BS2 gene then withholds BS2 rather than counting both sexes).
     ac_xx: Optional[int] = None
     nhomalt_xx: Optional[int] = None
+    # GrpMax-population allele count / number (paired), used by the PM2
+    # upper-95%-CI rule (Cardiomyopathy/HCM VCEP) to reconstruct the CI UPPER
+    # bound of the highest-frequency subpopulation's AF — gnomAD only exposes the
+    # FAF (CI lower bound). None when the DB predates these columns.
+    ac_grpmax: Optional[int] = None
+    an_grpmax: Optional[int] = None
     filter_pass: bool = True
 
     # Gene-level constraint (from gnomAD constraint table)

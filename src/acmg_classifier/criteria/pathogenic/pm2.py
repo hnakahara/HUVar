@@ -18,6 +18,36 @@ _RAW_AF_ABSENT = 0.0001
 # threshold. Use a relaxed cutoff for genes flagged recessive in the map.
 _RAW_AF_RECESSIVE = 0.005
 
+# Poisson exact upper one-sided 95% confidence limits, λ_U = 0.5·χ²₀.₉₅(2(k+1)),
+# indexed by observed allele count k. Used by the Cardiomyopathy/HCM PM2 rule,
+# which requires the UPPER bound of the 95% CI of the GrpMax-subpopulation AF
+# (= λ_U / AN_grpmax) to be <= the threshold. gnomAD displays only the FAF (the
+# CI LOWER bound), so we reconstruct the upper bound from the GrpMax AC/AN. These
+# values reproduce the VCEP's published AC/AN equivalence table for the 0.00004
+# cutoff (e.g. k=1: 4.744/120000 = 3.95e-5; k=4: 9.154/230000 = 3.98e-5).
+_POISSON_U95 = (
+    2.996, 4.744, 6.296, 7.754, 9.154, 10.513, 11.842, 13.148, 14.435,
+    15.705, 16.962, 18.208, 19.443, 20.669, 21.886, 23.097, 24.301,
+    25.499, 26.692, 27.879, 29.062,
+)
+
+
+def _upper_af_95(ac: int | None, an: int | None) -> float | None:
+    """Upper one-sided 95% CI bound of the allele frequency for *ac* observed in
+    *an* alleles (Poisson exact for small counts; a conservative normal-ish
+    extension for large counts, which are common variants that fail PM2 anyway).
+    Returns None when AC/AN are unavailable."""
+    if ac is None or an is None or an <= 0 or ac < 0:
+        return None
+    if ac < len(_POISSON_U95):
+        lam_u = _POISSON_U95[ac]
+    else:
+        import math
+        # Wilson/score-style upper extension; only reached for high AC (common
+        # variants), where the precise value is immaterial — PM2 won't apply.
+        lam_u = ac + 1.645 * math.sqrt(ac) + 1.353
+    return lam_u / an
+
 
 class PM2Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
@@ -48,6 +78,51 @@ class PM2Evaluator(CriterionEvaluator):
                 return _RAW_AF_RECESSIVE, f"recessive ({inh})"
         return _RAW_AF_ABSENT, "dominant/unknown"
 
+    def _subpop_block(self, rule, gd, threshold: float) -> str | None:
+        """Reason PM2 must be withheld because the highest-subpopulation metric
+        exceeds the threshold (the FAF95 lower bound under-states it), or None.
+
+        * ``point`` (RUNX1): the GrpMax POINT AF must be < threshold.
+        * ``ci95``  (HCM): the UPPER 95% CI of the GrpMax AF (from GrpMax AC/AN)
+          must be < threshold; falls back to the POINT AF when AC/AN are absent
+          (a DB built before the grpmax columns)."""
+        if rule is None or not rule.subpop_mode:
+            return None
+        if rule.subpop_mode == "point":
+            if gd.popmax_af is not None and gd.popmax_af >= threshold:
+                return (f"GrpMax point AF={gd.popmax_af:.2e} ≥ {threshold} "
+                        "(subpopulation exceeds)")
+            return None
+        if rule.subpop_mode == "ci95":
+            upper = _upper_af_95(gd.ac_grpmax, gd.an_grpmax)
+            if upper is None:  # GrpMax AC/AN unavailable → POINT-AF proxy
+                if gd.popmax_af is not None and gd.popmax_af >= threshold:
+                    return (f"GrpMax point AF={gd.popmax_af:.2e} ≥ {threshold} "
+                            "(95% CI unavailable)")
+                return None
+            if upper >= threshold:
+                return (f"GrpMax 95%CI upper={upper:.2e} ≥ {threshold} "
+                        "(subpopulation exceeds)")
+        return None
+
+    def _zygosity_block(self, rule, gd) -> str | None:
+        """Reason PM2 must be withheld because gnomAD shows more homo-/hemizygotes
+        than the VCEP tolerates (SLC6A8 0, OTC <=1, SCID genes 0 homozygotes,
+        ABCD1 0 hemizygotes), or None when within the allowed count."""
+        if rule is None or not rule.zyg_scope:
+            return None
+        hom = gd.nhomalt or 0
+        hemi = gd.nhemi or 0
+        if rule.zyg_scope == "hom":
+            n, label = hom, f"{hom} homozygote(s)"
+        elif rule.zyg_scope == "hemi":
+            n, label = hemi, f"{hemi} hemizygote(s)"
+        else:  # homhemi (combined)
+            n, label = hom + hemi, f"{hom + hemi} homo-/hemizygote(s)"
+        if n > rule.zyg_max:
+            return f"{label} in gnomAD (> {rule.zyg_max} allowed)"
+        return None
+
     def evaluate(
         self,
         variant: VariantRecord,
@@ -67,10 +142,21 @@ class PM2Evaluator(CriterionEvaluator):
             return CriteriaResult.met(
                 ACMGCriterion.PM2, strength, "Absent from gnomAD (no record)",
             )
-        # A failed gnomAD QC filter means we cannot trust the AF estimate, so
-        # we abstain rather than assert PM2 on dubious data.
-        if not gd.filter_pass:
-            return CriteriaResult.not_met(ACMGCriterion.PM2, "gnomAD filter failed")
+        # A failed gnomAD QC filter (most often AC0 — zero high-quality
+        # observations) does NOT preclude PM2: such a variant is effectively
+        # absent / extremely rare, exactly what PM2 captures. The eRepo benchmark
+        # showed 376 PM2 false negatives from blanket-blocking on filter failure,
+        # 98% with AF < 1e-5. We instead judge a filter-failed record on rarity
+        # like any other; a genuinely common filter-failed call (e.g. an inflated
+        # segmental-duplication AF) still fails the threshold below, so this adds
+        # no false positives. The filter status is surfaced in the evidence.
+        filter_note = "" if gd.filter_pass else " (gnomAD QC filter not passed)"
+
+        # Homozygote/hemizygote ceiling (SLC6A8, OTC, the SCID genes, ABCD1, …):
+        # PM2 is withheld when gnomAD shows more homo-/hemizygotes than the VCEP
+        # tolerates, regardless of the allele frequency. Computed once and applied
+        # to every "met" path below.
+        zyg_block = self._zygosity_block(rule, gd)
 
         # Comparison metric: most VCEPs (and the global default) judge PM2 on the
         # RAW grpmax allele frequency, but some state the cutoff on the GrpMax
@@ -90,8 +176,12 @@ class PM2Evaluator(CriterionEvaluator):
         # AC=0 means "observed only in samples that failed QC" — effectively
         # absent for ACMG purposes, so we treat it the same as value == 0.
         if value == 0.0 or gd.ac == 0:
+            if zyg_block:  # rare edge: FAF95≈0 yet homozygotes recorded
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM2, f"{zyg_block}{filter_note}",
+                )
             return CriteriaResult.met(
-                ACMGCriterion.PM2, strength, "Absent from gnomAD (AC=0)",
+                ACMGCriterion.PM2, strength, f"Absent from gnomAD (AC=0){filter_note}",
             )
 
         # Threshold: the VCEP's per-gene cutoff when set (threshold 0 means the
@@ -104,11 +194,21 @@ class PM2Evaluator(CriterionEvaluator):
             threshold, basis = self._threshold(annotation)
 
         if value < threshold:
+            # Highest-subpopulation correction for the deflated low-AC FAF95
+            # (FAF95 is the CI LOWER bound), then the homo-/hemizygote ceiling —
+            # either withholds PM2 despite the low frequency.
+            block = self._subpop_block(rule, gd, threshold) or zyg_block
+            if block:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM2,
+                    f"gnomAD {metric}={value:.2e} < {threshold} but {block} "
+                    f"[{basis}]{filter_note}",
+                )
             return CriteriaResult.met(
                 ACMGCriterion.PM2, strength,
-                f"gnomAD {metric}={value:.2e} < {threshold} [{basis}]",
+                f"gnomAD {metric}={value:.2e} < {threshold} [{basis}]{filter_note}",
             )
         return CriteriaResult.not_met(
             ACMGCriterion.PM2,
-            f"gnomAD {metric}={value:.2e} ≥ {threshold} [{basis}]",
+            f"gnomAD {metric}={value:.2e} ≥ {threshold} [{basis}]{filter_note}",
         )
