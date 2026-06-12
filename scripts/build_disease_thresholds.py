@@ -37,7 +37,7 @@ COLUMNS = [
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
     "bs2_count", "bs2_female_only", "bs2_hom_only",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
-    "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop",
+    "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
     "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
     "source_vcep", "cspec_url", "notes",
@@ -574,8 +574,34 @@ _BS2_XLINKED_INTERNAL = frozenset({
 #   of this code" statement is absent from the JSON-LD (it is in the spec text).
 #   The only phyloP in these files is an unrelated PM4 rule (PhyloP>2.0 for a
 #   conserved residue), so nothing is auto-extracted for BP7.
+#   BRCA1 (GN092) / BRCA2 (GN097) — the ENIGMA VCEP BP7 is BP4-driven (REVEL /
+#   SpliceAI) and states no phyloP nucleotide-conservation requirement, so
+#   conservation is not applied; nothing is auto-extractable from the text.
+#   RUNX1 (GN008) — "Conservation is no longer a requirement for BP7 ... (Cheung
+#   2019; Walker 2023)" appears in the spec notes, not the JSON-LD criteriaCode.
+#   MYOC (GN019) — BP7 is purely BP4-driven ("Apply to intronic/noncoding ...
+#   variants if BP4 is met"), with no phyloP conservation requirement.
 _BP7_CONSERVATION_NA = frozenset({
     "RPE65", "GUCY2D", "AIPL1",
+    "BRCA1", "BRCA2",
+    "RUNX1", "MYOC",
+})
+
+
+# BP7 genes whose intronic applicability is BROAD — any intronic position gated
+# only by SpliceAI (no +7/-21 deep-distance restriction), equivalent to the
+# "noncanonical" mode but phrased without the "except canonical splice sites"
+# wording the auto-detector (_bp7_intronic) keys on. Manually verified from the
+# BP7 criteriaCode text:
+#   RUNX1 (GN008) — "Intronic variants with SpliceAI ∆ scores <= 0.20."
+#   MYOC  (GN019) — "Apply to intronic/noncoding ... variants if BP4 is met."
+#   VHL   (GN078) — "BP7 can be applied to ... intronic variants where the
+#                    PhyloP score is <=0.2." (still keeps its phyloP 0.2 gate)
+# Genes that phrase a deep restriction differently (PIK3R1 "+1 to +6 and -1 to
+# -20"; the LGMD panel "outside the splice donor/acceptor regions designated in
+# Walker") are NOT here — they remain the +7/-21 default.
+_BP7_INTRONIC_NONCANONICAL = frozenset({
+    "RUNX1", "MYOC", "VHL",
 })
 
 
@@ -931,6 +957,8 @@ _BP7_PHYLOP_RE = re.compile(
 _BP7_NO_CONS_RE = re.compile(
     r"conservation[^.]{0,60}?\bnot\b[^.]{0,45}?"
         r"(considered|informative|required|necessary|relevant|assess|evaluat|applied|used)|"
+    r"conservation[^.]{0,40}?no longer[^.]{0,30}?"
+        r"(requirement|required|necessary|considered|relevant)|"
     r"\bno\b[^.]{0,25}?conservation[^.]{0,25}?(requirement|required|necessary)|"
     r"no requirement[^.]{0,45}?conservation|"
     r"conservation[^.]{0,40}?does not (?:have to|need)|"
@@ -957,6 +985,30 @@ def _bp7_phylop(rule_set: dict) -> str:
                 return m.group(1)
             if _BP7_NO_CONS_RE.search(desc):
                 return "na"
+    return ""
+
+
+# BP7 intronic applicability range. The Walker 2023 default ("") admits only
+# DEEP-intronic variants (donor >= +7, acceptor <= -21). Some VCEPs (the
+# RASopathy and PIK3-pathway panels) instead state BP7 applies to "intronic
+# positions (except canonical splice sites)" — i.e. anywhere beyond the canonical
+# +/-1,2 dinucleotides, a much broader range. Those resolve to "noncanonical" and
+# the evaluator relaxes its distance gate to |distance| >= 3 (still gated on a
+# benign SpliceAI prediction).
+_BP7_NONCANONICAL_RE = re.compile(r"except[^.]{0,30}?canonical splice", re.IGNORECASE)
+
+
+def _bp7_intronic(rule_set: dict) -> str:
+    """BP7 intronic range mode for a gene: ``"noncanonical"`` when the VCEP
+    admits any intronic position except the canonical +/-1,2 sites; ``""`` for
+    the Walker deep-intronic (+7/-21) default."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BP7":
+            continue
+        for es in _applicable_strengths(code):
+            desc = (es.get("description") or "").replace("\\", "")
+            if _BP7_NONCANONICAL_RE.search(desc):
+                return "noncanonical"
     return ""
 
 
@@ -1279,6 +1331,7 @@ def parse_spec(path: str) -> list[dict]:
         bp3 = _bp3_applicability(rs)
         bp3_regions = _bp3_regions(rs)
         bp7_phylop = _bp7_phylop(rs)
+        bp7_intronic = _bp7_intronic(rs)
         revel_pp3 = _revel_tiers(rs, "PP3")
         revel_bp4 = _revel_tiers(rs, "BP4")
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
@@ -1320,6 +1373,7 @@ def parse_spec(path: str) -> list[dict]:
                 "bp3": "",
                 "bp3_regions": "",
                 "bp7_phylop": "",
+                "bp7_intronic": "",
                 "revel_pp3_supporting": "",
                 "revel_pp3_moderate": "",
                 "revel_pp3_strong": "",
@@ -1358,6 +1412,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_bp3": bp3,
                 "_bp3_regions": bp3_regions,
                 "_bp7_phylop": bp7_phylop,
+                "_bp7_intronic": bp7_intronic,
                 "_revel_pp3": revel_pp3,
                 "_revel_bp4": revel_bp4,
             })
@@ -1433,6 +1488,8 @@ def main() -> None:
     # states a phyloP number (like PM2/REVEL). bp7_phylop_choice[g] =
     # (specificity, cutoff_string).
     bp7_phylop_choice: dict[str, tuple[int, str]] = {}
+    # BP7 intronic range mode ("noncanonical"), most gene-specific spec wins.
+    bp7_intronic_choice: dict[str, tuple[int, str]] = {}
     # PM2 threshold/strength/basis, resolved to the most gene-specific spec that
     # carries an applicable PM2 code (like PP2/BS2/PS1). pm2_choice[g] =
     # (specificity, threshold, strength, basis).
@@ -1544,6 +1601,12 @@ def main() -> None:
                 cur = bp7_phylop_choice.get(g)
                 if cur is None or spec < cur[0]:
                     bp7_phylop_choice[g] = (spec, row["_bp7_phylop"])
+            # BP7 intronic range mode (noncanonical), most gene-specific spec wins.
+            if row["_bp7_intronic"]:
+                spec = row["_specificity"]
+                cur = bp7_intronic_choice.get(g)
+                if cur is None or spec < cur[0]:
+                    bp7_intronic_choice[g] = (spec, row["_bp7_intronic"])
             if row["_ps1"] in ("applicable", "not_applicable"):
                 cand = (row["_specificity"], row["_ps1"], "")
                 if g not in ps1_choice or _pp2_more_specific(cand, ps1_choice[g]):
@@ -1646,10 +1709,17 @@ def main() -> None:
         row["bp3_regions"] = bp3_regions_by_gene.get(g, "") if bp3c and bp3c[1] == "applicable" else ""
         bp7c = bp7_phylop_choice.get(g)
         row["bp7_phylop"] = bp7c[1] if bp7c else ""
-        # Curated correction for genes whose newer "conservation non-informative"
-        # BP7 wording is absent from the shipped cspec snapshot (e.g. RPE65).
+        # Curated correction for genes whose "conservation non-informative" BP7
+        # policy is in the spec prose but absent from the JSON-LD (e.g. the LCA
+        # genes, BRCA1/2).
         if g in _BP7_CONSERVATION_NA:
             row["bp7_phylop"] = "na"
+        bp7ic = bp7_intronic_choice.get(g)
+        row["bp7_intronic"] = bp7ic[1] if bp7ic else ""
+        # Curated broad-intronic genes (RUNX1/MYOC/VHL) whose "any intronic
+        # position" policy is not phrased as "except canonical splice sites".
+        if g in _BP7_INTRONIC_NONCANONICAL:
+            row["bp7_intronic"] = "noncanonical"
         rvc = revel_choice.get(g)
         rv_pp3 = rvc[1] if rvc else {}
         rv_bp4 = rvc[2] if rvc else {}
@@ -1711,6 +1781,7 @@ _OVERRIDE_FIELDS = {
     "bp3": "bp3",
     "bp3_regions": "bp3_regions",
     "bp7_phylop": "bp7_phylop",
+    "bp7_intronic": "bp7_intronic",
     "revel_pp3_supporting": "revel_pp3_supporting",
     "revel_pp3_moderate": "revel_pp3_moderate",
     "revel_pp3_strong": "revel_pp3_strong",

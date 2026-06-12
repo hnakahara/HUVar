@@ -10,9 +10,12 @@
   "not highly conserved" (most VCEPs use the global default phyloP100way 2.0;
   some tighten it to 0.1 / 0.2 / 0 — the neurodevelopmental and coagulation
   panels, VHL, RPGR — or 1.5 for the platelet GP genes). The sentinel ``na``
-  means the VCEP declared conservation NON-informative (TP53, GALT, the SCID
-  T-/B-cell genes), so BP7 skips the conservation gate entirely. Blank when the
-  gene has no VCEP policy, so the evaluator keeps its global default.
+  means the VCEP declared conservation NON-informative (TP53, GALT, BRCA1/2, the
+  SCID T-/B-cell genes), so BP7 skips the conservation gate entirely. Blank when
+  the gene has no VCEP policy, so the evaluator keeps its global default.
+* ``bp7_intronic`` — the BP7 intronic applicability range. ``noncanonical`` (the
+  RASopathy / PIK3 panels) admits any intronic position except the canonical
+  +/-1,2 sites; blank keeps the Walker deep-intronic (+7/-21) default.
 
 The BP counterpart to :class:`~acmg_classifier.criteria.pp2_genes.PP2Applicability`.
 """
@@ -39,6 +42,7 @@ class BPApplicability:
         self._bp3_regions: dict[str, list[tuple[int, int]]] = {}
         self._bp7_phylop: dict[str, float] = {}
         self._bp7_no_conservation: set[str] = set()
+        self._bp7_intronic: dict[str, str] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -79,6 +83,9 @@ class BPApplicability:
                         self._bp7_phylop[gene] = float(raw_phylop)
                     except ValueError:
                         pass
+                intronic = (row.get("bp7_intronic") or "").strip().lower()
+                if intronic == "noncanonical":
+                    self._bp7_intronic[gene] = intronic
 
     def bp1(self, gene: str | None) -> str:
         """VCEP BP1 status: ``applicable`` / ``not_applicable`` / ""."""
@@ -132,9 +139,17 @@ class BPApplicability:
 
     def bp7_conservation_na(self, gene: str | None) -> bool:
         """True if the VCEP declared conservation NON-informative for BP7 (TP53,
-        GALT, the SCID T-/B-cell genes). The evaluator then skips the phyloP
-        conservation gate entirely — BP7 rests on splice + distance alone."""
+        GALT, BRCA1/2, the SCID T-/B-cell genes). The evaluator then skips the
+        phyloP conservation gate entirely — BP7 rests on splice + distance."""
         return bool(gene) and gene in self._bp7_no_conservation
+
+    def bp7_intronic_mode(self, gene: str | None) -> str:
+        """BP7 intronic range for *gene*: ``"noncanonical"`` (any intronic
+        position except the canonical +/-1,2 sites — RASopathy / PIK3 panels) or
+        ``""`` (the Walker deep-intronic +7/-21 default)."""
+        if not gene:
+            return ""
+        return self._bp7_intronic.get(gene, "")
 
 
 def _parse_ranges(raw: str) -> list[tuple[int, int]]:

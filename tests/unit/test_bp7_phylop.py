@@ -12,6 +12,7 @@ from unittest.mock import MagicMock
 
 from acmg_classifier.criteria.benign.bp7 import BP7Evaluator
 from acmg_classifier.criteria.bp_genes import BPApplicability
+from acmg_classifier.criteria.benign import bp7 as bp7_mod
 from acmg_classifier.models.annotation import (
     AnnotationData, ConsequenceInfo, SpliceScore,
 )
@@ -100,6 +101,12 @@ class TestBp7ConservationNotApplicable:
         rs = _rs(_bp7_code("Use 'as is', but no conservation requirement."))
         assert bdt._bp7_phylop(rs) == "na"
 
+    def test_no_longer_a_requirement(self):
+        # RUNX1 wording (if it ever lands in the JSON-LD).
+        rs = _rs(_bp7_code("Conservation is no longer a requirement for BP7 "
+                           "based on its limited predicted power."))
+        assert bdt._bp7_phylop(rs) == "na"
+
     def test_not_considered_informative(self):
         # The user's reported wording.
         rs = _rs(_bp7_code("BP4 and BP7 can be added unless variant is in an "
@@ -113,14 +120,33 @@ class TestBp7ConservationNotApplicable:
         assert bdt._bp7_phylop(rs) == "0.1"
 
 
+class TestBp7IntronicExtraction:
+    def test_noncanonical(self):
+        rs = _rs(_bp7_code("This rule is also applicable for intronic positions "
+                           "(except canonical splice sites) or non-coding variants."))
+        assert bdt._bp7_intronic(rs) == "noncanonical"
+
+    def test_default_deep(self):
+        rs = _rs(_bp7_code("intronic variant at or beyond +7 to -21 positions."))
+        assert bdt._bp7_intronic(rs) == ""
+
+    def test_canonical_mention_without_except_not_matched(self):
+        # RUNX1-style: names the canonical splice site as an EXCLUDED position,
+        # not an "except canonical" broadening → stays default.
+        rs = _rs(_bp7_code("Excludes the canonical donor splice site and the "
+                           "first nucleotide following a canonical acceptor."))
+        assert bdt._bp7_intronic(rs) == ""
+
+
 _TSV = (
-    "gene_symbol\tbp7_phylop\n"
-    "FOXG1\t0.1\n"
-    "VHL\t0.2\n"
-    "RPGR\t0\n"
-    "GP1BA\t1.5\n"
-    "TP53\tna\n"
-    "NOSPEC\t\n"
+    "gene_symbol\tbp7_phylop\tbp7_intronic\n"
+    "FOXG1\t0.1\t\n"
+    "VHL\t0.2\t\n"
+    "RPGR\t0\t\n"
+    "GP1BA\t1.5\t\n"
+    "TP53\tna\t\n"
+    "NRAS\t\tnoncanonical\n"
+    "NOSPEC\t\t\n"
 )
 
 
@@ -158,6 +184,12 @@ class TestBp7PhylopLoader:
         assert spec.bp7_conservation_na("FOXG1") is False
         assert spec.bp7_conservation_na("UNKNOWN") is False
 
+    def test_intronic_mode(self, tmp_path):
+        spec = BPApplicability(_tsv(tmp_path))
+        assert spec.bp7_intronic_mode("NRAS") == "noncanonical"
+        assert spec.bp7_intronic_mode("FOXG1") == ""
+        assert spec.bp7_intronic_mode("UNKNOWN") == ""
+
 
 class TestCommittedTsv:
     """Spot-check the committed TSV reflects the cspec extraction."""
@@ -191,14 +223,35 @@ class TestCommittedTsv:
                      "JAK3", "RAG1", "RAG2", "IL2RG"):
             assert rows[gene]["bp7_phylop"] == "na", gene
 
-    def test_curated_lca_genes(self):
-        # Leber Congenital Amaurosis VCEP (RPE65, GUCY2D, AIPL1): the
-        # conservation-non-informative policy is in the published spec prose but
-        # absent from the JSON-LD criteriaCode descriptions, so the build forces
-        # 'na' via the curated _BP7_CONSERVATION_NA set.
+    def test_curated_na_genes(self):
+        # LCA VCEP (RPE65, GUCY2D, AIPL1), ENIGMA BRCA1/2, and RUNX1:
+        # conservation policy is in the spec prose but absent from the JSON-LD,
+        # so the build forces 'na' via the curated _BP7_CONSERVATION_NA set.
         rows = self._rows()
-        for gene in ("RPE65", "GUCY2D", "AIPL1"):
+        for gene in ("RPE65", "GUCY2D", "AIPL1", "BRCA1", "BRCA2", "RUNX1",
+                     "MYOC"):
             assert rows[gene]["bp7_phylop"] == "na", gene
+
+    def test_noncanonical_intronic_genes(self):
+        # RASopathy / PIK3 panels (auto-detected "except canonical splice sites")
+        # plus curated broad-intronic genes RUNX1 / MYOC / VHL.
+        rows = self._rows()
+        for gene in ("NRAS", "KRAS", "HRAS", "BRAF", "RAF1", "SOS1", "SOS2",
+                     "PTPN11", "MAP2K1", "MAP2K2", "RIT1", "SHOC2", "LZTR1",
+                     "MRAS", "RRAS2", "PPP1CB", "AKT3", "MTOR", "PIK3CA",
+                     "PIK3R2", "RUNX1", "MYOC", "VHL"):
+            assert rows[gene]["bp7_intronic"] == "noncanonical", gene
+
+    def test_deep_intronic_genes_unchanged(self):
+        # Genes phrasing a deep restriction differently must stay default ("").
+        rows = self._rows()
+        for gene in ("PIK3R1", "DYSF", "CAPN3", "ANO5"):
+            assert rows[gene]["bp7_intronic"] == "", gene
+
+    def test_vhl_keeps_phylop_and_gains_noncanonical(self):
+        rows = self._rows()
+        assert rows["VHL"]["bp7_phylop"] == "0.2"
+        assert rows["VHL"]["bp7_intronic"] == "noncanonical"
 
 
 # --- evaluator per-gene gate -------------------------------------------------
@@ -274,3 +327,68 @@ class TestBp7PerGeneGate:
         ev._phylop = _phylop_stub(7.5)
         r = ev.evaluate(_snv(), _ann("TP53"))
         assert r.triggered
+
+
+def _ann_intronic(gene: str, consequence: ConsequenceType, dist: int | None) -> AnnotationData:
+    return AnnotationData(
+        splice=SpliceScore(tool="openspliceai", is_available=True, max_delta=0.02),
+        consequences=[ConsequenceInfo(
+            transcript_id="NM_x", gene_id="ENSG", gene_symbol=gene,
+            consequence=consequence, biotype="protein_coding",
+            intron_distance_from_splice=dist,
+        )],
+    )
+
+
+class TestBp7IntronicRange:
+    def _ev(self, tmp_path):
+        # phylop unavailable (bigwig None) → conservation gate skipped, so these
+        # tests isolate the distance/consequence routing.
+        return BP7Evaluator(_cfg(tmp_path))
+
+    def test_noncanonical_fires_at_plus3(self, tmp_path):
+        # NRAS (noncanonical): an intronic variant at +3 is beyond canonical
+        # +/-1,2 → BP7 fires (default deep mode would require +7).
+        r = self._ev(tmp_path).evaluate(
+            _snv(), _ann_intronic("NRAS", ConsequenceType.INTRON, 3))
+        assert r.triggered
+        assert "canonical" in r.evidence.lower()
+
+    def test_noncanonical_splice_region_fires(self, tmp_path):
+        # A SPLICE_REGION variant at -5 is routed in for noncanonical genes.
+        r = self._ev(tmp_path).evaluate(
+            _snv(), _ann_intronic("NRAS", ConsequenceType.SPLICE_REGION, -5))
+        assert r.triggered
+
+    def test_noncanonical_rejects_canonical_dinucleotide(self, tmp_path):
+        # +2 is a canonical splice dinucleotide → excluded even for noncanonical.
+        r = self._ev(tmp_path).evaluate(
+            _snv(), _ann_intronic("NRAS", ConsequenceType.INTRON, 2))
+        assert not r.triggered
+        assert "splice consensus" in r.evidence.lower()
+
+    def test_default_gene_requires_deep(self, tmp_path):
+        # NOSPEC (default Walker): +3 is NOT deep enough (needs +7) → not met.
+        r = self._ev(tmp_path).evaluate(
+            _snv(), _ann_intronic("NOSPEC", ConsequenceType.INTRON, 3))
+        assert not r.triggered
+
+    def test_default_gene_fires_when_deep(self, tmp_path):
+        r = self._ev(tmp_path).evaluate(
+            _snv(), _ann_intronic("NOSPEC", ConsequenceType.INTRON, 10))
+        assert r.triggered
+
+    def test_default_gene_ignores_splice_region(self, tmp_path):
+        # SPLICE_REGION is NOT routed for default-mode genes (only deep INTRON).
+        r = self._ev(tmp_path).evaluate(
+            _snv(), _ann_intronic("NOSPEC", ConsequenceType.SPLICE_REGION, 5))
+        assert not r.triggered
+
+    def test_intronic_eligible_unit(self):
+        # Direct check of the per-mode distance gate.
+        class _PC:
+            intron_distance_from_splice = 3
+        assert bp7_mod._intronic_eligible(_PC(), "noncanonical") is True
+        assert bp7_mod._intronic_eligible(_PC(), "") is False  # needs +7
+        _PC.intron_distance_from_splice = 2
+        assert bp7_mod._intronic_eligible(_PC(), "noncanonical") is False

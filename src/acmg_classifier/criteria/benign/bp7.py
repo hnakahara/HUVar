@@ -16,15 +16,24 @@ from acmg_classifier.models.supplement import SupplementEntry
 # the donor.
 _DEEP_INTRONIC_DONOR_MIN = 7       # >= +7  (downstream of donor)
 _DEEP_INTRONIC_ACCEPTOR_MAX = -21  # <= -21 (upstream of acceptor)
+# Canonical splice dinucleotides are +/-1,2; the "noncanonical" VCEP range admits
+# any intronic position beyond them, i.e. |distance| >= 3.
+_NONCANONICAL_MIN_ABS = 3
 
 
-def _is_deep_intronic(pc) -> bool:
-    """Variant is far enough from any canonical splice site to be plausibly
-    benign under Walker 2023. Returns False when distance is unknown — we
-    refuse to assume safety without evidence."""
+def _intronic_eligible(pc, mode: str = "") -> bool:
+    """Whether an intronic variant is far enough from the splice site for BP7.
+
+    Default (Walker 2023): deep-intronic only (donor >= +7, acceptor <= -21).
+    ``"noncanonical"`` (RASopathy / PIK3 VCEPs): any intronic position beyond the
+    canonical +/-1,2 sites (|distance| >= 3); the benign-splice gate downstream
+    still guards against a predicted cryptic site. Returns False when distance is
+    unknown — we refuse to assume safety without evidence."""
     dist = pc.intron_distance_from_splice
     if dist is None:
         return False
+    if mode == "noncanonical":
+        return abs(dist) >= _NONCANONICAL_MIN_ABS
     return dist >= _DEEP_INTRONIC_DONOR_MIN or dist <= _DEEP_INTRONIC_ACCEPTOR_MAX
 
 
@@ -130,27 +139,44 @@ class BP7Evaluator(CriterionEvaluator):
         # predict no impact (Walker 2023 / ClinGen SVI). Distance alone is NOT
         # sufficient — a deep-intronic variant can still create a cryptic splice
         # site — so we withhold BP7 when no splice predictor confirms no impact.
-        if pc.consequence == ConsequenceType.INTRON:
-            if not _is_deep_intronic(pc):
+        #
+        # The eligible distance range is per-gene: the Walker default admits only
+        # DEEP-intronic variants (+7/-21, consequence INTRON); the RASopathy /
+        # PIK3 VCEPs admit any intronic position except the canonical +/-1,2
+        # sites, which also pulls in the +3..+8 / -3..-8 SPLICE_REGION variants.
+        mode = self._spec.bp7_intronic_mode(pc.gene_symbol)
+        intronic_types = (
+            (ConsequenceType.INTRON, ConsequenceType.SPLICE_REGION)
+            if mode == "noncanonical"
+            else (ConsequenceType.INTRON,)
+        )
+        if pc.consequence in intronic_types:
+            if not _intronic_eligible(pc, mode):
                 return CriteriaResult.not_met(
                     ACMGCriterion.BP7,
-                    f"Intronic but within splice consensus (dist={pc.intron_distance_from_splice})",
+                    f"Intronic but within splice consensus (dist="
+                    f"{pc.intron_distance_from_splice})",
                 )
             if not _splice_benign(annotation):
                 return CriteriaResult.not_met(
                     ACMGCriterion.BP7,
-                    "Deep intronic but splice impact not ruled out "
+                    "Intronic but splice impact not ruled out "
                     "(no splice prediction of no impact)",
                 )
             blocked = self._conservation_block(variant, pc.gene_symbol)
             if blocked:
                 return CriteriaResult.not_met(
-                    ACMGCriterion.BP7, f"Deep intronic, splice benign, but {blocked}",
+                    ACMGCriterion.BP7, f"Intronic, splice benign, but {blocked}",
                 )
+            range_desc = (
+                "intronic outside canonical +/-1,2"
+                if mode == "noncanonical"
+                else "deep intronic (+7/-21)"
+            )
             return CriteriaResult.met(
                 ACMGCriterion.BP7,
                 evidence=(
-                    f"Deep intronic (dist={pc.intron_distance_from_splice}) "
+                    f"{range_desc} (dist={pc.intron_distance_from_splice}) "
                     "and splice score benign + not highly conserved (Walker 2023)"
                 ),
             )
