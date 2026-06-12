@@ -9,6 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **PVS1 per-gene VCEP applicability gate** (`pvs1` column in
+  `disease_prevalence.tsv`). 33 genes whose VCEP declares PVS1 *not applicable*
+  because loss-of-function is not the disease mechanism — gain-of-function /
+  dominant-negative disorders (MYOC, the RASopathy panel, the cardiomyopathy
+  genes, the activating PIK3 genes, RYR1, VWF, …) — now withhold PVS1 even on a
+  bona-fide null variant.
+- **APC-specific PVS1 decision tree** (Abou Tayoun 2018 / 2023 update,
+  `src/acmg_classifier/pvs1/apc.py`): a codon-range gate (truncating variants
+  are PVS1 only within NM_000038.6 codons 49–2645) and an allele-specific
+  strength table (Lists A–E) for canonical ±1,2 splice and "G→non-G last
+  nucleotide" exonic changes.
+- **BS2 ClinVar expert-panel fallback.** For genes whose VCEP bars gnomAD
+  population data for BS2 (CDH1, TP53, SERPINC1, …), a ≥3-star ClinVar review
+  that explicitly applied BS2 is harvested (`bs2_evidence` / `bs2_strength`
+  columns in the ClinVar DB) and used at the cited strength.
+- **Per-gene BP7 conservation & intronic policy.** `bp7_phylop` — the phyloP
+  "highly conserved" cutoff (0 / 0.1 / 0.2 / 1.5 / default 2.0) or `na` when the
+  VCEP declared conservation non-informative (TP53, BRCA1/2, RUNX1, MYOC, the
+  LCA genes, the SCID genes). `bp7_intronic = noncanonical` extends BP7 to any
+  intronic position except the canonical ±1,2 (RASopathy / PIK3 panels, plus
+  RUNX1 / MYOC / VHL).
+- **PM2 highest-subpopulation correction** (`pm2_subpop`): `point` (RUNX1 —
+  also require the GrpMax point AF ≤ threshold) and `ci95` (Cardiomyopathy/HCM
+  and LGMD — require the upper 95% CI of the GrpMax AF ≤ threshold, reconstructed
+  from new gnomAD `ac_grpmax` / `an_grpmax` columns). **PM2 homozygote/
+  hemizygote ceiling** (`pm2_zygosity`): PM2 is withheld when gnomAD shows more
+  homo-/hemizygotes than the VCEP tolerates (SLC6A8 0, OTC ≤1, the SCID genes /
+  GATM / GAMT 0 homozygotes, ABCD1 0 hemizygotes).
+- **Variant-level BS1 exclusion** (`bs1_exclude`): a recurrent disease allele
+  the VCEP bars from BS1 regardless of frequency (MYOC p.Gln368Ter).
 - **Automated OpenSpliceAI setup.** `openspliceai` is now a core dependency
   (installed with the package; it bundles the grch37/grch38 gene annotations the
   `-A` flag resolves, so no annotation file download is needed), and
@@ -75,6 +105,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **PM2 no longer blanket-blocks on a failed gnomAD QC filter.** A filter-failed
+  record (most often AC0 — zero high-quality observations) is effectively
+  absent / extremely rare, so PM2 is now judged on rarity like any other record
+  (a genuinely common filter-failed call still fails the threshold). Recovers a
+  large class of false-negative PM2 calls on absent/very-rare null variants.
+- **PVS1 last-exon (NMD-escape) refinement.** A truncating variant in the last
+  (or penultimate) exon with no functional-domain evidence is now **N/A** (was
+  Moderate): without evidence that a critical region is removed, the SVI tree
+  does not apply PVS1. A domain in the truncated tail still yields Strong.
+- **ITGA2B / ITGB3 PM2 threshold** now reads the operative gnomAD numeric tier
+  (`<0.0001`) that sits behind the legacy "Absent from ESP/1000G/ExAC"
+  boilerplate, instead of resolving to "must be absent" (threshold 0).
+- **Empty Pilot/In-Prep cspec specs no longer shadow a populated spec.** A
+  single-gene spec with zero criteriaCodes previously won the "most
+  gene-specific" rule and blanked out a populated grouped spec's BA1/BS1; the
+  populated spec now wins (recovers thresholds for 19 genes — AKT3/MTOR/PIK3CA/
+  PIK3R2, the hearing-loss and mitochondrial panels, …).
 - **Default missense predictor is now ESM1b** (was AlphaMissense). ESM1b is
   MIT-licensed, making the out-of-the-box configuration commercial-use ready.
   `--insilico-tool alphamissense` (CC BY-NC-SA 4.0) remains selectable.
@@ -122,6 +169,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **PS1/PM5 transcript-numbering collisions and frameshift mis-parsing.** Two
+  ClinVar-builder bugs let PS1/PM5 match a spurious comparator: (1) a variant
+  sharing only the `amino_acid_change` string on a *different* transcript's
+  numbering (e.g. PTEN p.Pro38Leu on MANE vs the long isoform) — now rejected by
+  a same-codon genomic-proximity guard (±2 bp); (2) a frameshift HGVS
+  `p.Pro38LeufsTer*` parsed as the missense `p.Pro38Leu` (stored as `P38L`) —
+  the residue regex now rejects a frameshift/extension tail.
+- **RPGR BS1/BA1 cspec typo.** The cspec listed BS1 `≥8.3×10⁻⁵` and a legacy
+  "5%" BA1 boilerplate; the VCEP's published classifications use BS1 `>5×10⁻⁶`
+  and BA1 `>5×10⁻⁵` (BA1 = 10×BS1, male AF basis). Corrected via a curated
+  threshold override.
 - **AlphaMissense BP4 strength** previously returned `Strong` for
   `score ≤ 0.070`; per Bergquist 2024 Table 2 there is no Strong (-4)
   category for AlphaMissense BP4. Capped at `ThreePoint`. Existing

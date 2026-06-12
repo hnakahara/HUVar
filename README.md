@@ -120,11 +120,14 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   and recessive frequencies using a per-gene inheritance table.
 - **Per-gene ClinGen VCEP rules** mined from the cspec specifications
   (`resources/clingen/disease_prevalence.tsv`, `pm1_hotspots.tsv`): disease-
-  specific BA1/BS1 cutoffs, PP2 applicability, PM5 Grantham-distance gating,
-  PM1 hotspot regions, inheritance-aware BS2 (incl. a dominant heterozygote
-  rule), the PS1 splice extension (canonical vs non-canonical), and BP1/BP3
-  applicability. X-linked "in males" genes are compared against the gnomAD
-  male (XY) allele frequency. See `resources/clingen/README.md`.
+  specific BA1/BS1 cutoffs, PVS1 applicability (gain-of-function genes decline
+  it) and the APC-specific PVS1 tree, PP2 applicability, PM5 Grantham-distance
+  gating, PM1 hotspot regions, inheritance-aware BS2 (incl. a dominant
+  heterozygote rule and a ≥3★ ClinVar fallback), the PS1 splice extension
+  (canonical vs non-canonical), BP1/BP3 applicability, per-gene BP7 phyloP /
+  intronic-range policy, and PM2 subpopulation / homozygote-count rules.
+  X-linked "in males" genes are compared against the gnomAD male (XY) allele
+  frequency. See `resources/clingen/README.md`.
 - **gnomAD frequencies** use the v4.1 **joint** (combined exome+genome) release
   on GRCh38; on GRCh37 (no joint release) the exome and genome callsets are both
   loaded and merged per-field, and BA1/BS1/PM2 compare against the GrpMax
@@ -530,10 +533,24 @@ The Abou Tayoun 2018 LoF decision tree is implemented at
 Strong, Strong, Moderate, Supporting, or be entirely suppressed based on:
 
 - NMD predicted vs escape
-- Last-exon / final 50 nt of penultimate exon rules
+- Last-exon / final 50 nt of penultimate exon rules — a truncation there with
+  no functional-domain evidence is **N/A** (a critical region must be shown
+  removed); a domain in the truncated tail downgrades to Strong
 - Rescue transcript existence
 - Region of biological relevance
 - Single-exon gene logic
+
+Two VCEP overlays sit in front of the generic tree:
+
+- **Per-gene applicability gate** (`pvs1` column of `disease_prevalence.tsv`).
+  Genes whose VCEP declares PVS1 not applicable because loss-of-function is not
+  the disease mechanism — gain-of-function / dominant-negative disorders (MYOC,
+  the RASopathy panel, the cardiomyopathy genes, the activating PIK3 genes,
+  RYR1, VWF, …) — withhold PVS1 entirely.
+- **APC-specific tree** (`src/acmg_classifier/pvs1/apc.py`): truncating variants
+  are PVS1 only within NM_000038.6 codons 49–2645, and canonical ±1,2 splice /
+  "G→non-G last nucleotide" changes use the VCEP's allele-specific strength
+  table (Lists A–E).
 
 ### In-silico aggregation (PP3 / BP4)
 
