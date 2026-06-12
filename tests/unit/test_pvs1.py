@@ -6,16 +6,68 @@ from acmg_classifier.pvs1.nmd_predictor import predicts_nmd, is_last_exon, is_pe
 from acmg_classifier.pvs1.transcript_evaluator import gene_has_lof_mechanism
 
 
-def _consequence(ctype, exon="5/24"):
+def _consequence(ctype, exon="5/24", gene="BRCA1"):
     return ConsequenceInfo(
         transcript_id="NM_007294.4",
         gene_id="ENSG00000012048",
-        gene_symbol="BRCA1",
+        gene_symbol=gene,
         consequence=ctype,
         biotype="protein_coding",
         is_mane_select=True,
         exon=exon,
     )
+
+
+class TestPVS1ApplicabilityGate:
+    """A VCEP that declines PVS1 (LoF not the disease mechanism — MYOC,
+    RASopathy, cardiomyopathy, …) withholds it even for a null variant."""
+
+    def _ev(self, tmp_path, gene_pvs1):
+        from unittest.mock import MagicMock
+        from acmg_classifier.criteria.pathogenic.pvs1 import PVS1Evaluator
+        p = tmp_path / "disease_prevalence.tsv"
+        p.write_text(
+            "gene_symbol\tpvs1\n" + "\n".join(f"{g}\t{v}" for g, v in gene_pvs1) + "\n",
+            encoding="utf-8",
+        )
+        cfg = MagicMock()
+        cfg.disease_prevalence_tsv = p
+        return PVS1Evaluator(cfg)
+
+    def _ann(self, gene):
+        c = _consequence(ConsequenceType.STOP_GAINED, exon="5/24", gene=gene)
+        return AnnotationData(consequences=[c], gnomad=GnomADData(loeuf=0.10))
+
+    def test_not_applicable_gene_withheld(self, tmp_path):
+        from acmg_classifier.models.enums import ACMGCriterion
+        ev = self._ev(tmp_path, [("MYOC", "not_applicable")])
+        v = VariantRecord(chrom="chr1", pos=100, ref="C", alt="T", assembly=Assembly.GRCH38)
+        r = ev.evaluate(v, self._ann("MYOC"))
+        assert not r.triggered
+        assert r.criterion == ACMGCriterion.PVS1
+        assert "not applicable" in r.evidence.lower()
+
+    def test_applicable_gene_not_gated(self, tmp_path):
+        # An applicable gene is NOT short-circuited (proceeds to the decision tree).
+        ev = self._ev(tmp_path, [("MYOC", "not_applicable"), ("BRCA1", "applicable")])
+        v = VariantRecord(chrom="chr1", pos=100, ref="C", alt="T", assembly=Assembly.GRCH38)
+        r = ev.evaluate(v, self._ann("BRCA1"))
+        # BRCA1 LOEUF 0.10 + stop-gained → not blocked by the applicability gate
+        # (the result then depends on the decision tree / ClinVar caps).
+        assert "not applicable" not in r.evidence.lower()
+
+    def test_committed_tsv_marks_gof_genes(self):
+        import csv
+        from pathlib import Path
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        with tsv.open(encoding="utf-8") as f:
+            rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
+        # Gain-of-function / dominant-negative genes: PVS1 not applicable.
+        for gene in ("MYOC", "BRAF", "KRAS", "PTPN11", "MYH7", "TNNT2",
+                     "PIK3CA", "RYR1", "VWF"):
+            assert rows[gene]["pvs1"] == "not_applicable", gene
+        # A haploinsufficiency gene keeps PVS1 applicable.
+        assert rows["BRCA1"]["pvs1"] != "not_applicable"
 
 
 class TestNMDPredictor:
@@ -84,11 +136,35 @@ class TestPVS1DecisionTree:
         strength, evidence = evaluate_pvs1(v, ann, self.cfg)
         assert strength == CriterionStrength.MODERATE
 
-    def test_last_exon_frameshift_no_domain_moderate(self):
+    def test_last_exon_frameshift_no_domain_not_met(self):
+        # SVI: a last-exon truncation escapes NMD; without evidence that a
+        # critical region is removed (no functional domain), PVS1 is N/A. The
+        # old behaviour over-applied Moderate (an eRepo PVS1 false-positive
+        # source on APC/MYOC-style last-exon truncations).
         from acmg_classifier.pvs1.decision_tree import evaluate_pvs1
         c = _consequence(ConsequenceType.FRAMESHIFT, exon="24/24")
         gd = GnomADData(loeuf=0.10)
         ann = AnnotationData(consequences=[c], gnomad=gd)
         v = VariantRecord(chrom="chr17", pos=100, ref="GA", alt="G", assembly=Assembly.GRCH38)
         strength, evidence = evaluate_pvs1(v, ann, self.cfg)
-        assert strength == CriterionStrength.MODERATE
+        assert strength == CriterionStrength.NOT_MET
+
+    def test_last_exon_frameshift_with_domain_strong(self):
+        # A functional domain in the truncated last-exon region → still PVS1_Strong.
+        from unittest.mock import patch
+        from acmg_classifier.pvs1.decision_tree import evaluate_pvs1
+        c = _consequence(ConsequenceType.FRAMESHIFT, exon="24/24")
+        c = c.model_copy(update={"domains": ["Pfam:PF00001"]})
+        gd = GnomADData(loeuf=0.10)
+        ann = AnnotationData(consequences=[c], gnomad=gd)
+        v = VariantRecord(chrom="chr17", pos=100, ref="GA", alt="G", assembly=Assembly.GRCH38)
+        # Established LoF mechanism (>= P/LP nulls) so the SVI cap does not apply.
+        with patch(
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
+            return_value=5,
+        ), patch(
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_missense_count",
+            return_value=0,
+        ):
+            strength, evidence = evaluate_pvs1(v, ann, self.cfg)
+        assert strength == CriterionStrength.STRONG

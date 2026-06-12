@@ -26,6 +26,8 @@ _LOF_CONSEQUENCES = {
 class PVS1Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        from acmg_classifier.criteria.pvs1_genes import PVS1Applicability
+        self._spec = PVS1Applicability(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -38,8 +40,37 @@ class PVS1Evaluator(CriterionEvaluator):
         # cannot fire and we skip the expensive NMD / last-exon / cryptic-
         # splice analysis in pvs1/decision_tree.py.
         pc = annotation.primary_consequence
-        if pc is None or pc.consequence not in _LOF_CONSEQUENCES:
+        if pc is None:
+            return CriteriaResult.not_met(ACMGCriterion.PVS1, "No primary consequence")
+
+        # APC has a gene-specific PVS1 tree (InSiGHT / Tayoun): a codon-range gate
+        # for truncating variants and an explicit allele-specific strength table
+        # for canonical-splice / "G to non-G last nucleotide" changes. The latter
+        # can fire on exonic changes VEP calls missense/synonymous, so the APC
+        # handler runs BEFORE the generic LoF-consequence gate. It returns None
+        # for variants its special rules don't cover (then fall back to generic).
+        if pc.gene_symbol == "APC":
+            from acmg_classifier.pvs1.apc import evaluate_apc_pvs1
+            apc = evaluate_apc_pvs1(pc)
+            if apc is not None:
+                strength, evidence = apc
+                if strength == CriterionStrength.NOT_MET:
+                    return CriteriaResult.not_met(ACMGCriterion.PVS1, evidence)
+                return CriteriaResult.met(ACMGCriterion.PVS1, strength, evidence)
+
+        if pc.consequence not in _LOF_CONSEQUENCES:
             return CriteriaResult.not_met(ACMGCriterion.PVS1, "Not a LoF consequence")
+
+        # VCEP gate: a VCEP that declined PVS1 for the gene (loss-of-function is
+        # not the disease mechanism — MYOC, the RASopathy / cardiomyopathy panels,
+        # the activating PIK3 genes, RYR1, VWF, …) withholds it even for a
+        # bona-fide null variant.
+        if self._spec.is_not_applicable(pc.gene_symbol):
+            return CriteriaResult.not_met(
+                ACMGCriterion.PVS1,
+                f"{pc.gene_symbol}: VCEP designates PVS1 not applicable "
+                "(LoF not the disease mechanism)",
+            )
 
         # The ClinGen SVI 2019 decision tree is large enough (NMD prediction,
         # last-exon position, biologically-relevant transcript check, etc.)

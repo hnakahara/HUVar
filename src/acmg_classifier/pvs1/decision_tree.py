@@ -164,15 +164,20 @@ def _nmd_branch(
         note = "last exon" if last else ("penultimate exon" if penult else "NMD escape")
 
         if last or penult:
-            # Domain presence is the proxy for "critical region truncated".
-            # Without explicit functional-domain data we conservatively assume
-            # the truncation may be tolerated → Moderate.
+            # NMD escapes, so a (largely) full-length protein is still made.
+            # Per the ClinGen SVI PVS1 decision tree, PVS1 then applies only when
+            # the truncation removes a CRITICAL functional region; otherwise it
+            # is N/A. Domain presence is our proxy for "critical region
+            # truncated": with a functional domain in the truncated tail → Strong;
+            # WITHOUT any domain evidence we must NOT assume criticality (the old
+            # "Moderate" over-applied PVS1 to last-exon truncations the VCEPs
+            # leave uncalled, e.g. APC/MYOC), so PVS1 is withheld.
             domains = pc.domains or []
             has_domain = bool(domains)
             if has_domain:
                 return CriterionStrength.STRONG, f"{pc.consequence.value}; {note}; truncated region contains functional domain"
             else:
-                return CriterionStrength.MODERATE, f"{pc.consequence.value}; {note}; no critical domain data"
+                return CriterionStrength.NOT_MET, f"{pc.consequence.value}; {note}; no critical region removed (NMD escaped) — PVS1 N/A"
         else:
             return CriterionStrength.SUPPORTING, f"{pc.consequence.value}; NMD not predicted; uncertain impact"
 

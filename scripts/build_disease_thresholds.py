@@ -36,7 +36,7 @@ COLUMNS = [
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
     "pm4", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
-    "bs2_count", "bs2_female_only", "bs2_hom_only",
+    "bs2_count", "bs2_female_only", "bs2_hom_only", "pvs1",
     "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
@@ -809,6 +809,20 @@ def _ps1_applicability(rule_set: dict) -> str:
     return ""
 
 
+def _pvs1_applicability(rule_set: dict) -> str:
+    """"applicable" / "not_applicable" / "" for the rule set's PVS1 code. A VCEP
+    that carries a PVS1 code with NO applicable strength has declined it for the
+    gene — typically because loss-of-function is not the disease mechanism
+    (gain-of-function / dominant-negative genes: MYOC, the RASopathy and
+    cardiomyopathy panels, the activating PIK3 genes, RYR1, VWF, …). PVS1 must
+    then never fire on a null variant in that gene."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PVS1":
+            continue
+        return "applicable" if _applicable_strengths(code) else "not_applicable"
+    return ""
+
+
 def _ps1_splice(rule_set: dict) -> str:
     """PS1 splice-extension state for the gene: "" (missense-only) / "canonical"
     / "noncanonical" — see the module-level note above."""
@@ -1449,6 +1463,7 @@ def parse_spec(path: str) -> list[dict]:
         bs2_hom_only = _bs2_hom_only(rs)
         ps1 = _ps1_applicability(rs)
         ps1_splice = _ps1_splice(rs)
+        pvs1 = _pvs1_applicability(rs)
         bp1, bp1_target = _bp1_applicability(rs)
         bp1_exclude = _bp1_exclude(rs)
         bp1_strength = _bp1_strength(rs)
@@ -1491,6 +1506,7 @@ def parse_spec(path: str) -> list[dict]:
                 "bs2_count": "",
                 "bs2_female_only": "",
                 "bs2_hom_only": "",
+                "pvs1": "",
                 "ps1": "",
                 "ps1_splice": "",
                 "bp1": "",
@@ -1535,6 +1551,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_bs2_hom_only": bs2_hom_only,
                 "_ps1": ps1,
                 "_ps1_splice": ps1_splice,
+                "_pvs1": pvs1,
                 "_bp1": bp1,
                 "_bp1_target": bp1_target,
                 "_bp1_exclude": bp1_exclude,
@@ -1609,6 +1626,9 @@ def main() -> None:
     ps1_splice_choice: dict[str, tuple[int, str]] = {}
     # PS1 applicability, resolved to the most gene-specific spec (like PP2/BS2).
     ps1_choice: dict[str, tuple[int, str, str]] = {}
+    # PVS1 applicability (gain-of-function / dominant-negative genes decline it),
+    # most gene-specific spec; on a tie the conservative not_applicable wins.
+    pvs1_choice: dict[str, tuple[int, str, str]] = {}
     # BP1 / BP3 applicability, most-specific spec (like PP2); BP1 also carries the
     # target consequence (missense / truncating).
     bp1_choice: dict[str, tuple[int, str, str]] = {}
@@ -1749,6 +1769,10 @@ def main() -> None:
                 if (cur is None or spec < cur[0]
                         or (spec == cur[0] and mode and not cur[1])):
                     ps1_splice_choice[g] = (spec, mode)
+            if row["_pvs1"] in ("applicable", "not_applicable"):
+                cand = (row["_specificity"], row["_pvs1"], "")
+                if g not in pvs1_choice or _pp2_more_specific(cand, pvs1_choice[g]):
+                    pvs1_choice[g] = cand
             if g not in by_gene:
                 by_gene[g] = row
                 continue
@@ -1841,6 +1865,8 @@ def main() -> None:
         pchoice = ps1_choice.get(g)
         row["ps1"] = pchoice[1] if pchoice else ""
         row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
+        vchoice = pvs1_choice.get(g)
+        row["pvs1"] = vchoice[1] if vchoice else ""
         bp1c = bp1_choice.get(g)
         row["bp1"] = bp1c[1] if bp1c else ""
         bp1f = bp1_fields_by_gene.get(g, {}) if bp1c and bp1c[1] == "applicable" else {}
@@ -1923,6 +1949,7 @@ _OVERRIDE_FIELDS = {
     "bs2_count": "bs2_count",
     "bs2_female_only": "bs2_female_only",
     "bs2_hom_only": "bs2_hom_only",
+    "pvs1": "pvs1",
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
     "bp1": "bp1",
