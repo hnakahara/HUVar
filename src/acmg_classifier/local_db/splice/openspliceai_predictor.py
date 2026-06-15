@@ -171,7 +171,6 @@ class OpenSpliceAIPredictor(SplicePredictor):
                 self._available = False
                 return False
 
-        import time
         log_path = out_vcf.parent / "openspliceai.log"
         try:
             with log_path.open("w") as logf, progress.progress_bar(

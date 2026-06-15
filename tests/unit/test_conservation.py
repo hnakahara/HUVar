@@ -1,7 +1,6 @@
 """PhyloPReader lazy-open behaviour (the BP7 conservation speedup)."""
 import sys
 import types
-from pathlib import Path
 
 from acmg_classifier.local_db.conservation import PhyloPReader
 

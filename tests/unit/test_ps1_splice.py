@@ -5,13 +5,12 @@ change). The ClinGen SVI splicing extension recognises a DIFFERENT nucleotide
 change at the SAME splice-site position as having the same predicted effect.
 """
 import sqlite3
-from pathlib import Path
 from unittest.mock import MagicMock
 
 from acmg_classifier.criteria.pathogenic.ps1 import PS1Evaluator, _ps1_strength
 from acmg_classifier.local_db.clinvar_sqlite import query_same_splice_site
 from acmg_classifier.models.annotation import AnnotationData, GnomADData, ConsequenceInfo, ClinVarRecord
-from acmg_classifier.models.enums import Assembly, ACMGCriterion, ConsequenceType, CriterionStrength
+from acmg_classifier.models.enums import Assembly, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 
 

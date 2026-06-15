@@ -1,7 +1,6 @@
 """Unit tests for manual-evidence override across ALL criteria (both modes)."""
 from pathlib import Path
 
-import pytest
 
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.registry import CriteriaRegistry

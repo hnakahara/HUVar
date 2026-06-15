@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 from acmg_classifier.criteria.pm1_hotspots import PM1Hotspots
 from acmg_classifier.criteria.pathogenic.pm1 import PM1Evaluator
 from acmg_classifier.models.annotation import AnnotationData, GnomADData, ConsequenceInfo
-from acmg_classifier.models.enums import Assembly, ACMGCriterion, ConsequenceType, CriterionStrength
+from acmg_classifier.models.enums import Assembly, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 
 _BUILD = Path(__file__).resolve().parents[2] / "scripts" / "build_pm1_hotspots.py"
