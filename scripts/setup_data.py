@@ -13,7 +13,7 @@ Usage:
       --genome-fasta /db/reference/GRCh38/hg38.fa \\
       --gnomad-vcf-dir /db/gnomad/v4.1/exomes/vcf
 
-  # Skip gnomAD (~300 GB) and set up everything else
+  # Skip gnomAD (~1.5 TB) and set up everything else
   python scripts/setup_data.py --data-dir ./data --skip-gnomad
 
   # Download gnomAD for specific chromosomes only
@@ -779,8 +779,9 @@ def step_gnomad_duckdb(
             print(f"  Once the VCFs are ready, re-run with --gnomad-vcf-dir <path>")
             return False
         print(f"  Downloading gnomAD v{ver} ({', '.join(n for n, *_ in sources)}; "
-              f"~300+ GB total) from {len(_GNOMAD_MIRRORS)} mirrors, "
-              f"{_GNOMAD_PER_MIRROR} concurrent each. Ctrl+C to interrupt; re-run to resume.")
+              f"~1.5 TB total) from {len(_GNOMAD_MIRRORS)} mirrors, "
+              f"{_GNOMAD_PER_MIRROR} concurrent each. Ctrl+C to interrupt; re-run to resume. "
+              f"The raw VCFs can be deleted after the DuckDB build (see README).")
         staging.mkdir(parents=True, exist_ok=True)
 
         # Build one job per chromosome (VCF + .tbi). URL suffixes are derived by
@@ -936,7 +937,7 @@ def main() -> None:
                         help="Build parallelism for the ClinVar (XML parse, max 24) "
                              "and gnomAD (DuckDB) steps (default: CPU cores - 1)")
     parser.add_argument("--skip-gnomad", action="store_true",
-                        help="Skip gnomAD download (~300 GB)")
+                        help="Skip gnomAD download (~1.5 TB)")
     parser.add_argument("--skip-genome", action="store_true",
                         help="Skip genome FASTA download (~880 MB)")
     parser.add_argument("--skip-vep-cache", action="store_true",

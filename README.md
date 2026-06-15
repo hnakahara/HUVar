@@ -71,9 +71,13 @@ pip install -e .
 
 **Step 3: Download and build annotation databases**
 
-> ⏱️ This step downloads ~350 GB and builds local indexes. **Expect 1–2 days
-> to complete** depending on network throughput and CPU; run it in `tmux` /
-> `screen` or as a background job.
+> ⏱️ This step downloads **~1.5 TB** (the gnomAD per-chromosome VCFs dominate)
+> and builds local indexes. **Expect 1–2 days to complete** depending on network
+> throughput and CPU; run it in `tmux` / `screen` or as a background job.
+>
+> 💾 The raw gnomAD VCFs are only needed to **build** the local DuckDB — once
+> setup finishes you can reclaim most of that space by deleting them. See
+> [Reclaiming disk space after setup](#reclaiming-disk-space-after-setup).
 
 ```bash
 python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --workers 12
@@ -81,16 +85,40 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data --assem
 
 **Step 4: Install the curated gene-rule tables**
 
-Copy the VCEP-derived gene rule tables into `data/shared/` (the criteria
-evaluators read them from there):
+Copy the curated tables into `data/shared/` (the criteria evaluators read them
+from there). This is two groups: the assembly-independent gene-rule tables in
+`resources/shared/`, plus the **assembly-specific** eRepo manual-evidence
+supplement from `resources/<assembly>/`:
 
 ```bash
 mkdir -p /path/to/download/directory/data/shared
-cp resources/gene_inheritance.tsv \
-   resources/clingen/disease_prevalence.tsv \
-   resources/clingen/pm1_hotspots.tsv \
-   /path/to/download/directory/data/shared/
+
+# 1) Assembly-independent gene-rule tables (auto-loaded by the evaluators)
+cp resources/shared/*.tsv /path/to/download/directory/data/shared/
+
+# 2) Manual-evidence supplement for your assembly (used via --supplement; see below)
+#    GRCh38:
+cp resources/GRCh38/erepo_manual_criteria_hg38.tsv /path/to/download/directory/data/shared/
+#    GRCh37:
+# cp resources/GRCh37/erepo_manual_criteria_hg19.tsv /path/to/download/directory/data/shared/
 ```
+
+The four `resources/shared/` tables are read **automatically** from `data/shared/`
+on every run:
+
+| File | Used by |
+|------|---------|
+| `disease_prevalence.tsv` | per-gene VCEP rules for BA1/BS1/BS2, PM2/PM4/PM5, PP2, PVS1 applicability, PS1 splice, BP1/BP3, BP7, REVEL cutoffs |
+| `gene_inheritance.tsv` | inheritance-aware PM2 / BS1 / BS2 thresholds |
+| `pm1_hotspots.tsv` | PM1 hotspot residues / regions |
+| `vcep_pvs1_splice_exons.tsv` | optional per-skipped-exon PVS1 splice strengths (absent → flat per-gene splice defaults) |
+
+The eRepo file is **not** auto-loaded — it is a ready-made manual-evidence
+supplement (ClinGen Evidence Repository curated calls for criteria the tool
+cannot derive automatically, e.g. PS4 / PP4). Pass it with `--supplement` at
+classify/explain time — see [Manual evidence supplement](#manual-evidence-supplement).
+It is assembly-specific, so use the `hg38` file for GRCh38 and the `hg19` file
+for GRCh37.
 
 **Step 5: Verify installation**
 
@@ -111,15 +139,19 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 - **Two classifiers in parallel**: ACMG 2015 Table 5 combinatorial rules and
   Tavtigian 2020 Bayesian point system reported side-by-side, so reviewers can
   spot disagreements at a glance.
-- **All 28 ACMG criteria** auto-evaluated (PVS1, PS1–PS4, PM1–PM6, PP1–PP5,
-  BA1, BS1–BS4, BP1–BP7), with ClinGen SVI strength adjustments and the
-  Bergquist-2024 3-point extension.
+- **All 28 ACMG criteria** supported, with ClinGen SVI strength adjustments and
+  the Bergquist-2024 3-point extension. The ~18 derivable from local data
+  (PVS1, PS1/PS3/PS4, PM1/PM2/PM4/PM5, PP1–PP3, BA1, BS1/BS2, BP1/BP3/BP4/BP7)
+  are evaluated **automatically**; the evidence-dependent rest (PS2, PM3, PM6,
+  PP4, BS3/BS4, BP2/BP5) are added via the [manual supplement](#manual-evidence-supplement),
+  and PP5/BP6 are disabled per ClinGen SVI. See
+  [Per-criterion decision basis](#per-criterion-decision-basis).
 - **PVS1 decision tree** (Abou Tayoun et al. 2018) applied for LoF variants
   including NMD prediction, last-exon rescue, and biological-relevance gating.
 - **Inheritance-aware PM2** (BS1/BS2 also) thresholds switch between dominant
   and recessive frequencies using a per-gene inheritance table.
 - **Per-gene ClinGen VCEP rules** mined from the cspec specifications
-  (`resources/clingen/disease_prevalence.tsv`, `pm1_hotspots.tsv`): disease-
+  (`resources/shared/disease_prevalence.tsv`, `pm1_hotspots.tsv`): disease-
   specific BA1/BS1 cutoffs, PVS1 applicability (gain-of-function genes decline
   it) and the APC-specific PVS1 tree, PP2 applicability, PM5 Grantham-distance
   gating, PM1 hotspot regions, inheritance-aware BS2 (incl. a dominant
@@ -171,7 +203,7 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 |-----------|---------|-------|
 | Linux / WSL2 | — | Tested on Rocky Linux 9.6; Windows native is **not** supported (uses bash & POSIX tools) |
 | Python | ≥ 3.11 | 3.12 recommended |
-| Disk | ~ 350 GB free | gnomAD dominates the footprint (v4.1 joint on GRCh38; exomes + genomes on GRCh37) |
+| Disk | ~ 1.5 TB free during setup | gnomAD VCFs dominate (v4.1 joint on GRCh38; exomes + genomes on GRCh37). The raw VCFs are deletable after the DuckDB build — see [Reclaiming disk space](#reclaiming-disk-space-after-setup) — leaving a much smaller steady-state footprint |
 | RAM | ≥ 16 GB | DuckDB build of gnomAD spikes briefly to ~10 GB |
 | CPU | ≥ 4 cores | `--workers` defaults to 4 |
 
@@ -240,7 +272,7 @@ downloads **resume** on re-run (size-verified against the remote, so a partial
 file left by Ctrl+C is completed rather than skipped):
 
 ```bash
-# Default: GRCh38 only, downloads everything (~ 350 GB, takes hours)
+# Default: GRCh38 only, downloads everything (~ 1.5 TB, takes hours–days)
 python scripts/setup_data.py --data-dir /path/to/download/directory/data --assembly GRCh38 --workers 12
 
 # Both assemblies
@@ -253,7 +285,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --gnomad-vcf-dir /db/gnomad/v4.1/joint/vcf \
     --workers 12
 
-# Skip the gigantic gnomAD download (~300 GB)
+# Skip the gigantic gnomAD download (~1.5 TB)
 python scripts/setup_data.py --data-dir /path/to/download/directory/data --skip-gnomad --workers 12
 
 # Pick specific chromosomes for gnomAD (testing/partial setup)
@@ -271,7 +303,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--gnomad-vcf-dir PATH` | Use existing gnomAD `*.vcf.bgz` files |
 | `--gnomad-chromosomes CHR ...` | Subset of chromosomes (default all 24) |
 | `--workers N` | Build parallelism for the ClinVar (XML parse, max 24) and gnomAD (DuckDB) steps (default = CPU - 1) |
-| `--skip-gnomad` | Skip gnomAD download (~ 300 GB) |
+| `--skip-gnomad` | Skip gnomAD download (~ 1.5 TB) |
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
 | `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
@@ -294,6 +326,7 @@ data/
     ├── clinvar/clinvar_GRCh38.vcf.gz(+.tbi)
     ├── clinvar/clinvar_ps1_pm5_GRCh38.sqlite
     ├── gnomad/gnomad_v4.1_joint.duckdb   # GRCh37: gnomad_v2.1.1_exome_genome.duckdb
+    ├── gnomad/vcf/                       # raw downloaded VCFs (~1.5 TB) — DELETABLE after build
     ├── gnomad/gnomad_v4.1_constraint.tsv
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
     ├── (optional) revel/revel_grch38.tsv.gz(+.tbi)   # built with --with-revel
@@ -311,6 +344,36 @@ data/
 > `--openspliceai-flanking-size` model (default `2000`); the OpenSpliceAI authors
 > recommend `10000` for best accuracy. Opt out of the model download with
 > `--skip-openspliceai` (e.g. when supplying models via `--openspliceai-model-dir`).
+
+### Reclaiming disk space after setup
+
+Most of the ~1.5 TB is the **raw gnomAD VCFs**, which are only consumed while
+building the local DuckDB. Once `setup_data.py` reports the gnomAD DuckDB as
+built (`gnomad/gnomad_v4.1_joint.duckdb` exists), the raw VCFs are no longer read
+at runtime and can be deleted:
+
+```bash
+# Safe to remove once the DuckDB build is complete — frees ~1.5 TB
+rm -rf /path/to/download/directory/data/GRCh38/gnomad/vcf
+# (and likewise data/GRCh37/gnomad/vcf if you built GRCh37)
+```
+
+If you later need to rebuild or add chromosomes, re-run `setup_data.py` (it will
+re-download only what is missing; the existing DuckDB is reused as-is).
+
+**ClinVar VCF** (`clinvar/clinvar_<assembly>.vcf.gz`) is *optional* at runtime:
+PS1/PM5 read the separate `clinvar_ps1_pm5_<assembly>.sqlite`, and the VCF is
+used only to add the public ClinVar classification to the output for human
+review. You may delete it if you don't need that annotation column — classification
+results are unaffected:
+
+```bash
+# Optional: removes the ClinVar classification column from output, not the calls
+rm -f /path/to/download/directory/data/GRCh38/clinvar/clinvar_GRCh38.vcf.gz*
+```
+
+Keep everything else (DuckDB, ClinVar SQLite, VEP cache, ESM1b, OpenSpliceAI
+models, constraint/AlphaMissense tables) — those are read on every run.
 > If the model directory is absent, splice scoring is skipped.
 
 Validate the install at any time:
@@ -417,6 +480,20 @@ variant_id	criterion	strength	evidence
 chr17:43044295:G:A	PS3	Strong	PMID:12345678 functional study showing loss of BRCA1 HR activity
 chr17:43044295:G:A	PP1	Supporting	3 affected family members segregating variant
 ```
+
+> 📦 **Ready-made eRepo supplement.** A curated supplement of ClinGen Evidence
+> Repository manual criteria ships per assembly at
+> `resources/<assembly>/erepo_manual_criteria_{hg38,hg19}.tsv` (copied to
+> `data/shared/` in [Step 4](#quick-start)). It carries calls the tool cannot
+> derive automatically (e.g. PS4, PP4) for variants in the eRepo. Use it as-is —
+> match the file to your assembly:
+> ```bash
+> acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 \
+>   --data-dir /path/to/download/directory/data \
+>   --supplement /path/to/download/directory/data/shared/erepo_manual_criteria_hg38.tsv
+> ```
+> Combine it with your own curation by concatenating rows into one TSV (or keep
+> separate files and run in stages).
 
 - `variant_id` must match the canonical `chrom:pos:ref:alt` used in the output.
 - `criterion` is any ACMG code (e.g. `PVS1`, `PS1`, `PS3`, `PM2`, `PP1`, `BP1`).
@@ -555,6 +632,55 @@ thresholds match the natural-scale fit reported in the 2020 paper.
 
 See `src/acmg_classifier/classification/classifier_bayesian.py`.
 
+### Per-criterion decision basis
+
+Each automatically-evaluated criterion, the data and thresholds it decides on,
+and whether a ClinGen **VCEP gene-specific rule** can override the default.
+Gene-specific parameters are stored per gene in
+`resources/shared/disease_prevalence.tsv` (column names in `code` font) and the
+`*_genes.py` / `pvs1/` modules; when a VCEP rule applies it is **authoritative**
+and replaces the genome-wide default. The audit-trail `*_evidence` column records
+which path fired.
+
+Three cross-criterion rules are enforced after the per-criterion calls:
+the allele-frequency criteria are **mutually exclusive** (BA1 > BS1 > PM2 — a
+variant gets at most one); **PVS1 and PP3 are not co-applied**; and PVS1 strength
+caps interact with ClinVar P/LP-null counts (see [PVS1](#pvs1-decision-tree)).
+
+**Pathogenic**
+
+| Criterion | Decision basis (default) | VCEP gene-specific rule |
+|-----------|--------------------------|-------------------------|
+| **PVS1** | LoF consequence (nonsense/frameshift/canonical-splice/start-loss/whole-gene-deletion) run through the Abou Tayoun 2018 tree (NMD, last-exon, rescue transcript, single-exon). See [PVS1 decision tree](#pvs1-decision-tree). | **Extensive.** `pvs1` applicability gate (LoF-not-the-mechanism genes withhold PVS1) + gene-specific trees for ~60 genes (`pvs1/vcep_pvs1.py`, APC in `pvs1/apc.py`): codon-range / critical-domain / NMD-boundary gates, per-gene initiation-codon and canonical-splice strengths, and an optional per-skipped-exon splice table. |
+| **PS1** | Same amino-acid change as an established P/LP ClinVar variant (≥`pm5_min_stars`). Strong if any comparator is Pathogenic; Moderate if all are only Likely pathogenic. | `ps1_splice` extends PS1 to splice-equivalent variants for genes whose VCEP allows it. |
+| **PS3** | Functional evidence: manual supplement (may reach Strong with OddsPath) or ClinVar SCV text-mining (1–2 SCV → Supporting, ≥3 → Moderate cap). | — (strength via supplement). |
+| **PS4** | Unrelated affected-proband count from ClinVar P/LP `AffectedStatus=yes` SCVs: ≥10 → Strong, 6–9 → Moderate, 2–5 → Supporting. Gated on rarity (FAF95_popmax < 0.0001 or AC=0) **and** ≥2 probands. | — |
+| **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`); statistical fallback where no VCEP table exists. | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
+| **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi). |
+| **PM4** | Protein-length change from an in-frame indel or stop-loss (outside repeat regions). | `pm4 = not_applicable` withholds PM4 for genes whose VCEP declined it. |
+| **PM5** | Different missense at a codon with an established P/LP missense in ClinVar — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`. |
+| **PP1** | Cosegregation: manual supplement or ClinVar text-mining; capped at Supporting (no meiosis counting from free text). | — |
+| **PP2** | Missense in a gene where missense is a common mechanism & benign missense is rare. | **Yes (dominant lever)** — `pp2` applicability is authoritative; `pp2_requires` adds co-requirements (e.g. BMPR2 needs PM2+PP3). ClinVar-stats fallback only when no VCEP covers the gene. |
+| **PP3** | Computational deleterious prediction (missense: ESM1b/AlphaMissense/REVEL; splice: OpenSpliceAI/SpliceAI), Bergquist 2024 tiers. See [In-silico aggregation](#in-silico-aggregation-pp3--bp4). | **Yes (REVEL)** — per-gene `revel_pp3_*` cutoffs from cspec override the genome-wide default and cap the gene's strength. |
+
+**Benign**
+
+| Criterion | Decision basis (default) | VCEP gene-specific rule |
+|-----------|--------------------------|-------------------------|
+| **BA1** | gnomAD FAF95_popmax ≥ cutoff (stand-alone). Default 5%; disease-specific `min(0.05, 10×maxAF)` where parameters exist. | **Yes** — `ba1_threshold` / `af_basis` per gene. |
+| **BS1** | gnomAD FAF95_popmax above the disorder-specific expectation. | **Yes** — `bs1_threshold` / `bs1_strength`; `bs1_exclude` bars a specific recurrent disease allele from BS1 (e.g. MYOC p.Gln368Ter). |
+| **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes, AD→het carriers). | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
+| **BP1** | Variant-type-vs-mechanism: applied only for genes whose VCEP names a target consequence. | **Yes (gate)** — `bp1` / `bp1_target` (`missense` for PALB2/APC/BRCA1/2; `truncating` for GoF RASopathy genes), `bp1_strength`, `bp1_exclude`, `bp1_no_splice`. No VCEP decision → not applied. |
+| **BP3** | In-frame indel in a repetitive region of unknown function. | **Yes** — VCEP-gated (`bp3`) + `bp3_regions`. |
+| **BP4** | Computational no-impact prediction (same tools as PP3), Bergquist 2024 tiers. | **Yes (REVEL)** — per-gene `revel_bp4_*` cutoffs. |
+| **BP7** | Synonymous / deep-intronic with no predicted splice impact and (default) low conservation. Safe-distance ≥ +7 (donor) / ≤ −21 (acceptor). | **Yes** — `bp7_phylop` conservation cutoff (or `na` where the VCEP deemed conservation non-informative), `bp7_intronic = noncanonical` extends BP7 to any non-±1,2 intronic position. |
+
+**Not auto-applied.** PS2, PM3, PM6, PP4, BS3, BS4, BP2, BP5 require evidence
+(de novo confirmation, trans/cis phase, segregation meioses, phenotype
+specificity) that cannot be derived from the local databases — add them via
+[manual evidence](#manual-evidence-supplement). PP5 / BP6 (reputable-source) are
+**deliberately disabled** per ClinGen SVI 2018 to avoid double-counting ClinVar.
+
 ### PVS1 decision tree
 
 The Abou Tayoun 2018 LoF decision tree is implemented at
@@ -569,17 +695,40 @@ Strong, Strong, Moderate, Supporting, or be entirely suppressed based on:
 - Region of biological relevance
 - Single-exon gene logic
 
-Two VCEP overlays sit in front of the generic tree:
+Three VCEP overlays sit in front of the generic tree (each authoritative where
+it applies, evaluated before the generic tree and its strength caps):
 
 - **Per-gene applicability gate** (`pvs1` column of `disease_prevalence.tsv`).
   Genes whose VCEP declares PVS1 not applicable because loss-of-function is not
   the disease mechanism — gain-of-function / dominant-negative disorders (MYOC,
   the RASopathy panel, the cardiomyopathy genes, the activating PIK3 genes,
   RYR1, VWF, …) — withhold PVS1 entirely.
-- **APC-specific tree** (`src/acmg_classifier/pvs1/apc.py`): truncating variants
-  are PVS1 only within NM_000038.6 codons 49–2645, and canonical ±1,2 splice /
-  "G→non-G last nucleotide" changes use the VCEP's allele-specific strength
-  table (Lists A–E).
+- **Gene-specific decision trees** for ~60 genes (`src/acmg_classifier/pvs1/vcep_pvs1.py`,
+  plus APC in `pvs1/apc.py`). Each encodes its VCEP's deviations from the generic
+  tree, in one of three forms:
+  - **Codon-range bands** — e.g. VHL no-PVS1 before codon 54; CYP1B1 haem-binding
+    domain through aa493; TP53 p.Lys351 boundary; GAA codon 916; the InSiGHT
+    Lynch genes (MLH1 ≤753, MSH2 ≤891, MSH6 ≤1341, PMS2 ≤798); KCNQ1 1-581 /
+    582-620 / 621-676; HBB's β-globin NMD window (codons 24-87). Some genes score
+    nonsense vs frameshift differently (HNF1A p.601/p.618, AIPL1 p.328/p.337).
+  - **Exon-based NMD** — NMD-predicted → Very Strong, NMD-escape → a fixed
+    strength (FBN1, CDH1) or the generic 10%-of-protein rule (ACADVL, GAMT,
+    ABCD1, RPGR).
+  - **Initiation-codon / canonical-splice / whole-gene-deletion strengths** per
+    VCEP (e.g. RPE65 start-loss Strong, GCK Supporting, VHL/DICER1 N/A; CDH1
+    canonical-splice Strong default; ACADVL intron-8 GC-donor exclusion).
+  - **APC** specifically: truncating variants are PVS1 only within NM_000038.6
+    codons 49–2645, and canonical ±1,2 splice / "G→non-G last nucleotide" changes
+    use the VCEP's allele-specific strength table (Lists A–E).
+- **Optional per-skipped-exon splice override** (`resources/shared/vcep_pvs1_splice_exons.tsv`,
+  consumed via `pvs1/vcep_pvs1_exons.py`). For canonical ±1,2 splice variants it
+  refines the flat per-gene splice strength by the exon predicted to be skipped
+  (in-frame / non-critical exon skips scored Strong or Moderate, e.g. DICER1,
+  CDKL5, HNF4A, GAA). Ships with verified entries; exon numbering is generated
+  from the MANE GFF by `scripts/build_vcep_pvs1_exons.py`.
+
+The MANE-Select transcript and protein length each gene's bands are defined
+against are recorded in `vcep_pvs1.py`.
 
 ### In-silico aggregation (PP3 / BP4)
 
