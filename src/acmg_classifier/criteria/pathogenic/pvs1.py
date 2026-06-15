@@ -28,6 +28,12 @@ class PVS1Evaluator(CriterionEvaluator):
         self._cfg = cfg
         from acmg_classifier.criteria.pvs1_genes import PVS1Applicability
         self._spec = PVS1Applicability(cfg.disease_prevalence_tsv)
+        # Optional exon-aware splice-strength overrides; empty when the TSV is
+        # absent, leaving the flat per-gene VCEP splice defaults untouched.
+        from acmg_classifier.pvs1.vcep_pvs1_exons import SpliceExonOverrides
+        self._splice_overrides = SpliceExonOverrides(
+            getattr(cfg, "vcep_pvs1_splice_exons_tsv", None)
+        )
 
     def evaluate(
         self,
@@ -57,6 +63,22 @@ class PVS1Evaluator(CriterionEvaluator):
                 if strength == CriterionStrength.NOT_MET:
                     return CriteriaResult.not_met(ACMGCriterion.PVS1, evidence)
                 return CriteriaResult.met(ACMGCriterion.PVS1, strength, evidence)
+
+        # Other VCEPs publish gene-specific PVS1 trees whose critical-region /
+        # codon-range gates, initiation-codon strengths and canonical-splice /
+        # whole-gene-deletion calls deviate from the generic tree (and would
+        # otherwise be under-called — e.g. single-exon genes like RAG1/GP9 where
+        # NMD is never predicted, or last-exon truncations the generic tree
+        # withholds). Like APC, the handler returns a final strength and so runs
+        # BEFORE the generic LoF gate and the ClinVar-count strength caps. It
+        # returns None for consequences the gene's VCEP does not special-case.
+        from acmg_classifier.pvs1.vcep_pvs1 import evaluate_vcep_pvs1
+        vcep = evaluate_vcep_pvs1(pc, self._splice_overrides)
+        if vcep is not None:
+            strength, evidence = vcep
+            if strength == CriterionStrength.NOT_MET:
+                return CriteriaResult.not_met(ACMGCriterion.PVS1, evidence)
+            return CriteriaResult.met(ACMGCriterion.PVS1, strength, evidence)
 
         if pc.consequence not in _LOF_CONSEQUENCES:
             return CriteriaResult.not_met(ACMGCriterion.PVS1, "Not a LoF consequence")

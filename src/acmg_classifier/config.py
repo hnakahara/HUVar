@@ -253,3 +253,10 @@ class Config(BaseSettings):
         """Per-gene PM1 hotspot regions/residues mined from the VCEP cspec
         summaries (see scripts/build_pm1_hotspots.py)."""
         return self.data_dir / "shared" / "pm1_hotspots.tsv"
+
+    @property
+    def vcep_pvs1_splice_exons_tsv(self) -> Path:
+        """Optional reviewer-supplied per-(gene, skipped-exon) PVS1 splice-strength
+        overrides. Absent file → flat per-gene splice defaults (unchanged
+        behaviour). See scripts/build_vcep_pvs1_exons.py and pvs1/vcep_pvs1_exons.py."""
+        return self.data_dir / "shared" / "vcep_pvs1_splice_exons.tsv"

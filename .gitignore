@@ -37,6 +37,7 @@ scratch/
 paper/
 resources/clingen/cspec_json/
 resources/clingen/CSpecList.tsv
+resources/gff/
 
 
 # Exception: keep tiny test fixtures shipped with the repo
