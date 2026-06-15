@@ -50,7 +50,9 @@ class TestOverridesLoader:
     def test_shipped_table_loads(self):
         # The committed override table should parse to a non-empty set with the
         # documented DICER1 entries.
-        ov = SpliceExonOverrides(Path("data/shared/vcep_pvs1_splice_exons.tsv"))
+        ov = SpliceExonOverrides(
+            Path(__file__).resolve().parents[2] / "resources" / "shared" / "vcep_pvs1_splice_exons.tsv"
+        )
         assert ov
         assert ov.lookup("DICER1", 10) == S.STRONG
         assert ov.lookup("DICER1", 5) == S.MODERATE

@@ -196,7 +196,7 @@ class TestCommittedTsv:
 
     def _rows(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             return {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
 

@@ -1,4 +1,4 @@
-"""Build ``data/shared/gene_inheritance.tsv`` — a gene -> inheritance map used by
+"""Build ``resources/shared/gene_inheritance.tsv`` — a gene -> inheritance map used by
 PM2 for inheritance-aware allele-frequency thresholds.
 
 Sources, merged in priority order (later sources never overwrite earlier ones):
@@ -294,7 +294,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Build gene_inheritance.tsv (gene -> MOI).")
     p.add_argument("--data-dir", type=Path, default=Path("./data"))
     p.add_argument("--output", type=Path, default=None,
-                   help="Output TSV (default: <data-dir>/shared/gene_inheritance.tsv)")
+                   help="Output TSV (default: resources/shared/gene_inheritance.tsv)")
     p.add_argument("--cgd-file", type=Path, default=None,
                    help="Local CGD.txt or CGD.txt.gz (skips download)")
     p.add_argument("--cgd-url", default=CGD_URL)
@@ -306,7 +306,8 @@ def main(argv: list[str] | None = None) -> int:
                    help="Emit only genes present in the ClinVar SQLite")
     args = p.parse_args(argv)
 
-    output = args.output or (args.data_dir / "shared" / "gene_inheritance.tsv")
+    # Curated table → committed resources/ tree (not the git-ignored data_dir).
+    output = args.output or (Path("./resources") / "shared" / "gene_inheritance.tsv")
     build_inheritance_map(
         output=output,
         cgd_file=args.cgd_file,

@@ -11,7 +11,7 @@ disease_prevalence.tsv consumable by `acmg_classifier.criteria.allele_frequency`
 Usage:
     python scripts/build_disease_thresholds.py \
         --json-dir resources/clingen \
-        --out resources/clingen/disease_prevalence.tsv
+        --out resources/shared/disease_prevalence.tsv
 
 Notes / safety:
   * Only thresholds that are explicitly *Applicable* in the spec are emitted.
@@ -1575,7 +1575,7 @@ def _fmt(x: float) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json-dir", default="resources/clingen")
-    ap.add_argument("--out", default="resources/clingen/disease_prevalence.tsv")
+    ap.add_argument("--out", default="resources/shared/disease_prevalence.tsv")
     ap.add_argument("--released-only", action="store_true",
                     help="Only emit specs whose cspecStatus is 'Released'.")
     ap.add_argument(

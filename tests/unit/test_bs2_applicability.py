@@ -157,7 +157,7 @@ class TestResolvedTSV:
 
     def test_committed_tsv_marks_target_genes_not_applicable(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         for gene in ("RPE65", "NRAS", "BRAF", "KCNQ1", "BRCA1", "BRCA2", "PALB2"):
@@ -170,7 +170,7 @@ class TestResolvedTSV:
         # gnomAD individuals that already drove BS1/BA1). See
         # build_disease_thresholds._BS2_CLINICAL_CONFIRMATION.
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         clinical_confirmation = (
@@ -197,7 +197,7 @@ class TestResolvedTSV:
         # BMPR2 / PIK3R2 sanction gnomAD homozygote counting directly
         # ("≥3 homozygotes in gnomAD"), so BS2 stays gnomAD-automatable.
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         for gene in ("BMPR2", "PIK3R2"):
@@ -215,7 +215,7 @@ class TestResolvedTSV:
         # previously forced not_applicable and produced FALSE NEGATIVES; they are
         # recessive/mode-agnostic so the evaluator counts gnomAD homozygotes.
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         for gene in ("IL7R", "RAG1", "RAG2", "PAH", "POLG", "GAMT", "ETHE1", "ADA"):
@@ -226,7 +226,7 @@ class TestResolvedTSV:
         # evaluator must fire at the LOWEST (Supporting) bar. GUCY2D nhomalt=3 was
         # the reported false negative when the count resolved to the Strong 6.
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         assert rows["GUCY2D"]["bs2_count"] == "3"
@@ -241,7 +241,7 @@ class TestResolvedTSV:
         # unaffected relatives). Forced not_applicable so a gnomAD-count BS2 never
         # falsely fires on a pathogenic X-linked variant.
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         for gene in ("CDKL5", "RS1", "PDHA1", "RPGR", "IL2RG",

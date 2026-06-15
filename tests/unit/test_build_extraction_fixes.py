@@ -124,7 +124,7 @@ class TestEmptyPlaceholderSpec:
 
     def _rows(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             return {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
 
@@ -156,7 +156,7 @@ class TestBS1VariantExclusion:
 
     def test_committed_tsv_has_exclusion(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         assert rows["MYOC"]["bs1_exclude"] == "p.Gln368Ter"
@@ -228,7 +228,7 @@ class TestRPGRThresholdCorrection:
 
     def _rows(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             return {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
 
@@ -278,7 +278,7 @@ class TestPM2TieredThreshold:
 
     def test_committed_tsv(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         assert rows["ITGA2B"]["pm2_threshold"] == "0.0001"
@@ -310,7 +310,7 @@ class TestPM2SubpopMode:
 
     def test_committed_tsv(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         assert rows["RUNX1"]["pm2_subpop"] == "point"
@@ -352,7 +352,7 @@ class TestPM2Zygosity:
 
     def test_committed_tsv(self):
         import csv
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         assert rows["SLC6A8"]["pm2_zygosity"] == "homhemi:0"

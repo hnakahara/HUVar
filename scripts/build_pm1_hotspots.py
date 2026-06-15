@@ -16,7 +16,7 @@ region quoted in the prose usually applies to one gene, not all of them.
 Usage:
     python scripts/build_pm1_hotspots.py \
         --summary resources/clingen/cspec_json/cspec_summary.json \
-        --out resources/clingen/pm1_hotspots.tsv
+        --out resources/shared/pm1_hotspots.tsv
 """
 from __future__ import annotations
 
@@ -175,7 +175,7 @@ def build(summary_path: str) -> dict[tuple[str, str], tuple[set, set]]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--summary", default="resources/clingen/cspec_json/cspec_summary.json")
-    ap.add_argument("--out", default="resources/clingen/pm1_hotspots.tsv")
+    ap.add_argument("--out", default="resources/shared/pm1_hotspots.tsv")
     args = ap.parse_args()
 
     table = build(args.summary)

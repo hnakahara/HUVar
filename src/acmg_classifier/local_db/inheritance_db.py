@@ -1,6 +1,7 @@
 """Gene -> inheritance map for inheritance-aware PM2 thresholds.
 
-Loads a simple TSV (``data/shared/gene_inheritance.tsv``):
+Loads a simple TSV (``data/shared/gene_inheritance.tsv`` at runtime; the
+version-controlled source is generated to ``resources/shared/``):
 
     gene<TAB>inheritance
     MVK<TAB>AR

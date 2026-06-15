@@ -59,7 +59,7 @@ class TestPVS1ApplicabilityGate:
     def test_committed_tsv_marks_gof_genes(self):
         import csv
         from pathlib import Path
-        tsv = Path(__file__).resolve().parents[2] / "resources" / "clingen" / "disease_prevalence.tsv"
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         # Gain-of-function / dominant-negative genes: PVS1 not applicable.

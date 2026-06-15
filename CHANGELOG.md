@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Optional exon-aware VCEP PVS1 splice refinement**
   (`src/acmg_classifier/pvs1/vcep_pvs1_exons.py`,
   `scripts/build_vcep_pvs1_exons.py`). A reviewer-supplied TSV
-  (`data/shared/vcep_pvs1_splice_exons.tsv`) can override the flat per-gene
+  (`resources/shared/vcep_pvs1_splice_exons.tsv`) can override the flat per-gene
   canonical-splice strength per *skipped exon* (donor in intron *n* skips exon
   *n*; acceptor skips exon *n+1*), matching VCEP trees that score in-frame /
   non-critical exon skips at Strong or Moderate (e.g. DICER1, CDKL5). Opt-in: the
@@ -51,8 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   reviewer activates rows. `build_vcep_pvs1_exons.py` generates a coordinate-
   accurate coding-exon table (in-frame flag, % protein, NMD geometry) from the
   MANE RefSeq GFF3 so exon numbering matches VEP and avoids the non-coding-exon-1
-  off-by-one trap. Generated `data/GRCh38/vcep_pvs1_exons.tsv` (MANE v1.5) and
-  `data/GRCh37/vcep_pvs1_exons.tsv` (RefSeq GCF_000001405.13, restricted to each
+  off-by-one trap. Generated `resources/GRCh38/vcep_pvs1_exons.tsv` (MANE v1.5) and
+  `resources/GRCh37/vcep_pvs1_exons.tsv` (RefSeq GCF_000001405.13, restricted to each
   gene's clinical transcript). Cross-checking the two assemblies validated the
   per-gene CDS lengths (28/30 exact matches) and surfaced four MANE-Select
   transcript/length corrections to `vcep_pvs1.py`:
