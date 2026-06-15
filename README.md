@@ -369,6 +369,30 @@ acmg-classify explain chr17 7674221 G A --assembly GRCh38 --data-dir /path/to/do
 
 Useful for debugging a specific classification or for ad-hoc review.
 
+**Adding manual evidence.** `explain` accepts curator evidence the same way
+`classify` does — inline via `--evidence` (repeatable, most convenient for a
+single variant) and/or from a `--supplement` TSV — combined with the automated
+calls per `--supplement-mode` (`merge` default, or `manual-only`):
+
+```bash
+# Inline: add a functional-study PS3 and a hotspot PM1
+acmg-classify explain chr17 7674221 G A \
+  --evidence PS3:strong \
+  --evidence PM1:moderate:"PMID 12345 hotspot"
+
+# From a supplement TSV (only rows matching this variant are applied)
+acmg-classify explain chr17 7674221 G A --supplement manual_evidence.tsv
+```
+
+- `--evidence` format is `CRITERION:STRENGTH[:NOTE]`. Criterion (`PVS1`, `PS3`,
+  `PM1`, `BA1`, …) and strength are **case-insensitive**; strength accepts the
+  canonical values (`VeryStrong`, `Strong`, `ThreePoint`, `Moderate`,
+  `Supporting`) or friendly aliases (`very_strong`, `strong`, `three_point`,
+  `moderate`, `supporting`, plus `stand_alone` for BA1). The optional third
+  field is a free-text note (it may itself contain `:`).
+- See [Manual evidence supplement](#manual-evidence-supplement) for the TSV
+  format and how `merge` / `manual-only` behave.
+
 ### `validate` / `status` / `setup`
 
 ```bash
@@ -418,6 +442,11 @@ change (e.g. `[manual override Strong→Moderate] …`).
 This is the recommended path for incorporating unpublished functional data,
 segregation analysis, expert-panel de novo assessments (PS2/PM6), or expert
 strength adjustments to any automated criterion.
+
+The same supplement TSV works with `acmg-classify explain` (single variant) via
+`--supplement`, and for a single variant you can skip the file entirely and pass
+evidence inline with one or more `--evidence CRITERION:STRENGTH[:NOTE]` flags —
+see [`explain`](#explain--single-variant-detail). Both honour `--supplement-mode`.
 
 A reference example lives at `tests/fixtures/sample_supplement.tsv`.
 

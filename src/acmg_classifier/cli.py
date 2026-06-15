@@ -178,6 +178,21 @@ def classify(
                    "OSAI_MANE model variant.")
 @click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None,
               help="Directory containing SpliceAI VCF files (snv + indel).")
+@click.option("--evidence", "evidence", multiple=True, metavar="CRITERION:STRENGTH[:NOTE]",
+              help="Add manual evidence to this variant (repeatable), e.g. "
+                   "--evidence PS3:strong --evidence PM1:moderate:hotspot. "
+                   "Criterion (PVS1/PS3/PM1/BA1/...) and strength "
+                   "(very_strong/strong/moderate/supporting, or stand_alone for BA1) "
+                   "are case-insensitive; an optional 3rd field is a free-text note.")
+@click.option("--supplement", type=click.Path(exists=True, path_type=Path),
+              default=None, help="Manual evidence TSV (rows matching this variant are applied).")
+@click.option("--supplement-mode",
+              type=click.Choice([m.value for m in SupplementMode]),
+              default=SupplementMode.MERGE.value, show_default=True,
+              help="How manual evidence combines with automated calls. 'merge': curator "
+                   "entries override the strength of any criterion they name and add "
+                   "criteria left not-met. 'manual-only': classify purely from the "
+                   "supplied evidence.")
 @click.pass_context
 def explain(
     ctx: click.Context,
@@ -192,10 +207,20 @@ def explain(
     openspliceai_model_dir: Optional[Path],
     openspliceai_flanking_size: int,
     spliceai_dir: Optional[Path],
+    evidence: tuple[str, ...],
+    supplement: Optional[Path],
+    supplement_mode: str,
 ) -> None:
-    """Show detailed classification for a single variant (CHROM POS REF ALT)."""
+    """Show detailed classification for a single variant (CHROM POS REF ALT).
+
+    Manual evidence can be added inline with --evidence (repeatable) and/or from
+    a --supplement TSV; both are combined with the automated calls per
+    --supplement-mode.
+    """
     from acmg_classifier.config import Config
+    from acmg_classifier.io.supplement_reader import parse_inline_evidence, read_supplement
     from acmg_classifier.pipeline.pipeline import run_single
+    from acmg_classifier.models.variant import VariantRecord
 
     cfg = Config(
         data_dir=data_dir,
@@ -205,8 +230,20 @@ def explain(
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
         spliceai_dir=spliceai_dir,
+        supplement_mode=SupplementMode(supplement_mode),
     )
-    run_single(chrom, pos, ref, alt, cfg)
+
+    # Assemble manual evidence for this variant: TSV rows keyed to it + inline.
+    variant_key = VariantRecord(
+        chrom=chrom, pos=pos, ref=ref, alt=alt, assembly=cfg.assembly
+    ).key
+    entries = []
+    if supplement:
+        entries.extend(read_supplement(supplement).get(variant_key, []))
+    if evidence:
+        entries.extend(parse_inline_evidence(list(evidence), variant_key))
+
+    run_single(chrom, pos, ref, alt, cfg, supplement=entries or None)
 
 
 # ---------------------------------------------------------------------------

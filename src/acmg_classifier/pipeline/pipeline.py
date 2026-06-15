@@ -7,6 +7,7 @@ import structlog
 from acmg_classifier.config import Config
 from acmg_classifier.io.vcf_reader import read_vcf, detect_assembly_from_header
 from acmg_classifier.io.supplement_reader import read_supplement
+from acmg_classifier.models.supplement import SupplementEntry
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.classification import ClassificationResult
 from acmg_classifier.utils.progress import track
@@ -200,8 +201,13 @@ def run_single(
     ref: str,
     alt: str,
     cfg: Config,
+    supplement: Optional[list[SupplementEntry]] = None,
 ) -> ClassificationResult:
-    """Classify a single variant and print a rich report to the terminal."""
+    """Classify a single variant and print a rich report to the terminal.
+
+    ``supplement`` is an optional list of manual curator evidence entries for
+    this variant (from ``explain --evidence`` / ``--supplement``); they are
+    combined with the automated calls per ``cfg.supplement_mode``."""
     from acmg_classifier.annotation.orchestrator import AnnotationOrchestrator
     from acmg_classifier.criteria.registry import CriteriaRegistry
     from acmg_classifier.classification.classifier_2015 import Classifier2015
@@ -213,7 +219,7 @@ def run_single(
     registry = CriteriaRegistry(cfg)
 
     ann = orchestrator.annotate_batch([variant])[variant.key]
-    criteria_results = registry.evaluate_all(variant, ann)
+    criteria_results = registry.evaluate_all(variant, ann, supplement)
 
     clf_2015 = Classifier2015()
     clf_bay = ClassifierBayesian()
