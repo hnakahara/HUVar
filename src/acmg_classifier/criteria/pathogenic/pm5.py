@@ -5,8 +5,9 @@ import re
 
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
+from acmg_classifier.criteria.blosum62 import blosum62_score
 from acmg_classifier.criteria.grantham import AA3_TO_AA1, grantham_distance
-from acmg_classifier.criteria.pm5_genes import GT, PM5Spec
+from acmg_classifier.criteria.pm5_genes import PM5Spec
 from acmg_classifier.models.annotation import AnnotationData, ClinVarRecord
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
@@ -78,21 +79,25 @@ class PM5Evaluator(CriterionEvaluator):
                 ACMGCriterion.PM5, "Benign variant known at codon"
             )
 
-        # Grantham-distance gate (PIK3CD, PIK3R1, VHL, …): keep only comparators
-        # the candidate is chemically as/more different from the wild type than.
-        op = self._spec.operator(pc.gene_symbol)
-        if op:
-            qualifying = self._grantham_filter(pc, hits, op)
+        # Chemical-severity gate (PIK3CD, PIK3R1, VHL via Grantham; PTEN via
+        # BLOSUM62): keep only comparators the candidate is chemically
+        # as-severe-or-more than at the wild-type residue.
+        gate = self._spec.gate(pc.gene_symbol)
+        if gate:
+            matrix, op = gate
+            qualifying = self._gate_filter(pc, hits, matrix, op)
+            engine = "Grantham" if matrix == "grantham" else "BLOSUM62"
             if qualifying is None:
                 return CriteriaResult.not_met(
-                    ACMGCriterion.PM5, "Grantham distance unavailable for candidate"
+                    ACMGCriterion.PM5, f"{engine} score unavailable for candidate"
                 )
             if not qualifying:
-                sym = ">" if op == GT else ">="
+                sym = {"ge": ">=", "gt": ">", "le": "<=", "lt": "<"}[op]
                 return CriteriaResult.not_met(
-                    ACMGCriterion.PM5, f"Grantham gate failed: candidate not {sym} comparator"
+                    ACMGCriterion.PM5,
+                    f"{engine} gate failed: candidate not {sym} comparator",
                 )
-            tag = f"Grantham-gated ({'>' if op == GT else '>='})"
+            tag = f"{engine}-gated ({ {'ge': '>=', 'gt': '>', 'le': '<=', 'lt': '<'}[op] })"
         else:
             qualifying = hits
             tag = "same codon, diff AA"
@@ -134,22 +139,23 @@ class PM5Evaluator(CriterionEvaluator):
             ACMGCriterion.PM5, strength=strength, evidence=f"ClinVar {tag}: {ids}"
         )
 
-    def _grantham_filter(
-        self, pc, hits: list[ClinVarRecord], op: str
+    def _gate_filter(
+        self, pc, hits: list[ClinVarRecord], matrix: str, op: str
     ) -> list[ClinVarRecord] | None:
-        """Comparators the candidate satisfies the Grantham gate against.
+        """Comparators the candidate satisfies the chemical-severity gate
+        against, using the Grantham or BLOSUM62 engine.
 
-        Returns ``None`` when the candidate's own Grantham distance cannot be
-        computed (the mandated comparison is impossible → withhold PM5)."""
-        cand = _candidate_distance(pc.amino_acids)
+        Returns ``None`` when the candidate's own score cannot be computed (the
+        mandated comparison is impossible → withhold PM5)."""
+        cand = _candidate_score(pc.amino_acids, matrix)
         if cand is None:
             return None
         out: list[ClinVarRecord] = []
         for h in hits:
-            comp = _comparator_distance(h.hgvs_p)
+            comp = _comparator_score(h.hgvs_p, matrix)
             if comp is None:
                 continue
-            if (cand > comp) if op == GT else (cand >= comp):
+            if _gate_pass(cand, comp, op):
                 out.append(h)
         return out
 
@@ -176,21 +182,41 @@ def _comparator_change(hgvs_p: str | None) -> str | None:
     return (m.group(1) + m.group(2)) if m else None
 
 
-def _candidate_distance(amino_acids: str | None) -> int | None:
-    """Grantham distance of the candidate from its "REF/ALT" 1-letter pair."""
+def _score_pair(aa_a: str | None, aa_b: str | None, matrix: str) -> int | None:
+    """Grantham distance or BLOSUM62 similarity between two residues."""
+    if matrix == "blosum":
+        return blosum62_score(aa_a, aa_b)
+    return grantham_distance(aa_a, aa_b)
+
+
+def _gate_pass(cand: int, comp: int, op: str) -> bool:
+    """True if the candidate score satisfies the gate against the comparator.
+    Grantham distance is severity-increasing (``ge``/``gt``); BLOSUM62
+    similarity is severity-decreasing (``le``/``lt``)."""
+    if op == "ge":
+        return cand >= comp
+    if op == "gt":
+        return cand > comp
+    if op == "le":
+        return cand <= comp
+    return cand < comp  # "lt"
+
+
+def _candidate_score(amino_acids: str | None, matrix: str) -> int | None:
+    """Chemical-severity score of the candidate from its "REF/ALT" 1-letter pair."""
     if not amino_acids:
         return None
     parts = amino_acids.split("/")
     if len(parts) != 2:
         return None
-    return grantham_distance(parts[0].strip(), parts[1].strip())
+    return _score_pair(parts[0].strip(), parts[1].strip(), matrix)
 
 
-def _comparator_distance(hgvs_p: str | None) -> int | None:
-    """Grantham distance of a ClinVar comparator from its 3-letter protein change."""
+def _comparator_score(hgvs_p: str | None, matrix: str) -> int | None:
+    """Chemical-severity score of a ClinVar comparator from its 3-letter change."""
     if not hgvs_p:
         return None
     m = _COMP_P.search(hgvs_p)
     if not m:
         return None
-    return grantham_distance(AA3_TO_AA1.get(m.group(1)), AA3_TO_AA1.get(m.group(2)))
+    return _score_pair(AA3_TO_AA1.get(m.group(1)), AA3_TO_AA1.get(m.group(2)), matrix)

@@ -184,8 +184,11 @@ class TestResolvedTSV:
             "MYO15A", "OTOF",
             # batch 2 — "healthy/unaffected adult" not gnomAD-confirmable
             "ACTA1", "DNM2", "NEB", "SCN1A", "SCN2A", "SCN3A", "SCN8A",
-            "DCLRE1C", "GATM", "HBB", "HBA2",
+            "GATM", "HBB", "HBA2",
             "FOXG1", "TCF4", "APC",
+            # NB: DCLRE1C intentionally dropped — GN116 takes the homozygote count
+            # "in gnomAD" (Strong >=3 / Supporting >=1 hom), so it is population-
+            # count eligible (applicable with bs2_strength tiers), per the audit fix.
         )
         for gene in clinical_confirmation:
             assert rows[gene]["bs2"] == "not_applicable", gene
@@ -244,7 +247,10 @@ class TestResolvedTSV:
         tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
-        for gene in ("CDKL5", "RS1", "PDHA1", "RPGR", "IL2RG",
+        # NB: IL2RG intentionally dropped — GN129 takes the hemizygote count
+        # ">=3 in gnomAD" (Strong) / ">=2 in gnomAD" (Supporting), so it is
+        # gnomAD-eligible (applicable with bs2_strength tiers), per the audit fix.
+        for gene in ("CDKL5", "RS1", "PDHA1", "RPGR",
                      "SLC9A6", "F9", "SLC6A8", "MECP2", "F8"):
             assert rows[gene]["bs2"] == "not_applicable", gene
             assert rows[gene]["bs2_count"] == "", gene

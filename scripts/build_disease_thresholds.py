@@ -34,10 +34,10 @@ COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "af_basis",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
-    "pm4", "pp2",
+    "pm4", "pm4_supporting_max_aa", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
-    "bs2_count", "bs2_female_only", "bs2_hom_only", "pvs1",
-    "ps1", "ps1_splice", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
+    "bs2_count", "bs2_strength", "bs2_female_only", "bs2_hom_only", "pvs1",
+    "ps1", "ps1_splice", "ps1_max", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
     "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
@@ -356,21 +356,28 @@ _PM5_GT = re.compile(r"higher grantham|less than", re.IGNORECASE)
 
 
 def _pm5_grantham_op(rule_set: dict) -> str:
-    """"ge"/"gt"/"" — the PM5 Grantham gate operator for this rule set's gene(s).
+    """The PM5 chemical-severity gate token for this rule set's gene(s):
+    ``ge``/``gt`` (Grantham distance), ``blosum_le``/``blosum_lt`` (BLOSUM62
+    similarity, e.g. PTEN), or "" when no applicable PM5 strength mentions a
+    matrix gate.
 
-    Returns "" when no applicable PM5 strength mentions Grantham. When the
-    description carries an "equal" clause the gate is inclusive (``ge``); a
-    strict "higher/less than" phrasing with no "equal" yields ``gt``. If both
-    appear across strengths the inclusive ``ge`` wins (the spec's primary rule)."""
+    Grantham: an "equal" clause is inclusive (``ge``); a strict "higher/less
+    than" phrasing with no "equal" yields ``gt``; the inclusive ``ge`` wins on a
+    cross-strength conflict. BLOSUM62 runs the opposite direction (lower score =
+    more severe): "equal to or less" → ``blosum_le``, strict "less" → ``blosum_lt``."""
     for code in rule_set.get("criteriaCodes", []):
         if code.get("label") != "PM5":
             continue
         op = ""
         for es in _applicable_strengths(code):
             desc = es.get("description", "") or ""
-            if "grantham" not in desc.lower():
+            low = desc.lower()
+            if "blosum" in low:
+                # BLOSUM62 gate: "equal to or less than" → inclusive ``blosum_le``.
+                return "blosum_le" if "equal" in low else "blosum_lt"
+            if "grantham" not in low:
                 continue
-            if "equal" in desc.lower():
+            if "equal" in low:
                 return "ge"  # inclusive clause is the operative gate
             if _PM5_GT.search(desc):
                 op = "gt"
@@ -535,8 +542,11 @@ _BS2_CLINICAL_CONFIRMATION = frozenset({
     "USH2A", "MYO15A", "OTOF",
     # batch 2 — reason (2): "healthy/unaffected adult" not gnomAD-confirmable
     "ACTA1", "DNM2", "NEB", "SCN1A", "SCN2A", "SCN3A", "SCN8A",
-    "DCLRE1C", "GATM", "HBB", "HBA2",
+    "GATM", "HBB", "HBA2",
     "FOXG1", "TCF4", "APC",
+    # NB: DCLRE1C (GN116) is NOT here — its SCID VCEP takes the homozygote count
+    # "in gnomAD" (BS2_Strong >=3 / Supporting >=1 hom), so it is population-count
+    # eligible; routed applicable with bs2_strength tiers.
 })
 
 
@@ -549,15 +559,17 @@ _BS2_CLINICAL_CONFIRMATION = frozenset({
 #   SLC6A8 GN027            — male with documented normal creatine transport study
 #   PDHA1 GN014             — well-characterized phenotype (explicitly "not just
 #                             seen in database") / Pyruvate enzyme assay
-#   IL2RG GN129             — SCID; unaffected status needs immune phenotyping
 #   CDKL5/MECP2/SLC9A6 GN016 — "N unaffected (related/unrelated) Het/Hemi" Rett-
 #                             like individuals (phenotyped, internal/family data)
 # gnomAD is presumed-healthy and unphenotyped (and, per the hemizygote-count
 # limitation, an unreliable source for X-linked male counts), so a gnomAD-count
 # BS2 would FALSELY fire on a pathogenic X-linked variant. Forced not_applicable.
 _BS2_XLINKED_INTERNAL = frozenset({
-    "CDKL5", "RS1", "PDHA1", "RPGR", "IL2RG",
+    "CDKL5", "RS1", "PDHA1", "RPGR",
     "SLC9A6", "F9", "SLC6A8", "MECP2", "F8",
+    # NB: IL2RG (GN129) is NOT here — its SCID VCEP takes the hemizygote count
+    # ">=3 in gnomAD" (Strong) / ">=2 in gnomAD" (Supporting), so it is
+    # gnomAD-eligible; routed applicable with bs2_strength tiers.
 })
 
 
@@ -689,6 +701,35 @@ def _pm4_applicability(rule_set: dict) -> str:
     return ""
 
 
+# Size-based PM4 downgrade: many VCEPs apply PM4 at Supporting (not the default
+# Moderate) for a small in-frame indel — "single/one/1 amino acid" (→ <=1 aa) or
+# "< 3 amino acid residues" (→ <=2 aa). Read from the PM4 Supporting strength.
+_PM4_LT3_AA = re.compile(
+    r"(?:less than|fewer than|under|<)\s*(?:3|three)\s+amino\s*acid", re.IGNORECASE
+)
+_PM4_SINGLE_AA = re.compile(r"(?:single|one|1)\s+amino\s*acid", re.IGNORECASE)
+
+
+def _pm4_supporting_max_aa(rule_set: dict) -> str:
+    """"1" / "2" / "" — the in-frame-indel size (in amino acids) at or below
+    which PM4 downgrades to Supporting for the rule set's gene(s). Read from the
+    PM4 Supporting strength description; "" when PM4 has no size-based Supporting
+    tier (PM4 then fires at its default Moderate for any in-frame indel)."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PM4":
+            continue
+        for es in _applicable_strengths(code):
+            if es.get("label") != "Supporting":
+                continue
+            desc = es.get("description", "") or ""
+            if _PM4_LT3_AA.search(desc):
+                return "2"
+            if _PM4_SINGLE_AA.search(desc):
+                return "1"
+        return ""
+    return ""
+
+
 def _bs2_count(rule_set: dict) -> str:
     """The VCEP's minimum BS2 observation count for the gene, or "" (use the
     global default). The LOWEST (min) operator-anchored count across all
@@ -707,6 +748,59 @@ def _bs2_count(rule_set: dict) -> str:
             if 1 <= n <= _BS2_COUNT_MAX:
                 vals.append(n)
         return str(min(vals)) if vals else ""
+    return ""
+
+
+# Count→strength tiers (e.g. GUCY2D "Strong >=6 homozygotes / Supporting >=3";
+# BMPR2 "Strong >=3 / Moderate >=2 / Supporting >=1"). Each Applicable BS2
+# strength carries its own operator-anchored count in its own description; the
+# MIN count per strength is taken (the bar at which that strength first fires).
+# Emitted only when >=2 distinct strengths carry a count (a real tiering) — a
+# single tier is already captured by bs2_count (which fires Strong by default).
+_BS2_STRENGTH_ORDER = ("Very Strong", "Strong", "Moderate", "Supporting")
+
+
+def _bs2_tier_count(desc: str) -> Optional[int]:
+    """The gnomAD-anchored BS2 count for one strength's description.
+
+    A single strength may cite two thresholds — a phenotyped-literature count and
+    a (usually higher) gnomAD count (GUCY2D Strong: ">=3 homozytes [literature] …
+    or >=6 homozygotes in gnomAD"). The app scores BS2 on gnomAD, so a count
+    immediately followed by "gnomAD" wins; only when none is gnomAD-anchored does
+    the MIN of all counts apply (the bar at which the strength first fires)."""
+    all_vals: list[int] = []
+    gnomad_vals: list[int] = []
+    for m in _BS2_COUNT.finditer(desc):
+        n = int(m.group(2)) + (1 if m.group(1) == ">" else 0)
+        if not (1 <= n <= _BS2_COUNT_MAX):
+            continue
+        all_vals.append(n)
+        if "gnomad" in desc[m.start():m.end() + 40].lower():
+            gnomad_vals.append(n)
+    pool = gnomad_vals or all_vals
+    return min(pool) if pool else None
+
+
+def _bs2_strength(rule_set: dict) -> str:
+    """"Strong:N,Moderate:M,Supporting:K" — the BS2 count→strength tiers for the
+    rule set's gene(s), or "" when fewer than two strengths carry a count."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "BS2":
+            continue
+        tiers: dict[str, int] = {}
+        for es in _applicable_strengths(code):
+            label = es.get("label", "")
+            if label not in _BS2_STRENGTH_ORDER:
+                continue
+            n = _bs2_tier_count(es.get("description", "") or "")
+            if n is not None:
+                tiers[label] = n
+        if len(tiers) >= 2:
+            return ",".join(
+                f"{s.replace(' ', '')}:{tiers[s]}"
+                for s in _BS2_STRENGTH_ORDER if s in tiers
+            )
+        return ""
     return ""
 
 
@@ -837,6 +931,27 @@ def _ps1_splice(rule_set: dict) -> str:
         if restricted and not _PS1_CANON_HANDLING.search(stripped):
             return "noncanonical"
         return "canonical"
+    return ""
+
+
+def _ps1_max(rule_set: dict) -> str:
+    """Per-gene PS1 strength ceiling, emitted only when the VCEP caps PS1 BELOW
+    its Strong default: "Supporting" (RMRP — "Downgraded to PS1_Supporting") or
+    "Moderate". "" when the highest applicable PS1 strength is Strong or higher
+    (no cap) or PS1 is not applicable. The PS1 counterpart of ``_pm5_max``."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != "PS1":
+            continue
+        ranks = [_STRENGTH_RANK[es["label"]] for es in _applicable_strengths(code)
+                 if es.get("label") in _STRENGTH_RANK]
+        if not ranks:
+            return ""
+        top = max(ranks)
+        if top <= _STRENGTH_RANK["Supporting"]:
+            return "Supporting"
+        if top == _STRENGTH_RANK["Moderate"]:
+            return "Moderate"
+        return ""  # Strong (or higher) applicable → no cap (PS1 default is Strong)
     return ""
 
 
@@ -1037,12 +1152,23 @@ def _bp7_phylop(rule_set: dict) -> str:
 # the evaluator relaxes its distance gate to |distance| >= 3 (still gated on a
 # benign SpliceAI prediction).
 _BP7_NONCANONICAL_RE = re.compile(r"except[^.]{0,30}?canonical splice", re.IGNORECASE)
+# Parametric BP7 intronic range. Two phrasings seen: Cardiomyopathy "(-4 and +7
+# outward)" and SLC6A8 "(beyond -4bp or +7 bp)". Captures the two signed offsets
+# (optional "bp" suffix); the negative is the acceptor cutoff, the positive the
+# donor.
+_BP7_PARAMETRIC_RE = re.compile(
+    r"\(\s*(?:beyond\s*)?([+-]?\d+)(?:\s*bp)?\s+(?:and|or)\s+"
+    r"([+-]?\d+)(?:\s*bp)?\s*(?:outward)?\s*\)",
+    re.IGNORECASE,
+)
 
 
 def _bp7_intronic(rule_set: dict) -> str:
     """BP7 intronic range mode for a gene: ``"noncanonical"`` when the VCEP
-    admits any intronic position except the canonical +/-1,2 sites; ``""`` for
-    the Walker deep-intronic (+7/-21) default."""
+    admits any intronic position except the canonical +/-1,2 sites;
+    ``"donor:N,acceptor:-M"`` when it states explicit outward offsets (e.g. the
+    Cardiomyopathy panel's "-4 and +7 outward"); ``""`` for the Walker
+    deep-intronic (+7/-21) default."""
     for code in rule_set.get("criteriaCodes", []):
         if code.get("label") != "BP7":
             continue
@@ -1050,6 +1176,12 @@ def _bp7_intronic(rule_set: dict) -> str:
             desc = (es.get("description") or "").replace("\\", "")
             if _BP7_NONCANONICAL_RE.search(desc):
                 return "noncanonical"
+            m = _BP7_PARAMETRIC_RE.search(desc)
+            if m:
+                a, b = int(m.group(1)), int(m.group(2))
+                donor = max(a, b)       # the positive (downstream-of-donor) offset
+                acceptor = min(a, b)    # the negative (upstream-of-acceptor) offset
+                return f"donor:{donor},acceptor:{acceptor}"
     return ""
 
 
@@ -1451,6 +1583,7 @@ def parse_spec(path: str) -> list[dict]:
         pm2_subpop = _pm2_subpop(rs)
         pm2_zygosity = _pm2_zygosity(rs)
         pm4 = _pm4_applicability(rs)
+        pm4_smax = _pm4_supporting_max_aa(rs)
         pp2_map = _pp2_applicability(rs)
         pp2_req = _pp2_requires(rs)
         pm5_op = _pm5_grantham_op(rs)
@@ -1459,10 +1592,12 @@ def parse_spec(path: str) -> list[dict]:
         pm5_lp = _pm5_lp_comparator(rs)
         bs2 = _bs2_applicability(rs)
         bs2_count = _bs2_count(rs)
+        bs2_strength = _bs2_strength(rs)
         bs2_female_only = _bs2_female_only(rs)
         bs2_hom_only = _bs2_hom_only(rs)
         ps1 = _ps1_applicability(rs)
         ps1_splice = _ps1_splice(rs)
+        ps1_max = _ps1_max(rs)
         pvs1 = _pvs1_applicability(rs)
         bp1, bp1_target = _bp1_applicability(rs)
         bp1_exclude = _bp1_exclude(rs)
@@ -1496,6 +1631,7 @@ def parse_spec(path: str) -> list[dict]:
                 "pm2_subpop": "",
                 "pm2_zygosity": "",
                 "pm4": "",
+                "pm4_supporting_max_aa": "",
                 "pp2": "",
                 "pp2_requires": "",
                 "pm5_grantham": "",
@@ -1504,11 +1640,13 @@ def parse_spec(path: str) -> list[dict]:
                 "pm5_lp": "",
                 "bs2": "",
                 "bs2_count": "",
+                "bs2_strength": "",
                 "bs2_female_only": "",
                 "bs2_hom_only": "",
                 "pvs1": "",
                 "ps1": "",
                 "ps1_splice": "",
+                "ps1_max": "",
                 "bp1": "",
                 "bp1_target": "",
                 "bp1_exclude": "",
@@ -1539,6 +1677,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm2_subpop": pm2_subpop,
                 "_pm2_zygosity": pm2_zygosity,
                 "_pm4": pm4,
+                "_pm4_smax": pm4_smax,
                 "_pp2": pp2_map.get(sym, ""),
                 "_pp2_requires": pp2_req,
                 "_pm5_grantham": pm5_op,
@@ -1547,10 +1686,12 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm5_lp": pm5_lp,
                 "_bs2": bs2,
                 "_bs2_count": bs2_count,
+                "_bs2_strength": bs2_strength,
                 "_bs2_female_only": bs2_female_only,
                 "_bs2_hom_only": bs2_hom_only,
                 "_ps1": ps1,
                 "_ps1_splice": ps1_splice,
+                "_ps1_max": ps1_max,
                 "_pvs1": pvs1,
                 "_bp1": bp1,
                 "_bp1_target": bp1_target,
@@ -1604,7 +1745,9 @@ def main() -> None:
     pp2_choice: dict[str, tuple[int, str, str]] = {}
     # PM5 Grantham gate, aggregated across specs: inclusive "ge" outranks strict
     # "gt" (the spec's primary, less-strict rule wins on a cross-spec conflict).
-    pm5_rank = {"ge": 2, "gt": 1, "": 0}
+    # Inclusive gates outrank strict ones within an engine; the only BLOSUM gene
+    # (PTEN) is a single-gene VCEP so cross-engine ties do not arise in practice.
+    pm5_rank = {"ge": 2, "gt": 1, "blosum_le": 2, "blosum_lt": 1, "": 0}
     pm5_by_gene: dict[str, str] = {}
     # PM5 exclusions (union of criteria across specs) and strength ceiling
     # ("Moderate" outranks "Supporting": a gene any VCEP allows at Moderate is
@@ -1696,15 +1839,16 @@ def main() -> None:
                         or (spec == cur[0] and row["_pm5_lp"] == "no" and cur[1] != "no")):
                     pm5_lp_choice[g] = (spec, row["_pm5_lp"])
             if row["_pm4"] in ("applicable", "not_applicable"):
-                cand = (row["_specificity"], row["_pm4"], "")
+                cand = (row["_specificity"], row["_pm4"], row["_pm4_smax"])
                 if g not in pm4_choice or _pp2_more_specific(cand, pm4_choice[g]):
                     pm4_choice[g] = cand
             if row["_bs2"] in ("applicable", "not_applicable"):
-                # Carry bs2_count (3rd slot), female-only (4th) and hom-only
-                # (5th) flags so all come from the same (most-specific) spec that
-                # decided applicability.
+                # Carry bs2_count (3rd slot), female-only (4th), hom-only (5th)
+                # and the count→strength tiers (6th) so all come from the same
+                # (most-specific) spec that decided applicability.
                 cand = (row["_specificity"], row["_bs2"], row["_bs2_count"],
-                        row["_bs2_female_only"], row["_bs2_hom_only"])
+                        row["_bs2_female_only"], row["_bs2_hom_only"],
+                        row["_bs2_strength"])
                 if g not in bs2_choice or _pp2_more_specific(cand, bs2_choice[g]):
                     bs2_choice[g] = cand
             # PM2: only specs with an applicable PM2 code contribute. Most
@@ -1760,7 +1904,7 @@ def main() -> None:
                 if cur is None or spec < cur[0]:
                     bp7_intronic_choice[g] = (spec, row["_bp7_intronic"])
             if row["_ps1"] in ("applicable", "not_applicable"):
-                cand = (row["_specificity"], row["_ps1"], "")
+                cand = (row["_specificity"], row["_ps1"], row["_ps1_max"])
                 if g not in ps1_choice or _pp2_more_specific(cand, ps1_choice[g]):
                     ps1_choice[g] = cand
                 # Splice mode comes from a spec that actually carries a PS1 code.
@@ -1852,8 +1996,12 @@ def main() -> None:
         row["bs2_count"] = bchoice[2] if (_bs2_applic and bchoice) else ""
         row["bs2_female_only"] = bchoice[3] if (_bs2_applic and bchoice) else ""
         row["bs2_hom_only"] = bchoice[4] if (_bs2_applic and bchoice) else ""
+        row["bs2_strength"] = bchoice[5] if (_bs2_applic and bchoice) else ""
         pm4c = pm4_choice.get(g)
         row["pm4"] = pm4c[1] if pm4c else ""
+        row["pm4_supporting_max_aa"] = (
+            pm4c[2] if (pm4c and pm4c[1] == "applicable") else ""
+        )
         pm2c = pm2_choice.get(g)
         # Emit pm2_strength only when Moderate (Supporting is the global default
         # the evaluator already applies); always emit the resolved threshold/basis.
@@ -1865,6 +2013,8 @@ def main() -> None:
         pchoice = ps1_choice.get(g)
         row["ps1"] = pchoice[1] if pchoice else ""
         row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
+        # PS1 strength cap: only meaningful when PS1 is applicable for the gene.
+        row["ps1_max"] = pchoice[2] if (pchoice and pchoice[1] == "applicable") else ""
         vchoice = pvs1_choice.get(g)
         row["pvs1"] = vchoice[1] if vchoice else ""
         bp1c = bp1_choice.get(g)
@@ -1939,6 +2089,7 @@ _OVERRIDE_FIELDS = {
     "pm2_subpop": "pm2_subpop",
     "pm2_zygosity": "pm2_zygosity",
     "pm4": "pm4",
+    "pm4_supporting_max_aa": "pm4_supporting_max_aa",
     "pp2": "pp2",
     "pp2_requires": "pp2_requires",
     "pm5_grantham": "pm5_grantham",
@@ -1947,11 +2098,13 @@ _OVERRIDE_FIELDS = {
     "pm5_lp": "pm5_lp",
     "bs2": "bs2",
     "bs2_count": "bs2_count",
+    "bs2_strength": "bs2_strength",
     "bs2_female_only": "bs2_female_only",
     "bs2_hom_only": "bs2_hom_only",
     "pvs1": "pvs1",
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
+    "ps1_max": "ps1_max",
     "bp1": "bp1",
     "bp1_target": "bp1_target",
     "bp1_exclude": "bp1_exclude",

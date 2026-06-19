@@ -11,11 +11,22 @@
   * ``noncanonical``  — splice extension limited to non-canonical positions
     (InSiGHT MMR, BMPR2, RS1, RUNX1, …); a canonical ±1/±2 change is PVS1
     territory and must not also get PS1.
+* ``ps1_max``    — per-gene PS1 strength ceiling: ``Supporting`` (RMRP, whose
+  VCEP downgrades PS1 to Supporting) or ``Moderate``; blank = no cap (PS1 keeps
+  its Strong/Moderate comparator-derived strength).
 """
 from __future__ import annotations
 
 import csv
 from pathlib import Path
+
+from acmg_classifier.models.enums import CriterionStrength
+
+_CAP = {
+    "supporting": CriterionStrength.SUPPORTING,
+    "moderate": CriterionStrength.MODERATE,
+    "strong": CriterionStrength.STRONG,
+}
 
 
 class PS1Spec:
@@ -25,6 +36,7 @@ class PS1Spec:
     def __init__(self, tsv_path: Path) -> None:
         self._not_applicable: set[str] = set()
         self._splice_mode: dict[str, str] = {}
+        self._max: dict[str, CriterionStrength] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -40,6 +52,9 @@ class PS1Spec:
                 mode = (row.get("ps1_splice") or "").strip().lower()
                 if mode in ("canonical", "noncanonical"):
                     self._splice_mode[gene] = mode
+                cap = (row.get("ps1_max") or "").strip().lower()
+                if cap in _CAP:
+                    self._max[gene] = _CAP[cap]
 
     def is_not_applicable(self, gene: str | None) -> bool:
         """True if the gene's VCEP declined PS1 entirely (e.g. CDH1)."""
@@ -51,3 +66,10 @@ class PS1Spec:
         if not gene:
             return ""
         return self._splice_mode.get(gene, "")
+
+    def max_strength(self, gene: str | None) -> CriterionStrength | None:
+        """PS1 strength ceiling for *gene* (``Supporting`` / ``Moderate``), or
+        ``None`` when the VCEP does not cap PS1 below its Strong default."""
+        if not gene:
+            return None
+        return self._max.get(gene)

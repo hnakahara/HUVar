@@ -43,6 +43,7 @@ class BPApplicability:
         self._bp7_phylop: dict[str, float] = {}
         self._bp7_no_conservation: set[str] = set()
         self._bp7_intronic: dict[str, str] = {}
+        self._bp7_intronic_cutoffs: dict[str, tuple[int, int]] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -86,6 +87,11 @@ class BPApplicability:
                 intronic = (row.get("bp7_intronic") or "").strip().lower()
                 if intronic == "noncanonical":
                     self._bp7_intronic[gene] = intronic
+                elif "donor:" in intronic or "acceptor:" in intronic:
+                    cutoffs = _parse_intronic_cutoffs(intronic)
+                    if cutoffs is not None:
+                        self._bp7_intronic[gene] = "parametric"
+                        self._bp7_intronic_cutoffs[gene] = cutoffs
 
     def bp1(self, gene: str | None) -> str:
         """VCEP BP1 status: ``applicable`` / ``not_applicable`` / ""."""
@@ -144,12 +150,47 @@ class BPApplicability:
         return bool(gene) and gene in self._bp7_no_conservation
 
     def bp7_intronic_mode(self, gene: str | None) -> str:
-        """BP7 intronic range for *gene*: ``"noncanonical"`` (any intronic
-        position except the canonical +/-1,2 sites — RASopathy / PIK3 panels) or
+        """BP7 intronic range mode for *gene*: ``"noncanonical"`` (any intronic
+        position except the canonical +/-1,2 sites — RASopathy / PIK3 panels),
+        ``"parametric"`` (explicit per-gene donor/acceptor cutoffs — see
+        :meth:`bp7_intronic_cutoffs`, e.g. the Cardiomyopathy panel's -4/+7), or
         ``""`` (the Walker deep-intronic +7/-21 default)."""
         if not gene:
             return ""
         return self._bp7_intronic.get(gene, "")
+
+    def bp7_intronic_cutoffs(self, gene: str | None) -> tuple[int, int] | None:
+        """The ``(donor_min, acceptor_max)`` BP7 cutoffs for a ``parametric``
+        gene — an intronic variant is eligible when ``dist >= donor_min`` or
+        ``dist <= acceptor_max`` (e.g. Cardiomyopathy ``(7, -4)``). ``None`` when
+        the gene uses a named mode or the default."""
+        if not gene:
+            return None
+        return self._bp7_intronic_cutoffs.get(gene)
+
+
+def _parse_intronic_cutoffs(raw: str) -> tuple[int, int] | None:
+    """Parse a parametric ``bp7_intronic`` cell ("donor:7,acceptor:-4") into
+    ``(donor_min, acceptor_max)``. Order-independent; returns ``None`` when both
+    cutoffs cannot be parsed. ``donor_min`` defaults to the Walker +7 and
+    ``acceptor_max`` to -21 when only one side is given."""
+    donor_min: int | None = None
+    acceptor_max: int | None = None
+    for part in raw.split(","):
+        key, _, val = part.strip().partition(":")
+        key = key.strip()
+        try:
+            n = int(val.strip())
+        except ValueError:
+            continue
+        if key == "donor":
+            donor_min = n
+        elif key == "acceptor":
+            acceptor_max = n
+    if donor_min is None and acceptor_max is None:
+        return None
+    return (donor_min if donor_min is not None else 7,
+            acceptor_max if acceptor_max is not None else -21)
 
 
 def _parse_ranges(raw: str) -> list[tuple[int, int]]:

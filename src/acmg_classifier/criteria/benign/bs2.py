@@ -89,6 +89,20 @@ class BS2Evaluator(CriterionEvaluator):
         hom_only = self._vcep.hom_only(gene)
 
         modes = self._vcep.modes(gene)
+
+        # Count→strength tiers (e.g. GUCY2D Strong>=6 / Supporting>=3; BMPR2
+        # Strong>=3 / Moderate>=2 / Supporting>=1). When a gene defines tiers the
+        # BS2 strength tracks the observed count instead of the flat Strong
+        # default — fire at the strongest tier whose count threshold is met.
+        tiers = self._vcep.tiers(gene)
+        if tiers:
+            observed, label = self._observed_count(
+                modes, nhomalt, nhemi, het_carriers, hom_only, female_only
+            )
+            for strength, thr in tiers:  # strongest-first
+                if observed >= thr:
+                    return self._met(f"{label}={observed} >= {thr}", strength=strength)
+            return self._not_met(nhomalt, nhemi, het_carriers)
         # A per-gene VCEP count (e.g. CDH1 >=10, TP53 >=8) overrides ALL mode
         # thresholds; otherwise use the inheritance-mode global defaults.
         vcep_count = self._vcep.count(gene)
@@ -158,7 +172,32 @@ class BS2Evaluator(CriterionEvaluator):
             ),
         )
 
-    def _met(self, detail: str) -> CriteriaResult:
+    @staticmethod
+    def _observed_count(
+        modes, nhomalt: int, nhemi: int, het_carriers: int,
+        hom_only: bool, female_only: bool,
+    ) -> tuple[int, str]:
+        """The single gnomAD count that the gene's inheritance mode scores BS2
+        on, with a human-readable label. Mirrors the mode selection of the
+        flat-threshold path: AR→homozygotes, XL→hemizygotes, AD→carriers (or
+        homozygotes for incomplete-penetrance hom_only genes); no mode →
+        homozygotes."""
+        if "AR" in modes:
+            return nhomalt, "recessive: nhomalt"
+        if "XL" in modes:
+            return nhemi, "X-linked: nhemi"
+        if "AD" in modes:
+            if hom_only:
+                return nhomalt, "dominant (incomplete penetrance): nhomalt"
+            who = "healthy female carriers" if female_only else "healthy carriers"
+            return het_carriers, f"dominant: {who}"
+        return nhomalt, "nhomalt"
+
+    def _met(self, detail: str, strength=None) -> CriteriaResult:
+        if strength is not None:
+            return CriteriaResult.met(
+                ACMGCriterion.BS2, strength=strength, evidence=f"gnomAD {detail}"
+            )
         return CriteriaResult.met(ACMGCriterion.BS2, evidence=f"gnomAD {detail}")
 
     def _not_met(self, nhomalt: int, nhemi: int, het: int) -> CriteriaResult:

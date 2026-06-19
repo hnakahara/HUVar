@@ -23,8 +23,25 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+from acmg_classifier.models.enums import CriterionStrength
+
 APPLICABLE = "applicable"
 NOT_APPLICABLE = "not_applicable"
+
+# Strength label (cspec) -> ACMG strength, used by the ``bs2_strength`` count→
+# strength tiers (e.g. "Strong:6,Supporting:3").
+_STRENGTH_LABELS = {
+    "verystrong": CriterionStrength.VERY_STRONG,
+    "strong": CriterionStrength.STRONG,
+    "moderate": CriterionStrength.MODERATE,
+    "supporting": CriterionStrength.SUPPORTING,
+}
+_STRENGTH_RANK = {
+    CriterionStrength.VERY_STRONG: 4,
+    CriterionStrength.STRONG: 3,
+    CriterionStrength.MODERATE: 2,
+    CriterionStrength.SUPPORTING: 1,
+}
 
 
 class BS2Applicability:
@@ -38,6 +55,7 @@ class BS2Applicability:
         self._status: dict[str, str] = {}
         self._modes: dict[str, frozenset[str]] = {}
         self._count: dict[str, int] = {}
+        self._tiers: dict[str, tuple[tuple[CriterionStrength, int], ...]] = {}
         self._female_only: set[str] = set()
         self._hom_only: set[str] = set()
         self._load(tsv_path)
@@ -66,6 +84,9 @@ class BS2Applicability:
                         self._count[gene] = int(raw_count)
                     except ValueError:
                         pass
+                tiers = self._parse_tiers(row.get("bs2_strength") or "")
+                if tiers:
+                    self._tiers[gene] = tiers
                 # A VCEP whose BS2 counts only females (e.g. TP53: ">=8 unrelated
                 # females ... without cancer"). The evaluator then counts female
                 # carriers (gnomAD AC_XX) instead of all-sex carriers.
@@ -76,6 +97,36 @@ class BS2Applicability:
                 # heterozygous carriers do not count toward benign evidence.
                 if (row.get("bs2_hom_only") or "").strip() in ("1", "true", "yes"):
                     self._hom_only.add(gene)
+
+    @staticmethod
+    def _parse_tiers(raw: str) -> tuple[tuple[CriterionStrength, int], ...]:
+        """Parse a ``bs2_strength`` cell ("Strong:6,Supporting:3") into
+        (strength, min_count) pairs sorted strongest-first. Malformed pairs are
+        skipped defensively."""
+        out: list[tuple[CriterionStrength, int]] = []
+        for part in raw.split(","):
+            part = part.strip()
+            if not part or ":" not in part:
+                continue
+            label, _, num = part.partition(":")
+            strength = _STRENGTH_LABELS.get(label.strip().lower())
+            if strength is None:
+                continue
+            try:
+                count = int(num.strip())
+            except ValueError:
+                continue
+            out.append((strength, count))
+        out.sort(key=lambda t: _STRENGTH_RANK[t[0]], reverse=True)
+        return tuple(out)
+
+    def tiers(self, gene: str | None) -> tuple[tuple[CriterionStrength, int], ...]:
+        """Count→strength BS2 tiers for *gene*, strongest-first (e.g.
+        ``((STRONG, 6), (SUPPORTING, 3))``); empty when the gene has no tiering
+        (the evaluator then uses the single ``bs2_count`` threshold at Strong)."""
+        if not gene:
+            return ()
+        return self._tiers.get(gene, ())
 
     def status(self, gene: str | None) -> str:
         """VCEP BS2 status for *gene*: ``applicable`` / ``not_applicable`` / ""."""

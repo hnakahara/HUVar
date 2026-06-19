@@ -3,8 +3,12 @@
 Three PM5 columns are loaded here, the PM5 counterpart to
 :class:`~acmg_classifier.criteria.pp2_genes.PP2Applicability`:
 
-* ``pm5_grantham`` — Grantham-distance gate operator: ``ge`` (candidate >=
-  comparator) or ``gt`` (strictly greater — PIK3R1, RYR1). Blank = no gate.
+* ``pm5_grantham`` — chemical-severity gate operator on the same-codon
+  comparator. Grantham-distance gates: ``ge`` (candidate >= comparator) or
+  ``gt`` (strictly greater — PIK3R1, RYR1). BLOSUM62-similarity gates (PTEN):
+  ``blosum_le`` (candidate score <= comparator) or ``blosum_lt`` (strictly
+  less). BLOSUM62 runs opposite to Grantham — a chemically as-severe-or-more
+  candidate has a *lower* similarity score. Blank = no gate.
 * ``pm5_excludes`` — criteria PM5 may not be combined with for the gene
   (``PM1`` or ``PM1,PS1``; e.g. RASopathy/Cardiomyopathy genes, RUNX1, DICER1).
 * ``pm5_max`` — strength ceiling: ``Supporting`` when the VCEP only allows
@@ -23,7 +27,18 @@ from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
 
 GE = "ge"  # candidate Grantham distance >= comparator
 GT = "gt"  # candidate Grantham distance strictly > comparator
-_VALID_OP = {GE, GT}
+BLOSUM_LE = "blosum_le"  # candidate BLOSUM62 score <= comparator (as/more severe)
+BLOSUM_LT = "blosum_lt"  # candidate BLOSUM62 score strictly < comparator
+
+# A gate token -> (matrix, operator). ``matrix`` selects the scoring engine and
+# ``op`` the direction the candidate must satisfy against the comparator.
+_GATE: dict[str, tuple[str, str]] = {
+    GE: ("grantham", "ge"),
+    GT: ("grantham", "gt"),
+    BLOSUM_LE: ("blosum", "le"),
+    BLOSUM_LT: ("blosum", "lt"),
+}
+_VALID_OP = set(_GATE)
 
 
 class PM5Spec:
@@ -81,10 +96,20 @@ class PM5Spec:
         return tuple(out)
 
     def operator(self, gene: str | None) -> str:
-        """Grantham operator for *gene*: ``ge`` / ``gt`` / "" (no gate)."""
+        """Raw gate token for *gene*: ``ge`` / ``gt`` / ``blosum_le`` /
+        ``blosum_lt`` / "" (no gate)."""
         if not gene:
             return ""
         return self._op.get(gene, "")
+
+    def gate(self, gene: str | None) -> tuple[str, str] | None:
+        """The PM5 chemical-severity gate for *gene* as ``(matrix, op)`` —
+        ``("grantham", "ge"|"gt")`` or ``("blosum", "le"|"lt")`` — or ``None``
+        when the gene has no gate."""
+        if not gene:
+            return None
+        token = self._op.get(gene)
+        return _GATE.get(token) if token else None
 
     def excludes(self, gene: str | None) -> tuple[ACMGCriterion, ...]:
         """Criteria PM5 may not be combined with for *gene* (may be empty)."""

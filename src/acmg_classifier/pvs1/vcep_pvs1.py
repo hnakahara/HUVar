@@ -652,6 +652,33 @@ _SPECS: dict[str, _GeneSpec] = {
                      (129, 142, _S.MODERATE)),
         start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
+    # GATM (Cerebral creatine deficiency VCEP, GN025 v2.0.0). Mirrors the sibling
+    # GAMT spec (same VCEP): nonsense/frameshift predicted to undergo NMD → PVS1;
+    # NMD escape (last exon 9 / last 50 nt of exon 8, 3' of c.1109) → Strong if
+    # >10% of the protein is removed else Moderate (generic 10% rule). Initiation
+    # codon → PVS1_Moderate (next Met at p.130). Canonical ±1,2 splice / full gene
+    # deletion → PVS1. MANE Select NM_001482.3 (423 aa).
+    "GATM": _GeneSpec(
+        gene="GATM", transcript="NM_001482.3", aa_len=423,
+        trunc_nmd=(_S.VERY_STRONG, None),
+        start_lost=_S.MODERATE, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+    ),
+    # PIK3R1 (Antibody Deficiencies VCEP, GN160 v1.0.0; PIK3R1-related
+    # immunodeficiency / SHORT syndrome, MONDO:1060136). Codon-band truncation
+    # rule on MANE Select NM_181523.3 (724 aa): the NMD region c.917-c.1890
+    # (codons 306-630) → PVS1; codons 631-645 + cSH2 646-718 → PVS1_Strong;
+    # 719-724 → PVS1_Moderate. Truncations in the N-terminal c.4-c.916 (codons
+    # 1-305, the AR-agammaglobulinaemia-only region) fall outside the bands → N/A
+    # for this disease scope. Initiation codon → N/A. Canonical ±1,2 splice → PVS1
+    # (the in-frame nSH2/iSH2/cSH2 exon-skip Strong exceptions are not modelled at
+    # this layer — flat default, like the other splice-refinement genes); full
+    # gene deletion → PVS1.
+    "PIK3R1": _GeneSpec(
+        gene="PIK3R1", transcript="NM_181523.3", aa_len=724,
+        trunc_bands=((306, 630, _S.VERY_STRONG), (631, 718, _S.STRONG),
+                     (719, 724, _S.MODERATE)),
+        start_lost=_S.NOT_MET, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+    ),
 }
 
 

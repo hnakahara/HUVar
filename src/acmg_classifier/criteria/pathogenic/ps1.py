@@ -9,6 +9,13 @@ from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
 
+_RANK = {
+    CriterionStrength.SUPPORTING: 1,
+    CriterionStrength.MODERATE: 2,
+    CriterionStrength.STRONG: 3,
+}
+
+
 def _ps1_strength(hits) -> CriterionStrength:
     """PS1 strength from the comparator's ClinVar classification (ClinGen SVI).
 
@@ -23,6 +30,13 @@ def _ps1_strength(hits) -> CriterionStrength:
         for h in hits
     )
     return CriterionStrength.STRONG if has_pathogenic else CriterionStrength.MODERATE
+
+
+def _cap(strength: CriterionStrength, ceiling: CriterionStrength | None) -> CriterionStrength:
+    """Clamp a PS1 strength to the gene's VCEP ceiling (e.g. RMRP → Supporting)."""
+    if ceiling is None or _RANK[strength] <= _RANK[ceiling]:
+        return strength
+    return ceiling
 
 
 class PS1Evaluator(CriterionEvaluator):
@@ -86,7 +100,7 @@ class PS1Evaluator(CriterionEvaluator):
         )
         if not hits:
             return CriteriaResult.not_met(ACMGCriterion.PS1, "No ClinVar >=1 star same-AA hit (excluding self)")
-        strength = _ps1_strength(hits)
+        strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
         evidence = (
             f"ClinVar same AA (different nucleotide), comparator {strength.value}: "
             f"{', '.join(h.variation_id or '' for h in hits[:3])}"
@@ -128,7 +142,7 @@ class PS1Evaluator(CriterionEvaluator):
             return CriteriaResult.not_met(
                 ACMGCriterion.PS1, "No ClinVar >=1 star same-splice-site P/LP hit"
             )
-        strength = _ps1_strength(hits)
+        strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
         evidence = (
             f"ClinVar same splice-site position (different nucleotide), comparator {strength.value}: "
             + ", ".join(h.variation_id or "" for h in hits[:3])

@@ -21,19 +21,26 @@ _DEEP_INTRONIC_ACCEPTOR_MAX = -21  # <= -21 (upstream of acceptor)
 _NONCANONICAL_MIN_ABS = 3
 
 
-def _intronic_eligible(pc, mode: str = "") -> bool:
+def _intronic_eligible(pc, mode: str = "", cutoffs: tuple[int, int] | None = None) -> bool:
     """Whether an intronic variant is far enough from the splice site for BP7.
 
     Default (Walker 2023): deep-intronic only (donor >= +7, acceptor <= -21).
     ``"noncanonical"`` (RASopathy / PIK3 VCEPs): any intronic position beyond the
-    canonical +/-1,2 sites (|distance| >= 3); the benign-splice gate downstream
-    still guards against a predicted cryptic site. Returns False when distance is
-    unknown — we refuse to assume safety without evidence."""
+    canonical +/-1,2 sites (|distance| >= 3).
+    ``"parametric"`` (per-gene ``cutoffs`` = ``(donor_min, acceptor_max)``, e.g.
+    the Cardiomyopathy panel's ``(7, -4)``): donor >= donor_min or
+    acceptor <= acceptor_max.
+    The benign-splice gate downstream still guards against a predicted cryptic
+    site. Returns False when distance is unknown — we refuse to assume safety
+    without evidence."""
     dist = pc.intron_distance_from_splice
     if dist is None:
         return False
     if mode == "noncanonical":
         return abs(dist) >= _NONCANONICAL_MIN_ABS
+    if mode == "parametric" and cutoffs is not None:
+        donor_min, acceptor_max = cutoffs
+        return dist >= donor_min or dist <= acceptor_max
     return dist >= _DEEP_INTRONIC_DONOR_MIN or dist <= _DEEP_INTRONIC_ACCEPTOR_MAX
 
 
@@ -145,13 +152,18 @@ class BP7Evaluator(CriterionEvaluator):
         # PIK3 VCEPs admit any intronic position except the canonical +/-1,2
         # sites, which also pulls in the +3..+8 / -3..-8 SPLICE_REGION variants.
         mode = self._spec.bp7_intronic_mode(pc.gene_symbol)
+        cutoffs = self._spec.bp7_intronic_cutoffs(pc.gene_symbol)
+        # noncanonical and parametric modes can admit splice-region positions
+        # (e.g. an acceptor cutoff of -4 falls in the -3..-8 SPLICE_REGION band),
+        # so both pull in SPLICE_REGION variants; the default Walker mode is
+        # deep-intronic only.
         intronic_types = (
             (ConsequenceType.INTRON, ConsequenceType.SPLICE_REGION)
-            if mode == "noncanonical"
+            if mode in ("noncanonical", "parametric")
             else (ConsequenceType.INTRON,)
         )
         if pc.consequence in intronic_types:
-            if not _intronic_eligible(pc, mode):
+            if not _intronic_eligible(pc, mode, cutoffs):
                 return CriteriaResult.not_met(
                     ACMGCriterion.BP7,
                     f"Intronic but within splice consensus (dist="
@@ -168,11 +180,12 @@ class BP7Evaluator(CriterionEvaluator):
                 return CriteriaResult.not_met(
                     ACMGCriterion.BP7, f"Intronic, splice benign, but {blocked}",
                 )
-            range_desc = (
-                "intronic outside canonical +/-1,2"
-                if mode == "noncanonical"
-                else "deep intronic (+7/-21)"
-            )
+            if mode == "noncanonical":
+                range_desc = "intronic outside canonical +/-1,2"
+            elif mode == "parametric" and cutoffs is not None:
+                range_desc = f"intronic (donor>=+{cutoffs[0]}/acceptor<={cutoffs[1]})"
+            else:
+                range_desc = "deep intronic (+7/-21)"
             return CriteriaResult.met(
                 ACMGCriterion.BP7,
                 evidence=(

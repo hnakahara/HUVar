@@ -124,6 +124,42 @@ def parse_regions(text: str) -> tuple[list[tuple[int, int]], list[int]]:
     return sorted(ranges), sorted(residues)
 
 
+# Manually curated PM1 hotspots, applied AFTER mining (replacing the mined
+# value for that (gene, strength) key). Used for specs whose residue/region list
+# the free-text miner cannot reliably extract: long explicit residue tables, a
+# range written as two endpoints, or a hotspot defined in a multi-gene panel
+# (the miner only mines single-gene specs). Every value is transcribed verbatim
+# from the cited ClinGen spec. (regions, residues).
+_CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
+    # OTC GN156 v1.0.0 — CP-binding, ornithine, catalytic + conserved residues
+    # (the miner captured only Met-268). 21 critical residues.
+    ("OTC", "Moderate"): ([], [
+        90, 91, 92, 93, 117, 141, 163, 168, 171, 198, 199, 263, 267, 268, 269,
+        277, 302, 303, 304, 305, 330,
+    ]),
+    # GALT GN158 v1.0.0 — active site Phe171–Gln188 (contiguous range; the miner
+    # stored only the two endpoints as residues).
+    ("GALT", "Moderate"): ([(171, 188)], []),
+    # KCNQ4 GN005 v2.0.0 — pore-forming region aa 271-292 (NM_004700.4). In the
+    # multi-gene Hearing Loss panel, so not mined.
+    ("KCNQ4", "Moderate"): ([(271, 292)], []),
+    # KCNQ1 GN112 v1.0.0 — pore helix aa 300-320. (Spec also requires
+    # PM2_Supporting, a co-criterion the PM1 engine does not model.)
+    ("KCNQ1", "Moderate"): ([(300, 320)], []),
+    # JAK3 GN121 v2.3.0 — JH2 domain residues R651, C759.
+    ("JAK3", "Moderate"): ([], [651, 759]),
+    # PDHA1 GN014 v1.0.0 — TPP-binding + αβ / α2β2 interface + phospho-loop
+    # residues (multi-gene panel, not mined). 59 critical residues.
+    ("PDHA1", "Moderate"): ([], [
+        88, 118, 119, 140, 160, 162, 164, 165, 166, 167, 169, 172, 173, 176,
+        177, 179, 180, 183, 195, 196, 197, 198, 199, 200, 201, 202, 203, 205,
+        209, 210, 213, 225, 227, 228, 229, 230, 231, 245, 287, 288, 289, 290,
+        291, 292, 293, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305,
+        314, 315, 316,
+    ]),
+}
+
+
 def build(summary_path: str) -> dict[tuple[str, str], tuple[set, set]]:
     with open(summary_path, encoding="utf-8") as fh:
         data = json.load(fh)["data"]
@@ -163,6 +199,10 @@ def build(summary_path: str) -> dict[tuple[str, str], tuple[set, set]]:
             r, res = table.setdefault(key, (set(), set()))
             r.update(ranges)
             res.update(residues)
+
+    # Apply manual curation overrides (replace the mined value for that key).
+    for key, (ranges, residues) in _CURATED.items():
+        table[key] = (set(ranges), set(residues))
 
     # Materialise not_applicable as its own strength row (only if the gene has no
     # positive hotspot rows from any spec).
