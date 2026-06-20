@@ -75,6 +75,14 @@ class _GeneSpec:
     ``splice_exclude_donor_introns``: donor (``+1/+2``) splice sites of these
     introns do NOT get PVS1 (ACADVL intron 8 begins with GC, not GT, so its
     impact is not well understood and the VCEP withholds PVS1).
+
+    ``trunc_exception_bands``: inclusive ``(lo_codon, hi_codon)`` ranges that are
+    VCEP-declared PVS1 exceptions — a truncating variant landing in one is
+    withheld (``NOT_MET``) because LoF there is not established as pathogenic
+    (e.g. OTOF exon 46 / MYO15A exons 8, 26: recurrent or high-frequency LoF
+    regions requiring manual scrutiny). Checked BEFORE ``trunc_bands`` /
+    ``trunc_nmd``; a truncation OUTSIDE the exception bands defers to those (or to
+    the generic tree when neither is set).
     """
 
     gene: str
@@ -87,6 +95,7 @@ class _GeneSpec:
     trunc_bands_fs: tuple[_Band, ...] | None = None
     trunc_nmd: tuple[CriterionStrength, CriterionStrength | None] | None = None
     splice_exclude_donor_introns: frozenset[int] = frozenset()
+    trunc_exception_bands: tuple[tuple[int, int], ...] | None = None
 
 
 _SPECS: dict[str, _GeneSpec] = {
@@ -679,6 +688,26 @@ _SPECS: dict[str, _GeneSpec] = {
                      (719, 724, _S.MODERATE)),
         start_lost=_S.NOT_MET, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
+    # OTOF (Hearing Loss VCEP, GN023 v1.0.0). LoF is the disease mechanism, so
+    # the generic SVI tree applies — EXCEPT exon 46 (c.5841-c.5994 = codons
+    # 1947-1997 on MANE NM_194248.3, 1997 aa), a high-frequency / non-pathogenic
+    # LoF region the VCEP flags as a PVS1 exception requiring scrutiny. A
+    # truncation there is withheld; everywhere else PVS1 defers to the generic
+    # tree (no trunc_bands/trunc_nmd → no per-gene strength override).
+    "OTOF": _GeneSpec(
+        gene="OTOF", transcript="NM_194248.3", aa_len=1997,
+        start_lost=None, splice=None, deletion=None,
+        trunc_exception_bands=((1947, 1997),),
+    ),
+    # MYO15A (Hearing Loss VCEP, GN023 v1.0.0). Generic SVI tree EXCEPT two
+    # exon carve-outs the VCEP flags as PVS1 exceptions: exon 8 (c.4033-c.4038 =
+    # codons 1345-1346) and exon 26 (c.5911-c.5964 = codons 1971-1988) on MANE
+    # NM_016239.4 (3530 aa). Truncations there are withheld; elsewhere defer.
+    "MYO15A": _GeneSpec(
+        gene="MYO15A", transcript="NM_016239.4", aa_len=3530,
+        start_lost=None, splice=None, deletion=None,
+        trunc_exception_bands=((1345, 1346), (1971, 1988)),
+    ),
 }
 
 
@@ -717,6 +746,21 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
 
     cq = pc.consequence
     if cq in _TRUNC:
+        # VCEP-declared PVS1 exception regions (OTOF exon 46; MYO15A exons 8/26):
+        # a truncation landing here is withheld — LoF is not established as
+        # pathogenic in these recurrent / high-frequency regions.
+        if spec.trunc_exception_bands and pc.protein_position is not None:
+            for lo, hi in spec.trunc_exception_bands:
+                if lo <= pc.protein_position <= hi:
+                    return _S.NOT_MET, (
+                        f"{spec.gene} VCEP: truncation at codon "
+                        f"{pc.protein_position} in PVS1-exception region "
+                        f"{lo}-{hi} ({spec.transcript}) -> N/A"
+                    )
+        # Genes with no per-gene truncation rule (only an exception carve-out)
+        # defer the rest to the generic tree.
+        if spec.trunc_nmd is None and spec.trunc_bands is None:
+            return None
         # NMD-based truncation rule (FBN1, CDH1, ACADVL, GAMT): the cutoff is the
         # exon-based NMD boundary, not a fixed codon.
         if spec.trunc_nmd is not None:

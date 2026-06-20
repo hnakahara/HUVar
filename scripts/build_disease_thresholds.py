@@ -39,6 +39,7 @@ COLUMNS = [
     "bs2_count", "bs2_strength", "bs2_female_only", "bs2_hom_only", "pvs1",
     "ps1", "ps1_splice", "ps1_max", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
+    "bp4_splice_cutoff", "bp7_splice_cutoff",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
     "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
     "source_vcep", "cspec_url", "notes",
@@ -1185,6 +1186,33 @@ def _bp7_intronic(rule_set: dict) -> str:
     return ""
 
 
+# Per-gene SpliceAI "no-impact" cutoff for the BP4/BP7 splice gate. Only the
+# benign-side operator (≤ / <) is captured — a "predicts impact ≥0.2" clause is
+# the pathogenic side and must NOT be read as the no-impact cutoff. Emitted only
+# when the gene's cutoff differs from the Walker 0.10 default.
+_SPLICEAI_CUTOFF_RE = re.compile(
+    r"spliceai[^.]{0,40}?(?:≤|<=|&le;|&lt;|<)\s*(0?\.\d+|0)\b",
+    re.IGNORECASE,
+)
+
+
+def _splice_cutoff(rule_set: dict, label: str) -> str:
+    """The non-default SpliceAI no-impact cutoff stated in the gene's *label*
+    (``BP4`` / ``BP7``) code, or "" when it uses the 0.10 default / states none."""
+    for code in rule_set.get("criteriaCodes", []):
+        if code.get("label") != label:
+            continue
+        for es in _applicable_strengths(code):
+            desc = (es.get("description") or "").replace("\\", "")
+            m = _SPLICEAI_CUTOFF_RE.search(desc)
+            if m:
+                val = float(m.group(1))
+                if 0 <= val <= 1 and abs(val - 0.10) > 1e-9:
+                    return m.group(1)
+        return ""
+    return ""
+
+
 # --- REVEL per-gene PP3/BP4 thresholds (from the PP3 / BP4 criteria codes) ---
 # Many VCEPs state a gene-specific REVEL cutoff for PP3/BP4 in place of the
 # genome-wide Pejaver 2022 defaults. Each *applicable* evidence strength
@@ -1607,6 +1635,8 @@ def parse_spec(path: str) -> list[dict]:
         bp3_regions = _bp3_regions(rs)
         bp7_phylop = _bp7_phylop(rs)
         bp7_intronic = _bp7_intronic(rs)
+        bp4_splice_cutoff = _splice_cutoff(rs, "BP4")
+        bp7_splice_cutoff = _splice_cutoff(rs, "BP7")
         revel_pp3 = _revel_tiers(rs, "PP3")
         revel_bp4 = _revel_tiers(rs, "BP4")
         notes = "; ".join(n for n in (ba1_note, bs1_note) if n and "not applicable" not in n and "absent" not in n)
@@ -1656,6 +1686,8 @@ def parse_spec(path: str) -> list[dict]:
                 "bp3_regions": "",
                 "bp7_phylop": "",
                 "bp7_intronic": "",
+                "bp4_splice_cutoff": "",
+                "bp7_splice_cutoff": "",
                 "revel_pp3_supporting": "",
                 "revel_pp3_moderate": "",
                 "revel_pp3_strong": "",
@@ -1702,6 +1734,8 @@ def parse_spec(path: str) -> list[dict]:
                 "_bp3_regions": bp3_regions,
                 "_bp7_phylop": bp7_phylop,
                 "_bp7_intronic": bp7_intronic,
+                "_bp4_splice_cutoff": bp4_splice_cutoff,
+                "_bp7_splice_cutoff": bp7_splice_cutoff,
                 "_revel_pp3": revel_pp3,
                 "_revel_bp4": revel_bp4,
             })
@@ -1784,6 +1818,9 @@ def main() -> None:
     bp7_phylop_choice: dict[str, tuple[int, str]] = {}
     # BP7 intronic range mode ("noncanonical"), most gene-specific spec wins.
     bp7_intronic_choice: dict[str, tuple[int, str]] = {}
+    # Per-gene SpliceAI no-impact cutoff for BP4 / BP7, most gene-specific wins.
+    bp4_splice_choice: dict[str, tuple[int, str]] = {}
+    bp7_splice_choice: dict[str, tuple[int, str]] = {}
     # PM2 threshold/strength/basis, resolved to the most gene-specific spec that
     # carries an applicable PM2 code (like PP2/BS2/PS1). pm2_choice[g] =
     # (specificity, threshold, strength, basis).
@@ -1903,6 +1940,16 @@ def main() -> None:
                 cur = bp7_intronic_choice.get(g)
                 if cur is None or spec < cur[0]:
                     bp7_intronic_choice[g] = (spec, row["_bp7_intronic"])
+            # Per-gene BP4/BP7 SpliceAI cutoff, most gene-specific spec wins.
+            for col, choice in (
+                ("_bp4_splice_cutoff", bp4_splice_choice),
+                ("_bp7_splice_cutoff", bp7_splice_choice),
+            ):
+                if row[col]:
+                    spec = row["_specificity"]
+                    cur = choice.get(g)
+                    if cur is None or spec < cur[0]:
+                        choice[g] = (spec, row[col])
             if row["_ps1"] in ("applicable", "not_applicable"):
                 cand = (row["_specificity"], row["_ps1"], row["_ps1_max"])
                 if g not in ps1_choice or _pp2_more_specific(cand, ps1_choice[g]):
@@ -2036,6 +2083,10 @@ def main() -> None:
             row["bp7_phylop"] = "na"
         bp7ic = bp7_intronic_choice.get(g)
         row["bp7_intronic"] = bp7ic[1] if bp7ic else ""
+        b4s = bp4_splice_choice.get(g)
+        row["bp4_splice_cutoff"] = b4s[1] if b4s else ""
+        b7s = bp7_splice_choice.get(g)
+        row["bp7_splice_cutoff"] = b7s[1] if b7s else ""
         # Curated broad-intronic genes (RUNX1/MYOC/VHL) whose "any intronic
         # position" policy is not phrased as "except canonical splice sites".
         if g in _BP7_INTRONIC_NONCANONICAL:
@@ -2114,6 +2165,8 @@ _OVERRIDE_FIELDS = {
     "bp3_regions": "bp3_regions",
     "bp7_phylop": "bp7_phylop",
     "bp7_intronic": "bp7_intronic",
+    "bp4_splice_cutoff": "bp4_splice_cutoff",
+    "bp7_splice_cutoff": "bp7_splice_cutoff",
     "revel_pp3_supporting": "revel_pp3_supporting",
     "revel_pp3_moderate": "revel_pp3_moderate",
     "revel_pp3_strong": "revel_pp3_strong",

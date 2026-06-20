@@ -16,6 +16,11 @@
 * ``bp7_intronic`` — the BP7 intronic applicability range. ``noncanonical`` (the
   RASopathy / PIK3 panels) admits any intronic position except the canonical
   +/-1,2 sites; blank keeps the Walker deep-intronic (+7/-21) default.
+* ``bp4_splice_cutoff`` / ``bp7_splice_cutoff`` — the per-gene SpliceAI
+  "no-impact" cutoff for the BP4 splice branch and the BP7 splice gate. A
+  variant is splice-benign when ``SpliceAI <= cutoff``. Most VCEPs use the Walker
+  default 0.10; some tighten it (the LGMD panels 0.05) or loosen it (RUNX1 0.20,
+  GAA/TP53 0.2, HBA2/HBB 0.3, RPGR-BP7 0.2). Blank → the global 0.10 default.
 
 The BP counterpart to :class:`~acmg_classifier.criteria.pp2_genes.PP2Applicability`.
 """
@@ -44,6 +49,8 @@ class BPApplicability:
         self._bp7_no_conservation: set[str] = set()
         self._bp7_intronic: dict[str, str] = {}
         self._bp7_intronic_cutoffs: dict[str, tuple[int, int]] = {}
+        self._bp4_splice_cutoff: dict[str, float] = {}
+        self._bp7_splice_cutoff: dict[str, float] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -92,6 +99,30 @@ class BPApplicability:
                     if cutoffs is not None:
                         self._bp7_intronic[gene] = "parametric"
                         self._bp7_intronic_cutoffs[gene] = cutoffs
+                for col, store in (
+                    ("bp4_splice_cutoff", self._bp4_splice_cutoff),
+                    ("bp7_splice_cutoff", self._bp7_splice_cutoff),
+                ):
+                    raw = (row.get(col) or "").strip()
+                    if raw:
+                        try:
+                            store[gene] = float(raw)
+                        except ValueError:
+                            pass
+
+    def bp4_splice_cutoff(self, gene: str | None) -> float | None:
+        """Per-gene SpliceAI no-impact cutoff for the BP4 splice branch, or
+        ``None`` (the evaluator then uses the global 0.10 default)."""
+        if not gene:
+            return None
+        return self._bp4_splice_cutoff.get(gene)
+
+    def bp7_splice_cutoff(self, gene: str | None) -> float | None:
+        """Per-gene SpliceAI no-impact cutoff for the BP7 splice gate, or
+        ``None`` (the evaluator then uses the global 0.10 default)."""
+        if not gene:
+            return None
+        return self._bp7_splice_cutoff.get(gene)
 
     def bp1(self, gene: str | None) -> str:
         """VCEP BP1 status: ``applicable`` / ``not_applicable`` / ""."""

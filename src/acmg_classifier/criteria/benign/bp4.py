@@ -66,17 +66,18 @@ def _esm1b_bp4(llr: float) -> CriterionStrength | None:
     return None
 
 
-def _spliceai_bp4(max_delta: float) -> CriterionStrength | None:
-    """SpliceAI BP4 per Walker 2023."""
-    if max_delta <= 0.10:
+def _spliceai_bp4(max_delta: float, cutoff: float = 0.10) -> CriterionStrength | None:
+    """SpliceAI BP4 per Walker 2023 (no-impact cutoff, default 0.10; some VCEPs
+    tighten/loosen it per gene)."""
+    if max_delta <= cutoff:
         return CriterionStrength.SUPPORTING
     return None
 
 
-def _openspliceai_bp4(max_delta: float) -> CriterionStrength | None:
+def _openspliceai_bp4(max_delta: float, cutoff: float = 0.10) -> CriterionStrength | None:
     """OpenSpliceAI BP4. Same 0–1 delta scale as SpliceAI, so the Walker 2023
-    <= 0.10 "no impact" cutoff applies; awarded as Supporting."""
-    if max_delta <= 0.10:
+    <= 0.10 "no impact" cutoff (per-gene overridable) applies; awarded as Supporting."""
+    if max_delta <= cutoff:
         return CriterionStrength.SUPPORTING
     return None
 
@@ -104,7 +105,10 @@ class BP4Evaluator(CriterionEvaluator):
         self._cfg = cfg
         # Gene-specific REVEL cutoffs (only consulted when insilico_tool=revel).
         from acmg_classifier.criteria.revel_genes import RevelSpec
+        from acmg_classifier.criteria.bp_genes import BPApplicability
         self._revel_spec = RevelSpec(cfg.disease_prevalence_tsv)
+        # Per-gene SpliceAI no-impact cutoff for the BP4 splice branch.
+        self._bp_spec = BPApplicability(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -190,12 +194,15 @@ class BP4Evaluator(CriterionEvaluator):
                 return CriteriaResult.not_met(
                     ACMGCriterion.BP4, "No splice prediction (splice evaluation disabled)",
                 )
+            cutoff = self._bp_spec.bp4_splice_cutoff(pc.gene_symbol)
+            gene_cut = cutoff if cutoff is not None else 0.10
+            cut_src = f" [{pc.gene_symbol} VCEP cutoff {gene_cut}]" if cutoff is not None else ""
             if sp.tool == "spliceai" and sp.max_delta is not None:
-                strength = _spliceai_bp4(sp.max_delta)
-                score_str = f"SpliceAI max_delta={sp.max_delta:.3f}"
+                strength = _spliceai_bp4(sp.max_delta, gene_cut)
+                score_str = f"SpliceAI max_delta={sp.max_delta:.3f}{cut_src}"
             elif sp.tool == "openspliceai" and sp.max_delta is not None:
-                strength = _openspliceai_bp4(sp.max_delta)
-                score_str = f"OpenSpliceAI max_delta={sp.max_delta:.3f}"
+                strength = _openspliceai_bp4(sp.max_delta, gene_cut)
+                score_str = f"OpenSpliceAI max_delta={sp.max_delta:.3f}{cut_src}"
             elif sp.tool == "squirls" and sp.raw_score is not None:
                 strength = _squirls_bp4(sp.raw_score)
                 score_str = f"SQUIRLS={sp.raw_score:.3f}"

@@ -44,21 +44,23 @@ def _intronic_eligible(pc, mode: str = "", cutoffs: tuple[int, int] | None = Non
     return dist >= _DEEP_INTRONIC_DONOR_MIN or dist <= _DEEP_INTRONIC_ACCEPTOR_MAX
 
 
-def _splice_benign(annotation: AnnotationData) -> bool:
+def _splice_benign(annotation: AnnotationData, cutoff: float = 0.10) -> bool:
     """Splice predictor agrees the variant has no impact.
 
-    Walker 2023 calibrates SpliceAI ≤ 0.10 as "no impact" (Supporting BP4).
-    SQUIRLS lacks an equivalent calibration so we use < 0.20 as a practical
-    approximation matching the lower BP4 bound — see README caveat."""
+    Walker 2023 calibrates SpliceAI ≤ 0.10 as "no impact" (Supporting BP4); some
+    VCEPs override the cutoff per gene (LGMD 0.05, RUNX1/RPGR 0.20). SQUIRLS lacks
+    an equivalent calibration so we use < 0.20 as a practical approximation
+    matching the lower BP4 bound — see README caveat (SQUIRLS is not rescaled by
+    the SpliceAI per-gene cutoff)."""
     sp = annotation.splice
     if sp is None or not sp.is_available:
         return False
     if sp.tool == "spliceai" and sp.max_delta is not None:
-        return sp.max_delta <= 0.10
-    # OpenSpliceAI shares SpliceAI's 0–1 delta scale, so the same <= 0.10
+        return sp.max_delta <= cutoff
+    # OpenSpliceAI shares SpliceAI's 0–1 delta scale, so the same per-gene
     # "no impact" cutoff applies.
     if sp.tool == "openspliceai" and sp.max_delta is not None:
-        return sp.max_delta <= 0.10
+        return sp.max_delta <= cutoff
     if sp.tool == "squirls" and sp.raw_score is not None:
         return sp.raw_score < 0.20
     # MMSplice DISABLED — retained, commented out, for later:
@@ -124,8 +126,10 @@ class BP7Evaluator(CriterionEvaluator):
         # silent codon change can still create/destroy a splice site. We do
         # NOT auto-fire on "synonymous alone" — that was the pre-Walker
         # behaviour and is now known to mis-classify exonic splice variants.
+        splice_cutoff = self._spec.bp7_splice_cutoff(pc.gene_symbol)
+        splice_cutoff = splice_cutoff if splice_cutoff is not None else 0.10
         if pc.consequence == ConsequenceType.SYNONYMOUS:
-            if _splice_benign(annotation):
+            if _splice_benign(annotation, splice_cutoff):
                 blocked = self._conservation_block(variant, pc.gene_symbol)
                 if blocked:
                     return CriteriaResult.not_met(
@@ -169,7 +173,7 @@ class BP7Evaluator(CriterionEvaluator):
                     f"Intronic but within splice consensus (dist="
                     f"{pc.intron_distance_from_splice})",
                 )
-            if not _splice_benign(annotation):
+            if not _splice_benign(annotation, splice_cutoff):
                 return CriteriaResult.not_met(
                     ACMGCriterion.BP7,
                     "Intronic but splice impact not ruled out "
