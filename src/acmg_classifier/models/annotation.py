@@ -52,6 +52,11 @@ class GnomADData(BaseModel):
     # OTC). None when the gnomAD DB predates the AF_XY column (graceful
     # fallback to the overall FAF in those evaluators).
     af_xy: Optional[float] = None
+    # Non-cancer subset allele frequency (gnomAD ``*_non_cancer`` INFO fields).
+    # Used by PM2 for VCEPs that judge absence on the non-cancer subset (ENIGMA
+    # BRCA1/2). None when the gnomAD DB predates this column → PM2 gracefully
+    # falls back to the overall allele frequency.
+    af_non_cancer: Optional[float] = None
     # Female (XX) allele count and female homozygote count, used by BS2 for VCEPs
     # that count only females (e.g. TP53). Female carriers = ac_xx - nhomalt_xx.
     # None when the gnomAD DB predates these columns (graceful fallback: a

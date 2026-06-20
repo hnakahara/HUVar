@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS variants (
     nhomalt_xx INTEGER,
     filters TEXT,
     ac_grpmax INTEGER,
-    an_grpmax INTEGER
+    an_grpmax INTEGER,
+    af_non_cancer DOUBLE
 );
 """
 
@@ -53,7 +54,7 @@ _CREATE_INDEX = """
 CREATE INDEX IF NOT EXISTS idx_variants ON variants (chrom, pos, ref, alt);
 """
 
-_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+_INSERT_SQL = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 _BATCH_SIZE = 50_000
 
@@ -495,6 +496,16 @@ def _vcf_to_parquet(
                         # the FAF lower bound, so we reconstruct it from AC/AN).
                         _to_int(_info(v, "AC_grpmax_joint", "AC_grpmax", "AC_popmax")),
                         _to_int(_info(v, "AN_grpmax_joint", "AN_grpmax", "AN_popmax")),
+                        # Non-cancer subset allele frequency for PM2 on ENIGMA
+                        # BRCA1/2 ("absent from the non-cancer subset"). Field name
+                        # varies by gnomAD release: v2.1.1 = "non_cancer_AF" /
+                        # "AF_non_cancer"; v4.x = "AF_non_cancer[_joint]". NULL when
+                        # the VCF carries no non-cancer subset (PM2 then falls back
+                        # to the overall AF).
+                        _to_float(_info(
+                            v, "AF_joint_non_cancer", "AF_non_cancer",
+                            "non_cancer_AF", "AF_non_cancer_joint",
+                        )),
                     )
                     batch.append(row)
 

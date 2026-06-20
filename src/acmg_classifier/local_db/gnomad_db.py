@@ -38,6 +38,12 @@ def _merge_rows(rows: list) -> GnomADData:
     # subpopulation frequency is highest) so the upper-CI is computed on a
     # consistent count/number pair — never a per-field max that could mix them.
     has_grpmax = len(best) > 13
+    # Non-cancer subset AF trails at index 14 (present only for DBs built after
+    # that schema addition; older DBs / shorter test tuples degrade to None).
+    af_non_cancer = None
+    if use and all(len(r) > 14 for r in use):
+        nc_vals = [r[14] for r in use if r[14] is not None]
+        af_non_cancer = max(nc_vals) if nc_vals else None
     return GnomADData(
         af=fmax(0),
         an=fmax(1),
@@ -52,6 +58,7 @@ def _merge_rows(rows: list) -> GnomADData:
         nhomalt_xx=fmax(10),
         ac_grpmax=best[12] if has_grpmax else None,
         an_grpmax=best[13] if has_grpmax else None,
+        af_non_cancer=af_non_cancer,
         filter_pass=bool(pass_rows),
     )
 
@@ -100,12 +107,18 @@ class GnomADDB:
                 "ac_grpmax, an_grpmax" if has_grpmax
                 else "NULL AS ac_grpmax, NULL AS an_grpmax"
             )
+            # Non-cancer subset AF (PM2 for ENIGMA BRCA1/2) — trails after grpmax
+            # at index 14. NULL for DBs built before the column (graceful).
+            nc_expr = (
+                "af_non_cancer" if "af_non_cancer" in cols
+                else "NULL AS af_non_cancer"
+            )
             rows = con.execute(
                 f"""
                 SELECT af, an, ac, nhomalt, nhemi,
                        popmax_af, popmax_pop, faf95_popmax, {xy_expr},
                        {xx_expr},
-                       filters, {grpmax_expr}
+                       filters, {grpmax_expr}, {nc_expr}
                 FROM variants
                 WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
                 """,

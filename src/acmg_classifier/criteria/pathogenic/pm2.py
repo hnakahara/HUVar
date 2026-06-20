@@ -173,15 +173,33 @@ class PM2Evaluator(CriterionEvaluator):
                 value = gd.af if gd.af is not None else 0.0
             metric = "AF"
 
+        # Non-cancer subset (ENIGMA BRCA1/2): the VCEP judges absence on gnomAD's
+        # non-cancer subset, so a variant present only in cancer cohorts still
+        # qualifies. Use the non-cancer AF when available; fall back to the overall
+        # value (and note it) when the gnomAD DB predates the column — graceful
+        # degradation identical to af_xy/ac_xx.
+        absent = value == 0.0 or gd.ac == 0
+        if rule and rule.subset == "non_cancer":
+            if gd.af_non_cancer is not None:
+                value = gd.af_non_cancer
+                metric = "AF(non-cancer)"
+                absent = value == 0.0
+            else:
+                metric = "AF [non-cancer subset unavailable → overall]"
+
         # AC=0 means "observed only in samples that failed QC" — effectively
         # absent for ACMG purposes, so we treat it the same as value == 0.
-        if value == 0.0 or gd.ac == 0:
+        if absent:
             if zyg_block:  # rare edge: FAF95≈0 yet homozygotes recorded
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM2, f"{zyg_block}{filter_note}",
                 )
+            using_nc = (rule and rule.subset == "non_cancer"
+                        and gd.af_non_cancer is not None)
+            detail = "non-cancer subset" if using_nc else "AC=0"
             return CriteriaResult.met(
-                ACMGCriterion.PM2, strength, f"Absent from gnomAD (AC=0){filter_note}",
+                ACMGCriterion.PM2, strength,
+                f"Absent from gnomAD ({detail}){filter_note}",
             )
 
         # Threshold: the VCEP's per-gene cutoff when set (threshold 0 means the

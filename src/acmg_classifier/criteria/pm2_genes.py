@@ -36,6 +36,8 @@ class PM2Rule:
     subpop_mode: str = ""           # "" / "point" (RUNX1) / "ci95" (HCM)
     zyg_scope: str = ""             # "" / "hom" / "hemi" / "homhemi"
     zyg_max: int = 0                # highest tolerated homo/hemi count
+    subset: str = ""                # "" / "non_cancer" (ENIGMA BRCA1/2: judge
+                                    # absence on the gnomAD non-cancer subset)
 
 
 class PM2Spec:
@@ -82,12 +84,16 @@ class PM2Spec:
                             zyg_scope, zyg_max = scope, int(mx)
                         except ValueError:
                             zyg_scope = ""
+                subset = (row.get("pm2_subset") or "").strip().lower()
+                if subset != "non_cancer":
+                    subset = ""
                 # Only record a rule when the gene carries at least one PM2
                 # specialisation; otherwise leave it to the global default.
                 if (raw or strength == CriterionStrength.MODERATE or use_faf
-                        or subpop_mode or zyg_scope):
+                        or subpop_mode or zyg_scope or subset):
                     self._by_gene[gene] = PM2Rule(
-                        threshold, strength, use_faf, subpop_mode, zyg_scope, zyg_max
+                        threshold, strength, use_faf, subpop_mode, zyg_scope,
+                        zyg_max, subset,
                     )
 
     def get(self, gene: Optional[str]) -> Optional[PM2Rule]:
