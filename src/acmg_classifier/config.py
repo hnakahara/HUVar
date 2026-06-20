@@ -255,6 +255,13 @@ class Config(BaseSettings):
         return self.data_dir / "shared" / "pm1_hotspots.tsv"
 
     @property
+    def pm4_regions_tsv(self) -> Path:
+        """Per-gene PM4 region / strength rules (Strong residues, allow/deny
+        regions, region default, stop-loss strength) — see
+        scripts/build_pm4_regions.py. Absent file → flat default PM4 behaviour."""
+        return self.data_dir / "shared" / "pm4_regions.tsv"
+
+    @property
     def vcep_pvs1_splice_exons_tsv(self) -> Path:
         """Optional reviewer-supplied per-(gene, skipped-exon) PVS1 splice-strength
         overrides. Absent file → flat per-gene splice defaults (unchanged

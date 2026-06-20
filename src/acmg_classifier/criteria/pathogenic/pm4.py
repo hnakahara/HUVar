@@ -47,6 +47,10 @@ class PM4Evaluator(CriterionEvaluator):
         self._not_applicable, self._supporting_max_aa = _load_pm4_columns(
             cfg.disease_prevalence_tsv
         )
+        from acmg_classifier.criteria.pm4_regions import PM4Regions
+        self._regions = PM4Regions(cfg.pm4_regions_tsv)
+        from acmg_classifier.local_db.conservation import PhyloPReader
+        self._phylop = PhyloPReader(cfg.phylop_bigwig)
 
     def evaluate(
         self,
@@ -70,43 +74,132 @@ class PM4Evaluator(CriterionEvaluator):
         # repetitive region, the length change is expected/tolerated and the
         # variant is better captured by BP3 — explicitly redirect rather than
         # silently failing so the audit trail reflects the reasoning.
-        if pc.consequence in (
-            ConsequenceType.INFRAME_INSERTION,
-            ConsequenceType.INFRAME_DELETION,
-            ConsequenceType.STOP_LOST,
-        ):
-            if annotation.repeat and annotation.repeat.in_repeat:
+        gene = pc.gene_symbol
+        is_indel = pc.consequence in (
+            ConsequenceType.INFRAME_INSERTION, ConsequenceType.INFRAME_DELETION,
+        )
+        is_stoploss = pc.consequence == ConsequenceType.STOP_LOST
+        if not (is_indel or is_stoploss):
+            return CriteriaResult.not_met(ACMGCriterion.PM4, "Not an in-frame indel or stop-loss")
+
+        if annotation.repeat and annotation.repeat.in_repeat:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM4,
+                f"In-frame indel in repeat ({annotation.repeat.repeat_class}); use BP3",
+            )
+
+        # Stop-loss: a VCEP may set a stop-loss-specific strength (or decline it —
+        # CYP1B1, where stop-loss is not a disease mechanism). Stop-loss is not
+        # size-scoped, so it keeps the default Moderate when no override exists.
+        if is_stoploss:
+            sl = self._regions.stoploss_strength(gene)
+            if sl == "not_applicable":
                 return CriteriaResult.not_met(
-                    ACMGCriterion.PM4,
-                    f"In-frame indel in repeat ({annotation.repeat.repeat_class}); use BP3",
+                    ACMGCriterion.PM4, f"{gene}: VCEP PM4 not applicable to stop-loss"
                 )
-            # Size-based downgrade: a VCEP may apply PM4 at Supporting for a small
-            # in-frame indel (e.g. a single amino acid). Stop-loss is not size-
-            # scoped, so it keeps the default Moderate. The amino-acid change is
-            # the net codon-length difference of an in-frame indel.
-            max_aa = self._supporting_max_aa.get(pc.gene_symbol)
-            if (
-                max_aa is not None
-                and pc.consequence in (
-                    ConsequenceType.INFRAME_INSERTION,
-                    ConsequenceType.INFRAME_DELETION,
-                )
-                and _indel_aa_change(variant) is not None
-                and _indel_aa_change(variant) <= max_aa
-            ):
+            if isinstance(sl, CriterionStrength):
                 return CriteriaResult.met(
-                    ACMGCriterion.PM4,
-                    strength=CriterionStrength.SUPPORTING,
-                    evidence=(
-                        f"{pc.consequence.value} of <={max_aa} aa "
-                        f"({pc.gene_symbol}: VCEP PM4_Supporting)"
-                    ),
+                    ACMGCriterion.PM4, strength=sl,
+                    evidence=f"stop_lost ({gene}: VCEP PM4_{sl.value})",
                 )
             return CriteriaResult.met(
-                ACMGCriterion.PM4,
-                evidence=f"{pc.consequence.value} outside repeat region",
+                ACMGCriterion.PM4, evidence="stop_lost outside repeat region",
             )
-        return CriteriaResult.not_met(ACMGCriterion.PM4, "Not an in-frame indel or stop-loss")
+
+        # In-frame indel. Size-based Supporting (single / <3 aa) is eligible when
+        # the VCEP set a size cutoff (pm4_supporting_max_aa).
+        max_aa = self._supporting_max_aa.get(gene)
+        aa = _indel_aa_change(variant)
+        size_eligible = max_aa is not None and aa is not None and aa <= max_aa
+
+        # Gene-specific PM4 region rule (Strong residues, allow/deny regions,
+        # region default, conservation / deletion-content gates), if any.
+        if self._regions.has_gene(gene):
+            # Conservation gate (RPE65/CTLA4/PIK3R1): PM4 only when the indel sits
+            # at a conserved position (PhyloP > cutoff). Skipped (PM4 proceeds)
+            # when phyloP is unavailable — graceful degradation, like BP7.
+            cutoff = self._regions.conserved_phylop(gene)
+            if cutoff is not None and _not_conserved(self._phylop, variant, cutoff):
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM4,
+                    f"{gene}: in-frame indel not at a conserved position "
+                    f"(phyloP <= {cutoff})",
+                )
+            # Deletion-content gate (SCID panel): a DELETION earns PM4 only if its
+            # deleted genomic span contains a known ClinVar P/LP (Moderate) or VUS
+            # (Supporting) variant.
+            if (self._regions.requires_deletion_content(gene)
+                    and pc.consequence == ConsequenceType.INFRAME_DELETION):
+                from acmg_classifier.local_db.clinvar_sqlite import (
+                    query_pm4_deletion_content,
+                )
+                end = variant.pos + max(0, len(variant.ref) - 1)
+                content = query_pm4_deletion_content(
+                    self._cfg.clinvar_sqlite, gene, variant.chrom, variant.pos, end,
+                )
+                if content == "pathogenic":
+                    return CriteriaResult.met(
+                        ACMGCriterion.PM4, strength=CriterionStrength.MODERATE,
+                        evidence=f"{gene}: deleted region contains a ClinVar P/LP variant",
+                    )
+                if content == "vus":
+                    return CriteriaResult.met(
+                        ACMGCriterion.PM4, strength=CriterionStrength.SUPPORTING,
+                        evidence=f"{gene}: deleted region contains a ClinVar VUS",
+                    )
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM4,
+                    f"{gene}: deleted region contains no ClinVar P/LP or VUS variant",
+                )
+            rstr = self._regions.indel_strength(gene, pc.protein_position)
+            if rstr == "not_met":
+                # A small indel still earns Supporting even where Moderate is
+                # withheld (the size-Supporting tier is region-independent).
+                if size_eligible:
+                    return CriteriaResult.met(
+                        ACMGCriterion.PM4, strength=CriterionStrength.SUPPORTING,
+                        evidence=f"in-frame indel of <={max_aa} aa ({gene}: PM4_Supporting)",
+                    )
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM4,
+                    f"{gene}: in-frame indel outside PM4 region / in denied region",
+                )
+            if isinstance(rstr, CriterionStrength):
+                if rstr == CriterionStrength.MODERATE and size_eligible:
+                    return CriteriaResult.met(
+                        ACMGCriterion.PM4, strength=CriterionStrength.SUPPORTING,
+                        evidence=f"in-frame indel of <={max_aa} aa ({gene}: PM4_Supporting)",
+                    )
+                return CriteriaResult.met(
+                    ACMGCriterion.PM4, strength=rstr,
+                    evidence=f"in-frame indel ({gene}: VCEP PM4_{rstr.value} region)",
+                )
+            # rstr is None → no region default → fall through to the flat default.
+
+        if size_eligible:
+            return CriteriaResult.met(
+                ACMGCriterion.PM4, strength=CriterionStrength.SUPPORTING,
+                evidence=f"in-frame indel of <={max_aa} aa ({gene}: VCEP PM4_Supporting)",
+            )
+        return CriteriaResult.met(
+            ACMGCriterion.PM4, evidence="in-frame indel outside repeat region",
+        )
+
+
+def _not_conserved(phylop, variant: VariantRecord, cutoff: float) -> bool:
+    """True when the variant's span is confidently NOT conserved (max phyloP over
+    the ref span <= cutoff), so a conservation-gated PM4 must be withheld. False
+    when conserved OR when phyloP is unavailable (gate skipped → PM4 proceeds)."""
+    if not phylop.is_available():
+        return False
+    best: float | None = None
+    for offset in range(max(1, len(variant.ref))):
+        score = phylop.value(variant.chrom, variant.pos + offset)
+        if score is not None and (best is None or score > best):
+            best = score
+    if best is None:
+        return False  # no phyloP at any position → cannot disprove conservation
+    return best <= cutoff
 
 
 def _indel_aa_change(variant: VariantRecord) -> int | None:

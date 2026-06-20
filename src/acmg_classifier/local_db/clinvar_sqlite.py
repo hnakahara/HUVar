@@ -344,6 +344,50 @@ def has_benign_at_codon(
     return any(_is_missense_p(r[0]) for r in rows)
 
 
+def query_pm4_deletion_content(
+    db_path: Path,
+    gene_symbol: str,
+    chrom: str,
+    start: int,
+    end: int,
+    min_stars: int = 1,
+) -> Optional[str]:
+    """Highest-significance ClinVar variant within a deleted genomic region, for
+    the SCID-panel PM4 rule ("the deleted region must contain a known P/LP
+    [→Moderate] or VUS [→Supporting] variant").
+
+    Returns ``"pathogenic"`` when a Pathogenic / Likely pathogenic variant lies
+    in ``[start, end]`` on *chrom* for *gene_symbol*; else ``"vus"`` when an
+    Uncertain-significance variant does; else ``None``. (The spec's "not
+    predicted/observed to alter splicing" qualifier is not modelled here — the
+    presence of a curated P/LP or VUS in the deleted span is the signal.)"""
+    if not db_path.exists():
+        return None
+    q_chrom = strip_chr(chrom)
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT clinical_significance
+            FROM variants
+            WHERE gene_symbol = ?
+              AND star_rating >= ?
+              AND pos BETWEEN ? AND ?
+              AND (chrom = ? OR chrom = ?)
+            """,
+            (gene_symbol, min_stars, start, end, q_chrom, "chr" + q_chrom),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="pm4_deletion_content", error=str(exc))
+        return None
+    sigs = {(r[0] or "").lower() for r in rows}
+    if sigs & {"pathogenic", "likely pathogenic", "pathogenic/likely pathogenic"}:
+        return "pathogenic"
+    if "uncertain significance" in sigs:
+        return "vus"
+    return None
+
+
 def _sum_column(db_path: Path, column: str, chrom: str, pos: int, ref: str, alt: str) -> int:
     """Return SUM(column) across SCV rows for a variant; 0 if column/DB missing.
 

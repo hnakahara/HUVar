@@ -14,6 +14,13 @@
 * ``ps1_max``    — per-gene PS1 strength ceiling: ``Supporting`` (RMRP, whose
   VCEP downgrades PS1 to Supporting) or ``Moderate``; blank = no cap (PS1 keeps
   its Strong/Moderate comparator-derived strength).
+* ``ps1_paralog_group`` — sibling genes whose analogous (same-numbered) residue a
+  PS1 same-AA comparator may also come from (RASopathy "highly analogous
+  groupings" HRAS/NRAS/KRAS, MAP2K1/MAP2K2, SOS1/SOS2; HBA2↔HBA1). Comma-joined,
+  the OTHER genes of the group.
+* ``ps1_paralog_strength`` — fixed strength for a paralogue-only PS1 hit:
+  ``Moderate`` (HBA2: "PS1_Moderate ... in a paralogue gene"); blank = use the
+  comparator-derived strength (RASopathy grants the full Strong/Moderate).
 """
 from __future__ import annotations
 
@@ -37,6 +44,8 @@ class PS1Spec:
         self._not_applicable: set[str] = set()
         self._splice_mode: dict[str, str] = {}
         self._max: dict[str, CriterionStrength] = {}
+        self._paralog_group: dict[str, tuple[str, ...]] = {}
+        self._paralog_strength: dict[str, CriterionStrength] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -55,6 +64,15 @@ class PS1Spec:
                 cap = (row.get("ps1_max") or "").strip().lower()
                 if cap in _CAP:
                     self._max[gene] = _CAP[cap]
+                group = tuple(
+                    s.strip() for s in (row.get("ps1_paralog_group") or "").split(",")
+                    if s.strip()
+                )
+                if group:
+                    self._paralog_group[gene] = group
+                pstr = (row.get("ps1_paralog_strength") or "").strip().lower()
+                if pstr in _CAP:
+                    self._paralog_strength[gene] = _CAP[pstr]
 
     def is_not_applicable(self, gene: str | None) -> bool:
         """True if the gene's VCEP declined PS1 entirely (e.g. CDH1)."""
@@ -73,3 +91,17 @@ class PS1Spec:
         if not gene:
             return None
         return self._max.get(gene)
+
+    def paralog_group(self, gene: str | None) -> tuple[str, ...]:
+        """Sibling genes whose analogous (same-numbered) residue a PS1 comparator
+        may also come from, or empty when the gene has no paralogue PS1 rule."""
+        if not gene:
+            return ()
+        return self._paralog_group.get(gene, ())
+
+    def paralog_strength(self, gene: str | None) -> CriterionStrength | None:
+        """Fixed strength for a paralogue-only PS1 hit (HBA2 → Moderate), or
+        ``None`` to use the comparator-derived strength (RASopathy)."""
+        if not gene:
+            return None
+        return self._paralog_strength.get(gene)

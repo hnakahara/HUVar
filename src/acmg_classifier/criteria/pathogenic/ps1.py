@@ -98,14 +98,40 @@ class PS1Evaluator(CriterionEvaluator):
             exclude_alt=variant.alt,
             min_stars=1,
         )
-        if not hits:
-            return CriteriaResult.not_met(ACMGCriterion.PS1, "No ClinVar >=1 star same-AA hit (excluding self)")
-        strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
-        evidence = (
-            f"ClinVar same AA (different nucleotide), comparator {strength.value}: "
-            f"{', '.join(h.variation_id or '' for h in hits[:3])}"
-        )
-        return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
+        if hits:
+            strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
+            evidence = (
+                f"ClinVar same AA (different nucleotide), comparator {strength.value}: "
+                f"{', '.join(h.variation_id or '' for h in hits[:3])}"
+            )
+            return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
+
+        # Paralogue (analogous-residue) route: a VCEP may grant PS1 from the same
+        # amino-acid change at the ANALOGOUS (same-numbered) residue of a sibling
+        # gene — RASopathy groups (HRAS/NRAS/KRAS, MAP2K1/MAP2K2, SOS1/SOS2) and
+        # HBA2/HBA1. Only consulted when the same-gene rule did not fire.
+        siblings = self._spec.paralog_group(pc.gene_symbol)
+        if siblings:
+            # No self-exclusion / codon-proximity guard for paralogues: the hit is
+            # in a DIFFERENT gene (different chromosome), so it can never be the
+            # variant itself and the same-codon proximity rule does not apply.
+            para = []
+            for sib in siblings:
+                para.extend(query_same_aa_change(
+                    self._cfg.clinvar_sqlite, sib, pc.hgvs_p, min_stars=1,
+                ))
+            if para:
+                fixed = self._spec.paralog_strength(pc.gene_symbol)
+                strength = fixed if fixed is not None else _cap(
+                    _ps1_strength(para), self._spec.max_strength(pc.gene_symbol)
+                )
+                evidence = (
+                    f"ClinVar same AA in paralogue gene ({', '.join(siblings)}), "
+                    f"{strength.value}: {', '.join(h.variation_id or '' for h in para[:3])}"
+                )
+                return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
+
+        return CriteriaResult.not_met(ACMGCriterion.PS1, "No ClinVar >=1 star same-AA hit (excluding self)")
 
     def _evaluate_splice(self, variant: VariantRecord, pc) -> CriteriaResult:
         # PS1's splice extension is opt-in per VCEP. Genes whose PS1 is the

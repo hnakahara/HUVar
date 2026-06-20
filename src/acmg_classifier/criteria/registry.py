@@ -57,6 +57,8 @@ class CriteriaRegistry:
         # with PM1/PS1; RASopathy/Cardiomyopathy genes: not with PM1).
         from acmg_classifier.criteria.pm5_genes import PM5Spec
         self._pm5 = PM5Spec(cfg.disease_prevalence_tsv)
+        from acmg_classifier.criteria.pm4_regions import PM4Regions
+        self._pm4_regions = PM4Regions(cfg.pm4_regions_tsv)
 
     def _build_evaluators(self) -> list[CriterionEvaluator]:
         # Local imports avoid an import cycle: each evaluator module imports
@@ -167,6 +169,7 @@ class CriteriaRegistry:
         # Gene-specific PM5 exclusions (RUNX1: not with PM1; DICER1: not with
         # PM1/PS1). Suppress PM5 when an excluded criterion fired for the gene.
         self._apply_pm5_exclusions(results, annotation)
+        self._apply_pm4_exclusions(results, annotation)
 
         # BA1 / BS1 / PM2 are mutually exclusive frequency criteria — keep only
         # the highest-priority one (see _apply_af_mutual_exclusion).
@@ -260,6 +263,29 @@ class CriteriaRegistry:
             if r.criterion == ACMGCriterion.PM5 and r.triggered and not r.suppressed:
                 r.suppressed = True
                 r.evidence = (r.evidence + f" [suppressed: PM5 not with {with_}]").strip()
+
+    def _apply_pm4_exclusions(
+        self, results: list[CriteriaResult], annotation: AnnotationData
+    ) -> None:
+        """Suppress PM4 when it is mutually exclusive with another triggered
+        criterion (FBN1: PVS1; KCNQ1/CTLA4/PIK3R1: PVS1 and PP3 — avoiding
+        double-counting the same in-silico / loss-of-function evidence)."""
+        pc = annotation.primary_consequence
+        gene = pc.gene_symbol if pc else None
+        excluded = self._pm4_regions.excludes(gene)
+        if not excluded:
+            return
+        active = {
+            r.criterion.value for r in results if r.triggered and not r.suppressed
+        }
+        clash = [c for c in excluded if c in active]
+        if not clash:
+            return
+        with_ = "+".join(clash)
+        for r in results:
+            if r.criterion == ACMGCriterion.PM4 and r.triggered and not r.suppressed:
+                r.suppressed = True
+                r.evidence = (r.evidence + f" [suppressed: PM4 not with {with_}]").strip()
 
     def _apply_pp2_co_requirements(
         self, results: list[CriteriaResult], annotation: AnnotationData

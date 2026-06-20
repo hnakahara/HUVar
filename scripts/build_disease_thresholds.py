@@ -37,7 +37,8 @@ COLUMNS = [
     "pm4", "pm4_supporting_max_aa", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
     "bs2_count", "bs2_strength", "bs2_female_only", "bs2_hom_only", "pvs1",
-    "ps1", "ps1_splice", "ps1_max", "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
+    "ps1", "ps1_splice", "ps1_max", "ps1_paralog_group", "ps1_paralog_strength",
+    "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
     "bp4_splice_cutoff", "bp7_splice_cutoff",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
@@ -56,6 +57,18 @@ COLUMNS = [
 _FORCE_SPEC: dict[str, str] = {
     "ITGA2B": "GN011",
     "ITGB3": "GN011",
+}
+
+# PS1 paralogue / analogous-residue groups, transcribed from the specs (the group
+# text is prose, so curated rather than mined). gene -> (sibling genes, fixed
+# paralog strength). RASopathy GN004 grants PS1 at the analogous residue across
+# each "highly analogous grouping" with the full (comparator-derived) strength;
+# HBA2 GN173 grants only PS1_Moderate from its paralogue HBA1.
+_PS1_PARALOG: dict[str, tuple[str, str]] = {
+    "HRAS": ("NRAS,KRAS", ""), "NRAS": ("HRAS,KRAS", ""), "KRAS": ("HRAS,NRAS", ""),
+    "MAP2K1": ("MAP2K2", ""), "MAP2K2": ("MAP2K1", ""),
+    "SOS1": ("SOS2", ""), "SOS2": ("SOS1", ""),
+    "HBA2": ("HBA1", "Moderate"),
 }
 
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* allele frequency
@@ -1677,6 +1690,8 @@ def parse_spec(path: str) -> list[dict]:
                 "ps1": "",
                 "ps1_splice": "",
                 "ps1_max": "",
+                "ps1_paralog_group": "",
+                "ps1_paralog_strength": "",
                 "bp1": "",
                 "bp1_target": "",
                 "bp1_exclude": "",
@@ -2062,6 +2077,8 @@ def main() -> None:
         row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
         # PS1 strength cap: only meaningful when PS1 is applicable for the gene.
         row["ps1_max"] = pchoice[2] if (pchoice and pchoice[1] == "applicable") else ""
+        # PS1 paralogue / analogous-residue group (curated).
+        row["ps1_paralog_group"], row["ps1_paralog_strength"] = _PS1_PARALOG.get(g, ("", ""))
         vchoice = pvs1_choice.get(g)
         row["pvs1"] = vchoice[1] if vchoice else ""
         bp1c = bp1_choice.get(g)
@@ -2156,6 +2173,8 @@ _OVERRIDE_FIELDS = {
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
     "ps1_max": "ps1_max",
+    "ps1_paralog_group": "ps1_paralog_group",
+    "ps1_paralog_strength": "ps1_paralog_strength",
     "bp1": "bp1",
     "bp1_target": "bp1_target",
     "bp1_exclude": "bp1_exclude",
