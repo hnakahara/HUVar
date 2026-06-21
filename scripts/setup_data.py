@@ -754,15 +754,14 @@ def step_gnomad_constraint(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
-def step_gnomad_coverage(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
-    """Download the gnomAD exomes coverage summary (per-locus DP) for the PM2
-    read-depth gate (ENIGMA BRCA1/2: "average read depth >= 25"). Kept bgzipped
-    (the file is large); the depth-DB builder reads it directly. OPT-IN via
-    --with-gnomad-coverage since the depth gate is consulted only for the BRCA
-    PM2 path."""
-    if not enabled:
-        print("  [SKIP] gnomAD coverage not requested "
-              "(pass --with-gnomad-coverage for the BRCA1/2 PM2 read-depth gate)")
+def step_gnomad_coverage(asm_dir: Path, assembly: str, urls: dict, skip: bool) -> bool:
+    """Download the gnomAD exomes coverage summary (per-locus DP) and build the
+    per-locus coverage DuckDB for the PM2 read-depth gate (ENIGMA BRCA1/2:
+    "average read depth >= 25"). Downloaded by default; opt out with
+    --skip-gnomad-coverage (the depth gate is then skipped at runtime)."""
+    if skip:
+        print("  [SKIP] --skip-gnomad-coverage specified "
+              "(BRCA1/2 PM2 will not enforce the read-depth >= 25 gate)")
         return True
     ver = _GNOMAD_VER[assembly]
     url = urls.get("gnomad_coverage")
@@ -1000,10 +999,10 @@ def main() -> None:
                         help="Download REVEL (~600 MB zip) and build the per-assembly "
                              "TSV for --insilico-tool revel. Off by default (ESM1b is "
                              "the default in-silico tool).")
-    parser.add_argument("--with-gnomad-coverage", action="store_true",
-                        help="Download the gnomAD exomes coverage summary "
-                             "(per-locus mean/median DP) for the PM2 read-depth "
-                             "gate (ENIGMA BRCA1/2). Off by default.")
+    parser.add_argument("--skip-gnomad-coverage", action="store_true",
+                        help="Skip the gnomAD exomes coverage summary (per-locus "
+                             "mean/median DP) used by the PM2 read-depth gate "
+                             "(ENIGMA BRCA1/2). Downloaded + built by default.")
     parser.add_argument("--skip-esm1b", action="store_true",
                         help="Skip ESM1b download/build (~1.34 GB)")
     parser.add_argument("--skip-openspliceai", action="store_true",
@@ -1050,7 +1049,7 @@ def main() -> None:
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
         # ("mmsplice-gtf",      "MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
         ("gnomad-constraint", "gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
-        ("gnomad-coverage",   "gnomAD coverage",   lambda: step_gnomad_coverage(asm_dir, assembly, urls, args.with_gnomad_coverage)),
+        ("gnomad-coverage",   "gnomAD coverage",   lambda: step_gnomad_coverage(asm_dir, assembly, urls, args.skip_gnomad_coverage)),
         ("gnomad",            "gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
         ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
         ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
