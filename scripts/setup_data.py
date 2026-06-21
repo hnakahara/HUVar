@@ -770,11 +770,19 @@ def step_gnomad_coverage(asm_dir: Path, assembly: str, urls: dict, enabled: bool
         print("  [SKIP] no gnomAD coverage URL for this assembly")
         return True
     dest = asm_dir / "gnomad" / f"gnomad_v{ver}_exomes_coverage.summary.tsv.bgz"
-    if dest.exists():
-        print(f"  [SKIP] {dest.name}")
+    db = asm_dir / "gnomad" / f"gnomad_v{ver}_exomes_coverage.duckdb"
+    if db.exists():
+        print(f"  [SKIP] {db.name}")
         return True
     dest.parent.mkdir(parents=True, exist_ok=True)
-    _download(url, dest, f"gnomAD v{ver} exomes coverage summary (bgzipped, large)")
+    if not dest.exists():
+        _download(url, dest, f"gnomAD v{ver} exomes coverage summary (bgzipped, large)")
+    # Build the per-locus coverage DuckDB consumed by the PM2 read-depth gate.
+    print(f"  building coverage DuckDB → {db.name}")
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import build_gnomad_coverage
+    n = build_gnomad_coverage.build(dest, db)
+    print(f"    coverage rows: {n}")
     return True
 
 

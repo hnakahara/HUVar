@@ -255,6 +255,16 @@ class Config(BaseSettings):
         return self.data_dir / "shared" / "pm1_hotspots.tsv"
 
     @property
+    def gnomad_coverage_db(self) -> Path:
+        """Per-locus gnomAD coverage DuckDB (mean read depth) for the PM2
+        read-depth gate (ENIGMA BRCA1/2). Optional — absent file disables the
+        gate (PM2 then does not enforce the depth requirement). Built by
+        scripts/build_gnomad_coverage.py from the coverage summary downloaded via
+        ``setup_data.py --with-gnomad-coverage``."""
+        ver = "4.1" if self.assembly == Assembly.GRCH38 else "2.1.1"
+        return self.assembly_dir / "gnomad" / f"gnomad_v{ver}_exomes_coverage.duckdb"
+
+    @property
     def pm4_regions_tsv(self) -> Path:
         """Per-gene PM4 region / strength rules (Strong residues, allow/deny
         regions, region default, stop-loss strength) — see

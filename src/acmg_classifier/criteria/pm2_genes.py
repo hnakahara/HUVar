@@ -38,6 +38,8 @@ class PM2Rule:
     zyg_max: int = 0                # highest tolerated homo/hemi count
     subset: str = ""                # "" / "non_cancer" (ENIGMA BRCA1/2: judge
                                     # absence on the gnomAD non-cancer subset)
+    min_depth: Optional[float] = None  # ENIGMA BRCA1/2: the region must have a
+                                    # gnomAD mean read depth >= this for PM2
 
 
 class PM2Spec:
@@ -87,13 +89,20 @@ class PM2Spec:
                 subset = (row.get("pm2_subset") or "").strip().lower()
                 if subset != "non_cancer":
                     subset = ""
+                min_depth: Optional[float] = None
+                raw_depth = (row.get("pm2_min_depth") or "").strip()
+                if raw_depth:
+                    try:
+                        min_depth = float(raw_depth)
+                    except ValueError:
+                        min_depth = None
                 # Only record a rule when the gene carries at least one PM2
                 # specialisation; otherwise leave it to the global default.
                 if (raw or strength == CriterionStrength.MODERATE or use_faf
-                        or subpop_mode or zyg_scope or subset):
+                        or subpop_mode or zyg_scope or subset or min_depth is not None):
                     self._by_gene[gene] = PM2Rule(
                         threshold, strength, use_faf, subpop_mode, zyg_scope,
-                        zyg_max, subset,
+                        zyg_max, subset, min_depth,
                     )
 
     def get(self, gene: Optional[str]) -> Optional[PM2Rule]:

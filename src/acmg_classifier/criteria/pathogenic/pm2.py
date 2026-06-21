@@ -56,6 +56,23 @@ class PM2Evaluator(CriterionEvaluator):
         # (FAF vs raw AF). Genes absent from the spec use the global defaults.
         from acmg_classifier.criteria.pm2_genes import PM2Spec
         self._spec = PM2Spec(cfg.disease_prevalence_tsv)
+        # gnomAD coverage (mean read depth) for the BRCA1/2 depth gate; optional.
+        from acmg_classifier.local_db.coverage_db import CoverageDB
+        self._coverage = CoverageDB(cfg.gnomad_coverage_db)
+
+    def _depth_block(self, rule, variant: VariantRecord) -> str | None:
+        """A not-met reason when the VCEP requires a minimum region read depth
+        (ENIGMA BRCA1/2) and gnomAD shows the region below it — "absent" there is
+        not callable. ``None`` when no depth requirement, or when coverage is
+        unavailable / unknown (graceful skip)."""
+        if not rule or rule.min_depth is None or not self._coverage.available:
+            return None
+        end = variant.pos + max(0, len(variant.ref) - 1)
+        dp = self._coverage.mean_depth(variant.chrom, variant.pos, end)
+        if dp is None or dp >= rule.min_depth:
+            return None
+        return (f"gnomAD region mean depth {dp:.0f} < {rule.min_depth:g} "
+                "(absence not callable)")
 
     def _threshold(self, annotation: AnnotationData) -> tuple[float, str]:
         """Select the FAF95 cutoff based on the gene's inheritance pattern.
@@ -157,6 +174,10 @@ class PM2Evaluator(CriterionEvaluator):
         # tolerates, regardless of the allele frequency. Computed once and applied
         # to every "met" path below.
         zyg_block = self._zygosity_block(rule, gd)
+        # Read-depth ceiling (ENIGMA BRCA1/2): "absent" in a poorly-covered region
+        # is not callable, so PM2 is withheld when gnomAD mean depth < the VCEP
+        # minimum. Combined with the zygosity block on every met path.
+        depth_block = self._depth_block(rule, variant)
 
         # Comparison metric: most VCEPs (and the global default) judge PM2 on the
         # RAW grpmax allele frequency, but some state the cutoff on the GrpMax
@@ -190,9 +211,10 @@ class PM2Evaluator(CriterionEvaluator):
         # AC=0 means "observed only in samples that failed QC" — effectively
         # absent for ACMG purposes, so we treat it the same as value == 0.
         if absent:
-            if zyg_block:  # rare edge: FAF95≈0 yet homozygotes recorded
+            if zyg_block or depth_block:
+                reason = zyg_block or depth_block
                 return CriteriaResult.not_met(
-                    ACMGCriterion.PM2, f"{zyg_block}{filter_note}",
+                    ACMGCriterion.PM2, f"{reason}{filter_note}",
                 )
             using_nc = (rule and rule.subset == "non_cancer"
                         and gd.af_non_cancer is not None)
@@ -215,7 +237,7 @@ class PM2Evaluator(CriterionEvaluator):
             # Highest-subpopulation correction for the deflated low-AC FAF95
             # (FAF95 is the CI LOWER bound), then the homo-/hemizygote ceiling —
             # either withholds PM2 despite the low frequency.
-            block = self._subpop_block(rule, gd, threshold) or zyg_block
+            block = self._subpop_block(rule, gd, threshold) or zyg_block or depth_block
             if block:
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM2,

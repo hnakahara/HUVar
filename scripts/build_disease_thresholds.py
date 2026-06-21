@@ -34,7 +34,7 @@ COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "af_basis",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
-    "pm2_subset",
+    "pm2_subset", "pm2_min_depth",
     "pm4", "pm4_supporting_max_aa", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
     "bs2_count", "bs2_strength", "bs2_female_only", "bs2_hom_only", "pvs1",
@@ -1548,6 +1548,26 @@ def _pm2_subset(rule_set: dict) -> str:
     return "non_cancer" if _PM2_NON_CANCER.search(desc) else ""
 
 
+# "average read depth >= 25" (ENIGMA BRCA1/2). Capture the integer minimum.
+_PM2_DEPTH = re.compile(
+    r"read\s*depth[^.\d]{0,20}?(?:≥|≧|>=|&ge;|>|of\s+(?:at\s+least\s+)?|at\s+least\s+)\s*(\d{1,3})",
+    re.IGNORECASE,
+)
+
+
+def _pm2_min_depth(rule_set: dict) -> str:
+    """The VCEP's minimum gnomAD read depth for PM2 (e.g. "25"), or "". Read
+    from the PM2 code description ("average read depth >= 25")."""
+    code = _pm2_code(rule_set)
+    if code is None:
+        return ""
+    desc = " ".join(
+        es.get("description", "") or "" for es in _applicable_strengths(code)
+    ).replace("\\", "")
+    m = _PM2_DEPTH.search(desc)
+    return m.group(1) if m else ""
+
+
 def _pm2_threshold(rule_set: dict, moi: str) -> str:
     """PM2 allele-frequency cutoff for a gene with mode-of-inheritance *moi*.
 
@@ -1640,6 +1660,7 @@ def parse_spec(path: str) -> list[dict]:
         pm2_subpop = _pm2_subpop(rs)
         pm2_zygosity = _pm2_zygosity(rs)
         pm2_subset = _pm2_subset(rs)
+        pm2_min_depth = _pm2_min_depth(rs)
         pm4 = _pm4_applicability(rs)
         pm4_smax = _pm4_supporting_max_aa(rs)
         pp2_map = _pp2_applicability(rs)
@@ -1691,6 +1712,7 @@ def parse_spec(path: str) -> list[dict]:
                 "pm2_subpop": "",
                 "pm2_zygosity": "",
                 "pm2_subset": "",
+                "pm2_min_depth": "",
                 "pm4": "",
                 "pm4_supporting_max_aa": "",
                 "pp2": "",
@@ -1742,6 +1764,7 @@ def parse_spec(path: str) -> list[dict]:
                 "_pm2_subpop": pm2_subpop,
                 "_pm2_zygosity": pm2_zygosity,
                 "_pm2_subset": pm2_subset,
+                "_pm2_min_depth": pm2_min_depth,
                 "_pm4": pm4,
                 "_pm4_smax": pm4_smax,
                 "_pp2": pp2_map.get(sym, ""),
@@ -1932,7 +1955,7 @@ def main() -> None:
                     pm2_choice[g] = (
                         spec, row["_pm2_threshold"], row["_pm2_strength"],
                         row["_pm2_basis"], row["_pm2_subpop"], row["_pm2_zygosity"],
-                        row["_pm2_subset"],
+                        row["_pm2_subset"], row["_pm2_min_depth"],
                     )
             # REVEL: only specs that state a numeric REVEL cutoff contribute.
             # Most gene-specific spec wins; on a tie keep the first (file order).
@@ -2093,6 +2116,7 @@ def main() -> None:
         row["pm2_subpop"] = pm2c[4] if pm2c else ""
         row["pm2_zygosity"] = pm2c[5] if pm2c else ""
         row["pm2_subset"] = pm2c[6] if (pm2c and len(pm2c) > 6) else ""
+        row["pm2_min_depth"] = pm2c[7] if (pm2c and len(pm2c) > 7) else ""
         pchoice = ps1_choice.get(g)
         row["ps1"] = pchoice[1] if pchoice else ""
         row["ps1_splice"] = ps1_splice_choice.get(g, (0, ""))[1]
@@ -2178,6 +2202,7 @@ _OVERRIDE_FIELDS = {
     "pm2_subpop": "pm2_subpop",
     "pm2_zygosity": "pm2_zygosity",
     "pm2_subset": "pm2_subset",
+    "pm2_min_depth": "pm2_min_depth",
     "pm4": "pm4",
     "pm4_supporting_max_aa": "pm4_supporting_max_aa",
     "pp2": "pp2",
