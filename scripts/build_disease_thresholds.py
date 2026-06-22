@@ -70,6 +70,10 @@ _PS1_PARALOG: dict[str, tuple[str, str]] = {
     "MAP2K1": ("MAP2K2", ""), "MAP2K2": ("MAP2K1", ""),
     "SOS1": ("SOS2", ""), "SOS2": ("SOS1", ""),
     "HBA2": ("HBA1", "Moderate"),
+    # KCNQ1 (GN112): paralogue PS1 uses the alignment map (ps1_paralog_map.tsv)
+    # for the KCNQ2 analogous residue, fixed at PS1_Moderate. No same-numbering
+    # group (group empty); the strength is consumed by the alignment route.
+    "KCNQ1": ("", "Moderate"),
 }
 
 # Genes whose BA1/BS1 spec defines the cutoff on the *male* allele frequency

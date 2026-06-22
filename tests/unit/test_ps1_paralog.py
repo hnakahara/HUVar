@@ -246,3 +246,64 @@ class TestScnParalogEvaluator:
         # same-codon same-gene hit.
         r = ev.evaluate(_snv(), _scn_ann("SCN2A", 40))
         assert r.triggered and "paralogue" not in r.evidence
+
+
+class TestKCNQ1Paralog:
+    """KCNQ1 (GN112): a Pathogenic KCNQ2 same-AA variant at the analogous residue
+    → PS1_Moderate (fixed); LP-only does not qualify."""
+
+    def _cfg(self, tmp_path, clinvar):
+        dp = tmp_path / "dp.tsv"
+        dp.write_text(
+            "gene_symbol\tps1\tps1_splice\tps1_max\tps1_paralog_group\tps1_paralog_strength\n"
+            "KCNQ1\tapplicable\t\t\t\tModerate\n",
+            encoding="utf-8",
+        )
+        m = tmp_path / "map.tsv"
+        m.write_text("SCN1A\tSCN2A\tSCN3A\tSCN8A\tKCNQ1\tKCNQ2\n"
+                     "\t\t\t\t144\t114\n", encoding="utf-8")
+        cfg = MagicMock()
+        cfg.disease_prevalence_tsv = dp
+        cfg.clinvar_sqlite = clinvar
+        cfg.ps1_paralog_map_tsv = m
+        return cfg
+
+    def _ann(self, codon=144, change="T/A"):
+        return AnnotationData(
+            gnomad=GnomADData(),
+            consequences=[ConsequenceInfo(
+                transcript_id="NM_1", gene_id="ENSG", gene_symbol="KCNQ1",
+                consequence=ConsequenceType.MISSENSE, biotype="protein_coding",
+                is_mane_select=True, protein_position=codon,
+                hgvs_p=f"NP:p.Thr{codon}Ala", amino_acids=change,
+            )],
+        )
+
+    def test_kcnq2_pathogenic_moderate(self, tmp_path):
+        # KCNQ1 p.Thr144Ala → analogous KCNQ2 p.Thr114Ala Pathogenic → Moderate.
+        db = _db(tmp_path, [
+            ("1", "chr20", 1, "A", "G", "KCNQ2", "NP:p.Thr114Ala", "T114A", 114,
+             "Pathogenic", "criteria provided", 2),
+        ])
+        r = PS1Evaluator(self._cfg(tmp_path, db)).evaluate(_snv(), self._ann())
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+        assert "analogous paralogue" in r.evidence
+
+    def test_kcnq2_lp_only_not_met(self, tmp_path):
+        # The KCNQ1 rule requires KCNQ2 *Pathogenic*; LP-only does not qualify.
+        db = _db(tmp_path, [
+            ("1", "chr20", 1, "A", "G", "KCNQ2", "NP:p.Thr114Ala", "T114A", 114,
+             "Likely pathogenic", "criteria provided", 2),
+        ])
+        r = PS1Evaluator(self._cfg(tmp_path, db)).evaluate(_snv(), self._ann())
+        assert not r.triggered
+
+    def test_no_kcnq2_hit_not_met(self, tmp_path):
+        db = _db(tmp_path, [])
+        r = PS1Evaluator(self._cfg(tmp_path, db)).evaluate(_snv(), self._ann())
+        assert not r.triggered
+
+    def test_committed_map_has_kcnq(self):
+        m = PS1ParalogMap(_MAP_TSV)
+        assert m.has_gene("KCNQ1") and m.has_gene("KCNQ2")
+        assert m.analogs("KCNQ1", 144) == {"KCNQ2": 114}

@@ -146,10 +146,13 @@ class PS1Evaluator(CriterionEvaluator):
                 )
                 return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
 
-        # SCN paralogue alignment route (GN067-070): the same amino-acid change at
-        # the ANALOGOUS residue of a paralogue (SCN1A/2A/3A/8A), translated via the
-        # alignment table. >=2 paralogue Pathogenic hits → PS1_Strong; a single
-        # P/LP paralogue hit → PS1_Supporting.
+        # Paralogue alignment route: the same amino-acid change at the ANALOGOUS
+        # residue of a paralogue, translated via the alignment table.
+        #  * SCN1A/2A/3A/8A (GN067-070): >=2 paralogue Pathogenic → PS1_Strong;
+        #    a single P/LP → PS1_Supporting.
+        #  * KCNQ1 (GN112): a Pathogenic KCNQ2 same-AA variant → PS1_Moderate
+        #    (fixed; LP-only does not qualify). The fixed strength is taken from
+        #    ps1_paralog_strength.
         aa = _aa_ref_alt(pc.amino_acids)
         if aa and self._paralog_map.has_gene(pc.gene_symbol):
             from acmg_classifier.local_db.clinvar_sqlite import query_paralog_aa_change
@@ -166,9 +169,16 @@ class PS1Evaluator(CriterionEvaluator):
                     sig = (h.clinical_significance or "").lower()
                     if "pathogenic" in sig and sig != "likely pathogenic":
                         path_genes.add(sib)
-            if any_plp:
+            fixed = self._spec.paralog_strength(pc.gene_symbol)
+            strength = None
+            if fixed is not None:
+                # KCNQ1: requires a Pathogenic paralogue hit (not LP-only).
+                if path_genes:
+                    strength = fixed
+            elif any_plp:
                 strength = (CriterionStrength.STRONG if len(path_genes) >= 2
                             else CriterionStrength.SUPPORTING)
+            if strength is not None:
                 strength = _cap(strength, self._spec.max_strength(pc.gene_symbol))
                 ids = ", ".join(h.variation_id or "" for h in any_plp[:3])
                 return CriteriaResult.met(

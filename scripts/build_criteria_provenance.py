@@ -121,6 +121,8 @@ def main() -> None:
         ("PS1 paralogue (analogous-residue alignment)",
          "SCN1A, SCN2A, SCN3A, SCN8A", "GN067-070",
          meta.get("GN067", ("", "", ""))[0], "SCN epilepsy VCEPs"),
+        ("PS1 paralogue (analogous-residue alignment, → KCNQ2, Moderate)",
+         "KCNQ1", "GN112", meta.get("GN112", ("", "", ""))[0], "Long QT VCEP"),
     ]
 
     with open(OUT_MD, "w", encoding="utf-8") as fh:
