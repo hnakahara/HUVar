@@ -97,6 +97,12 @@ _CURATED: dict[str, list[tuple[str, list, list]]] = {
         ("region_default", "not_met", None),
         ("stoploss", "moderate", None),
     ],
+    # ABCA4 (GN164): besides the size-based in-frame indel rule, PM4 also applies
+    # to a synonymous or missense variant at a highly-conserved nucleotide
+    # (phyloP >= 7.367): a single changed nucleotide → Supporting, >1 → Moderate.
+    "ABCA4": [
+        ("nt_phylop", "7.367", None),
+    ],
     # RPGR (GN106, ORF15 isoform MANE NM_001034853.2, 1152 aa). PM4_Moderate for
     # in-frame indels in exons 1-14 (codons 1-585) or the non-repetitive part of
     # ORF15 (aa 585-1078) — together 1-1078; the repetitive ORF15 C-terminus
@@ -150,7 +156,7 @@ def main() -> None:
     args = ap.parse_args()
 
     _SCALAR = ("region_default", "stoploss", "conserved_phylop",
-               "deletion_content", "excludes")
+               "deletion_content", "excludes", "nt_phylop")
     rows = []
     for gene, entries in sorted(_CURATED.items()):
         for strength, regions, residues in entries:

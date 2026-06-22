@@ -1,4 +1,5 @@
 gene_symbol	strength	regions	residues
+ABCA4	nt_phylop	7.367	
 ADA	deletion_content	yes	
 ATM	region_default	not_met	
 ATM	stoploss	moderate	

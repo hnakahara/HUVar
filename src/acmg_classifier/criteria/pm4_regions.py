@@ -31,7 +31,7 @@ _RANK = {
 
 class _GeneRule:
     __slots__ = ("tiers", "deny", "region_default", "stoploss",
-                 "conserved_phylop", "deletion_content", "excludes")
+                 "conserved_phylop", "deletion_content", "excludes", "nt_phylop")
 
     def __init__(self) -> None:
         # list of (strength, ranges:list[(a,b)], residues:frozenset[int])
@@ -42,6 +42,8 @@ class _GeneRule:
         self.conserved_phylop: float | None = None
         self.deletion_content: bool = False
         self.excludes: tuple[str, ...] = ()
+        self.nt_phylop: float | None = None  # ABCA4: synonymous/missense PM4 at a
+        #                                      nucleotide with phyloP >= this
 
 
 class PM4Regions:
@@ -81,6 +83,11 @@ class PM4Regions:
                     rule.deletion_content = (row.get("regions") or "").strip().lower() in (
                         "yes", "1", "true",
                     )
+                elif kind == "nt_phylop":
+                    try:
+                        rule.nt_phylop = float((row.get("regions") or "").strip())
+                    except ValueError:
+                        pass
                 elif kind == "excludes":
                     rule.excludes = tuple(
                         c.strip().upper() for c in (row.get("regions") or "").split(",")
@@ -144,6 +151,12 @@ class PM4Regions:
         within the deleted range to earn PM4 (the SCID panel rule)."""
         rule = self._by_gene.get(gene or "")
         return bool(rule and rule.deletion_content)
+
+    def nt_phylop(self, gene: str | None) -> float | None:
+        """PhyloP cutoff at/above which a synonymous or missense variant earns PM4
+        on nucleotide conservation (ABCA4), or ``None``."""
+        rule = self._by_gene.get(gene or "")
+        return rule.nt_phylop if rule else None
 
     def excludes(self, gene: str | None) -> tuple[str, ...]:
         """ACMG codes PM4 is mutually exclusive with for *gene* (e.g. PVS1,PP3)."""

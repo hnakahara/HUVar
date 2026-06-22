@@ -79,6 +79,26 @@ class PM4Evaluator(CriterionEvaluator):
             ConsequenceType.INFRAME_INSERTION, ConsequenceType.INFRAME_DELETION,
         )
         is_stoploss = pc.consequence == ConsequenceType.STOP_LOST
+
+        # Nucleotide-conservation PM4 (ABCA4): a synonymous or missense variant at
+        # a highly-conserved nucleotide (phyloP >= cutoff) earns PM4 — Supporting
+        # for a single changed nucleotide, Moderate for >1. Skipped when phyloP is
+        # unavailable.
+        nt_cut = self._regions.nt_phylop(gene)
+        if nt_cut is not None and pc.consequence in (
+            ConsequenceType.SYNONYMOUS, ConsequenceType.MISSENSE,
+        ):
+            best = _max_phylop(self._phylop, variant)
+            if best is not None and best >= nt_cut:
+                n_nt = _changed_nt(variant)
+                strength = (CriterionStrength.SUPPORTING if n_nt <= 1
+                            else CriterionStrength.MODERATE)
+                return CriteriaResult.met(
+                    ACMGCriterion.PM4, strength=strength,
+                    evidence=(f"{gene}: {pc.consequence.value} at conserved nucleotide "
+                              f"(phyloP {best:.2f} >= {nt_cut:g}, {n_nt} nt)"),
+                )
+
         if not (is_indel or is_stoploss):
             return CriteriaResult.not_met(ACMGCriterion.PM4, "Not an in-frame indel or stop-loss")
 
@@ -186,19 +206,36 @@ class PM4Evaluator(CriterionEvaluator):
         )
 
 
-def _not_conserved(phylop, variant: VariantRecord, cutoff: float) -> bool:
-    """True when the variant's span is confidently NOT conserved (max phyloP over
-    the ref span <= cutoff), so a conservation-gated PM4 must be withheld. False
-    when conserved OR when phyloP is unavailable (gate skipped → PM4 proceeds)."""
+def _max_phylop(phylop, variant: VariantRecord) -> float | None:
+    """Max phyloP over the variant's reference span, or None when phyloP is
+    unavailable / unscored at every position."""
     if not phylop.is_available():
-        return False
+        return None
     best: float | None = None
     for offset in range(max(1, len(variant.ref))):
         score = phylop.value(variant.chrom, variant.pos + offset)
         if score is not None and (best is None or score > best):
             best = score
+    return best
+
+
+def _changed_nt(variant: VariantRecord) -> int:
+    """Number of substituted nucleotides (1 for an SNV). For an equal-length
+    substitution it is the count of differing positions; otherwise the longer of
+    ref/alt (a conservative upper bound)."""
+    ref, alt = variant.ref, variant.alt
+    if len(ref) == len(alt):
+        return sum(1 for r, a in zip(ref, alt) if r != a) or 1
+    return max(len(ref), len(alt))
+
+
+def _not_conserved(phylop, variant: VariantRecord, cutoff: float) -> bool:
+    """True when the variant's span is confidently NOT conserved (max phyloP over
+    the ref span <= cutoff), so a conservation-gated PM4 must be withheld. False
+    when conserved OR when phyloP is unavailable (gate skipped → PM4 proceeds)."""
+    best = _max_phylop(phylop, variant)
     if best is None:
-        return False  # no phyloP at any position → cannot disprove conservation
+        return False  # phyloP unavailable / unscored → cannot disprove conservation
     return best <= cutoff
 
 

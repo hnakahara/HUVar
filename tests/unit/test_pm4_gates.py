@@ -29,6 +29,7 @@ _REGIONS = (
     "CTLA4\texcludes\tPVS1,PP3\t\n"
     "FBN1\texcludes\tPVS1\t\n"
     "DCLRE1C\tdeletion_content\tyes\t\n"
+    "ABCA4\tnt_phylop\t7.367\t\n"
 )
 _DP = (
     "gene_symbol\tpm4\tpm4_supporting_max_aa\n"
@@ -196,3 +197,43 @@ class TestPM4Exclusions:
         ]
         reg._apply_pm4_exclusions(results, _ann("RPE65", ConsequenceType.INFRAME_DELETION))
         assert not results[0].suppressed
+
+
+def _snv(ref="A", alt="G", pos=100):
+    return VariantRecord(chrom="chr1", pos=pos, ref=ref, alt=alt, assembly=Assembly.GRCH38)
+
+
+class TestNtPhylop:
+    """ABCA4: a synonymous/missense variant at a highly conserved nucleotide
+    (phyloP >= 7.367) earns PM4 — Supporting for a single changed nucleotide,
+    Moderate for >1; <7.367 or non-syn/mis → not met; skipped when phyloP off."""
+
+    def test_synonymous_single_nt_supporting(self, tmp_path):
+        ev = PM4Evaluator(_cfg(tmp_path))
+        ev._phylop = _phylop_stub(7.5)
+        r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+
+    def test_missense_single_nt_supporting(self, tmp_path):
+        ev = PM4Evaluator(_cfg(tmp_path))
+        ev._phylop = _phylop_stub(7.367)
+        r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.MISSENSE))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+
+    def test_multi_nt_moderate(self, tmp_path):
+        ev = PM4Evaluator(_cfg(tmp_path))
+        ev._phylop = _phylop_stub(8.0)
+        r = ev.evaluate(_snv("AC", "GT"), _ann("ABCA4", ConsequenceType.MISSENSE))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+
+    def test_below_cutoff_not_met(self, tmp_path):
+        ev = PM4Evaluator(_cfg(tmp_path))
+        ev._phylop = _phylop_stub(7.0)
+        r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
+        assert not r.triggered
+
+    def test_phylop_unavailable_not_met(self, tmp_path):
+        ev = PM4Evaluator(_cfg(tmp_path))
+        ev._phylop = _phylop_stub(None)
+        r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
+        assert not r.triggered
