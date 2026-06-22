@@ -56,8 +56,8 @@ CREATE INDEX IF NOT EXISTS idx_gene_aa ON variants (gene_symbol, amino_acid_chan
 # Positive indicators of a damaging functional assay (PS3).
 _FUNCTIONAL_POS = re.compile(
     r"functional stud|enzymatic activit|enzyme activit|experimental stud|"
-    r"in vitro|reduced .{0,30}activit|decreased .{0,30}activit|undetectable|"
-    r"abolish|loss of function|affects? .{0,20}function|\bPS3\b",
+    r"\bassay\b|in vitro|reduced .{0,30}activit|decreased .{0,30}activit|undetectable|"
+    r"abolish|affects? .{0,20}function|\bPS3\b",
     re.IGNORECASE,
 )
 # Phrases that negate a damaging functional result — skip the SCV if present.
