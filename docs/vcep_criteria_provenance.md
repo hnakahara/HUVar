@@ -37,7 +37,7 @@ Genes covered: **131**.
 | ETHE1 | GN014 | 1.0.0 | Released | Mitochondrial Disease Nuclear and Mitochondrial Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | F8 | GN071 | 2.0.0 | Released | Coagulation Factor Deficiency Expert Panel for F8 Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | F9 | GN080 | 2.1.0 | Released | Coagulation Factor Deficiency Expert Panel for F9 Version 2.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| FBN1 | GN022 | 1.0.0 | Pilot Rules Submitted | FBN1 Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| FBN1 | GN022 | 1.0.0 | Pilot Rules Submitted | FBN1 Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | FOXG1 | GN035 | 6.0.0 | Released | Rett and Angelman-like Disorders Expert Panel for FOXG1 Version 6.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | FOXN1 | GN113 | 2.3.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for FOXN1 Versio | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | GAA | GN010 | 2.0.0 | Released | Lysosomal Storage Disorders Variant Curation Expert Panel Version 2 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |

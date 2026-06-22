@@ -102,6 +102,23 @@ class TestLDLRpm1:
         assert self._h().lookup("LDLR", 500) is None
 
 
+class TestFBN1pm1:
+    def _h(self):
+        return PM1Hotspots(_PM1)
+
+    def test_cbegf_cys_strong(self):
+        # 250 is a cysteine in a cbEGF (EGF-like calcium-binding) domain.
+        assert self._h().lookup("FBN1", 250) == CriterionStrength.STRONG
+
+    def test_egf_tb_hybrid_cys_moderate(self):
+        assert self._h().lookup("FBN1", 85) == CriterionStrength.MODERATE   # EGF-like non-cb
+        assert self._h().lookup("FBN1", 186) == CriterionStrength.MODERATE  # TB domain
+
+    def test_non_cys_position_none(self):
+        # 300 is not a curated cysteine residue.
+        assert self._h().lookup("FBN1", 300) is None
+
+
 class TestVHLpm4:
     def _r(self):
         return PM4Regions(_PM4)
