@@ -86,13 +86,16 @@ _FUNCTIONAL_NEG = re.compile(
     r"predict\w*[^.]{0,60}?(abolish|disrupt|damag|impact|affect|effect|splic|donor|acceptor|function)|"
     r"yet to be (confirmed|validated|established|proven)|"
     r"no (experimental|functional)[^.]{0,40}?(evidence|stud|data|assay)|"
-    # "functional assays have not been reported/performed" (subject-first) and
-    # "(variant) has not been reported ... (or) in functional studies"
-    # (negation-first): the assay/study was NOT done, so it is not PS3 evidence.
-    r"functional (assay|stud|analys|evaluat|test|experiment)\w*[^.]{0,40}?\bnot\b"
-        r"[^.]{0,30}?(been )?(report|perform|conduct|publish|describ|available|done|carried)|"
+    # The assay/study was NOT done -> not PS3 evidence. Two phrasings:
+    #  - subject-first: "functional/experimental assays ... (are|have) not ...
+    #    reported/performed/available" (also "results of experimental studies are
+    #    not available");
+    #  - negation-first: "... has not been reported ... (or) in functional studies".
+    r"(functional|experimental|in[ -]?vitro|in[ -]?vivo)\s+"
+        r"(assay|stud|analys|evaluat|test|investigation|experiment)\w*[^.]{0,45}?\bnot\b"
+        r"[^.]{0,35}?(report|perform|conduct|publish|describ|available|done|carried|present)|"
     r"\bnot been (report|perform|conduct|publish|describ)\w*[^.;]{0,150}?"
-        r"\b(in|nor)\s+functional (assay|stud|analys)",
+        r"\b(in|nor)\s+(functional|experimental)\s+(assay|stud|analys)",
     re.IGNORECASE,
 )
 # Positive indicators of cosegregation (PP1).

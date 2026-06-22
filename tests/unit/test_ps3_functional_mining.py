@@ -60,6 +60,16 @@ class TestNegationGuard:
             "individuals affected with SCID/DCLRE1C-related conditions or in functional studies."
         )
 
+    def test_experimental_studies_not_available_excluded(self):
+        # GAA-style: "results of experimental studies are not available."
+        assert not _is_functional(
+            "To our knowledge, this variant has not been reported in the literature in "
+            "individuals with Pompe disease, and results of experimental studies are not available."
+        )
+
+    def test_experimental_studies_positive_still_fires(self):
+        assert _is_functional("Experimental studies showed undetectable enzyme activity.")
+
     def test_plural_assays_with_real_result_still_fires(self):
         assert _is_functional("In vitro assays confirmed the mutation abolished enzyme activity.")
 
