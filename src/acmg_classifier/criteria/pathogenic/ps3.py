@@ -23,6 +23,23 @@ from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
 
+# Genes whose VCEP does not permit a text-mined PS3 from ClinVar:
+#   * no PS3 code in the VCEP spec at all — PALB2, PDHA1, POLG;
+#   * PS3 explicitly "not applicable ... for in vitro assays" (only a rare,
+#     case-by-case variant-specific animal model qualifies, which a curator must
+#     assert via the manual supplement) — CAPN3, ANO5.
+# A manual supplement PS3 still applies (it takes precedence below); only the
+# free-text ClinVar fallback is suppressed for these genes.
+_PS3_NOT_APPLICABLE = frozenset({"PALB2", "PDHA1", "POLG", "CAPN3", "ANO5"})
+
+# Genes whose VCEP caps PS3 at Supporting — the text-mined fallback must not reach
+# Moderate (n>=3) for them. Transcribed from the cspec PS3 strength descriptors.
+_PS3_MAX_SUPPORTING = frozenset({
+    "ABCD1", "AIPL1", "ETHE1", "F8", "F9", "GALT", "GAMT", "GATM", "HBA2",
+    "HBB", "RPE65", "RPGR", "SERPINC1", "SLC19A3", "VHL",
+})
+
+
 def _functional_strength(n: int) -> CriterionStrength | None:
     # Capped at Moderate: OddsPath calibration for Strong is unavailable from ClinVar text.
     if n >= 3:
@@ -50,6 +67,17 @@ class PS3Evaluator(CriterionEvaluator):
             if e.criterion == ACMGCriterion.PS3:
                 return CriteriaResult.met(ACMGCriterion.PS3, e.strength, e.evidence)
 
+        # Gene gate: some VCEPs do not allow a text-mined PS3 at all (no PS3 code,
+        # or PS3 not applicable for in vitro assays). Withhold the free-text
+        # fallback for those genes (a manual supplement above still applies).
+        pc = annotation.primary_consequence
+        gene = pc.gene_symbol if pc else None
+        if gene in _PS3_NOT_APPLICABLE:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PS3,
+                f"{gene}: VCEP does not permit a ClinVar-text PS3 (no PS3 / in vitro N/A)",
+            )
+
         # 2. Fallback: count ClinVar SCVs whose free-text comment matches a
         #    damaging-functional-study pattern. Strength is capped at Moderate
         #    because OddsPath cannot be derived from free text alone.
@@ -63,6 +91,9 @@ class PS3Evaluator(CriterionEvaluator):
             return CriteriaResult.not_met(
                 ACMGCriterion.PS3, "No ClinVar SCV describing damaging functional study"
             )
+        # Per-gene VCEP cap: several VCEPs allow PS3 only at Supporting.
+        if gene in _PS3_MAX_SUPPORTING and strength != CriterionStrength.SUPPORTING:
+            strength = CriterionStrength.SUPPORTING
         return CriteriaResult.met(
             ACMGCriterion.PS3,
             strength,

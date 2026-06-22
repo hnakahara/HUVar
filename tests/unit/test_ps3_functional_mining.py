@@ -46,3 +46,26 @@ class TestNegationGuard:
 
     def test_no_functional_assay_excluded(self):
         assert not _is_functional("There is no functional assay data for this variant.")
+
+    def test_functional_assays_not_reported_excluded(self):
+        # ACADVL-style: the assay was never done → not PS3 evidence.
+        assert not _is_functional(
+            "To our knowledge, functional assays have not been reported for this variant."
+        )
+
+    def test_not_reported_in_functional_studies_excluded(self):
+        # DCLRE1C-style: "... has not been reported ... or in functional studies."
+        assert not _is_functional(
+            "To our knowledge, this variant has not been reported in the literature in "
+            "individuals affected with SCID/DCLRE1C-related conditions or in functional studies."
+        )
+
+    def test_plural_assays_with_real_result_still_fires(self):
+        assert _is_functional("In vitro assays confirmed the mutation abolished enzyme activity.")
+
+    def test_not_reported_then_positive_clause_still_fires(self):
+        # Negation about individuals, separate clause with a real functional result.
+        assert _is_functional(
+            "This variant has not been reported in patients; however functional studies "
+            "confirmed significantly reduced enzymatic activity."
+        )

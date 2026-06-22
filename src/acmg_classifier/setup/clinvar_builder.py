@@ -56,7 +56,7 @@ CREATE INDEX IF NOT EXISTS idx_gene_aa ON variants (gene_symbol, amino_acid_chan
 # Positive indicators of a damaging functional assay (PS3).
 _FUNCTIONAL_POS = re.compile(
     r"functional stud|enzymatic activit|enzyme activit|experimental stud|"
-    r"\bassay\b|in vitro|reduced .{0,30}activit|decreased .{0,30}activit|undetectable|"
+    r"\bassays?\b|in vitro|reduced .{0,30}activit|decreased .{0,30}activit|undetectable|"
     r"abolish|affects? .{0,20}function|\bPS3\b",
     re.IGNORECASE,
 )
@@ -85,7 +85,14 @@ _FUNCTIONAL_NEG = re.compile(
     r"computational (tool|method|analys|predict|algorithm|approach|program|software)|"
     r"predict\w*[^.]{0,60}?(abolish|disrupt|damag|impact|affect|effect|splic|donor|acceptor|function)|"
     r"yet to be (confirmed|validated|established|proven)|"
-    r"no (experimental|functional)[^.]{0,40}?(evidence|stud|data|assay)",
+    r"no (experimental|functional)[^.]{0,40}?(evidence|stud|data|assay)|"
+    # "functional assays have not been reported/performed" (subject-first) and
+    # "(variant) has not been reported ... (or) in functional studies"
+    # (negation-first): the assay/study was NOT done, so it is not PS3 evidence.
+    r"functional (assay|stud|analys|evaluat|test|experiment)\w*[^.]{0,40}?\bnot\b"
+        r"[^.]{0,30}?(been )?(report|perform|conduct|publish|describ|available|done|carried)|"
+    r"\bnot been (report|perform|conduct|publish|describ)\w*[^.;]{0,150}?"
+        r"\b(in|nor)\s+functional (assay|stud|analys)",
     re.IGNORECASE,
 )
 # Positive indicators of cosegregation (PP1).
