@@ -20,12 +20,12 @@ _spec = importlib.util.spec_from_file_location("build_disease_thresholds", _BDT_
 bdt = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bdt)
 
-# GATM: single-aa -> Supporting (max 1). MECP2: <3 aa -> Supporting (max 2).
+# GATM: single-aa -> Supporting (max 1). UBE3A: <3 aa -> Supporting (max 2).
 # MYH7: no size downgrade (default Moderate).
 _TSV = (
     "gene_symbol\tpm4\tpm4_supporting_max_aa\n"
     "GATM\tapplicable\t1\n"
-    "MECP2\tapplicable\t2\n"
+    "UBE3A\tapplicable\t2\n"
     "MYH7\tapplicable\t\n"
     "BRCA1\tnot_applicable\t\n"
 )
@@ -59,7 +59,7 @@ class TestLoader:
     def test_reads_max_aa_and_declined(self, tmp_path):
         declined, max_aa = _load_pm4_columns(_cfg(tmp_path).disease_prevalence_tsv)
         assert "BRCA1" in declined
-        assert max_aa == {"GATM": 1, "MECP2": 2}
+        assert max_aa == {"GATM": 1, "UBE3A": 2}
 
 
 class TestSizeDowngrade:
@@ -73,8 +73,8 @@ class TestSizeDowngrade:
         assert r.triggered and r.strength == CriterionStrength.MODERATE
 
     def test_two_aa_within_cutoff_supporting(self, tmp_path):
-        # MECP2 cutoff is 2 aa; a 2-aa indel downgrades to Supporting.
-        r = PM4Evaluator(_cfg(tmp_path)).evaluate(_DEL_2AA, _ann("MECP2"))
+        # UBE3A cutoff is 2 aa; a 2-aa indel downgrades to Supporting.
+        r = PM4Evaluator(_cfg(tmp_path)).evaluate(_DEL_2AA, _ann("UBE3A"))
         assert r.triggered and r.strength == CriterionStrength.SUPPORTING
 
     def test_stop_loss_not_size_scoped(self, tmp_path):

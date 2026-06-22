@@ -55,17 +55,28 @@ _CURATED: dict[str, list[tuple[str, list, list]]] = {
         ("deny", [(606, 609), (1418, 1420), (1422, 1425)], []),
         ("region_default", "supporting", None),
     ],
-    # MECP2 (GN036): PM4_Moderate excludes the Pro-rich p.381-405 region (size
-    # <3 aa → Supporting is handled by pm4_supporting_max_aa).
+    # MECP2 (GN036): in-frame indel PM4 applies ONLY within a PM1 functionally
+    # important domain — MBD (Methyl-DNA binding) aa 90-162 and TRD
+    # (transcriptional repression) aa 302-306 → Moderate. The spec's
+    # "smaller in-frame events (<3 aa) ... unless they occur in a functionally
+    # important region" means small events in these domains stay Moderate (no
+    # size downgrade — pm4_supporting_max_aa is cleared for MECP2); outside the
+    # domains PM4 is N/A. The Pro-rich p.381-405 deny is retained for provenance
+    # though it already lies outside the allowed domains.
     "MECP2": [
+        ("moderate", [(90, 162), (302, 306)], []),
         ("deny", [(381, 405)], []),
-        ("region_default", "moderate", None),
+        ("region_default", "not_met", None),
     ],
-    # CDKL5 (GN034): PM4_Moderate excludes the C-terminus after p.904 (exons
-    # 19-21); the gene's MANE isoform is 960 aa.
+    # CDKL5 (GN034): in-frame indel PM4 applies ONLY within a PM1 functionally
+    # important domain — ATP-binding region aa 19-43 and TEY phosphorylation site
+    # aa 169-171 → Moderate (small events in these domains are not size-downgraded;
+    # pm4_supporting_max_aa is cleared for CDKL5). Outside → N/A. The C-terminus
+    # after p.904 (exons 19-21) deny is retained for provenance.
     "CDKL5": [
+        ("moderate", [(19, 43), (169, 171)], []),
         ("deny", [(905, 960)], []),
-        ("region_default", "moderate", None),
+        ("region_default", "not_met", None),
     ],
     # FOXG1 (GN035): PM4_Moderate excludes the His-rich p.37-57, Pro/Gln-rich
     # p.58-86 (merged 37-86) and Pro-rich p.105-112 low-complexity regions.
@@ -104,12 +115,12 @@ _CURATED: dict[str, list[tuple[str, list, list]]] = {
         ("nt_phylop", "7.367", None),
     ],
     # RPGR (GN106, ORF15 isoform MANE NM_001034853.2, 1152 aa). PM4_Moderate for
-    # in-frame indels in exons 1-14 (codons 1-585) or the non-repetitive part of
-    # ORF15 (aa 585-1078) — together 1-1078; the repetitive ORF15 C-terminus
-    # (1079-1152) → N/A. Stop-loss at the terminal codon (aa 1153) produces a
-    # 38-aa extension shown to be deleterious → PVS1... here PM4_Strong.
+    # in-frame indels in exons 1-14 (codons 1-585) only. The ORF15 repetitive
+    # region (aa 585-1078) must NOT be evaluated → N/A, and the C-terminus beyond
+    # 1078 likewise → N/A. Stop-loss at the terminal codon (aa 1153) produces a
+    # 38-aa extension shown to be deleterious → PM4_Strong.
     "RPGR": [
-        ("moderate", [(1, 1078)], []),
+        ("moderate", [(1, 584)], []),
         ("region_default", "not_met", None),
         ("stoploss", "strong", None),
     ],

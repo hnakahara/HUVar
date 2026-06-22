@@ -660,6 +660,13 @@ _BS1_EXCLUDE_VARIANTS: dict[str, str] = {
 #   Both cspec numbers are typos; gnomAD male (XY) AF basis is already correct.
 _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     "RPGR": {"bs1_threshold": "0.000005", "ba1_threshold": "0.00005"},
+    # MECP2 / CDKL5 (GN036 / GN034): the "<3 aa unless functionally important
+    # region" PM4 Supporting tier is NOT a size-based downgrade for these genes —
+    # PM4 applies only within their PM1 functional domains (pm4_regions.tsv) where
+    # small events stay Moderate. Clear the mined size cutoff so no out-of-domain
+    # small indel leaks a size-only PM4_Supporting.
+    "MECP2": {"pm4_supporting_max_aa": ""},
+    "CDKL5": {"pm4_supporting_max_aa": ""},
 }
 
 

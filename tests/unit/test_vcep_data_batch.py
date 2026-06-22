@@ -176,11 +176,12 @@ class TestRPGRpm4:
     def _r(self):
         return PM4Regions(_PM4)
 
-    def test_exon1_14_and_orf15_moderate(self):
-        assert self._r().indel_strength("RPGR", 300) == CriterionStrength.MODERATE   # exon 1-14
-        assert self._r().indel_strength("RPGR", 800) == CriterionStrength.MODERATE   # ORF15 585-1078
+    def test_exon1_14_moderate(self):
+        assert self._r().indel_strength("RPGR", 300) == CriterionStrength.MODERATE   # exon 1-14 (1-584)
 
     def test_orf15_repeat_not_met(self):
+        # The ORF15 repetitive region (585-1078) must NOT be evaluated → N/A.
+        assert self._r().indel_strength("RPGR", 800) == "not_met"
         assert self._r().indel_strength("RPGR", 1100) == "not_met"   # repetitive C-terminus
 
     def test_stoploss_strong(self):

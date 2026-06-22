@@ -204,21 +204,22 @@ def _snv(ref="A", alt="G", pos=100):
 
 
 class TestNtPhylop:
-    """ABCA4: a synonymous/missense variant at a highly conserved nucleotide
-    (phyloP >= 7.367) earns PM4 — Supporting for a single changed nucleotide,
-    Moderate for >1; <7.367 or non-syn/mis → not met; skipped when phyloP off."""
+    """ABCA4: a synonymous/missense variant affecting >1 nucleotide at a highly
+    conserved position (phyloP >= 7.367) earns PM4_Moderate. A single-nucleotide
+    change (SNV) does NOT qualify; <7.367, non-syn/mis, or phyloP off → not met."""
 
-    def test_synonymous_single_nt_supporting(self, tmp_path):
+    def test_single_nt_synonymous_not_met(self, tmp_path):
+        # A single-nucleotide synonymous SNV does not qualify (>1 nt required).
         ev = PM4Evaluator(_cfg(tmp_path))
-        ev._phylop = _phylop_stub(7.5)
+        ev._phylop = _phylop_stub(9.25)
         r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
-        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+        assert not r.triggered
 
-    def test_missense_single_nt_supporting(self, tmp_path):
+    def test_single_nt_missense_not_met(self, tmp_path):
         ev = PM4Evaluator(_cfg(tmp_path))
         ev._phylop = _phylop_stub(7.367)
         r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.MISSENSE))
-        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+        assert not r.triggered
 
     def test_multi_nt_moderate(self, tmp_path):
         ev = PM4Evaluator(_cfg(tmp_path))
@@ -226,14 +227,14 @@ class TestNtPhylop:
         r = ev.evaluate(_snv("AC", "GT"), _ann("ABCA4", ConsequenceType.MISSENSE))
         assert r.triggered and r.strength == CriterionStrength.MODERATE
 
-    def test_below_cutoff_not_met(self, tmp_path):
+    def test_multi_nt_below_cutoff_not_met(self, tmp_path):
         ev = PM4Evaluator(_cfg(tmp_path))
         ev._phylop = _phylop_stub(7.0)
-        r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
+        r = ev.evaluate(_snv("AC", "GT"), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
         assert not r.triggered
 
     def test_phylop_unavailable_not_met(self, tmp_path):
         ev = PM4Evaluator(_cfg(tmp_path))
         ev._phylop = _phylop_stub(None)
-        r = ev.evaluate(_snv(), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
+        r = ev.evaluate(_snv("AC", "GT"), _ann("ABCA4", ConsequenceType.SYNONYMOUS))
         assert not r.triggered

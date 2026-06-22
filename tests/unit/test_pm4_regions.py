@@ -2,8 +2,8 @@
 
 Covers PM4_Strong residues (RUNX1), allow-list regions with an N/A default
 (MYOC), Moderate-in-domain / Supporting-outside / denied-repeat (DICER1),
-deny regions combined with the size-Supporting tier (MECP2), stop-loss-only
-genes (CDH1), and the stop-loss N/A gene (CYP1B1).
+functional-domain-only allow-list where small events stay Moderate (MECP2),
+stop-loss-only genes (CDH1), and the stop-loss N/A gene (CYP1B1).
 """
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -24,17 +24,19 @@ _REGIONS = (
     "DICER1\tmoderate\t1682-1846\t\n"
     "DICER1\tdeny\t606-609\t\n"
     "DICER1\tregion_default\tsupporting\t\n"
+    "MECP2\tmoderate\t90-162;302-306\t\n"
     "MECP2\tdeny\t381-405\t\n"
-    "MECP2\tregion_default\tmoderate\t\n"
+    "MECP2\tregion_default\tnot_met\t\n"
     "CDH1\tregion_default\tnot_met\t\n"
     "CDH1\tstoploss\tmoderate\t\n"
     "CYP1B1\tstoploss\tnot_applicable\t\n"
 )
 
-# pm4_supporting_max_aa: MECP2 <3aa -> Supporting (size tier).
+# MECP2 has no size-based Supporting tier — its PM4 applies only inside the PM1
+# functional domains (where small events stay Moderate, not downgraded).
 _DP = (
     "gene_symbol\tpm4\tpm4_supporting_max_aa\n"
-    "MECP2\tapplicable\t2\n"
+    "MECP2\tapplicable\t\n"
 )
 
 
@@ -126,18 +128,30 @@ class TestEvaluator:
         r = self._ev(tmp_path).evaluate(_DEL_2AA, _ann("DICER1", ConsequenceType.INFRAME_DELETION, 607))
         assert not r.triggered
 
-    def test_mecp2_small_indel_supporting_even_in_deny(self, tmp_path):
-        # 1-aa indel in the Pro-rich deny region → Supporting (size tier wins).
-        r = self._ev(tmp_path).evaluate(_DEL_1AA, _ann("MECP2", ConsequenceType.INFRAME_DELETION, 390))
-        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+    def test_mecp2_small_indel_in_domain_moderate(self, tmp_path):
+        # 1-aa indel inside the MBD domain (90-162) → Moderate (small events in a
+        # functionally important region are NOT downgraded to Supporting).
+        r = self._ev(tmp_path).evaluate(_DEL_1AA, _ann("MECP2", ConsequenceType.INFRAME_DELETION, 100))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
 
-    def test_mecp2_large_indel_in_deny_not_met(self, tmp_path):
-        # 3-aa indel in the deny region → withheld.
+    def test_mecp2_small_indel_outside_domain_not_met(self, tmp_path):
+        # 1-aa indel outside the functional domains → PM4 N/A (no size-Supporting).
+        r = self._ev(tmp_path).evaluate(_DEL_1AA, _ann("MECP2", ConsequenceType.INFRAME_DELETION, 250))
+        assert not r.triggered
+
+    def test_mecp2_large_indel_outside_domain_not_met(self, tmp_path):
+        # 3-aa indel outside the functional domains → PM4 N/A (broad Moderate removed).
+        r = self._ev(tmp_path).evaluate(_DEL_3AA, _ann("MECP2", ConsequenceType.INFRAME_DELETION, 250))
+        assert not r.triggered
+
+    def test_mecp2_indel_in_deny_not_met(self, tmp_path):
+        # Pro-rich deny region (381-405) → withheld.
         r = self._ev(tmp_path).evaluate(_DEL_3AA, _ann("MECP2", ConsequenceType.INFRAME_DELETION, 390))
         assert not r.triggered
 
-    def test_mecp2_large_indel_outside_moderate(self, tmp_path):
-        r = self._ev(tmp_path).evaluate(_DEL_3AA, _ann("MECP2", ConsequenceType.INFRAME_DELETION, 100))
+    def test_mecp2_trd_domain_moderate(self, tmp_path):
+        # In-frame indel in the TRD domain (302-306) → Moderate.
+        r = self._ev(tmp_path).evaluate(_DEL_3AA, _ann("MECP2", ConsequenceType.INFRAME_DELETION, 304))
         assert r.triggered and r.strength == CriterionStrength.MODERATE
 
     def test_cdh1_indel_not_met_but_stoploss_moderate(self, tmp_path):

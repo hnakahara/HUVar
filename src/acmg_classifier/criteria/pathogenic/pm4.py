@@ -80,21 +80,20 @@ class PM4Evaluator(CriterionEvaluator):
         )
         is_stoploss = pc.consequence == ConsequenceType.STOP_LOST
 
-        # Nucleotide-conservation PM4 (ABCA4): a synonymous or missense variant at
-        # a highly-conserved nucleotide (phyloP >= cutoff) earns PM4 — Supporting
-        # for a single changed nucleotide, Moderate for >1. Skipped when phyloP is
-        # unavailable.
+        # Nucleotide-conservation PM4 (ABCA4): a synonymous or missense variant
+        # affecting >1 nucleotide at a highly-conserved position (phyloP >= cutoff)
+        # earns PM4_Moderate. A single-nucleotide change (SNV) does NOT qualify —
+        # the ABCA4 VCEP restricts this rule to multi-nucleotide events. Skipped
+        # when phyloP is unavailable.
         nt_cut = self._regions.nt_phylop(gene)
         if nt_cut is not None and pc.consequence in (
             ConsequenceType.SYNONYMOUS, ConsequenceType.MISSENSE,
         ):
             best = _max_phylop(self._phylop, variant)
-            if best is not None and best >= nt_cut:
-                n_nt = _changed_nt(variant)
-                strength = (CriterionStrength.SUPPORTING if n_nt <= 1
-                            else CriterionStrength.MODERATE)
+            n_nt = _changed_nt(variant)
+            if best is not None and best >= nt_cut and n_nt > 1:
                 return CriteriaResult.met(
-                    ACMGCriterion.PM4, strength=strength,
+                    ACMGCriterion.PM4, strength=CriterionStrength.MODERATE,
                     evidence=(f"{gene}: {pc.consequence.value} at conserved nucleotide "
                               f"(phyloP {best:.2f} >= {nt_cut:g}, {n_nt} nt)"),
                 )

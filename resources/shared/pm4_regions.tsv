@@ -5,8 +5,9 @@ ATM	region_default	not_met
 ATM	stoploss	moderate	
 CDH1	region_default	not_met	
 CDH1	stoploss	moderate	
+CDKL5	moderate	19-43;169-171	
 CDKL5	deny	905-960	
-CDKL5	region_default	moderate	
+CDKL5	region_default	not_met	
 CTLA4	conserved_phylop	2.0	
 CTLA4	excludes	PVS1,PP3	
 CYP1B1	stoploss	not_applicable	
@@ -22,8 +23,9 @@ IL2RG	deletion_content	yes
 IL7R	deletion_content	yes	
 JAK3	deletion_content	yes	
 KCNQ1	excludes	PVS1,PP3	
+MECP2	moderate	90-162;302-306	
 MECP2	deny	381-405	
-MECP2	region_default	moderate	
+MECP2	region_default	not_met	
 MYOC	moderate	246-502	
 MYOC	region_default	not_met	
 PIK3R1	conserved_phylop	2.0	
@@ -31,7 +33,7 @@ PIK3R1	excludes	PVS1,PP3
 RAG1	deletion_content	yes	
 RAG2	deletion_content	yes	
 RPE65	conserved_phylop	2.0	
-RPGR	moderate	1-1078	
+RPGR	moderate	1-584	
 RPGR	region_default	not_met	
 RPGR	stoploss	strong	
 RUNX1	strong		107,110,134,162,166,167,169,170,194,196,198,201,204
