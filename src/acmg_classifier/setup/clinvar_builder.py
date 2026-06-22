@@ -98,6 +98,22 @@ _FUNCTIONAL_NEG = re.compile(
         r"\b(in|nor)\s+(functional|experimental)\s+(assay|stud|analys)",
     re.IGNORECASE,
 )
+# A quantitative functional claim (activity / levels / % of wild-type, protein
+# stability/expression, transactivation) only counts toward PS3 when the SCV
+# cites a PMID for the study — an uncited quantitative assertion is not
+# well-established evidence. Qualitative statements (e.g. a minigene splicing
+# assay, "loss of function") are unaffected.
+_QUANT_FUNCTIONAL = re.compile(
+    r"(?:enzymatic|enzyme|catalytic|residual|isomerohydrolase|specific|transactivation)\s*activit|"
+    r"activit\w*\s*(?:level|assay|measurement)|"
+    r"protein (?:level|stability|express)|"
+    r"\bundetectable\b|"
+    r"\d+\s?%|"
+    r"(?:reduced|decreased|increased|elevated|impaired|diminished|residual|abolish\w*)\b"
+        r"[^.]{0,30}?activit",
+    re.IGNORECASE,
+)
+_PMID_RE = re.compile(r"\bPMIDs?\b\s*:?\s*\d{3,9}", re.IGNORECASE)
 # Positive indicators of cosegregation (PP1).
 _SEGREGATION_POS = re.compile(r"segregat|\bPP1\b", re.IGNORECASE)
 # Phrases that negate cosegregation.
@@ -581,7 +597,10 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
             combined = " ".join(texts)
             if combined:
                 if _FUNCTIONAL_POS.search(combined) and not _FUNCTIONAL_NEG.search(combined):
-                    functional += 1
+                    # A quantitative functional claim must cite a PMID to count.
+                    if not (_QUANT_FUNCTIONAL.search(combined)
+                            and not _PMID_RE.search(combined)):
+                        functional += 1
                 if _SEGREGATION_POS.search(combined) and not _SEGREGATION_NEG.search(combined):
                     segregation += 1
 
