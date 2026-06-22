@@ -88,6 +88,15 @@ _CURATED: dict[str, list[tuple[str, list, list]]] = {
     "CYP1B1": [
         ("stoploss", "not_applicable", None),
     ],
+    # VHL (GN078): PM4_Moderate for in-frame indels in the beta domain (residues
+    # 63-155 and 193-204) and the alpha domain (155-193) — together 63-204 of the
+    # 213-aa protein; outside these domains → N/A. Stop-loss variants adding
+    # significant additional amino acids → Moderate (Type 2A extensions).
+    "VHL": [
+        ("moderate", [(63, 204)], []),
+        ("region_default", "not_met", None),
+        ("stoploss", "moderate", None),
+    ],
     # RPE65 (GN120): PM4 only when the indel touches a conserved residue
     # (PhyloP>2.0); ≥2 aa → Moderate, 1 aa → Supporting (size via
     # pm4_supporting_max_aa=1). CTLA4 (GN122) / PIK3R1 (GN160): conserved-nucleotide

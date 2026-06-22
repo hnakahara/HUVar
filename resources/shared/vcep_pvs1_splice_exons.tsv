@@ -52,3 +52,9 @@ GAMT	6	strong	final exon, in-frame, >10% protein
 IDUA	4	moderate	in-frame skip, <10% protein
 IDUA	9	strong	in-frame skip, >10% protein
 IDUA	11	moderate	in-frame skip, <10% protein
+# GALT (NM_000155.4, GN158): in-frame exon skips 6/7/9/10 (preserve reading
+# frame) -> Strong/Moderate; frame-disrupting exons 1-5/8 keep the flat PVS1.
+GALT	6	strong	in-frame skip; exon 6 = critical active site aa171-188
+GALT	7	moderate	in-frame skip, role of region unknown
+GALT	9	moderate	in-frame skip, role of region unknown
+GALT	10	moderate	in-frame skip, role of region unknown

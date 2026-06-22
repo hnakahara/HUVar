@@ -157,6 +157,27 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
         291, 292, 293, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305,
         314, 315, 316,
     ]),
+    # VHL GN078 v1.1.0 — germline + somatic hotspots (the residue list lives in
+    # the VCEP's external "Germline and Somatic Hotspots" table, not the JSON).
+    # PM1_Moderate for the curated hotspot residues. (The somatic <10-instances →
+    # PM1_Supporting split needs per-residue cancerhotspots counts, not encoded.)
+    ("VHL", "Moderate"): ([], [
+        # germline hotspots
+        65, 76, 78, 80, 86, 96, 98, 112, 117, 161, 162, 167, 170, 176, 178,
+        # somatic hotspots (cancerhotspots recurrent)
+        89, 111, 114, 115, 121, 135, 151, 158, 169,
+    ]),
+    # LDLR GN013 v1.2.0 — missense in exon 4 (MANE NM_000527.5 codons 105-232) OR
+    # one of the 60 conserved disulfide-bond cysteine residues (Supp. Table S4 of
+    # the LDLR VCEP). PM1_Moderate. (Spec also requires PM2 — a co-criterion the
+    # PM1 engine does not model.)
+    ("LDLR", "Moderate"): ([(105, 232)], [
+        27, 34, 39, 46, 52, 63, 68, 75, 82, 89, 95, 104, 109, 116, 121, 128,
+        134, 143, 148, 155, 160, 167, 173, 184, 197, 204, 209, 216, 222, 231,
+        236, 243, 248, 255, 261, 270, 276, 284, 289, 296, 302, 313, 318, 325,
+        329, 338, 340, 352, 358, 364, 368, 377, 379, 392, 667, 677, 681, 696,
+        698, 711,
+    ]),
 }
 
 

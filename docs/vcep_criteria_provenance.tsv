@@ -57,7 +57,7 @@ JAK3	GN121	2.3.0	Released	Severe Combined Immunodeficiency Disease Expert Panel 
 KCNQ1	GN112	1.0.0	Released	Potassium Channel Arrhythmia Expert Panel for KCNQ1 Version 1.0.0	BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 KCNQ4	GN005	2.0.0	Released	Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S	BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 KRAS	GN044	2.3.0	Released	RASopathy Expert Panel for KRAS Version 2.3.0	BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
-LDLR	GN013	1.2.0	Pilot Rules In Prep	Familial Hypercholesterolemia Expert Panel Specifications to the ACMG/	BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
+LDLR	GN013	1.2.0	Pilot Rules In Prep	Familial Hypercholesterolemia Expert Panel Specifications to the ACMG/	BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 LZTR1	GN094	1.3.0	Released	RASopathy Expert Panel for LZTR1 Version 1.3.0	BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 MAP2K1	GN045	2.3.0	Released	RASopathy Expert Panel for MAP2K1 Version 2.3.0	BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 MAP2K2	GN048	2.3.0	Released	RASopathy Expert Panel for MAP2K2 Version 2.3.0	BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
@@ -128,5 +128,5 @@ TP53	GN009	2.4.0	Released	TP53 Expert Panel for TP53 Version 2.4.0	BA1 BP1 BP3 B
 TPM1	GN100	1.0.0	Released	Cardiomyopathy Expert Panel for TPM1 Version 1.0.0	BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 UBE3A	GN037	7.0.0	Released	Rett and Angelman-like Disorders Expert Panel for UBE3A Version 7.0.0	BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 USH2A	GN005	2.0.0	Released	Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S	BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
-VHL	GN078	1.1.0	Released	VHL Expert Panel for VHL Version 1.1.0	BA1 BP1 BP3 BP7 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
+VHL	GN078	1.1.0	Released	VHL Expert Panel for VHL Version 1.1.0	BA1 BP1 BP3 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1
 VWF	GN081	1.0.0	Released	von Willebrand Disease Expert Panel for VWF Version 1.0.0	BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1

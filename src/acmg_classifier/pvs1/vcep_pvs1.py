@@ -708,6 +708,20 @@ _SPECS: dict[str, _GeneSpec] = {
         start_lost=None, splice=None, deletion=None,
         trunc_exception_bands=((1345, 1346), (1971, 1988)),
     ),
+    # GALT (Galactosemia VCEP, GN158 v1.0.0; MANE NM_000155.4, 379 aa). Decision
+    # tree (GALT_PVS1_DecisionTree): nonsense/frameshift with termination before
+    # c.1010 (codon <=336) → NMD → PVS1; NMD-escape (last 50 nt of exon 10 +
+    # exon 11, codon >=337) removing >10% (>38 aa, codon <=341) → PVS1, else
+    # (<=38 aa, role of region unknown) → PVS1_Moderate. Initiation codon →
+    # PVS1_Strong. Canonical +/-1,2 splice: in-frame exon 6/7/9/10 skips are
+    # downgraded per vcep_pvs1_splice_exons.tsv (exon 6 = the critical active site
+    # 171-188 → Strong; 7/9/10 → Moderate); frame-disrupting exon 1-5/8 skips keep
+    # the flat PVS1. Full gene / exon deletion → PVS1.
+    "GALT": _GeneSpec(
+        gene="GALT", transcript="NM_000155.4", aa_len=379,
+        trunc_bands=((1, 341, _S.VERY_STRONG), (342, 379, _S.MODERATE)),
+        start_lost=_S.STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+    ),
 }
 
 

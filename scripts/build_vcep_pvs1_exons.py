@@ -71,6 +71,8 @@ TARGET_TRANSCRIPTS: dict[str, str] = {
     "SCN2A": "NM_001371246", "SCN3A": "NM_006922", "SCN8A": "NM_014191",
     "NEB": "NM_001164508", "F8": "NM_000132", "PTEN": "NM_000314",
     "MYBPC3": "NM_000256", "HBB": "NM_000518", "HBA2": "NM_000517",
+    # GALT decision-tree (GN158): in-frame exon 6/7/9/10 skip strengths.
+    "GALT": "NM_000155",
 }
 
 

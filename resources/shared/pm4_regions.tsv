@@ -33,3 +33,6 @@ RPE65	conserved_phylop	2.0
 RUNX1	strong		107,110,134,162,166,167,169,170,194,196,198,201,204
 RUNX1	supporting	89-204	
 RUNX1	region_default	not_met	
+VHL	moderate	63-204	
+VHL	region_default	not_met	
+VHL	stoploss	moderate	
