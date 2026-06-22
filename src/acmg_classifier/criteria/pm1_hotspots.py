@@ -40,6 +40,9 @@ class PM1Hotspots:
         # gene -> list of (strength, ranges:list[(a,b)], residues:frozenset[int])
         self._by_gene: dict[str, list[tuple[CriterionStrength, list, frozenset]]] = {}
         self._not_applicable: set[str] = set()
+        # gene -> disulfide-domain ranges where a Cys-creating missense (alt=Cys)
+        # earns PM1_Moderate (FBN1).
+        self._cys_creating: dict[str, list[tuple[int, int]]] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -53,6 +56,11 @@ class PM1Hotspots:
                 strength_raw = (row.get("strength") or "").strip().lower()
                 if strength_raw == "not_applicable":
                     self._not_applicable.add(gene)
+                    continue
+                if strength_raw == "cys_creating":
+                    rngs = _parse_ranges(row.get("regions") or "")
+                    if rngs:
+                        self._cys_creating.setdefault(gene, []).extend(rngs)
                     continue
                 strength = _STRENGTH.get(strength_raw)
                 if strength is None:
@@ -83,6 +91,16 @@ class PM1Hotspots:
                 if best is None or _RANK[strength] > _RANK[best]:
                     best = strength
         return best
+
+    def has_cys_creating(self, gene: str | None) -> bool:
+        return bool(gene) and gene in self._cys_creating
+
+    def in_cys_creating_region(self, gene: str | None, position: int | None) -> bool:
+        """True if *position* lies in a disulfide-bonded domain where a
+        Cys-creating missense earns PM1_Moderate (FBN1)."""
+        if not gene or position is None:
+            return False
+        return any(a <= position <= b for a, b in self._cys_creating.get(gene, ()))
 
 
 def _parse_ranges(raw: str) -> list[tuple[int, int]]:

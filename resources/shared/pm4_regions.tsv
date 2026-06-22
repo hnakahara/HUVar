@@ -30,6 +30,9 @@ PIK3R1	excludes	PVS1,PP3
 RAG1	deletion_content	yes	
 RAG2	deletion_content	yes	
 RPE65	conserved_phylop	2.0	
+RPGR	moderate	1-1078	
+RPGR	region_default	not_met	
+RPGR	stoploss	strong	
 RUNX1	strong		107,110,134,162,166,167,169,170,194,196,198,201,204
 RUNX1	supporting	89-204	
 RUNX1	region_default	not_met	

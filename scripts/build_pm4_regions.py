@@ -97,6 +97,16 @@ _CURATED: dict[str, list[tuple[str, list, list]]] = {
         ("region_default", "not_met", None),
         ("stoploss", "moderate", None),
     ],
+    # RPGR (GN106, ORF15 isoform MANE NM_001034853.2, 1152 aa). PM4_Moderate for
+    # in-frame indels in exons 1-14 (codons 1-585) or the non-repetitive part of
+    # ORF15 (aa 585-1078) — together 1-1078; the repetitive ORF15 C-terminus
+    # (1079-1152) → N/A. Stop-loss at the terminal codon (aa 1153) produces a
+    # 38-aa extension shown to be deleterious → PVS1... here PM4_Strong.
+    "RPGR": [
+        ("moderate", [(1, 1078)], []),
+        ("region_default", "not_met", None),
+        ("stoploss", "strong", None),
+    ],
     # RPE65 (GN120): PM4 only when the indel touches a conserved residue
     # (PhyloP>2.0); ≥2 aa → Moderate, 1 aa → Supporting (size via
     # pm4_supporting_max_aa=1). CTLA4 (GN122) / PIK3R1 (GN160): conserved-nucleotide

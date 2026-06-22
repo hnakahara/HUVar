@@ -180,10 +180,13 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
     ]),
     # FBN1 GN022 v1.0.0 — Marfan VCEP. Cys residues in cbEGF-like (EGF-like
     # calcium-binding) domains -> PM1_Strong; Cys in EGF-like / TB / hybrid
-    # domains -> PM1_Moderate. Residues = the cysteines within each domain on
-    # UniProt P35555 (= MANE NM_000138.5, 2871 aa). The motif-based Moderate
-    # cases (calcium-binding/hydroxylation residues, Gly motifs, the (D/N)-X
-    # consensus, Cys-creating variants) are not residue lists and are not encoded.
+    # domains AND the critical Gly residues (between Cys2-Cys3 of every cbEGF, and
+    # between Cys3-Cys4 of cbEGF domains that have an upstream cbEGF) -> PM1_
+    # Moderate. Residues derived from UniProt P35555 (= MANE NM_000138.5, 2871 aa)
+    # domain + cysteine positions. The remaining motif-based Moderate cases
+    # (calcium-binding / hydroxylation residues and the (D/N)-X-(D/N)-(E/Q)…(Y/F)
+    # consensus substitution) need the per-cbEGF consensus residue positions and
+    # are not yet encoded; Cys-creating variants are handled separately (alt=Cys).
     ("FBN1", "Strong"): ([], [
         250, 257, 262, 271, 273, 286, 292, 299, 304, 313, 315, 328, 494, 499,
         504, 513, 515, 528, 534, 541, 546, 555, 557, 570, 576, 582, 587, 596,
@@ -209,14 +212,31 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
     ]),
     ("FBN1", "Moderate"): ([], [
         85, 89, 94, 100, 102, 111, 119, 123, 129, 134, 136, 145, 150, 154, 160,
-        166, 168, 177, 186, 195, 204, 209, 210, 221, 224, 231, 336, 345, 358,
-        359, 360, 365, 377, 389, 453, 460, 465, 474, 476, 488, 661, 670, 683,
-        684, 685, 696, 699, 711, 853, 862, 875, 876, 887, 890, 896, 958, 967,
-        980, 981, 982, 993, 996, 1008, 1534, 1549, 1562, 1563, 1564, 1574, 1577,
-        1589, 1695, 1706, 1719, 1720, 1721, 1733, 1736, 1748, 2061, 2070, 2083,
-        2084, 2085, 2096, 2099, 2111, 2339, 2348, 2363, 2364, 2365, 2375, 2378,
-        2390,
+        166, 168, 177, 186, 195, 204, 209, 210, 221, 224, 231, 259, 260, 301,
+        302, 336, 345, 358, 359, 360, 365, 377, 389, 453, 460, 465, 474, 476,
+        488, 501, 502, 509, 544, 551, 585, 592, 626, 633, 661, 670, 683, 684,
+        685, 696, 699, 711, 737, 744, 779, 786, 819, 826, 853, 862, 875, 876,
+        887, 890, 896, 924, 931, 958, 967, 980, 981, 982, 993, 996, 1008, 1042,
+        1049, 1082, 1084, 1091, 1126, 1127, 1134, 1169, 1176, 1217, 1251, 1252,
+        1259, 1294, 1301, 1334, 1344, 1385, 1416, 1418, 1425, 1426, 1459, 1466,
+        1500, 1507, 1534, 1549, 1562, 1563, 1564, 1574, 1577, 1589, 1619, 1620,
+        1627, 1659, 1661, 1668, 1695, 1706, 1719, 1720, 1721, 1733, 1736, 1748,
+        1780, 1787, 1829, 1863, 1870, 1901, 1903, 1910, 1945, 1952, 1987, 1994,
+        2027, 2034, 2061, 2070, 2083, 2084, 2085, 2096, 2099, 2111, 2140, 2147,
+        2177, 2179, 2186, 2187, 2226, 2270, 2305, 2312, 2339, 2348, 2363, 2364,
+        2365, 2375, 2378, 2390, 2416, 2423, 2464, 2505, 2506, 2536, 2539, 2546,
+        2580, 2586, 2587, 2618, 2619, 2627, 2662, 2668, 2669,
     ]),
+    # FBN1 Cys-creating variants: a missense introducing a new cysteine anywhere
+    # in a disulfide-bonded domain (EGF-like / cbEGF / TB / hybrid) → PM1_Moderate
+    # (handled by the evaluator as alt=Cys within these ranges). UniProt P35555
+    # domain ranges (merged).
+    ("FBN1", "cys_creating"): ([
+        (81, 112), (115, 178), (184, 236), (246, 329), (334, 389), (449, 653),
+        (659, 711), (723, 846), (851, 902), (910, 951), (956, 1008),
+        (1028, 1527), (1532, 1589), (1606, 1688), (1693, 1748), (1766, 2054),
+        (2059, 2111), (2127, 2332), (2337, 2390), (2402, 2687),
+    ], []),
 }
 
 

@@ -119,6 +119,74 @@ class TestFBN1pm1:
         assert self._h().lookup("FBN1", 300) is None
 
 
+class TestFBN1GlyMotif:
+    def _h(self):
+        return PM1Hotspots(_PM1)
+
+    def test_gly_between_cys_moderate(self):
+        # 259 is a critical Gly between Cys2-Cys3 of a cbEGF domain → Moderate.
+        assert self._h().lookup("FBN1", 259) == CriterionStrength.MODERATE
+        assert self._h().lookup("FBN1", 301) == CriterionStrength.MODERATE
+
+    def test_cbegf_cys_still_strong(self):
+        assert self._h().lookup("FBN1", 250) == CriterionStrength.STRONG
+
+
+class TestFBN1CysCreating:
+    def _ev(self):
+        from unittest.mock import MagicMock
+        from acmg_classifier.criteria.pathogenic.pm1 import PM1Evaluator
+        cfg = MagicMock()
+        cfg.pm1_hotspots_tsv = _PM1
+        cfg.clinvar_sqlite = Path("does/not/exist.sqlite")
+        return PM1Evaluator(cfg)
+
+    def _ann(self, pos, amino_acids):
+        from acmg_classifier.models.annotation import AnnotationData, GnomADData
+        return AnnotationData(gnomad=GnomADData(), consequences=[ConsequenceInfo(
+            transcript_id="NM", gene_id="ENSG", gene_symbol="FBN1",
+            consequence=ConsequenceType.MISSENSE, biotype="protein_coding",
+            is_mane_select=True, protein_position=pos, amino_acids=amino_acids,
+        )])
+
+    def _snv(self):
+        from acmg_classifier.models.variant import VariantRecord
+        from acmg_classifier.models.enums import Assembly
+        return VariantRecord(chrom="chr15", pos=1, ref="C", alt="T", assembly=Assembly.GRCH38)
+
+    def test_cys_creating_in_domain_moderate(self):
+        # Residue 90 is in a disulfide domain (81-112) but not a curated residue;
+        # a missense to Cys (alt=C) → PM1_Moderate.
+        r = self._ev().evaluate(self._snv(), self._ann(90, "S/C"))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+        assert "Cys-creating" in r.evidence
+
+    def test_non_cys_alt_not_met(self):
+        # Same position, alt != Cys, and 90 is not a curated hotspot residue.
+        r = self._ev().evaluate(self._snv(), self._ann(90, "S/A"))
+        assert not r.triggered
+
+    def test_cys_creating_outside_domain_not_met(self):
+        # Position 50 is outside all disulfide domains → Cys-creating does not apply.
+        r = self._ev().evaluate(self._snv(), self._ann(50, "S/C"))
+        assert not r.triggered
+
+
+class TestRPGRpm4:
+    def _r(self):
+        return PM4Regions(_PM4)
+
+    def test_exon1_14_and_orf15_moderate(self):
+        assert self._r().indel_strength("RPGR", 300) == CriterionStrength.MODERATE   # exon 1-14
+        assert self._r().indel_strength("RPGR", 800) == CriterionStrength.MODERATE   # ORF15 585-1078
+
+    def test_orf15_repeat_not_met(self):
+        assert self._r().indel_strength("RPGR", 1100) == "not_met"   # repetitive C-terminus
+
+    def test_stoploss_strong(self):
+        assert self._r().stoploss_strength("RPGR") == CriterionStrength.STRONG
+
+
 class TestVHLpm4:
     def _r(self):
         return PM4Regions(_PM4)
