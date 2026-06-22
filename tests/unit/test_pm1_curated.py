@@ -85,3 +85,50 @@ class TestLoaderOnCommitted:
         assert h.lookup("JAK3", 651) == CriterionStrength.MODERATE
         assert h.lookup("PDHA1", 292) == CriterionStrength.MODERATE
         assert h.lookup("KCNQ4", 300) is None
+
+
+class TestSCNpathogenicEnrichedRegions:
+    """SCN1A/2A/3A/8A (GN067-070): PM1_Moderate only within the VCEP PM1 Table
+    Pathogenic Enriched Region residues; outside → no PM1."""
+
+    def _h(self):
+        return PM1Hotspots(_TSV)
+
+    def test_scn1a_in_and_out(self):
+        h = self._h()
+        assert h.lookup("SCN1A", 220) == CriterionStrength.MODERATE   # in 212-230
+        assert h.lookup("SCN1A", 1780) == CriterionStrength.MODERATE  # in 1771-1784
+        assert h.lookup("SCN1A", 240) is None                         # gap 231-246
+        assert h.lookup("SCN1A", 100) is None                         # before first region
+
+    def test_scn2a_3a_8a_boundaries(self):
+        h = self._h()
+        assert h.lookup("SCN2A", 413) == CriterionStrength.MODERATE   # 413-426 start
+        assert h.lookup("SCN3A", 1352) == CriterionStrength.MODERATE  # 1309-1352 end
+        assert h.lookup("SCN8A", 399) == CriterionStrength.MODERATE   # 399-412 start
+        assert h.lookup("SCN8A", 413) is None                         # just past 399-412
+
+    def test_curated_constant_ranges(self):
+        assert bp._CURATED[("SCN1A", "Moderate")][0][0] == (212, 230)
+        assert bp._CURATED[("SCN8A", "Moderate")][0][-1] == (1751, 1764)
+        # All four genes have 16 Pathogenic Enriched Regions.
+        for g in ("SCN1A", "SCN2A", "SCN3A", "SCN8A"):
+            assert len(bp._CURATED[(g, "Moderate")][0]) == 16
+
+
+class TestHighlyPolymorphicNotApplicable:
+    """ITGA2B/ITGB3 (GN011): PM1 'does not apply due to genes being highly
+    polymorphic' → marked not_applicable."""
+
+    def _h(self):
+        return PM1Hotspots(_TSV)
+
+    def test_marked_not_applicable(self):
+        h = self._h()
+        assert h.is_not_applicable("ITGA2B")
+        assert h.is_not_applicable("ITGB3")
+
+    def test_committed_rows_present(self):
+        com = _committed()
+        assert ("ITGA2B", "not_applicable") in com
+        assert ("ITGB3", "not_applicable") in com

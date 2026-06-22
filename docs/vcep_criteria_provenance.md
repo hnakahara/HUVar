@@ -58,8 +58,8 @@ Genes covered: **131**.
 | IDUA | GN091 | 1.2.0 | Released | Lysosomal Diseases Expert Panel for IDUA Version 1.2.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | IL2RG | GN129 | 2.2.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for IL2RG Versio | BA1 BP1 BP3 BP7 BS1 BS2 PM4 PM5 PP2 PS1 PVS1 |
 | IL7R | GN119 | 2.2.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for IL7R Version | BA1 BP1 BP3 BP7 BS1 BS2 PM2 PM4 PM5 PP2 PS1 PVS1 |
-| ITGA2B | GN011 | 2.1.0 | Released | Platelet Disorders Expert Panel Version 2.1 | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| ITGB3 | GN011 | 2.1.0 | Released | Platelet Disorders Expert Panel Version 2.1 | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| ITGA2B | GN011 | 2.1.0 | Released | Platelet Disorders Expert Panel Version 2.1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| ITGB3 | GN011 | 2.1.0 | Released | Platelet Disorders Expert Panel Version 2.1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | JAK3 | GN121 | 2.3.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for JAK3 Version | BA1 BP1 BP3 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | KCNQ1 | GN112 | 1.0.0 | Released | Potassium Channel Arrhythmia Expert Panel for KCNQ1 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | KCNQ4 | GN005 | 2.0.0 | Released | Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -110,11 +110,11 @@ Genes covered: **131**.
 | RS1 | GN126 | 1.0.0 | Released | X-linked Inherited Retinal Disease Expert Panel for RS1 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | RUNX1 | GN008 | 3.1.0 | Released | Myeloid Malignancy Expert Panel for RUNX1 Version 3.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | RYR1 | GN179 | 2.0.0 | Released | Congenital Myopathies Expert Panel for RYR1 Version 2.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| SCN1A | GN067 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN1A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM4 PM5 PP2 PS1 PVS1 |
+| SCN1A | GN067 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN1A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
 | SCN1B | GN076 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN1B Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
-| SCN2A | GN068 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN2A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM4 PM5 PP2 PS1 PVS1 |
-| SCN3A | GN069 | 2.1.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN3A Version 2.1.0 | BA1 BP1 BP3 BS1 BS2 PM4 PM5 PP2 PS1 PVS1 |
-| SCN8A | GN070 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN8A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM4 PM5 PP2 PS1 PVS1 |
+| SCN2A | GN068 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN2A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
+| SCN3A | GN069 | 2.1.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN3A Version 2.1.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
+| SCN8A | GN070 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN8A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
 | SERPINC1 | GN084 | 1.1.0 | Pilot Rules In Prep | Thrombosis Expert Panel for SERPINC1 Version 1.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | SGCA | GN189 | 2.0.0 | Released | Limb Girdle Muscular Dystrophy Expert Panel for SGCA Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | SGCB | GN184 | 2.0.0 | Released | Limb Girdle Muscular Dystrophy Expert Panel for SGCB Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |

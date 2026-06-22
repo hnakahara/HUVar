@@ -131,6 +131,14 @@ def parse_regions(text: str) -> tuple[list[tuple[int, int]], list[int]]:
 # (the miner only mines single-gene specs). Every value is transcribed verbatim
 # from the cited ClinGen spec. (regions, residues).
 _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
+    # SCN1A/2A/3A/8A GN067-070 (Epilepsy Sodium Channel VCEP) — PM1_Moderate
+    # applies ONLY to the Pathogenic Enriched Region residues listed in the VCEP's
+    # external "PM1 Table" (PM1_Table_v2.20241205.xlsx), transcribed here as 16
+    # per-gene residue ranges. A variant outside these ranges does NOT get PM1.
+    ("SCN1A", "Moderate"): ([(212, 230), (247, 255), (411, 424), (859, 867), (879, 887), (889, 902), (904, 912), (931, 939), (979, 997), (1321, 1364), (1468, 1476), (1478, 1491), (1493, 1511), (1631, 1649), (1656, 1674), (1771, 1784)], []),
+    ("SCN2A", "Moderate"): ([(213, 231), (248, 256), (413, 426), (850, 858), (870, 878), (880, 893), (895, 903), (922, 930), (970, 988), (1311, 1354), (1458, 1466), (1468, 1481), (1483, 1501), (1621, 1639), (1646, 1664), (1761, 1774)], []),
+    ("SCN3A", "Moderate"): ([(212, 230), (247, 255), (412, 425), (851, 859), (871, 879), (881, 894), (896, 904), (923, 931), (971, 989), (1309, 1352), (1453, 1461), (1463, 1476), (1478, 1496), (1616, 1634), (1641, 1659), (1756, 1769)], []),
+    ("SCN8A", "Moderate"): ([(216, 234), (251, 259), (399, 412), (844, 852), (864, 872), (874, 887), (889, 897), (916, 924), (964, 982), (1301, 1344), (1449, 1457), (1459, 1472), (1474, 1492), (1612, 1630), (1637, 1655), (1751, 1764)], []),
     # OTC GN156 v1.0.0 — CP-binding, ornithine, catalytic + conserved residues
     # (the miner captured only Met-268). 21 critical residues.
     ("OTC", "Moderate"): ([], [
@@ -304,6 +312,11 @@ def build(summary_path: str) -> dict[tuple[str, str], tuple[set, set]]:
     # Apply manual curation overrides (replace the mined value for that key).
     for key, (ranges, residues) in _CURATED.items():
         table[key] = (set(ranges), set(residues))
+
+    # Curated not-applicable: ITGA2B/ITGB3 (GN011) declare PM1 "does not apply due
+    # to genes being highly polymorphic". They sit in a MULTI-gene spec, which the
+    # single-gene miner above skips, so force them here.
+    not_applicable |= {"ITGA2B", "ITGB3"}
 
     # Materialise not_applicable as its own strength row (only if the gene has no
     # positive hotspot rows from any spec).
