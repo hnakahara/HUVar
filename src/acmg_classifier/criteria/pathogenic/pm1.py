@@ -15,6 +15,14 @@ _RANK = {
     CriterionStrength.STRONG: 3,
 }
 
+# PM1 is a missense criterion by default. Only the few VCEPs that explicitly
+# extend it to in-frame indels accept those: GAA (GN010, "missense substitution
+# or in frame deletion"), IDUA (GN091, "missense substitutions or inframe
+# deletions") and CYP1B1 (GN104, "missense variants and in-frame indels"). For
+# every other gene an in-frame indel must NOT earn PM1 (e.g. RUNX1, whose VCEP
+# scopes PM1 to missense affecting RHD residues).
+_PM1_INDEL_GENES = frozenset({"GAA", "IDUA", "CYP1B1"})
+
 
 class PM1Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
@@ -42,6 +50,15 @@ class PM1Evaluator(CriterionEvaluator):
             return CriteriaResult.not_met(ACMGCriterion.PM1, "Not a missense/in-frame variant")
 
         gene = pc.gene_symbol
+
+        # PM1 is missense-only unless the gene's VCEP explicitly extends it to
+        # in-frame indels — withhold PM1 for an in-frame indel in any other gene.
+        if pc.consequence in (
+            ConsequenceType.INFRAME_INSERTION, ConsequenceType.INFRAME_DELETION,
+        ) and gene not in _PM1_INDEL_GENES:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM1, f"{gene}: PM1 applies to missense variants only"
+            )
 
         # 1. VCEP declared PM1 not applicable for the gene (benign variation
         #    throughout / no defined hotspot — e.g. ABCA4, ATM, RASopathy genes).

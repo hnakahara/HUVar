@@ -139,12 +139,16 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
     ("SCN2A", "Moderate"): ([(213, 231), (248, 256), (413, 426), (850, 858), (870, 878), (880, 893), (895, 903), (922, 930), (970, 988), (1311, 1354), (1458, 1466), (1468, 1481), (1483, 1501), (1621, 1639), (1646, 1664), (1761, 1774)], []),
     ("SCN3A", "Moderate"): ([(212, 230), (247, 255), (412, 425), (851, 859), (871, 879), (881, 894), (896, 904), (923, 931), (971, 989), (1309, 1352), (1453, 1461), (1463, 1476), (1478, 1496), (1616, 1634), (1641, 1659), (1756, 1769)], []),
     ("SCN8A", "Moderate"): ([(216, 234), (251, 259), (399, 412), (844, 852), (864, 872), (874, 887), (889, 897), (916, 924), (964, 982), (1301, 1344), (1449, 1457), (1459, 1472), (1474, 1492), (1612, 1630), (1637, 1655), (1751, 1764)], []),
-    # RYR1 GN150/GN179 v2.0.0 — PM1_Moderate restricted to the pore/transmembrane
-    # region (amino acids 4800-4950). The older Malignant Hyperthermia VCEP
-    # (GN012) defined broad N-terminal (1-552) / central (2101-2458) / C-terminal
-    # regions; those are superseded here (see _CURATED_EXCLUSIVE) so PM1 fires
-    # only within 4800-4950.
+    # RYR1 — two VCEPs define PM1 differently and BOTH apply:
+    #  * Congenital Myopathies VCEP (GN150/GN179): PM1_Moderate in the
+    #    pore/transmembrane region (aa 4800-4950).
+    #  * Malignant Hyperthermia Susceptibility VCEP (GN012): PM1_Supporting in the
+    #    N-terminal (1-552), central (2101-2458) and C-terminal (4631-4991)
+    #    regions.
+    # The mined table merged these into a single (wrong) Moderate row, so RYR1 is
+    # pinned exclusively (see _CURATED_EXCLUSIVE) to these two curated rows.
     ("RYR1", "Moderate"): ([(4800, 4950)], []),
+    ("RYR1", "Supporting"): ([(1, 552), (2101, 2458), (4631, 4991)], []),
     # OTC GN156 v1.0.0 — CP-binding, ornithine, catalytic + conserved residues
     # (the miner captured only Met-268). 21 critical residues.
     ("OTC", "Moderate"): ([], [

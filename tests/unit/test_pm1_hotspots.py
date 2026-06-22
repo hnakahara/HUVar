@@ -75,6 +75,7 @@ def _tsv(tmp_path):
         "MYH7\tModerate\t167-931\t\n"
         "RUNX1\tStrong\t\t107,110,134\n"
         "RUNX1\tSupporting\t89-204\t\n"
+        "GAA\tModerate\t\t282,404\n"
         "ABCA4\tnot_applicable\t\t\n",
         encoding="utf-8",
     )
@@ -155,11 +156,27 @@ class TestPM1Evaluator:
         )
         assert not r.triggered and "Not a missense/in-frame" in r.evidence
 
-    def test_inframe_indel_eligible(self, tmp_path):
+    def test_inframe_indel_withheld_for_missense_only_gene(self, tmp_path):
+        # MYH7's VCEP scopes PM1 to missense → an in-frame indel earns nothing.
         r = PM1Evaluator(_cfg(tmp_path)).evaluate(
             _snv(), _ann("MYH7", 500, ConsequenceType.INFRAME_DELETION)
         )
-        assert r.triggered
+        assert not r.triggered and "missense variants only" in r.evidence
+
+    def test_inframe_indel_eligible_for_indel_gene(self, tmp_path):
+        # GAA's VCEP extends PM1 to in-frame deletions → fires at a hotspot residue.
+        r = PM1Evaluator(_cfg(tmp_path)).evaluate(
+            _snv(), _ann("GAA", 282, ConsequenceType.INFRAME_DELETION)
+        )
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+
+    def test_runx1_inframe_indel_withheld(self, tmp_path):
+        # RUNX1 PM1 is missense-only: an in-frame indel at an RHD residue (134)
+        # that WOULD be a Strong missense hotspot must not earn PM1.
+        r = PM1Evaluator(_cfg(tmp_path)).evaluate(
+            _snv(), _ann("RUNX1", 134, ConsequenceType.INFRAME_DELETION)
+        )
+        assert not r.triggered and "missense variants only" in r.evidence
 
     def test_uncurated_gene_uses_fallback(self, tmp_path):
         # No curated rows + absent ClinVar DB -> heuristic runs and finds nothing,

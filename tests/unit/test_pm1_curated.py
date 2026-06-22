@@ -117,8 +117,9 @@ class TestSCNpathogenicEnrichedRegions:
 
 
 class TestRYR1PoreRegionOnly:
-    """RYR1 (GN150/GN179): PM1_Moderate only in the pore/transmembrane region
-    4800-4950; the broad GN012 (Malignant Hyperthermia) regions are superseded."""
+    """RYR1: PM1_Moderate in the Congenital Myopathies pore region (4800-4950,
+    GN150/GN179) PLUS PM1_Supporting in the Malignant Hyperthermia regions
+    (1-552, 2101-2458, 4631-4991, GN012)."""
 
     def _h(self):
         return PM1Hotspots(_TSV)
@@ -129,17 +130,20 @@ class TestRYR1PoreRegionOnly:
         assert h.lookup("RYR1", 4875) == CriterionStrength.MODERATE
         assert h.lookup("RYR1", 4950) == CriterionStrength.MODERATE
 
-    def test_old_broad_regions_no_longer_fire(self):
+    def test_mh_vcep_supporting_regions(self):
+        # Malignant Hyperthermia VCEP (GN012) PM1_Supporting regions restored.
         h = self._h()
-        assert h.lookup("RYR1", 330) is None    # was 1-552 (GN012)
-        assert h.lookup("RYR1", 2200) is None   # was 2101-2458 (GN012)
-        assert h.lookup("RYR1", 4700) is None    # outside pore region
+        assert h.lookup("RYR1", 330) == CriterionStrength.SUPPORTING    # 1-552
+        assert h.lookup("RYR1", 2200) == CriterionStrength.SUPPORTING   # 2101-2458
+        assert h.lookup("RYR1", 4700) == CriterionStrength.SUPPORTING   # 4631-4991
+        assert h.lookup("RYR1", 1000) is None                          # between regions
 
     def test_curated_and_committed(self):
         assert bp._CURATED[("RYR1", "Moderate")] == ([(4800, 4950)], [])
+        assert bp._CURATED[("RYR1", "Supporting")] == ([(1, 552), (2101, 2458), (4631, 4991)], [])
         com = _committed()
         assert com[("RYR1", "Moderate")] == ("4800-4950", "")
-        assert ("RYR1", "Supporting") not in com   # GN012 Supporting dropped
+        assert com[("RYR1", "Supporting")] == ("1-552;2101-2458;4631-4991", "")
 
 
 class TestHighlyPolymorphicNotApplicable:
