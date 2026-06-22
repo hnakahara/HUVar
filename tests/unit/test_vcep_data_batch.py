@@ -201,3 +201,23 @@ class TestVHLpm4:
 
     def test_stoploss_moderate(self):
         assert self._r().stoploss_strength("VHL") == CriterionStrength.MODERATE
+
+
+class TestFunctionalDomainOnlyPM4:
+    """FOXG1 / TCF4 / UBE3A: in-frame indel PM4 applies only within the PM1
+    functionally important domain → Moderate; elsewhere N/A."""
+
+    def _r(self):
+        return PM4Regions(_PM4)
+
+    def test_foxg1_forkhead_moderate(self):
+        assert self._r().indel_strength("FOXG1", 200) == CriterionStrength.MODERATE  # 181-275
+        assert self._r().indel_strength("FOXG1", 100) == "not_met"                   # outside
+
+    def test_tcf4_bhlh_moderate(self):
+        assert self._r().indel_strength("TCF4", 580) == CriterionStrength.MODERATE   # 564-617
+        assert self._r().indel_strength("TCF4", 100) == "not_met"
+
+    def test_ube3a_residue_moderate(self):
+        assert self._r().indel_strength("UBE3A", 820) == CriterionStrength.MODERATE  # residue 820
+        assert self._r().indel_strength("UBE3A", 821) == "not_met"

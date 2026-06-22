@@ -78,11 +78,29 @@ _CURATED: dict[str, list[tuple[str, list, list]]] = {
         ("deny", [(905, 960)], []),
         ("region_default", "not_met", None),
     ],
-    # FOXG1 (GN035): PM4_Moderate excludes the His-rich p.37-57, Pro/Gln-rich
-    # p.58-86 (merged 37-86) and Pro-rich p.105-112 low-complexity regions.
+    # FOXG1 (GN035): in-frame indel PM4 applies ONLY within the PM1 Forkhead
+    # domain (aa 181-275) → Moderate (small events in the domain are not
+    # size-downgraded). Outside → N/A. The His-rich p.37-86 / Pro-rich p.105-112
+    # low-complexity denies are retained for provenance though they already lie
+    # outside the Forkhead domain.
     "FOXG1": [
+        ("moderate", [(181, 275)], []),
         ("deny", [(37, 86), (105, 112)], []),
-        ("region_default", "moderate", None),
+        ("region_default", "not_met", None),
+    ],
+    # TCF4 (Pitt-Hopkins): in-frame indel PM4 applies ONLY within the PM1 bHLH
+    # domain (aa 564-617) → Moderate; outside → N/A. Same "<3 aa unless
+    # functionally important region" caveat as the Rett/Angelman genes.
+    "TCF4": [
+        ("moderate", [(564, 617)], []),
+        ("region_default", "not_met", None),
+    ],
+    # UBE3A (Angelman): the PM1 functional domain is the single 3'-cysteine
+    # binding residue aa 820 → an in-frame indel impacting it is Moderate;
+    # elsewhere → N/A.
+    "UBE3A": [
+        ("moderate", [], [820]),
+        ("region_default", "not_met", None),
     ],
     # CDH1 (GN007) / ATM (GN020): PM4 applies ONLY to stop-loss variants → an
     # in-frame indel is N/A; a stop-loss is Moderate (the default strength).

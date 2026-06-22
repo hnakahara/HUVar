@@ -16,8 +16,9 @@ DICER1	moderate	1682-1846
 DICER1	deny	606-609;1418-1420;1422-1425	
 DICER1	region_default	supporting	
 FBN1	excludes	PVS1	
+FOXG1	moderate	181-275	
 FOXG1	deny	37-86;105-112	
-FOXG1	region_default	moderate	
+FOXG1	region_default	not_met	
 FOXN1	deletion_content	yes	
 IL2RG	deletion_content	yes	
 IL7R	deletion_content	yes	
@@ -39,6 +40,10 @@ RPGR	stoploss	strong
 RUNX1	strong		107,110,134,162,166,167,169,170,194,196,198,201,204
 RUNX1	supporting	89-204	
 RUNX1	region_default	not_met	
+TCF4	moderate	564-617	
+TCF4	region_default	not_met	
+UBE3A	moderate		820
+UBE3A	region_default	not_met	
 VHL	moderate	63-204	
 VHL	region_default	not_met	
 VHL	stoploss	moderate	

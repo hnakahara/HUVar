@@ -667,6 +667,9 @@ _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     # small indel leaks a size-only PM4_Supporting.
     "MECP2": {"pm4_supporting_max_aa": ""},
     "CDKL5": {"pm4_supporting_max_aa": ""},
+    "FOXG1": {"pm4_supporting_max_aa": ""},
+    "TCF4": {"pm4_supporting_max_aa": ""},
+    "UBE3A": {"pm4_supporting_max_aa": ""},
 }
 
 
