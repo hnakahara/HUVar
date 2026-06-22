@@ -39,6 +39,18 @@ def _cap(strength: CriterionStrength, ceiling: CriterionStrength | None) -> Crit
     return ceiling
 
 
+def _aa_ref_alt(amino_acids: str | None) -> tuple[str, str] | None:
+    """The 1-letter (ref, alt) from a VEP ``amino_acids`` "X/Y" missense field,
+    or None when it is absent or not a single-residue substitution."""
+    if not amino_acids or "/" not in amino_acids:
+        return None
+    ref, _, alt = amino_acids.partition("/")
+    ref, alt = ref.strip(), alt.strip()
+    if len(ref) == 1 and len(alt) == 1:
+        return ref, alt
+    return None
+
+
 class PS1Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
@@ -46,6 +58,9 @@ class PS1Evaluator(CriterionEvaluator):
         # non-canonical splice nucleotides (InSiGHT MMR genes).
         from acmg_classifier.criteria.ps1_genes import PS1Spec
         self._spec = PS1Spec(cfg.disease_prevalence_tsv)
+        # SCN paralogue amino-acid alignment (PS1 analogous-residue route).
+        from acmg_classifier.criteria.ps1_paralog import PS1ParalogMap
+        self._paralog_map = PS1ParalogMap(cfg.ps1_paralog_map_tsv)
 
     def evaluate(
         self,
@@ -130,6 +145,38 @@ class PS1Evaluator(CriterionEvaluator):
                     f"{strength.value}: {', '.join(h.variation_id or '' for h in para[:3])}"
                 )
                 return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
+
+        # SCN paralogue alignment route (GN067-070): the same amino-acid change at
+        # the ANALOGOUS residue of a paralogue (SCN1A/2A/3A/8A), translated via the
+        # alignment table. >=2 paralogue Pathogenic hits → PS1_Strong; a single
+        # P/LP paralogue hit → PS1_Supporting.
+        aa = _aa_ref_alt(pc.amino_acids)
+        if aa and self._paralog_map.has_gene(pc.gene_symbol):
+            from acmg_classifier.local_db.clinvar_sqlite import query_paralog_aa_change
+            ref, alt = aa
+            analogs = self._paralog_map.analogs(pc.gene_symbol, pc.protein_position)
+            path_genes: set[str] = set()
+            any_plp: list = []
+            for sib, spos in analogs.items():
+                hits = query_paralog_aa_change(
+                    self._cfg.clinvar_sqlite, sib, f"{ref}{spos}{alt}", min_stars=1,
+                )
+                for h in hits:
+                    any_plp.append(h)
+                    sig = (h.clinical_significance or "").lower()
+                    if "pathogenic" in sig and sig != "likely pathogenic":
+                        path_genes.add(sib)
+            if any_plp:
+                strength = (CriterionStrength.STRONG if len(path_genes) >= 2
+                            else CriterionStrength.SUPPORTING)
+                strength = _cap(strength, self._spec.max_strength(pc.gene_symbol))
+                ids = ", ".join(h.variation_id or "" for h in any_plp[:3])
+                return CriteriaResult.met(
+                    ACMGCriterion.PS1, strength,
+                    f"ClinVar same AA at analogous paralogue residue "
+                    f"({len(path_genes)} paralogue P / {len(any_plp)} P-LP), "
+                    f"{strength.value}: {ids}",
+                )
 
         return CriteriaResult.not_met(ACMGCriterion.PS1, "No ClinVar >=1 star same-AA hit (excluding self)")
 

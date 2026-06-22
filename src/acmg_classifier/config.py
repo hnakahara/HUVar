@@ -265,6 +265,13 @@ class Config(BaseSettings):
         return self.assembly_dir / "gnomad" / f"gnomad_v{ver}_exomes_coverage.duckdb"
 
     @property
+    def ps1_paralog_map_tsv(self) -> Path:
+        """SCN paralogue amino-acid alignment for the PS1 analogous-residue route
+        (SCN1A/2A/3A/8A), built by scripts/build_ps1_paralog_map.py. Absent file
+        disables the SCN paralogue path."""
+        return self.data_dir / "shared" / "ps1_paralog_map.tsv"
+
+    @property
     def pm4_regions_tsv(self) -> Path:
         """Per-gene PM4 region / strength rules (Strong residues, allow/deny
         regions, region default, stop-loss strength) — see

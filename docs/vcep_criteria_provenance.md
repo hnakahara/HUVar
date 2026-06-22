@@ -144,3 +144,4 @@ Genes covered: **131**.
 |-----------|-------|-------|---------|------|
 | PS1 paralogue | HRAS, NRAS, KRAS, MAP2K1, MAP2K2, SOS1, SOS2 | GN004 | 1.0.0 | RASopathy VCEP |
 | PS1 paralogue | HBA2 (← HBA1) | GN173 | 1.0.0 | Hemoglobinopathy VCEP |
+| PS1 paralogue (analogous-residue alignment) | SCN1A, SCN2A, SCN3A, SCN8A | GN067-070 | 2.0.0 | SCN epilepsy VCEPs |

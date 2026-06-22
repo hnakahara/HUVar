@@ -118,6 +118,9 @@ def main() -> None:
          meta.get("GN004", ("", "", ""))[0], "RASopathy VCEP"),
         ("PS1 paralogue", "HBA2 (← HBA1)", "GN173", meta.get("GN173", ("", "", ""))[0],
          "Hemoglobinopathy VCEP"),
+        ("PS1 paralogue (analogous-residue alignment)",
+         "SCN1A, SCN2A, SCN3A, SCN8A", "GN067-070",
+         meta.get("GN067", ("", "", ""))[0], "SCN epilepsy VCEPs"),
     ]
 
     with open(OUT_MD, "w", encoding="utf-8") as fh:

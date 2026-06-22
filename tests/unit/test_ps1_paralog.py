@@ -145,3 +145,104 @@ def test_committed_tsv_paralog_groups():
     assert rows["HBA2"]["ps1_paralog_group"] == "HBA1"
     assert rows["HBA2"]["ps1_paralog_strength"] == "Moderate"
     assert rows["SOS1"]["ps1_paralog_group"] == "SOS2"
+
+
+# --------------------- SCN paralogue alignment route -------------------------
+
+from acmg_classifier.criteria.ps1_paralog import PS1ParalogMap  # noqa: E402
+
+_ROOT = Path(__file__).resolve().parents[2]
+_MAP_TSV = _ROOT / "resources" / "shared" / "ps1_paralog_map.tsv"
+
+
+class TestParalogMapLoader:
+    def test_committed_map_analogs(self):
+        m = PS1ParalogMap(_MAP_TSV)
+        assert m.has_gene("SCN1A") and m.has_gene("SCN8A")
+        assert not m.has_gene("BRCA1")
+        # Alignment row "40  40  40  44": SCN1A40 ↔ SCN2A40/SCN3A40/SCN8A44.
+        assert m.analogs("SCN1A", 40) == {"SCN2A": 40, "SCN3A": 40, "SCN8A": 44}
+        assert m.analogs("SCN8A", 44)["SCN1A"] == 40
+
+    def test_missing_file(self, tmp_path):
+        m = PS1ParalogMap(tmp_path / "nope.tsv")
+        assert not m.has_gene("SCN1A")
+        assert m.analogs("SCN1A", 40) == {}
+
+
+def _scn_cfg(tmp_path, clinvar, map_tsv):
+    dp = tmp_path / "dp.tsv"
+    dp.write_text(
+        "gene_symbol\tps1\tps1_splice\tps1_max\tps1_paralog_group\tps1_paralog_strength\n"
+        "SCN2A\tapplicable\t\t\t\t\n",
+        encoding="utf-8",
+    )
+    cfg = MagicMock()
+    cfg.disease_prevalence_tsv = dp
+    cfg.clinvar_sqlite = clinvar
+    cfg.ps1_paralog_map_tsv = map_tsv
+    return cfg
+
+
+def _map(tmp_path):
+    p = tmp_path / "map.tsv"
+    p.write_text("SCN1A\tSCN2A\tSCN3A\tSCN8A\n40\t40\t40\t44\n", encoding="utf-8")
+    return p
+
+
+def _scn_ann(gene, codon, change="R/W"):
+    return AnnotationData(
+        gnomad=GnomADData(),
+        consequences=[ConsequenceInfo(
+            transcript_id="NM_1", gene_id="ENSG", gene_symbol=gene,
+            consequence=ConsequenceType.MISSENSE, biotype="protein_coding",
+            is_mane_select=True, protein_position=codon,
+            hgvs_p=f"NP:p.Arg{codon}Trp", amino_acids=change,
+        )],
+    )
+
+
+class TestScnParalogEvaluator:
+    def test_two_paralog_pathogenic_strong(self, tmp_path):
+        # SCN2A R40W: analogous SCN1A R40W (Path) + SCN8A R44W (Path) → 2 → Strong.
+        db = _db(tmp_path, [
+            ("1", "chr2", 1, "C", "A", "SCN1A", "NP:p.Arg40Trp", "R40W", 40,
+             "Pathogenic", "criteria provided", 2),
+            ("2", "chr12", 1, "C", "A", "SCN8A", "NP:p.Arg44Trp", "R44W", 44,
+             "Pathogenic", "criteria provided", 2),
+        ])
+        r = PS1Evaluator(_scn_cfg(tmp_path, db, _map(tmp_path))).evaluate(
+            _snv(), _scn_ann("SCN2A", 40))
+        assert r.triggered and r.strength == CriterionStrength.STRONG
+        assert "analogous paralogue" in r.evidence
+
+    def test_single_paralog_supporting(self, tmp_path):
+        # Only one paralogue hit (LP) → Supporting.
+        db = _db(tmp_path, [
+            ("1", "chr2", 1, "C", "A", "SCN1A", "NP:p.Arg40Trp", "R40W", 40,
+             "Likely pathogenic", "criteria provided", 2),
+        ])
+        r = PS1Evaluator(_scn_cfg(tmp_path, db, _map(tmp_path))).evaluate(
+            _snv(), _scn_ann("SCN2A", 40))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+
+    def test_no_paralog_hit_not_met(self, tmp_path):
+        db = _db(tmp_path, [
+            ("1", "chr2", 1, "C", "A", "SCN1A", "NP:p.Arg40Gln", "R40Q", 40,
+             "Pathogenic", "criteria provided", 2),  # different alt → no match for R40W
+        ])
+        r = PS1Evaluator(_scn_cfg(tmp_path, db, _map(tmp_path))).evaluate(
+            _snv(), _scn_ann("SCN2A", 40))
+        assert not r.triggered
+
+    def test_same_gene_takes_precedence(self, tmp_path):
+        # A same-gene SCN2A hit (within codon window) fires first; paralog unused.
+        db = _db(tmp_path, [
+            ("self", "chr12", 101, "C", "G", "SCN2A", "NP:p.Arg40Trp", "R40W", 40,
+             "Pathogenic", "criteria provided", 2),
+        ])
+        ev = PS1Evaluator(_scn_cfg(tmp_path, db, _map(tmp_path)))
+        # candidate at chr12:100 so the sibling at 101 is a different-nucleotide
+        # same-codon same-gene hit.
+        r = ev.evaluate(_snv(), _scn_ann("SCN2A", 40))
+        assert r.triggered and "paralogue" not in r.evidence

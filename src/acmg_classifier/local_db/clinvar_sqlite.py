@@ -84,6 +84,45 @@ def _aa_change_key(hgvs_p: Optional[str]) -> Optional[str]:
     return aa1 + m.group(2) + aa2
 
 
+def query_paralog_aa_change(
+    db_path: Path,
+    gene_symbol: str,
+    aa_change: str,
+    min_stars: int = 1,
+) -> list[ClinVarRecord]:
+    """ClinVar P/LP records in *gene_symbol* whose MANE-anchored
+    ``amino_acid_change`` equals *aa_change* (e.g. "R1234W"), for the PS1
+    paralogue route — the same amino-acid change at the analogous residue of a
+    paralogue gene (SCN1A/2A/3A/8A). No self-exclusion / proximity guard: the
+    hit is in a different gene by construction."""
+    if not db_path.exists() or not aa_change:
+        return []
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT variation_id, clinical_significance, review_status, star_rating,
+                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change
+            FROM variants
+            WHERE gene_symbol = ?
+              AND amino_acid_change = ?
+              AND star_rating >= ?
+              AND clinical_significance IN (
+                  'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
+              )
+            """,
+            (gene_symbol, aa_change, min_stars),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="paralog_aa", error=str(exc))
+        return []
+    return [ClinVarRecord(
+        variation_id=str(r[0]), clinical_significance=r[1], review_status=r[2],
+        star_rating=r[3], gene_symbol=r[4], hgvs_c=r[5], hgvs_p=r[6],
+        amino_acid_change=r[7],
+    ) for r in rows]
+
+
 def query_same_aa_change(
     db_path: Path,
     gene_symbol: str,
