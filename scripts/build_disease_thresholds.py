@@ -679,6 +679,14 @@ _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     "MYOC": {"af_basis": "popmax"},
     "GAMT": {"af_basis": "popmax"},
     "BMPR2": {"af_basis": "popmax"},
+    # Point-estimate MAF specs (no FAF wording in their cSpec): USH2A "MAF ≥0.005",
+    # CDH1 "MAF cutoff 0.2%", F8 "MAF ≥0.0333%", FBN1 "AF above 0.1% in ethnic
+    # population with highest AF", SCN2A "AF above 0.01% in gnomAD".
+    "USH2A": {"af_basis": "popmax"},
+    "CDH1": {"af_basis": "popmax"},
+    "F8": {"af_basis": "popmax"},
+    "FBN1": {"af_basis": "popmax"},
+    "SCN2A": {"af_basis": "popmax"},
     # RYR1: the auto-resolver picked the AR-variant myopathy BA1 (0.00697, GN179);
     # the applicable Malignant Hyperthermia VCEP (GN012) BA1/BS1 are 0.0038/0.0008
     # on the popmax point AF.
