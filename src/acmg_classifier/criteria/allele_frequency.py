@@ -79,12 +79,19 @@ class GeneThresholds:
     ``af_basis`` selects which gnomAD frequency the BA1/BS1 evaluators compare
     against: "" (default) → overall population FAF95; "males" → male (XY)
     allele frequency, for X-linked genes whose VCEP states the cutoff "in
-    males" (RPGR, RS1, ABCD1, SLC6A8, OTC).
+    males" (RPGR, RS1, ABCD1, SLC6A8, OTC); "popmax" → the grpmax/popmax POINT
+    estimate, for VCEPs that define BA1/BS1 on the point allele frequency rather
+    than the 95%-CI filtering AF (RUNX1, GAA, MYOC, …) — gated by
+    ``Config.popmax_af_basis``.
+
+    ``ba1_hom_count`` is the homozygote+hemizygote count at/above which BA1 fires
+    independently of frequency, for VCEPs with that OR-clause (SLC6A8, OTC: ≥10).
     """
 
     ba1: float
     bs1: float
     af_basis: str = ""
+    ba1_hom_count: Optional[int] = None
     # Strength the BS1 cutoff fires at — the spec's BS1 tier (e.g. MYO15A/OTOF
     # fire VeryStrong at >=0.3%); defaults to the ACMG BS1 Strong level.
     bs1_strength: CriterionStrength = CriterionStrength.STRONG
@@ -160,9 +167,14 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
         (row.get("bs1_strength") or "").strip(), CriterionStrength.STRONG
     )
     bs1_exclude = (row.get("bs1_exclude") or "").strip()
+    raw_hom = (row.get("ba1_hom_count") or "").strip()
+    try:
+        ba1_hom_count = int(raw_hom) if raw_hom else None
+    except ValueError:
+        ba1_hom_count = None
     return GeneThresholds(
         ba1=ba1, bs1=bs1, af_basis=af_basis, bs1_strength=bs1_strength,
-        bs1_exclude=bs1_exclude,
+        bs1_exclude=bs1_exclude, ba1_hom_count=ba1_hom_count,
     )
 
 

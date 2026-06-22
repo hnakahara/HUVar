@@ -156,6 +156,71 @@ class TestMalesAlleleFrequency:
         assert "AF_XY (males)" in r.evidence
 
 
+class TestBA1PopmaxBasisAndHomCount:
+    """af_basis='popmax' compares the grpmax/popmax POINT AF (not FAF95) for VCEPs
+    that define the cutoff that way; Config.popmax_af_basis=False reverts to FAF95.
+    ba1_hom_count gives an independent count-based BA1 (SLC6A8/OTC: >=10 hom/hemi)."""
+
+    def _cfg(self, tmp_path, popmax_enabled=True):
+        from unittest.mock import MagicMock
+        cfg = MagicMock()
+        tsv = tmp_path / "disease_prevalence.tsv"
+        tsv.write_text(
+            "gene_symbol\tbs1_threshold\tba1_threshold\taf_basis\tba1_hom_count\n"
+            "RUNX1\t0.00015\t0.0015\tpopmax\t\n"
+            "SLC6A8\t0.0002\t0.002\t\t10\n",
+            encoding="utf-8",
+        )
+        cfg.disease_prevalence_tsv = tsv
+        cfg.popmax_af_basis = popmax_enabled
+        return cfg
+
+    def test_popmax_point_fires_when_faf95_below(self, tmp_path):
+        from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+        ev = BA1Evaluator(self._cfg(tmp_path))
+        # FAF95 (0.00089) < BA1 0.0015, but popmax POINT (0.0016) >= 0.0015.
+        gd = GnomADData(faf95_popmax=0.00089, popmax_af=0.0016, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="RUNX1")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and "popmax AF (point)" in r.evidence
+
+    def test_popmax_basis_disabled_reverts_to_faf95(self, tmp_path):
+        from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+        ev = BA1Evaluator(self._cfg(tmp_path, popmax_enabled=False))
+        gd = GnomADData(faf95_popmax=0.00089, popmax_af=0.0016, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="RUNX1")])
+        r = ev.evaluate(_snv(), ann)
+        assert not r.triggered   # FAF95 0.00089 < 0.0015
+
+    def test_hom_count_fires_independent_of_af(self, tmp_path):
+        from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+        ev = BA1Evaluator(self._cfg(tmp_path))
+        # Low FAF95 but >=10 hom+hemi → BA1 via the count OR-clause.
+        gd = GnomADData(faf95_popmax=0.00001, nhomalt=4, nhemi=7, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="SLC6A8")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and "count rule" in r.evidence
+
+    def test_hom_count_below_threshold_not_met(self, tmp_path):
+        from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+        ev = BA1Evaluator(self._cfg(tmp_path))
+        gd = GnomADData(faf95_popmax=0.00001, nhomalt=2, nhemi=3, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="SLC6A8")])
+        r = ev.evaluate(_snv(), ann)
+        assert not r.triggered
+
+
+def test_committed_ryr1_ba1_threshold():
+    import csv
+    from pathlib import Path
+    tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
+    row = next(r for r in csv.DictReader(tsv.open(encoding="utf-8"), delimiter="\t")
+               if r["gene_symbol"] == "RYR1")
+    assert row["ba1_threshold"] == "0.0038"
+    assert row["bs1_threshold"] == "0.0008"
+    assert row["af_basis"] == "popmax"
+
+
 _BS2_TSV = (
     "gene_symbol\tbs2\tinheritance\n"
     "PTEN\tapplicable\tAD\n"

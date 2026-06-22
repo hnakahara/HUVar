@@ -36,6 +36,18 @@ class BA1Evaluator(CriterionEvaluator):
         gt = self._thresholds.get(gene)
         threshold = gt.ba1
 
+        # Homozygote/hemizygote-count OR-clause (SLC6A8, OTC: BA1 if >=10 hom or
+        # hemizygotes regardless of frequency). Evaluated first since it is an
+        # independent path to BA1.
+        if gt.ba1_hom_count is not None:
+            n_hh = (gd.nhomalt or 0) + (gd.nhemi or 0)
+            if n_hh >= gt.ba1_hom_count:
+                return CriteriaResult.met(
+                    ACMGCriterion.BA1,
+                    evidence=(f"{n_hh} gnomAD homo/hemizygotes >= {gt.ba1_hom_count} "
+                              f"for {gene or 'default'} (BA1 count rule)"),
+                )
+
         # Same prefer-FAF95 logic as PM2/PS4: FAF gives the most conservative
         # estimate; only fall back to the POINT popmax AF if FAF is unavailable.
         # The fallback is flagged in the metric label because the point AF lacks
@@ -53,6 +65,14 @@ class BA1Evaluator(CriterionEvaluator):
         if gt.af_basis == "males" and gd.af_xy is not None:
             faf = gd.af_xy
             metric = "gnomAD AF_XY (males)"
+
+        # Point-estimate basis: a few VCEPs define BA1/BS1 on the grpmax/popmax
+        # POINT allele frequency (not FAF95). Honour that for af_basis="popmax"
+        # genes unless globally disabled (Config.popmax_af_basis=False → FAF95).
+        if (gt.af_basis == "popmax" and self._cfg.popmax_af_basis
+                and gd.popmax_af is not None):
+            faf = gd.popmax_af
+            metric = "gnomAD popmax AF (point)"
 
         # 3 significant figures rather than 4 fixed decimals — disease-specific
         # BA1 cutoffs can be ~1e-3/1e-5, which ".4f" rounds misleadingly. The

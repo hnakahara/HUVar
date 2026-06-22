@@ -42,6 +42,12 @@ class Config(BaseSettings):
     bs2_min_homalt: int = 2
     bs2_min_hemi: int = 2
     bs2_min_het: int = 3
+    # When True, genes whose VCEP defines the BA1/BS1 cutoff on the *point*
+    # grpmax/popmax allele frequency (af_basis="popmax" in disease_prevalence.tsv
+    # — e.g. RUNX1, GAA, MYOC) compare against the gnomAD popmax point estimate
+    # rather than the more conservative FAF95. Set ACMG_POPMAX_AF_BASIS=false to
+    # force every gene back to FAF95 (the universally conservative metric).
+    popmax_af_basis: bool = True
     insilico_tool: InSilicoTool = InSilicoTool.ESM1B
     splice_tool: SpliceTool = SpliceTool.OPENSPLICEAI
     supplement_mode: SupplementMode = SupplementMode.MERGE

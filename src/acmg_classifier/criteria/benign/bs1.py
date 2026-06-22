@@ -84,6 +84,14 @@ class BS1Evaluator(CriterionEvaluator):
             faf = gd.af_xy
             metric = "gnomAD AF_XY (males)"
 
+        # Point-estimate basis (mirrors BA1): VCEPs that define the cutoff on the
+        # grpmax/popmax POINT AF rather than FAF95 (af_basis="popmax"), unless
+        # globally disabled (Config.popmax_af_basis=False).
+        if (gt.af_basis == "popmax" and self._cfg.popmax_af_basis
+                and gd.popmax_af is not None):
+            faf = gd.popmax_af
+            metric = "gnomAD popmax AF (point)"
+
         # Format with 3 significant figures (not fixed 4 decimals): disease-
         # specific cutoffs are often ~1e-4, where ".4f" rounds both the FAF and
         # the threshold to misleadingly coarse values (0.000358 → "0.0004",

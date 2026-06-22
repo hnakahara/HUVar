@@ -33,6 +33,7 @@ from typing import Optional
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
     "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "af_basis",
+    "ba1_hom_count",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
     "pm2_subset", "pm2_min_depth",
     "pm4", "pm4_supporting_max_aa", "pp2",
@@ -665,11 +666,26 @@ _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     # PM4 applies only within their PM1 functional domains (pm4_regions.tsv) where
     # small events stay Moderate. Clear the mined size cutoff so no out-of-domain
     # small indel leaks a size-only PM4_Supporting.
-    "MECP2": {"pm4_supporting_max_aa": ""},
+    "MECP2": {"pm4_supporting_max_aa": "", "af_basis": "popmax"},
     "CDKL5": {"pm4_supporting_max_aa": ""},
-    "FOXG1": {"pm4_supporting_max_aa": ""},
-    "TCF4": {"pm4_supporting_max_aa": ""},
-    "UBE3A": {"pm4_supporting_max_aa": ""},
+    "FOXG1": {"pm4_supporting_max_aa": "", "af_basis": "popmax"},
+    "TCF4": {"pm4_supporting_max_aa": "", "af_basis": "popmax"},
+    "UBE3A": {"pm4_supporting_max_aa": "", "af_basis": "popmax"},
+    # BA1/BS1 AF metric = grpmax/popmax POINT estimate (not FAF95) for VCEPs that
+    # define the cutoff on the point allele frequency (see Config.popmax_af_basis
+    # to revert all of these to FAF95).
+    "RUNX1": {"af_basis": "popmax"},
+    "GAA": {"af_basis": "popmax"},
+    "MYOC": {"af_basis": "popmax"},
+    "GAMT": {"af_basis": "popmax"},
+    "BMPR2": {"af_basis": "popmax"},
+    # RYR1: the auto-resolver picked the AR-variant myopathy BA1 (0.00697, GN179);
+    # the applicable Malignant Hyperthermia VCEP (GN012) BA1/BS1 are 0.0038/0.0008
+    # on the popmax point AF.
+    "RYR1": {"ba1_threshold": "0.0038", "bs1_threshold": "0.0008", "af_basis": "popmax"},
+    # Homozygote/hemizygote-count BA1 OR-clause (X-linked): BA1 if >=10 hom/hemi.
+    "SLC6A8": {"ba1_hom_count": "10"},
+    "OTC": {"ba1_hom_count": "10"},
 }
 
 
@@ -2210,6 +2226,7 @@ _OVERRIDE_FIELDS = {
     "bs1_strength": "bs1_strength",
     "bs1_exclude": "bs1_exclude",
     "af_basis": "af_basis",
+    "ba1_hom_count": "ba1_hom_count",
     "pm2_threshold": "pm2_threshold",
     "pm2_strength": "pm2_strength",
     "pm2_basis": "pm2_basis",
