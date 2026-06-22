@@ -116,6 +116,32 @@ class TestSCNpathogenicEnrichedRegions:
             assert len(bp._CURATED[(g, "Moderate")][0]) == 16
 
 
+class TestRYR1PoreRegionOnly:
+    """RYR1 (GN150/GN179): PM1_Moderate only in the pore/transmembrane region
+    4800-4950; the broad GN012 (Malignant Hyperthermia) regions are superseded."""
+
+    def _h(self):
+        return PM1Hotspots(_TSV)
+
+    def test_pore_region_moderate(self):
+        h = self._h()
+        assert h.lookup("RYR1", 4800) == CriterionStrength.MODERATE
+        assert h.lookup("RYR1", 4875) == CriterionStrength.MODERATE
+        assert h.lookup("RYR1", 4950) == CriterionStrength.MODERATE
+
+    def test_old_broad_regions_no_longer_fire(self):
+        h = self._h()
+        assert h.lookup("RYR1", 330) is None    # was 1-552 (GN012)
+        assert h.lookup("RYR1", 2200) is None   # was 2101-2458 (GN012)
+        assert h.lookup("RYR1", 4700) is None    # outside pore region
+
+    def test_curated_and_committed(self):
+        assert bp._CURATED[("RYR1", "Moderate")] == ([(4800, 4950)], [])
+        com = _committed()
+        assert com[("RYR1", "Moderate")] == ("4800-4950", "")
+        assert ("RYR1", "Supporting") not in com   # GN012 Supporting dropped
+
+
 class TestHighlyPolymorphicNotApplicable:
     """ITGA2B/ITGB3 (GN011): PM1 'does not apply due to genes being highly
     polymorphic' → marked not_applicable."""

@@ -139,6 +139,12 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
     ("SCN2A", "Moderate"): ([(213, 231), (248, 256), (413, 426), (850, 858), (870, 878), (880, 893), (895, 903), (922, 930), (970, 988), (1311, 1354), (1458, 1466), (1468, 1481), (1483, 1501), (1621, 1639), (1646, 1664), (1761, 1774)], []),
     ("SCN3A", "Moderate"): ([(212, 230), (247, 255), (412, 425), (851, 859), (871, 879), (881, 894), (896, 904), (923, 931), (971, 989), (1309, 1352), (1453, 1461), (1463, 1476), (1478, 1496), (1616, 1634), (1641, 1659), (1756, 1769)], []),
     ("SCN8A", "Moderate"): ([(216, 234), (251, 259), (399, 412), (844, 852), (864, 872), (874, 887), (889, 897), (916, 924), (964, 982), (1301, 1344), (1449, 1457), (1459, 1472), (1474, 1492), (1612, 1630), (1637, 1655), (1751, 1764)], []),
+    # RYR1 GN150/GN179 v2.0.0 — PM1_Moderate restricted to the pore/transmembrane
+    # region (amino acids 4800-4950). The older Malignant Hyperthermia VCEP
+    # (GN012) defined broad N-terminal (1-552) / central (2101-2458) / C-terminal
+    # regions; those are superseded here (see _CURATED_EXCLUSIVE) so PM1 fires
+    # only within 4800-4950.
+    ("RYR1", "Moderate"): ([(4800, 4950)], []),
     # OTC GN156 v1.0.0 — CP-binding, ornithine, catalytic + conserved residues
     # (the miner captured only Met-268). 21 critical residues.
     ("OTC", "Moderate"): ([], [
@@ -308,6 +314,15 @@ def build(summary_path: str) -> dict[tuple[str, str], tuple[set, set]]:
             r, res = table.setdefault(key, (set(), set()))
             r.update(ranges)
             res.update(residues)
+
+    # Genes whose PM1 is defined SOLELY by the curated override: drop every mined
+    # row first so a conflicting broader spec cannot leak extra regions/strengths.
+    # RYR1 — the pore-region spec (GN150/GN179, 4800-4950) supersedes the broad
+    # Malignant Hyperthermia VCEP regions (GN012).
+    _CURATED_EXCLUSIVE = {"RYR1"}
+    for g in _CURATED_EXCLUSIVE:
+        for key in [k for k in table if k[0] == g]:
+            del table[key]
 
     # Apply manual curation overrides (replace the mined value for that key).
     for key, (ranges, residues) in _CURATED.items():
