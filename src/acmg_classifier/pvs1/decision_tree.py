@@ -44,9 +44,15 @@ def evaluate_pvs1(
     variant: VariantRecord,
     annotation: AnnotationData,
     cfg: Config,
+    lof_established: bool | None = None,
 ) -> tuple[CriterionStrength, str]:
     """
     Run the ClinGen 2019 PVS1 decision tree.
+
+    ``lof_established`` overrides the LoF-mechanism question: a VCEP that
+    explicitly applies PVS1 has, by definition, established LoF as the disease
+    mechanism, so pass ``True`` to skip the ClinVar/LOEUF heuristic (which can
+    miss under-represented genes). ``None`` (default) uses the heuristic.
 
     Returns (strength, evidence_string).
     strength == NOT_MET means PVS1 should not be applied.
@@ -59,12 +65,16 @@ def evaluate_pvs1(
     loeuf = gd.loeuf if gd else None
     alt_rescue = has_alternative_transcript_rescue(annotation)
 
-    # "Is LoF a known disease mechanism?" — primary signal is the count of P/LP
-    # null variants already reported in ClinVar for the gene (Franklin-style);
-    # LOEUF is only a secondary constraint hint.
-    from acmg_classifier.local_db.clinvar_sqlite import query_pathogenic_null_count
-    plp_null = query_pathogenic_null_count(cfg.clinvar_sqlite, pc.gene_symbol)
-    lof_mechanism = gene_has_lof_mechanism(pc, loeuf, plp_null)
+    # "Is LoF a known disease mechanism?" — when the VCEP explicitly applies PVS1
+    # (lof_established=True) the mechanism is settled; otherwise the primary
+    # signal is the count of P/LP null variants already reported in ClinVar for
+    # the gene (Franklin-style), with LOEUF as a secondary constraint hint.
+    if lof_established:
+        lof_mechanism = True
+    else:
+        from acmg_classifier.local_db.clinvar_sqlite import query_pathogenic_null_count
+        plp_null = query_pathogenic_null_count(cfg.clinvar_sqlite, pc.gene_symbol)
+        lof_mechanism = gene_has_lof_mechanism(pc, loeuf, plp_null)
 
     # ---- Branch dispatch (compute strength + evidence) ---------------------
     if pc.consequence == ConsequenceType.TRANSCRIPT_ABLATION:
@@ -101,7 +111,11 @@ def evaluate_pvs1(
     #       evidence in ClinVar to establish LoF as the disease mechanism even
     #       when LOEUF/Z indicate population-level constraint.
     # Either situation caps PVS1 strength to Moderate (cf. Franklin's PVS1).
-    if strength in (CriterionStrength.VERY_STRONG, CriterionStrength.STRONG) \
+    # Skipped when the VCEP explicitly applies PVS1 (lof_established) — the panel
+    # has already established LoF as the mechanism, so the ClinVar-curation caps
+    # do not apply.
+    if not lof_established \
+            and strength in (CriterionStrength.VERY_STRONG, CriterionStrength.STRONG) \
             and plp_null < _MIN_PLP_NULL_FOR_FULL_PVS1:
         from acmg_classifier.local_db.clinvar_sqlite import query_pathogenic_missense_count
         plp_miss = query_pathogenic_missense_count(cfg.clinvar_sqlite, pc.gene_symbol)

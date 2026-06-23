@@ -22,6 +22,7 @@ class PVS1Applicability:
 
     def __init__(self, tsv_path: Path) -> None:
         self._not_applicable: set[str] = set()
+        self._applicable: set[str] = set()
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -32,9 +33,18 @@ class PVS1Applicability:
                 gene = (row.get("gene_symbol") or "").strip()
                 if not gene:
                     continue
-                if (row.get("pvs1") or "").strip().lower() == "not_applicable":
+                val = (row.get("pvs1") or "").strip().lower()
+                if val == "not_applicable":
                     self._not_applicable.add(gene)
+                elif val == "applicable":
+                    self._applicable.add(gene)
 
     def is_not_applicable(self, gene: str | None) -> bool:
         """True if the gene's VCEP declined PVS1 entirely (LoF not the mechanism)."""
         return bool(gene) and gene in self._not_applicable
+
+    def is_applicable(self, gene: str | None) -> bool:
+        """True if the gene's VCEP explicitly applies PVS1 — meaning the VCEP has
+        established loss-of-function as a disease mechanism for the gene, so the
+        decision tree may skip the ClinVar/LOEUF LoF-mechanism heuristic."""
+        return bool(gene) and gene in self._applicable

@@ -689,11 +689,17 @@ _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     "SCN2A": {"af_basis": "popmax"},
     # RYR1: the auto-resolver picked the AR-variant myopathy BA1 (0.00697, GN179);
     # the applicable Malignant Hyperthermia VCEP (GN012) BA1/BS1 are 0.0038/0.0008
-    # on the popmax point AF.
-    "RYR1": {"ba1_threshold": "0.0038", "bs1_threshold": "0.0008", "af_basis": "popmax"},
+    # on the popmax point AF. PVS1: the Congenital Myopathies VCEP (GN179) applies
+    # PVS1 Very Strong to null variants (LoF is a known mechanism); the resolver
+    # had taken the gain-of-function MH sibling spec which declines PVS1.
+    "RYR1": {"ba1_threshold": "0.0038", "bs1_threshold": "0.0008",
+             "af_basis": "popmax", "pvs1": "applicable"},
     # Homozygote/hemizygote-count BA1 OR-clause (X-linked): BA1 if >=10 hom/hemi.
     "SLC6A8": {"ba1_hom_count": "10"},
     "OTC": {"ba1_hom_count": "10"},
+    # ACTA1 (GN169) Congenital Myopathies VCEP applies PVS1 Very Strong to null
+    # variants ("LOF is a known mechanism"); the resolver had declined it.
+    "ACTA1": {"pvs1": "applicable"},
 }
 
 

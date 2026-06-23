@@ -99,7 +99,13 @@ class PVS1Evaluator(CriterionEvaluator):
         # that it lives in its own sub-package. Import is local to keep the
         # criteria layer free of the heavy pvs1 dependencies until needed.
         from acmg_classifier.pvs1.decision_tree import evaluate_pvs1
-        strength, evidence = evaluate_pvs1(variant, annotation, self._cfg)
+        # A VCEP that explicitly applies PVS1 has established LoF as the disease
+        # mechanism — pass that through so the decision tree skips the ClinVar/
+        # LOEUF heuristic (which can miss under-represented genes).
+        lof_established = self._spec.is_applicable(pc.gene_symbol) or None
+        strength, evidence = evaluate_pvs1(
+            variant, annotation, self._cfg, lof_established=lof_established,
+        )
         if strength == CriterionStrength.NOT_MET:
             return CriteriaResult.not_met(ACMGCriterion.PVS1, evidence)
         return CriteriaResult.met(ACMGCriterion.PVS1, strength, evidence)

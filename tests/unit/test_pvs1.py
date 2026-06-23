@@ -64,10 +64,48 @@ class TestPVS1ApplicabilityGate:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
         # Gain-of-function / dominant-negative genes: PVS1 not applicable.
         for gene in ("MYOC", "BRAF", "KRAS", "PTPN11", "MYH7", "TNNT2",
-                     "PIK3CA", "RYR1", "VWF"):
+                     "PIK3CA", "VWF"):
             assert rows[gene]["pvs1"] == "not_applicable", gene
         # A haploinsufficiency gene keeps PVS1 applicable.
         assert rows["BRCA1"]["pvs1"] != "not_applicable"
+        # ACTA1/RYR1: the Congenital Myopathies VCEP applies PVS1 to null variants
+        # (LoF is a known mechanism) — must NOT be marked not_applicable.
+        assert rows["ACTA1"]["pvs1"] == "applicable"
+        assert rows["RYR1"]["pvs1"] == "applicable"
+
+
+class TestPVS1VcepLofEstablished:
+    """A gene whose VCEP explicitly applies PVS1 is treated as having an
+    established LoF mechanism — the decision tree skips the ClinVar/LOEUF
+    heuristic, so a null variant fires PVS1 even without those signals."""
+
+    def _ev(self, tmp_path, gene, value):
+        from unittest.mock import MagicMock
+        from acmg_classifier.criteria.pathogenic.pvs1 import PVS1Evaluator
+        p = tmp_path / "dp.tsv"
+        p.write_text(f"gene_symbol\tpvs1\n{gene}\t{value}\n", encoding="utf-8")
+        cfg = MagicMock()
+        cfg.disease_prevalence_tsv = p
+        return PVS1Evaluator(cfg)
+
+    def _ann_no_lof_signal(self, gene):
+        # No LOEUF and (with a MagicMock clinvar DB) no P/LP null count → the
+        # heuristic alone would NOT establish LoF.
+        c = _consequence(ConsequenceType.STOP_GAINED, exon="5/24", gene=gene)
+        return AnnotationData(consequences=[c], gnomad=GnomADData(loeuf=None))
+
+    def test_applicable_gene_fires_without_heuristic_signal(self, tmp_path):
+        ev = self._ev(tmp_path, "ACTA1", "applicable")
+        v = VariantRecord(chrom="chr1", pos=100, ref="C", alt="T", assembly=Assembly.GRCH38)
+        r = ev.evaluate(v, self._ann_no_lof_signal("ACTA1"))
+        assert r.triggered and r.strength == CriterionStrength.VERY_STRONG
+
+    def test_unmarked_gene_still_needs_heuristic(self, tmp_path):
+        # A gene with no VCEP PVS1 marking and no LoF signal → not established.
+        ev = self._ev(tmp_path, "ZZZ1", "")
+        v = VariantRecord(chrom="chr1", pos=100, ref="C", alt="T", assembly=Assembly.GRCH38)
+        r = ev.evaluate(v, self._ann_no_lof_signal("ZZZ1"))
+        assert not r.triggered
 
 
 class TestNMDPredictor:
