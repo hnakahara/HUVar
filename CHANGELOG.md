@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **PM4 region/strength engine** (`pm4_regions.tsv` + `PM4Regions`): per-gene
+  PM4_Strong residues, allow/deny regions, region default, stop-loss strength,
+  conservation (`conserved_phylop`) and deletion-content gates, mutual exclusion
+  (PVS1/PP3), the `pm4_supporting_max_aa` size downgrade, and ABCA4
+  nucleotide-conservation PM4 (`nt_phylop` ≥7.367, >1 nt → Moderate). VHL/RPGR
+  region rules; MECP2/CDKL5/FOXG1/TCF4/UBE3A restricted to PM1 functional
+  domains.
+- **PM1 curated hotspots** for SCN1A/2A/3A/8A (VCEP "PM1 Table" Pathogenic
+  Enriched Regions), RYR1 (pore Moderate + MH Supporting), FBN1 (cbEGF Cys /
+  Gly-motif / Ca-binding consensus / Cys-creating), VHL, LDLR; ITGA2B/ITGB3
+  marked not-applicable; PM1 restricted to missense except GAA/IDUA/CYP1B1.
+- **PS1 cross-gene paralogue map** (`ps1_paralog_map.tsv`): SCN1A/2A/3A/8A and
+  KCNQ1↔KCNQ2 analogous-residue PS1.
+- **PM5 `pm5_min_count`** column — ACVRL1/ENG require ≥2 distinct same-codon
+  LP/P comparators → PM5_Strong.
+- **BA1 `ba1_hom_count`** column — homozygote/hemizygote-count BA1 (SLC6A8/OTC
+  ≥10), independent of frequency.
+- **Per-gene BA1/BS1 point-AF basis** (`af_basis=popmax`) for VCEPs that define
+  the cutoff on the grpmax/popmax point allele frequency, with a global
+  `ACMG_POPMAX_AF_BASIS` (default on) to revert all such genes to FAF95.
+- **gnomAD exomes coverage** download + DuckDB build (default-on;
+  `--skip-gnomad-coverage`) powering the PM2 read-depth gate (`pm2_min_depth`,
+  ENIGMA BRCA1/2 ≥25) and non-cancer-subset PM2 (`pm2_subset=non_cancer`).
+- **PM2 gene-specific cSpec wording** for F8/F9 ("absent in males"), RYR1
+  ("1 allele allowed"), ATM ("n=1 in a single subpopulation"), PTEN
+  (single-vs-multi-allele subpopulation), RUNX1 (GrpMax FAF then all-subpop).
+- **PS3 per-gene control** — suppression for genes whose VCEP has no PS3 / only
+  animal-model PS3 (PALB2/PDHA1/POLG/CAPN3/ANO5) and a Supporting cap for 15
+  Supporting-only VCEPs; manual-supplement PS3 still takes precedence.
 - **PVS1 per-gene VCEP applicability gate** (`pvs1` column in
   `disease_prevalence.tsv`). 33 genes whose VCEP declares PVS1 *not applicable*
   because loss-of-function is not the disease mechanism — gain-of-function /
@@ -241,6 +270,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **eRepo benchmark false positives/negatives** addressed across criteria:
+  - **PM1** — RYR1 pore-only over-firing (Malignant Hyperthermia broad regions
+    were merged in), ITGA2B/ITGB3 ("highly polymorphic" → not applicable), and
+    RUNX1 in-frame indels (PM1 is missense-only except GAA/IDUA/CYP1B1).
+  - **PM4** — ABCA4 single-nucleotide false positive (now >1 nt only), RPGR
+    Moderate region narrowed to exons 1–14 (ORF15 repeat excluded), and
+    MECP2/CDKL5/FOXG1/TCF4/UBE3A in-frame indels restricted to PM1 domains.
+  - **PS3** — text-mining no longer fires on "loss of function" prose, on
+    "functional assays have not been reported / results not available", or on
+    uncited quantitative assays (a PMID is required for quantitative claims);
+    per-gene suppression / Supporting cap added.
+  - **PM2** — gene-specific cSpec rules (F8/F9 "in males", RYR1 "1 allele
+    allowed", ATM single-subpop allele, PTEN subpop tiers, RUNX1 FAF-priority)
+    fix point-AF/FAF inflation false negatives.
+  - **BA1→BS1 downgrades** — RYR1 BA1 threshold corrected (0.00697 → 0.0038,
+    Malignant Hyperthermia VCEP), per-gene point-AF basis, and the
+    homozygote-count rule.
+  - **PVS1** — ACTA1/RYR1 null variants no longer blocked: the Congenital
+    Myopathies VCEP applies PVS1 Very Strong (multi-spec resolution had taken a
+    gain-of-function sibling spec). A VCEP that explicitly applies PVS1 now
+    establishes LoF, bypassing the ClinVar/LOEUF heuristic and undercuration cap.
 - **PS1/PM5 transcript-numbering collisions and frameshift mis-parsing.** Two
   ClinVar-builder bugs let PS1/PM5 match a spurious comparator: (1) a variant
   sharing only the `amino_acid_change` string on a *different* transcript's

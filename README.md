@@ -103,7 +103,7 @@ cp resources/GRCh38/erepo_manual_criteria_hg38.tsv /path/to/download/directory/d
 # cp resources/GRCh37/erepo_manual_criteria_hg19.tsv /path/to/download/directory/data/shared/
 ```
 
-The four `resources/shared/` tables are read **automatically** from `data/shared/`
+The `resources/shared/` tables are read **automatically** from `data/shared/`
 on every run:
 
 | File | Used by |
@@ -111,6 +111,8 @@ on every run:
 | `disease_prevalence.tsv` | per-gene VCEP rules for BA1/BS1/BS2, PM2/PM4/PM5, PP2, PVS1 applicability, PS1 splice, BP1/BP3, BP7, REVEL cutoffs |
 | `gene_inheritance.tsv` | inheritance-aware PM2 / BS1 / BS2 thresholds |
 | `pm1_hotspots.tsv` | PM1 hotspot residues / regions |
+| `pm4_regions.tsv` | per-gene PM4 region/strength rules (Strong residues, allow/deny regions, stop-loss strength, conservation / deletion-content gates, ABCA4 nucleotide-phyloP) |
+| `ps1_paralog_map.tsv` | PS1 cross-gene paralogue residue map (SCN1A/2A/3A/8A, KCNQ1↔KCNQ2) |
 | `vcep_pvs1_splice_exons.tsv` | optional per-skipped-exon PVS1 splice strengths (absent → flat per-gene splice defaults) |
 
 The eRepo file is **not** auto-loaded — it is a ready-made manual-evidence
@@ -159,11 +161,17 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   (canonical vs non-canonical), BP1/BP3 applicability, per-gene BP7 phyloP /
   intronic-range policy, and PM2 subpopulation / homozygote-count rules.
   X-linked "in males" genes are compared against the gnomAD male (XY) allele
-  frequency. See `resources/clingen/README.md`.
+  frequency; a homozygote/hemizygote-count BA1 rule (`ba1_hom_count`, e.g.
+  SLC6A8/OTC ≥10) fires independently of frequency. See `resources/clingen/README.md`.
 - **gnomAD frequencies** use the v4.1 **joint** (combined exome+genome) release
   on GRCh38; on GRCh37 (no joint release) the exome and genome callsets are both
-  loaded and merged per-field, and BA1/BS1/PM2 compare against the GrpMax
-  filtering allele frequency (FAF95).
+  loaded and merged per-field. BA1/BS1/PM2 compare against the GrpMax filtering
+  allele frequency (FAF95) by default; genes whose VCEP defines the cutoff on the
+  point grpmax/popmax allele frequency instead use that (`af_basis=popmax`,
+  globally revertible via `ACMG_POPMAX_AF_BASIS=false`). PM2 can additionally
+  require a minimum gnomAD read depth (`pm2_min_depth`, ENIGMA BRCA1/2 ≥25) and
+  judge absence on the non-cancer subset (`pm2_subset=non_cancer`), both from the
+  optional gnomAD coverage build (see [Data setup](#data-setup)).
 - **In silico prediction**: **ESM1b** (default; Brandes 2023, MIT-licensed,
   commercial-use ready), **AlphaMissense** (non-commercial), or **REVEL**
   (Ioannidis 2016; free for non-commercial use, commercial use needs a separate
@@ -304,6 +312,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--gnomad-chromosomes CHR ...` | Subset of chromosomes (default all 24) |
 | `--workers N` | Build parallelism for the ClinVar (XML parse, max 24) and gnomAD (DuckDB) steps (default = CPU - 1) |
 | `--skip-gnomad` | Skip gnomAD download (~ 1.5 TB) |
+| `--skip-gnomad-coverage` | Skip the gnomAD exomes coverage summary download + DuckDB build (per-locus mean read depth; used by the PM2 read-depth gate for ENIGMA BRCA1/2). Downloaded by default. |
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
 | `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
@@ -317,7 +326,10 @@ data/
 ├── shared/                          # curated gene-rule tables (copied from resources/)
 │   ├── gene_inheritance.tsv         #   gene → AD/AR/XL
 │   ├── disease_prevalence.tsv       #   per-gene VCEP rules (BA1/BS1, PP2, PM5, BS2, PS1, BP1/BP3, …)
-│   └── pm1_hotspots.tsv             #   per-gene PM1 hotspot residues/regions
+│   ├── pm1_hotspots.tsv             #   per-gene PM1 hotspot residues/regions
+│   ├── pm4_regions.tsv              #   per-gene PM4 region/strength rules
+│   ├── ps1_paralog_map.tsv          #   PS1 cross-gene paralogue residue map
+│   └── vcep_pvs1_splice_exons.tsv   #   per-skipped-exon PVS1 splice strengths
 ├── vep_cache/                       # VEP indexed cache, both assemblies
 ├── esm1b/                           # (optional) protein-coordinate, shared across assemblies
 │   └── esm1b_llr.sqlite             #   built from Brandes 2023 archive
@@ -328,6 +340,7 @@ data/
     ├── gnomad/gnomad_v4.1_joint.duckdb   # GRCh37: gnomad_v2.1.1_exome_genome.duckdb
     ├── gnomad/vcf/                       # raw downloaded VCFs (~1.5 TB) — DELETABLE after build
     ├── gnomad/gnomad_v4.1_constraint.tsv
+    ├── gnomad/gnomad_v4.0_exomes_coverage.duckdb   # per-locus mean DP (PM2 read-depth gate); GRCh37: v2.1
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
     ├── (optional) revel/revel_grch38.tsv.gz(+.tbi)   # built with --with-revel
     ├── repeats/repeatmasker_dfam_hg38.bed.gz
@@ -656,9 +669,9 @@ caps interact with ClinVar P/LP-null counts (see [PVS1](#pvs1-decision-tree)).
 | **PS3** | Functional evidence: manual supplement (may reach Strong with OddsPath) or ClinVar SCV text-mining (1–2 SCV → Supporting, ≥3 → Moderate cap). | — (strength via supplement). |
 | **PS4** | Unrelated affected-proband count from ClinVar P/LP `AffectedStatus=yes` SCVs: ≥10 → Strong, 6–9 → Moderate, 2–5 → Supporting. Gated on rarity (FAF95_popmax < 0.0001 or AC=0) **and** ≥2 probands. | — |
 | **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`); statistical fallback where no VCEP table exists. | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
-| **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi). |
+| **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi); `pm2_subset=non_cancer` and `pm2_min_depth` (ENIGMA BRCA1/2). Gene-specific cSpec wording is hard-coded for a few genes (F8/F9 "absent in males", RYR1 "1 allele allowed", ATM "n=1 in a single subpopulation", PTEN single-vs-multi-allele subpop, RUNX1 GrpMax-FAF-then-all-subpop). |
 | **PM4** | Protein-length change from an in-frame indel or stop-loss (outside repeat regions). | `pm4 = not_applicable` withholds PM4 for genes whose VCEP declined it. |
-| **PM5** | Different missense at a codon with an established P/LP missense in ClinVar — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`. |
+| **PM5** | Different missense at a codon with an established P/LP missense in ClinVar — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`, `pm5_min_count` (ACVRL1/ENG require ≥2 distinct same-codon LP/P → Strong). |
 | **PP1** | Cosegregation: manual supplement or ClinVar text-mining; capped at Supporting (no meiosis counting from free text). | — |
 | **PP2** | Missense in a gene where missense is a common mechanism & benign missense is rare. | **Yes (dominant lever)** — `pp2` applicability is authoritative; `pp2_requires` adds co-requirements (e.g. BMPR2 needs PM2+PP3). ClinVar-stats fallback only when no VCEP covers the gene. |
 | **PP3** | Computational deleterious prediction (missense: ESM1b/AlphaMissense/REVEL; splice: OpenSpliceAI/SpliceAI), Bergquist 2024 tiers. See [In-silico aggregation](#in-silico-aggregation-pp3--bp4). | **Yes (REVEL)** — per-gene `revel_pp3_*` cutoffs from cspec override the genome-wide default and cap the gene's strength. |
@@ -667,7 +680,7 @@ caps interact with ClinVar P/LP-null counts (see [PVS1](#pvs1-decision-tree)).
 
 | Criterion | Decision basis (default) | VCEP gene-specific rule |
 |-----------|--------------------------|-------------------------|
-| **BA1** | gnomAD FAF95_popmax ≥ cutoff (stand-alone). Default 5%; disease-specific `min(0.05, 10×maxAF)` where parameters exist. | **Yes** — `ba1_threshold` / `af_basis` per gene. |
+| **BA1** | gnomAD FAF95_popmax ≥ cutoff (stand-alone). Default 5%; disease-specific `min(0.05, 10×maxAF)` where parameters exist. | **Yes** — `ba1_threshold` / `af_basis` (`males` = XY AF, `popmax` = point grpmax AF) / `ba1_hom_count` (homo/hemizygote-count rule) per gene. |
 | **BS1** | gnomAD FAF95_popmax above the disorder-specific expectation. | **Yes** — `bs1_threshold` / `bs1_strength`; `bs1_exclude` bars a specific recurrent disease allele from BS1 (e.g. MYOC p.Gln368Ter). |
 | **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes, AD→het carriers). | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
 | **BP1** | Variant-type-vs-mechanism: applied only for genes whose VCEP names a target consequence. | **Yes (gate)** — `bp1` / `bp1_target` (`missense` for PALB2/APC/BRCA1/2; `truncating` for GoF RASopathy genes), `bp1_strength`, `bp1_exclude`, `bp1_no_splice`. No VCEP decision → not applied. |
@@ -702,7 +715,12 @@ it applies, evaluated before the generic tree and its strength caps):
   Genes whose VCEP declares PVS1 not applicable because loss-of-function is not
   the disease mechanism — gain-of-function / dominant-negative disorders (MYOC,
   the RASopathy panel, the cardiomyopathy genes, the activating PIK3 genes,
-  RYR1, VWF, …) — withhold PVS1 entirely.
+  VWF, …) — withhold PVS1 entirely. Conversely, a VCEP that **explicitly applies**
+  PVS1 (`pvs1=applicable`) has established LoF as the mechanism, so the decision
+  tree skips the ClinVar/LOEUF LoF-mechanism heuristic and the undercuration
+  strength caps for those genes (e.g. the Congenital Myopathies VCEP applies
+  PVS1 Very Strong to ACTA1/RYR1 null variants — note RYR1's other VCEPs are
+  gain-of-function, a multi-disease gene resolved here to the LoF context).
 - **Gene-specific decision trees** for ~60 genes (`src/acmg_classifier/pvs1/vcep_pvs1.py`,
   plus APC in `pvs1/apc.py`). Each encodes its VCEP's deviations from the generic
   tree, in one of three forms:
@@ -856,9 +874,11 @@ export ACMG_SUPPLEMENT_MODE=merge   # or manual-only
 
 # Criterion tunables (sensible defaults; override only to trade precision/recall)
 export ACMG_PM5_MIN_STARS=1        # min ClinVar review stars for a PM5 comparator
-export ACMG_BS2_MIN_HOMALT=5       # BS2 healthy-homozygote count (recessive)
-export ACMG_BS2_MIN_HEMI=5         # BS2 healthy-hemizygote count (X-linked)
-export ACMG_BS2_MIN_HET=5          # BS2 healthy-carrier count (dominant)
+export ACMG_BS2_MIN_HOMALT=2       # BS2 healthy-homozygote count (recessive)
+export ACMG_BS2_MIN_HEMI=2         # BS2 healthy-hemizygote count (X-linked)
+export ACMG_BS2_MIN_HET=3          # BS2 healthy-carrier count (dominant)
+export ACMG_POPMAX_AF_BASIS=true   # false → force every gene's BA1/BS1 onto FAF95
+                                   # (ignore per-gene af_basis=popmax point estimate)
 ```
 
 CLI flags take precedence over environment variables.
