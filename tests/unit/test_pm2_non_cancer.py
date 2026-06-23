@@ -87,6 +87,20 @@ class TestEvaluator:
             _snv(), _ann("BRCA1", af=0.0, ac=0, af_non_cancer=0.0))
         assert r.triggered
 
+    def test_fully_absent_notes_non_cancer_basis(self, tmp_path):
+        # Variant absent from gnomAD entirely (af_non_cancer=None, ac=0): PM2
+        # fires, and the evidence must record that the non-cancer subset was the
+        # judgement basis even though there is no non-cancer record to read.
+        r = PM2Evaluator(_cfg(tmp_path)).evaluate(
+            _snv(), _ann("BRCA1", af=0.0, ac=0, af_non_cancer=None))
+        assert r.triggered and "non-cancer subset" in r.evidence
+
+    def test_fully_absent_overall_gene_omits_non_cancer(self, tmp_path):
+        # A non-subset gene (KRAS) absent overall must NOT mention non-cancer.
+        r = PM2Evaluator(_cfg(tmp_path)).evaluate(
+            _snv(), _ann("KRAS", af=0.0, ac=0, af_non_cancer=None))
+        assert r.triggered and "non-cancer" not in r.evidence
+
 
 class TestGnomadMerge:
     def test_merge_reads_non_cancer_at_index14(self):

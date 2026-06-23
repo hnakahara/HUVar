@@ -78,6 +78,18 @@ URLS: dict[str, dict[str, str]] = {
             "https://storage.googleapis.com/gcp-public-data--gnomad/release/4.1/vcf/joint/"
             "gnomad.joint.v4.1.sites.{chrom}.vcf.bgz.tbi"
         ),
+        # gnomAD v3.1.2 genomes — the non-cancer SUBSET source for GRCh38. v4.1
+        # dropped the non-cancer subset, so AF_non_cancer is built from here (hg38
+        # coordinates match v4.1) into a small companion DB consulted by PM2 for
+        # ENIGMA BRCA1/2. See step_gnomad_noncancer / Config.gnomad_noncancer_duckdb.
+        "gnomad_noncancer_vcf": (
+            "https://storage.googleapis.com/gcp-public-data--gnomad/release/3.1.2/vcf/genomes/"
+            "gnomad.genomes.v3.1.2.sites.{chrom}.vcf.bgz"
+        ),
+        "gnomad_noncancer_vcf_tbi": (
+            "https://storage.googleapis.com/gcp-public-data--gnomad/release/3.1.2/vcf/genomes/"
+            "gnomad.genomes.v3.1.2.sites.{chrom}.vcf.bgz.tbi"
+        ),
         # Per-locus coverage summary (mean/median DP, over_X fractions) for the
         # PM2 read-depth gate (ENIGMA BRCA1/2: "average read depth >= 25").
         # Exomes coverage suffices for the coding regions BRCA PM2 targets. gnomAD
@@ -860,6 +872,73 @@ def step_gnomad_duckdb(
     return True
 
 
+def step_gnomad_noncancer(
+    asm_dir: Path,
+    assembly: str,
+    urls: dict,
+    vcf_dir: Path | None,
+    chromosomes: list[str],
+    skip: bool,
+    workers: int | None = None,
+) -> bool:
+    """Build the gnomAD non-cancer-subset companion DB (GRCh38 only).
+
+    gnomAD v4.1 dropped the non-cancer subset, so PM2 for ENIGMA BRCA1/2 reads the
+    non-cancer AF from gnomAD v3.1.2 genomes (hg38 — same coordinates as v4.1) via
+    a small companion DB (gnomad_v3.1.2_non_cancer.duckdb). Not applicable to
+    GRCh37, whose v2.1.1 build carries the subset inline."""
+    if assembly != "GRCh38":
+        print("  [SKIP] non-cancer companion is GRCh38-only "
+              "(GRCh37 v2.1.1 carries the subset inline)")
+        return True
+    if "gnomad_noncancer_vcf" not in urls:
+        print("  [SKIP] no gnomAD v3.1.2 non-cancer URL configured")
+        return True
+    dest = asm_dir / "gnomad" / "gnomad_v3.1.2_non_cancer.duckdb"
+    if _verify_duckdb_has_rows(dest):
+        print(f"  [SKIP] {dest.name}")
+        return True
+
+    # v3.1.2 genomes carry the non-cancer subset (chrM excluded).
+    nc_chroms = [c for c in chromosomes if c not in ("chrM", "MT")]
+    staging = asm_dir / "gnomad" / "vcf_noncancer"
+
+    if vcf_dir is None:
+        found = _find_existing(_GNOMAD_SEARCH, ["gnomad.genomes.v3.1.2.sites.*.vcf.bgz"])
+        if found:
+            vcf_dir = found.parent
+
+    if vcf_dir is None or not list(vcf_dir.glob("gnomad.genomes.*.vcf.bgz")):
+        if skip:
+            print("  [SKIP] Skipping gnomAD v3.1.2 non-cancer download "
+                  "(--skip-gnomad-noncancer); PM2 BRCA1/2 falls back to overall AF")
+            return False
+        print(f"  Downloading gnomAD v3.1.2 genomes (non-cancer source; large) from "
+              f"{len(_GNOMAD_MIRRORS)} mirrors, {_GNOMAD_PER_MIRROR} concurrent each. "
+              f"Re-run to resume. Raw VCFs can be deleted after the build.")
+        staging.mkdir(parents=True, exist_ok=True)
+        jobs: list[tuple] = []
+        vcf_tmpl = urls["gnomad_noncancer_vcf"]
+        tbi_tmpl = urls["gnomad_noncancer_vcf_tbi"]
+        for chrom in nc_chroms:
+            vcf_suffix = vcf_tmpl.format(chrom=chrom).removeprefix(_GNOMAD_GCS_PREFIX)
+            tbi_suffix = tbi_tmpl.format(chrom=chrom).removeprefix(_GNOMAD_GCS_PREFIX)
+            vcf_f = staging / f"gnomad.genomes.v3.1.2.sites.{chrom}.vcf.bgz"
+            tbi_f = Path(str(vcf_f) + ".tbi")
+            jobs.append(("genomes", chrom, vcf_suffix, tbi_suffix, vcf_f, tbi_f))
+        _download_gnomad_parallel(jobs)
+        vcf_dir = staging
+
+    n_workers = workers if workers is not None else max(1, (os.cpu_count() or 2) - 1)
+    print(f"  Building gnomAD non-cancer companion DuckDB ({n_workers} workers)...")
+    _add_src_to_path()
+    from acmg_classifier.setup.gnomad_builder import build_gnomad_noncancer_duckdb  # type: ignore
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    build_gnomad_noncancer_duckdb(vcf_dir, dest, max_workers=n_workers,
+                                  callsets=("genomes",))
+    return True
+
+
 def step_repeatmasker(asm_dir: Path, assembly: str, urls: dict) -> bool:
     suffix = "hg38" if assembly == "GRCh38" else "hg19"
     dest = asm_dir / "repeats" / f"repeatmasker_dfam_{suffix}.bed.gz"
@@ -978,6 +1057,12 @@ def main() -> None:
                         help="Path to an existing genome FASTA (skips download)")
     parser.add_argument("--gnomad-vcf-dir", type=Path, default=None, metavar="PATH",
                         help="Directory of existing gnomAD *.vcf.bgz files")
+    parser.add_argument("--gnomad-noncancer-vcf-dir", type=Path, default=None, metavar="PATH",
+                        help="Directory of existing gnomAD v3.1.2 genomes *.vcf.bgz files "
+                             "(the GRCh38 non-cancer subset source). Default: auto-discover/download.")
+    parser.add_argument("--skip-gnomad-noncancer", action="store_true",
+                        help="Skip the gnomAD v3.1.2 non-cancer companion DB (GRCh38). "
+                             "PM2 for ENIGMA BRCA1/2 then falls back to the overall AF.")
     parser.add_argument("--gnomad-chromosomes", nargs="+", default=None, metavar="CHR",
                         help="Chromosomes to download (default: all 24)")
     parser.add_argument("--workers", type=int, default=None, metavar="N",
@@ -1051,6 +1136,7 @@ def main() -> None:
         ("gnomad-constraint", "gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
         ("gnomad-coverage",   "gnomAD coverage",   lambda: step_gnomad_coverage(asm_dir, assembly, urls, args.skip_gnomad_coverage)),
         ("gnomad",            "gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
+        ("gnomad-noncancer",  "gnomAD non-cancer", lambda: step_gnomad_noncancer(asm_dir, assembly, urls, args.gnomad_noncancer_vcf_dir, chroms, args.skip_gnomad_noncancer, args.workers)),
         ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
         ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
     ]

@@ -64,9 +64,19 @@ def _merge_rows(rows: list) -> GnomADData:
 
 
 class GnomADDB:
-    def __init__(self, db_path: Path, constraint_tsv: Path) -> None:
+    def __init__(
+        self,
+        db_path: Path,
+        constraint_tsv: Path,
+        noncancer_db_path: Optional[Path] = None,
+    ) -> None:
         self._db_path = db_path
         self._constraint_tsv = constraint_tsv
+        # Companion non-cancer-subset DB (GRCh38 gnomAD v3.1.2). The main v4.1
+        # build has af_non_cancer = NULL (v4 dropped the subset), so PM2 for
+        # ENIGMA BRCA1/2 consults this as a fallback. None when not configured
+        # (GRCh37, whose v2.1.1 build carries the subset inline). See query().
+        self._noncancer_db_path = noncancer_db_path
         self._constraint: dict[str, tuple[float | None, float | None, float | None]] = {}
         if constraint_tsv.exists():
             self._constraint = _load_constraint(constraint_tsv)
@@ -141,7 +151,49 @@ class GnomADDB:
         # the "either dataset meets the criterion" semantics (the higher AF wins
         # for BA1/BS1, and PM2's rarity check sees the higher AF too). GRCh38's
         # joint build has a single row, so the merge is a no-op there.
-        return _merge_rows(rows)
+        data = _merge_rows(rows)
+
+        # Backfill the non-cancer-subset AF from the companion v3.1.2 DB when the
+        # main build doesn't carry it (GRCh38 v4.1 dropped the non-cancer subset,
+        # so its af_non_cancer is always NULL). Only consulted for a variant
+        # present in the main DB — one absent there is absent in every subset
+        # too, so PM2's "absent" path already covers it and we skip the extra
+        # lookup for the overwhelmingly common novel variant.
+        if data.af_non_cancer is None and self._noncancer_db_path is not None:
+            nc = self._query_noncancer(c1, c2, pos, ref, alt)
+            if nc is not None:
+                data = data.model_copy(update={"af_non_cancer": nc})
+        return data
+
+    def _query_noncancer(
+        self, c1: str, c2: str, pos: int, ref: str, alt: str
+    ) -> Optional[float]:
+        """Non-cancer-subset AF from the companion v3.1.2 DB (GRCh38), or None.
+
+        Returns the per-field MAX over any matching rows (mirroring the main
+        merge), or None when the variant is absent there or the DB is missing.
+        Connection-per-call mirrors query()'s pattern — DuckDB read-only opens
+        are cheap and keep the object stateless across threads/processes."""
+        if not self._noncancer_db_path.exists():
+            log.warning("gnomad_noncancer_db_missing",
+                        path=str(self._noncancer_db_path))
+            return None
+        try:
+            import duckdb
+            con = duckdb.connect(str(self._noncancer_db_path), read_only=True)
+            rows = con.execute(
+                """
+                SELECT af_non_cancer FROM non_cancer
+                WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
+                """,
+                [c1, c2, pos, ref, alt],
+            ).fetchall()
+            con.close()
+        except Exception as exc:
+            log.error("gnomad_noncancer_query_error", error=str(exc))
+            return None
+        vals = [r[0] for r in rows if r[0] is not None]
+        return max(vals) if vals else None
 
     def _columns(self, con) -> set[str]:
         """The variants table's column names (cached per instance). Used to

@@ -105,6 +105,22 @@ class Config(BaseSettings):
         return self.assembly_dir / "gnomad" / names[self.assembly]
 
     @property
+    def gnomad_noncancer_duckdb(self) -> Optional[Path]:
+        """Companion non-cancer-subset AF DB for PM2 (ENIGMA BRCA1/2), GRCh38 only.
+
+        gnomAD v4.1 dropped the non-cancer subset, so the main v4.1 JOINT build
+        carries af_non_cancer = NULL everywhere. This points to a small DB built
+        from gnomAD v3.1.2 genomes (hg38 — same coordinates as v4.1) holding only
+        (chrom, pos, ref, alt, af_non_cancer); gnomad_db consults it as a fallback
+        when the main DB's af_non_cancer is NULL. v2.1.1 (GRCh37) already carries
+        the non-cancer subset inline, so no companion is needed there. Returns
+        None when the file is absent (PM2 then falls back to the overall AF)."""
+        if self.assembly != Assembly.GRCH38:
+            return None
+        p = self.assembly_dir / "gnomad" / "gnomad_v3.1.2_non_cancer.duckdb"
+        return p if p.exists() else None
+
+    @property
     def gnomad_constraint_tsv(self) -> Path:
         names = {
             Assembly.GRCH38: "gnomad_v4.1_constraint.tsv",

@@ -86,7 +86,11 @@ class AnnotationOrchestrator:
 
     def _init_gnomad(self):
         from acmg_classifier.local_db.gnomad_db import GnomADDB
-        return GnomADDB(self._cfg.gnomad_duckdb, self._cfg.gnomad_constraint_tsv)
+        return GnomADDB(
+            self._cfg.gnomad_duckdb,
+            self._cfg.gnomad_constraint_tsv,
+            self._cfg.gnomad_noncancer_duckdb,
+        )
 
     def _init_splice(self):
         if self._cfg.splice_tool == SpliceTool.OPENSPLICEAI:

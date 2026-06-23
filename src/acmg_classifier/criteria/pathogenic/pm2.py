@@ -226,6 +226,14 @@ class PM2Evaluator(CriterionEvaluator):
                 absent = value == 0.0
                 if absent:
                     absent_detail = "non-cancer subset"
+            elif gd.ac == 0:
+                # Variant absent from gnomAD entirely → necessarily absent from
+                # the non-cancer subset too. Make the provenance explicit so the
+                # evidence records that PM2 was judged against the non-cancer
+                # subset (the ENIGMA BRCA1/2 basis), even though there is no
+                # non-cancer record to read.
+                metric = "AF(non-cancer)"
+                absent_detail = "non-cancer subset; absent from gnomAD"
             else:
                 metric = "AF [non-cancer subset unavailable → overall]"
 

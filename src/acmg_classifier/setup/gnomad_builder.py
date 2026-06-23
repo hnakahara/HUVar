@@ -532,3 +532,197 @@ def _vcf_to_parquet(
                 pass
 
     return name, n_inserted
+
+
+# ---------------------------------------------------------------------------
+# Non-cancer-subset companion DB (GRCh38)
+# ---------------------------------------------------------------------------
+# gnomAD v4.1 (GRCh38) dropped the non-cancer subset, so the main v4.1 build's
+# af_non_cancer is always NULL. gnomAD v3.1.2 genomes (hg38 — same coordinates as
+# v4.1) DOES carry it, so we build a small sparse overlay holding only
+# (chrom, pos, ref, alt, af_non_cancer) for sites that have a non-cancer AF.
+# gnomad_db.GnomADDB consults it as a fallback for PM2 (ENIGMA BRCA1/2). GRCh37's
+# v2.1.1 build carries the subset inline (built by build_gnomad_duckdb), so it
+# needs no companion.
+
+_CREATE_NONCANCER_TABLE = """
+CREATE TABLE IF NOT EXISTS non_cancer (
+    chrom TEXT NOT NULL,
+    pos INTEGER NOT NULL,
+    ref TEXT NOT NULL,
+    alt TEXT NOT NULL,
+    af_non_cancer DOUBLE
+);
+"""
+
+_CREATE_NONCANCER_INDEX = """
+CREATE INDEX IF NOT EXISTS idx_non_cancer ON non_cancer (chrom, pos, ref, alt);
+"""
+
+_NONCANCER_INSERT_SQL = "INSERT INTO non_cancer VALUES (?,?,?,?,?)"
+
+
+def build_gnomad_noncancer_duckdb(
+    vcf_dir: Path,
+    output_db: Path,
+    max_workers: int | None = None,
+    window_size: int = _WINDOW_SIZE,
+    callsets: tuple[str, ...] | None = ("genomes",),
+) -> None:
+    """Build the non-cancer-subset companion DB from gnomAD v3.1.2 genomes.
+
+    Extracts ONLY (chrom, pos, ref, alt, AF_non_cancer) and stores rows that
+    carry a non-NULL non-cancer AF (a sparse overlay). Reuses the region-parallel
+    VCF→Parquet→DuckDB pipeline. ``callsets`` defaults to the genomes VCF, which
+    is the v3.1.2 release that carries the non-cancer subset."""
+    import duckdb
+
+    output_db.parent.mkdir(parents=True, exist_ok=True)
+    log.info("building_gnomad_noncancer_db", output=str(output_db))
+
+    vcf_files = _select_vcf_files(vcf_dir, callsets)
+    if not vcf_files:
+        raise FileNotFoundError(f"No *.vcf.bgz files found in {vcf_dir}")
+
+    tmp_dir = output_db.parent / "_gnomad_noncancer_parquet_tmp"
+    if tmp_dir.exists():
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+
+    jobs = _make_region_jobs(vcf_files, tmp_dir, window_size)
+    if not jobs:
+        raise RuntimeError(f"No variants found in any VCF under {vcf_dir}")
+
+    if max_workers is None:
+        max_workers = max(1, (os.cpu_count() or 2) - 1)
+    max_workers = max(1, min(max_workers, len(jobs)))
+
+    mem_limit = _per_worker_mem_limit(max_workers)
+    log.info("noncancer_vcf_files_found", count=len(vcf_files), regions=len(jobs),
+             workers=max_workers, mem_per_worker=mem_limit)
+
+    parquet_paths: list[Path] = []
+    total_rows = 0
+    try:
+        with progress_bar("Loading gnomAD non-cancer VCFs", total=len(jobs)) as advance:
+            if max_workers == 1:
+                for vcf_path, region, parquet_path in jobs:
+                    name, rows = _vcf_to_noncancer_parquet(
+                        vcf_path, region, parquet_path, str(tmp_dir), mem_limit
+                    )
+                    parquet_paths.append(Path(parquet_path))
+                    total_rows += rows
+                    advance()
+            else:
+                with ProcessPoolExecutor(max_workers=max_workers) as pool:
+                    future_to_job = {
+                        pool.submit(
+                            _vcf_to_noncancer_parquet,
+                            vcf_path, region, parquet_path, str(tmp_dir), mem_limit,
+                        ): parquet_path
+                        for vcf_path, region, parquet_path in jobs
+                    }
+                    for future in as_completed(future_to_job):
+                        parquet_path = future_to_job[future]
+                        name, rows = future.result()
+                        parquet_paths.append(Path(parquet_path))
+                        total_rows += rows
+                        advance()
+
+        log.info("loading_noncancer_parquet_into_duckdb", files=len(parquet_paths))
+        con = duckdb.connect(str(output_db))
+        try:
+            con.execute(_CREATE_NONCANCER_TABLE)
+            file_list = [str(p) for p in parquet_paths]
+            con.execute(
+                "INSERT INTO non_cancer SELECT * FROM read_parquet($files)",
+                {"files": file_list},
+            )
+            con.execute(_CREATE_NONCANCER_INDEX)
+        finally:
+            con.close()
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    log.info("gnomad_noncancer_db_built", path=str(output_db), total_rows=total_rows)
+
+
+def _vcf_to_noncancer_parquet(
+    vcf_path: str,
+    region: str | None,
+    parquet_path: str,
+    temp_dir: str,
+    mem_limit: str,
+) -> tuple[str, int]:
+    """Extract (chrom, pos, ref, alt, AF_non_cancer) for one VCF region.
+
+    Only rows with a non-NULL non-cancer AF are written (a sparse overlay).
+    Mirrors _vcf_to_parquet's region-window de-duplication and per-worker DuckDB
+    spill handling."""
+    import duckdb
+    from cyvcf2 import VCF
+
+    name = Path(vcf_path).name
+    build_db = parquet_path + ".build.duckdb"
+    for stale in (build_db, build_db + ".wal"):
+        try:
+            os.remove(stale)
+        except FileNotFoundError:
+            pass
+
+    con = duckdb.connect(build_db)
+    n_inserted = 0
+    try:
+        con.execute("SET threads TO 1")
+        con.execute(f"SET memory_limit='{mem_limit}'")
+        con.execute("SET preserve_insertion_order=false")
+        con.execute(f"SET temp_directory='{temp_dir}'")
+        con.execute(_CREATE_NONCANCER_TABLE)
+
+        pos_lo = pos_hi = None
+        if region:
+            coords = region.rsplit(":", 1)[1]
+            lo_s, hi_s = coords.split("-")
+            pos_lo, pos_hi = int(lo_s), int(hi_s)
+
+        vcf = VCF(vcf_path)
+        batch: list[tuple] = []
+        try:
+            iterator = vcf(region) if region else vcf
+            for v in iterator:
+                if pos_lo is not None and not (pos_lo <= v.POS <= pos_hi):
+                    continue
+                # Field name varies by release: v3.1.2 / v2.1.1 = "AF_non_cancer"
+                # or "non_cancer_AF". Skip sites that carry no non-cancer AF.
+                af_nc = _to_float(_info(v, "AF_non_cancer", "non_cancer_AF"))
+                if af_nc is None:
+                    continue
+                chrom_raw = v.CHROM
+                chrom = chrom_raw[3:] if chrom_raw.startswith("chr") else chrom_raw
+                ref = v.REF
+                for alt in v.ALT:
+                    batch.append((chrom, int(v.POS), ref, alt, af_nc))
+
+                if len(batch) >= _BATCH_SIZE:
+                    con.executemany(_NONCANCER_INSERT_SQL, batch)
+                    n_inserted += len(batch)
+                    batch.clear()
+
+            if batch:
+                con.executemany(_NONCANCER_INSERT_SQL, batch)
+                n_inserted += len(batch)
+        finally:
+            vcf.close()
+
+        con.execute(
+            f"COPY non_cancer TO '{parquet_path}' (FORMAT PARQUET, COMPRESSION ZSTD)"
+        )
+    finally:
+        con.close()
+        for stale in (build_db, build_db + ".wal"):
+            try:
+                os.remove(stale)
+            except FileNotFoundError:
+                pass
+
+    return name, n_inserted
