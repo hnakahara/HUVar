@@ -9,7 +9,6 @@
   (KCNQ1/CTLA4/PIK3R1) also fired.
 """
 import sqlite3
-from pathlib import Path
 from unittest.mock import MagicMock
 
 from acmg_classifier.criteria.pm4_regions import PM4Regions

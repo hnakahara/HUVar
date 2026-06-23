@@ -34,7 +34,8 @@ def _db(tmp_path, rows):
         "VALUES (?,?,?,?,?,?,?,?)",
         rows,
     )
-    con.commit(); con.close()
+    con.commit()
+    con.close()
     return p
 
 
