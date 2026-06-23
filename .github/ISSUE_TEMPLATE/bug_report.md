@@ -12,7 +12,7 @@ A clear, one-sentence description of the bug.
 
 ## Environment
 
-- HUHVar (`acmg-classifier`) version (`acmg-classify --version`):
+- HUVar (`acmg-classifier`) version (`acmg-classify --version`):
 - Python version (`python --version`):
 - OS / distribution:
 - Assembly (GRCh37 / GRCh38):

@@ -1156,7 +1156,7 @@ def _bp3_regions(rule_set: dict) -> str:
 # state a phyloP cutoff X for this, phrased either as the BP7-eligible side
 # ("not highly conserved = phyloP < X") or the conserved side ("conservation =
 # phyloP > X"); either way the boundary value X is the cutoff the evaluator uses
-# (block BP7 when phyloP >= X). All HUHVar phyloP is phyloP100way, matching the
+# (block BP7 when phyloP >= X). All HUVar phyloP is phyloP100way, matching the
 # specs that say "phyloP100way < 2.0" (== the global default, a no-op). Real
 # per-gene values seen: 0.1 (neurodev / coagulation panels), 0.2 (VHL), 1.5 (the
 # platelet GP genes), 0 (RPGR, accelerated-only). The SpliceAI score and the

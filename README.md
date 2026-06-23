@@ -1,4 +1,4 @@
-# HUHVar
+# HUVar
 
 **Hiroshima University Hospital Variant classification tool** (package name:
 `acmg-classifier`)
@@ -61,11 +61,11 @@ conda activate acmg
 conda install -c bioconda -c conda-forge samtools tabix bcftools htslib ensembl-vep=111
 ```
 
-**Step 2: Clone and install HUHVar**
+**Step 2: Clone and install HUVar**
 
 ```bash
-git clone https://github.com/hnakahara/HUHVar.git
-cd HUHVar
+git clone https://github.com/hnakahara/HUVar.git
+cd HUVar
 pip install -e .
 ```
 
@@ -255,8 +255,8 @@ cyvcf2 pysam duckdb
 
 ```bash
 # 1. Clone
-git clone https://github.com/hnakahara/HUHVar.git
-cd HUHVar
+git clone https://github.com/hnakahara/HUVar.git
+cd HUVar
 
 # 2. Create & activate environment (conda example)
 conda create -n acmg -c bioconda -c conda-forge \
@@ -819,7 +819,7 @@ Notes:
 ## Project layout
 
 ```
-HUHVar/
+HUVar/
 ├── src/acmg_classifier/
 │   ├── cli.py                       # Click entry point (acmg-classify)
 │   ├── config.py                    # Runtime configuration & derived paths
@@ -938,9 +938,9 @@ Genet Med. 2018;20(9):1054-1066.
 Tavtigian SV, et al. Fitting a naturally scaled point system to the
 ACMG/AMP-based variant classification framework. Hum Mutat. 2020.
 
-HUHVar (acmg-classifier). Department of Clinical and Molecular Genetics,
+HUVar (acmg-classifier). Department of Clinical and Molecular Genetics,
 Hiroshima University Hospital, 2026.
-https://github.com/hnakahara/HUHVar
+https://github.com/hnakahara/HUVar
 ```
 
 A machine-readable `CITATION.cff` is shipped with the repository for tools
@@ -971,7 +971,7 @@ their own terms — see [NOTICE](NOTICE) for attribution and links.
 **This software is intended for research use only and not for clinical
 diagnostic purposes.**
 
-HUHVar (`acmg-classifier`) is **not** an in vitro diagnostic device and is **not
+HUVar (`acmg-classifier`) is **not** an in vitro diagnostic device and is **not
 certified for clinical decision making**. Any variant interpretation produced
 by this tool must be reviewed by qualified clinical personnel before being
 used to inform patient care.

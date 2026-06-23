@@ -1,6 +1,6 @@
-# Contributing to HUHVar
+# Contributing to HUVar
 
-Thank you for your interest in improving HUHVar (`acmg-classifier`). This
+Thank you for your interest in improving HUVar (`acmg-classifier`). This
 document describes the development workflow and how to submit changes.
 
 ## Reporting issues
@@ -13,8 +13,8 @@ synthesise an equivalent variant from public ClinVar entries instead.
 ## Development setup
 
 ```bash
-git clone https://github.com/hnakahara/HUHVar.git
-cd HUHVar
+git clone https://github.com/hnakahara/HUVar.git
+cd HUVar
 
 mamba create -n acmg-dev -c bioconda -c conda-forge \
     python=3.12 samtools tabix bcftools htslib ensembl-vep=111

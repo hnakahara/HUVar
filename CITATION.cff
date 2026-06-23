@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "HUHVar (acmg-classifier): Fully local ACMG/AMP variant pathogenicity classifier"
+title: "HUVar (acmg-classifier): Fully local ACMG/AMP variant pathogenicity classifier"
 message: >-
   If you use this software, please cite both this tool and the underlying
   ACMG/AMP and ClinGen guidelines listed in the references.
@@ -8,8 +8,8 @@ authors:
   - name: "Department of Clinical and Molecular Genetics, Hiroshima University Hospital"
     affiliation: "Hiroshima University Hospital"
 license: Apache-2.0
-repository-code: "https://github.com/hnakahara/HUHVar"
-url: "https://github.com/hnakahara/HUHVar"
+repository-code: "https://github.com/hnakahara/HUVar"
+url: "https://github.com/hnakahara/HUVar"
 keywords:
   - ACMG
   - AMP

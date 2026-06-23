@@ -56,10 +56,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/hnakahara/HUHVar"
-Repository = "https://github.com/hnakahara/HUHVar"
-Issues = "https://github.com/hnakahara/HUHVar/issues"
-Changelog = "https://github.com/hnakahara/HUHVar/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/hnakahara/HUVar"
+Repository = "https://github.com/hnakahara/HUVar"
+Issues = "https://github.com/hnakahara/HUVar/issues"
+Changelog = "https://github.com/hnakahara/HUVar/blob/main/CHANGELOG.md"
 
 [project.scripts]
 acmg-classify = "acmg_classifier.cli:cli"
