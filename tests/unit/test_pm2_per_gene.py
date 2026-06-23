@@ -136,14 +136,23 @@ class TestPM2PerGeneEvaluator:
         assert not r.triggered
         assert "MYO15A VCEP" in r.evidence
 
-    def test_runx1_subpop_blocks_deflated_faf(self, tmp_path):
-        # The reported FP (RUNX1 c.*2678A>G): FAF95=2.1e-5 < 5e-5 would fire, but
-        # the GrpMax POINT AF (East Asian 1.2e-4) >= 5e-5 → PM2 must NOT fire.
+    def test_runx1_faf_available_is_authoritative(self, tmp_path):
+        # cSpec: "evaluate PM2 using the GrpMax FAF when available." FAF95=2.1e-5
+        # < 5e-5 → PM2 fires even though the GrpMax POINT AF (1.2e-4) exceeds the
+        # threshold — the point/all-subpopulation rule is only the FAF-absent
+        # fallback.
         ev = PM2Evaluator(_cfg(tmp_path))
         r = ev.evaluate(_snv(), _ann("RUNX1", ac=2, af=8.56e-6,
                                      popmax_af=1.206e-4, faf95_popmax=2.09e-5))
+        assert r.triggered and "FAF95" in r.evidence
+
+    def test_runx1_faf_absent_requires_all_subpop(self, tmp_path):
+        # GrpMax FAF unavailable → require all subpopulations meet the threshold;
+        # the POINT AF (1.2e-4) exceeds 5e-5 → PM2 must NOT fire.
+        ev = PM2Evaluator(_cfg(tmp_path))
+        r = ev.evaluate(_snv(), _ann("RUNX1", ac=2, af=8.56e-6,
+                                     popmax_af=1.206e-4, faf95_popmax=None))
         assert not r.triggered
-        assert "subpopulation exceeds" in r.evidence
 
     def test_runx1_subpop_allows_truly_rare(self, tmp_path):
         # Both FAF95 and GrpMax point AF below threshold → PM2 fires normally.

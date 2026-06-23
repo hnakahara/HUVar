@@ -18,6 +18,24 @@ _RAW_AF_ABSENT = 0.0001
 # threshold. Use a relaxed cutoff for genes flagged recessive in the map.
 _RAW_AF_RECESSIVE = 0.005
 
+# Gene-specific PM2 wording transcribed verbatim from the cSpec, applied ONLY to
+# the named genes (the deflated FAF95 / inflated small-subpopulation point AF
+# otherwise mis-handles these):
+#   F8 / F9 — "Variant must be absent in MALES" (X-linked): judge absence on the
+#             hemizygous (male) count, not the overall AC.
+#   RYR1    — AD "absent (1 allele allowed)": up to one observed allele still
+#             qualifies as absent.
+#   ATM     — "If n=1 in a single sub population, that is sufficiently rare and
+#             PM2_supporting would apply": a single observed allele meets PM2 even
+#             when its small-subpopulation point AF exceeds the cutoff.
+#   PTEN    — "<0.00001; if multiple alleles are present within any subpopulation,
+#             that subpopulation AF must be <0.00002": a single allele is judged on
+#             the global AF, a recurring one on the subpopulation AF.
+_PM2_MALE_ABSENT = frozenset({"F8", "F9"})
+_PM2_ALLOW_ONE_ALLELE = frozenset({"RYR1"})
+_PM2_SINGLE_ALLELE_RARE = frozenset({"ATM"})
+_PM2_PTEN_SUBPOP_CUTOFF = 0.00002
+
 # Poisson exact upper one-sided 95% confidence limits, λ_U = 0.5·χ²₀.₉₅(2(k+1)),
 # indexed by observed allele count k. Used by the Cardiomyopathy/HCM PM2 rule,
 # which requires the UPPER bound of the 95% CI of the GrpMax-subpopulation AF
@@ -200,13 +218,23 @@ class PM2Evaluator(CriterionEvaluator):
         # value (and note it) when the gnomAD DB predates the column — graceful
         # degradation identical to af_xy/ac_xx.
         absent = value == 0.0 or gd.ac == 0
+        absent_detail = "AC=0"
         if rule and rule.subset == "non_cancer":
             if gd.af_non_cancer is not None:
                 value = gd.af_non_cancer
                 metric = "AF(non-cancer)"
                 absent = value == 0.0
+                if absent:
+                    absent_detail = "non-cancer subset"
             else:
                 metric = "AF [non-cancer subset unavailable → overall]"
+
+        # Gene-specific "absent" wording (named genes only, cSpec verbatim).
+        gene_u = gene or ""
+        if gene_u in _PM2_MALE_ABSENT and gd.nhemi is not None and gd.nhemi == 0:
+            absent, absent_detail = True, "absent in males (nhemi=0)"
+        elif gene_u in _PM2_ALLOW_ONE_ALLELE and (gd.ac or 0) <= 1:
+            absent, absent_detail = True, f"AC={gd.ac or 0} <= 1 allele allowed"
 
         # AC=0 means "observed only in samples that failed QC" — effectively
         # absent for ACMG purposes, so we treat it the same as value == 0.
@@ -216,12 +244,9 @@ class PM2Evaluator(CriterionEvaluator):
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM2, f"{reason}{filter_note}",
                 )
-            using_nc = (rule and rule.subset == "non_cancer"
-                        and gd.af_non_cancer is not None)
-            detail = "non-cancer subset" if using_nc else "AC=0"
             return CriteriaResult.met(
                 ACMGCriterion.PM2, strength,
-                f"Absent from gnomAD ({detail}){filter_note}",
+                f"Absent from gnomAD ({absent_detail}){filter_note}",
             )
 
         # Threshold: the VCEP's per-gene cutoff when set (threshold 0 means the
@@ -233,11 +258,29 @@ class PM2Evaluator(CriterionEvaluator):
         else:
             threshold, basis = self._threshold(annotation)
 
+        # PTEN: a single allele is judged on the GLOBAL AF (< threshold 1e-5); a
+        # subpopulation carrying >=2 alleles is judged on that subpopulation AF
+        # (< 2e-5). This avoids penalising a one-off small-denominator point AF.
+        if gene_u == "PTEN":
+            if (gd.ac_grpmax or 0) >= 2:
+                value = gd.popmax_af if gd.popmax_af is not None else (gd.af or 0.0)
+                threshold, metric = _PM2_PTEN_SUBPOP_CUTOFF, "subpop AF"
+            else:
+                value = gd.af if gd.af is not None else 0.0
+                metric = "global AF"
+
         if value < threshold:
             # Highest-subpopulation correction for the deflated low-AC FAF95
             # (FAF95 is the CI LOWER bound), then the homo-/hemizygote ceiling —
             # either withholds PM2 despite the low frequency.
-            block = self._subpop_block(rule, gd, threshold) or zyg_block or depth_block
+            subpop = self._subpop_block(rule, gd, threshold)
+            # RUNX1: the all-subpopulation (POINT) requirement is the cSpec
+            # FALLBACK used only when GrpMax FAF is unavailable; when FAF95 is
+            # present it is authoritative, so the point block does not apply.
+            if (rule and rule.subpop_mode == "point" and rule.use_faf
+                    and gd.faf95_popmax is not None):
+                subpop = None
+            block = subpop or zyg_block or depth_block
             if block:
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM2,
@@ -248,6 +291,17 @@ class PM2Evaluator(CriterionEvaluator):
                 ACMGCriterion.PM2, strength,
                 f"gnomAD {metric}={value:.2e} < {threshold} [{basis}]{filter_note}",
             )
+
+        # ATM: "if n=1 in a single sub population, that is sufficiently rare and
+        # PM2_supporting would apply" — a single observed allele meets PM2 even
+        # when its small-denominator point AF exceeds the cutoff.
+        if gene_u in _PM2_SINGLE_ALLELE_RARE:
+            n = gd.ac_grpmax if gd.ac_grpmax is not None else gd.ac
+            if n is not None and n <= 1:
+                return CriteriaResult.met(
+                    ACMGCriterion.PM2, strength,
+                    f"single allele (n={n}) in one subpopulation [{basis}]{filter_note}",
+                )
         return CriteriaResult.not_met(
             ACMGCriterion.PM2,
             f"gnomAD {metric}={value:.2e} ≥ {threshold} [{basis}]{filter_note}",
