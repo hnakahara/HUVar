@@ -17,6 +17,10 @@ Three PM5 columns are loaded here, the PM5 counterpart to
   same-codon comparator must reach **Pathogenic**; a Likely-pathogenic-only
   comparator must not trigger PM5 (PTEN, VHL, KCNQ1, RASopathy genes, …).
   Blank = a Likely-pathogenic comparator is accepted (at Supporting).
+* ``pm5_min_count`` — minimum number of DISTINCT same-codon LP/P missense
+  comparators the VCEP requires before PM5 applies (default 1). ACVRL1/ENG
+  (HHT VCEP) require ``2`` ("≥2 different missense changes at the same codon
+  determined LP/P" → PM5_Strong); below the count PM5 is not met.
 """
 from __future__ import annotations
 
@@ -53,6 +57,7 @@ class PM5Spec:
         self._excludes: dict[str, tuple[ACMGCriterion, ...]] = {}
         self._max: dict[str, CriterionStrength] = {}
         self._require_p: set[str] = set()
+        self._min_count: dict[str, int] = {}
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -79,6 +84,14 @@ class PM5Spec:
                     self._max[gene] = cap_map[cap]
                 if (row.get("pm5_lp") or "").strip().lower() == "no":
                     self._require_p.add(gene)
+                raw_count = (row.get("pm5_min_count") or "").strip()
+                if raw_count:
+                    try:
+                        n = int(raw_count)
+                        if n > 1:
+                            self._min_count[gene] = n
+                    except ValueError:
+                        pass
 
     @staticmethod
     def _parse_excludes(raw: str) -> tuple[ACMGCriterion, ...]:
@@ -131,3 +144,10 @@ class PM5Spec:
         (no Supporting PM5 strength) — a Likely-pathogenic-only comparator must
         not trigger PM5."""
         return bool(gene) and gene in self._require_p
+
+    def min_count(self, gene: str | None) -> int:
+        """Minimum number of DISTINCT same-codon LP/P comparators the gene's VCEP
+        requires before PM5 applies (default 1; ACVRL1/ENG = 2)."""
+        if not gene:
+            return 1
+        return self._min_count.get(gene, 1)

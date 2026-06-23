@@ -37,7 +37,8 @@ COLUMNS = [
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
     "pm2_subset", "pm2_min_depth",
     "pm4", "pm4_supporting_max_aa", "pp2",
-    "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp", "bs2",
+    "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp",
+    "pm5_min_count", "bs2",
     "bs2_count", "bs2_strength", "bs2_female_only", "bs2_hom_only", "pvs1",
     "ps1", "ps1_splice", "ps1_max", "ps1_paralog_group", "ps1_paralog_strength",
     "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
@@ -700,6 +701,11 @@ _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     # ACTA1 (GN169) Congenital Myopathies VCEP applies PVS1 Very Strong to null
     # variants ("LOF is a known mechanism"); the resolver had declined it.
     "ACTA1": {"pvs1": "applicable"},
+    # ACVRL1/ENG (HHT VCEP GN135/136): PM5_Strong requires >=2 different
+    # same-codon missense determined LP/P. Count threshold = 2 and LP comparators
+    # are accepted (clear pm5_lp).
+    "ACVRL1": {"pm5_min_count": "2", "pm5_lp": ""},
+    "ENG": {"pm5_min_count": "2", "pm5_lp": ""},
 }
 
 
@@ -2256,6 +2262,7 @@ _OVERRIDE_FIELDS = {
     "pm5_excludes": "pm5_excludes",
     "pm5_max": "pm5_max",
     "pm5_lp": "pm5_lp",
+    "pm5_min_count": "pm5_min_count",
     "bs2": "bs2",
     "bs2_count": "bs2_count",
     "bs2_strength": "bs2_strength",

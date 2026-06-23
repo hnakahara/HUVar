@@ -114,6 +114,30 @@ class PM5Evaluator(CriterionEvaluator):
                     "No Pathogenic same-codon comparator (LP not accepted for this gene)",
                 )
 
+        cap = self._spec.max_strength(pc.gene_symbol) or CriterionStrength.MODERATE
+
+        # Count-threshold VCEPs (ACVRL1/ENG, HHT): PM5 applies only when >=N
+        # DISTINCT same-codon LP/P missense comparators exist, then fires at the
+        # VCEP ceiling (Strong). Fewer than N distinct changes → PM5 not met.
+        min_count = self._spec.min_count(pc.gene_symbol)
+        if min_count > 1:
+            distinct = len({
+                _comparator_change(h.hgvs_p) for h in qualifying
+                if _comparator_change(h.hgvs_p)
+            })
+            if distinct < min_count:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM5,
+                    f"only {distinct} distinct same-codon LP/P comparator(s) "
+                    f"(< {min_count} required for {pc.gene_symbol})",
+                )
+            ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
+            return CriteriaResult.met(
+                ACMGCriterion.PM5, strength=cap,
+                evidence=(f"ClinVar {tag}: >={min_count} distinct same-codon LP/P "
+                          f"({distinct}): {ids}"),
+            )
+
         # Strength (ClinGen SVI):
         #   >=2 DIFFERENT pathogenic missense at the codon -> Strong
         #   1 pathogenic comparator                         -> Moderate
@@ -132,7 +156,6 @@ class PM5Evaluator(CriterionEvaluator):
         else:
             base = CriterionStrength.SUPPORTING
 
-        cap = self._spec.max_strength(pc.gene_symbol) or CriterionStrength.MODERATE
         strength = _min_strength(base, cap)
         ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
         return CriteriaResult.met(
