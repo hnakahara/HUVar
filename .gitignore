@@ -135,3 +135,6 @@ nohup.out
 *.intervar
 concordance_*.tsv
 concordance_*.txt
+
+# Internal audit notes — never committed
+.audit/
