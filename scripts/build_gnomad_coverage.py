@@ -20,33 +20,45 @@ from pathlib import Path
 
 
 def _header_cols(path: Path) -> list[str]:
+    """The header column names **exactly as read_csv exposes them** — the leading
+    "#" of a "#chrom" header is kept, because DuckDB does not strip it."""
     with gzip.open(path, "rt", encoding="utf-8") as fh:
         first = fh.readline().rstrip("\n")
-    return first.lstrip("#").split("\t")
+    return first.split("\t")
 
 
 def _select_sql(src: str, cols: list[str]) -> str:
-    """A SELECT that normalises either layout to (chrom, pos, mean_dp)."""
-    lower = [c.lower() for c in cols]
+    """A SELECT that normalises either layout to (chrom, pos, mean_dp).
+
+    Each source column is referenced by its **actual** name (qualified with the
+    table alias ``t``): the output aliases chrom/pos/mean_dp would otherwise
+    collide with the source column names, and newer DuckDB then treats the bare
+    column as a forward lateral reference to the not-yet-defined output alias and
+    errors. The chrom header may be "#chrom" (the "#" is retained by read_csv)."""
+    # normalised (lower-case, "#"-stripped) name -> actual column name
+    norm = {c.lower().lstrip("#"): c for c in cols}
     read = (
         f"read_csv('{src}', delim='\t', header=true, compression='gzip', "
-        "ignore_errors=true, auto_detect=true)"
+        "ignore_errors=true, auto_detect=true) AS t"
     )
-    if "locus" in lower:
+    mean_col = norm.get("mean", "mean")
+    if "locus" in norm:
         # v4.x: locus = "chr1:12345"
+        locus_col = norm["locus"]
         return (
-            "SELECT split_part(locus, ':', 1) AS chrom, "
-            "CAST(split_part(locus, ':', 2) AS INTEGER) AS pos, "
-            "CAST(mean AS DOUBLE) AS mean_dp "
-            f"FROM {read} WHERE mean IS NOT NULL"
+            f"SELECT split_part(t.\"{locus_col}\", ':', 1) AS chrom, "
+            f"CAST(split_part(t.\"{locus_col}\", ':', 2) AS INTEGER) AS pos, "
+            f'CAST(t."{mean_col}" AS DOUBLE) AS mean_dp '
+            f'FROM {read} WHERE t."{mean_col}" IS NOT NULL'
         )
-    # v2.x: separate chrom + pos columns (the chrom header may be "#chrom",
-    # which read_csv exposes as "chrom" after the '#').
-    chrom_col = "chrom" if "chrom" in lower else cols[0]
+    # v2.x: separate chrom + pos columns (chrom header may be "#chrom").
+    chrom_col = norm.get("chrom", cols[0])
+    pos_col = norm.get("pos", "pos")
     return (
-        f'SELECT CAST("{chrom_col}" AS VARCHAR) AS chrom, '
-        'CAST(pos AS INTEGER) AS pos, CAST(mean AS DOUBLE) AS mean_dp '
-        f"FROM {read} WHERE mean IS NOT NULL"
+        f'SELECT CAST(t."{chrom_col}" AS VARCHAR) AS chrom, '
+        f'CAST(t."{pos_col}" AS INTEGER) AS pos, '
+        f'CAST(t."{mean_col}" AS DOUBLE) AS mean_dp '
+        f'FROM {read} WHERE t."{mean_col}" IS NOT NULL'
     )
 
 
