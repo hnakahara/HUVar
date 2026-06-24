@@ -10,7 +10,7 @@ import pytest
 
 duckdb = pytest.importorskip("duckdb")
 
-from acmg_classifier.local_db.gnomad_db import GnomADDB
+from acmg_classifier.local_db.gnomad_db import GnomADDB  # noqa: E402
 
 # Minimal `variants` schema = exactly the columns query() degrades against when
 # af_xy / ac_xx / grpmax / af_non_cancer are absent (older-style build). With
