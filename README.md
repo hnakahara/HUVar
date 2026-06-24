@@ -299,6 +299,10 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data --skip-
 # Pick specific chromosomes for gnomAD (testing/partial setup)
 python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --gnomad-chromosomes chr1 chr2 chrX
+
+# Refresh ClinVar to the latest weekly release (re-download VCF + XML, rebuild SQLite)
+python scripts/setup_data.py --data-dir /path/to/download/directory/data \
+    --force-clinvar --only clinvar-vcf clinvar-sqlite --workers 12
 ```
 
 ### `setup_data.py` options
@@ -311,6 +315,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--gnomad-vcf-dir PATH` | Use existing gnomAD `*.vcf.bgz` files |
 | `--gnomad-chromosomes CHR ...` | Subset of chromosomes (default all 24) |
 | `--workers N` | Build parallelism for the ClinVar (XML parse, max 24) and gnomAD (DuckDB) steps (default = CPU - 1) |
+| `--force-clinvar` | Force a fresh ClinVar download/rebuild even when local files exist (ClinVar is a rolling weekly release at a fixed URL). Re-acquires the VCF, the source RCV XML, and the PS1/PM5 SQLite. Combine with `--only clinvar-vcf clinvar-sqlite` to refresh ClinVar alone. |
 | `--skip-gnomad` | Skip gnomAD download (~ 1.5 TB) |
 | `--skip-gnomad-coverage` | Skip the gnomAD exomes coverage summary download + DuckDB build (per-locus mean read depth; used by the PM2 read-depth gate for ENIGMA BRCA1/2). Downloaded by default. |
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
@@ -388,6 +393,13 @@ rm -f /path/to/download/directory/data/GRCh38/clinvar/clinvar_GRCh38.vcf.gz*
 Keep everything else (DuckDB, ClinVar SQLite, VEP cache, ESM1b, OpenSpliceAI
 models, constraint/AlphaMissense tables) — those are read on every run.
 > If the model directory is absent, splice scoring is skipped.
+
+> **Keeping ClinVar current.** ClinVar is published as a rolling weekly release at
+> a fixed URL, so a normal re-run *skips* an existing ClinVar VCF/SQLite and they
+> grow stale. Use `--force-clinvar` to re-download the VCF + source RCV XML and
+> rebuild the PS1/PM5 SQLite from the latest release; pair it with
+> `--only clinvar-vcf clinvar-sqlite` to refresh ClinVar without touching the
+> large gnomAD/VEP/ESM1b data.
 
 Validate the install at any time:
 

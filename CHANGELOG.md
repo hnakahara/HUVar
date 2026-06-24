@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **`setup_data.py --force-clinvar`** — force a fresh ClinVar download/rebuild
+  even when local files exist. ClinVar is a rolling weekly release at a fixed
+  URL, so a normal re-run skips the existing VCF/SQLite and they go stale; the
+  flag re-acquires the VCF, the source RCV XML, and the PS1/PM5 SQLite. Pair
+  with `--only clinvar-vcf clinvar-sqlite` to refresh ClinVar alone.
+
 - **PM4 region/strength engine** (`pm4_regions.tsv` + `PM4Regions`): per-gene
   PM4_Strong residues, allow/deny regions, region default, stop-loss strength,
   conservation (`conserved_phylop`) and deletion-content gates, mutual exclusion

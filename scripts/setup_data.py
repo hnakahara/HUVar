@@ -18,6 +18,10 @@ Usage:
 
   # Download gnomAD for specific chromosomes only
   python scripts/setup_data.py --data-dir ./data --gnomad-chromosomes chr1 chr2 chrX
+
+  # Refresh ClinVar to the latest weekly release (re-download VCF + XML, rebuild SQLite)
+  python scripts/setup_data.py --data-dir ./data --force-clinvar \\
+      --only clinvar-vcf clinvar-sqlite
 """
 from __future__ import annotations
 
@@ -533,12 +537,16 @@ def step_vep_cache(data_dir: Path, assembly: str, urls: dict, skip: bool) -> boo
     return True
 
 
-def step_clinvar_vcf(asm_dir: Path, assembly: str, urls: dict) -> bool:
+def step_clinvar_vcf(asm_dir: Path, assembly: str, urls: dict, force: bool = False) -> bool:
     dest = asm_dir / "clinvar" / f"clinvar_{assembly}.vcf.gz"
     tbi = Path(str(dest) + ".tbi")
-    if dest.exists() and tbi.exists():
+    if dest.exists() and tbi.exists() and not force:
         print(f"  [SKIP] {dest.name}")
         return True
+    if force and dest.exists():
+        # ClinVar is a rolling weekly release at a fixed URL; force a re-fetch of
+        # the latest even when a (possibly stale) local copy exists.
+        print(f"  [FORCE] re-downloading ClinVar VCF (latest weekly release)")
 
     _require("tabix")
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -557,18 +565,26 @@ def step_clinvar_vcf(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
-def step_clinvar_sqlite(asm_dir: Path, assembly: str, urls: dict, workers: int | None = None) -> bool:
+def step_clinvar_sqlite(asm_dir: Path, assembly: str, urls: dict, workers: int | None = None,
+                        force: bool = False) -> bool:
     dest = asm_dir / "clinvar" / f"clinvar_ps1_pm5_{assembly}.sqlite"
-    if _verify_sqlite_has_rows(dest):
-        print(f"  [SKIP] {dest.name}")
-        return True
-
     # ClinVarRCVRelease (RCV_release) — the current, weekly/monthly-updated RCV
     # XML. The legacy RCV_xml_old_format/ClinVarFullRelease_00-latest is frozen
     # (its content stopped at 2025-07), so PM5/PS1 comparators built from it lag
     # ClinVar by ~a year. The distinct local name ensures a stale, previously
     # downloaded ClinVarFullRelease.xml.gz is not silently reused.
     xml_gz = asm_dir / "clinvar" / "ClinVarRCVRelease.xml.gz"
+    if force:
+        # Drop the prior SQLite AND its cached source XML so the PS1/PM5
+        # comparators are rebuilt from the latest ClinVar release.
+        if dest.exists() or xml_gz.exists():
+            print(f"  [FORCE] rebuilding ClinVar SQLite from a fresh XML download")
+        dest.unlink(missing_ok=True)
+        xml_gz.unlink(missing_ok=True)
+    if _verify_sqlite_has_rows(dest):
+        print(f"  [SKIP] {dest.name}")
+        return True
+
     # ClinVarRCVRelease is ~6 GB; treat anything under 1 GB as corrupt
     _verify_size(xml_gz, min_bytes=1_000_000_000, label="ClinVar XML")
     if not xml_gz.exists():
@@ -1068,6 +1084,12 @@ def main() -> None:
     parser.add_argument("--workers", type=int, default=None, metavar="N",
                         help="Build parallelism for the ClinVar (XML parse, max 24) "
                              "and gnomAD (DuckDB) steps (default: CPU cores - 1)")
+    parser.add_argument("--force-clinvar", action="store_true",
+                        help="Force a fresh ClinVar download/rebuild even when local files "
+                             "exist. ClinVar is a rolling weekly release at a fixed URL, so "
+                             "the VCF, the source RCV XML, and the PS1/PM5 SQLite are all "
+                             "re-acquired to pick up the latest release. Combine with "
+                             "'--only clinvar-vcf clinvar-sqlite' to refresh ClinVar alone.")
     parser.add_argument("--skip-gnomad", action="store_true",
                         help="Skip gnomAD download (~1.5 TB)")
     parser.add_argument("--skip-genome", action="store_true",
@@ -1125,8 +1147,8 @@ def main() -> None:
     steps: list[tuple[str, str, object]] = [
         ("genome",            "Reference genome",  lambda: step_genome(asm_dir, assembly, urls, args.genome_fasta, args.skip_genome)),
         ("vep",               "VEP cache",         lambda: step_vep_cache(data_dir, assembly, urls, args.skip_vep_cache)),
-        ("clinvar-vcf",       "ClinVar VCF",       lambda: step_clinvar_vcf(asm_dir, assembly, urls)),
-        ("clinvar-sqlite",    "ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls, args.workers)),
+        ("clinvar-vcf",       "ClinVar VCF",       lambda: step_clinvar_vcf(asm_dir, assembly, urls, args.force_clinvar)),
+        ("clinvar-sqlite",    "ClinVar SQLite",    lambda: step_clinvar_sqlite(asm_dir, assembly, urls, args.workers, args.force_clinvar)),
         ("alphamissense",     "AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
         ("esm1b",             "ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
         ("revel",             "REVEL",             lambda: step_revel(asm_dir, assembly, urls, args.with_revel)),
