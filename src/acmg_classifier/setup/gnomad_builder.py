@@ -203,6 +203,7 @@ def _per_worker_mem_limit(max_workers: int) -> str:
 def _select_vcf_files(
     vcf_dir: Path,
     callsets: tuple[str, ...] | None,
+    chromosomes: tuple[str, ...] | None = None,
 ) -> list[Path]:
     """ロード対象の VCF を選ぶ。
 
@@ -210,6 +211,11 @@ def _select_vcf_files(
     joint と exome が同居していても joint のみを拾い、二重登録を防ぐ。指定の
     callset に 1 件も一致しない場合のみ、従来通り全 ``*.vcf.bgz`` へフォール
     バックする (例: exomes-only を別ディレクトリで明示指定したケース)。
+
+    ``chromosomes`` 指定時は ``gnomad.{callset}.{ver}.sites.{chrom}.vcf.bgz`` の
+    contig 部分が一致するファイルだけに絞る。staging に他の contig の VCF が
+    既にあっても、指定 contig だけで build できるようにするため (例: non-cancer
+    コンパニオンを chr13/chr17 のみで構築する)。
     """
     if callsets:
         selected: list[Path] = []
@@ -219,11 +225,23 @@ def _select_vcf_files(
                 if f not in seen:
                     seen.add(f)
                     selected.append(f)
-        if selected:
-            return selected
-        log.warning("callset_filter_no_match", callsets=list(callsets),
-                    vcf_dir=str(vcf_dir))
-    return sorted(vcf_dir.glob("*.vcf.bgz"))
+        if not selected:
+            log.warning("callset_filter_no_match", callsets=list(callsets),
+                        vcf_dir=str(vcf_dir))
+            selected = sorted(vcf_dir.glob("*.vcf.bgz"))
+    else:
+        selected = sorted(vcf_dir.glob("*.vcf.bgz"))
+
+    if chromosomes:
+        # contig は ".sites.{chrom}.vcf.bgz" / ".{chrom}.vcf.bgz" の形で名前に
+        # 現れる。前後をドットで挟むことで chr1 が chr13 に誤マッチしない。
+        tokens = tuple(f".{c}.vcf.bgz" for c in chromosomes)
+        filtered = [f for f in selected if f.name.endswith(tokens)]
+        if not filtered:
+            log.warning("chromosome_filter_no_match", chromosomes=list(chromosomes),
+                        vcf_dir=str(vcf_dir))
+        return filtered
+    return selected
 
 
 def _make_region_jobs(
@@ -568,21 +586,30 @@ def build_gnomad_noncancer_duckdb(
     max_workers: int | None = None,
     window_size: int = _WINDOW_SIZE,
     callsets: tuple[str, ...] | None = ("genomes",),
+    chromosomes: tuple[str, ...] | None = None,
 ) -> None:
     """Build the non-cancer-subset companion DB from gnomAD v3.1.2 genomes.
 
     Extracts ONLY (chrom, pos, ref, alt, AF_non_cancer) and stores rows that
     carry a non-NULL non-cancer AF (a sparse overlay). Reuses the region-parallel
     VCF→Parquet→DuckDB pipeline. ``callsets`` defaults to the genomes VCF, which
-    is the v3.1.2 release that carries the non-cancer subset."""
+    is the v3.1.2 release that carries the non-cancer subset.
+
+    ``chromosomes`` restricts the build to the named contigs only — so an existing
+    staging dir holding other contigs' VCFs does not get pulled into the build
+    when only chr13/chr17 were requested."""
     import duckdb
 
     output_db.parent.mkdir(parents=True, exist_ok=True)
-    log.info("building_gnomad_noncancer_db", output=str(output_db))
+    log.info("building_gnomad_noncancer_db", output=str(output_db),
+             chromosomes=list(chromosomes) if chromosomes else None)
 
-    vcf_files = _select_vcf_files(vcf_dir, callsets)
+    vcf_files = _select_vcf_files(vcf_dir, callsets, chromosomes)
     if not vcf_files:
-        raise FileNotFoundError(f"No *.vcf.bgz files found in {vcf_dir}")
+        raise FileNotFoundError(
+            f"No matching *.vcf.bgz files found in {vcf_dir}"
+            + (f" for chromosomes {list(chromosomes)}" if chromosomes else "")
+        )
 
     tmp_dir = output_db.parent / "_gnomad_noncancer_parquet_tmp"
     if tmp_dir.exists():

@@ -1096,8 +1096,12 @@ def step_gnomad_noncancer(
     _add_src_to_path()
     from acmg_classifier.setup.gnomad_builder import build_gnomad_noncancer_duckdb  # type: ignore
     dest.parent.mkdir(parents=True, exist_ok=True)
+    # Restrict the build to the requested contigs so that any other contigs'
+    # VCFs already present in the staging dir (from an earlier run) are NOT
+    # pulled into this build.
     build_gnomad_noncancer_duckdb(vcf_dir, dest, max_workers=n_workers,
-                                  callsets=("genomes",))
+                                  callsets=("genomes",),
+                                  chromosomes=tuple(nc_chroms))
     return True
 
 
