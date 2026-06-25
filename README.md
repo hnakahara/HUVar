@@ -170,8 +170,12 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   point grpmax/popmax allele frequency instead use that (`af_basis=popmax`,
   globally revertible via `ACMG_POPMAX_AF_BASIS=false`). PM2 can additionally
   require a minimum gnomAD read depth (`pm2_min_depth`, ENIGMA BRCA1/2 ≥25) and
-  judge absence on the non-cancer subset (`pm2_subset=non_cancer`), both from the
-  optional gnomAD coverage build (see [Data setup](#data-setup)).
+  judge absence on the non-cancer subset (`pm2_subset=non_cancer`). On GRCh38 the
+  v4.1 release dropped the non-cancer subset, so it is backfilled from a small
+  v3.1.2 genomes companion DB built **only for the BRCA1/2 contigs (chr13/chr17)**
+  by default — the only genes that use it; GRCh37's v2.1.1 build carries the
+  subset inline. The read-depth gate comes from the optional gnomAD coverage
+  build (see [Data setup](#data-setup)).
 - **In silico prediction**: **ESM1b** (default; Brandes 2023, MIT-licensed,
   commercial-use ready), **AlphaMissense** (non-commercial), or **REVEL**
   (Ioannidis 2016; free for non-commercial use, commercial use needs a separate
@@ -300,6 +304,11 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data --skip-
 python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --gnomad-chromosomes chr1 chr2 chrX
 
+# The GRCh38 non-cancer companion (PM2 BRCA1/2) builds ONLY chr13+chr17 by
+# default. Rebuild it genome-wide if a future VCEP adds a non-cancer gene:
+python scripts/setup_data.py --data-dir /path/to/download/directory/data \
+    --gnomad-noncancer-full --only gnomad-noncancer --workers 12
+
 # Refresh ClinVar to the latest weekly release (re-download VCF + XML, rebuild SQLite)
 python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --force-clinvar --only clinvar-vcf clinvar-sqlite --workers 12
@@ -318,6 +327,9 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--force-clinvar` | Force a fresh ClinVar download/rebuild even when local files exist (ClinVar is a rolling weekly release at a fixed URL). Re-acquires the VCF, the source RCV XML, and the PS1/PM5 SQLite. Combine with `--only clinvar-vcf clinvar-sqlite` to refresh ClinVar alone. |
 | `--skip-gnomad` | Skip gnomAD download (~ 1.5 TB) |
 | `--skip-gnomad-coverage` | Skip the gnomAD exomes coverage summary download + DuckDB build (per-locus mean read depth; used by the PM2 read-depth gate for ENIGMA BRCA1/2). Downloaded by default. |
+| `--skip-gnomad-noncancer` | Skip the gnomAD v3.1.2 non-cancer companion DB (GRCh38). PM2 for ENIGMA BRCA1/2 then falls back to the overall AF. |
+| `--gnomad-noncancer-chromosomes CHR ...` | Contigs to build the non-cancer companion DB from. **Default: only the BRCA1/2 contigs (`chr13 chr17`)** — the sole genes whose VCEP judges PM2 absence on the non-cancer subset, so the full v3.1.2 genomes download is avoided. GRCh37 ignores this (its v2.1.1 build carries the subset inline). |
+| `--gnomad-noncancer-full` | Build the non-cancer companion DB genome-wide (all 24 contigs) instead of just `chr13`/`chr17`. Use when a future VCEP adds a non-cancer-subset gene outside the BRCA loci. |
 | `--skip-genome` | Skip reference FASTA download (~ 880 MB) |
 | `--skip-vep-cache` | Skip VEP cache download (~ 14 GB) |
 | `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
@@ -346,6 +358,7 @@ data/
     ├── gnomad/vcf/                       # raw downloaded VCFs (~1.5 TB) — DELETABLE after build
     ├── gnomad/gnomad_v4.1_constraint.tsv
     ├── gnomad/gnomad_v4.0_exomes_coverage.duckdb   # per-locus mean DP (PM2 read-depth gate); GRCh37: v2.1
+    ├── gnomad/gnomad_v3.1.2_non_cancer.duckdb      # GRCh38 only: PM2 BRCA1/2 non-cancer AF overlay (chr13/chr17 by default)
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
     ├── (optional) revel/revel_grch38.tsv.gz(+.tbi)   # built with --with-revel
     ├── repeats/repeatmasker_dfam_hg38.bed.gz

@@ -19,6 +19,11 @@ Usage:
   # Download gnomAD for specific chromosomes only
   python scripts/setup_data.py --data-dir ./data --gnomad-chromosomes chr1 chr2 chrX
 
+  # The gnomAD non-cancer companion (PM2 BRCA1/2) builds ONLY chr13+chr17 by
+  # default. Rebuild it genome-wide when a future VCEP adds a non-cancer gene:
+  python scripts/setup_data.py --data-dir ./data --gnomad-noncancer-full \\
+      --only gnomad-noncancer
+
   # Refresh ClinVar to the latest weekly release (re-download VCF + XML, rebuild SQLite)
   python scripts/setup_data.py --data-dir ./data --force-clinvar \\
       --only clinvar-vcf clinvar-sqlite
@@ -171,6 +176,19 @@ URLS: dict[str, dict[str, str]] = {
 GNOMAD_CHROMS: dict[str, list[str]] = {
     "GRCh38": [f"chr{c}" for c in list(range(1, 23)) + ["X", "Y"]],
     "GRCh37": [str(c) for c in list(range(1, 23)) + ["X", "Y"]],
+}
+
+# Chromosomes the gnomAD non-cancer companion DB (GRCh38) needs to build. The
+# overlay only backfills PM2 for genes whose VCEP judges absence on the gnomAD
+# non-cancer subset. Currently that is ONLY ENIGMA BRCA1/2 (BRCA2 = chr13,
+# BRCA1 = chr17), so by default we download/build just those two contigs instead
+# of the whole genome (saves ~1.5 TB of v3.1.2 genomes download + build time).
+# To rebuild the FULL genome-wide overlay later — e.g. when a future VCEP adds a
+# non-cancer gene on another contig — pass --gnomad-noncancer-full (all 24) or
+# list contigs explicitly with --gnomad-noncancer-chromosomes.
+GNOMAD_NONCANCER_CHROMS: dict[str, list[str]] = {
+    "GRCh38": ["chr13", "chr17"],
+    "GRCh37": ["13", "17"],
 }
 
 # Candidate directories for existing gnomAD / genome files on the server
@@ -902,7 +920,13 @@ def step_gnomad_noncancer(
     gnomAD v4.1 dropped the non-cancer subset, so PM2 for ENIGMA BRCA1/2 reads the
     non-cancer AF from gnomAD v3.1.2 genomes (hg38 — same coordinates as v4.1) via
     a small companion DB (gnomad_v3.1.2_non_cancer.duckdb). Not applicable to
-    GRCh37, whose v2.1.1 build carries the subset inline."""
+    GRCh37, whose v2.1.1 build carries the subset inline.
+
+    ``chromosomes`` is the contig subset to build from — by default only the
+    BRCA1/2 contigs (chr13/chr17), the sole genes whose VCEP currently judges PM2
+    absence on the non-cancer subset. Pass --gnomad-noncancer-full (or list
+    contigs via --gnomad-noncancer-chromosomes) to rebuild the genome-wide
+    overlay later."""
     if assembly != "GRCh38":
         print("  [SKIP] non-cancer companion is GRCh38-only "
               "(GRCh37 v2.1.1 carries the subset inline)")
@@ -917,6 +941,8 @@ def step_gnomad_noncancer(
 
     # v3.1.2 genomes carry the non-cancer subset (chrM excluded).
     nc_chroms = [c for c in chromosomes if c not in ("chrM", "MT")]
+    print(f"  non-cancer companion contigs: {', '.join(nc_chroms)} "
+          f"(default = BRCA1/2 only; --gnomad-noncancer-full for genome-wide)")
     staging = asm_dir / "gnomad" / "vcf_noncancer"
 
     if vcf_dir is None:
@@ -1079,6 +1105,15 @@ def main() -> None:
     parser.add_argument("--skip-gnomad-noncancer", action="store_true",
                         help="Skip the gnomAD v3.1.2 non-cancer companion DB (GRCh38). "
                              "PM2 for ENIGMA BRCA1/2 then falls back to the overall AF.")
+    parser.add_argument("--gnomad-noncancer-chromosomes", nargs="+", default=None, metavar="CHR",
+                        help="Contigs to build the gnomAD non-cancer companion DB from. "
+                             "Default: only the BRCA1/2 contigs (GRCh38: chr13 chr17) — the "
+                             "sole genes whose VCEP currently judges PM2 absence on the "
+                             "non-cancer subset. Explicit values override the default.")
+    parser.add_argument("--gnomad-noncancer-full", action="store_true",
+                        help="Build the gnomAD non-cancer companion DB genome-wide (all 24 "
+                             "contigs) instead of just the BRCA1/2 contigs. Use when a future "
+                             "VCEP adds a non-cancer-subset gene outside chr13/chr17.")
     parser.add_argument("--gnomad-chromosomes", nargs="+", default=None, metavar="CHR",
                         help="Chromosomes to download (default: all 24)")
     parser.add_argument("--workers", type=int, default=None, metavar="N",
@@ -1136,6 +1171,14 @@ def main() -> None:
     asm_dir = data_dir / assembly
     urls = URLS[assembly]
     chroms = args.gnomad_chromosomes or GNOMAD_CHROMS[assembly]
+    # Non-cancer companion DB contigs: explicit override > genome-wide (--full) >
+    # the BRCA1/2-only default (the only genes currently using the subset).
+    if args.gnomad_noncancer_chromosomes:
+        nc_chroms = args.gnomad_noncancer_chromosomes
+    elif args.gnomad_noncancer_full:
+        nc_chroms = chroms
+    else:
+        nc_chroms = GNOMAD_NONCANCER_CHROMS.get(assembly, chroms)
 
     sep = "=" * 62
     print(f"\n{sep}")
@@ -1158,7 +1201,7 @@ def main() -> None:
         ("gnomad-constraint", "gnomAD constraint", lambda: step_gnomad_constraint(asm_dir, assembly, urls)),
         ("gnomad-coverage",   "gnomAD coverage",   lambda: step_gnomad_coverage(asm_dir, assembly, urls, args.skip_gnomad_coverage)),
         ("gnomad",            "gnomAD DuckDB",     lambda: step_gnomad_duckdb(asm_dir, assembly, urls, args.gnomad_vcf_dir, chroms, args.skip_gnomad, args.workers)),
-        ("gnomad-noncancer",  "gnomAD non-cancer", lambda: step_gnomad_noncancer(asm_dir, assembly, urls, args.gnomad_noncancer_vcf_dir, chroms, args.skip_gnomad_noncancer, args.workers)),
+        ("gnomad-noncancer",  "gnomAD non-cancer", lambda: step_gnomad_noncancer(asm_dir, assembly, urls, args.gnomad_noncancer_vcf_dir, nc_chroms, args.skip_gnomad_noncancer, args.workers)),
         ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
         ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
     ]
