@@ -1,0 +1,2570 @@
+hgvs_c	hgvs_p	agvgd	bayesdel	code
+c.4G>C	p.Glu2Gln	Class C0	0.0858	BP4
+c.4G>A	p.Glu2Lys	Class C0	0.1490	BP4
+c.5A>T	p.Glu2Val	Class C0	0.1191	BP4
+c.5A>G	p.Glu2Gly	Class C0	0.0978	BP4
+c.5A>C	p.Glu2Ala	Class C0	0.0985	BP4
+c.6G>T	p.Glu2Asp	Class C0	0.0779	BP4
+c.6G>C	p.Glu2Asp	Class C0	0.0779	BP4
+c.7G>C	p.Glu3Gln	Class C0	0.1028	BP4
+c.7G>A	p.Glu3Lys	Class C0	0.1957	No evidence
+c.8A>T	p.Glu3Val	Class C0	0.1085	BP4
+c.8A>G	p.Glu3Gly	Class C0	0.0852	BP4
+c.8A>C	p.Glu3Ala	Class C0	0.0879	BP4
+c.9G>T	p.Glu3Asp	Class C0	0.0136	BP4
+c.9G>C	p.Glu3Asp	Class C0	0.0188	BP4
+c.10C>T	p.Pro4Ser	Class C0	-0.0222	BP4_moderate
+c.10C>G	p.Pro4Ala	Class C0	-0.0201	BP4_moderate
+c.10C>A	p.Pro4Thr	Class C0	-0.0044	BP4
+c.11C>T	p.Pro4Leu	Class C0	0.0629	BP4
+c.11C>G	p.Pro4Arg	Class C0	0.0654	BP4
+c.11C>A	p.Pro4Gln	Class C0	0.0632	BP4
+c.13C>G	p.Gln5Glu	Class C0	0.0678	BP4
+c.13C>A	p.Gln5Lys	Class C0	0.0767	BP4
+c.14A>T	p.Gln5Leu	Class C0	0.0463	BP4
+c.14A>G	p.Gln5Arg	Class C0	0.0447	BP4
+c.14A>C	p.Gln5Pro	Class C0	0.0439	BP4
+c.15G>T	p.Gln5His	Class C0	0.0375	BP4
+c.15G>C	p.Gln5His	Class C0	0.0375	BP4
+c.16T>G	p.Ser6Ala	Class C0	0.0135	BP4
+c.16T>C	p.Ser6Pro	Class C0	0.1082	BP4
+c.16T>A	p.Ser6Thr	Class C0	0.0377	BP4
+c.17C>T	p.Ser6Leu	Class C0	0.0680	BP4
+c.19G>T	p.Asp7Tyr	Class C35	0.1773	PP3
+c.19G>C	p.Asp7His	Class C0	0.1007	BP4
+c.19G>A	p.Asp7Asn	Class C0	0.0194	BP4
+c.20A>T	p.Asp7Val	Class C35	0.1685	PP3
+c.20A>G	p.Asp7Gly	Class C15	0.1028	BP4
+c.20A>C	p.Asp7Ala	Class C25	0.0801	BP4
+c.21T>G	p.Asp7Glu	Class C0	-0.0153	BP4_moderate
+c.21T>A	p.Asp7Glu	Class C0	-0.0153	BP4_moderate
+c.22C>T	p.Pro8Ser	Class C0	-0.0162	BP4_moderate
+c.22C>G	p.Pro8Ala	Class C0	-0.0311	BP4_moderate
+c.22C>A	p.Pro8Thr	Class C0	-0.0173	BP4_moderate
+c.23C>T	p.Pro8Leu	Class C0	-0.0398	BP4_moderate
+c.23C>G	p.Pro8Arg	Class C0	-0.0135	BP4_moderate
+c.23C>A	p.Pro8His	Class C0	-0.0109	BP4_moderate
+c.25A>T	p.Ser9Cys	Class C0	-0.0083	BP4_moderate
+c.25A>G	p.Ser9Gly	Class C0	-0.0368	BP4_moderate
+c.25A>C	p.Ser9Arg	Class C0	-0.0049	BP4
+c.26G>T	p.Ser9Ile	Class C0	-0.0000	BP4
+c.26G>C	p.Ser9Thr	Class C0	-0.0585	BP4_moderate
+c.26G>A	p.Ser9Asn	Class C0	-0.0745	BP4_moderate
+c.27C>G	p.Ser9Arg	Class C0	0.0169	BP4
+c.27C>A	p.Ser9Arg	Class C0	0.0168	BP4
+c.28G>T	p.Val10Phe	Class C0	-0.0352	BP4_moderate
+c.28G>C	p.Val10Leu	Class C0	-0.0594	BP4_moderate
+c.28G>A	p.Val10Ile	Class C0	-0.0961	BP4_moderate
+c.29T>G	p.Val10Gly	Class C0	0.0740	BP4
+c.29T>C	p.Val10Ala	Class C0	0.0247	BP4
+c.29T>A	p.Val10Asp	Class C0	0.0814	BP4
+c.31G>C	p.Glu11Gln	Class C0	0.0890	BP4
+c.31G>A	p.Glu11Lys	Class C0	0.0906	BP4
+c.32A>T	p.Glu11Val	Class C0	0.0980	BP4
+c.32A>G	p.Glu11Gly	Class C0	0.0709	BP4
+c.32A>C	p.Glu11Ala	Class C0	0.0730	BP4
+c.33G>T	p.Glu11Asp	Class C0	0.0113	BP4
+c.33G>C	p.Glu11Asp	Class C0	0.0113	BP4
+c.34C>T	p.Pro12Ser	Class C0	0.0264	BP4
+c.34C>G	p.Pro12Ala	Class C0	0.0224	BP4
+c.34C>A	p.Pro12Thr	Class C0	0.0444	BP4
+c.35C>T	p.Pro12Leu	Class C0	-0.0047	BP4
+c.35C>G	p.Pro12Arg	Class C0	0.0269	BP4
+c.35C>A	p.Pro12His	Class C0	0.0214	BP4
+c.37C>T	p.Pro13Ser	Class C0	0.1233	BP4
+c.37C>G	p.Pro13Ala	Class C0	0.1140	BP4
+c.37C>A	p.Pro13Thr	Class C0	0.1344	BP4
+c.38C>T	p.Pro13Leu	Class C0	0.1467	BP4
+c.38C>G	p.Pro13Arg	Class C0	0.1803	No evidence
+c.38C>A	p.Pro13His	Class C0	0.1355	BP4
+c.40C>G	p.Leu14Val	Class C0	0.1599	BP4
+c.40C>A	p.Leu14Met	Class C0	0.0872	BP4
+c.41T>G	p.Leu14Arg	Class C0	0.2595	No evidence
+c.41T>C	p.Leu14Pro	Class C0	0.2239	No evidence
+c.41T>A	p.Leu14Gln	Class C0	0.1921	No evidence
+c.43A>T	p.Ser15Cys	Class C65	0.1956	PP3_moderate
+c.43A>G	p.Ser15Gly	Class C55	0.1468	BP4
+c.43A>C	p.Ser15Arg	Class C65	0.2485	PP3_moderate
+c.44G>T	p.Ser15Ile	Class C65	0.3000	PP3_moderate
+c.44G>C	p.Ser15Thr	Class C55	0.1286	BP4
+c.44G>A	p.Ser15Asn	Class C45	0.0939	BP4
+c.45T>G	p.Ser15Arg	Class C65	0.1826	PP3_moderate
+c.45T>A	p.Ser15Arg	Class C65	0.1826	PP3_moderate
+c.46C>G	p.Gln16Glu	Class C25	0.1249	BP4
+c.46C>A	p.Gln16Lys	Class C45	0.1429	BP4
+c.47A>T	p.Gln16Leu	Class C65	0.1247	No evidence
+c.47A>G	p.Gln16Arg	Class C35	0.1277	BP4
+c.47A>C	p.Gln16Pro	Class C65	0.2090	PP3_moderate
+c.48G>T	p.Gln16His	Class C15	0.0836	BP4
+c.48G>C	p.Gln16His	Class C15	0.0836	BP4
+c.49G>C	p.Glu17Gln	Class C0	0.0825	BP4
+c.49G>A	p.Glu17Lys	Class C15	0.1518	BP4
+c.50A>T	p.Glu17Val	Class C35	0.1231	BP4
+c.50A>G	p.Glu17Gly	Class C15	0.0872	BP4
+c.50A>C	p.Glu17Ala	Class C25	0.0830	BP4
+c.51A>T	p.Glu17Asp	Class C0	0.0595	BP4
+c.51A>C	p.Glu17Asp	Class C0	0.0595	BP4
+c.52A>T	p.Thr18Ser	Class C0	0.0839	BP4
+c.52A>G	p.Thr18Ala	Class C0	0.1306	BP4
+c.52A>C	p.Thr18Pro	Class C0	0.2121	No evidence
+c.53C>T	p.Thr18Ile	Class C0	0.2170	No evidence
+c.53C>G	p.Thr18Arg	Class C0	0.2221	No evidence
+c.53C>A	p.Thr18Lys	Class C0	0.2038	No evidence
+c.55T>G	p.Phe19Val	Class C45	0.2696	PP3
+c.55T>C	p.Phe19Leu	Class C15	0.1356	BP4
+c.55T>A	p.Phe19Ile	Class C15	0.1556	BP4
+c.56T>G	p.Phe19Cys	Class C65	0.4285	PP3_moderate
+c.56T>C	p.Phe19Ser	Class C65	0.3156	PP3_moderate
+c.56T>A	p.Phe19Tyr	Class C15	0.1767	No evidence
+c.57T>G	p.Phe19Leu	Class C15	0.1294	BP4
+c.57T>A	p.Phe19Leu	Class C15	0.1295	BP4
+c.58T>G	p.Ser20Ala	Class C0	0.0652	BP4
+c.58T>C	p.Ser20Pro	Class C0	0.2049	No evidence
+c.58T>A	p.Ser20Thr	Class C0	0.0849	BP4
+c.59C>T	p.Ser20Leu	Class C0	0.1716	No evidence
+c.61G>T	p.Asp21Tyr	Class C0	0.2206	No evidence
+c.61G>C	p.Asp21His	Class C0	0.1557	BP4
+c.61G>A	p.Asp21Asn	Class C0	0.0027	BP4
+c.62A>T	p.Asp21Val	Class C0	0.2499	No evidence
+c.62A>G	p.Asp21Gly	Class C0	0.1719	No evidence
+c.62A>C	p.Asp21Ala	Class C0	0.1680	No evidence
+c.63C>G	p.Asp21Glu	Class C0	0.0154	BP4
+c.63C>A	p.Asp21Glu	Class C0	0.0154	BP4
+c.64C>G	p.Leu22Val	Class C25	0.1078	BP4
+c.64C>A	p.Leu22Ile	Class C0	0.0488	BP4
+c.65T>G	p.Leu22Arg	Class C65	0.2398	PP3_moderate
+c.65T>C	p.Leu22Pro	Class C65	0.3011	PP3_moderate
+c.65T>A	p.Leu22Gln	Class C65	0.2259	PP3_moderate
+c.67T>G	p.Trp23Gly	Class C65	0.4811	PP3_moderate
+c.67T>C	p.Trp23Arg	Class C65	0.4602	PP3_moderate
+c.67T>A	p.Trp23Arg	Class C65	0.4602	PP3_moderate
+c.68G>T	p.Trp23Leu	Class C55	0.2784	PP3
+c.68G>C	p.Trp23Ser	Class C65	0.4891	PP3_moderate
+c.69G>T	p.Trp23Cys	Class C65	0.3733	PP3_moderate
+c.69G>C	p.Trp23Cys	Class C65	0.3733	PP3_moderate
+c.70A>G	p.Lys24Glu	Class C0	0.1535	BP4
+c.70A>C	p.Lys24Gln	Class C0	0.0689	BP4
+c.71A>T	p.Lys24Ile	Class C0	0.0818	BP4
+c.71A>G	p.Lys24Arg	Class C0	0.0256	BP4
+c.71A>C	p.Lys24Thr	Class C0	0.0878	BP4
+c.72A>T	p.Lys24Asn	Class C0	-0.0538	BP4_moderate
+c.72A>C	p.Lys24Asn	Class C0	-0.0537	BP4_moderate
+c.73C>G	p.Leu25Val	Class C0	0.1568	BP4
+c.73C>A	p.Leu25Ile	Class C0	0.0879	BP4
+c.74T>G	p.Leu25Arg	Class C0	0.3363	No evidence
+c.74T>C	p.Leu25Pro	Class C0	0.4406	No evidence
+c.74T>A	p.Leu25Gln	Class C0	0.2643	No evidence
+c.76C>T	p.Leu26Phe	Class C0	0.0747	BP4
+c.76C>G	p.Leu26Val	Class C0	0.0807	BP4
+c.76C>A	p.Leu26Ile	Class C0	0.0638	BP4
+c.77T>G	p.Leu26Arg	Class C0	0.3126	No evidence
+c.77T>C	p.Leu26Pro	Class C0	0.3049	No evidence
+c.77T>A	p.Leu26His	Class C0	0.2526	No evidence
+c.79C>T	p.Pro27Ser	Class C0	0.0811	BP4
+c.79C>G	p.Pro27Ala	Class C0	0.0640	BP4
+c.79C>A	p.Pro27Thr	Class C0	0.0923	BP4
+c.80C>T	p.Pro27Leu	Class C0	0.1017	BP4
+c.80C>G	p.Pro27Arg	Class C0	0.1163	BP4
+c.80C>A	p.Pro27His	Class C0	0.0994	BP4
+c.82G>C	p.Glu28Gln	Class C0	-0.0725	BP4_moderate
+c.82G>A	p.Glu28Lys	Class C0	0.0489	BP4
+c.83A>T	p.Glu28Val	Class C0	-0.0010	BP4
+c.83A>G	p.Glu28Gly	Class C0	-0.0412	BP4_moderate
+c.83A>C	p.Glu28Ala	Class C0	-0.0356	BP4_moderate
+c.84A>T	p.Glu28Asp	Class C0	-0.0491	BP4_moderate
+c.84A>C	p.Glu28Asp	Class C0	-0.0491	BP4_moderate
+c.85A>T	p.Asn29Tyr	Class C0	0.0051	BP4
+c.85A>G	p.Asn29Asp	Class C0	-0.1384	BP4_moderate
+c.85A>C	p.Asn29His	Class C0	-0.0715	BP4_moderate
+c.86A>T	p.Asn29Ile	Class C0	0.0568	BP4
+c.86A>G	p.Asn29Ser	Class C0	-0.0919	BP4_moderate
+c.86A>C	p.Asn29Thr	Class C0	-0.0275	BP4_moderate
+c.87C>G	p.Asn29Lys	Class C0	-0.1121	BP4_moderate
+c.87C>A	p.Asn29Lys	Class C0	-0.1121	BP4_moderate
+c.88A>T	p.Asn30Tyr	Class C0	-0.0134	BP4_moderate
+c.88A>G	p.Asn30Asp	Class C0	-0.1364	BP4_moderate
+c.88A>C	p.Asn30His	Class C0	-0.0573	BP4_moderate
+c.89A>T	p.Asn30Ile	Class C0	0.0302	BP4
+c.89A>G	p.Asn30Ser	Class C0	-0.0890	BP4_moderate
+c.89A>C	p.Asn30Thr	Class C0	-0.0175	BP4_moderate
+c.90C>G	p.Asn30Lys	Class C0	-0.0845	BP4_moderate
+c.90C>A	p.Asn30Lys	Class C0	-0.0845	BP4_moderate
+c.91G>T	p.Val31Phe	Class C0	0.0291	BP4
+c.91G>C	p.Val31Leu	Class C0	-0.0793	BP4_moderate
+c.91G>A	p.Val31Ile	Class C0	-0.0168	BP4_moderate
+c.92T>G	p.Val31Gly	Class C0	0.1627	No evidence
+c.92T>C	p.Val31Ala	Class C0	0.0396	BP4
+c.92T>A	p.Val31Asp	Class C0	0.2110	No evidence
+c.94C>G	p.Leu32Val	Class C0	0.0683	BP4
+c.94C>A	p.Leu32Met	Class C0	0.0633	BP4
+c.95T>G	p.Leu32Arg	Class C0	0.2885	No evidence
+c.95T>C	p.Leu32Pro	Class C0	0.3742	No evidence
+c.95T>A	p.Leu32Gln	Class C0	0.2660	No evidence
+c.97T>G	p.Ser33Ala	Class C0	-0.0243	BP4_moderate
+c.97T>C	p.Ser33Pro	Class C0	-0.0075	BP4
+c.97T>A	p.Ser33Thr	Class C0	-0.0322	BP4_moderate
+c.98C>T	p.Ser33Phe	Class C0	0.0584	BP4
+c.98C>G	p.Ser33Cys	Class C0	0.0319	BP4
+c.98C>A	p.Ser33Tyr	Class C0	0.0572	BP4
+c.100C>T	p.Pro34Ser	Class C0	-0.1142	BP4_moderate
+c.100C>G	p.Pro34Ala	Class C0	-0.0969	BP4_moderate
+c.100C>A	p.Pro34Thr	Class C0	-0.1050	BP4_moderate
+c.101C>T	p.Pro34Leu	Class C0	-0.0040	BP4
+c.101C>G	p.Pro34Arg	Class C0	-0.0051	BP4
+c.101C>A	p.Pro34His	Class C0	0.0017	BP4
+c.103T>G	p.Leu35Val	Class C0	-0.0709	BP4_moderate
+c.103T>A	p.Leu35Met	Class C0	-0.0688	BP4_moderate
+c.104T>G	p.Leu35Trp	Class C0	-0.0376	BP4_moderate
+c.104T>C	p.Leu35Ser	Class C0	-0.0712	BP4_moderate
+c.105G>T	p.Leu35Phe	Class C0	-0.0785	BP4_moderate
+c.105G>C	p.Leu35Phe	Class C0	-0.0785	BP4_moderate
+c.106C>T	p.Pro36Ser	Class C0	-0.0964	BP4_moderate
+c.106C>G	p.Pro36Ala	Class C0	-0.1119	BP4_moderate
+c.106C>A	p.Pro36Thr	Class C0	-0.0926	BP4_moderate
+c.107C>T	p.Pro36Leu	Class C0	-0.1016	BP4_moderate
+c.107C>G	p.Pro36Arg	Class C0	-0.0443	BP4_moderate
+c.107C>A	p.Pro36Gln	Class C0	-0.0700	BP4_moderate
+c.109T>G	p.Ser37Ala	Class C0	-0.0640	BP4_moderate
+c.109T>C	p.Ser37Pro	Class C0	-0.0296	BP4_moderate
+c.109T>A	p.Ser37Thr	Class C0	-0.0802	BP4_moderate
+c.110C>T	p.Ser37Phe	Class C0	0.0299	BP4
+c.110C>G	p.Ser37Cys	Class C0	-0.0054	BP4
+c.110C>A	p.Ser37Tyr	Class C0	0.0242	BP4
+c.112C>G	p.Gln38Glu	Class C0	-0.1012	BP4_moderate
+c.112C>A	p.Gln38Lys	Class C0	-0.0761	BP4_moderate
+c.113A>T	p.Gln38Leu	Class C0	-0.0538	BP4_moderate
+c.113A>G	p.Gln38Arg	Class C0	-0.0841	BP4_moderate
+c.113A>C	p.Gln38Pro	Class C0	-0.0735	BP4_moderate
+c.114A>T	p.Gln38His	Class C0	-0.0867	BP4_moderate
+c.114A>C	p.Gln38His	Class C0	-0.0867	BP4_moderate
+c.115G>T	p.Ala39Ser	Class C0	-0.1018	BP4_moderate
+c.115G>C	p.Ala39Pro	Class C0	-0.1029	BP4_moderate
+c.115G>A	p.Ala39Thr	Class C0	-0.0978	BP4_moderate
+c.116C>T	p.Ala39Val	Class C0	-0.0224	BP4_moderate
+c.116C>G	p.Ala39Gly	Class C0	-0.0617	BP4_moderate
+c.116C>A	p.Ala39Glu	Class C0	-0.0106	BP4_moderate
+c.118A>T	p.Met40Leu	Class C0	-0.1007	BP4_moderate
+c.118A>G	p.Met40Val	Class C0	-0.1239	BP4_moderate
+c.118A>C	p.Met40Leu	Class C0	-0.1008	BP4_moderate
+c.119T>G	p.Met40Arg	Class C0	0.0654	BP4
+c.119T>C	p.Met40Thr	Class C0	-0.0138	BP4_moderate
+c.119T>A	p.Met40Lys	Class C0	0.1138	BP4
+c.120G>T	p.Met40Ile	Class C0	-0.0441	BP4_moderate
+c.120G>C	p.Met40Ile	Class C0	-0.0441	BP4_moderate
+c.120G>A	p.Met40Ile	Class C0	-0.0441	BP4_moderate
+c.121G>T	p.Asp41Tyr	Class C65	0.1143	No evidence
+c.121G>C	p.Asp41His	Class C65	0.0366	No evidence
+c.121G>A	p.Asp41Asn	Class C15	-0.1171	BP4_moderate
+c.122A>T	p.Asp41Val	Class C65	0.1734	PP3_moderate
+c.122A>G	p.Asp41Gly	Class C65	0.0552	No evidence
+c.122A>C	p.Asp41Ala	Class C65	0.0636	No evidence
+c.123T>G	p.Asp41Glu	Class C35	-0.1041	BP4_moderate
+c.123T>A	p.Asp41Glu	Class C35	-0.1041	BP4_moderate
+c.124G>T	p.Asp42Tyr	Class C25	-0.0014	BP4
+c.124G>C	p.Asp42His	Class C0	-0.0725	BP4_moderate
+c.124G>A	p.Asp42Asn	Class C0	-0.2280	BP4_moderate
+c.125A>T	p.Asp42Val	Class C25	0.0218	BP4
+c.125A>G	p.Asp42Gly	Class C0	-0.0689	BP4_moderate
+c.125A>C	p.Asp42Ala	Class C15	-0.0645	BP4_moderate
+c.126T>G	p.Asp42Glu	Class C0	-0.2128	BP4_moderate
+c.126T>A	p.Asp42Glu	Class C0	-0.2128	BP4_moderate
+c.127T>G	p.Leu43Val	Class C0	-0.0280	BP4_moderate
+c.127T>A	p.Leu43Met	Class C0	-0.0450	BP4_moderate
+c.128T>G	p.Leu43Trp	Class C0	0.1032	BP4
+c.128T>C	p.Leu43Ser	Class C0	0.1725	No evidence
+c.129G>T	p.Leu43Phe	Class C0	-0.0232	BP4_moderate
+c.129G>C	p.Leu43Phe	Class C0	-0.0232	BP4_moderate
+c.130A>T	p.Met44Leu	Class C0	-0.2204	BP4_moderate
+c.130A>G	p.Met44Val	Class C0	-0.1738	BP4_moderate
+c.130A>C	p.Met44Leu	Class C0	-0.2204	BP4_moderate
+c.131T>G	p.Met44Arg	Class C0	-0.0042	BP4
+c.131T>C	p.Met44Thr	Class C0	-0.0971	BP4_moderate
+c.131T>A	p.Met44Lys	Class C0	0.0013	BP4
+c.132G>T	p.Met44Ile	Class C0	-0.1870	BP4_moderate
+c.132G>C	p.Met44Ile	Class C0	-0.1871	BP4_moderate
+c.132G>A	p.Met44Ile	Class C0	-0.1871	BP4_moderate
+c.133C>G	p.Leu45Val	Class C0	-0.1351	BP4_moderate
+c.133C>A	p.Leu45Met	Class C0	-0.0897	BP4_moderate
+c.134T>G	p.Leu45Arg	Class C0	0.0084	BP4
+c.134T>C	p.Leu45Pro	Class C0	-0.0202	BP4_moderate
+c.134T>A	p.Leu45Gln	Class C0	-0.0102	BP4_moderate
+c.136T>G	p.Ser46Ala	Class C0	-0.1526	BP4_moderate
+c.136T>C	p.Ser46Pro	Class C0	-0.0899	BP4_moderate
+c.136T>A	p.Ser46Thr	Class C0	-0.1420	BP4_moderate
+c.137C>T	p.Ser46Phe	Class C0	-0.0258	BP4_moderate
+c.137C>G	p.Ser46Cys	Class C0	-0.0566	BP4_moderate
+c.137C>A	p.Ser46Tyr	Class C0	-0.0433	BP4_moderate
+c.139C>T	p.Pro47Ser	Class C0	-0.2146	BP4_moderate
+c.139C>G	p.Pro47Ala	Class C0	-0.1757	BP4_moderate
+c.139C>A	p.Pro47Thr	Class C0	-0.1833	BP4_moderate
+c.140C>T	p.Pro47Leu	Class C0	-0.0765	BP4_moderate
+c.140C>G	p.Pro47Arg	Class C0	-0.0441	BP4_moderate
+c.140C>A	p.Pro47Gln	Class C0	-0.0657	BP4_moderate
+c.142G>T	p.Asp48Tyr	Class C0	-0.0285	BP4_moderate
+c.142G>C	p.Asp48His	Class C0	-0.0538	BP4_moderate
+c.142G>A	p.Asp48Asn	Class C0	-0.2157	BP4_moderate
+c.143A>T	p.Asp48Val	Class C0	-0.0243	BP4_moderate
+c.143A>G	p.Asp48Gly	Class C0	-0.0860	BP4_moderate
+c.143A>C	p.Asp48Ala	Class C0	-0.0944	BP4_moderate
+c.144C>G	p.Asp48Glu	Class C0	-0.2240	BP4_moderate
+c.144C>A	p.Asp48Glu	Class C0	-0.2240	BP4_moderate
+c.145G>T	p.Asp49Tyr	Class C0	0.0044	BP4
+c.145G>C	p.Asp49His	Class C0	-0.0307	BP4_moderate
+c.145G>A	p.Asp49Asn	Class C0	-0.2320	BP4_moderate
+c.146A>T	p.Asp49Val	Class C0	-0.0098	BP4_moderate
+c.146A>G	p.Asp49Gly	Class C0	-0.0674	BP4_moderate
+c.146A>C	p.Asp49Ala	Class C0	-0.0395	BP4_moderate
+c.147T>G	p.Asp49Glu	Class C0	-0.1988	BP4_moderate
+c.147T>A	p.Asp49Glu	Class C0	-0.1988	BP4_moderate
+c.148A>T	p.Ile50Phe	Class C0	-0.1047	BP4_moderate
+c.148A>G	p.Ile50Val	Class C0	-0.2824	BP4_moderate
+c.148A>C	p.Ile50Leu	Class C0	-0.1821	BP4_moderate
+c.149T>G	p.Ile50Ser	Class C0	0.0133	BP4
+c.149T>C	p.Ile50Thr	Class C0	-0.0655	BP4_moderate
+c.149T>A	p.Ile50Asn	Class C0	-0.0374	BP4_moderate
+c.150T>G	p.Ile50Met	Class C0	-0.1588	BP4_moderate
+c.151G>C	p.Glu51Gln	Class C0	-0.1673	BP4_moderate
+c.151G>A	p.Glu51Lys	Class C0	-0.0528	BP4_moderate
+c.152A>T	p.Glu51Val	Class C0	-0.1285	BP4_moderate
+c.152A>G	p.Glu51Gly	Class C0	-0.1580	BP4_moderate
+c.152A>C	p.Glu51Ala	Class C0	-0.2224	BP4_moderate
+c.153A>T	p.Glu51Asp	Class C0	-0.2272	BP4_moderate
+c.153A>C	p.Glu51Asp	Class C0	-0.2273	BP4_moderate
+c.154C>G	p.Gln52Glu	Class C0	-0.2329	BP4_moderate
+c.154C>A	p.Gln52Lys	Class C0	-0.2217	BP4_moderate
+c.155A>T	p.Gln52Leu	Class C0	-0.0816	BP4_moderate
+c.155A>G	p.Gln52Arg	Class C0	-0.1916	BP4_moderate
+c.155A>C	p.Gln52Pro	Class C0	-0.0476	BP4_moderate
+c.156A>T	p.Gln52His	Class C0	-0.1514	BP4_moderate
+c.156A>C	p.Gln52His	Class C0	-0.1516	BP4_moderate
+c.157T>G	p.Trp53Gly	Class C0	0.0221	BP4
+c.157T>C	p.Trp53Arg	Class C0	0.0231	BP4
+c.157T>A	p.Trp53Arg	Class C0	0.0231	BP4
+c.158G>T	p.Trp53Leu	Class C0	-0.0551	BP4_moderate
+c.158G>C	p.Trp53Ser	Class C0	-0.0051	BP4
+c.159G>T	p.Trp53Cys	Class C0	-0.0077	BP4
+c.159G>C	p.Trp53Cys	Class C0	-0.0077	BP4
+c.160T>G	p.Phe54Val	Class C0	-0.1494	BP4_moderate
+c.160T>C	p.Phe54Leu	Class C0	-0.1990	BP4_moderate
+c.160T>A	p.Phe54Ile	Class C0	-0.1431	BP4_moderate
+c.161T>G	p.Phe54Cys	Class C0	-0.0148	BP4_moderate
+c.161T>C	p.Phe54Ser	Class C0	-0.0239	BP4_moderate
+c.161T>A	p.Phe54Tyr	Class C0	-0.0780	BP4_moderate
+c.162C>G	p.Phe54Leu	Class C0	-0.2146	BP4_moderate
+c.162C>A	p.Phe54Leu	Class C0	-0.2146	BP4_moderate
+c.163A>T	p.Thr55Ser	Class C0	-0.2337	BP4_moderate
+c.163A>G	p.Thr55Ala	Class C0	-0.1986	BP4_moderate
+c.163A>C	p.Thr55Pro	Class C0	-0.0796	BP4_moderate
+c.164C>T	p.Thr55Ile	Class C0	-0.1829	BP4_moderate
+c.164C>G	p.Thr55Ser	Class C0	-0.2778	BP4_moderate
+c.164C>A	p.Thr55Asn	Class C0	-0.2534	BP4_moderate
+c.166G>C	p.Glu56Gln	Class C0	-0.1645	BP4_moderate
+c.166G>A	p.Glu56Lys	Class C0	-0.0088	BP4_moderate
+c.167A>T	p.Glu56Val	Class C0	-0.0003	BP4
+c.167A>G	p.Glu56Gly	Class C0	-0.0903	BP4_moderate
+c.167A>C	p.Glu56Ala	Class C0	-0.0344	BP4_moderate
+c.168A>T	p.Glu56Asp	Class C0	-0.1213	BP4_moderate
+c.168A>C	p.Glu56Asp	Class C0	-0.1213	BP4_moderate
+c.169G>T	p.Asp57Tyr	Class C0	0.0108	BP4
+c.169G>C	p.Asp57His	Class C0	-0.0263	BP4_moderate
+c.169G>A	p.Asp57Asn	Class C0	-0.1690	BP4_moderate
+c.170A>T	p.Asp57Val	Class C0	0.0176	BP4
+c.170A>G	p.Asp57Gly	Class C0	-0.0521	BP4_moderate
+c.170A>C	p.Asp57Ala	Class C0	-0.0513	BP4_moderate
+c.171C>G	p.Asp57Glu	Class C0	-0.0964	BP4_moderate
+c.171C>A	p.Asp57Glu	Class C0	-0.0963	BP4_moderate
+c.172C>T	p.Pro58Ser	Class C0	-0.1206	BP4_moderate
+c.172C>G	p.Pro58Ala	Class C0	-0.0822	BP4_moderate
+c.172C>A	p.Pro58Thr	Class C0	-0.1033	BP4_moderate
+c.173C>T	p.Pro58Leu	Class C0	-0.0546	BP4_moderate
+c.173C>G	p.Pro58Arg	Class C0	-0.0771	BP4_moderate
+c.173C>A	p.Pro58Gln	Class C0	-0.0875	BP4_moderate
+c.175G>T	p.Gly59Cys	Class C0	-0.0219	BP4_moderate
+c.175G>C	p.Gly59Arg	Class C0	-0.0191	BP4_moderate
+c.175G>A	p.Gly59Ser	Class C0	-0.0499	BP4_moderate
+c.176G>T	p.Gly59Val	Class C0	-0.0809	BP4_moderate
+c.176G>C	p.Gly59Ala	Class C0	-0.1344	BP4_moderate
+c.176G>A	p.Gly59Asp	Class C0	-0.0686	BP4_moderate
+c.178C>T	p.Pro60Ser	Class C0	-0.1654	BP4_moderate
+c.178C>G	p.Pro60Ala	Class C0	-0.1186	BP4_moderate
+c.178C>A	p.Pro60Thr	Class C0	-0.1007	BP4_moderate
+c.179C>T	p.Pro60Leu	Class C0	-0.0771	BP4_moderate
+c.179C>G	p.Pro60Arg	Class C0	-0.0124	BP4_moderate
+c.179C>A	p.Pro60Gln	Class C0	-0.0759	BP4_moderate
+c.181G>T	p.Asp61Tyr	Class C0	-0.0450	BP4_moderate
+c.181G>C	p.Asp61His	Class C0	-0.1102	BP4_moderate
+c.181G>A	p.Asp61Asn	Class C0	-0.2539	BP4_moderate
+c.182A>T	p.Asp61Val	Class C0	-0.0241	BP4_moderate
+c.182A>G	p.Asp61Gly	Class C0	-0.0863	BP4_moderate
+c.182A>C	p.Asp61Ala	Class C0	-0.0855	BP4_moderate
+c.183T>G	p.Asp61Glu	Class C0	-0.1823	BP4_moderate
+c.183T>A	p.Asp61Glu	Class C0	-0.1823	BP4_moderate
+c.184G>C	p.Glu62Gln	Class C0	-0.0893	BP4_moderate
+c.184G>A	p.Glu62Lys	Class C0	-0.0029	BP4
+c.185A>T	p.Glu62Val	Class C0	-0.0061	BP4
+c.185A>G	p.Glu62Gly	Class C0	-0.1097	BP4_moderate
+c.185A>C	p.Glu62Ala	Class C0	-0.0349	BP4_moderate
+c.186A>T	p.Glu62Asp	Class C0	-0.1778	BP4_moderate
+c.186A>C	p.Glu62Asp	Class C0	-0.1778	BP4_moderate
+c.187G>T	p.Ala63Ser	Class C0	-0.1100	BP4_moderate
+c.187G>C	p.Ala63Pro	Class C0	-0.0678	BP4_moderate
+c.187G>A	p.Ala63Thr	Class C0	-0.1513	BP4_moderate
+c.188C>T	p.Ala63Val	Class C0	-0.0987	BP4_moderate
+c.188C>G	p.Ala63Gly	Class C0	-0.1559	BP4_moderate
+c.188C>A	p.Ala63Asp	Class C0	-0.0875	BP4_moderate
+c.190C>T	p.Pro64Ser	Class C0	-0.2023	BP4_moderate
+c.190C>G	p.Pro64Ala	Class C0	-0.1530	BP4_moderate
+c.190C>A	p.Pro64Thr	Class C0	-0.1629	BP4_moderate
+c.191C>T	p.Pro64Leu	Class C0	-0.1676	BP4_moderate
+c.191C>G	p.Pro64Arg	Class C0	-0.1324	BP4_moderate
+c.191C>A	p.Pro64His	Class C0	-0.1233	BP4_moderate
+c.193A>G	p.Arg65Gly	Class C0	-0.1241	BP4_moderate
+c.194G>T	p.Arg65Ile	Class C0	-0.1163	BP4_moderate
+c.194G>C	p.Arg65Thr	Class C0	-0.1777	BP4_moderate
+c.194G>A	p.Arg65Lys	Class C0	-0.1946	BP4_moderate
+c.195A>T	p.Arg65Ser	Class C0	-0.1489	BP4_moderate
+c.195A>C	p.Arg65Ser	Class C0	-0.1488	BP4_moderate
+c.196A>T	p.Met66Leu	Class C0	-0.1743	BP4_moderate
+c.196A>G	p.Met66Val	Class C0	-0.2690	BP4_moderate
+c.196A>C	p.Met66Leu	Class C0	-0.1743	BP4_moderate
+c.197T>G	p.Met66Arg	Class C0	-0.0909	BP4_moderate
+c.197T>C	p.Met66Thr	Class C0	-0.1330	BP4_moderate
+c.197T>A	p.Met66Lys	Class C0	-0.0741	BP4_moderate
+c.198G>T	p.Met66Ile	Class C0	-0.1510	BP4_moderate
+c.198G>C	p.Met66Ile	Class C0	-0.1511	BP4_moderate
+c.198G>A	p.Met66Ile	Class C0	-0.1510	BP4_moderate
+c.199C>T	p.Pro67Ser	Class C0	-0.3045	BP4_moderate
+c.199C>G	p.Pro67Ala	Class C0	-0.2740	BP4_moderate
+c.199C>A	p.Pro67Thr	Class C0	-0.2182	BP4_moderate
+c.200C>T	p.Pro67Leu	Class C0	-0.1851	BP4_moderate
+c.200C>G	p.Pro67Arg	Class C0	-0.1166	BP4_moderate
+c.200C>A	p.Pro67Gln	Class C0	-0.1668	BP4_moderate
+c.202G>C	p.Glu68Gln	Class C0	-0.1848	BP4_moderate
+c.202G>A	p.Glu68Lys	Class C0	-0.0861	BP4_moderate
+c.203A>T	p.Glu68Val	Class C0	-0.1816	BP4_moderate
+c.203A>G	p.Glu68Gly	Class C0	-0.2626	BP4_moderate
+c.203A>C	p.Glu68Ala	Class C0	-0.2419	BP4_moderate
+c.204G>T	p.Glu68Asp	Class C0	-0.2118	BP4_moderate
+c.204G>C	p.Glu68Asp	Class C0	-0.2118	BP4_moderate
+c.205G>T	p.Ala69Ser	Class C0	-0.1989	BP4_moderate
+c.205G>C	p.Ala69Pro	Class C0	-0.1691	BP4_moderate
+c.205G>A	p.Ala69Thr	Class C0	-0.1881	BP4_moderate
+c.206C>T	p.Ala69Val	Class C0	-0.1420	BP4_moderate
+c.206C>G	p.Ala69Gly	Class C0	-0.1612	BP4_moderate
+c.206C>A	p.Ala69Asp	Class C0	-0.0996	BP4_moderate
+c.208G>T	p.Ala70Ser	Class C0	-0.2198	BP4_moderate
+c.208G>C	p.Ala70Pro	Class C0	-0.1628	BP4_moderate
+c.208G>A	p.Ala70Thr	Class C0	-0.2036	BP4_moderate
+c.209C>T	p.Ala70Val	Class C0	-0.1038	BP4_moderate
+c.209C>G	p.Ala70Gly	Class C0	-0.1407	BP4_moderate
+c.209C>A	p.Ala70Asp	Class C0	-0.1033	BP4_moderate
+c.211C>T	p.Pro71Ser	Class C0	-0.2185	BP4_moderate
+c.211C>G	p.Pro71Ala	Class C0	-0.2255	BP4_moderate
+c.211C>A	p.Pro71Thr	Class C0	-0.2004	BP4_moderate
+c.212C>T	p.Pro71Leu	Class C0	-0.1474	BP4_moderate
+c.212C>G	p.Pro71Arg	Class C0	-0.1198	BP4_moderate
+c.212C>A	p.Pro71His	Class C0	-0.1567	BP4_moderate
+c.214C>T	p.Pro72Ser	Class C0	-0.2029	BP4_moderate
+c.214C>G	p.Pro72Ala	Class C0	-0.2154	BP4_moderate
+c.214C>A	p.Pro72Thr	Class C0	-0.1745	BP4_moderate
+c.215C>T	p.Pro72Leu	Class C0	-0.1133	BP4_moderate
+c.215C>G	p.Pro72Arg	Class C0	-0.1085	BP4_moderate
+c.215C>A	p.Pro72His	Class C0	-0.1017	BP4_moderate
+c.217G>T	p.Val73Leu	Class C0	-0.2430	BP4_moderate
+c.217G>C	p.Val73Leu	Class C0	-0.2431	BP4_moderate
+c.217G>A	p.Val73Met	Class C0	-0.1673	BP4_moderate
+c.218T>G	p.Val73Gly	Class C0	-0.1268	BP4_moderate
+c.218T>C	p.Val73Ala	Class C0	-0.2316	BP4_moderate
+c.218T>A	p.Val73Glu	Class C0	-0.1327	BP4_moderate
+c.220G>T	p.Ala74Ser	Class C0	-0.1651	BP4_moderate
+c.220G>C	p.Ala74Pro	Class C0	-0.1199	BP4_moderate
+c.220G>A	p.Ala74Thr	Class C0	-0.1794	BP4_moderate
+c.221C>T	p.Ala74Val	Class C0	-0.2135	BP4_moderate
+c.221C>G	p.Ala74Gly	Class C0	-0.2299	BP4_moderate
+c.221C>A	p.Ala74Asp	Class C0	-0.1979	BP4_moderate
+c.223C>T	p.Pro75Ser	Class C0	-0.1480	BP4_moderate
+c.223C>G	p.Pro75Ala	Class C0	-0.1169	BP4_moderate
+c.223C>A	p.Pro75Thr	Class C0	-0.1360	BP4_moderate
+c.224C>T	p.Pro75Leu	Class C0	-0.0965	BP4_moderate
+c.224C>G	p.Pro75Arg	Class C0	-0.0898	BP4_moderate
+c.224C>A	p.Pro75His	Class C0	-0.0692	BP4_moderate
+c.226G>T	p.Ala76Ser	Class C0	-0.1989	BP4_moderate
+c.226G>C	p.Ala76Pro	Class C0	-0.1123	BP4_moderate
+c.226G>A	p.Ala76Thr	Class C0	-0.1708	BP4_moderate
+c.227C>T	p.Ala76Val	Class C0	-0.1429	BP4_moderate
+c.227C>G	p.Ala76Gly	Class C0	-0.1962	BP4_moderate
+c.227C>A	p.Ala76Glu	Class C0	-0.1384	BP4_moderate
+c.229C>T	p.Pro77Ser	Class C0	-0.1899	BP4_moderate
+c.229C>G	p.Pro77Ala	Class C0	-0.1024	BP4_moderate
+c.229C>A	p.Pro77Thr	Class C0	-0.1725	BP4_moderate
+c.230C>T	p.Pro77Leu	Class C0	-0.1063	BP4_moderate
+c.230C>G	p.Pro77Arg	Class C0	-0.0980	BP4_moderate
+c.230C>A	p.Pro77Gln	Class C0	-0.1121	BP4_moderate
+c.232G>T	p.Ala78Ser	Class C0	-0.1634	BP4_moderate
+c.232G>C	p.Ala78Pro	Class C0	-0.0676	BP4_moderate
+c.232G>A	p.Ala78Thr	Class C0	-0.1197	BP4_moderate
+c.233C>T	p.Ala78Val	Class C0	-0.1003	BP4_moderate
+c.233C>G	p.Ala78Gly	Class C0	-0.1739	BP4_moderate
+c.233C>A	p.Ala78Glu	Class C0	-0.1256	BP4_moderate
+c.235G>T	p.Ala79Ser	Class C0	-0.0457	BP4_moderate
+c.235G>C	p.Ala79Pro	Class C0	-0.0306	BP4_moderate
+c.235G>A	p.Ala79Thr	Class C0	-0.0815	BP4_moderate
+c.236C>T	p.Ala79Val	Class C0	-0.0170	BP4_moderate
+c.236C>G	p.Ala79Gly	Class C0	0.0023	BP4
+c.236C>A	p.Ala79Asp	Class C0	0.0294	BP4
+c.238C>T	p.Pro80Ser	Class C0	0.0054	BP4
+c.238C>G	p.Pro80Ala	Class C0	0.0054	BP4
+c.238C>A	p.Pro80Thr	Class C0	0.0159	BP4
+c.239C>T	p.Pro80Leu	Class C0	-0.0210	BP4_moderate
+c.239C>G	p.Pro80Arg	Class C0	0.0148	BP4
+c.239C>A	p.Pro80His	Class C0	0.0116	BP4
+c.241A>T	p.Thr81Ser	Class C0	-0.1045	BP4_moderate
+c.241A>G	p.Thr81Ala	Class C0	-0.2199	BP4_moderate
+c.241A>C	p.Thr81Pro	Class C0	-0.1056	BP4_moderate
+c.242C>T	p.Thr81Ile	Class C0	-0.0618	BP4_moderate
+c.242C>G	p.Thr81Arg	Class C0	-0.0465	BP4_moderate
+c.242C>A	p.Thr81Lys	Class C0	-0.0593	BP4_moderate
+c.244C>T	p.Pro82Ser	Class C0	0.0120	BP4
+c.244C>G	p.Pro82Ala	Class C0	-0.0143	BP4_moderate
+c.244C>A	p.Pro82Thr	Class C0	0.0058	BP4
+c.245C>T	p.Pro82Leu	Class C0	0.0708	BP4
+c.245C>G	p.Pro82Arg	Class C0	0.0052	BP4
+c.245C>A	p.Pro82Gln	Class C0	-0.0122	BP4_moderate
+c.247G>T	p.Ala83Ser	Class C0	-0.0509	BP4_moderate
+c.247G>C	p.Ala83Pro	Class C0	-0.0244	BP4_moderate
+c.247G>A	p.Ala83Thr	Class C0	-0.0512	BP4_moderate
+c.248C>T	p.Ala83Val	Class C0	-0.0928	BP4_moderate
+c.248C>G	p.Ala83Gly	Class C0	-0.0688	BP4_moderate
+c.248C>A	p.Ala83Glu	Class C0	-0.0332	BP4_moderate
+c.250G>T	p.Ala84Ser	Class C0	-0.0284	BP4_moderate
+c.250G>C	p.Ala84Pro	Class C0	-0.0057	BP4
+c.250G>A	p.Ala84Thr	Class C0	-0.0502	BP4_moderate
+c.251C>T	p.Ala84Val	Class C0	0.0231	BP4
+c.251C>G	p.Ala84Gly	Class C0	0.0747	BP4
+c.251C>A	p.Ala84Asp	Class C0	0.1171	BP4
+c.253C>T	p.Pro85Ser	Class C0	-0.0266	BP4_moderate
+c.253C>G	p.Pro85Ala	Class C0	-0.0222	BP4_moderate
+c.253C>A	p.Pro85Thr	Class C0	0.0131	BP4
+c.254C>T	p.Pro85Leu	Class C0	0.0403	BP4
+c.254C>G	p.Pro85Arg	Class C0	0.0506	BP4
+c.254C>A	p.Pro85His	Class C0	0.0661	BP4
+c.256G>T	p.Ala86Ser	Class C0	-0.0908	BP4_moderate
+c.256G>C	p.Ala86Pro	Class C0	-0.0413	BP4_moderate
+c.256G>A	p.Ala86Thr	Class C0	-0.1103	BP4_moderate
+c.257C>T	p.Ala86Val	Class C0	-0.0079	BP4
+c.257C>G	p.Ala86Gly	Class C0	-0.0408	BP4_moderate
+c.257C>A	p.Ala86Glu	Class C0	0.0079	BP4
+c.259C>T	p.Pro87Ser	Class C0	0.0531	BP4
+c.259C>G	p.Pro87Ala	Class C0	0.0523	BP4
+c.259C>A	p.Pro87Thr	Class C0	0.0925	BP4
+c.260C>T	p.Pro87Leu	Class C15	0.0682	BP4
+c.260C>G	p.Pro87Arg	Class C0	0.0922	BP4
+c.260C>A	p.Pro87Gln	Class C0	0.0831	BP4
+c.262G>T	p.Ala88Ser	Class C0	-0.0054	BP4
+c.262G>C	p.Ala88Pro	Class C0	0.0264	BP4
+c.262G>A	p.Ala88Thr	Class C0	0.0015	BP4
+c.263C>T	p.Ala88Val	Class C0	0.0101	BP4
+c.263C>G	p.Ala88Gly	Class C0	0.0068	BP4
+c.263C>A	p.Ala88Asp	Class C0	0.0531	BP4
+c.265C>T	p.Pro89Ser	Class C0	-0.0485	BP4_moderate
+c.265C>G	p.Pro89Ala	Class C0	-0.0444	BP4_moderate
+c.265C>A	p.Pro89Thr	Class C0	-0.1119	BP4_moderate
+c.266C>T	p.Pro89Leu	Class C0	-0.0039	BP4
+c.266C>G	p.Pro89Arg	Class C0	0.0369	BP4
+c.266C>A	p.Pro89His	Class C0	0.0266	BP4
+c.268T>G	p.Ser90Ala	Class C0	-0.0555	BP4_moderate
+c.268T>C	p.Ser90Pro	Class C0	-0.0800	BP4_moderate
+c.268T>A	p.Ser90Thr	Class C0	-0.0494	BP4_moderate
+c.269C>T	p.Ser90Phe	Class C15	0.0454	BP4
+c.269C>G	p.Ser90Cys	Class C15	0.0303	BP4
+c.269C>A	p.Ser90Tyr	Class C15	0.0475	BP4
+c.271T>G	p.Trp91Gly	Class C0	0.1530	BP4
+c.271T>C	p.Trp91Arg	Class C0	0.1433	BP4
+c.271T>A	p.Trp91Arg	Class C0	0.1433	BP4
+c.272G>T	p.Trp91Leu	Class C0	0.0672	BP4
+c.272G>C	p.Trp91Ser	Class C0	0.0498	BP4
+c.273G>T	p.Trp91Cys	Class C15	0.1735	No evidence
+c.273G>C	p.Trp91Cys	Class C15	0.1734	No evidence
+c.274C>T	p.Pro92Ser	Class C15	0.0728	BP4
+c.274C>G	p.Pro92Ala	Class C0	0.0740	BP4
+c.274C>A	p.Pro92Thr	Class C0	0.0047	BP4
+c.275C>T	p.Pro92Leu	Class C0	0.0963	BP4
+c.275C>G	p.Pro92Arg	Class C0	0.1047	BP4
+c.275C>A	p.Pro92His	Class C0	0.1205	BP4
+c.277C>G	p.Leu93Val	Class C0	0.0475	BP4
+c.277C>A	p.Leu93Met	Class C0	0.0339	BP4
+c.278T>G	p.Leu93Arg	Class C0	0.1170	BP4
+c.278T>C	p.Leu93Pro	Class C0	0.0374	BP4
+c.278T>A	p.Leu93Gln	Class C0	0.1108	BP4
+c.280T>G	p.Ser94Ala	Class C0	0.0564	BP4
+c.280T>C	p.Ser94Pro	Class C0	0.1014	BP4
+c.280T>A	p.Ser94Thr	Class C0	0.0443	BP4
+c.281C>T	p.Ser94Leu	Class C25	0.1511	BP4
+c.283T>G	p.Ser95Ala	Class C0	0.0803	BP4
+c.283T>C	p.Ser95Pro	Class C0	0.0857	BP4
+c.283T>A	p.Ser95Thr	Class C0	0.0805	BP4
+c.284C>T	p.Ser95Phe	Class C0	0.1332	BP4
+c.284C>G	p.Ser95Cys	Class C0	0.1018	BP4
+c.284C>A	p.Ser95Tyr	Class C0	0.1517	BP4
+c.286T>G	p.Ser96Ala	Class C0	-0.0565	BP4_moderate
+c.286T>C	p.Ser96Pro	Class C0	0.0288	BP4
+c.286T>A	p.Ser96Thr	Class C0	-0.0613	BP4_moderate
+c.287C>T	p.Ser96Phe	Class C0	-0.0660	BP4_moderate
+c.287C>G	p.Ser96Cys	Class C0	0.0004	BP4
+c.287C>A	p.Ser96Tyr	Class C0	0.0162	BP4
+c.289G>T	p.Val97Phe	Class C0	0.2533	No evidence
+c.289G>C	p.Val97Leu	Class C0	0.1179	BP4
+c.289G>A	p.Val97Ile	Class C0	0.2069	No evidence
+c.290T>G	p.Val97Gly	Class C35	0.3586	PP3
+c.290T>C	p.Val97Ala	Class C25	0.1823	PP3
+c.290T>A	p.Val97Asp	Class C45	0.5022	PP3
+c.292C>T	p.Pro98Ser	Class C65	0.5622	PP3_moderate
+c.292C>G	p.Pro98Ala	Class C25	0.4264	PP3
+c.292C>A	p.Pro98Thr	Class C35	0.5922	PP3
+c.293C>T	p.Pro98Leu	Class C65	0.5574	PP3_moderate
+c.293C>G	p.Pro98Arg	Class C65	0.5918	PP3_moderate
+c.293C>A	p.Pro98His	Class C65	0.5391	PP3_moderate
+c.295T>G	p.Ser99Ala	Class C0	0.0864	BP4
+c.295T>C	p.Ser99Pro	Class C0	0.2566	No evidence
+c.295T>A	p.Ser99Thr	Class C0	0.1008	BP4
+c.296C>T	p.Ser99Phe	Class C15	0.2720	No evidence
+c.296C>G	p.Ser99Cys	Class C15	0.1519	BP4
+c.296C>A	p.Ser99Tyr	Class C15	0.2749	No evidence
+c.298C>G	p.Gln100Glu	Class C0	-0.0167	BP4_moderate
+c.298C>A	p.Gln100Lys	Class C0	0.0364	BP4
+c.299A>T	p.Gln100Leu	Class C25	-0.0042	BP4
+c.299A>G	p.Gln100Arg	Class C0	-0.0343	BP4_moderate
+c.299A>C	p.Gln100Pro	Class C0	-0.0474	BP4_moderate
+c.300G>T	p.Gln100His	Class C0	-0.0821	BP4_moderate
+c.300G>C	p.Gln100His	Class C0	-0.0821	BP4_moderate
+c.301A>G	p.Lys101Glu	Class C0	0.0162	BP4
+c.301A>C	p.Lys101Gln	Class C0	0.0501	BP4
+c.302A>T	p.Lys101Ile	Class C0	0.0588	BP4
+c.302A>G	p.Lys101Arg	Class C0	0.0544	BP4
+c.302A>C	p.Lys101Thr	Class C0	-0.0092	BP4_moderate
+c.303A>T	p.Lys101Asn	Class C0	-0.0790	BP4_moderate
+c.303A>C	p.Lys101Asn	Class C0	-0.0790	BP4_moderate
+c.304A>T	p.Thr102Ser	Class C0	0.0539	BP4
+c.304A>G	p.Thr102Ala	Class C0	0.0591	BP4
+c.304A>C	p.Thr102Pro	Class C0	0.0315	BP4
+c.305C>T	p.Thr102Ile	Class C15	0.0598	BP4
+c.305C>G	p.Thr102Ser	Class C0	0.0503	BP4
+c.305C>A	p.Thr102Asn	Class C0	-0.0098	BP4_moderate
+c.307T>G	p.Tyr103Asp	Class C65	0.5341	PP3_moderate
+c.307T>C	p.Tyr103His	Class C65	0.3337	PP3_moderate
+c.307T>A	p.Tyr103Asn	Class C65	0.4029	PP3_moderate
+c.308A>T	p.Tyr103Phe	Class C15	0.2049	No evidence
+c.308A>G	p.Tyr103Cys	Class C65	0.3201	PP3_moderate
+c.308A>C	p.Tyr103Ser	Class C65	0.4487	PP3_moderate
+c.310C>G	p.Gln104Glu	Class C0	-0.0285	BP4_moderate
+c.310C>A	p.Gln104Lys	Class C0	0.0158	BP4
+c.311A>T	p.Gln104Leu	Class C0	0.0005	BP4
+c.311A>G	p.Gln104Arg	Class C0	-0.1059	BP4_moderate
+c.311A>C	p.Gln104Pro	Class C0	-0.0314	BP4_moderate
+c.312G>T	p.Gln104His	Class C0	-0.1466	BP4_moderate
+c.312G>C	p.Gln104His	Class C0	-0.1465	BP4_moderate
+c.313G>T	p.Gly105Cys	Class C65	0.5684	PP3_moderate
+c.313G>C	p.Gly105Arg	Class C65	0.5684	PP3_moderate
+c.313G>A	p.Gly105Ser	Class C55	0.5407	PP3
+c.314G>T	p.Gly105Val	Class C65	0.5684	PP3_moderate
+c.314G>C	p.Gly105Ala	Class C55	0.5402	PP3
+c.314G>A	p.Gly105Asp	Class C65	0.5683	PP3_moderate
+c.316A>T	p.Ser106Cys	Class C15	-0.0555	BP4_moderate
+c.316A>G	p.Ser106Gly	Class C0	-0.1171	BP4_moderate
+c.316A>C	p.Ser106Arg	Class C0	0.0959	BP4
+c.317G>T	p.Ser106Ile	Class C0	-0.0670	BP4_moderate
+c.317G>C	p.Ser106Thr	Class C0	-0.1608	BP4_moderate
+c.317G>A	p.Ser106Asn	Class C0	-0.2488	BP4_moderate
+c.318C>G	p.Ser106Arg	Class C0	0.1309	BP4
+c.318C>A	p.Ser106Arg	Class C0	0.1309	BP4
+c.319T>G	p.Tyr107Asp	Class C15	0.4297	No evidence
+c.319T>C	p.Tyr107His	Class C0	0.0202	BP4
+c.319T>A	p.Tyr107Asn	Class C15	0.2558	No evidence
+c.320A>T	p.Tyr107Phe	Class C0	0.0281	BP4
+c.320A>G	p.Tyr107Cys	Class C25	0.2962	PP3
+c.320A>C	p.Tyr107Ser	Class C15	0.2243	No evidence
+c.322G>T	p.Gly108Cys	Class C15	0.1188	BP4
+c.322G>C	p.Gly108Arg	Class C15	0.2234	No evidence
+c.322G>A	p.Gly108Ser	Class C0	0.0347	BP4
+c.323G>T	p.Gly108Val	Class C15	0.1067	BP4
+c.323G>C	p.Gly108Ala	Class C0	0.0074	BP4
+c.323G>A	p.Gly108Asp	Class C0	0.1155	BP4
+c.325T>G	p.Phe109Val	Class C0	0.5533	No evidence
+c.325T>C	p.Phe109Leu	Class C0	0.2481	No evidence
+c.325T>A	p.Phe109Ile	Class C0	0.4221	No evidence
+c.326T>G	p.Phe109Cys	Class C55	0.5842	PP3
+c.326T>C	p.Phe109Ser	Class C55	0.5840	PP3
+c.326T>A	p.Phe109Tyr	Class C0	0.3230	No evidence
+c.327C>G	p.Phe109Leu	Class C0	0.2173	No evidence
+c.327C>A	p.Phe109Leu	Class C0	0.2173	No evidence
+c.328C>T	p.Arg110Cys	Class C35	0.0367	BP4
+c.328C>G	p.Arg110Gly	Class C15	0.0564	BP4
+c.328C>A	p.Arg110Ser	Class C15	0.0094	BP4
+c.329G>T	p.Arg110Leu	Class C25	0.2132	PP3
+c.329G>C	p.Arg110Pro	Class C15	0.3823	No evidence
+c.329G>A	p.Arg110His	Class C0	0.0728	BP4
+c.331C>G	p.Leu111Val	Class C25	-0.0184	BP4_moderate
+c.331C>A	p.Leu111Met	Class C0	0.0627	BP4
+c.332T>G	p.Leu111Arg	Class C65	0.4821	PP3_moderate
+c.332T>C	p.Leu111Pro	Class C65	0.4624	PP3_moderate
+c.332T>A	p.Leu111Gln	Class C65	0.3678	PP3_moderate
+c.334G>T	p.Gly112Cys	Class C0	0.1302	BP4
+c.334G>C	p.Gly112Arg	Class C0	-0.1377	BP4_moderate
+c.334G>A	p.Gly112Ser	Class C0	-0.1086	BP4_moderate
+c.335G>T	p.Gly112Val	Class C0	-0.0063	BP4
+c.335G>C	p.Gly112Ala	Class C0	-0.3693	BP4_moderate
+c.335G>A	p.Gly112Asp	Class C0	-0.2772	BP4_moderate
+c.337T>G	p.Phe113Val	Class C45	0.3138	PP3
+c.337T>C	p.Phe113Leu	Class C15	0.3711	No evidence
+c.337T>A	p.Phe113Ile	Class C15	0.3305	No evidence
+c.338T>G	p.Phe113Cys	Class C65	0.5652	PP3_moderate
+c.338T>C	p.Phe113Ser	Class C65	0.5651	PP3_moderate
+c.338T>A	p.Phe113Tyr	Class C15	0.3612	No evidence
+c.339C>G	p.Phe113Leu	Class C15	0.3140	No evidence
+c.339C>A	p.Phe113Leu	Class C15	0.3140	No evidence
+c.340T>G	p.Leu114Val	Class C0	0.0605	BP4
+c.340T>A	p.Leu114Met	Class C0	0.0534	BP4
+c.341T>G	p.Leu114Trp	Class C0	0.2725	No evidence
+c.341T>C	p.Leu114Ser	Class C0	0.1926	No evidence
+c.342G>T	p.Leu114Phe	Class C0	0.0173	BP4
+c.342G>C	p.Leu114Phe	Class C0	-0.0308	BP4_moderate
+c.343C>T	p.His115Tyr	Class C35	0.0279	BP4
+c.343C>G	p.His115Asp	Class C25	-0.3855	BP4_moderate
+c.343C>A	p.His115Asn	Class C15	-0.4621	BP4_moderate
+c.344A>T	p.His115Leu	Class C35	0.0896	BP4
+c.344A>G	p.His115Arg	Class C0	0.0464	BP4
+c.344A>C	p.His115Pro	Class C25	0.0843	BP4
+c.345T>G	p.His115Gln	Class C0	-0.8480	BP4_moderate
+c.345T>A	p.His115Gln	Class C0	-0.8460	BP4_moderate
+c.346T>G	p.Ser116Ala	Class C25	0.2169	PP3
+c.346T>C	p.Ser116Pro	Class C15	0.2762	No evidence
+c.346T>A	p.Ser116Thr	Class C0	0.2116	No evidence
+c.347C>T	p.Ser116Phe	Class C35	0.2813	PP3
+c.347C>G	p.Ser116Cys	Class C25	0.1736	PP3
+c.347C>A	p.Ser116Tyr	Class C35	0.2823	PP3
+c.349G>T	p.Gly117Trp	Class C35	0.2381	PP3
+c.349G>C	p.Gly117Arg	Class C25	0.1838	PP3
+c.349G>A	p.Gly117Arg	Class C25	0.5122	PP3
+c.350G>T	p.Gly117Val	Class C15	0.2608	No evidence
+c.350G>C	p.Gly117Ala	Class C0	0.1614	No evidence
+c.350G>A	p.Gly117Glu	Class C15	0.4692	No evidence
+c.352A>T	p.Thr118Ser	Class C55	0.2826	PP3
+c.352A>G	p.Thr118Ala	Class C55	0.2906	PP3
+c.352A>C	p.Thr118Pro	Class C35	0.3593	PP3
+c.353C>T	p.Thr118Ile	Class C65	0.3466	PP3_moderate
+c.353C>G	p.Thr118Arg	Class C65	0.3785	PP3_moderate
+c.353C>A	p.Thr118Lys	Class C65	0.3569	PP3_moderate
+c.355G>T	p.Ala119Ser	Class C65	0.2944	PP3_moderate
+c.355G>C	p.Ala119Pro	Class C25	0.4294	PP3
+c.355G>A	p.Ala119Thr	Class C55	0.2953	PP3
+c.356C>T	p.Ala119Val	Class C55	0.3457	PP3
+c.356C>G	p.Ala119Gly	Class C55	0.3403	PP3
+c.356C>A	p.Ala119Asp	Class C65	0.5460	PP3_moderate
+c.358A>G	p.Lys120Glu	Class C55	0.3833	PP3
+c.358A>C	p.Lys120Gln	Class C45	0.2557	PP3
+c.359A>T	p.Lys120Met	Class C65	0.3483	PP3_moderate
+c.359A>G	p.Lys120Arg	Class C25	0.2085	PP3
+c.359A>C	p.Lys120Thr	Class C65	0.3127	PP3_moderate
+c.360G>T	p.Lys120Asn	Class C65	0.1102	No evidence
+c.360G>C	p.Lys120Asn	Class C65	0.1102	No evidence
+c.361T>G	p.Ser121Ala	Class C65	0.2462	PP3_moderate
+c.361T>C	p.Ser121Pro	Class C65	0.5068	PP3_moderate
+c.361T>A	p.Ser121Thr	Class C55	0.2904	PP3
+c.362C>T	p.Ser121Phe	Class C65	0.4804	PP3_moderate
+c.362C>G	p.Ser121Cys	Class C65	0.2793	PP3_moderate
+c.362C>A	p.Ser121Tyr	Class C65	0.4142	PP3_moderate
+c.364G>T	p.Val122Leu	Class C25	0.1613	PP3
+c.364G>C	p.Val122Leu	Class C25	0.1613	PP3
+c.364G>A	p.Val122Met	Class C15	0.1341	BP4
+c.365T>G	p.Val122Gly	Class C65	0.5023	PP3_moderate
+c.365T>C	p.Val122Ala	Class C55	0.0891	BP4
+c.365T>A	p.Val122Glu	Class C65	0.3873	PP3_moderate
+c.367A>T	p.Thr123Ser	Class C0	0.1828	No evidence
+c.367A>G	p.Thr123Ala	Class C0	0.1379	BP4
+c.367A>C	p.Thr123Pro	Class C0	0.3768	No evidence
+c.368C>T	p.Thr123Ile	Class C0	0.3252	No evidence
+c.368C>G	p.Thr123Ser	Class C0	0.1587	BP4
+c.368C>A	p.Thr123Asn	Class C0	0.1244	BP4
+c.370T>G	p.Cys124Gly	Class C65	0.2169	PP3_moderate
+c.370T>C	p.Cys124Arg	Class C65	0.2547	PP3_moderate
+c.370T>A	p.Cys124Ser	Class C65	0.2579	PP3_moderate
+c.371G>T	p.Cys124Phe	Class C65	0.1519	No evidence
+c.371G>C	p.Cys124Ser	Class C65	0.0527	No evidence
+c.371G>A	p.Cys124Tyr	Class C65	0.1122	No evidence
+c.372C>G	p.Cys124Trp	Class C65	0.0003	No evidence
+c.373A>T	p.Thr125Ser	Class C55	0.3288	PP3
+c.373A>G	p.Thr125Ala	Class C55	0.4709	PP3
+c.373A>C	p.Thr125Pro	Class C35	0.5761	PP3
+c.374C>T	p.Thr125Met	Class C65	0.5002	PP3_moderate
+c.374C>G	p.Thr125Arg	Class C65	0.5996	PP3_moderate
+c.374C>A	p.Thr125Lys	Class C65	0.5995	PP3_moderate
+c.376T>G	p.Tyr126Asp	Class C65	0.5996	PP3_moderate
+c.376T>C	p.Tyr126His	Class C65	0.5985	PP3_moderate
+c.376T>A	p.Tyr126Asn	Class C65	0.5731	PP3_moderate
+c.377A>T	p.Tyr126Phe	Class C15	0.2796	No evidence
+c.377A>G	p.Tyr126Cys	Class C65	0.5956	PP3_moderate
+c.377A>C	p.Tyr126Ser	Class C65	0.5956	PP3_moderate
+c.379T>G	p.Ser127Ala	Class C65	0.3558	PP3_moderate
+c.379T>C	p.Ser127Pro	Class C65	0.5863	PP3_moderate
+c.379T>A	p.Ser127Thr	Class C55	0.4289	PP3
+c.380C>T	p.Ser127Phe	Class C65	0.5651	PP3_moderate
+c.380C>G	p.Ser127Cys	Class C65	0.5567	PP3_moderate
+c.380C>A	p.Ser127Tyr	Class C65	0.6001	PP3_moderate
+c.382C>T	p.Pro128Ser	Class C0	0.0286	BP4
+c.382C>G	p.Pro128Ala	Class C0	0.0270	BP4
+c.382C>A	p.Pro128Thr	Class C0	-0.0062	BP4
+c.383C>T	p.Pro128Leu	Class C0	0.0840	BP4
+c.383C>G	p.Pro128Arg	Class C0	0.1499	BP4
+c.383C>A	p.Pro128His	Class C0	0.0951	BP4
+c.385G>T	p.Ala129Ser	Class C0	-0.1439	BP4_moderate
+c.385G>C	p.Ala129Pro	Class C0	-0.0973	BP4_moderate
+c.385G>A	p.Ala129Thr	Class C0	-0.1493	BP4_moderate
+c.386C>T	p.Ala129Val	Class C0	-0.1211	BP4_moderate
+c.386C>G	p.Ala129Gly	Class C0	-0.1451	BP4_moderate
+c.386C>A	p.Ala129Asp	Class C0	-0.0835	BP4_moderate
+c.388C>T	p.Leu130Phe	Class C15	0.5537	No evidence
+c.388C>G	p.Leu130Val	Class C25	0.5517	PP3
+c.388C>A	p.Leu130Ile	Class C0	0.3460	No evidence
+c.389T>G	p.Leu130Arg	Class C65	0.6030	PP3_moderate
+c.389T>C	p.Leu130Pro	Class C65	0.6034	PP3_moderate
+c.389T>A	p.Leu130His	Class C65	0.6002	PP3_moderate
+c.391A>T	p.Asn131Tyr	Class C65	0.3204	PP3_moderate
+c.391A>G	p.Asn131Asp	Class C15	0.1161	BP4
+c.391A>C	p.Asn131His	Class C65	0.1640	PP3_moderate
+c.392A>T	p.Asn131Ile	Class C65	0.3201	PP3_moderate
+c.392A>G	p.Asn131Ser	Class C45	0.1414	BP4
+c.392A>C	p.Asn131Thr	Class C55	0.1596	BP4
+c.393C>G	p.Asn131Lys	Class C65	0.0051	No evidence
+c.393C>A	p.Asn131Lys	Class C65	0.0052	No evidence
+c.394A>G	p.Lys132Glu	Class C55	0.5995	PP3
+c.394A>C	p.Lys132Gln	Class C45	0.5995	PP3
+c.395A>T	p.Lys132Met	Class C65	0.1842	PP3_moderate
+c.395A>G	p.Lys132Arg	Class C25	0.2555	PP3
+c.395A>C	p.Lys132Thr	Class C65	0.2886	PP3_moderate
+c.396G>T	p.Lys132Asn	Class C65	0.3648	PP3_moderate
+c.396G>C	p.Lys132Asn	Class C65	0.3138	PP3_moderate
+c.397A>T	p.Met133Leu	Class C0	-0.0495	BP4_moderate
+c.397A>G	p.Met133Val	Class C0	-0.0050	BP4
+c.397A>C	p.Met133Leu	Class C0	-0.0496	BP4_moderate
+c.398T>G	p.Met133Arg	Class C45	0.4966	PP3
+c.398T>C	p.Met133Thr	Class C45	0.3779	PP3
+c.398T>A	p.Met133Lys	Class C55	0.4285	PP3
+c.399G>T	p.Met133Ile	Class C0	-0.0454	BP4_moderate
+c.399G>C	p.Met133Ile	Class C0	-0.0454	BP4_moderate
+c.399G>A	p.Met133Ile	Class C0	-0.0454	BP4_moderate
+c.400T>G	p.Phe134Val	Class C45	0.3941	PP3
+c.400T>C	p.Phe134Leu	Class C15	0.3860	No evidence
+c.400T>A	p.Phe134Ile	Class C15	0.3704	No evidence
+c.401T>G	p.Phe134Cys	Class C65	0.4957	PP3_moderate
+c.401T>C	p.Phe134Ser	Class C65	0.5426	PP3_moderate
+c.401T>A	p.Phe134Tyr	Class C15	0.2132	No evidence
+c.402T>G	p.Phe134Leu	Class C15	0.3166	No evidence
+c.402T>A	p.Phe134Leu	Class C15	0.3165	No evidence
+c.403T>G	p.Cys135Gly	Class C65	0.5991	PP3_moderate
+c.403T>C	p.Cys135Arg	Class C65	0.5991	PP3_moderate
+c.403T>A	p.Cys135Ser	Class C65	0.6431	PP3_moderate
+c.404G>T	p.Cys135Phe	Class C65	0.5670	PP3_moderate
+c.404G>C	p.Cys135Ser	Class C65	0.5806	PP3_moderate
+c.404G>A	p.Cys135Tyr	Class C65	0.5754	PP3_moderate
+c.405C>G	p.Cys135Trp	Class C65	0.5031	PP3_moderate
+c.406C>G	p.Gln136Glu	Class C25	0.3897	PP3
+c.406C>A	p.Gln136Lys	Class C45	0.4190	PP3
+c.407A>T	p.Gln136Leu	Class C65	0.5055	PP3_moderate
+c.407A>G	p.Gln136Arg	Class C35	0.4829	PP3
+c.407A>C	p.Gln136Pro	Class C65	0.5554	PP3_moderate
+c.408A>T	p.Gln136His	Class C15	0.5237	No evidence
+c.408A>C	p.Gln136His	Class C15	0.5237	No evidence
+c.409C>G	p.Leu137Val	Class C25	0.1957	PP3
+c.409C>A	p.Leu137Met	Class C0	-0.0171	BP4_moderate
+c.410T>G	p.Leu137Arg	Class C65	0.5660	PP3_moderate
+c.410T>C	p.Leu137Pro	Class C65	0.5695	PP3_moderate
+c.410T>A	p.Leu137Gln	Class C65	0.4976	PP3_moderate
+c.412G>T	p.Ala138Ser	Class C65	0.4868	PP3_moderate
+c.412G>C	p.Ala138Pro	Class C25	0.5846	PP3
+c.412G>A	p.Ala138Thr	Class C55	0.4548	PP3
+c.413C>T	p.Ala138Val	Class C55	0.5174	PP3
+c.413C>G	p.Ala138Gly	Class C55	0.3316	PP3
+c.413C>A	p.Ala138Asp	Class C65	0.5405	PP3_moderate
+c.415A>G	p.Lys139Glu	Class C55	0.3800	PP3
+c.415A>C	p.Lys139Gln	Class C45	0.2172	PP3
+c.416A>T	p.Lys139Met	Class C65	0.3642	PP3_moderate
+c.416A>G	p.Lys139Arg	Class C25	0.1185	BP4
+c.416A>C	p.Lys139Thr	Class C65	0.3223	PP3_moderate
+c.417G>T	p.Lys139Asn	Class C65	0.0501	No evidence
+c.417G>C	p.Lys139Asn	Class C65	0.0501	No evidence
+c.418A>T	p.Thr140Ser	Class C55	0.1474	BP4
+c.418A>G	p.Thr140Ala	Class C55	0.2734	PP3
+c.418A>C	p.Thr140Pro	Class C35	0.5075	PP3
+c.419C>T	p.Thr140Ile	Class C65	0.4730	PP3_moderate
+c.419C>G	p.Thr140Ser	Class C55	0.1779	PP3
+c.419C>A	p.Thr140Asn	Class C55	0.1560	BP4
+c.421T>G	p.Cys141Gly	Class C65	0.5525	PP3_moderate
+c.421T>C	p.Cys141Arg	Class C65	0.5631	PP3_moderate
+c.421T>A	p.Cys141Ser	Class C65	0.2605	PP3_moderate
+c.422G>T	p.Cys141Phe	Class C65	0.5350	PP3_moderate
+c.422G>C	p.Cys141Ser	Class C65	0.2701	PP3_moderate
+c.422G>A	p.Cys141Tyr	Class C65	0.5687	PP3_moderate
+c.423C>G	p.Cys141Trp	Class C65	0.4976	PP3_moderate
+c.424C>T	p.Pro142Ser	Class C65	0.5835	PP3_moderate
+c.424C>G	p.Pro142Ala	Class C25	0.5832	PP3
+c.424C>A	p.Pro142Thr	Class C35	0.6044	PP3
+c.425C>T	p.Pro142Leu	Class C65	0.5476	PP3_moderate
+c.425C>G	p.Pro142Arg	Class C65	0.5928	PP3_moderate
+c.425C>A	p.Pro142His	Class C65	0.6003	PP3_moderate
+c.427G>T	p.Val143Leu	Class C0	0.0391	BP4
+c.427G>C	p.Val143Leu	Class C0	0.0391	BP4
+c.427G>A	p.Val143Met	Class C0	0.2334	No evidence
+c.428T>G	p.Val143Gly	Class C35	0.5493	PP3
+c.428T>C	p.Val143Ala	Class C25	0.1806	PP3
+c.428T>A	p.Val143Glu	Class C35	0.5222	PP3
+c.430C>G	p.Gln144Glu	Class C0	0.0637	BP4
+c.430C>A	p.Gln144Lys	Class C0	0.2699	No evidence
+c.431A>T	p.Gln144Leu	Class C0	0.3196	No evidence
+c.431A>G	p.Gln144Arg	Class C0	0.2159	No evidence
+c.431A>C	p.Gln144Pro	Class C0	0.3871	No evidence
+c.432G>T	p.Gln144His	Class C0	0.2083	No evidence
+c.432G>C	p.Gln144His	Class C0	0.2083	No evidence
+c.433C>G	p.Leu145Val	Class C0	-0.0473	BP4_moderate
+c.433C>A	p.Leu145Met	Class C0	-0.0152	BP4_moderate
+c.434T>G	p.Leu145Arg	Class C25	0.5514	PP3
+c.434T>C	p.Leu145Pro	Class C25	0.5461	PP3
+c.434T>A	p.Leu145Gln	Class C35	0.4795	PP3
+c.436T>G	p.Trp146Gly	Class C0	0.0351	BP4
+c.436T>C	p.Trp146Arg	Class C0	-0.0201	BP4_moderate
+c.436T>A	p.Trp146Arg	Class C0	-0.0201	BP4_moderate
+c.437G>T	p.Trp146Leu	Class C0	-0.0234	BP4_moderate
+c.437G>C	p.Trp146Ser	Class C0	0.0296	BP4
+c.438G>T	p.Trp146Cys	Class C15	0.0745	BP4
+c.438G>C	p.Trp146Cys	Class C15	0.0745	BP4
+c.439G>T	p.Val147Phe	Class C45	0.4586	PP3
+c.439G>C	p.Val147Leu	Class C25	0.2882	PP3
+c.439G>A	p.Val147Ile	Class C25	0.0661	BP4
+c.440T>G	p.Val147Gly	Class C65	0.5332	PP3_moderate
+c.440T>C	p.Val147Ala	Class C55	0.3502	PP3
+c.440T>A	p.Val147Asp	Class C65	0.5461	PP3_moderate
+c.442G>T	p.Asp148Tyr	Class C0	-0.0412	BP4_moderate
+c.442G>C	p.Asp148His	Class C0	-0.1001	BP4_moderate
+c.442G>A	p.Asp148Asn	Class C0	-0.2955	BP4_moderate
+c.443A>T	p.Asp148Val	Class C0	-0.0454	BP4_moderate
+c.443A>G	p.Asp148Gly	Class C0	-0.1044	BP4_moderate
+c.443A>C	p.Asp148Ala	Class C0	-0.1259	BP4_moderate
+c.444T>G	p.Asp148Glu	Class C0	-0.2162	BP4_moderate
+c.444T>A	p.Asp148Glu	Class C0	-0.2162	BP4_moderate
+c.445T>G	p.Ser149Ala	Class C0	-0.1127	BP4_moderate
+c.445T>C	p.Ser149Pro	Class C0	0.0663	BP4
+c.445T>A	p.Ser149Thr	Class C0	-0.0755	BP4_moderate
+c.446C>T	p.Ser149Phe	Class C0	0.0403	BP4
+c.446C>G	p.Ser149Cys	Class C15	0.0589	BP4
+c.446C>A	p.Ser149Tyr	Class C0	0.0640	BP4
+c.448A>T	p.Thr150Ser	Class C0	-0.1305	BP4_moderate
+c.448A>G	p.Thr150Ala	Class C0	-0.1457	BP4_moderate
+c.448A>C	p.Thr150Pro	Class C0	-0.1009	BP4_moderate
+c.449C>T	p.Thr150Ile	Class C0	-0.0345	BP4_moderate
+c.449C>G	p.Thr150Arg	Class C0	-0.0260	BP4_moderate
+c.449C>A	p.Thr150Lys	Class C0	-0.0402	BP4_moderate
+c.451C>T	p.Pro151Ser	Class C65	0.4902	PP3_moderate
+c.451C>G	p.Pro151Ala	Class C25	0.5045	PP3
+c.451C>A	p.Pro151Thr	Class C35	0.5667	PP3
+c.452C>T	p.Pro151Leu	Class C65	0.2255	PP3_moderate
+c.452C>G	p.Pro151Arg	Class C65	0.4903	PP3_moderate
+c.452C>A	p.Pro151His	Class C65	0.3202	PP3_moderate
+c.454C>T	p.Pro152Ser	Class C65	0.3720	PP3_moderate
+c.454C>G	p.Pro152Ala	Class C25	0.2981	PP3
+c.454C>A	p.Pro152Thr	Class C35	0.3601	PP3
+c.455C>T	p.Pro152Leu	Class C65	0.5581	PP3_moderate
+c.455C>G	p.Pro152Arg	Class C65	0.5317	PP3_moderate
+c.455C>A	p.Pro152Gln	Class C65	0.3578	PP3_moderate
+c.457C>T	p.Pro153Ser	Class C0	-0.0233	BP4_moderate
+c.457C>G	p.Pro153Ala	Class C0	-0.0918	BP4_moderate
+c.457C>A	p.Pro153Thr	Class C0	-0.0229	BP4_moderate
+c.458C>T	p.Pro153Leu	Class C0	-0.0236	BP4_moderate
+c.458C>G	p.Pro153Arg	Class C0	-0.0315	BP4_moderate
+c.458C>A	p.Pro153His	Class C0	-0.0088	BP4_moderate
+c.460G>T	p.Gly154Cys	Class C65	0.4027	PP3_moderate
+c.460G>C	p.Gly154Arg	Class C65	0.3308	PP3_moderate
+c.460G>A	p.Gly154Ser	Class C55	0.0512	BP4
+c.461G>T	p.Gly154Val	Class C65	0.4843	PP3_moderate
+c.461G>C	p.Gly154Ala	Class C55	0.2314	PP3
+c.461G>A	p.Gly154Asp	Class C65	0.2733	PP3_moderate
+c.463A>T	p.Thr155Ser	Class C0	-0.1071	BP4_moderate
+c.463A>G	p.Thr155Ala	Class C0	-0.0956	BP4_moderate
+c.463A>C	p.Thr155Pro	Class C0	0.0505	BP4
+c.464C>T	p.Thr155Ile	Class C0	0.1755	No evidence
+c.464C>G	p.Thr155Ser	Class C0	-0.0922	BP4_moderate
+c.464C>A	p.Thr155Asn	Class C0	-0.0372	BP4_moderate
+c.466C>T	p.Arg156Cys	Class C15	-0.0272	BP4_moderate
+c.466C>G	p.Arg156Gly	Class C15	0.1068	BP4
+c.466C>A	p.Arg156Ser	Class C0	-0.0058	BP4
+c.467G>T	p.Arg156Leu	Class C0	0.0305	BP4
+c.467G>C	p.Arg156Pro	Class C0	0.2125	No evidence
+c.467G>A	p.Arg156His	Class C0	0.1907	No evidence
+c.469G>T	p.Val157Phe	Class C0	0.3141	No evidence
+c.469G>C	p.Val157Leu	Class C0	-0.0166	BP4_moderate
+c.469G>A	p.Val157Ile	Class C0	-0.0571	BP4_moderate
+c.470T>G	p.Val157Gly	Class C35	0.5746	PP3
+c.470T>C	p.Val157Ala	Class C25	0.3697	PP3
+c.470T>A	p.Val157Asp	Class C45	0.5762	PP3
+c.472C>T	p.Arg158Cys	Class C65	0.5145	PP3_moderate
+c.472C>G	p.Arg158Gly	Class C65	0.5248	PP3_moderate
+c.472C>A	p.Arg158Ser	Class C65	0.5244	PP3_moderate
+c.473G>T	p.Arg158Leu	Class C65	0.5756	PP3_moderate
+c.473G>C	p.Arg158Pro	Class C65	0.5756	PP3_moderate
+c.473G>A	p.Arg158His	Class C25	0.5337	PP3
+c.475G>T	p.Ala159Ser	Class C0	0.2365	No evidence
+c.475G>C	p.Ala159Pro	Class C0	0.5032	No evidence
+c.475G>A	p.Ala159Thr	Class C0	0.1474	BP4
+c.476C>T	p.Ala159Val	Class C0	0.2728	No evidence
+c.476C>G	p.Ala159Gly	Class C0	0.2925	No evidence
+c.476C>A	p.Ala159Asp	Class C15	0.4214	No evidence
+c.478A>T	p.Met160Leu	Class C0	0.0354	BP4
+c.478A>G	p.Met160Val	Class C0	0.2065	No evidence
+c.478A>C	p.Met160Leu	Class C0	0.0354	BP4
+c.479T>G	p.Met160Arg	Class C0	0.4878	No evidence
+c.479T>C	p.Met160Thr	Class C0	0.1381	BP4
+c.479T>A	p.Met160Lys	Class C0	0.4709	No evidence
+c.480G>T	p.Met160Ile	Class C0	0.1994	No evidence
+c.480G>C	p.Met160Ile	Class C0	0.1994	No evidence
+c.480G>A	p.Met160Ile	Class C0	0.1994	No evidence
+c.481G>T	p.Ala161Ser	Class C65	0.2325	PP3_moderate
+c.481G>C	p.Ala161Pro	Class C25	0.1584	BP4
+c.481G>A	p.Ala161Thr	Class C55	0.2766	PP3
+c.482C>T	p.Ala161Val	Class C55	0.3327	PP3
+c.482C>G	p.Ala161Gly	Class C55	0.3148	PP3
+c.482C>A	p.Ala161Asp	Class C65	0.5874	PP3_moderate
+c.484A>T	p.Ile162Phe	Class C0	0.1230	BP4
+c.484A>G	p.Ile162Val	Class C0	-0.0356	BP4_moderate
+c.484A>C	p.Ile162Leu	Class C0	0.0663	BP4
+c.485T>G	p.Ile162Ser	Class C35	0.4869	PP3
+c.485T>C	p.Ile162Thr	Class C25	0.2901	PP3
+c.485T>A	p.Ile162Asn	Class C45	0.2071	PP3
+c.486C>G	p.Ile162Met	Class C0	0.1144	BP4
+c.487T>G	p.Tyr163Asp	Class C65	0.5949	PP3_moderate
+c.487T>C	p.Tyr163His	Class C65	0.4466	PP3_moderate
+c.487T>A	p.Tyr163Asn	Class C65	0.5840	PP3_moderate
+c.488A>T	p.Tyr163Phe	Class C15	0.0886	BP4
+c.488A>G	p.Tyr163Cys	Class C65	0.5370	PP3_moderate
+c.488A>C	p.Tyr163Ser	Class C65	0.5361	PP3_moderate
+c.490A>G	p.Lys164Glu	Class C55	0.5572	PP3
+c.490A>C	p.Lys164Gln	Class C45	0.4539	PP3
+c.491A>T	p.Lys164Met	Class C65	0.5129	PP3_moderate
+c.491A>G	p.Lys164Arg	Class C25	0.3566	PP3
+c.491A>C	p.Lys164Thr	Class C65	0.5150	PP3_moderate
+c.492G>T	p.Lys164Asn	Class C65	0.1357	No evidence
+c.492G>C	p.Lys164Asn	Class C65	0.1357	No evidence
+c.493C>G	p.Gln165Glu	Class C0	0.0426	BP4
+c.493C>A	p.Gln165Lys	Class C0	-0.0611	BP4_moderate
+c.494A>T	p.Gln165Leu	Class C25	0.1202	BP4
+c.494A>G	p.Gln165Arg	Class C0	0.0683	BP4
+c.494A>C	p.Gln165Pro	Class C15	0.1804	No evidence
+c.495G>T	p.Gln165His	Class C0	0.0001	BP4
+c.495G>C	p.Gln165His	Class C0	0.0001	BP4
+c.496T>G	p.Ser166Ala	Class C0	-0.0589	BP4_moderate
+c.496T>C	p.Ser166Pro	Class C0	0.1448	BP4
+c.496T>A	p.Ser166Thr	Class C0	-0.0315	BP4_moderate
+c.497C>T	p.Ser166Leu	Class C0	0.0591	BP4
+c.499C>G	p.Gln167Glu	Class C0	-0.0257	BP4_moderate
+c.499C>A	p.Gln167Lys	Class C15	0.2130	No evidence
+c.500A>T	p.Gln167Leu	Class C35	0.1393	BP4
+c.500A>G	p.Gln167Arg	Class C0	0.1381	BP4
+c.500A>C	p.Gln167Pro	Class C25	0.1439	BP4
+c.501G>T	p.Gln167His	Class C0	0.0347	BP4
+c.501G>C	p.Gln167His	Class C0	0.0347	BP4
+c.502C>T	p.His168Tyr	Class C65	0.0243	No evidence
+c.502C>G	p.His168Asp	Class C65	0.0695	No evidence
+c.502C>A	p.His168Asn	Class C65	0.0536	No evidence
+c.503A>T	p.His168Leu	Class C65	0.2310	PP3_moderate
+c.503A>G	p.His168Arg	Class C25	0.1603	PP3
+c.503A>C	p.His168Pro	Class C65	0.1837	PP3_moderate
+c.504C>G	p.His168Gln	Class C15	0.1293	BP4
+c.504C>A	p.His168Gln	Class C15	0.1293	BP4
+c.505A>T	p.Met169Leu	Class C0	0.0294	BP4
+c.505A>G	p.Met169Val	Class C0	-0.0177	BP4_moderate
+c.505A>C	p.Met169Leu	Class C0	0.0295	BP4
+c.506T>G	p.Met169Arg	Class C35	0.1540	BP4
+c.506T>C	p.Met169Thr	Class C25	0.1887	PP3
+c.506T>A	p.Met169Lys	Class C35	0.2899	PP3
+c.507G>T	p.Met169Ile	Class C0	0.0496	BP4
+c.507G>C	p.Met169Ile	Class C0	0.0496	BP4
+c.507G>A	p.Met169Ile	Class C0	0.0496	BP4
+c.508A>T	p.Thr170Ser	Class C0	0.0923	BP4
+c.508A>G	p.Thr170Ala	Class C0	-0.0089	BP4_moderate
+c.508A>C	p.Thr170Pro	Class C0	0.2733	No evidence
+c.509C>T	p.Thr170Met	Class C15	0.3213	No evidence
+c.509C>G	p.Thr170Arg	Class C15	0.3254	No evidence
+c.509C>A	p.Thr170Lys	Class C15	0.2761	No evidence
+c.511G>C	p.Glu171Gln	Class C25	0.2693	PP3
+c.511G>A	p.Glu171Lys	Class C55	0.3088	PP3
+c.512A>T	p.Glu171Val	Class C65	0.3697	PP3_moderate
+c.512A>G	p.Glu171Gly	Class C65	0.3041	PP3_moderate
+c.512A>C	p.Glu171Ala	Class C65	0.1767	PP3_moderate
+c.513G>T	p.Glu171Asp	Class C35	0.0105	BP4
+c.513G>C	p.Glu171Asp	Class C35	0.0105	BP4
+c.514G>T	p.Val172Phe	Class C45	0.5464	PP3
+c.514G>C	p.Val172Leu	Class C25	0.3029	PP3
+c.514G>A	p.Val172Ile	Class C25	0.0944	BP4
+c.515T>G	p.Val172Gly	Class C65	0.5746	PP3_moderate
+c.515T>C	p.Val172Ala	Class C55	0.3487	PP3
+c.515T>A	p.Val172Asp	Class C65	0.5884	PP3_moderate
+c.517G>T	p.Val173Leu	Class C25	0.4928	PP3
+c.517G>C	p.Val173Leu	Class C25	0.4928	PP3
+c.517G>A	p.Val173Met	Class C15	0.5927	No evidence
+c.518T>G	p.Val173Gly	Class C65	0.5877	PP3_moderate
+c.518T>C	p.Val173Ala	Class C55	0.5670	PP3
+c.518T>A	p.Val173Glu	Class C65	0.5399	PP3_moderate
+c.520A>T	p.Arg174Trp	Class C35	0.1493	BP4
+c.520A>G	p.Arg174Gly	Class C45	0.2743	PP3
+c.521G>T	p.Arg174Met	Class C35	0.1161	BP4
+c.521G>C	p.Arg174Thr	Class C25	0.0886	BP4
+c.521G>A	p.Arg174Lys	Class C0	-0.0648	BP4_moderate
+c.522G>T	p.Arg174Ser	Class C35	0.1059	BP4
+c.522G>C	p.Arg174Ser	Class C35	0.1059	BP4
+c.523C>T	p.Arg175Cys	Class C65	0.5443	PP3_moderate
+c.523C>G	p.Arg175Gly	Class C65	0.5545	PP3_moderate
+c.523C>A	p.Arg175Ser	Class C65	0.5541	PP3_moderate
+c.524G>T	p.Arg175Leu	Class C65	0.5730	PP3_moderate
+c.524G>C	p.Arg175Pro	Class C65	0.5730	PP3_moderate
+c.524G>A	p.Arg175His	Class C25	0.5462	PP3
+c.526T>G	p.Cys176Gly	Class C65	0.5953	PP3_moderate
+c.526T>C	p.Cys176Arg	Class C65	0.6044	PP3_moderate
+c.526T>A	p.Cys176Ser	Class C65	0.5727	PP3_moderate
+c.527G>T	p.Cys176Phe	Class C65	0.5796	PP3_moderate
+c.527G>C	p.Cys176Ser	Class C65	0.5554	PP3_moderate
+c.527G>A	p.Cys176Tyr	Class C65	0.5871	PP3_moderate
+c.528C>G	p.Cys176Trp	Class C65	0.4411	PP3_moderate
+c.529C>T	p.Pro177Ser	Class C65	0.3492	PP3_moderate
+c.529C>G	p.Pro177Ala	Class C25	0.3374	PP3
+c.529C>A	p.Pro177Thr	Class C35	0.3705	PP3
+c.530C>T	p.Pro177Leu	Class C65	0.3545	PP3_moderate
+c.530C>G	p.Pro177Arg	Class C65	0.4485	PP3_moderate
+c.530C>A	p.Pro177His	Class C65	0.3378	PP3_moderate
+c.532C>T	p.His178Tyr	Class C65	0.2496	PP3_moderate
+c.532C>G	p.His178Asp	Class C65	0.4249	PP3_moderate
+c.532C>A	p.His178Asn	Class C65	0.0080	No evidence
+c.533A>T	p.His178Leu	Class C65	0.2665	PP3_moderate
+c.533A>G	p.His178Arg	Class C25	0.2530	PP3
+c.533A>C	p.His178Pro	Class C65	0.3485	PP3_moderate
+c.534C>G	p.His178Gln	Class C15	0.2241	No evidence
+c.534C>A	p.His178Gln	Class C15	0.2241	No evidence
+c.535C>T	p.His179Tyr	Class C65	0.6022	PP3_moderate
+c.535C>G	p.His179Asp	Class C65	0.5768	PP3_moderate
+c.535C>A	p.His179Asn	Class C65	0.3432	PP3_moderate
+c.536A>T	p.His179Leu	Class C65	0.4541	PP3_moderate
+c.536A>G	p.His179Arg	Class C25	0.5374	PP3
+c.536A>C	p.His179Pro	Class C65	0.5357	PP3_moderate
+c.537T>G	p.His179Gln	Class C15	0.4443	No evidence
+c.537T>A	p.His179Gln	Class C15	0.4443	No evidence
+c.538G>C	p.Glu180Gln	Class C25	0.0782	BP4
+c.538G>A	p.Glu180Lys	Class C55	0.2624	PP3
+c.539A>T	p.Glu180Val	Class C65	0.3509	PP3_moderate
+c.539A>G	p.Glu180Gly	Class C65	0.3416	PP3_moderate
+c.539A>C	p.Glu180Ala	Class C65	0.2781	PP3_moderate
+c.540G>T	p.Glu180Asp	Class C35	0.1328	BP4
+c.540G>C	p.Glu180Asp	Class C35	0.1328	BP4
+c.541C>T	p.Arg181Cys	Class C65	0.4693	PP3_moderate
+c.541C>G	p.Arg181Gly	Class C65	0.2546	PP3_moderate
+c.541C>A	p.Arg181Ser	Class C65	0.2040	PP3_moderate
+c.542G>T	p.Arg181Leu	Class C65	0.1707	PP3_moderate
+c.542G>C	p.Arg181Pro	Class C65	0.4371	PP3_moderate
+c.542G>A	p.Arg181His	Class C25	0.2584	PP3
+c.544T>G	p.Cys182Gly	Class C0	-0.0142	BP4_moderate
+c.544T>C	p.Cys182Arg	Class C0	0.0035	BP4
+c.544T>A	p.Cys182Ser	Class C0	-0.0726	BP4_moderate
+c.545G>T	p.Cys182Phe	Class C0	0.0570	BP4
+c.545G>C	p.Cys182Ser	Class C0	-0.0390	BP4_moderate
+c.545G>A	p.Cys182Tyr	Class C0	0.0486	BP4
+c.546C>G	p.Cys182Trp	Class C15	0.1769	No evidence
+c.547T>G	p.Ser183Ala	Class C0	-0.0099	BP4_moderate
+c.547T>C	p.Ser183Pro	Class C0	-0.0226	BP4_moderate
+c.547T>A	p.Ser183Thr	Class C0	-0.0325	BP4_moderate
+c.548C>T	p.Ser183Leu	Class C0	0.0314	BP4
+c.550G>T	p.Asp184Tyr	Class C35	0.2883	PP3
+c.550G>C	p.Asp184His	Class C0	0.2428	No evidence
+c.550G>A	p.Asp184Asn	Class C0	-0.0380	BP4_moderate
+c.551A>T	p.Asp184Val	Class C35	0.3192	PP3
+c.551A>G	p.Asp184Gly	Class C15	0.2212	No evidence
+c.551A>C	p.Asp184Ala	Class C25	0.2145	PP3
+c.552T>G	p.Asp184Glu	Class C0	-0.0776	BP4_moderate
+c.552T>A	p.Asp184Glu	Class C0	-0.0777	BP4_moderate
+c.553A>T	p.Ser185Cys	Class C15	0.0142	BP4
+c.553A>G	p.Ser185Gly	Class C0	-0.0821	BP4_moderate
+c.553A>C	p.Ser185Arg	Class C0	-0.0075	BP4
+c.554G>T	p.Ser185Ile	Class C0	-0.0134	BP4_moderate
+c.554G>C	p.Ser185Thr	Class C0	-0.0730	BP4_moderate
+c.554G>A	p.Ser185Asn	Class C0	-0.1594	BP4_moderate
+c.555C>G	p.Ser185Arg	Class C0	-0.0619	BP4_moderate
+c.555C>A	p.Ser185Arg	Class C0	-0.0619	BP4_moderate
+c.556G>T	p.Asp186Tyr	Class C35	0.2905	PP3
+c.556G>C	p.Asp186His	Class C0	0.2299	No evidence
+c.556G>A	p.Asp186Asn	Class C0	-0.0517	BP4_moderate
+c.557A>T	p.Asp186Val	Class C35	0.3304	PP3
+c.557A>G	p.Asp186Gly	Class C15	0.0991	BP4
+c.557A>C	p.Asp186Ala	Class C25	0.2448	PP3
+c.558T>G	p.Asp186Glu	Class C0	0.0038	BP4
+c.558T>A	p.Asp186Glu	Class C0	0.0038	BP4
+c.559G>T	p.Gly187Cys	Class C15	0.1838	No evidence
+c.559G>C	p.Gly187Arg	Class C0	0.1879	No evidence
+c.559G>A	p.Gly187Ser	Class C0	0.0727	BP4
+c.560G>T	p.Gly187Val	Class C0	0.2137	No evidence
+c.560G>C	p.Gly187Ala	Class C0	0.0879	BP4
+c.560G>A	p.Gly187Asp	Class C0	0.1123	BP4
+c.562C>G	p.Leu188Val	Class C0	0.0454	BP4
+c.562C>A	p.Leu188Met	Class C0	0.0461	BP4
+c.563T>G	p.Leu188Arg	Class C0	0.0608	BP4
+c.563T>C	p.Leu188Pro	Class C0	0.1922	No evidence
+c.563T>A	p.Leu188Gln	Class C0	0.0961	BP4
+c.565G>T	p.Ala189Ser	Class C65	0.2294	PP3_moderate
+c.565G>C	p.Ala189Pro	Class C25	0.3281	PP3
+c.565G>A	p.Ala189Thr	Class C55	0.2852	PP3
+c.566C>T	p.Ala189Val	Class C55	0.4162	PP3
+c.566C>G	p.Ala189Gly	Class C55	0.2833	PP3
+c.566C>A	p.Ala189Asp	Class C65	0.4894	PP3_moderate
+c.568C>T	p.Pro190Ser	Class C65	0.2026	PP3_moderate
+c.568C>G	p.Pro190Ala	Class C25	0.1552	BP4
+c.568C>A	p.Pro190Thr	Class C35	0.2676	PP3
+c.569C>T	p.Pro190Leu	Class C65	0.2956	PP3_moderate
+c.569C>G	p.Pro190Arg	Class C65	0.3216	PP3_moderate
+c.569C>A	p.Pro190His	Class C65	0.1267	No evidence
+c.571C>T	p.Pro191Ser	Class C25	0.0530	BP4
+c.571C>G	p.Pro191Ala	Class C0	0.0111	BP4
+c.571C>A	p.Pro191Thr	Class C0	0.1932	No evidence
+c.572C>T	p.Pro191Leu	Class C35	0.2547	PP3
+c.572C>G	p.Pro191Arg	Class C35	0.0942	BP4
+c.572C>A	p.Pro191His	Class C25	0.2814	PP3
+c.574C>G	p.Gln192Glu	Class C0	0.0531	BP4
+c.574C>A	p.Gln192Lys	Class C0	0.0951	BP4
+c.575A>T	p.Gln192Leu	Class C15	0.1109	BP4
+c.575A>G	p.Gln192Arg	Class C0	0.0979	BP4
+c.575A>C	p.Gln192Pro	Class C0	0.2140	No evidence
+c.576G>T	p.Gln192His	Class C0	0.0338	BP4
+c.576G>C	p.Gln192His	Class C0	0.0338	BP4
+c.577C>T	p.His193Tyr	Class C65	0.5671	PP3_moderate
+c.577C>G	p.His193Asp	Class C65	0.5988	PP3_moderate
+c.577C>A	p.His193Asn	Class C65	0.3181	PP3_moderate
+c.578A>T	p.His193Leu	Class C65	0.5996	PP3_moderate
+c.578A>G	p.His193Arg	Class C25	0.5585	PP3
+c.578A>C	p.His193Pro	Class C65	0.5922	PP3_moderate
+c.579T>G	p.His193Gln	Class C15	0.5093	No evidence
+c.579T>A	p.His193Gln	Class C15	0.5093	No evidence
+c.580C>T	p.Leu194Phe	Class C15	0.5584	No evidence
+c.580C>G	p.Leu194Val	Class C25	0.4493	PP3
+c.580C>A	p.Leu194Ile	Class C0	0.3541	No evidence
+c.581T>G	p.Leu194Arg	Class C65	0.5830	PP3_moderate
+c.581T>C	p.Leu194Pro	Class C65	0.6021	PP3_moderate
+c.581T>A	p.Leu194His	Class C65	0.5882	PP3_moderate
+c.583A>T	p.Ile195Phe	Class C0	0.5292	No evidence
+c.583A>G	p.Ile195Val	Class C0	0.1612	No evidence
+c.583A>C	p.Ile195Leu	Class C0	0.2218	No evidence
+c.584T>G	p.Ile195Ser	Class C65	0.5815	PP3_moderate
+c.584T>C	p.Ile195Thr	Class C55	0.5174	PP3
+c.584T>A	p.Ile195Asn	Class C65	0.6041	PP3_moderate
+c.585C>G	p.Ile195Met	Class C0	0.2771	No evidence
+c.586C>G	p.Arg196Gly	Class C65	0.5401	PP3_moderate
+c.587G>T	p.Arg196Leu	Class C65	0.5835	PP3_moderate
+c.587G>C	p.Arg196Pro	Class C65	0.5898	PP3_moderate
+c.587G>A	p.Arg196Gln	Class C35	0.5787	PP3
+c.589G>T	p.Val197Leu	Class C25	0.2579	PP3
+c.589G>C	p.Val197Leu	Class C25	0.2579	PP3
+c.589G>A	p.Val197Met	Class C15	0.2507	No evidence
+c.590T>G	p.Val197Gly	Class C65	0.5955	PP3_moderate
+c.590T>C	p.Val197Ala	Class C55	0.3625	PP3
+c.590T>A	p.Val197Glu	Class C65	0.5718	PP3_moderate
+c.592G>C	p.Glu198Gln	Class C25	0.5426	PP3
+c.592G>A	p.Glu198Lys	Class C55	0.5932	PP3
+c.593A>T	p.Glu198Val	Class C65	0.5814	PP3_moderate
+c.593A>G	p.Glu198Gly	Class C65	0.5452	PP3_moderate
+c.593A>C	p.Glu198Ala	Class C65	0.5901	PP3_moderate
+c.594A>T	p.Glu198Asp	Class C35	0.4796	PP3
+c.594A>C	p.Glu198Asp	Class C35	0.4797	PP3
+c.595G>C	p.Gly199Arg	Class C25	0.3283	PP3
+c.595G>A	p.Gly199Arg	Class C25	0.3283	PP3
+c.596G>T	p.Gly199Val	Class C15	0.5524	No evidence
+c.596G>C	p.Gly199Ala	Class C0	0.3125	No evidence
+c.596G>A	p.Gly199Glu	Class C15	0.4302	No evidence
+c.598A>T	p.Asn200Tyr	Class C65	0.3685	PP3_moderate
+c.598A>G	p.Asn200Asp	Class C15	0.1597	BP4
+c.598A>C	p.Asn200His	Class C65	0.1956	PP3_moderate
+c.599A>T	p.Asn200Ile	Class C65	0.2942	PP3_moderate
+c.599A>G	p.Asn200Ser	Class C45	-0.0013	BP4
+c.599A>C	p.Asn200Thr	Class C55	0.1658	PP3
+c.600T>G	p.Asn200Lys	Class C65	0.0618	No evidence
+c.600T>A	p.Asn200Lys	Class C65	0.0618	No evidence
+c.601T>G	p.Leu201Val	Class C0	-0.0379	BP4_moderate
+c.601T>A	p.Leu201Met	Class C0	-0.0197	BP4_moderate
+c.602T>G	p.Leu201Trp	Class C0	0.0268	BP4
+c.602T>C	p.Leu201Ser	Class C0	-0.0137	BP4_moderate
+c.603G>T	p.Leu201Phe	Class C0	-0.0430	BP4_moderate
+c.603G>C	p.Leu201Phe	Class C0	-0.0430	BP4_moderate
+c.604C>T	p.Arg202Cys	Class C15	0.1641	No evidence
+c.604C>G	p.Arg202Gly	Class C15	0.1311	BP4
+c.604C>A	p.Arg202Ser	Class C0	0.0690	BP4
+c.605G>T	p.Arg202Leu	Class C0	-0.0594	BP4_moderate
+c.605G>C	p.Arg202Pro	Class C0	0.1630	No evidence
+c.605G>A	p.Arg202His	Class C0	-0.0838	BP4_moderate
+c.607G>T	p.Val203Leu	Class C0	0.0165	BP4
+c.607G>C	p.Val203Leu	Class C0	0.0165	BP4
+c.607G>A	p.Val203Met	Class C0	0.0264	BP4
+c.608T>G	p.Val203Gly	Class C0	0.1905	No evidence
+c.608T>C	p.Val203Ala	Class C0	-0.0042	BP4
+c.608T>A	p.Val203Glu	Class C15	0.2109	No evidence
+c.610G>C	p.Glu204Gln	Class C0	-0.0305	BP4_moderate
+c.610G>A	p.Glu204Lys	Class C0	0.0530	BP4
+c.611A>T	p.Glu204Val	Class C0	0.1014	BP4
+c.611A>G	p.Glu204Gly	Class C0	0.1233	BP4
+c.611A>C	p.Glu204Ala	Class C0	0.0959	BP4
+c.612G>T	p.Glu204Asp	Class C0	0.0410	BP4
+c.612G>C	p.Glu204Asp	Class C0	0.0411	BP4
+c.613T>G	p.Tyr205Asp	Class C65	0.5790	PP3_moderate
+c.613T>C	p.Tyr205His	Class C65	0.5648	PP3_moderate
+c.613T>A	p.Tyr205Asn	Class C65	0.5753	PP3_moderate
+c.614A>T	p.Tyr205Phe	Class C15	0.2129	No evidence
+c.614A>G	p.Tyr205Cys	Class C65	0.5835	PP3_moderate
+c.614A>C	p.Tyr205Ser	Class C65	0.5647	PP3_moderate
+c.616T>G	p.Leu206Val	Class C0	-0.0894	BP4_moderate
+c.616T>A	p.Leu206Met	Class C0	-0.0621	BP4_moderate
+c.617T>G	p.Leu206Trp	Class C0	0.0601	BP4
+c.617T>C	p.Leu206Ser	Class C0	0.1115	BP4
+c.618G>T	p.Leu206Phe	Class C0	-0.0452	BP4_moderate
+c.618G>C	p.Leu206Phe	Class C0	-0.0451	BP4_moderate
+c.619G>T	p.Asp207Tyr	Class C0	0.2220	No evidence
+c.619G>C	p.Asp207His	Class C0	0.1063	BP4
+c.619G>A	p.Asp207Asn	Class C0	-0.0539	BP4_moderate
+c.620A>T	p.Asp207Val	Class C0	0.2289	No evidence
+c.620A>G	p.Asp207Gly	Class C0	0.1955	No evidence
+c.620A>C	p.Asp207Ala	Class C0	0.1133	BP4
+c.621T>G	p.Asp207Glu	Class C0	-0.1402	BP4_moderate
+c.621T>A	p.Asp207Glu	Class C0	-0.1402	BP4_moderate
+c.622G>T	p.Asp208Tyr	Class C65	0.5931	PP3_moderate
+c.622G>C	p.Asp208His	Class C65	0.5523	PP3_moderate
+c.622G>A	p.Asp208Asn	Class C15	0.0431	BP4
+c.623A>T	p.Asp208Val	Class C65	0.5756	PP3_moderate
+c.623A>G	p.Asp208Gly	Class C65	0.5753	PP3_moderate
+c.623A>C	p.Asp208Ala	Class C65	0.5964	PP3_moderate
+c.624C>G	p.Asp208Glu	Class C35	0.4554	PP3
+c.624C>A	p.Asp208Glu	Class C35	0.4554	PP3
+c.625A>G	p.Arg209Gly	Class C0	0.0469	BP4
+c.626G>T	p.Arg209Ile	Class C0	-0.0431	BP4_moderate
+c.626G>C	p.Arg209Thr	Class C0	-0.0849	BP4_moderate
+c.626G>A	p.Arg209Lys	Class C0	-0.1235	BP4_moderate
+c.627A>T	p.Arg209Ser	Class C0	-0.0633	BP4_moderate
+c.627A>C	p.Arg209Ser	Class C0	-0.0633	BP4_moderate
+c.628A>T	p.Asn210Tyr	Class C0	-0.0630	BP4_moderate
+c.628A>G	p.Asn210Asp	Class C0	-0.1398	BP4_moderate
+c.628A>C	p.Asn210His	Class C0	-0.1309	BP4_moderate
+c.629A>T	p.Asn210Ile	Class C0	-0.0627	BP4_moderate
+c.629A>G	p.Asn210Ser	Class C0	-0.1828	BP4_moderate
+c.629A>C	p.Asn210Thr	Class C0	-0.1006	BP4_moderate
+c.630C>G	p.Asn210Lys	Class C0	-0.0809	BP4_moderate
+c.630C>A	p.Asn210Lys	Class C0	-0.0809	BP4_moderate
+c.631A>T	p.Thr211Ser	Class C0	0.3100	No evidence
+c.631A>G	p.Thr211Ala	Class C0	0.5217	No evidence
+c.631A>C	p.Thr211Pro	Class C0	0.5895	No evidence
+c.632C>T	p.Thr211Ile	Class C0	0.5922	No evidence
+c.632C>G	p.Thr211Ser	Class C0	0.3149	No evidence
+c.632C>A	p.Thr211Asn	Class C0	0.2028	No evidence
+c.634T>G	p.Phe212Val	Class C0	-0.0003	BP4
+c.634T>C	p.Phe212Leu	Class C0	-0.0250	BP4_moderate
+c.634T>A	p.Phe212Ile	Class C0	-0.0067	BP4
+c.635T>G	p.Phe212Cys	Class C15	0.0877	BP4
+c.635T>C	p.Phe212Ser	Class C0	0.0137	BP4
+c.635T>A	p.Phe212Tyr	Class C0	-0.0258	BP4_moderate
+c.636T>G	p.Phe212Leu	Class C0	-0.0503	BP4_moderate
+c.636T>A	p.Phe212Leu	Class C0	-0.0503	BP4_moderate
+c.637C>G	p.Arg213Gly	Class C65	0.5216	PP3_moderate
+c.638G>T	p.Arg213Leu	Class C65	0.5862	PP3_moderate
+c.638G>C	p.Arg213Pro	Class C65	0.5865	PP3_moderate
+c.638G>A	p.Arg213Gln	Class C35	0.5033	PP3
+c.640C>T	p.His214Tyr	Class C35	0.1887	PP3
+c.640C>G	p.His214Asp	Class C25	0.3564	PP3
+c.640C>A	p.His214Asn	Class C15	0.1497	BP4
+c.641A>T	p.His214Leu	Class C35	0.3232	PP3
+c.641A>G	p.His214Arg	Class C0	0.4107	No evidence
+c.641A>C	p.His214Pro	Class C25	0.4323	PP3
+c.642T>G	p.His214Gln	Class C0	-0.0520	BP4_moderate
+c.642T>A	p.His214Gln	Class C0	-0.0520	BP4_moderate
+c.643A>T	p.Ser215Cys	Class C0	0.4693	No evidence
+c.643A>G	p.Ser215Gly	Class C0	0.3210	No evidence
+c.643A>C	p.Ser215Arg	Class C15	0.4819	No evidence
+c.644G>T	p.Ser215Ile	Class C15	0.5723	No evidence
+c.644G>C	p.Ser215Thr	Class C0	0.3307	No evidence
+c.644G>A	p.Ser215Asn	Class C0	0.1310	BP4
+c.645T>G	p.Ser215Arg	Class C15	0.3622	No evidence
+c.645T>A	p.Ser215Arg	Class C15	0.3622	No evidence
+c.646G>T	p.Val216Leu	Class C25	0.5551	PP3
+c.646G>C	p.Val216Leu	Class C25	0.5551	PP3
+c.646G>A	p.Val216Met	Class C15	0.5501	No evidence
+c.647T>G	p.Val216Gly	Class C65	0.5897	PP3_moderate
+c.647T>C	p.Val216Ala	Class C55	0.5766	PP3
+c.647T>A	p.Val216Glu	Class C65	0.6031	PP3_moderate
+c.649G>T	p.Val217Leu	Class C0	-0.0276	BP4_moderate
+c.649G>C	p.Val217Leu	Class C0	-0.0276	BP4_moderate
+c.649G>A	p.Val217Met	Class C0	-0.0183	BP4_moderate
+c.650T>G	p.Val217Gly	Class C0	0.2361	No evidence
+c.650T>C	p.Val217Ala	Class C0	0.0611	BP4
+c.650T>A	p.Val217Glu	Class C0	0.2827	No evidence
+c.652G>T	p.Val218Leu	Class C0	0.3313	No evidence
+c.652G>C	p.Val218Leu	Class C0	0.3314	No evidence
+c.652G>A	p.Val218Met	Class C0	0.3512	No evidence
+c.653T>G	p.Val218Gly	Class C35	0.6024	PP3
+c.653T>C	p.Val218Ala	Class C25	0.5331	PP3
+c.653T>A	p.Val218Glu	Class C35	0.6020	PP3
+c.655C>T	p.Pro219Ser	Class C65	0.5933	PP3_moderate
+c.655C>G	p.Pro219Ala	Class C25	0.5925	PP3
+c.655C>A	p.Pro219Thr	Class C35	0.6071	PP3
+c.656C>T	p.Pro219Leu	Class C65	0.5857	PP3_moderate
+c.656C>G	p.Pro219Arg	Class C65	0.6070	PP3_moderate
+c.656C>A	p.Pro219His	Class C65	0.6070	PP3_moderate
+c.658T>G	p.Tyr220Asp	Class C65	0.6033	PP3_moderate
+c.658T>C	p.Tyr220His	Class C65	0.4729	PP3_moderate
+c.658T>A	p.Tyr220Asn	Class C65	0.4968	PP3_moderate
+c.659A>T	p.Tyr220Phe	Class C15	0.2387	No evidence
+c.659A>G	p.Tyr220Cys	Class C65	0.5625	PP3_moderate
+c.659A>C	p.Tyr220Ser	Class C65	0.5764	PP3_moderate
+c.661G>C	p.Glu221Gln	Class C25	0.2979	PP3
+c.661G>A	p.Glu221Lys	Class C55	0.5016	PP3
+c.662A>T	p.Glu221Val	Class C65	0.5263	PP3_moderate
+c.662A>G	p.Glu221Gly	Class C65	0.4739	PP3_moderate
+c.662A>C	p.Glu221Ala	Class C65	0.4668	PP3_moderate
+c.663G>T	p.Glu221Asp	Class C35	0.1873	PP3
+c.663G>C	p.Glu221Asp	Class C35	0.1873	PP3
+c.664C>T	p.Pro222Ser	Class C0	-0.0157	BP4_moderate
+c.664C>G	p.Pro222Ala	Class C0	0.0369	BP4
+c.664C>A	p.Pro222Thr	Class C0	0.0985	BP4
+c.665C>T	p.Pro222Leu	Class C0	0.2245	No evidence
+c.665C>G	p.Pro222Arg	Class C0	0.1820	No evidence
+c.665C>A	p.Pro222Gln	Class C0	0.1553	BP4
+c.667C>T	p.Pro223Ser	Class C65	0.3127	PP3_moderate
+c.667C>G	p.Pro223Ala	Class C25	0.1606	PP3
+c.667C>A	p.Pro223Thr	Class C35	0.3054	PP3
+c.668C>T	p.Pro223Leu	Class C65	0.1510	No evidence
+c.668C>G	p.Pro223Arg	Class C65	0.3621	PP3_moderate
+c.668C>A	p.Pro223His	Class C65	0.3149	PP3_moderate
+c.670G>C	p.Glu224Gln	Class C0	-0.0053	BP4
+c.670G>A	p.Glu224Lys	Class C15	0.1974	No evidence
+c.671A>T	p.Glu224Val	Class C35	0.2684	PP3
+c.671A>G	p.Glu224Gly	Class C35	0.1771	PP3
+c.671A>C	p.Glu224Ala	Class C35	0.1654	PP3
+c.672G>T	p.Glu224Asp	Class C15	0.1232	BP4
+c.672G>C	p.Glu224Asp	Class C15	0.1232	BP4
+c.673G>T	p.Val225Phe	Class C0	0.1227	BP4
+c.673G>C	p.Val225Leu	Class C0	-0.0761	BP4_moderate
+c.673G>A	p.Val225Ile	Class C0	-0.0357	BP4_moderate
+c.674T>G	p.Val225Gly	Class C0	0.1723	No evidence
+c.674T>C	p.Val225Ala	Class C0	0.0062	BP4
+c.674T>A	p.Val225Asp	Class C15	0.2181	No evidence
+c.676G>T	p.Gly226Cys	Class C15	0.4126	No evidence
+c.676G>C	p.Gly226Arg	Class C0	0.3462	No evidence
+c.676G>A	p.Gly226Ser	Class C0	0.5183	No evidence
+c.677G>T	p.Gly226Val	Class C15	0.3665	No evidence
+c.677G>C	p.Gly226Ala	Class C0	0.2516	No evidence
+c.677G>A	p.Gly226Asp	Class C0	0.6207	No evidence
+c.679T>G	p.Ser227Ala	Class C0	-0.0591	BP4_moderate
+c.679T>C	p.Ser227Pro	Class C0	0.2135	No evidence
+c.679T>A	p.Ser227Thr	Class C0	0.0889	BP4
+c.680C>T	p.Ser227Phe	Class C0	0.1594	BP4
+c.680C>G	p.Ser227Cys	Class C0	0.0810	BP4
+c.680C>A	p.Ser227Tyr	Class C0	0.1845	No evidence
+c.682G>T	p.Asp228Tyr	Class C35	0.2996	PP3
+c.682G>C	p.Asp228His	Class C0	0.2299	No evidence
+c.682G>A	p.Asp228Asn	Class C0	0.0176	BP4
+c.683A>T	p.Asp228Val	Class C35	0.2846	PP3
+c.683A>G	p.Asp228Gly	Class C15	0.1772	No evidence
+c.683A>C	p.Asp228Ala	Class C25	0.1705	PP3
+c.684C>G	p.Asp228Glu	Class C0	-0.1335	BP4_moderate
+c.684C>A	p.Asp228Glu	Class C0	-0.1335	BP4_moderate
+c.685T>G	p.Cys229Gly	Class C0	0.1077	BP4
+c.685T>C	p.Cys229Arg	Class C0	0.0891	BP4
+c.685T>A	p.Cys229Ser	Class C0	0.0526	BP4
+c.686G>T	p.Cys229Phe	Class C0	-0.0674	BP4_moderate
+c.686G>C	p.Cys229Ser	Class C0	-0.0060	BP4
+c.686G>A	p.Cys229Tyr	Class C0	-0.1059	BP4_moderate
+c.687T>G	p.Cys229Trp	Class C0	0.0215	BP4
+c.688A>T	p.Thr230Ser	Class C0	0.2370	No evidence
+c.688A>G	p.Thr230Ala	Class C0	0.4232	No evidence
+c.688A>C	p.Thr230Pro	Class C0	0.5481	No evidence
+c.689C>T	p.Thr230Ile	Class C15	0.5420	No evidence
+c.689C>G	p.Thr230Ser	Class C0	0.2501	No evidence
+c.689C>A	p.Thr230Asn	Class C0	0.3386	No evidence
+c.691A>T	p.Thr231Ser	Class C55	0.3160	PP3
+c.691A>G	p.Thr231Ala	Class C55	0.4026	PP3
+c.691A>C	p.Thr231Pro	Class C35	0.5882	PP3
+c.692C>T	p.Thr231Ile	Class C65	0.5206	PP3_moderate
+c.692C>G	p.Thr231Ser	Class C55	0.3201	PP3
+c.692C>A	p.Thr231Asn	Class C55	0.1878	PP3
+c.694A>T	p.Ile232Phe	Class C0	0.4192	No evidence
+c.694A>G	p.Ile232Val	Class C0	-0.0366	BP4_moderate
+c.694A>C	p.Ile232Leu	Class C0	0.1387	BP4
+c.695T>G	p.Ile232Ser	Class C35	0.5768	PP3
+c.695T>C	p.Ile232Thr	Class C25	0.5446	PP3
+c.695T>A	p.Ile232Asn	Class C35	0.3671	PP3
+c.696C>G	p.Ile232Met	Class C0	0.2972	No evidence
+c.697C>T	p.His233Tyr	Class C0	0.1213	BP4
+c.697C>G	p.His233Asp	Class C15	0.4290	No evidence
+c.697C>A	p.His233Asn	Class C0	0.0848	BP4
+c.698A>T	p.His233Leu	Class C0	0.0525	BP4
+c.698A>G	p.His233Arg	Class C0	0.2203	No evidence
+c.698A>C	p.His233Pro	Class C0	0.3518	No evidence
+c.699C>G	p.His233Gln	Class C0	0.0832	BP4
+c.699C>A	p.His233Gln	Class C0	0.0832	BP4
+c.700T>G	p.Tyr234Asp	Class C35	0.5099	PP3
+c.700T>C	p.Tyr234His	Class C25	0.2875	PP3
+c.700T>A	p.Tyr234Asn	Class C35	0.4894	PP3
+c.701A>T	p.Tyr234Phe	Class C0	0.0391	BP4
+c.701A>G	p.Tyr234Cys	Class C45	0.5288	PP3
+c.701A>C	p.Tyr234Ser	Class C35	0.4179	PP3
+c.703A>T	p.Asn235Tyr	Class C15	0.3363	No evidence
+c.703A>G	p.Asn235Asp	Class C0	0.1442	BP4
+c.703A>C	p.Asn235His	Class C0	0.1609	No evidence
+c.704A>T	p.Asn235Ile	Class C15	0.2956	No evidence
+c.704A>G	p.Asn235Ser	Class C0	-0.0342	BP4_moderate
+c.704A>C	p.Asn235Thr	Class C0	0.1282	BP4
+c.705C>G	p.Asn235Lys	Class C0	-0.0276	BP4_moderate
+c.705C>A	p.Asn235Lys	Class C0	-0.0276	BP4_moderate
+c.706T>G	p.Tyr236Asp	Class C55	0.4871	PP3
+c.706T>C	p.Tyr236His	Class C35	0.1757	PP3
+c.706T>A	p.Tyr236Asn	Class C55	0.3713	PP3
+c.707A>T	p.Tyr236Phe	Class C0	-0.0341	BP4_moderate
+c.707A>G	p.Tyr236Cys	Class C55	0.4057	PP3
+c.707A>C	p.Tyr236Ser	Class C55	0.2962	PP3
+c.709A>T	p.Met237Leu	Class C0	0.3725	No evidence
+c.709A>G	p.Met237Val	Class C15	0.4603	No evidence
+c.709A>C	p.Met237Leu	Class C0	0.3725	No evidence
+c.710T>G	p.Met237Arg	Class C65	0.6053	PP3_moderate
+c.710T>C	p.Met237Thr	Class C65	0.5168	PP3_moderate
+c.710T>A	p.Met237Lys	Class C65	0.5552	PP3_moderate
+c.711G>T	p.Met237Ile	Class C0	0.4419	No evidence
+c.711G>C	p.Met237Ile	Class C0	0.4419	No evidence
+c.711G>A	p.Met237Ile	Class C0	0.4419	No evidence
+c.712T>G	p.Cys238Gly	Class C65	0.5947	PP3_moderate
+c.712T>C	p.Cys238Arg	Class C65	0.6075	PP3_moderate
+c.712T>A	p.Cys238Ser	Class C65	0.6075	PP3_moderate
+c.713G>T	p.Cys238Phe	Class C65	0.5997	PP3_moderate
+c.713G>C	p.Cys238Ser	Class C65	0.5997	PP3_moderate
+c.713G>A	p.Cys238Tyr	Class C65	0.5997	PP3_moderate
+c.714T>G	p.Cys238Trp	Class C65	0.5361	PP3_moderate
+c.715A>T	p.Asn239Tyr	Class C65	0.5251	PP3_moderate
+c.715A>G	p.Asn239Asp	Class C15	0.2051	No evidence
+c.715A>C	p.Asn239His	Class C65	0.1990	PP3_moderate
+c.716A>T	p.Asn239Ile	Class C65	0.4000	PP3_moderate
+c.716A>G	p.Asn239Ser	Class C45	0.1054	BP4
+c.716A>C	p.Asn239Thr	Class C55	0.2083	PP3
+c.717C>G	p.Asn239Lys	Class C65	0.1086	No evidence
+c.717C>A	p.Asn239Lys	Class C65	0.1085	No evidence
+c.718A>T	p.Ser240Cys	Class C65	0.4166	PP3_moderate
+c.718A>G	p.Ser240Gly	Class C55	0.2495	PP3
+c.718A>C	p.Ser240Arg	Class C65	0.5112	PP3_moderate
+c.719G>T	p.Ser240Ile	Class C65	0.5002	PP3_moderate
+c.719G>C	p.Ser240Thr	Class C55	0.2314	PP3
+c.719G>A	p.Ser240Asn	Class C45	0.1025	BP4
+c.720T>G	p.Ser240Arg	Class C65	0.4820	PP3_moderate
+c.720T>A	p.Ser240Arg	Class C65	0.4819	PP3_moderate
+c.721T>G	p.Ser241Ala	Class C65	0.3448	PP3_moderate
+c.721T>C	p.Ser241Pro	Class C65	0.5417	PP3_moderate
+c.721T>A	p.Ser241Thr	Class C55	0.5249	PP3
+c.722C>T	p.Ser241Phe	Class C65	0.5450	PP3_moderate
+c.722C>G	p.Ser241Cys	Class C65	0.5101	PP3_moderate
+c.722C>A	p.Ser241Tyr	Class C65	0.5447	PP3_moderate
+c.724T>G	p.Cys242Gly	Class C65	0.5996	PP3_moderate
+c.724T>C	p.Cys242Arg	Class C65	0.6071	PP3_moderate
+c.724T>A	p.Cys242Ser	Class C65	0.5884	PP3_moderate
+c.725G>T	p.Cys242Phe	Class C65	0.6000	PP3_moderate
+c.725G>C	p.Cys242Ser	Class C65	0.5813	PP3_moderate
+c.725G>A	p.Cys242Tyr	Class C65	0.6000	PP3_moderate
+c.726C>G	p.Cys242Trp	Class C65	0.5405	PP3_moderate
+c.727A>T	p.Met243Leu	Class C0	0.0872	BP4
+c.727A>G	p.Met243Val	Class C15	0.0080	BP4
+c.727A>C	p.Met243Leu	Class C0	0.0872	BP4
+c.728T>G	p.Met243Arg	Class C65	0.3338	PP3_moderate
+c.728T>C	p.Met243Thr	Class C65	0.2991	PP3_moderate
+c.728T>A	p.Met243Lys	Class C65	0.3447	PP3_moderate
+c.729G>T	p.Met243Ile	Class C0	0.1038	BP4
+c.729G>C	p.Met243Ile	Class C0	0.1038	BP4
+c.729G>A	p.Met243Ile	Class C0	0.1038	BP4
+c.730G>T	p.Gly244Cys	Class C65	0.5811	PP3_moderate
+c.730G>C	p.Gly244Arg	Class C65	0.5916	PP3_moderate
+c.730G>A	p.Gly244Ser	Class C55	0.4625	PP3
+c.731G>T	p.Gly244Val	Class C65	0.5970	PP3_moderate
+c.731G>C	p.Gly244Ala	Class C55	0.4384	PP3
+c.731G>A	p.Gly244Asp	Class C65	0.5969	PP3_moderate
+c.733G>T	p.Gly245Cys	Class C65	0.5982	PP3_moderate
+c.733G>C	p.Gly245Arg	Class C65	0.5982	PP3_moderate
+c.733G>A	p.Gly245Ser	Class C55	0.5536	PP3
+c.734G>T	p.Gly245Val	Class C65	0.5986	PP3_moderate
+c.734G>C	p.Gly245Ala	Class C55	0.5899	PP3
+c.734G>A	p.Gly245Asp	Class C65	0.5986	PP3_moderate
+c.736A>T	p.Met246Leu	Class C0	0.2953	No evidence
+c.736A>G	p.Met246Val	Class C15	0.3710	No evidence
+c.736A>C	p.Met246Leu	Class C0	0.2953	No evidence
+c.737T>G	p.Met246Arg	Class C65	0.4922	PP3_moderate
+c.737T>C	p.Met246Thr	Class C65	0.3754	PP3_moderate
+c.737T>A	p.Met246Lys	Class C65	0.5161	PP3_moderate
+c.738G>T	p.Met246Ile	Class C0	0.2716	No evidence
+c.738G>C	p.Met246Ile	Class C0	0.2716	No evidence
+c.738G>A	p.Met246Ile	Class C0	0.2716	No evidence
+c.739A>T	p.Asn247Tyr	Class C65	0.5334	PP3_moderate
+c.739A>G	p.Asn247Asp	Class C15	0.2171	No evidence
+c.739A>C	p.Asn247His	Class C65	0.2795	PP3_moderate
+c.740A>T	p.Asn247Ile	Class C65	0.4815	PP3_moderate
+c.740A>G	p.Asn247Ser	Class C45	0.1415	BP4
+c.740A>C	p.Asn247Thr	Class C55	0.3042	PP3
+c.741C>G	p.Asn247Lys	Class C65	0.1308	No evidence
+c.741C>A	p.Asn247Lys	Class C65	0.1308	No evidence
+c.742C>T	p.Arg248Trp	Class C65	0.5336	PP3_moderate
+c.742C>G	p.Arg248Gly	Class C65	0.5336	PP3_moderate
+c.743G>T	p.Arg248Leu	Class C65	0.5703	PP3_moderate
+c.743G>C	p.Arg248Pro	Class C65	0.5704	PP3_moderate
+c.743G>A	p.Arg248Gln	Class C35	0.4738	PP3
+c.745A>T	p.Arg249Trp	Class C65	0.4982	PP3_moderate
+c.745A>G	p.Arg249Gly	Class C65	0.4881	PP3_moderate
+c.746G>T	p.Arg249Met	Class C65	0.5720	PP3_moderate
+c.746G>C	p.Arg249Thr	Class C65	0.5671	PP3_moderate
+c.746G>A	p.Arg249Lys	Class C25	0.4608	PP3
+c.747G>T	p.Arg249Ser	Class C65	0.4313	PP3_moderate
+c.747G>C	p.Arg249Ser	Class C65	0.4313	PP3_moderate
+c.748C>T	p.Pro250Ser	Class C25	0.5739	PP3
+c.748C>G	p.Pro250Ala	Class C0	0.5094	No evidence
+c.748C>A	p.Pro250Thr	Class C0	0.6019	No evidence
+c.749C>T	p.Pro250Leu	Class C35	0.6029	PP3
+c.749C>G	p.Pro250Arg	Class C35	0.5954	PP3
+c.749C>A	p.Pro250His	Class C25	0.5764	PP3
+c.751A>T	p.Ile251Phe	Class C15	0.5951	No evidence
+c.751A>G	p.Ile251Val	Class C25	0.3567	PP3
+c.751A>C	p.Ile251Leu	Class C0	0.5139	No evidence
+c.752T>G	p.Ile251Ser	Class C65	0.5991	PP3_moderate
+c.752T>C	p.Ile251Thr	Class C65	0.5334	PP3_moderate
+c.752T>A	p.Ile251Asn	Class C65	0.4250	PP3_moderate
+c.753C>G	p.Ile251Met	Class C0	0.4709	No evidence
+c.754C>T	p.Leu252Phe	Class C15	0.2069	No evidence
+c.754C>G	p.Leu252Val	Class C25	0.0150	BP4
+c.754C>A	p.Leu252Ile	Class C0	-0.0308	BP4_moderate
+c.755T>G	p.Leu252Arg	Class C65	0.5609	PP3_moderate
+c.755T>C	p.Leu252Pro	Class C65	0.5799	PP3_moderate
+c.755T>A	p.Leu252His	Class C65	0.3531	PP3_moderate
+c.757A>T	p.Thr253Ser	Class C0	0.2257	No evidence
+c.757A>G	p.Thr253Ala	Class C0	0.2120	No evidence
+c.757A>C	p.Thr253Pro	Class C0	0.4616	No evidence
+c.758C>T	p.Thr253Ile	Class C15	0.0185	BP4
+c.758C>G	p.Thr253Ser	Class C0	0.2097	No evidence
+c.758C>A	p.Thr253Asn	Class C15	0.2337	No evidence
+c.760A>T	p.Ile254Phe	Class C15	0.5917	No evidence
+c.760A>G	p.Ile254Val	Class C25	0.1708	PP3
+c.760A>C	p.Ile254Leu	Class C0	0.3325	No evidence
+c.761T>G	p.Ile254Ser	Class C65	0.5987	PP3_moderate
+c.761T>C	p.Ile254Thr	Class C65	0.5982	PP3_moderate
+c.761T>A	p.Ile254Asn	Class C65	0.5449	PP3_moderate
+c.762C>G	p.Ile254Met	Class C0	0.4809	No evidence
+c.763A>T	p.Ile255Phe	Class C15	0.1382	BP4
+c.763A>G	p.Ile255Val	Class C25	-0.0241	BP4_moderate
+c.763A>C	p.Ile255Leu	Class C0	-0.0177	BP4_moderate
+c.764T>G	p.Ile255Ser	Class C65	0.5698	PP3_moderate
+c.764T>C	p.Ile255Thr	Class C65	0.5489	PP3_moderate
+c.764T>A	p.Ile255Asn	Class C65	0.3476	PP3_moderate
+c.765C>G	p.Ile255Met	Class C0	0.2472	No evidence
+c.766A>T	p.Thr256Ser	Class C55	0.1457	BP4
+c.766A>G	p.Thr256Ala	Class C55	0.5454	PP3
+c.766A>C	p.Thr256Pro	Class C35	0.5716	PP3
+c.767C>T	p.Thr256Ile	Class C65	0.5866	PP3_moderate
+c.767C>G	p.Thr256Arg	Class C65	0.6003	PP3_moderate
+c.767C>A	p.Thr256Lys	Class C65	0.6003	PP3_moderate
+c.769C>G	p.Leu257Val	Class C25	0.5269	PP3
+c.769C>A	p.Leu257Met	Class C0	0.4424	No evidence
+c.770T>G	p.Leu257Arg	Class C65	0.5879	PP3_moderate
+c.770T>C	p.Leu257Pro	Class C65	0.6049	PP3_moderate
+c.770T>A	p.Leu257Gln	Class C65	0.6013	PP3_moderate
+c.772G>C	p.Glu258Gln	Class C25	0.3324	PP3
+c.772G>A	p.Glu258Lys	Class C55	0.5972	PP3
+c.773A>T	p.Glu258Val	Class C65	0.5775	PP3_moderate
+c.773A>G	p.Glu258Gly	Class C65	0.5520	PP3_moderate
+c.773A>C	p.Glu258Ala	Class C65	0.5429	PP3_moderate
+c.774A>T	p.Glu258Asp	Class C35	0.3731	PP3
+c.774A>C	p.Glu258Asp	Class C35	0.3731	PP3
+c.775G>T	p.Asp259Tyr	Class C15	0.2724	No evidence
+c.775G>C	p.Asp259His	Class C0	0.2384	No evidence
+c.775G>A	p.Asp259Asn	Class C0	-0.0315	BP4_moderate
+c.776A>T	p.Asp259Val	Class C15	0.3342	No evidence
+c.776A>G	p.Asp259Gly	Class C0	0.2400	No evidence
+c.776A>C	p.Asp259Ala	Class C0	0.2616	No evidence
+c.777C>G	p.Asp259Glu	Class C0	0.0661	BP4
+c.777C>A	p.Asp259Glu	Class C0	0.0661	BP4
+c.778T>G	p.Ser260Ala	Class C0	0.0372	BP4
+c.778T>C	p.Ser260Pro	Class C0	0.2042	No evidence
+c.778T>A	p.Ser260Thr	Class C0	-0.0024	BP4
+c.779C>T	p.Ser260Phe	Class C0	0.2294	No evidence
+c.779C>G	p.Ser260Cys	Class C0	0.1651	No evidence
+c.779C>A	p.Ser260Tyr	Class C0	0.2298	No evidence
+c.781A>T	p.Ser261Cys	Class C0	-0.0972	BP4_moderate
+c.781A>G	p.Ser261Gly	Class C0	-0.1298	BP4_moderate
+c.781A>C	p.Ser261Arg	Class C0	0.0013	BP4
+c.782G>T	p.Ser261Ile	Class C0	-0.1131	BP4_moderate
+c.782G>C	p.Ser261Thr	Class C0	-0.1625	BP4_moderate
+c.782G>A	p.Ser261Asn	Class C0	-0.1948	BP4_moderate
+c.783T>G	p.Ser261Arg	Class C0	-0.0553	BP4_moderate
+c.783T>A	p.Ser261Arg	Class C0	-0.0554	BP4_moderate
+c.784G>T	p.Gly262Cys	Class C65	0.5918	PP3_moderate
+c.784G>C	p.Gly262Arg	Class C65	0.5656	PP3_moderate
+c.784G>A	p.Gly262Ser	Class C55	0.5593	PP3
+c.785G>T	p.Gly262Val	Class C65	0.5903	PP3_moderate
+c.785G>C	p.Gly262Ala	Class C55	0.5791	PP3
+c.785G>A	p.Gly262Asp	Class C65	0.5805	PP3_moderate
+c.787A>T	p.Asn263Tyr	Class C0	-0.0088	BP4_moderate
+c.787A>G	p.Asn263Asp	Class C0	-0.1450	BP4_moderate
+c.787A>C	p.Asn263His	Class C0	-0.1214	BP4_moderate
+c.788A>T	p.Asn263Ile	Class C0	-0.1156	BP4_moderate
+c.788A>G	p.Asn263Ser	Class C0	-0.2743	BP4_moderate
+c.788A>C	p.Asn263Thr	Class C0	-0.1394	BP4_moderate
+c.789T>G	p.Asn263Lys	Class C0	-0.3736	BP4_moderate
+c.789T>A	p.Asn263Lys	Class C0	-0.3736	BP4_moderate
+c.790C>G	p.Leu264Val	Class C25	-0.1544	BP4_moderate
+c.790C>A	p.Leu264Ile	Class C0	-0.0702	BP4_moderate
+c.791T>G	p.Leu264Arg	Class C65	0.3282	PP3_moderate
+c.791T>C	p.Leu264Pro	Class C65	0.3119	PP3_moderate
+c.791T>A	p.Leu264Gln	Class C65	0.2617	PP3_moderate
+c.793C>G	p.Leu265Val	Class C25	0.4592	PP3
+c.793C>A	p.Leu265Met	Class C0	0.5195	No evidence
+c.794T>G	p.Leu265Arg	Class C65	0.6013	PP3_moderate
+c.794T>C	p.Leu265Pro	Class C65	0.5880	PP3_moderate
+c.794T>A	p.Leu265Gln	Class C65	0.6014	PP3_moderate
+c.796G>C	p.Gly266Arg	Class C65	0.5986	PP3_moderate
+c.796G>A	p.Gly266Arg	Class C65	0.5986	PP3_moderate
+c.797G>T	p.Gly266Val	Class C65	0.5990	PP3_moderate
+c.797G>C	p.Gly266Ala	Class C55	0.5814	PP3
+c.797G>A	p.Gly266Glu	Class C65	0.5990	PP3_moderate
+c.799C>T	p.Arg267Trp	Class C65	0.5424	PP3_moderate
+c.799C>G	p.Arg267Gly	Class C65	0.5335	PP3_moderate
+c.800G>T	p.Arg267Leu	Class C65	0.5684	PP3_moderate
+c.800G>C	p.Arg267Pro	Class C65	0.5901	PP3_moderate
+c.800G>A	p.Arg267Gln	Class C35	0.5934	PP3
+c.802A>T	p.Asn268Tyr	Class C15	-0.0191	BP4_moderate
+c.802A>G	p.Asn268Asp	Class C0	-0.2574	BP4_moderate
+c.802A>C	p.Asn268His	Class C0	-0.1435	BP4_moderate
+c.803A>T	p.Asn268Ile	Class C15	0.0492	BP4
+c.803A>G	p.Asn268Ser	Class C0	-0.1577	BP4_moderate
+c.803A>C	p.Asn268Thr	Class C0	-0.0858	BP4_moderate
+c.804C>G	p.Asn268Lys	Class C0	-0.1175	BP4_moderate
+c.804C>A	p.Asn268Lys	Class C0	-0.1175	BP4_moderate
+c.805A>T	p.Ser269Cys	Class C0	-0.0404	BP4_moderate
+c.805A>G	p.Ser269Gly	Class C0	0.1009	BP4
+c.805A>C	p.Ser269Arg	Class C15	0.3115	No evidence
+c.806G>T	p.Ser269Ile	Class C15	0.2060	No evidence
+c.806G>C	p.Ser269Thr	Class C0	0.0107	BP4
+c.806G>A	p.Ser269Asn	Class C0	-0.0234	BP4_moderate
+c.807C>G	p.Ser269Arg	Class C15	0.2499	No evidence
+c.807C>A	p.Ser269Arg	Class C15	0.2499	No evidence
+c.808T>G	p.Phe270Val	Class C45	0.5173	PP3
+c.808T>C	p.Phe270Leu	Class C15	0.4595	No evidence
+c.808T>A	p.Phe270Ile	Class C15	0.5076	No evidence
+c.809T>G	p.Phe270Cys	Class C65	0.5613	PP3_moderate
+c.809T>C	p.Phe270Ser	Class C65	0.5800	PP3_moderate
+c.809T>A	p.Phe270Tyr	Class C15	0.4803	No evidence
+c.810T>G	p.Phe270Leu	Class C15	0.3585	No evidence
+c.810T>A	p.Phe270Leu	Class C15	0.3585	No evidence
+c.811G>C	p.Glu271Gln	Class C25	0.5203	PP3
+c.811G>A	p.Glu271Lys	Class C55	0.5866	PP3
+c.812A>T	p.Glu271Val	Class C65	0.5971	PP3_moderate
+c.812A>G	p.Glu271Gly	Class C65	0.5671	PP3_moderate
+c.812A>C	p.Glu271Ala	Class C65	0.5758	PP3_moderate
+c.813G>T	p.Glu271Asp	Class C35	0.3258	PP3
+c.813G>C	p.Glu271Asp	Class C35	0.3258	PP3
+c.814G>T	p.Val272Leu	Class C25	0.4374	PP3
+c.814G>C	p.Val272Leu	Class C25	0.4374	PP3
+c.814G>A	p.Val272Met	Class C15	0.5009	No evidence
+c.815T>G	p.Val272Gly	Class C65	0.2618	PP3_moderate
+c.815T>C	p.Val272Ala	Class C55	0.2034	PP3
+c.815T>A	p.Val272Glu	Class C65	0.4614	PP3_moderate
+c.817C>T	p.Arg273Cys	Class C65	0.5537	PP3_moderate
+c.817C>G	p.Arg273Gly	Class C65	0.5587	PP3_moderate
+c.817C>A	p.Arg273Ser	Class C65	0.5657	PP3_moderate
+c.818G>T	p.Arg273Leu	Class C65	0.5913	PP3_moderate
+c.818G>C	p.Arg273Pro	Class C65	0.5935	PP3_moderate
+c.818G>A	p.Arg273His	Class C25	0.5259	PP3
+c.820G>T	p.Val274Phe	Class C45	0.3158	PP3
+c.820G>C	p.Val274Leu	Class C25	0.0664	BP4
+c.820G>A	p.Val274Ile	Class C25	-0.1864	BP4_moderate
+c.821T>G	p.Val274Gly	Class C65	0.4528	PP3_moderate
+c.821T>C	p.Val274Ala	Class C55	0.3106	PP3
+c.821T>A	p.Val274Asp	Class C65	0.5837	PP3_moderate
+c.823T>G	p.Cys275Gly	Class C65	0.6049	PP3_moderate
+c.823T>C	p.Cys275Arg	Class C65	0.6049	PP3_moderate
+c.823T>A	p.Cys275Ser	Class C65	0.6431	PP3_moderate
+c.824G>T	p.Cys275Phe	Class C65	0.6004	PP3_moderate
+c.824G>C	p.Cys275Ser	Class C65	0.6003	PP3_moderate
+c.824G>A	p.Cys275Tyr	Class C65	0.6004	PP3_moderate
+c.825T>G	p.Cys275Trp	Class C65	0.5544	PP3_moderate
+c.826G>T	p.Ala276Ser	Class C65	0.3303	PP3_moderate
+c.826G>C	p.Ala276Pro	Class C25	0.5669	PP3
+c.826G>A	p.Ala276Thr	Class C55	0.4666	PP3
+c.827C>T	p.Ala276Val	Class C55	0.5277	PP3
+c.827C>G	p.Ala276Gly	Class C55	0.4083	PP3
+c.827C>A	p.Ala276Asp	Class C65	0.5978	PP3_moderate
+c.829T>G	p.Cys277Gly	Class C65	0.3886	PP3_moderate
+c.829T>C	p.Cys277Arg	Class C65	0.6037	PP3_moderate
+c.829T>A	p.Cys277Ser	Class C65	0.6005	PP3_moderate
+c.830G>T	p.Cys277Phe	Class C65	0.5753	PP3_moderate
+c.830G>C	p.Cys277Ser	Class C65	0.5721	PP3_moderate
+c.830G>A	p.Cys277Tyr	Class C65	0.5762	PP3_moderate
+c.831T>G	p.Cys277Trp	Class C65	0.4555	PP3_moderate
+c.832C>T	p.Pro278Ser	Class C65	0.6004	PP3_moderate
+c.832C>G	p.Pro278Ala	Class C25	0.5675	PP3
+c.832C>A	p.Pro278Thr	Class C35	0.5946	PP3
+c.833C>T	p.Pro278Leu	Class C65	0.5837	PP3_moderate
+c.833C>G	p.Pro278Arg	Class C65	0.6078	PP3_moderate
+c.833C>A	p.Pro278His	Class C65	0.6078	PP3_moderate
+c.835G>T	p.Gly279Trp	Class C65	0.4306	PP3_moderate
+c.835G>C	p.Gly279Arg	Class C65	0.3373	PP3_moderate
+c.835G>A	p.Gly279Arg	Class C65	0.6431	PP3_moderate
+c.836G>T	p.Gly279Val	Class C65	0.4824	PP3_moderate
+c.836G>C	p.Gly279Ala	Class C55	0.3050	PP3
+c.836G>A	p.Gly279Glu	Class C65	0.6431	PP3_moderate
+c.838A>G	p.Arg280Gly	Class C65	0.5374	PP3_moderate
+c.839G>T	p.Arg280Ile	Class C65	0.5969	PP3_moderate
+c.839G>C	p.Arg280Thr	Class C65	0.5965	PP3_moderate
+c.839G>A	p.Arg280Lys	Class C25	0.5921	PP3
+c.840A>T	p.Arg280Ser	Class C65	0.5195	PP3_moderate
+c.840A>C	p.Arg280Ser	Class C65	0.4715	PP3_moderate
+c.841G>T	p.Asp281Tyr	Class C65	0.5998	PP3_moderate
+c.841G>C	p.Asp281His	Class C65	0.5741	PP3_moderate
+c.841G>A	p.Asp281Asn	Class C15	0.1778	No evidence
+c.842A>T	p.Asp281Val	Class C65	0.6009	PP3_moderate
+c.842A>G	p.Asp281Gly	Class C65	0.6008	PP3_moderate
+c.842A>C	p.Asp281Ala	Class C65	0.6009	PP3_moderate
+c.843C>G	p.Asp281Glu	Class C35	0.5464	PP3
+c.843C>A	p.Asp281Glu	Class C35	0.5464	PP3
+c.844C>T	p.Arg282Trp	Class C65	0.5418	PP3_moderate
+c.844C>G	p.Arg282Gly	Class C65	0.4830	PP3_moderate
+c.845G>T	p.Arg282Leu	Class C65	0.3605	PP3_moderate
+c.845G>C	p.Arg282Pro	Class C65	0.5568	PP3_moderate
+c.845G>A	p.Arg282Gln	Class C35	0.4777	PP3
+c.847C>T	p.Arg283Cys	Class C55	0.3309	PP3
+c.847C>G	p.Arg283Gly	Class C45	0.2505	PP3
+c.847C>A	p.Arg283Ser	Class C35	0.1712	PP3
+c.848G>T	p.Arg283Leu	Class C35	0.1671	PP3
+c.848G>C	p.Arg283Pro	Class C35	0.2722	PP3
+c.848G>A	p.Arg283His	Class C0	0.3010	No evidence
+c.850A>T	p.Thr284Ser	Class C0	0.0193	BP4
+c.850A>G	p.Thr284Ala	Class C0	-0.0653	BP4_moderate
+c.850A>C	p.Thr284Pro	Class C0	0.1844	No evidence
+c.851C>T	p.Thr284Ile	Class C15	0.1918	No evidence
+c.851C>G	p.Thr284Arg	Class C15	0.1900	No evidence
+c.851C>A	p.Thr284Lys	Class C15	0.1690	No evidence
+c.853G>C	p.Glu285Gln	Class C25	0.3581	PP3
+c.853G>A	p.Glu285Lys	Class C55	0.4445	PP3
+c.854A>T	p.Glu285Val	Class C65	0.4539	PP3_moderate
+c.854A>G	p.Glu285Gly	Class C65	0.2815	PP3_moderate
+c.854A>C	p.Glu285Ala	Class C65	0.2578	PP3_moderate
+c.855G>T	p.Glu285Asp	Class C35	-0.0774	BP4_moderate
+c.855G>C	p.Glu285Asp	Class C35	-0.0774	BP4_moderate
+c.856G>C	p.Glu286Gln	Class C25	0.2667	PP3
+c.856G>A	p.Glu286Lys	Class C55	0.5759	PP3
+c.857A>T	p.Glu286Val	Class C65	0.4044	PP3_moderate
+c.857A>G	p.Glu286Gly	Class C65	0.3768	PP3_moderate
+c.857A>C	p.Glu286Ala	Class C65	0.5335	PP3_moderate
+c.858A>T	p.Glu286Asp	Class C35	0.1862	PP3
+c.858A>C	p.Glu286Asp	Class C35	0.1862	PP3
+c.859G>C	p.Glu287Gln	Class C0	0.0561	BP4
+c.859G>A	p.Glu287Lys	Class C0	0.0472	BP4
+c.860A>T	p.Glu287Val	Class C15	0.1129	BP4
+c.860A>G	p.Glu287Gly	Class C0	0.0838	BP4
+c.860A>C	p.Glu287Ala	Class C0	0.0665	BP4
+c.861G>T	p.Glu287Asp	Class C0	-0.1171	BP4_moderate
+c.861G>C	p.Glu287Asp	Class C0	-0.1171	BP4_moderate
+c.862A>T	p.Asn288Tyr	Class C65	0.1201	No evidence
+c.862A>G	p.Asn288Asp	Class C15	-0.0726	BP4_moderate
+c.862A>C	p.Asn288His	Class C65	0.0024	No evidence
+c.863A>T	p.Asn288Ile	Class C65	0.1030	No evidence
+c.863A>G	p.Asn288Ser	Class C45	-0.1044	BP4_moderate
+c.863A>C	p.Asn288Thr	Class C55	0.0309	BP4
+c.864T>G	p.Asn288Lys	Class C65	0.0742	No evidence
+c.864T>A	p.Asn288Lys	Class C65	0.0742	No evidence
+c.865C>T	p.Leu289Phe	Class C0	-0.2413	BP4_moderate
+c.865C>G	p.Leu289Val	Class C0	-0.1031	BP4_moderate
+c.865C>A	p.Leu289Ile	Class C0	-0.1700	BP4_moderate
+c.866T>G	p.Leu289Arg	Class C0	-0.0772	BP4_moderate
+c.866T>C	p.Leu289Pro	Class C0	-0.0138	BP4_moderate
+c.866T>A	p.Leu289His	Class C0	-0.0648	BP4_moderate
+c.868C>T	p.Arg290Cys	Class C15	0.1482	BP4
+c.868C>G	p.Arg290Gly	Class C0	0.1096	BP4
+c.868C>A	p.Arg290Ser	Class C0	0.1111	BP4
+c.869G>T	p.Arg290Leu	Class C0	0.1643	No evidence
+c.869G>C	p.Arg290Pro	Class C0	0.0940	BP4
+c.869G>A	p.Arg290His	Class C0	0.0916	BP4
+c.871A>G	p.Lys291Glu	Class C55	0.0827	BP4
+c.871A>C	p.Lys291Gln	Class C45	0.1227	BP4
+c.872A>T	p.Lys291Met	Class C65	0.2022	PP3_moderate
+c.872A>G	p.Lys291Arg	Class C25	0.1049	BP4
+c.872A>C	p.Lys291Thr	Class C65	0.1845	PP3_moderate
+c.873G>T	p.Lys291Asn	Class C65	0.0526	No evidence
+c.873G>C	p.Lys291Asn	Class C65	0.0407	No evidence
+c.874A>G	p.Lys292Glu	Class C0	0.0798	BP4
+c.874A>C	p.Lys292Gln	Class C0	-0.0071	BP4
+c.875A>T	p.Lys292Ile	Class C0	0.3142	No evidence
+c.875A>G	p.Lys292Arg	Class C0	0.0100	BP4
+c.875A>C	p.Lys292Thr	Class C0	0.0988	BP4
+c.876A>T	p.Lys292Asn	Class C0	-0.0562	BP4_moderate
+c.876A>C	p.Lys292Asn	Class C0	-0.0562	BP4_moderate
+c.877G>T	p.Gly293Trp	Class C0	0.2026	No evidence
+c.877G>C	p.Gly293Arg	Class C0	-0.0096	BP4_moderate
+c.877G>A	p.Gly293Arg	Class C0	-0.0095	BP4_moderate
+c.878G>T	p.Gly293Val	Class C0	-0.0320	BP4_moderate
+c.878G>C	p.Gly293Ala	Class C0	-0.1641	BP4_moderate
+c.878G>A	p.Gly293Glu	Class C0	-0.1792	BP4_moderate
+c.880G>C	p.Glu294Gln	Class C0	-0.1396	BP4_moderate
+c.880G>A	p.Glu294Lys	Class C0	-0.0240	BP4_moderate
+c.881A>T	p.Glu294Val	Class C0	-0.0680	BP4_moderate
+c.881A>G	p.Glu294Gly	Class C0	-0.1365	BP4_moderate
+c.881A>C	p.Glu294Ala	Class C0	-0.0479	BP4_moderate
+c.882G>T	p.Glu294Asp	Class C0	-0.1131	BP4_moderate
+c.882G>C	p.Glu294Asp	Class C0	-0.1131	BP4_moderate
+c.883C>T	p.Pro295Ser	Class C0	-0.2078	BP4_moderate
+c.883C>G	p.Pro295Ala	Class C0	-0.0974	BP4_moderate
+c.883C>A	p.Pro295Thr	Class C0	-0.0890	BP4_moderate
+c.884C>T	p.Pro295Leu	Class C0	-0.0974	BP4_moderate
+c.884C>G	p.Pro295Arg	Class C0	-0.0250	BP4_moderate
+c.884C>A	p.Pro295His	Class C0	-0.1080	BP4_moderate
+c.886C>T	p.His296Tyr	Class C0	-0.1287	BP4_moderate
+c.886C>G	p.His296Asp	Class C0	-0.1150	BP4_moderate
+c.886C>A	p.His296Asn	Class C0	-0.2363	BP4_moderate
+c.887A>T	p.His296Leu	Class C0	-0.0831	BP4_moderate
+c.887A>G	p.His296Arg	Class C0	-0.2011	BP4_moderate
+c.887A>C	p.His296Pro	Class C0	-0.0896	BP4_moderate
+c.888C>G	p.His296Gln	Class C0	-0.2199	BP4_moderate
+c.888C>A	p.His296Gln	Class C0	-0.2199	BP4_moderate
+c.889C>T	p.His297Tyr	Class C0	-0.1732	BP4_moderate
+c.889C>G	p.His297Asp	Class C0	-0.1515	BP4_moderate
+c.889C>A	p.His297Asn	Class C0	-0.1999	BP4_moderate
+c.890A>T	p.His297Leu	Class C0	-0.1550	BP4_moderate
+c.890A>G	p.His297Arg	Class C0	-0.2371	BP4_moderate
+c.890A>C	p.His297Pro	Class C0	-0.2190	BP4_moderate
+c.891C>G	p.His297Gln	Class C0	-0.3145	BP4_moderate
+c.891C>A	p.His297Gln	Class C0	-0.3145	BP4_moderate
+c.892G>C	p.Glu298Gln	Class C0	-0.2019	BP4_moderate
+c.892G>A	p.Glu298Lys	Class C0	-0.1989	BP4_moderate
+c.893A>T	p.Glu298Val	Class C0	0.0259	BP4
+c.893A>G	p.Glu298Gly	Class C0	0.0014	BP4
+c.893A>C	p.Glu298Ala	Class C0	-0.0054	BP4
+c.894G>T	p.Glu298Asp	Class C0	-0.1636	BP4_moderate
+c.894G>C	p.Glu298Asp	Class C0	-0.1636	BP4_moderate
+c.895C>G	p.Leu299Val	Class C0	-0.1488	BP4_moderate
+c.895C>A	p.Leu299Met	Class C0	-0.0843	BP4_moderate
+c.896T>G	p.Leu299Arg	Class C0	-0.1065	BP4_moderate
+c.896T>C	p.Leu299Pro	Class C0	-0.2185	BP4_moderate
+c.896T>A	p.Leu299Gln	Class C0	-0.1949	BP4_moderate
+c.898C>T	p.Pro300Ser	Class C0	-0.0837	BP4_moderate
+c.898C>G	p.Pro300Ala	Class C0	-0.0362	BP4_moderate
+c.898C>A	p.Pro300Thr	Class C0	-0.0658	BP4_moderate
+c.899C>T	p.Pro300Leu	Class C0	0.0227	BP4
+c.899C>G	p.Pro300Arg	Class C0	0.0485	BP4
+c.899C>A	p.Pro300His	Class C0	0.0599	BP4
+c.901C>T	p.Pro301Ser	Class C0	-0.1191	BP4_moderate
+c.901C>G	p.Pro301Ala	Class C0	-0.0731	BP4_moderate
+c.901C>A	p.Pro301Thr	Class C0	-0.1204	BP4_moderate
+c.902C>T	p.Pro301Leu	Class C0	-0.0421	BP4_moderate
+c.902C>G	p.Pro301Arg	Class C0	-0.0944	BP4_moderate
+c.902C>A	p.Pro301Gln	Class C0	-0.0585	BP4_moderate
+c.904G>T	p.Gly302Trp	Class C0	0.0173	BP4
+c.904G>C	p.Gly302Arg	Class C0	-0.1262	BP4_moderate
+c.904G>A	p.Gly302Arg	Class C0	-0.1262	BP4_moderate
+c.905G>T	p.Gly302Val	Class C0	0.0082	BP4
+c.905G>C	p.Gly302Ala	Class C0	-0.0982	BP4_moderate
+c.905G>A	p.Gly302Glu	Class C0	-0.0955	BP4_moderate
+c.907A>T	p.Ser303Cys	Class C15	0.0770	BP4
+c.907A>G	p.Ser303Gly	Class C0	-0.0726	BP4_moderate
+c.907A>C	p.Ser303Arg	Class C0	0.0839	BP4
+c.908G>T	p.Ser303Ile	Class C0	0.1667	No evidence
+c.908G>C	p.Ser303Thr	Class C0	-0.0827	BP4_moderate
+c.908G>A	p.Ser303Asn	Class C0	-0.1147	BP4_moderate
+c.909C>G	p.Ser303Arg	Class C0	0.0732	BP4
+c.909C>A	p.Ser303Arg	Class C0	0.0732	BP4
+c.910A>T	p.Thr304Ser	Class C0	-0.1919	BP4_moderate
+c.910A>G	p.Thr304Ala	Class C0	-0.2018	BP4_moderate
+c.910A>C	p.Thr304Pro	Class C0	0.0106	BP4
+c.911C>T	p.Thr304Ile	Class C0	-0.1075	BP4_moderate
+c.911C>G	p.Thr304Ser	Class C0	-0.1989	BP4_moderate
+c.911C>A	p.Thr304Asn	Class C0	-0.2187	BP4_moderate
+c.913A>G	p.Lys305Glu	Class C55	0.1044	BP4
+c.913A>C	p.Lys305Gln	Class C45	0.1525	BP4
+c.914A>T	p.Lys305Met	Class C65	0.3420	PP3_moderate
+c.914A>G	p.Lys305Arg	Class C25	0.0762	BP4
+c.914A>C	p.Lys305Thr	Class C65	0.1430	No evidence
+c.915G>T	p.Lys305Asn	Class C65	0.0810	No evidence
+c.915G>C	p.Lys305Asn	Class C65	0.0810	No evidence
+c.916C>G	p.Arg306Gly	Class C45	0.2946	PP3
+c.917G>T	p.Arg306Leu	Class C35	0.3227	PP3
+c.917G>C	p.Arg306Pro	Class C35	0.4579	PP3
+c.917G>A	p.Arg306Gln	Class C0	0.2652	No evidence
+c.919G>T	p.Ala307Ser	Class C0	-0.0540	BP4_moderate
+c.919G>C	p.Ala307Pro	Class C0	0.0196	BP4
+c.919G>A	p.Ala307Thr	Class C0	-0.1109	BP4_moderate
+c.920C>T	p.Ala307Val	Class C0	0.0147	BP4
+c.920C>G	p.Ala307Gly	Class C0	0.0465	BP4
+c.920C>A	p.Ala307Glu	Class C0	0.0799	BP4
+c.922C>G	p.Leu308Val	Class C0	-0.0296	BP4_moderate
+c.922C>A	p.Leu308Met	Class C0	-0.0452	BP4_moderate
+c.923T>G	p.Leu308Arg	Class C45	0.1421	BP4
+c.923T>C	p.Leu308Pro	Class C45	0.1775	PP3
+c.923T>A	p.Leu308Gln	Class C55	0.1586	BP4
+c.925C>T	p.Pro309Ser	Class C0	0.1384	BP4
+c.925C>G	p.Pro309Ala	Class C0	0.0211	BP4
+c.925C>A	p.Pro309Thr	Class C0	0.0716	BP4
+c.926C>T	p.Pro309Leu	Class C0	0.0992	BP4
+c.926C>G	p.Pro309Arg	Class C0	0.0437	BP4
+c.926C>A	p.Pro309His	Class C0	0.0905	BP4
+c.928A>T	p.Asn310Tyr	Class C0	-0.0981	BP4_moderate
+c.928A>G	p.Asn310Asp	Class C0	-0.2523	BP4_moderate
+c.928A>C	p.Asn310His	Class C0	-0.1734	BP4_moderate
+c.929A>T	p.Asn310Ile	Class C0	-0.1305	BP4_moderate
+c.929A>G	p.Asn310Ser	Class C0	-0.3266	BP4_moderate
+c.929A>C	p.Asn310Thr	Class C0	-0.3001	BP4_moderate
+c.930C>G	p.Asn310Lys	Class C0	-0.2889	BP4_moderate
+c.930C>A	p.Asn310Lys	Class C0	-0.2889	BP4_moderate
+c.931A>T	p.Asn311Tyr	Class C0	-0.1322	BP4_moderate
+c.931A>G	p.Asn311Asp	Class C0	-0.3011	BP4_moderate
+c.931A>C	p.Asn311His	Class C0	-0.1998	BP4_moderate
+c.932A>T	p.Asn311Ile	Class C0	-0.1419	BP4_moderate
+c.932A>G	p.Asn311Ser	Class C0	-0.3133	BP4_moderate
+c.932A>C	p.Asn311Thr	Class C0	-0.2941	BP4_moderate
+c.933C>G	p.Asn311Lys	Class C0	-0.2306	BP4_moderate
+c.933C>A	p.Asn311Lys	Class C0	-0.2306	BP4_moderate
+c.934A>T	p.Thr312Ser	Class C0	-0.0551	BP4_moderate
+c.934A>G	p.Thr312Ala	Class C0	-0.0063	BP4
+c.934A>C	p.Thr312Pro	Class C0	-0.0889	BP4_moderate
+c.935C>T	p.Thr312Ile	Class C15	0.0686	BP4
+c.935C>G	p.Thr312Ser	Class C0	-0.0123	BP4_moderate
+c.935C>A	p.Thr312Asn	Class C0	0.0269	BP4
+c.937A>T	p.Ser313Cys	Class C0	0.0312	BP4
+c.937A>G	p.Ser313Gly	Class C0	-0.1247	BP4_moderate
+c.937A>C	p.Ser313Arg	Class C0	0.0306	BP4
+c.938G>T	p.Ser313Ile	Class C0	0.0268	BP4
+c.938G>C	p.Ser313Thr	Class C0	-0.1120	BP4_moderate
+c.938G>A	p.Ser313Asn	Class C0	-0.1618	BP4_moderate
+c.939C>G	p.Ser313Arg	Class C0	0.0410	BP4
+c.939C>A	p.Ser313Arg	Class C0	0.0410	BP4
+c.940T>G	p.Ser314Ala	Class C0	-0.0807	BP4_moderate
+c.940T>C	p.Ser314Pro	Class C0	-0.0334	BP4_moderate
+c.940T>A	p.Ser314Thr	Class C0	-0.0439	BP4_moderate
+c.941C>T	p.Ser314Phe	Class C15	0.0664	BP4
+c.941C>G	p.Ser314Cys	Class C15	0.0503	BP4
+c.941C>A	p.Ser314Tyr	Class C15	0.0816	BP4
+c.943T>G	p.Ser315Ala	Class C0	-0.0027	BP4
+c.943T>C	p.Ser315Pro	Class C0	0.0556	BP4
+c.943T>A	p.Ser315Thr	Class C0	-0.0544	BP4_moderate
+c.944C>T	p.Ser315Phe	Class C0	0.1023	BP4
+c.944C>G	p.Ser315Cys	Class C15	0.0929	BP4
+c.944C>A	p.Ser315Tyr	Class C0	0.1059	BP4
+c.946C>T	p.Pro316Ser	Class C0	0.0209	BP4
+c.946C>G	p.Pro316Ala	Class C0	0.0397	BP4
+c.946C>A	p.Pro316Thr	Class C0	-0.0226	BP4_moderate
+c.947C>T	p.Pro316Leu	Class C15	0.1096	BP4
+c.947C>G	p.Pro316Arg	Class C15	0.0940	BP4
+c.947C>A	p.Pro316His	Class C15	0.0518	BP4
+c.949C>G	p.Gln317Glu	Class C0	-0.1550	BP4_moderate
+c.949C>A	p.Gln317Lys	Class C0	-0.1674	BP4_moderate
+c.950A>T	p.Gln317Leu	Class C0	-0.1034	BP4_moderate
+c.950A>G	p.Gln317Arg	Class C0	-0.1730	BP4_moderate
+c.950A>C	p.Gln317Pro	Class C0	-0.1740	BP4_moderate
+c.951G>T	p.Gln317His	Class C0	-0.1392	BP4_moderate
+c.951G>C	p.Gln317His	Class C0	-0.1393	BP4_moderate
+c.952C>T	p.Pro318Ser	Class C0	-0.0916	BP4_moderate
+c.952C>G	p.Pro318Ala	Class C0	-0.0893	BP4_moderate
+c.952C>A	p.Pro318Thr	Class C0	-0.0867	BP4_moderate
+c.953C>T	p.Pro318Leu	Class C0	-0.0375	BP4_moderate
+c.953C>G	p.Pro318Arg	Class C0	-0.0489	BP4_moderate
+c.953C>A	p.Pro318Gln	Class C0	-0.1705	BP4_moderate
+c.955A>G	p.Lys319Glu	Class C0	0.1984	No evidence
+c.955A>C	p.Lys319Gln	Class C0	0.1363	BP4
+c.956A>T	p.Lys319Met	Class C0	0.1424	BP4
+c.956A>G	p.Lys319Arg	Class C0	0.0969	BP4
+c.956A>C	p.Lys319Thr	Class C0	0.1129	BP4
+c.957G>T	p.Lys319Asn	Class C0	0.0754	BP4
+c.957G>C	p.Lys319Asn	Class C0	0.0754	BP4
+c.958A>G	p.Lys320Glu	Class C55	0.1587	BP4
+c.958A>C	p.Lys320Gln	Class C45	0.1449	BP4
+c.959A>T	p.Lys320Met	Class C65	0.1002	No evidence
+c.959A>G	p.Lys320Arg	Class C25	0.0455	BP4
+c.959A>C	p.Lys320Thr	Class C65	0.1252	No evidence
+c.960G>T	p.Lys320Asn	Class C65	0.0460	No evidence
+c.960G>C	p.Lys320Asn	Class C65	0.0460	No evidence
+c.961A>G	p.Lys321Glu	Class C0	0.2670	No evidence
+c.961A>C	p.Lys321Gln	Class C0	0.1917	No evidence
+c.962A>T	p.Lys321Ile	Class C0	0.1784	No evidence
+c.962A>G	p.Lys321Arg	Class C0	0.0768	BP4
+c.962A>C	p.Lys321Thr	Class C0	0.1466	BP4
+c.963A>T	p.Lys321Asn	Class C0	0.0310	BP4
+c.963A>C	p.Lys321Asn	Class C0	0.0310	BP4
+c.964C>T	p.Pro322Ser	Class C0	0.0280	BP4
+c.964C>G	p.Pro322Ala	Class C0	0.0136	BP4
+c.964C>A	p.Pro322Thr	Class C0	0.0587	BP4
+c.965C>T	p.Pro322Leu	Class C0	-0.0318	BP4_moderate
+c.965C>G	p.Pro322Arg	Class C0	0.0173	BP4
+c.965C>A	p.Pro322Gln	Class C0	0.0546	BP4
+c.967C>G	p.Leu323Val	Class C0	-0.1220	BP4_moderate
+c.967C>A	p.Leu323Met	Class C0	-0.0978	BP4_moderate
+c.968T>G	p.Leu323Arg	Class C0	0.0389	BP4
+c.968T>C	p.Leu323Pro	Class C0	-0.0371	BP4_moderate
+c.968T>A	p.Leu323Gln	Class C0	0.0283	BP4
+c.970G>T	p.Asp324Tyr	Class C35	0.2966	PP3
+c.970G>C	p.Asp324His	Class C0	0.2652	No evidence
+c.970G>A	p.Asp324Asn	Class C0	-0.0337	BP4_moderate
+c.971A>T	p.Asp324Val	Class C35	0.3236	PP3
+c.971A>G	p.Asp324Gly	Class C15	0.2267	No evidence
+c.971A>C	p.Asp324Ala	Class C25	0.1860	PP3
+c.972T>G	p.Asp324Glu	Class C0	-0.0332	BP4_moderate
+c.972T>A	p.Asp324Glu	Class C0	-0.0333	BP4_moderate
+c.973G>C	p.Gly325Arg	Class C0	0.0478	BP4
+c.973G>A	p.Gly325Arg	Class C0	0.0478	BP4
+c.974G>T	p.Gly325Val	Class C0	0.1751	No evidence
+c.974G>C	p.Gly325Ala	Class C0	-0.1319	BP4_moderate
+c.974G>A	p.Gly325Glu	Class C0	-0.1769	BP4_moderate
+c.976G>C	p.Glu326Gln	Class C0	0.3032	No evidence
+c.976G>A	p.Glu326Lys	Class C0	0.4638	No evidence
+c.977A>T	p.Glu326Val	Class C0	0.4922	No evidence
+c.977A>G	p.Glu326Gly	Class C0	0.4790	No evidence
+c.977A>C	p.Glu326Ala	Class C0	0.3439	No evidence
+c.978A>T	p.Glu326Asp	Class C0	0.2014	No evidence
+c.978A>C	p.Glu326Asp	Class C0	0.2014	No evidence
+c.979T>G	p.Tyr327Asp	Class C15	0.4671	No evidence
+c.979T>C	p.Tyr327His	Class C0	0.2402	No evidence
+c.979T>A	p.Tyr327Asn	Class C15	0.3208	No evidence
+c.980A>T	p.Tyr327Phe	Class C0	0.1396	BP4
+c.980A>G	p.Tyr327Cys	Class C25	0.1082	BP4
+c.980A>C	p.Tyr327Ser	Class C0	0.3195	No evidence
+c.982T>G	p.Phe328Val	Class C15	0.4639	No evidence
+c.982T>C	p.Phe328Leu	Class C0	0.3077	No evidence
+c.982T>A	p.Phe328Ile	Class C0	0.3450	No evidence
+c.983T>G	p.Phe328Cys	Class C55	0.4794	PP3
+c.983T>C	p.Phe328Ser	Class C55	0.4951	PP3
+c.983T>A	p.Phe328Tyr	Class C0	0.0515	BP4
+c.984C>G	p.Phe328Leu	Class C0	0.2575	No evidence
+c.984C>A	p.Phe328Leu	Class C0	0.2575	No evidence
+c.985A>T	p.Thr329Ser	Class C0	0.1262	BP4
+c.985A>G	p.Thr329Ala	Class C0	0.2797	No evidence
+c.985A>C	p.Thr329Pro	Class C0	0.5342	No evidence
+c.986C>T	p.Thr329Ile	Class C0	0.1656	No evidence
+c.986C>G	p.Thr329Ser	Class C0	0.1134	BP4
+c.986C>A	p.Thr329Asn	Class C0	0.1242	BP4
+c.988C>T	p.Leu330Phe	Class C15	0.4662	No evidence
+c.988C>G	p.Leu330Val	Class C25	0.3877	PP3
+c.988C>A	p.Leu330Ile	Class C0	0.2308	No evidence
+c.989T>G	p.Leu330Arg	Class C65	0.5678	PP3_moderate
+c.989T>C	p.Leu330Pro	Class C65	0.5680	PP3_moderate
+c.989T>A	p.Leu330His	Class C65	0.5696	PP3_moderate
+c.991C>G	p.Gln331Glu	Class C0	0.0408	BP4
+c.991C>A	p.Gln331Lys	Class C0	-0.0569	BP4_moderate
+c.992A>T	p.Gln331Leu	Class C25	0.1875	PP3
+c.992A>G	p.Gln331Arg	Class C0	0.0494	BP4
+c.992A>C	p.Gln331Pro	Class C15	0.2806	No evidence
+c.993G>T	p.Gln331His	Class C0	0.0751	BP4
+c.993G>C	p.Gln331His	Class C0	0.0751	BP4
+c.994A>T	p.Ile332Phe	Class C0	0.3423	No evidence
+c.994A>G	p.Ile332Val	Class C0	-0.2367	BP4_moderate
+c.994A>C	p.Ile332Leu	Class C0	0.0740	BP4
+c.995T>G	p.Ile332Ser	Class C35	0.5413	PP3
+c.995T>C	p.Ile332Thr	Class C25	0.4942	PP3
+c.995T>A	p.Ile332Asn	Class C45	0.3398	PP3
+c.996C>G	p.Ile332Met	Class C0	0.3675	No evidence
+c.997C>T	p.Arg333Cys	Class C35	0.2370	PP3
+c.997C>G	p.Arg333Gly	Class C25	0.2549	PP3
+c.997C>A	p.Arg333Ser	Class C25	0.2371	PP3
+c.998G>T	p.Arg333Leu	Class C25	0.0696	BP4
+c.998G>C	p.Arg333Pro	Class C25	0.3905	PP3
+c.998G>A	p.Arg333His	Class C0	-0.0924	BP4_moderate
+c.1000G>T	p.Gly334Trp	Class C25	0.5721	PP3
+c.1000G>C	p.Gly334Arg	Class C15	0.5712	No evidence
+c.1000G>A	p.Gly334Arg	Class C15	0.5712	No evidence
+c.1001G>T	p.Gly334Val	Class C15	0.5688	No evidence
+c.1001G>C	p.Gly334Ala	Class C0	0.5408	No evidence
+c.1001G>A	p.Gly334Glu	Class C0	0.5714	No evidence
+c.1003C>T	p.Arg335Cys	Class C25	0.2751	PP3
+c.1003C>G	p.Arg335Gly	Class C15	0.3960	No evidence
+c.1003C>A	p.Arg335Ser	Class C15	0.3340	No evidence
+c.1004G>T	p.Arg335Leu	Class C0	0.2385	No evidence
+c.1004G>C	p.Arg335Pro	Class C15	0.4518	No evidence
+c.1004G>A	p.Arg335His	Class C0	0.0421	BP4
+c.1006G>C	p.Glu336Gln	Class C0	-0.2252	BP4_moderate
+c.1006G>A	p.Glu336Lys	Class C0	-0.2516	BP4_moderate
+c.1007A>T	p.Glu336Val	Class C0	0.0274	BP4
+c.1007A>G	p.Glu336Gly	Class C0	-0.0546	BP4_moderate
+c.1007A>C	p.Glu336Ala	Class C0	-0.1175	BP4_moderate
+c.1008G>T	p.Glu336Asp	Class C0	-0.2300	BP4_moderate
+c.1008G>C	p.Glu336Asp	Class C0	-0.2300	BP4_moderate
+c.1009C>T	p.Arg337Cys	Class C45	0.3165	PP3
+c.1009C>G	p.Arg337Gly	Class C35	0.1578	BP4
+c.1009C>A	p.Arg337Ser	Class C35	0.1541	BP4
+c.1010G>T	p.Arg337Leu	Class C35	0.0670	BP4
+c.1010G>C	p.Arg337Pro	Class C25	0.4073	PP3
+c.1010G>A	p.Arg337His	Class C0	0.1777	No evidence
+c.1012T>G	p.Phe338Val	Class C15	0.0973	BP4
+c.1012T>C	p.Phe338Leu	Class C0	0.0896	BP4
+c.1012T>A	p.Phe338Ile	Class C0	0.0946	BP4
+c.1013T>G	p.Phe338Cys	Class C55	0.0781	BP4
+c.1013T>C	p.Phe338Ser	Class C55	0.1069	BP4
+c.1013T>A	p.Phe338Tyr	Class C0	-0.2745	BP4_moderate
+c.1014C>G	p.Phe338Leu	Class C0	-0.0530	BP4_moderate
+c.1014C>A	p.Phe338Leu	Class C0	-0.0530	BP4_moderate
+c.1015G>C	p.Glu339Gln	Class C0	0.0408	BP4
+c.1015G>A	p.Glu339Lys	Class C0	-0.0742	BP4_moderate
+c.1016A>T	p.Glu339Val	Class C15	0.2419	No evidence
+c.1016A>G	p.Glu339Gly	Class C15	0.1890	No evidence
+c.1016A>C	p.Glu339Ala	Class C15	0.1411	BP4
+c.1017G>T	p.Glu339Asp	Class C0	-0.0208	BP4_moderate
+c.1017G>C	p.Glu339Asp	Class C0	-0.0208	BP4_moderate
+c.1018A>T	p.Met340Leu	Class C0	-0.1713	BP4_moderate
+c.1018A>G	p.Met340Val	Class C0	-0.1059	BP4_moderate
+c.1018A>C	p.Met340Leu	Class C0	-0.1713	BP4_moderate
+c.1019T>G	p.Met340Arg	Class C45	0.1086	BP4
+c.1019T>C	p.Met340Thr	Class C45	-0.0908	BP4_moderate
+c.1019T>A	p.Met340Lys	Class C55	0.0913	BP4
+c.1020G>T	p.Met340Ile	Class C0	-0.2351	BP4_moderate
+c.1020G>C	p.Met340Ile	Class C0	-0.2351	BP4_moderate
+c.1020G>A	p.Met340Ile	Class C0	-0.2351	BP4_moderate
+c.1021T>G	p.Phe341Val	Class C0	-0.0308	BP4_moderate
+c.1021T>C	p.Phe341Leu	Class C0	-0.3075	BP4_moderate
+c.1021T>A	p.Phe341Ile	Class C0	-0.1559	BP4_moderate
+c.1022T>G	p.Phe341Cys	Class C55	0.1952	PP3
+c.1022T>C	p.Phe341Ser	Class C55	0.2685	PP3
+c.1022T>A	p.Phe341Tyr	Class C0	0.0597	BP4
+c.1023C>G	p.Phe341Leu	Class C0	-0.3218	BP4_moderate
+c.1023C>A	p.Phe341Leu	Class C0	-0.3218	BP4_moderate
+c.1024C>G	p.Arg342Gly	Class C45	-0.0831	BP4_moderate
+c.1025G>T	p.Arg342Leu	Class C35	-0.2899	BP4_moderate
+c.1025G>C	p.Arg342Pro	Class C35	0.2485	PP3
+c.1025G>A	p.Arg342Gln	Class C0	-0.2779	BP4_moderate
+c.1027G>C	p.Glu343Gln	Class C0	-0.2073	BP4_moderate
+c.1027G>A	p.Glu343Lys	Class C0	-0.3261	BP4_moderate
+c.1028A>T	p.Glu343Val	Class C0	-0.0325	BP4_moderate
+c.1028A>G	p.Glu343Gly	Class C0	-0.0719	BP4_moderate
+c.1028A>C	p.Glu343Ala	Class C0	-0.0813	BP4_moderate
+c.1029G>T	p.Glu343Asp	Class C0	-0.1808	BP4_moderate
+c.1029G>C	p.Glu343Asp	Class C0	-0.1808	BP4_moderate
+c.1030C>G	p.Leu344Val	Class C15	-0.1883	BP4_moderate
+c.1030C>A	p.Leu344Met	Class C0	-0.1540	BP4_moderate
+c.1031T>G	p.Leu344Arg	Class C65	0.2882	PP3_moderate
+c.1031T>C	p.Leu344Pro	Class C65	0.4856	PP3_moderate
+c.1031T>A	p.Leu344Gln	Class C65	0.2430	PP3_moderate
+c.1033A>T	p.Asn345Tyr	Class C0	0.1355	BP4
+c.1033A>G	p.Asn345Asp	Class C0	-0.0279	BP4_moderate
+c.1033A>C	p.Asn345His	Class C0	-0.0048	BP4
+c.1034A>T	p.Asn345Ile	Class C0	0.1238	BP4
+c.1034A>G	p.Asn345Ser	Class C0	-0.0741	BP4_moderate
+c.1034A>C	p.Asn345Thr	Class C0	0.0388	BP4
+c.1035T>G	p.Asn345Lys	Class C0	-0.2279	BP4_moderate
+c.1035T>A	p.Asn345Lys	Class C0	-0.2279	BP4_moderate
+c.1036G>C	p.Glu346Gln	Class C0	0.0297	BP4
+c.1036G>A	p.Glu346Lys	Class C15	0.0894	BP4
+c.1037A>T	p.Glu346Val	Class C25	0.2195	PP3
+c.1037A>G	p.Glu346Gly	Class C15	0.1468	BP4
+c.1037A>C	p.Glu346Ala	Class C25	0.0919	BP4
+c.1038G>T	p.Glu346Asp	Class C0	-0.2968	BP4_moderate
+c.1038G>C	p.Glu346Asp	Class C0	-0.2968	BP4_moderate
+c.1039G>T	p.Ala347Ser	Class C0	-0.2549	BP4_moderate
+c.1039G>C	p.Ala347Pro	Class C0	0.2789	No evidence
+c.1039G>A	p.Ala347Thr	Class C0	-0.0188	BP4_moderate
+c.1040C>T	p.Ala347Val	Class C0	0.0221	BP4
+c.1040C>G	p.Ala347Gly	Class C0	-0.1932	BP4_moderate
+c.1040C>A	p.Ala347Asp	Class C0	0.2301	No evidence
+c.1042T>G	p.Leu348Val	Class C25	0.1042	BP4
+c.1042T>A	p.Leu348Met	Class C0	0.0462	BP4
+c.1043T>G	p.Leu348Trp	Class C55	0.5011	PP3
+c.1043T>C	p.Leu348Ser	Class C65	0.5439	PP3_moderate
+c.1044G>T	p.Leu348Phe	Class C15	0.0649	BP4
+c.1044G>C	p.Leu348Phe	Class C15	0.0649	BP4
+c.1045G>C	p.Glu349Gln	Class C25	0.1352	BP4
+c.1045G>A	p.Glu349Lys	Class C55	0.4058	PP3
+c.1046A>T	p.Glu349Val	Class C65	0.4966	PP3_moderate
+c.1046A>G	p.Glu349Gly	Class C65	0.4664	PP3_moderate
+c.1046A>C	p.Glu349Ala	Class C65	0.3651	PP3_moderate
+c.1047A>T	p.Glu349Asp	Class C35	0.0265	BP4
+c.1047A>C	p.Glu349Asp	Class C35	0.0265	BP4
+c.1048C>T	p.Leu350Phe	Class C15	-0.1609	BP4_moderate
+c.1048C>G	p.Leu350Val	Class C25	-0.0997	BP4_moderate
+c.1048C>A	p.Leu350Ile	Class C0	-0.1114	BP4_moderate
+c.1049T>G	p.Leu350Arg	Class C65	0.1691	PP3_moderate
+c.1049T>C	p.Leu350Pro	Class C65	0.3423	PP3_moderate
+c.1049T>A	p.Leu350His	Class C65	0.1843	PP3_moderate
+c.1051A>G	p.Lys351Glu	Class C0	-0.1438	BP4_moderate
+c.1051A>C	p.Lys351Gln	Class C0	-0.1931	BP4_moderate
+c.1052A>T	p.Lys351Met	Class C0	-0.2326	BP4_moderate
+c.1052A>G	p.Lys351Arg	Class C0	-0.2699	BP4_moderate
+c.1052A>C	p.Lys351Thr	Class C0	-0.0955	BP4_moderate
+c.1053G>T	p.Lys351Asn	Class C0	-0.2220	BP4_moderate
+c.1053G>C	p.Lys351Asn	Class C0	-0.2219	BP4_moderate
+c.1054G>T	p.Asp352Tyr	Class C35	0.0844	BP4
+c.1054G>C	p.Asp352His	Class C0	0.0373	BP4
+c.1054G>A	p.Asp352Asn	Class C0	-0.2009	BP4_moderate
+c.1055A>T	p.Asp352Val	Class C35	0.1068	BP4
+c.1055A>G	p.Asp352Gly	Class C15	0.0313	BP4
+c.1055A>C	p.Asp352Ala	Class C25	-0.0097	BP4_moderate
+c.1056T>G	p.Asp352Glu	Class C0	-0.3561	BP4_moderate
+c.1056T>A	p.Asp352Glu	Class C0	-0.3561	BP4_moderate
+c.1057G>T	p.Ala353Ser	Class C0	-0.1471	BP4_moderate
+c.1057G>C	p.Ala353Pro	Class C0	0.1209	BP4
+c.1057G>A	p.Ala353Thr	Class C0	-0.0778	BP4_moderate
+c.1058C>T	p.Ala353Val	Class C0	-0.2088	BP4_moderate
+c.1058C>G	p.Ala353Gly	Class C0	-0.1270	BP4_moderate
+c.1058C>A	p.Ala353Asp	Class C0	0.0208	BP4
+c.1060C>G	p.Gln354Glu	Class C0	-0.2817	BP4_moderate
+c.1060C>A	p.Gln354Lys	Class C0	-0.2829	BP4_moderate
+c.1061A>T	p.Gln354Leu	Class C0	-0.3078	BP4_moderate
+c.1061A>G	p.Gln354Arg	Class C0	-0.3461	BP4_moderate
+c.1061A>C	p.Gln354Pro	Class C0	-0.1271	BP4_moderate
+c.1062G>T	p.Gln354His	Class C0	-0.2792	BP4_moderate
+c.1062G>C	p.Gln354His	Class C0	-0.2792	BP4_moderate
+c.1063G>T	p.Ala355Ser	Class C0	-0.4058	BP4_moderate
+c.1063G>C	p.Ala355Pro	Class C0	-0.3403	BP4_moderate
+c.1063G>A	p.Ala355Thr	Class C0	-0.4361	BP4_moderate
+c.1064C>T	p.Ala355Val	Class C0	-0.2689	BP4_moderate
+c.1064C>G	p.Ala355Gly	Class C0	-0.3678	BP4_moderate
+c.1064C>A	p.Ala355Asp	Class C0	-0.2881	BP4_moderate
+c.1066G>T	p.Gly356Trp	Class C15	-0.2058	BP4_moderate
+c.1066G>C	p.Gly356Arg	Class C0	-0.3473	BP4_moderate
+c.1066G>A	p.Gly356Arg	Class C0	-0.3473	BP4_moderate
+c.1067G>T	p.Gly356Val	Class C0	-0.2826	BP4_moderate
+c.1067G>C	p.Gly356Ala	Class C0	-0.4565	BP4_moderate
+c.1067G>A	p.Gly356Glu	Class C0	-0.4635	BP4_moderate
+c.1069A>G	p.Lys357Glu	Class C0	-0.2764	BP4_moderate
+c.1069A>C	p.Lys357Gln	Class C0	-0.2889	BP4_moderate
+c.1070A>T	p.Lys357Met	Class C0	-0.1282	BP4_moderate
+c.1070A>G	p.Lys357Arg	Class C0	-0.3041	BP4_moderate
+c.1070A>C	p.Lys357Thr	Class C0	-0.1779	BP4_moderate
+c.1071G>T	p.Lys357Asn	Class C0	-0.2786	BP4_moderate
+c.1071G>C	p.Lys357Asn	Class C0	-0.2785	BP4_moderate
+c.1072G>C	p.Glu358Gln	Class C0	-0.2701	BP4_moderate
+c.1072G>A	p.Glu358Lys	Class C0	-0.0971	BP4_moderate
+c.1073A>T	p.Glu358Val	Class C15	-0.0752	BP4_moderate
+c.1073A>G	p.Glu358Gly	Class C0	-0.1192	BP4_moderate
+c.1073A>C	p.Glu358Ala	Class C0	-0.1262	BP4_moderate
+c.1074G>T	p.Glu358Asp	Class C0	-0.3307	BP4_moderate
+c.1074G>C	p.Glu358Asp	Class C0	-0.3307	BP4_moderate
+c.1075C>T	p.Pro359Ser	Class C0	-0.2477	BP4_moderate
+c.1075C>G	p.Pro359Ala	Class C0	-0.1318	BP4_moderate
+c.1075C>A	p.Pro359Thr	Class C0	-0.1938	BP4_moderate
+c.1076C>T	p.Pro359Leu	Class C0	0.1658	No evidence
+c.1076C>G	p.Pro359Arg	Class C0	-0.0083	BP4_moderate
+c.1076C>A	p.Pro359Gln	Class C0	-0.0601	BP4_moderate
+c.1078G>T	p.Gly360Trp	Class C0	-0.1088	BP4_moderate
+c.1078G>C	p.Gly360Arg	Class C0	-0.1878	BP4_moderate
+c.1078G>A	p.Gly360Arg	Class C0	-0.1878	BP4_moderate
+c.1079G>T	p.Gly360Val	Class C0	-0.2111	BP4_moderate
+c.1079G>C	p.Gly360Ala	Class C0	-0.3336	BP4_moderate
+c.1079G>A	p.Gly360Glu	Class C0	-0.3311	BP4_moderate
+c.1081G>T	p.Gly361Trp	Class C0	-0.0681	BP4_moderate
+c.1081G>C	p.Gly361Arg	Class C0	-0.1550	BP4_moderate
+c.1081G>A	p.Gly361Arg	Class C0	-0.1550	BP4_moderate
+c.1082G>T	p.Gly361Val	Class C0	-0.1343	BP4_moderate
+c.1082G>C	p.Gly361Ala	Class C0	-0.1795	BP4_moderate
+c.1082G>A	p.Gly361Glu	Class C0	-0.2616	BP4_moderate
+c.1084A>T	p.Ser362Cys	Class C0	0.0188	BP4
+c.1084A>G	p.Ser362Gly	Class C0	-0.0134	BP4_moderate
+c.1084A>C	p.Ser362Arg	Class C0	0.0463	BP4
+c.1085G>T	p.Ser362Ile	Class C0	-0.0125	BP4_moderate
+c.1085G>C	p.Ser362Thr	Class C0	-0.1280	BP4_moderate
+c.1085G>A	p.Ser362Asn	Class C0	-0.1841	BP4_moderate
+c.1086C>G	p.Ser362Arg	Class C0	0.0176	BP4
+c.1086C>A	p.Ser362Arg	Class C0	0.0176	BP4
+c.1087A>T	p.Arg363Trp	Class C0	-0.0358	BP4_moderate
+c.1087A>G	p.Arg363Gly	Class C0	-0.0882	BP4_moderate
+c.1088G>T	p.Arg363Met	Class C0	-0.0218	BP4_moderate
+c.1088G>C	p.Arg363Thr	Class C0	-0.1365	BP4_moderate
+c.1088G>A	p.Arg363Lys	Class C0	-0.2610	BP4_moderate
+c.1089G>T	p.Arg363Ser	Class C0	-0.0942	BP4_moderate
+c.1089G>C	p.Arg363Ser	Class C0	-0.0942	BP4_moderate
+c.1090G>T	p.Ala364Ser	Class C0	-0.1899	BP4_moderate
+c.1090G>C	p.Ala364Pro	Class C0	-0.2313	BP4_moderate
+c.1090G>A	p.Ala364Thr	Class C0	-0.3149	BP4_moderate
+c.1091C>T	p.Ala364Val	Class C0	-0.2475	BP4_moderate
+c.1091C>G	p.Ala364Gly	Class C0	-0.2193	BP4_moderate
+c.1091C>A	p.Ala364Asp	Class C0	-0.0773	BP4_moderate
+c.1093C>T	p.His365Tyr	Class C0	0.1352	BP4
+c.1093C>G	p.His365Asp	Class C0	0.0532	BP4
+c.1093C>A	p.His365Asn	Class C0	-0.0959	BP4_moderate
+c.1094A>T	p.His365Leu	Class C0	-0.0257	BP4_moderate
+c.1094A>G	p.His365Arg	Class C0	-0.0249	BP4_moderate
+c.1094A>C	p.His365Pro	Class C0	0.0285	BP4
+c.1095C>G	p.His365Gln	Class C0	-0.1540	BP4_moderate
+c.1095C>A	p.His365Gln	Class C0	-0.1539	BP4_moderate
+c.1096T>G	p.Ser366Ala	Class C0	0.1186	BP4
+c.1096T>C	p.Ser366Pro	Class C0	-0.1381	BP4_moderate
+c.1096T>A	p.Ser366Thr	Class C0	-0.1280	BP4_moderate
+c.1097C>T	p.Ser366Phe	Class C0	-0.0882	BP4_moderate
+c.1097C>G	p.Ser366Cys	Class C0	-0.1080	BP4_moderate
+c.1097C>A	p.Ser366Tyr	Class C0	-0.0535	BP4_moderate
+c.1099A>T	p.Ser367Cys	Class C0	-0.0201	BP4_moderate
+c.1099A>G	p.Ser367Gly	Class C0	-0.0481	BP4_moderate
+c.1099A>C	p.Ser367Arg	Class C0	0.0010	BP4
+c.1100G>T	p.Ser367Ile	Class C0	-0.0033	BP4
+c.1100G>C	p.Ser367Thr	Class C0	-0.0810	BP4_moderate
+c.1100G>A	p.Ser367Asn	Class C0	-0.1735	BP4_moderate
+c.1101C>G	p.Ser367Arg	Class C0	0.0047	BP4
+c.1101C>A	p.Ser367Arg	Class C0	0.0047	BP4
+c.1102C>T	p.His368Tyr	Class C0	-0.2582	BP4_moderate
+c.1102C>G	p.His368Asp	Class C0	-0.1322	BP4_moderate
+c.1102C>A	p.His368Asn	Class C0	-0.2133	BP4_moderate
+c.1103A>T	p.His368Leu	Class C0	-0.1110	BP4_moderate
+c.1103A>G	p.His368Arg	Class C0	-0.1882	BP4_moderate
+c.1103A>C	p.His368Pro	Class C0	-0.1550	BP4_moderate
+c.1104C>G	p.His368Gln	Class C0	-0.2805	BP4_moderate
+c.1104C>A	p.His368Gln	Class C0	-0.2805	BP4_moderate
+c.1105C>G	p.Leu369Val	Class C0	-0.1212	BP4_moderate
+c.1105C>A	p.Leu369Met	Class C0	-0.1065	BP4_moderate
+c.1106T>G	p.Leu369Arg	Class C0	-0.0306	BP4_moderate
+c.1106T>C	p.Leu369Pro	Class C0	-0.1185	BP4_moderate
+c.1106T>A	p.Leu369Gln	Class C0	-0.0299	BP4_moderate
+c.1108A>G	p.Lys370Glu	Class C0	0.1792	No evidence
+c.1108A>C	p.Lys370Gln	Class C0	0.0349	BP4
+c.1109A>T	p.Lys370Met	Class C0	0.0999	BP4
+c.1109A>G	p.Lys370Arg	Class C0	-0.0159	BP4_moderate
+c.1109A>C	p.Lys370Thr	Class C0	0.0981	BP4
+c.1110G>T	p.Lys370Asn	Class C0	-0.1085	BP4_moderate
+c.1110G>C	p.Lys370Asn	Class C0	-0.1085	BP4_moderate
+c.1111T>G	p.Ser371Ala	Class C0	-0.2575	BP4_moderate
+c.1111T>C	p.Ser371Pro	Class C0	-0.2290	BP4_moderate
+c.1111T>A	p.Ser371Thr	Class C0	-0.2744	BP4_moderate
+c.1112C>T	p.Ser371Phe	Class C0	-0.1557	BP4_moderate
+c.1112C>G	p.Ser371Cys	Class C0	-0.1298	BP4_moderate
+c.1112C>A	p.Ser371Tyr	Class C0	-0.0977	BP4_moderate
+c.1114A>G	p.Lys372Glu	Class C0	0.0161	BP4
+c.1114A>C	p.Lys372Gln	Class C0	0.0219	BP4
+c.1115A>T	p.Lys372Ile	Class C0	0.0759	BP4
+c.1115A>G	p.Lys372Arg	Class C0	-0.0542	BP4_moderate
+c.1115A>C	p.Lys372Thr	Class C0	0.0508	BP4
+c.1116A>T	p.Lys372Asn	Class C0	-0.1179	BP4_moderate
+c.1116A>C	p.Lys372Asn	Class C0	-0.1179	BP4_moderate
+c.1117A>G	p.Lys373Glu	Class C0	0.0342	BP4
+c.1117A>C	p.Lys373Gln	Class C0	-0.0012	BP4
+c.1118A>T	p.Lys373Met	Class C0	0.0400	BP4
+c.1118A>G	p.Lys373Arg	Class C0	-0.1067	BP4_moderate
+c.1118A>C	p.Lys373Thr	Class C0	0.0192	BP4
+c.1119G>T	p.Lys373Asn	Class C0	-0.0918	BP4_moderate
+c.1119G>C	p.Lys373Asn	Class C0	-0.0918	BP4_moderate
+c.1120G>T	p.Gly374Cys	Class C0	0.0713	BP4
+c.1120G>C	p.Gly374Arg	Class C0	-0.0546	BP4_moderate
+c.1120G>A	p.Gly374Ser	Class C0	0.0132	BP4
+c.1121G>T	p.Gly374Val	Class C0	0.0316	BP4
+c.1121G>C	p.Gly374Ala	Class C0	-0.0636	BP4_moderate
+c.1121G>A	p.Gly374Asp	Class C0	-0.0195	BP4_moderate
+c.1123C>G	p.Gln375Glu	Class C0	-0.1464	BP4_moderate
+c.1123C>A	p.Gln375Lys	Class C0	-0.1440	BP4_moderate
+c.1124A>T	p.Gln375Leu	Class C0	-0.0650	BP4_moderate
+c.1124A>G	p.Gln375Arg	Class C0	-0.1366	BP4_moderate
+c.1124A>C	p.Gln375Pro	Class C0	-0.1472	BP4_moderate
+c.1125G>T	p.Gln375His	Class C0	-0.1510	BP4_moderate
+c.1125G>C	p.Gln375His	Class C0	-0.1510	BP4_moderate
+c.1126T>G	p.Ser376Ala	Class C0	-0.1076	BP4_moderate
+c.1126T>C	p.Ser376Pro	Class C0	-0.1167	BP4_moderate
+c.1126T>A	p.Ser376Thr	Class C0	-0.0999	BP4_moderate
+c.1127C>T	p.Ser376Phe	Class C0	0.0093	BP4
+c.1127C>G	p.Ser376Cys	Class C0	-0.0688	BP4_moderate
+c.1127C>A	p.Ser376Tyr	Class C0	0.0169	BP4
+c.1129A>T	p.Thr377Ser	Class C0	-0.1285	BP4_moderate
+c.1129A>G	p.Thr377Ala	Class C0	-0.1497	BP4_moderate
+c.1129A>C	p.Thr377Pro	Class C0	-0.1450	BP4_moderate
+c.1130C>T	p.Thr377Ile	Class C15	-0.0233	BP4_moderate
+c.1130C>G	p.Thr377Ser	Class C0	-0.0989	BP4_moderate
+c.1130C>A	p.Thr377Asn	Class C15	-0.1005	BP4_moderate
+c.1132T>G	p.Ser378Ala	Class C0	-0.0808	BP4_moderate
+c.1132T>C	p.Ser378Pro	Class C0	-0.0978	BP4_moderate
+c.1132T>A	p.Ser378Thr	Class C0	-0.0517	BP4_moderate
+c.1133C>T	p.Ser378Phe	Class C0	0.0233	BP4
+c.1133C>G	p.Ser378Cys	Class C0	0.0210	BP4
+c.1133C>A	p.Ser378Tyr	Class C0	0.0137	BP4
+c.1135C>T	p.Arg379Cys	Class C0	-0.1496	BP4_moderate
+c.1135C>G	p.Arg379Gly	Class C0	-0.0228	BP4_moderate
+c.1135C>A	p.Arg379Ser	Class C0	-0.1497	BP4_moderate
+c.1136G>T	p.Arg379Leu	Class C0	-0.0782	BP4_moderate
+c.1136G>C	p.Arg379Pro	Class C0	-0.0143	BP4_moderate
+c.1136G>A	p.Arg379His	Class C0	-0.0720	BP4_moderate
+c.1138C>T	p.His380Tyr	Class C0	0.0600	BP4
+c.1138C>G	p.His380Asp	Class C0	0.1625	No evidence
+c.1138C>A	p.His380Asn	Class C0	-0.0353	BP4_moderate
+c.1139A>T	p.His380Leu	Class C0	0.0314	BP4
+c.1139A>G	p.His380Arg	Class C0	-0.0235	BP4_moderate
+c.1139A>C	p.His380Pro	Class C0	0.1273	BP4
+c.1140T>G	p.His380Gln	Class C0	-0.0143	BP4_moderate
+c.1140T>A	p.His380Gln	Class C0	-0.0143	BP4_moderate
+c.1141A>G	p.Lys381Glu	Class C55	0.0869	BP4
+c.1141A>C	p.Lys381Gln	Class C45	0.0665	BP4
+c.1142A>T	p.Lys381Ile	Class C65	0.0767	No evidence
+c.1142A>G	p.Lys381Arg	Class C25	-0.1113	BP4_moderate
+c.1142A>C	p.Lys381Thr	Class C65	0.0621	No evidence
+c.1143A>T	p.Lys381Asn	Class C65	-0.0589	No evidence
+c.1143A>C	p.Lys381Asn	Class C65	-0.0589	No evidence
+c.1144A>G	p.Lys382Glu	Class C15	0.0626	BP4
+c.1144A>C	p.Lys382Gln	Class C0	0.0429	BP4
+c.1145A>T	p.Lys382Ile	Class C35	0.0542	BP4
+c.1145A>G	p.Lys382Arg	Class C0	-0.1749	BP4_moderate
+c.1145A>C	p.Lys382Thr	Class C25	0.0312	BP4
+c.1146A>T	p.Lys382Asn	Class C35	-0.1472	BP4_moderate
+c.1146A>C	p.Lys382Asn	Class C35	-0.1472	BP4_moderate
+c.1147C>T	p.Leu383Phe	Class C0	-0.2895	BP4_moderate
+c.1147C>G	p.Leu383Val	Class C0	-0.2572	BP4_moderate
+c.1147C>A	p.Leu383Ile	Class C0	-0.2567	BP4_moderate
+c.1148T>G	p.Leu383Arg	Class C0	-0.1479	BP4_moderate
+c.1148T>C	p.Leu383Pro	Class C0	-0.3083	BP4_moderate
+c.1148T>A	p.Leu383His	Class C0	-0.1369	BP4_moderate
+c.1150A>T	p.Met384Leu	Class C0	-0.2042	BP4_moderate
+c.1150A>G	p.Met384Val	Class C0	-0.0731	BP4_moderate
+c.1150A>C	p.Met384Leu	Class C0	-0.2042	BP4_moderate
+c.1151T>G	p.Met384Arg	Class C0	-0.0073	BP4
+c.1151T>C	p.Met384Thr	Class C0	-0.1212	BP4_moderate
+c.1151T>A	p.Met384Lys	Class C0	-0.0106	BP4_moderate
+c.1152G>T	p.Met384Ile	Class C0	-0.1522	BP4_moderate
+c.1152G>C	p.Met384Ile	Class C0	-0.1522	BP4_moderate
+c.1152G>A	p.Met384Ile	Class C0	-0.1522	BP4_moderate
+c.1153T>G	p.Phe385Val	Class C0	-0.3145	BP4_moderate
+c.1153T>C	p.Phe385Leu	Class C0	-0.3408	BP4_moderate
+c.1153T>A	p.Phe385Ile	Class C0	-0.2920	BP4_moderate
+c.1154T>G	p.Phe385Cys	Class C35	-0.1009	BP4_moderate
+c.1154T>C	p.Phe385Ser	Class C25	-0.1002	BP4_moderate
+c.1154T>A	p.Phe385Tyr	Class C0	-0.1340	BP4_moderate
+c.1155C>G	p.Phe385Leu	Class C0	-0.3063	BP4_moderate
+c.1155C>A	p.Phe385Leu	Class C0	-0.3061	BP4_moderate
+c.1156A>G	p.Lys386Glu	Class C55	0.2374	PP3
+c.1156A>C	p.Lys386Gln	Class C45	0.0668	BP4
+c.1157A>T	p.Lys386Met	Class C65	0.1183	No evidence
+c.1157A>G	p.Lys386Arg	Class C25	0.0528	BP4
+c.1157A>C	p.Lys386Thr	Class C65	0.1139	No evidence
+c.1158G>T	p.Lys386Asn	Class C65	-0.0319	No evidence
+c.1158G>C	p.Lys386Asn	Class C65	-0.0319	No evidence
+c.1159A>T	p.Thr387Ser	Class C0	-0.2661	BP4_moderate
+c.1159A>G	p.Thr387Ala	Class C0	-0.2263	BP4_moderate
+c.1159A>C	p.Thr387Pro	Class C0	-0.1198	BP4_moderate
+c.1160C>T	p.Thr387Ile	Class C0	-0.2734	BP4_moderate
+c.1160C>G	p.Thr387Arg	Class C0	-0.3130	BP4_moderate
+c.1160C>A	p.Thr387Lys	Class C0	-0.3016	BP4_moderate
+c.1162G>C	p.Glu388Gln	Class C0	-0.0934	BP4_moderate
+c.1162G>A	p.Glu388Lys	Class C0	0.0304	BP4
+c.1163A>T	p.Glu388Val	Class C0	-0.0822	BP4_moderate
+c.1163A>G	p.Glu388Gly	Class C0	-0.0041	BP4
+c.1163A>C	p.Glu388Ala	Class C0	-0.0336	BP4_moderate
+c.1164A>T	p.Glu388Asp	Class C0	-0.1492	BP4_moderate
+c.1164A>C	p.Glu388Asp	Class C0	-0.1492	BP4_moderate
+c.1165G>T	p.Gly389Trp	Class C0	0.0233	BP4
+c.1165G>C	p.Gly389Arg	Class C0	-0.0217	BP4_moderate
+c.1165G>A	p.Gly389Arg	Class C0	-0.0217	BP4_moderate
+c.1166G>T	p.Gly389Val	Class C0	-0.1167	BP4_moderate
+c.1166G>C	p.Gly389Ala	Class C0	-0.1484	BP4_moderate
+c.1166G>A	p.Gly389Glu	Class C0	-0.0205	BP4_moderate
+c.1168C>T	p.Pro390Ser	Class C0	-0.1477	BP4_moderate
+c.1168C>G	p.Pro390Ala	Class C0	-0.0815	BP4_moderate
+c.1168C>A	p.Pro390Thr	Class C0	-0.0398	BP4_moderate
+c.1169C>T	p.Pro390Leu	Class C0	-0.1373	BP4_moderate
+c.1169C>G	p.Pro390Arg	Class C0	-0.0302	BP4_moderate
+c.1169C>A	p.Pro390His	Class C0	-0.0132	BP4_moderate
+c.1171G>T	p.Asp391Tyr	Class C65	0.2697	PP3_moderate
+c.1171G>C	p.Asp391His	Class C65	0.1727	PP3_moderate
+c.1171G>A	p.Asp391Asn	Class C15	-0.1145	BP4_moderate
+c.1172A>T	p.Asp391Val	Class C65	0.2547	PP3_moderate
+c.1172A>G	p.Asp391Gly	Class C65	0.1605	PP3_moderate
+c.1172A>C	p.Asp391Ala	Class C65	0.1203	No evidence
+c.1173C>G	p.Asp391Glu	Class C35	0.0365	BP4
+c.1173C>A	p.Asp391Glu	Class C35	0.0365	BP4
+c.1174T>G	p.Ser392Ala	Class C65	0.0710	No evidence
+c.1174T>C	p.Ser392Pro	Class C65	0.2038	PP3_moderate
+c.1174T>A	p.Ser392Thr	Class C55	0.0711	BP4
+c.1175C>T	p.Ser392Leu	Class C65	0.1533	No evidence
+c.1177G>T	p.Asp393Tyr	Class C35	0.1835	PP3
+c.1177G>C	p.Asp393His	Class C0	0.1009	BP4
+c.1177G>A	p.Asp393Asn	Class C0	-0.0709	BP4_moderate
+c.1178A>T	p.Asp393Val	Class C35	0.2104	PP3
+c.1178A>G	p.Asp393Gly	Class C15	0.1470	BP4
+c.1178A>C	p.Asp393Ala	Class C25	0.1004	BP4
+c.1179C>G	p.Asp393Glu	Class C0	-0.0059	BP4
+c.1179C>A	p.Asp393Glu	Class C0	-0.0059	BP4

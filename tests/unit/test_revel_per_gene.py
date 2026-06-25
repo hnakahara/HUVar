@@ -38,6 +38,10 @@ def _cfg(tmp_path: Path) -> MagicMock:
     cfg = MagicMock()
     cfg.disease_prevalence_tsv = _spec_tsv(tmp_path)
     cfg.insilico_tool = InSilicoTool.REVEL
+    # Opt-in auxiliary predictors off by default (a bare MagicMock attribute would
+    # otherwise be truthy and wrongly activate the BayesDel/CADD per-gene rules).
+    cfg.use_bayesdel = False
+    cfg.use_cadd = False
     return cfg
 
 

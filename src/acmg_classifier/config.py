@@ -49,6 +49,16 @@ class Config(BaseSettings):
     # force every gene back to FAF95 (the universally conservative metric).
     popmax_af_basis: bool = True
     insilico_tool: InSilicoTool = InSilicoTool.ESM1B
+    # Opt-in auxiliary missense predictors (BayesDel, CADD) consulted only by the
+    # VCEPs that name them (e.g. ENIGMA BRCA1/2 / TP53 BayesDel; CADD in 2-of-3
+    # combos). Both carry academic / non-commercial licence terms, so they are
+    # gated to the licence-encumbered missense path: they run ONLY when
+    # insilico_tool is REVEL or ALPHAMISSENSE and are skipped entirely under
+    # ESM1B (the commercial-safe default). Enable per run with --with-bayesdel /
+    # --with-cadd; the data must also have been staged with the matching
+    # setup_data.py flag (--with-bayesdel / --with-cadd).
+    use_bayesdel: bool = False
+    use_cadd: bool = False
     splice_tool: SpliceTool = SpliceTool.OPENSPLICEAI
     supplement_mode: SupplementMode = SupplementMode.MERGE
     spliceai_dir: Optional[Path] = None
@@ -160,6 +170,34 @@ class Config(BaseSettings):
         return self.assembly_dir / "revel" / names[self.assembly]
 
     @property
+    def bayesdel_tsv(self) -> Path:
+        """BayesDel precomputed scores, normalised by scripts/setup_data.py to a
+        5-column tabix-indexed TSV (chrom, pos, ref, alt, BayesDel).
+
+        Opt-in (setup_data.py --with-bayesdel) and consulted only under
+        insilico_tool REVEL/ALPHAMISSENSE — never under ESM1B (licence gate).
+        """
+        names = {
+            Assembly.GRCH38: "bayesdel_grch38.tsv.gz",
+            Assembly.GRCH37: "bayesdel_grch37.tsv.gz",
+        }
+        return self.assembly_dir / "bayesdel" / names[self.assembly]
+
+    @property
+    def cadd_tsv(self) -> Path:
+        """CADD precomputed scores (PHRED), normalised by scripts/setup_data.py
+        to a 5-column tabix-indexed TSV (chrom, pos, ref, alt, CADD_PHRED).
+
+        Opt-in (setup_data.py --with-cadd) and consulted only under insilico_tool
+        REVEL/ALPHAMISSENSE — never under ESM1B (licence gate).
+        """
+        names = {
+            Assembly.GRCH38: "cadd_grch38.tsv.gz",
+            Assembly.GRCH37: "cadd_grch37.tsv.gz",
+        }
+        return self.assembly_dir / "cadd" / names[self.assembly]
+
+    @property
     def esm1b_sqlite(self) -> Path:
         """Brandes 2023 ESM1b LLR scores indexed by UniProt accession.
 
@@ -269,6 +307,15 @@ class Config(BaseSettings):
     def gene_inheritance_tsv(self) -> Path:
         """gene -> inheritance (AD/AR/XL...) map for inheritance-aware PM2 thresholds."""
         return self.data_dir / "shared" / "gene_inheritance.tsv"
+
+    @property
+    def tp53_codes_tsv(self) -> Path:
+        """ClinGen TP53 VCEP precomputed per-missense PP3/BP4 codes (built from the
+        VCEP supplementary table by scripts/build_tp53_codes.py). Carries the
+        Align-GVGD-derived code this pipeline cannot compute itself; consulted only
+        under the BayesDel licence gate (insilico_tool REVEL/AlphaMissense +
+        --with-bayesdel). Absent file → TP53 auxiliary PP3/BP4 simply not applied."""
+        return self.data_dir / "shared" / "tp53_pp3_bp4_codes.tsv"
 
     @property
     def pm1_hotspots_tsv(self) -> Path:

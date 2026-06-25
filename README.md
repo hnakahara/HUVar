@@ -186,6 +186,18 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   the high-impact threshold (≥ 0.20). The missense predictors use Bergquist 2024
   Table 2 strengths; for REVEL a VCEP-specified gene cutoff (mined from cspec
   into `disease_prevalence.tsv`) overrides the genome-wide default when present.
+  > _**Opt-in auxiliary predictors (BayesDel, CADD).** A few VCEPs define PP3/BP4
+  > on BayesDel (ENIGMA BRCA1/2, TP53) or on an agreement of REVEL with CADD /
+  > AlphaMissense (CTLA4, PIK3CD, PIK3R1, BMPR2, ABCA4). Both are academic /
+  > non-commercial-licensed, so they are **licence-gated**: consulted only when
+  > `--insilico-tool` is `revel` or `alphamissense` **and** the data is staged
+  > (`--with-bayesdel` / `--with-cadd`); they are **never read under the
+  > commercial-safe `esm1b` default**. When active, the per-gene VCEP rule is
+  > authoritative (e.g. CTLA4 cannot meet PP3 on REVEL alone — REVEL∧CADD must
+  > agree). TP53 uses the VCEP's published per-missense code table
+  > (`resources/shared/tp53_pp3_bp4_codes.tsv`, which bakes in the Align-GVGD
+  > class this tool does not compute); the assigned code plus its Align-GVGD and
+  > BayesDel values are carried into the PP3/BP4 evidence._
   > _OpenSpliceAI reuses SpliceAI's 0–1 delta scale; lacking an OddsPath
   > calibration of its own, its PP3 is awarded at the conservative Supporting
   > tier (vs SpliceAI's Moderate). SQUIRLS and MMSplice are retained in the
@@ -194,7 +206,8 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 - **Fully offline** at classification time (OpenSpliceAI runs locally too).
   Local databases include: Ensembl reference genome, VEP cache, gnomAD
   (DuckDB), ClinVar (VCF + derived SQLite for PS1/PM5), ESM1b / AlphaMissense,
-  RepeatMasker, and optional SpliceAI (opt-in, Illumina-licensed).
+  RepeatMasker, optional SpliceAI (opt-in, Illumina-licensed), and optional
+  CADD / BayesDel (opt-in auxiliary PP3/BP4 predictors).
 - **Manual evidence supplement**: per-variant TSV that can **override any
   criterion** (functional studies, family segregation, expert strength
   adjustments, etc.). Two combination modes (`--supplement-mode`): `merge`
@@ -312,6 +325,12 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 # Refresh ClinVar to the latest weekly release (re-download VCF + XML, rebuild SQLite)
 python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --force-clinvar --only clinvar-vcf clinvar-sqlite --workers 12
+
+# Opt-in auxiliary predictors — CADD (downloads the ~80 GB GRCh38 SNV file and
+# normalises it) and BayesDel (staged from a manually-downloaded raw file):
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --only cadd --with-cadd
+python scripts/setup_data.py --data-dir /path/to/download/directory/data --only bayesdel \
+    --with-bayesdel --bayesdel-raw /path/to/BayesDel_noAF.tsv
 ```
 
 ### `setup_data.py` options
@@ -335,6 +354,18 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 | `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
 | `--skip-openspliceai` | Skip the OSAI_MANE model download (all 4 flanking sizes). Default tool, so skip only when supplying models another way. The `openspliceai` CLI itself ships as a package dependency. |
 | `--with-revel` | Download REVEL (~ 600 MB zip) and build the per-assembly TSV for `--insilico-tool revel` (opt-in; ESM1b is the default tool) |
+| `--with-cadd` | Build the per-assembly CADD TSV (opt-in auxiliary PP3/BP4 predictor for CTLA4/PIK3CD/PIK3R1/BMPR2/ABCA4). Downloads the CADD whole-genome SNV file (**GRCh38 v1.7 ~80 GB**) and normalises it. Consulted only under `--insilico-tool revel/alphamissense`. |
+| `--cadd-raw PATH` | Use an already-downloaded CADD `whole_genome_SNVs.tsv.gz` (`Chrom Pos Ref Alt RawScore PHRED`) instead of downloading. |
+| `--with-bayesdel` | Build the per-assembly BayesDel TSV (opt-in auxiliary PP3/BP4 predictor for ENIGMA BRCA1/2). Requires `--bayesdel-raw`. Consulted only under `--insilico-tool revel/alphamissense`. _(TP53 uses the shipped VCEP code table and only needs this flag toggled on at classification time — see below.)_ |
+| `--bayesdel-raw PATH` | Path to a raw BayesDel score file (download the **no-AF** scores from <https://fenglab.chpc.utah.edu/BayesDel/BayesDel.html>). Layout: `chrom pos ref alt … score(last column)`. |
+
+> **TP53 PP3/BP4** uses the ClinGen TP53 VCEP's published per-missense code table
+> (`resources/shared/tp53_pp3_bp4_codes.tsv`, shipped with the repo and copied to
+> `data/shared/` like the other curated tables — no download needed). It encodes
+> the Align-GVGD class this tool does not compute. It is gated with the BayesDel
+> family, so enable it at classification time with `--with-bayesdel` under
+> `--insilico-tool revel/alphamissense`. Rebuild the table from a newer VCEP
+> spreadsheet with `python scripts/build_tp53_codes.py --xlsx <file>`.
 
 After setup, the expected layout is:
 
@@ -346,7 +377,8 @@ data/
 │   ├── pm1_hotspots.tsv             #   per-gene PM1 hotspot residues/regions
 │   ├── pm4_regions.tsv              #   per-gene PM4 region/strength rules
 │   ├── ps1_paralog_map.tsv          #   PS1 cross-gene paralogue residue map
-│   └── vcep_pvs1_splice_exons.tsv   #   per-skipped-exon PVS1 splice strengths
+│   ├── vcep_pvs1_splice_exons.tsv   #   per-skipped-exon PVS1 splice strengths
+│   └── tp53_pp3_bp4_codes.tsv       #   ClinGen TP53 VCEP per-missense PP3/BP4 codes (aGVGD+BayesDel)
 ├── vep_cache/                       # VEP indexed cache, both assemblies
 ├── esm1b/                           # (optional) protein-coordinate, shared across assemblies
 │   └── esm1b_llr.sqlite             #   built from Brandes 2023 archive
@@ -360,7 +392,9 @@ data/
     ├── gnomad/gnomad_v4.0_exomes_coverage.duckdb   # per-locus mean DP (PM2 read-depth gate); GRCh37: v2.1
     ├── gnomad/gnomad_v3.1.2_non_cancer.duckdb      # GRCh38 only: PM2 BRCA1/2 non-cancer AF overlay (chr13/chr17 by default)
     ├── alphamissense/AlphaMissense_hg38.tsv.gz
-    ├── (optional) revel/revel_grch38.tsv.gz(+.tbi)   # built with --with-revel
+    ├── (optional) revel/revel_grch38.tsv.gz(+.tbi)       # built with --with-revel
+    ├── (optional) cadd/cadd_grch38.tsv.gz(+.tbi)         # built with --with-cadd (~80 GB source)
+    ├── (optional) bayesdel/bayesdel_grch38.tsv.gz(+.tbi) # built with --with-bayesdel (--bayesdel-raw)
     ├── repeats/repeatmasker_dfam_hg38.bed.gz
     ├── (default splice) openspliceai/{80,400,2000,10000}nt/   # OSAI_MANE 5-model ensembles
     └── (optional)        spliceai/spliceai_scores.raw.{snv,indel}.hg38.vcf.gz
@@ -699,7 +733,7 @@ caps interact with ClinVar P/LP-null counts (see [PVS1](#pvs1-decision-tree)).
 | **PM5** | Different missense at a codon with an established P/LP missense in ClinVar — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`, `pm5_min_count` (ACVRL1/ENG require ≥2 distinct same-codon LP/P → Strong). |
 | **PP1** | Cosegregation: manual supplement or ClinVar text-mining; capped at Supporting (no meiosis counting from free text). | — |
 | **PP2** | Missense in a gene where missense is a common mechanism & benign missense is rare. | **Yes (dominant lever)** — `pp2` applicability is authoritative; `pp2_requires` adds co-requirements (e.g. BMPR2 needs PM2+PP3). ClinVar-stats fallback only when no VCEP covers the gene. |
-| **PP3** | Computational deleterious prediction (missense: ESM1b/AlphaMissense/REVEL; splice: OpenSpliceAI/SpliceAI), Bergquist 2024 tiers. See [In-silico aggregation](#in-silico-aggregation-pp3--bp4). | **Yes (REVEL)** — per-gene `revel_pp3_*` cutoffs from cspec override the genome-wide default and cap the gene's strength. |
+| **PP3** | Computational deleterious prediction (missense: ESM1b/AlphaMissense/REVEL; splice: OpenSpliceAI/SpliceAI), Bergquist 2024 tiers. See [In-silico aggregation](#in-silico-aggregation-pp3--bp4). | **Yes (REVEL)** — per-gene `revel_pp3_*` cutoffs from cspec override the genome-wide default and cap the gene's strength. **Opt-in auxiliary rules (`--with-bayesdel`/`--with-cadd`, licence-gated to REVEL/AlphaMissense):** BayesDel for ENIGMA BRCA1/2 (domain-gated) and TP53 (VCEP code table); REVEL∧CADD agreement for CTLA4/PIK3CD/PIK3R1; 2-of-3 REVEL/AM/CADD for BMPR2; CADD for ABCA4 synonymous/indel. When active the gene rule is authoritative. |
 
 **Benign**
 
@@ -710,7 +744,7 @@ caps interact with ClinVar P/LP-null counts (see [PVS1](#pvs1-decision-tree)).
 | **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes, AD→het carriers). | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
 | **BP1** | Variant-type-vs-mechanism: applied only for genes whose VCEP names a target consequence. | **Yes (gate)** — `bp1` / `bp1_target` (`missense` for PALB2/APC/BRCA1/2; `truncating` for GoF RASopathy genes), `bp1_strength`, `bp1_exclude`, `bp1_no_splice`. No VCEP decision → not applied. |
 | **BP3** | In-frame indel in a repetitive region of unknown function. | **Yes** — VCEP-gated (`bp3`) + `bp3_regions`. |
-| **BP4** | Computational no-impact prediction (same tools as PP3), Bergquist 2024 tiers. | **Yes (REVEL)** — per-gene `revel_bp4_*` cutoffs. |
+| **BP4** | Computational no-impact prediction (same tools as PP3), Bergquist 2024 tiers. | **Yes (REVEL)** — per-gene `revel_bp4_*` cutoffs. **Opt-in auxiliary rules** mirror PP3 (BayesDel for BRCA1/2 & TP53; REVEL∧CADD for CTLA4/PIK3CD/PIK3R1; 2-of-3 for BMPR2; CADD for ABCA4 synonymous/indel), licence-gated and authoritative when active. |
 | **BP7** | Synonymous / deep-intronic with no predicted splice impact and (default) low conservation. Safe-distance ≥ +7 (donor) / ≤ −21 (acceptor). | **Yes** — `bp7_phylop` conservation cutoff (or `na` where the VCEP deemed conservation non-informative), `bp7_intronic = noncanonical` extends BP7 to any non-±1,2 intronic position. |
 
 **Not auto-applied.** PS2, PM3, PM6, PP4, BS3, BS4, BP2, BP5 require evidence

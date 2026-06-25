@@ -94,6 +94,26 @@ class RevelData(BaseModel):
     score: Optional[float] = None
 
 
+class BayesDelData(BaseModel):
+    """BayesDel meta-predictor score (Feng 2017) for a missense variant.
+
+    Higher score ⇒ more pathogenic. Opt-in auxiliary predictor used only by the
+    VCEPs that name it (e.g. ENIGMA BRCA1/2, TP53) and only under insilico_tool
+    REVEL/ALPHAMISSENSE (never ESM1B — see Config.use_bayesdel)."""
+
+    score: Optional[float] = None
+
+
+class CADDData(BaseModel):
+    """CADD score (Kircher 2014, PHRED-scaled) for a variant.
+
+    Higher PHRED ⇒ more deleterious. Opt-in auxiliary predictor used only in the
+    VCEP 2-of-3 combination rules and only under insilico_tool REVEL/ALPHAMISSENSE
+    (never ESM1B — see Config.use_cadd)."""
+
+    phred: Optional[float] = None
+
+
 class ESM1bData(BaseModel):
     """ESM1b log-likelihood ratio (LLR) score for a missense variant.
 
@@ -145,6 +165,11 @@ class AnnotationData(BaseModel):
     alphamissense: Optional[AlphaMissenseData] = None
     esm1b: Optional[ESM1bData] = None
     revel: Optional[RevelData] = None
+    # Opt-in auxiliary predictors, populated only under insilico_tool
+    # REVEL/ALPHAMISSENSE when --with-bayesdel / --with-cadd are set (None
+    # otherwise, including always under ESM1B — see AnnotationOrchestrator).
+    bayesdel: Optional[BayesDelData] = None
+    cadd: Optional[CADDData] = None
     # Primary splice predictor used for ACMG criteria (SpliceAI or SQUIRLS per config).
     splice: Optional[SpliceScore] = None
     # SQUIRLS score always stored separately for TSV reporting regardless of which

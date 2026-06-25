@@ -24,6 +24,8 @@ _ANNOTATION_HEADER = [
     "alphamissense_score", "alphamissense_classification",
     "esm1b_llr",
     "revel_score",
+    "bayesdel_score",
+    "cadd_phred",
     "squirls_score",
     "splice_tool", "splice_score",
     "in_repeat", "repeat_class",
@@ -155,6 +157,16 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
         _fmt(rv.score, ".4f") if rv and rv.score is not None else "",
     ]
 
+    bd = ann.bayesdel
+    bayesdel_cols = [
+        _fmt(bd.score, ".4f") if bd and bd.score is not None else "",
+    ]
+
+    cd = ann.cadd
+    cadd_cols = [
+        _fmt(cd.phred, ".4f") if cd and cd.phred is not None else "",
+    ]
+
     sq = ann.squirls
     squirls_cols = [
         _fmt(sq.raw_score, ".4f") if sq and sq.raw_score is not None else "",
@@ -173,7 +185,8 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
         rep.repeat_class or "" if rep else "",
     ]
 
-    return gnomad_cols + clinvar_cols + am_cols + esm1b_cols + revel_cols + squirls_cols + splice_cols + repeat_cols
+    return (gnomad_cols + clinvar_cols + am_cols + esm1b_cols + revel_cols
+            + bayesdel_cols + cadd_cols + squirls_cols + splice_cols + repeat_cols)
 
 
 def _build_row(result: ClassificationResult) -> list[str]:

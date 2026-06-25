@@ -109,6 +109,11 @@ class BP4Evaluator(CriterionEvaluator):
         self._revel_spec = RevelSpec(cfg.disease_prevalence_tsv)
         # Per-gene SpliceAI no-impact cutoff for the BP4 splice branch.
         self._bp_spec = BPApplicability(cfg.disease_prevalence_tsv)
+        # Per-gene auxiliary BayesDel/CADD/2-of-3 rules (opt-in, licence-gated to
+        # REVEL/AlphaMissense — see insilico_genes.combo_active). TP53 uses the
+        # VCEP's precomputed PP3/BP4 code table (aGVGD baked in).
+        from acmg_classifier.criteria.insilico_genes import InSilicoGeneSpec, TP53Codes
+        self._insilico_spec = InSilicoGeneSpec(TP53Codes(cfg.tp53_codes_tsv))
 
     def evaluate(
         self,
@@ -136,6 +141,22 @@ class BP4Evaluator(CriterionEvaluator):
                         ACMGCriterion.BP4,
                         f"{tool_label} max_delta={sp.max_delta:.3f} — predicted splice impact, BP4 not applicable",
                     )
+
+            # Per-gene auxiliary rule (BayesDel / REVEL∧CADD / 2-of-3). When
+            # active it is AUTHORITATIVE for the gene and replaces the single-tool
+            # dispatch below — so e.g. CTLA4 cannot meet BP4 on REVEL alone when
+            # its VCEP requires REVEL∧CADD agreement. A None outcome means the rule
+            # does not govern this consequence → fall through to the default.
+            from acmg_classifier.criteria.insilico_genes import build_scores, combo_active
+            gene = pc.gene_symbol
+            if combo_active(self._insilico_spec, gene, self._cfg):
+                outcome = self._insilico_spec.bp4(gene, build_scores(annotation, pc))
+                if outcome is not None:
+                    strength, note = outcome
+                    if strength:
+                        return CriteriaResult.met(ACMGCriterion.BP4, strength, note)
+                    return CriteriaResult.not_met(ACMGCriterion.BP4, note)
+
             if self._cfg.insilico_tool == InSilicoTool.REVEL:
                 rv = annotation.revel
                 if rv and rv.score is not None:
@@ -187,6 +208,15 @@ class BP4Evaluator(CriterionEvaluator):
             ConsequenceType.INTRON,
             ConsequenceType.SYNONYMOUS,
         ):
+            # Gene auxiliary CADD path for synonymous (e.g. ABCA4, BMPR2). Only a
+            # *met* outcome short-circuits — a non-met must not suppress the
+            # splice-based BP4 below, so we fall through otherwise.
+            from acmg_classifier.criteria.insilico_genes import build_scores, combo_active
+            if combo_active(self._insilico_spec, pc.gene_symbol, self._cfg):
+                outcome = self._insilico_spec.bp4(pc.gene_symbol, build_scores(annotation, pc))
+                if outcome is not None and outcome[0] is not None:
+                    return CriteriaResult.met(ACMGCriterion.BP4, outcome[0], outcome[1])
+
             sp = annotation.splice
             # No splice predictor (e.g. default --splice-tool none) → say so
             # explicitly rather than implying a score was computed and rejected.

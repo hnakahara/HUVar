@@ -112,6 +112,16 @@ URLS: dict[str, dict[str, str]] = {
         "phylop": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
         # REVEL ships a single zip carrying BOTH hg19 and GRCh38 coordinates.
         "revel": "https://rothsj06.dmz.hpc.mssm.edu/revel-v1.3_all_chromosomes.zip",
+        # CADD whole-genome SNV scores (PHRED), already a tabix-style TSV
+        # (Chrom Pos Ref Alt RawScore PHRED). Opt-in auxiliary PP3/BP4 predictor;
+        # ~80 GB. v1.7 is the current GRCh38 release.
+        "cadd": (
+            "https://kircherlab.bihealth.org/download/CADD/v1.7/GRCh38/"
+            "whole_genome_SNVs.tsv.gz"
+        ),
+        # BayesDel has no single stable download URL (it is distributed as packed
+        # per-chromosome score files behind https://fenglab.chpc.utah.edu/BayesDel/BayesDel.html),
+        # so it is staged from a user-supplied raw file via --bayesdel-raw.
     },
     "GRCh37": {
         "genome": (
@@ -169,6 +179,11 @@ URLS: dict[str, dict[str, str]] = {
         # Same single REVEL zip as GRCh38; the hg19 position column is selected
         # when building the per-assembly TSV.
         "revel": "https://rothsj06.dmz.hpc.mssm.edu/revel-v1.3_all_chromosomes.zip",
+        # CADD GRCh37 is frozen at v1.6 (v1.7 is GRCh38-only).
+        "cadd": (
+            "https://kircherlab.bihealth.org/download/CADD/v1.6/GRCh37/"
+            "whole_genome_SNVs.tsv.gz"
+        ),
     },
 }
 
@@ -685,6 +700,111 @@ def step_revel(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
     return True
 
 
+def step_cadd(asm_dir: Path, assembly: str, urls: dict, enabled: bool,
+              raw_path: Path | None) -> bool:
+    """Build the per-assembly CADD TSV (opt-in auxiliary PP3/BP4 predictor).
+
+    CADD distributes a coordinate-sorted, tabix-style whole-genome SNV file
+    (`Chrom Pos Ref Alt RawScore PHRED`, two `#` header lines). We normalise it to
+    the 5-column `chrom pos ref alt PHRED` layout the `cadd_db` reader expects and
+    re-index with tabix.
+
+    OPT-IN (`--with-cadd`): the source is very large (GRCh38 SNV ~80 GB) and CADD
+    is only consulted under `--insilico-tool revel/alphamissense` (never esm1b).
+    Point `--cadd-raw PATH` at an already-downloaded source to skip the download.
+    """
+    suffix = "grch38" if assembly == "GRCh38" else "grch37"
+    dest = asm_dir / "cadd" / f"cadd_{suffix}.tsv.gz"
+    tbi = Path(str(dest) + ".tbi")
+    if dest.exists() and tbi.exists():
+        print(f"  [SKIP] {dest.name}")
+        return True
+    if not enabled:
+        print("  [SKIP] CADD not requested (pass --with-cadd; very large source, "
+              "used only with --insilico-tool revel/alphamissense)")
+        return True
+
+    _require("zcat", "awk", "bgzip", "tabix")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    raw = raw_path
+    if raw is None:
+        url = urls.get("cadd")
+        if not url:
+            print("  [SKIP] no CADD URL for this assembly; supply --cadd-raw PATH")
+            return False
+        raw = dest.parent / "cadd_whole_genome_SNVs.tsv.gz"
+        if not raw.exists():
+            _download(url, raw, f"CADD {suffix} whole-genome SNV (~80 GB)")
+
+    if not dest.exists():
+        # CADD native is already position-sorted, so we only drop the header /
+        # RawScore column and keep PHRED (col 6) — no global re-sort needed.
+        print("  Normalising CADD to 5-column TSV + bgzip...")
+        awk = 'BEGIN{OFS="\\t"} !/^#/ {print $1, $2, $3, $4, $6}'
+        cmd = (
+            f"zcat {shlex.quote(str(raw))} | "
+            f"awk {shlex.quote(awk)} | bgzip > {shlex.quote(str(dest))}"
+        )
+        subprocess.run(["bash", "-c", cmd], check=True)
+
+    if not tbi.exists():
+        _run(["tabix", "-s", "1", "-b", "2", "-e", "2", "-f", str(dest)])
+    return True
+
+
+def step_bayesdel(asm_dir: Path, assembly: str, enabled: bool,
+                  raw_path: Path | None) -> bool:
+    """Build the per-assembly BayesDel TSV (opt-in auxiliary PP3/BP4 predictor).
+
+    BayesDel (https://fenglab.chpc.utah.edu/BayesDel/BayesDel.html) is distributed as packed
+    precomputed score files (addAF / noAF) with no single stable download URL, so
+    it is staged from a user-supplied raw file via `--bayesdel-raw PATH`. We
+    normalise it to the 5-column `chrom pos ref alt BayesDel` layout the
+    `bayesdel_db` reader expects (the score is taken from the LAST column of each
+    record) and index with tabix.
+
+    OPT-IN (`--with-bayesdel`) and only consulted under `--insilico-tool
+    revel/alphamissense` (never esm1b).
+    """
+    suffix = "grch38" if assembly == "GRCh38" else "grch37"
+    dest = asm_dir / "bayesdel" / f"bayesdel_{suffix}.tsv.gz"
+    tbi = Path(str(dest) + ".tbi")
+    if dest.exists() and tbi.exists():
+        print(f"  [SKIP] {dest.name}")
+        return True
+    if not enabled:
+        print("  [SKIP] BayesDel not requested (pass --with-bayesdel; "
+              "used only with --insilico-tool revel/alphamissense)")
+        return True
+    if raw_path is None:
+        print("  [SKIP] BayesDel requires --bayesdel-raw PATH (download the "
+              "addAF/noAF scores from https://fenglab.chpc.utah.edu/BayesDel/BayesDel.html). "
+              "Expected raw layout: chrom pos ref alt ... score(last column).")
+        return False
+
+    _require("awk", "sort", "bgzip", "tabix")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    if not dest.exists():
+        # BayesDel packed files may be plain or gzipped; the score is the last
+        # column. Re-sort by (chrom, pos) so a concatenation of per-chromosome
+        # files is tabix-indexable.
+        reader = "zcat" if str(raw_path).endswith(".gz") else "cat"
+        print("  Normalising BayesDel to 5-column TSV + bgzip...")
+        awk = 'BEGIN{OFS="\\t"} !/^#/ && $1!="" {print $1, $2, $3, $4, $NF}'
+        cmd = (
+            f"{reader} {shlex.quote(str(raw_path))} | "
+            f"awk {shlex.quote(awk)} | "
+            f"sort -k1,1 -k2,2n | bgzip > {shlex.quote(str(dest))}"
+        )
+        subprocess.run(["bash", "-c", cmd], check=True)
+
+    if not tbi.exists():
+        _run(["tabix", "-s", "1", "-b", "2", "-e", "2", "-f", str(dest)])
+    return True
+
+
 # OpenSpliceAI OSAI_MANE pretrained models. Each flanking size has a 5-model
 # ensemble (random seeds rs10–rs14), mirroring SpliceAI's 5-model averaging.
 # Hosted on the JHU CCB FTP; the openspliceai CLI takes the per-flank directory
@@ -1141,6 +1261,23 @@ def main() -> None:
                         help="Download REVEL (~600 MB zip) and build the per-assembly "
                              "TSV for --insilico-tool revel. Off by default (ESM1b is "
                              "the default in-silico tool).")
+    parser.add_argument("--with-cadd", action="store_true",
+                        help="Build the per-assembly CADD TSV (opt-in auxiliary PP3/BP4 "
+                             "predictor). Source is very large (GRCh38 SNV ~80 GB). At "
+                             "classification time CADD is consulted only under "
+                             "--insilico-tool revel/alphamissense (never esm1b).")
+    parser.add_argument("--cadd-raw", type=Path, default=None, metavar="PATH",
+                        help="Path to an existing CADD whole-genome SNV TSV.gz "
+                             "(Chrom Pos Ref Alt RawScore PHRED) to normalise instead of "
+                             "downloading.")
+    parser.add_argument("--with-bayesdel", action="store_true",
+                        help="Build the per-assembly BayesDel TSV (opt-in auxiliary PP3/BP4 "
+                             "predictor) from --bayesdel-raw. Consulted only under "
+                             "--insilico-tool revel/alphamissense (never esm1b).")
+    parser.add_argument("--bayesdel-raw", type=Path, default=None, metavar="PATH",
+                        help="Path to a raw BayesDel score file (addAF/noAF; download from "
+                             "https://fenglab.chpc.utah.edu/BayesDel/BayesDel.html). Required for "
+                             "--with-bayesdel. Layout: chrom pos ref alt ... score(last col).")
     parser.add_argument("--skip-gnomad-coverage", action="store_true",
                         help="Skip the gnomAD exomes coverage summary (per-locus "
                              "mean/median DP) used by the PM2 read-depth gate "
@@ -1159,8 +1296,9 @@ def main() -> None:
     parser.add_argument("--only", nargs="+", default=None, metavar="STEP",
                         help="Run only the named step(s) and skip the rest. Step "
                              "keys: genome, vep, clinvar-vcf, clinvar-sqlite, "
-                             "alphamissense, esm1b, revel, openspliceai, "
-                             "gnomad-constraint, gnomad, repeatmasker, phylop. "
+                             "alphamissense, esm1b, revel, cadd, bayesdel, "
+                             "openspliceai, gnomad-constraint, gnomad-coverage, "
+                             "gnomad, gnomad-noncancer, repeatmasker, phylop. "
                              "Each step is idempotent: it checks for existing "
                              "files and downloads only what is missing. Example: "
                              "--only openspliceai")
@@ -1195,6 +1333,8 @@ def main() -> None:
         ("alphamissense",     "AlphaMissense",     lambda: step_alphamissense(asm_dir, assembly, urls)),
         ("esm1b",             "ESM1b",             lambda: step_esm1b(data_dir, urls, args.skip_esm1b)),
         ("revel",             "REVEL",             lambda: step_revel(asm_dir, assembly, urls, args.with_revel)),
+        ("cadd",              "CADD",              lambda: step_cadd(asm_dir, assembly, urls, args.with_cadd, args.cadd_raw)),
+        ("bayesdel",          "BayesDel",          lambda: step_bayesdel(asm_dir, assembly, args.with_bayesdel, args.bayesdel_raw)),
         ("openspliceai",      "OpenSpliceAI",      lambda: step_openspliceai(asm_dir, assembly, args.skip_openspliceai)),
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
         # ("mmsplice-gtf",      "MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),

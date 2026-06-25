@@ -8,7 +8,7 @@ import structlog
 
 from acmg_classifier.config import Config
 from acmg_classifier.models.annotation import AnnotationData
-from acmg_classifier.models.enums import ConsequenceType, SpliceTool
+from acmg_classifier.models.enums import ConsequenceType, InSilicoTool, SpliceTool
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.utils.progress import progress_bar
 
@@ -60,6 +60,22 @@ class AnnotationOrchestrator:
         self._am_path = cfg.alphamissense_tsv
         self._esm1b_path = cfg.esm1b_sqlite
         self._revel_path = cfg.revel_tsv
+        self._bayesdel_path = cfg.bayesdel_tsv
+        self._cadd_path = cfg.cadd_tsv
+        # BayesDel / CADD are academic / non-commercial-licensed, so they are
+        # consulted ONLY alongside the already licence-encumbered missense path
+        # (REVEL or AlphaMissense) and NEVER under ESM1B (the commercial-safe
+        # default). Each is additionally opt-in via --with-bayesdel / --with-cadd.
+        licence_ok = cfg.insilico_tool in (InSilicoTool.REVEL, InSilicoTool.ALPHAMISSENSE)
+        self._use_bayesdel = cfg.use_bayesdel and licence_ok
+        self._use_cadd = cfg.use_cadd and licence_ok
+        if cfg.insilico_tool == InSilicoTool.ESM1B and (cfg.use_bayesdel or cfg.use_cadd):
+            requested = [n for n, on in (("bayesdel", cfg.use_bayesdel),
+                                         ("cadd", cfg.use_cadd)) if on]
+            log.warning("auxiliary_predictor_skipped_under_esm1b",
+                        requested=requested,
+                        reason="BayesDel/CADD are licence-gated to REVEL/AlphaMissense; "
+                               "not run under the commercial-safe ESM1B path")
         self._repeat_path = cfg.repeatmasker_bed
         self._splice = self._init_splice()
         # SQUIRLS predictor for secondary reporting — always initialized so
@@ -211,6 +227,24 @@ class AnnotationOrchestrator:
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
 
+        # Auxiliary predictors only when licence-gated ON (REVEL/AlphaMissense +
+        # explicit opt-in). Under ESM1B these stay None so no non-commercial data
+        # is ever read or written into the output.
+        bayesdel = None
+        if self._use_bayesdel:
+            from acmg_classifier.local_db.bayesdel_db import query_bayesdel
+            bayesdel = query_bayesdel(
+                self._bayesdel_path,
+                variant.chrom, variant.pos, variant.ref, variant.alt,
+            )
+        cadd = None
+        if self._use_cadd:
+            from acmg_classifier.local_db.cadd_db import query_cadd
+            cadd = query_cadd(
+                self._cadd_path,
+                variant.chrom, variant.pos, variant.ref, variant.alt,
+            )
+
         splice = self._splice.predict(variant)
         # When SQUIRLS is the primary splice tool, reuse the same result.
         # When SpliceAI is primary, run SQUIRLS separately for TSV reporting.
@@ -224,6 +258,8 @@ class AnnotationOrchestrator:
             alphamissense=alphamissense,
             esm1b=esm1b,
             revel=revel,
+            bayesdel=bayesdel,
+            cadd=cadd,
             # Dropping the splice record entirely when the predictor was
             # unavailable lets downstream criteria treat "no data" as
             # "splice unknown" rather than "splice = 0".

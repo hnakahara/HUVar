@@ -72,6 +72,14 @@ def cli(log_level: str):
 @click.option("--insilico-tool",
               type=click.Choice([t.value for t in InSilicoTool]),
               default=InSilicoTool.ESM1B.value, show_default=True)
+@click.option("--with-bayesdel", is_flag=True, default=False,
+              help="Consult the opt-in BayesDel scores (must be staged via "
+                   "setup_data.py --with-bayesdel). Licence-gated: applied only when "
+                   "--insilico-tool is revel or alphamissense; ignored under esm1b.")
+@click.option("--with-cadd", is_flag=True, default=False,
+              help="Consult the opt-in CADD scores (must be staged via "
+                   "setup_data.py --with-cadd). Licence-gated: applied only when "
+                   "--insilico-tool is revel or alphamissense; ignored under esm1b.")
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
@@ -111,6 +119,8 @@ def classify(
     data_dir: Path,
     assembly: Optional[str],
     insilico_tool: str,
+    with_bayesdel: bool,
+    with_cadd: bool,
     splice_tool: str,
     openspliceai_model_dir: Optional[Path],
     openspliceai_flanking_size: int,
@@ -134,6 +144,8 @@ def classify(
         data_dir=data_dir,
         assembly=Assembly(assembly) if assembly else Assembly.GRCH38,
         insilico_tool=InSilicoTool(insilico_tool),
+        use_bayesdel=with_bayesdel,
+        use_cadd=with_cadd,
         splice_tool=SpliceTool(splice_tool),
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
@@ -165,6 +177,13 @@ def classify(
 @click.option("--insilico-tool",
               type=click.Choice([t.value for t in InSilicoTool]),
               default=InSilicoTool.ESM1B.value, show_default=True)
+@click.option("--with-bayesdel", is_flag=True, default=False,
+              help="Consult the opt-in BayesDel scores (staged via setup_data.py "
+                   "--with-bayesdel). Applied only under --insilico-tool revel/alphamissense; "
+                   "ignored under esm1b.")
+@click.option("--with-cadd", is_flag=True, default=False,
+              help="Consult the opt-in CADD scores (staged via setup_data.py --with-cadd). "
+                   "Applied only under --insilico-tool revel/alphamissense; ignored under esm1b.")
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
@@ -203,6 +222,8 @@ def explain(
     data_dir: Path,
     assembly: str,
     insilico_tool: str,
+    with_bayesdel: bool,
+    with_cadd: bool,
     splice_tool: str,
     openspliceai_model_dir: Optional[Path],
     openspliceai_flanking_size: int,
@@ -226,6 +247,8 @@ def explain(
         data_dir=data_dir,
         assembly=Assembly(assembly),
         insilico_tool=InSilicoTool(insilico_tool),
+        use_bayesdel=with_bayesdel,
+        use_cadd=with_cadd,
         splice_tool=SpliceTool(splice_tool),
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
