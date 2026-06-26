@@ -91,6 +91,13 @@ class GeneThresholds:
     ba1: float
     bs1: float
     af_basis: str = ""
+    # gnomAD sample subset the BA1/BS1 cutoff is judged on: "" (default) → the
+    # overall/full release; "non_cancer" → the non-cancer subset's popmax FAF95
+    # (ENIGMA BRCA1/2). Sourced from an explicit ``af_subset`` column, falling
+    # back to the row's ``pm2_subset`` so genes already flagged non-cancer for
+    # PM2 (BRCA1/2) get the same basis for BA1/BS1 without a TSV edit. The BA1/BS1
+    # evaluators degrade to the overall FAF95 when the non-cancer value is absent.
+    af_subset: str = ""
     ba1_hom_count: Optional[int] = None
     # Strength the BS1 cutoff fires at — the spec's BS1 tier (e.g. MYO15A/OTOF
     # fire VeryStrong at >=0.3%); defaults to the ACMG BS1 Strong level.
@@ -163,6 +170,13 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
         ba1 = _DEFAULT_BA1
 
     af_basis = (row.get("af_basis") or "").strip().lower()
+    # Explicit af_subset wins; otherwise inherit the PM2 subset so BRCA1/2 (which
+    # carry pm2_subset=non_cancer) get non-cancer BA1/BS1 without a TSV change.
+    af_subset = (row.get("af_subset") or "").strip().lower()
+    if not af_subset:
+        af_subset = (row.get("pm2_subset") or "").strip().lower()
+    if af_subset != "non_cancer":
+        af_subset = ""
     bs1_strength = _BS1_STRENGTH.get(
         (row.get("bs1_strength") or "").strip(), CriterionStrength.STRONG
     )
@@ -173,8 +187,9 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
     except ValueError:
         ba1_hom_count = None
     return GeneThresholds(
-        ba1=ba1, bs1=bs1, af_basis=af_basis, bs1_strength=bs1_strength,
-        bs1_exclude=bs1_exclude, ba1_hom_count=ba1_hom_count,
+        ba1=ba1, bs1=bs1, af_basis=af_basis, af_subset=af_subset,
+        bs1_strength=bs1_strength, bs1_exclude=bs1_exclude,
+        ba1_hom_count=ba1_hom_count,
     )
 
 

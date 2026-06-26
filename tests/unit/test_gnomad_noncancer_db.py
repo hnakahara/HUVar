@@ -35,6 +35,8 @@ def _main_db(tmp_path: Path, rows: list[tuple]) -> Path:
 
 
 def _noncancer_db(tmp_path: Path, rows: list[tuple]) -> Path:
+    """Legacy companion schema (no faf95_non_cancer column) — exercises the
+    schema-probe backward-compat path."""
     p = tmp_path / "non_cancer.duckdb"
     con = duckdb.connect(str(p))
     con.execute(
@@ -43,6 +45,20 @@ def _noncancer_db(tmp_path: Path, rows: list[tuple]) -> Path:
     )
     if rows:  # DuckDB's executemany rejects an empty parameter list
         con.executemany("INSERT INTO non_cancer VALUES (?,?,?,?,?)", rows)
+    con.close()
+    return p
+
+
+def _noncancer_db_v2(tmp_path: Path, rows: list[tuple]) -> Path:
+    """Current companion schema, carrying the recomputed faf95_non_cancer."""
+    p = tmp_path / "non_cancer.duckdb"
+    con = duckdb.connect(str(p))
+    con.execute(
+        "CREATE TABLE non_cancer (chrom TEXT, pos INTEGER, ref TEXT, alt TEXT, "
+        "af_non_cancer DOUBLE, faf95_non_cancer DOUBLE)"
+    )
+    if rows:
+        con.executemany("INSERT INTO non_cancer VALUES (?,?,?,?,?,?)", rows)
     con.close()
     return p
 
@@ -61,6 +77,30 @@ def test_backfills_af_non_cancer_from_companion(tmp_path):
     assert gd.af_non_cancer == pytest.approx(1e-5)
     # The overall AF is untouched — the companion only supplies the subset value.
     assert gd.af == pytest.approx(2e-4)
+
+
+def test_backfills_faf95_non_cancer_from_companion(tmp_path):
+    # Current companion schema: both af and the recomputed popmax FAF95 backfill.
+    main = _main_db(tmp_path, [_PRESENT])
+    nc = _noncancer_db_v2(tmp_path, [("17", 43000000, "A", "G", 1e-5, 8e-6)])
+    db = GnomADDB(main, _NO_CONSTRAINT, nc)
+    gd = db.query("17", 43000000, "A", "G")
+    assert gd is not None
+    assert gd.af_non_cancer == pytest.approx(1e-5)
+    assert gd.faf95_non_cancer == pytest.approx(8e-6)
+
+
+def test_legacy_companion_without_faf95_degrades_to_none(tmp_path):
+    # A companion DB built before the faf95_non_cancer column: the schema probe
+    # selects NULL for it, so faf95_non_cancer stays None (BA1/BS1 then fall back
+    # to the overall FAF95) while af_non_cancer still backfills.
+    main = _main_db(tmp_path, [_PRESENT])
+    nc = _noncancer_db(tmp_path, [("17", 43000000, "A", "G", 1e-5)])
+    db = GnomADDB(main, _NO_CONSTRAINT, nc)
+    gd = db.query("17", 43000000, "A", "G")
+    assert gd is not None
+    assert gd.af_non_cancer == pytest.approx(1e-5)
+    assert gd.faf95_non_cancer is None
 
 
 def test_absent_in_companion_stays_none(tmp_path):

@@ -58,6 +58,17 @@ class BA1Evaluator(CriterionEvaluator):
             faf = gd.popmax_af if gd.popmax_af is not None else (gd.af or 0.0)
             metric = "gnomAD popmax AF (FAF95 unavailable)"
 
+        # Non-cancer subset (ENIGMA BRCA1/2): judge BA1 on the non-cancer subset's
+        # popmax FAF95 (recomputed at build time from the per-group non-cancer
+        # AC/AN). Fall back to the overall FAF95 (noting it) when the companion
+        # non-cancer value is unavailable.
+        if gt.af_subset == "non_cancer":
+            if gd.faf95_non_cancer is not None:
+                faf = gd.faf95_non_cancer
+                metric = "gnomAD FAF95 (non-cancer)"
+            else:
+                metric += " [non-cancer subset unavailable → overall]"
+
         # X-linked genes whose VCEP defines the cutoff "in males" (RPGR, RS1,
         # ABCD1, SLC6A8, OTC): compare against the male (XY) allele frequency.
         # Fall back to the overall FAF when AF_XY is unavailable (e.g. a gnomAD

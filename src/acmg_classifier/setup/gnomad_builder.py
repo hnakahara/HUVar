@@ -145,6 +145,50 @@ def _faf95_popmax(variant) -> float | None:
     return max(vals) if vals else None
 
 
+def _faf95_from_counts(ac: int | None, an: int | None) -> float | None:
+    """Poisson 95%-CI filtering allele frequency from a raw (AC, AN) pair.
+
+    gnomAD v3.1.2 publishes faf95 only for the FULL release, not the non-cancer
+    subset, so the non-cancer popmax FAF must be recomputed from the per-group
+    AC_non_cancer_<pop>/AN_non_cancer_<pop> counts. We use the Whiffin/Ware 2017
+    Poisson 95% lower confidence bound (the same definition gnomAD/Hail use):
+
+        faf = 0.5 * chi2_inv(0.05; 2*AC) / AN = gammaincinv(AC, 0.05) / AN
+
+    using the chi-square↔regularised-lower-incomplete-gamma identity
+    chi2_inv(p; 2k) = 2*gammaincinv(k, p). AC==0 has a lower bound of 0; a missing
+    or zero AN yields None (no callable denominator). For the rare-variant regime
+    that drives BA1/BS1 (AF ~1e-4) the Poisson bound matches gnomAD's published
+    faf95 to well under a percent — verified in the unit tests against the
+    full-release faf95_<pop> fields, which ARE precomputed in the same VCF."""
+    if an is None or an <= 0:
+        return None
+    if ac is None or ac <= 0:
+        return 0.0
+    from scipy.special import gammaincinv
+
+    return float(gammaincinv(ac, 0.05) / an)
+
+
+def _faf95_noncancer_popmax(variant) -> float | None:
+    """Non-cancer popmax FAF95 = max over the continental groups of the per-group
+    Poisson 95% FAF computed from AC_non_cancer_<pop>/AN_non_cancer_<pop>.
+
+    The population set mirrors ``_FAF95_V2_POPS`` (afr/amr/eas/nfe/sas) — the
+    grpmax/popmax basis that already excludes the founder/bottleneck groups
+    (asj, fin, oth, ami, mid). Returns None when no group carries a non-cancer
+    count (then the row simply has no non-cancer FAF, the same sparse-overlay
+    semantics as af_non_cancer)."""
+    vals: list[float] = []
+    for pop in _FAF95_V2_POPS:
+        ac = _to_int(_info(variant, f"AC_non_cancer_{pop}"))
+        an = _to_int(_info(variant, f"AN_non_cancer_{pop}"))
+        faf = _faf95_from_counts(ac, an)
+        if faf is not None:
+            vals.append(faf)
+    return max(vals) if vals else None
+
+
 def _nhemi(variant, chrom: str) -> int | None:
     """Hemizygous alt-allele count, version-agnostic.
 
@@ -569,7 +613,8 @@ CREATE TABLE IF NOT EXISTS non_cancer (
     pos INTEGER NOT NULL,
     ref TEXT NOT NULL,
     alt TEXT NOT NULL,
-    af_non_cancer DOUBLE
+    af_non_cancer DOUBLE,
+    faf95_non_cancer DOUBLE
 );
 """
 
@@ -577,7 +622,7 @@ _CREATE_NONCANCER_INDEX = """
 CREATE INDEX IF NOT EXISTS idx_non_cancer ON non_cancer (chrom, pos, ref, alt);
 """
 
-_NONCANCER_INSERT_SQL = "INSERT INTO non_cancer VALUES (?,?,?,?,?)"
+_NONCANCER_INSERT_SQL = "INSERT INTO non_cancer VALUES (?,?,?,?,?,?)"
 
 
 def build_gnomad_noncancer_duckdb(
@@ -590,8 +635,10 @@ def build_gnomad_noncancer_duckdb(
 ) -> None:
     """Build the non-cancer-subset companion DB from gnomAD v3.1.2 genomes.
 
-    Extracts ONLY (chrom, pos, ref, alt, AF_non_cancer) and stores rows that
-    carry a non-NULL non-cancer AF (a sparse overlay). Reuses the region-parallel
+    Extracts (chrom, pos, ref, alt, AF_non_cancer, faf95_non_cancer) and stores
+    rows carrying at least one non-NULL non-cancer signal (a sparse overlay). The
+    non-cancer popmax FAF95 is recomputed from the per-group non-cancer AC/AN
+    (gnomAD does not precompute it for the subset). Reuses the region-parallel
     VCF→Parquet→DuckDB pipeline. ``callsets`` defaults to the genomes VCF, which
     is the v3.1.2 release that carries the non-cancer subset.
 
@@ -681,11 +728,12 @@ def _vcf_to_noncancer_parquet(
     temp_dir: str,
     mem_limit: str,
 ) -> tuple[str, int]:
-    """Extract (chrom, pos, ref, alt, AF_non_cancer) for one VCF region.
+    """Extract (chrom, pos, ref, alt, AF_non_cancer, faf95_non_cancer) for one
+    VCF region.
 
-    Only rows with a non-NULL non-cancer AF are written (a sparse overlay).
-    Mirrors _vcf_to_parquet's region-window de-duplication and per-worker DuckDB
-    spill handling."""
+    Only rows with at least one non-NULL non-cancer signal are written (a sparse
+    overlay). Mirrors _vcf_to_parquet's region-window de-duplication and
+    per-worker DuckDB spill handling."""
     import duckdb
     from cyvcf2 import VCF
 
@@ -720,15 +768,18 @@ def _vcf_to_noncancer_parquet(
                 if pos_lo is not None and not (pos_lo <= v.POS <= pos_hi):
                     continue
                 # Field name varies by release: v3.1.2 / v2.1.1 = "AF_non_cancer"
-                # or "non_cancer_AF". Skip sites that carry no non-cancer AF.
+                # or "non_cancer_AF". faf95_non_cancer is NOT precomputed, so we
+                # derive it from the per-group non-cancer AC/AN (see
+                # _faf95_noncancer_popmax). Skip sites carrying neither signal.
                 af_nc = _to_float(_info(v, "AF_non_cancer", "non_cancer_AF"))
-                if af_nc is None:
+                faf_nc = _faf95_noncancer_popmax(v)
+                if af_nc is None and faf_nc is None:
                     continue
                 chrom_raw = v.CHROM
                 chrom = chrom_raw[3:] if chrom_raw.startswith("chr") else chrom_raw
                 ref = v.REF
                 for alt in v.ALT:
-                    batch.append((chrom, int(v.POS), ref, alt, af_nc))
+                    batch.append((chrom, int(v.POS), ref, alt, af_nc, faf_nc))
 
                 if len(batch) >= _BATCH_SIZE:
                     con.executemany(_NONCANCER_INSERT_SQL, batch)

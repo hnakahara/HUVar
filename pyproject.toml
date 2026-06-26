@@ -53,6 +53,11 @@ dependencies = [
     # bigWig silently disables BP7. Builds against libcurl/zlib (preinstalled on
     # typical Linux); reading is no-op when the bigWig file is absent.
     "pyBigWig>=0.3",
+    # Poisson 95% CI filtering allele frequency (scipy.special.gammaincinv) for
+    # the gnomAD non-cancer subset, whose faf95 gnomAD does NOT precompute — it is
+    # recomputed at build time from the per-group non-cancer AC/AN. See
+    # gnomad_builder._faf95_from_counts.
+    "scipy>=1.10",
 ]
 
 [project.urls]

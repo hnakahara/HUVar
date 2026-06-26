@@ -77,6 +77,18 @@ class BS1Evaluator(CriterionEvaluator):
                     "(recurrent disease allele)",
                 )
 
+        # Non-cancer subset (ENIGMA BRCA1/2): the VCEP judges BS1 on gnomAD's
+        # non-cancer subset, so use its popmax FAF95 (recomputed at build time
+        # from the per-group non-cancer AC/AN). Fall back to the overall FAF95
+        # (noting it) when the companion non-cancer value is unavailable — e.g. a
+        # companion DB predating the column, or a variant absent from the subset.
+        if gt.af_subset == "non_cancer":
+            if gd.faf95_non_cancer is not None:
+                faf = gd.faf95_non_cancer
+                metric = "gnomAD FAF95 (non-cancer)"
+            else:
+                metric += " [non-cancer subset unavailable → overall]"
+
         # X-linked "in males" genes (RPGR, RS1): the VCEP cutoff is on the male
         # (XY) allele frequency. Fall back to the overall FAF when AF_XY is
         # unavailable (gnomAD DB predating the af_xy column).

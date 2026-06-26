@@ -117,6 +117,35 @@ class TestDiseaseThresholds:
         assert dt.get("MECP2").af_basis == ""        # blank → overall population
         assert dt.get("UNKNOWN").af_basis == ""      # default thresholds
 
+    def test_af_subset_explicit_column(self, tmp_path: Path):
+        tsv = _write_tsv(
+            tmp_path,
+            "gene_symbol\tbs1_threshold\tba1_threshold\taf_subset\n"
+            "GENEX\t0.0001\t0.001\tnon_cancer\n"
+            "GENEY\t0.0001\t0.001\t\n",
+        )
+        dt = DiseaseThresholds(tsv)
+        assert dt.get("GENEX").af_subset == "non_cancer"
+        assert dt.get("GENEY").af_subset == ""       # blank → overall
+
+    def test_af_subset_falls_back_to_pm2_subset(self, tmp_path: Path):
+        # BRCA1/2 carry pm2_subset=non_cancer (no explicit af_subset column), so
+        # BA1/BS1 inherit the non-cancer basis without a TSV edit.
+        tsv = _write_tsv(
+            tmp_path,
+            "gene_symbol\tbs1_threshold\tba1_threshold\tpm2_subset\n"
+            "BRCA2\t0.0001\t0.001\tnon_cancer\n",
+        )
+        assert DiseaseThresholds(tsv).get("BRCA2").af_subset == "non_cancer"
+
+    def test_af_subset_unknown_value_ignored(self, tmp_path: Path):
+        tsv = _write_tsv(
+            tmp_path,
+            "gene_symbol\tbs1_threshold\tba1_threshold\taf_subset\n"
+            "GENEZ\t0.0001\t0.001\tcontrols\n",
+        )
+        assert DiseaseThresholds(tsv).get("GENEZ").af_subset == ""
+
     def test_het_defaults_to_one_when_omitted(self, tmp_path: Path):
         # Only prevalence + penetrance given; het defaults to 1.0.
         # maxAF (AD) = 0.001*1*1/1 /2 = 5e-4 → bs1 = max(5e-4,5e-4)=5e-4

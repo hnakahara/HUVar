@@ -210,6 +210,65 @@ class TestBA1PopmaxBasisAndHomCount:
         assert not r.triggered
 
 
+class TestNonCancerSubset:
+    """ENIGMA BRCA1/2 judge BA1/BS1 on the gnomAD non-cancer subset's popmax
+    FAF95 (recomputed at build time). The subset basis is inherited from the
+    pm2_subset column, so BRCA2 needs no extra TSV column."""
+
+    def _cfg(self, tmp_path):
+        from unittest.mock import MagicMock
+        cfg = MagicMock()
+        tsv = tmp_path / "disease_prevalence.tsv"
+        # pm2_subset=non_cancer (no explicit af_subset) → BA1/BS1 inherit it.
+        tsv.write_text(
+            "gene_symbol\tbs1_threshold\tba1_threshold\tpm2_subset\n"
+            "BRCA2\t0.0001\t0.001\tnon_cancer\n",
+            encoding="utf-8",
+        )
+        cfg.disease_prevalence_tsv = tsv
+        cfg.popmax_af_basis = True
+        return cfg
+
+    def test_bs1_uses_noncancer_faf_over_overall(self, tmp_path):
+        from acmg_classifier.criteria.benign.bs1 import BS1Evaluator
+        ev = BS1Evaluator(self._cfg(tmp_path))
+        # Overall FAF (1e-5) below BS1, non-cancer FAF (2e-4) >= 1e-4 → fires.
+        gd = GnomADData(faf95_popmax=1e-5, faf95_non_cancer=2e-4, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="BRCA2")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and "non-cancer" in r.evidence
+
+    def test_bs1_noncancer_faf_suppresses_when_subset_is_rarer(self, tmp_path):
+        from acmg_classifier.criteria.benign.bs1 import BS1Evaluator
+        ev = BS1Evaluator(self._cfg(tmp_path))
+        # Overall FAF (2e-4) would fire, but the authoritative non-cancer FAF
+        # (1e-5) is below BS1 → BS1 must NOT fire (the cancer cohorts inflated
+        # the overall AF).
+        gd = GnomADData(faf95_popmax=2e-4, faf95_non_cancer=1e-5, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="BRCA2")])
+        r = ev.evaluate(_snv(), ann)
+        assert not r.triggered
+
+    def test_bs1_falls_back_to_overall_when_noncancer_missing(self, tmp_path):
+        from acmg_classifier.criteria.benign.bs1 import BS1Evaluator
+        ev = BS1Evaluator(self._cfg(tmp_path))
+        # No non-cancer FAF (legacy companion / absent in subset) → fall back to
+        # the overall FAF95 (2e-4 >= 1e-4 fires), with the fallback noted.
+        gd = GnomADData(faf95_popmax=2e-4, faf95_non_cancer=None, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="BRCA2")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and "non-cancer subset unavailable" in r.evidence
+
+    def test_ba1_uses_noncancer_faf(self, tmp_path):
+        from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+        ev = BA1Evaluator(self._cfg(tmp_path))
+        # Overall FAF (1e-4) below BA1, non-cancer FAF (2e-3) >= 1e-3 → fires.
+        gd = GnomADData(faf95_popmax=1e-4, faf95_non_cancer=2e-3, filter_pass=True)
+        ann = _annotation(gnomad=gd, consequences=[_consequence(gene="BRCA2")])
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and "non-cancer" in r.evidence
+
+
 def test_committed_ryr1_ba1_threshold():
     import csv
     from pathlib import Path

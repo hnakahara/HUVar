@@ -57,6 +57,12 @@ class GnomADData(BaseModel):
     # BRCA1/2). None when the gnomAD DB predates this column → PM2 gracefully
     # falls back to the overall allele frequency.
     af_non_cancer: Optional[float] = None
+    # Non-cancer-subset popmax FAF95 (95%-CI filtering AF), recomputed from the
+    # gnomAD v3.1.2 per-group non-cancer AC/AN (gnomAD does not precompute it for
+    # the subset). Used by BA1/BS1 for VCEPs that judge frequency on the
+    # non-cancer subset (ENIGMA BRCA1/2). None when the DB predates this column →
+    # BA1/BS1 gracefully fall back to the overall (full-release) FAF95.
+    faf95_non_cancer: Optional[float] = None
     # Female (XX) allele count and female homozygote count, used by BS2 for VCEPs
     # that count only females (e.g. TP53). Female carriers = ac_xx - nhomalt_xx.
     # None when the gnomAD DB predates these columns (graceful fallback: a

@@ -159,21 +159,32 @@ class GnomADDB:
         # present in the main DB — one absent there is absent in every subset
         # too, so PM2's "absent" path already covers it and we skip the extra
         # lookup for the overwhelmingly common novel variant.
-        if data.af_non_cancer is None and self._noncancer_db_path is not None:
+        if ((data.af_non_cancer is None or data.faf95_non_cancer is None)
+                and self._noncancer_db_path is not None):
             nc = self._query_noncancer(c1, c2, pos, ref, alt)
             if nc is not None:
-                data = data.model_copy(update={"af_non_cancer": nc})
+                af_nc, faf_nc = nc
+                update = {}
+                if data.af_non_cancer is None and af_nc is not None:
+                    update["af_non_cancer"] = af_nc
+                if data.faf95_non_cancer is None and faf_nc is not None:
+                    update["faf95_non_cancer"] = faf_nc
+                if update:
+                    data = data.model_copy(update=update)
         return data
 
     def _query_noncancer(
         self, c1: str, c2: str, pos: int, ref: str, alt: str
-    ) -> Optional[float]:
-        """Non-cancer-subset AF from the companion v3.1.2 DB (GRCh38), or None.
+    ) -> Optional[tuple[Optional[float], Optional[float]]]:
+        """Non-cancer-subset (AF, popmax FAF95) from the companion v3.1.2 DB
+        (GRCh38), or None when the variant is absent / the DB is missing.
 
         Returns the per-field MAX over any matching rows (mirroring the main
-        merge), or None when the variant is absent there or the DB is missing.
-        Connection-per-call mirrors query()'s pattern — DuckDB read-only opens
-        are cheap and keep the object stateless across threads/processes."""
+        merge). ``faf95_non_cancer`` is absent in companion DBs built before that
+        column was added — a schema probe degrades it to None there (BA1/BS1 then
+        fall back to the overall FAF95). Connection-per-call mirrors query()'s
+        pattern — DuckDB read-only opens are cheap and keep the object stateless
+        across threads/processes."""
         if not self._noncancer_db_path.exists():
             log.warning("gnomad_noncancer_db_missing",
                         path=str(self._noncancer_db_path))
@@ -181,9 +192,18 @@ class GnomADDB:
         try:
             import duckdb
             con = duckdb.connect(str(self._noncancer_db_path), read_only=True)
+            cols = {
+                r[1] for r in con.execute(
+                    "PRAGMA table_info('non_cancer')"
+                ).fetchall()
+            }
+            faf_expr = (
+                "faf95_non_cancer" if "faf95_non_cancer" in cols
+                else "NULL AS faf95_non_cancer"
+            )
             rows = con.execute(
-                """
-                SELECT af_non_cancer FROM non_cancer
+                f"""
+                SELECT af_non_cancer, {faf_expr} FROM non_cancer
                 WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
                 """,
                 [c1, c2, pos, ref, alt],
@@ -192,8 +212,15 @@ class GnomADDB:
         except Exception as exc:
             log.error("gnomad_noncancer_query_error", error=str(exc))
             return None
-        vals = [r[0] for r in rows if r[0] is not None]
-        return max(vals) if vals else None
+        if not rows:
+            return None
+        af_vals = [r[0] for r in rows if r[0] is not None]
+        faf_vals = [r[1] for r in rows if r[1] is not None]
+        af_nc = max(af_vals) if af_vals else None
+        faf_nc = max(faf_vals) if faf_vals else None
+        if af_nc is None and faf_nc is None:
+            return None
+        return (af_nc, faf_nc)
 
     def _columns(self, con) -> set[str]:
         """The variants table's column names (cached per instance). Used to
