@@ -233,8 +233,22 @@ class PM2Evaluator(CriterionEvaluator):
                 # subset (the ENIGMA BRCA1/2 basis), even though there is no
                 # non-cancer record to read.
                 metric = "AF(non-cancer)"
+                absent = True
                 absent_detail = "non-cancer subset; absent from gnomAD"
+            elif gd.non_cancer_queried:
+                # Present in the overall gnomAD (cancer cohorts) but carrying NO
+                # non-cancer record despite the subset being consulted → zero
+                # non-cancer carriers → ABSENT in the non-cancer subset. ENIGMA
+                # judges PM2 on that subset, so this qualifies as absent. The
+                # read-depth gate (depth_block) still guards a poorly-covered
+                # region, where "absence" is not callable. (Only BRCA1/2 use this
+                # subset today, and the companion DB covers their contigs.)
+                metric = "AF(non-cancer)"
+                absent = True
+                absent_detail = "non-cancer subset (present only in cancer cohorts)"
             else:
+                # The non-cancer subset was not consultable (no companion DB / old
+                # build) → subset absence cannot be asserted; fall back to overall.
                 metric = "AF [non-cancer subset unavailable → overall]"
 
         # Gene-specific "absent" wording (named genes only, cSpec verbatim).

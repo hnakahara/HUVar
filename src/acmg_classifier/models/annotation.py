@@ -63,6 +63,12 @@ class GnomADData(BaseModel):
     # non-cancer subset (ENIGMA BRCA1/2). None when the DB predates this column →
     # BA1/BS1 gracefully fall back to the overall (full-release) FAF95.
     faf95_non_cancer: Optional[float] = None
+    # True when the non-cancer companion DB was present and consulted for this
+    # variant — so a None af_non_cancer means genuine ABSENCE in the non-cancer
+    # subset (no record found), not "subset data unavailable". PM2 (ENIGMA
+    # BRCA1/2) needs this to tell "present only in cancer cohorts → absent in
+    # non-cancer → PM2 met" apart from an old DB with no non-cancer support.
+    non_cancer_queried: bool = False
     # Female (XX) allele count and female homozygote count, used by BS2 for VCEPs
     # that count only females (e.g. TP53). Female carriers = ac_xx - nhomalt_xx.
     # None when the gnomAD DB predates these columns (graceful fallback: a

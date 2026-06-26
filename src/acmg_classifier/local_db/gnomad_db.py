@@ -159,18 +159,22 @@ class GnomADDB:
         # present in the main DB — one absent there is absent in every subset
         # too, so PM2's "absent" path already covers it and we skip the extra
         # lookup for the overwhelmingly common novel variant.
-        if ((data.af_non_cancer is None or data.faf95_non_cancer is None)
-                and self._noncancer_db_path is not None):
-            nc = self._query_noncancer(c1, c2, pos, ref, alt)
-            if nc is not None:
-                af_nc, faf_nc = nc
-                update = {}
-                if data.af_non_cancer is None and af_nc is not None:
-                    update["af_non_cancer"] = af_nc
-                if data.faf95_non_cancer is None and faf_nc is not None:
-                    update["faf95_non_cancer"] = faf_nc
-                if update:
-                    data = data.model_copy(update=update)
+        if (self._noncancer_db_path is not None
+                and self._noncancer_db_path.exists()):
+            # The companion subset is consultable → record that fact so a None
+            # af_non_cancer downstream reads as genuine absence in the non-cancer
+            # subset (PM2's "present only in cancer cohorts" case), not as missing
+            # data. Set regardless of hit/miss; a miss IS the absence signal.
+            update = {"non_cancer_queried": True}
+            if data.af_non_cancer is None or data.faf95_non_cancer is None:
+                nc = self._query_noncancer(c1, c2, pos, ref, alt)
+                if nc is not None:
+                    af_nc, faf_nc = nc
+                    if data.af_non_cancer is None and af_nc is not None:
+                        update["af_non_cancer"] = af_nc
+                    if data.faf95_non_cancer is None and faf_nc is not None:
+                        update["faf95_non_cancer"] = faf_nc
+            data = data.model_copy(update=update)
         return data
 
     def _query_noncancer(

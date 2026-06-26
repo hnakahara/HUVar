@@ -77,6 +77,8 @@ def test_backfills_af_non_cancer_from_companion(tmp_path):
     assert gd.af_non_cancer == pytest.approx(1e-5)
     # The overall AF is untouched — the companion only supplies the subset value.
     assert gd.af == pytest.approx(2e-4)
+    # The subset was consultable → flagged so a None downstream reads as absence.
+    assert gd.non_cancer_queried is True
 
 
 def test_backfills_faf95_non_cancer_from_companion(tmp_path):
@@ -109,6 +111,9 @@ def test_absent_in_companion_stays_none(tmp_path):
     db = GnomADDB(main, _NO_CONSTRAINT, nc)
     gd = db.query("17", 43000000, "A", "G")
     assert gd is not None and gd.af_non_cancer is None
+    # The companion was present and consulted → a miss flags genuine subset
+    # absence (PM2 reads this as "present only in cancer cohorts").
+    assert gd.non_cancer_queried is True
 
 
 def test_no_companion_configured_is_noop(tmp_path):
@@ -116,6 +121,8 @@ def test_no_companion_configured_is_noop(tmp_path):
     db = GnomADDB(main, _NO_CONSTRAINT)  # GRCh37-style: no companion
     gd = db.query("17", 43000000, "A", "G")
     assert gd is not None and gd.af_non_cancer is None
+    # No companion → subset NOT consultable → PM2 must fall back to overall AF.
+    assert gd.non_cancer_queried is False
 
 
 def test_variant_absent_from_main_skips_companion(tmp_path):

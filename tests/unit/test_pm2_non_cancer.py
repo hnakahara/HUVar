@@ -75,12 +75,22 @@ class TestEvaluator:
             _snv(), _ann("BRCA1", af=2e-4, popmax_af=2e-4, ac=5, af_non_cancer=2e-4))
         assert not r.triggered
 
-    def test_fallback_to_overall_when_subset_absent(self, tmp_path):
-        # gnomAD DB predates the column (af_non_cancer=None) → fall back to overall
-        # AF; present overall → not absent → not met, with a fallback note.
+    def test_fallback_to_overall_when_subset_not_consulted(self, tmp_path):
+        # No companion DB consulted (non_cancer_queried=False, e.g. an old build):
+        # af_non_cancer=None means "subset unavailable", NOT absence — fall back to
+        # the overall AF; present overall → not absent → not met, with a note.
         r = PM2Evaluator(_cfg(tmp_path)).evaluate(
             _snv(), _ann("BRCA1", af=2e-4, popmax_af=2e-4, ac=5, af_non_cancer=None))
         assert not r.triggered and "non-cancer subset unavailable" in r.evidence
+
+    def test_absent_in_non_cancer_subset_fires(self, tmp_path):
+        # Companion subset WAS consulted (non_cancer_queried=True) and found no
+        # record → the variant is present only in cancer cohorts → absent in the
+        # non-cancer subset → PM2 fires (no depth requirement in this test TSV).
+        r = PM2Evaluator(_cfg(tmp_path)).evaluate(
+            _snv(), _ann("BRCA1", af=2e-4, popmax_af=2e-4, ac=5,
+                         af_non_cancer=None, non_cancer_queried=True))
+        assert r.triggered and "cancer cohorts" in r.evidence
 
     def test_truly_absent_fires(self, tmp_path):
         r = PM2Evaluator(_cfg(tmp_path)).evaluate(
