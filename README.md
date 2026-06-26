@@ -474,6 +474,8 @@ Full option list:
 | `--data-dir PATH` | path | `./data` | Data root |
 | `--assembly {GRCh37,GRCh38}` | str | auto-detect from VCF header → fallback `GRCh38` | Force a specific assembly |
 | `--insilico-tool {esm1b,alphamissense,revel}` | str | `esm1b` | Missense predictor used for PP3/BP4 (`revel` needs `setup_data.py --with-revel`) |
+| `--with-bayesdel` | flag | off | **Required at classification time** to consult BayesDel for the VCEPs that define PP3/BP4 on it (ENIGMA BRCA1/2, TP53). Without it these genes fall through to the single-tool path and BayesDel is **never queried**. Applied only under `--insilico-tool revel/alphamissense`; the data must also be staged with `setup_data.py --with-bayesdel`. |
+| `--with-cadd` | flag | off | **Required at classification time** to consult CADD for the VCEPs that define PP3/BP4 on it (CTLA4/PIK3CD/PIK3R1/BMPR2/ABCA4). Without it CADD is **never queried**. Applied only under `--insilico-tool revel/alphamissense`; the data must also be staged with `setup_data.py --with-cadd`. |
 | `--splice-tool {openspliceai,spliceai}` | str | `openspliceai` | Splice predictor used for PP3/BP4/PVS1. `openspliceai` (default, GPL-3.0) runs OSAI_MANE at inference time; `spliceai` (Illumina-licensed) uses precomputed VCFs. The splice call takes precedence over the missense call — including on missense variants — when its score ≥ 0.20. |
 | `--openspliceai-model-dir PATH` | path | `<data-dir>/<asm>/openspliceai/<flank>nt/` | OSAI_MANE model directory |
 | `--openspliceai-flanking-size N` | int | `2000` | Model context length (must match the downloaded model: 80/400/2000/10000) |
@@ -481,6 +483,25 @@ Full option list:
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
 | `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
 | `--workers N` | int | `4` | Parallel workers for annotation |
+
+> ⚠️ **BayesDel / CADD are opt-in at classification time too.** `--with-bayesdel`
+> and `--with-cadd` must be passed to **`classify`** (and `explain`), not only to
+> `setup_data.py`. Staging the data alone does **not** enable them — without the
+> flag the BayesDel/CADD-based VCEP rules (BRCA1/2 & TP53; CTLA4/PIK3CD/PIK3R1/
+> BMPR2/ABCA4) are skipped and those genes fall through to the single-tool PP3/BP4
+> path. Both flags are licence-gated to `--insilico-tool revel/alphamissense` and
+> ignored under `esm1b`.
+
+Example for a BRCA1/2 + TP53 panel using REVEL with the auxiliary predictors:
+
+```bash
+acmg-classify classify panel.vcf.gz \
+    -o panel_results.tsv \
+    --assembly GRCh38 --data-dir /path/to/download/directory/data \
+    --insilico-tool revel --with-bayesdel --with-cadd \
+    --splice-tool openspliceai --openspliceai-flanking-size 2000 \
+    --workers 12
+```
 
 Example for a panel sequencing run with manual segregation evidence:
 
