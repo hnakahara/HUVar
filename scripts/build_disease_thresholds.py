@@ -2211,17 +2211,21 @@ def resolve_rows(files: list[str], released_only: bool = False) -> dict[str, dic
 # under a specific disease's specification. The batch disease_prevalence.tsv is
 # unchanged; only this extra file is produced.
 #   gene -> [(GN id, cspec_id, disease label, per-CSpec override dict), ...]
-# The override dict carries values the standalone single-spec resolution cannot
-# mine but that the conservative row pins via _CURATED_OVERRIDES — kept in sync
-# so a CSpec uses the same AF metric as the batch row for that gene. RYR1's AF
-# cutoffs are popmax point estimates (see _CURATED_OVERRIDES["RYR1"]); the same
-# basis applies to all three RYR1 CSpecs. ACTA1/VWF carry no AF-basis pin in the
-# batch row, so they stay on the resolver/evaluator default (empty).
+# The override dict pins the AF metric the spec text states, since the standalone
+# resolution does not always mine it. CRITICAL: the metric is per-CSpec, NOT
+# per-gene — RYR1's three CSpecs disagree:
+#   * GN012 (malignant hyperthermia): "Popmax allele frequency >0.0008" → popmax
+#     POINT estimate (matches _CURATED_OVERRIDES["RYR1"], which is the MH spec).
+#   * GN150 / GN179 (congenital myopathy AD/AR): "using the filtering allele
+#     frequency ... ≥4.86e-6 / ≥6.97e-4" → FAF95. These must NOT inherit MH's
+#     popmax basis; on few alleles point >> FAF95, which would wrongly fire BS1.
+# Empty dict ⇒ evaluator default (FAF95 when Config.popmax_af_basis is True).
+# ACTA1/VWF spec BS1/BA1 are likewise FAF-based, so they stay empty.
 _MULTISPEC_CSPECS: dict[str, list[tuple[str, str, str, dict]]] = {
     "RYR1": [
         ("GN012", "malignant_hyperthermia", "悪性高熱症感受性", {"af_basis": "popmax"}),
-        ("GN150", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {"af_basis": "popmax"}),
-        ("GN179", "congenital_myopathy_ar", "先天性ミオパチー (AR)", {"af_basis": "popmax"}),
+        ("GN150", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {}),
+        ("GN179", "congenital_myopathy_ar", "先天性ミオパチー (AR)", {}),
     ],
     "ACTA1": [
         ("GN147", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {}),

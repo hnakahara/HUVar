@@ -124,6 +124,21 @@ class TestCommittedMultispecTable:
         assert {c["cspec_id"] for c in available_cspecs("VWF", _MULTISPEC)} == {
             "vwd_ad", "vwd_ar"}
 
+    def test_ryr1_af_basis_is_per_cspec(self):
+        # The AF metric differs BY CSPEC, not by gene: malignant hyperthermia
+        # states "Popmax allele frequency" (point), while the congenital myopathy
+        # specs state "filtering allele frequency" (FAF95 → empty af_basis). A
+        # blanket popmax inheritance would wrongly fire BS1 on few-allele variants
+        # (e.g. RYR1 p.F4976L, 13/1.18M) whose point AF exceeds the FAF95 cutoff.
+        basis = {}
+        with _MULTISPEC.open(encoding="utf-8") as f:
+            for r in csv.DictReader(f, delimiter="\t"):
+                if r["gene_symbol"] == "RYR1":
+                    basis[r["cspec_id"]] = r["af_basis"]
+        assert basis["malignant_hyperthermia"] == "popmax"
+        assert basis["congenital_myopathy_ad"] == ""
+        assert basis["congenital_myopathy_ar"] == ""
+
     def test_ryr1_pvs1_differs_by_cspec(self, tmp_path):
         base = tmp_path / "base.tsv"
         base.write_text(_BASE, encoding="utf-8")
