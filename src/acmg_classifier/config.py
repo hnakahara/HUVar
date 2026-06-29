@@ -63,6 +63,12 @@ class Config(BaseSettings):
     supplement_mode: SupplementMode = SupplementMode.MERGE
     spliceai_dir: Optional[Path] = None
     openspliceai_model_dir: Optional[Path] = None
+    # Optional override of the disease_prevalence.tsv path. Left None for CLI /
+    # batch runs, which always use the conservative aggregated table under
+    # data_dir. The HUVar app sets this to a per-CSpec overlay TSV (a copy of the
+    # base table with one gene's row replaced by a specific disease's spec) to
+    # evaluate a variant under that CSpec without touching the batch behaviour.
+    disease_prevalence_tsv_override: Optional[Path] = None
     # OpenSpliceAI model context length (nt). Default 80 (the smallest OSAI_MANE
     # variant) for fast CPU inference — runtime scales with the flanking window,
     # so 80nt is ~25x lighter than 2000nt. Raise to 400/2000/10000 (all staged
@@ -301,6 +307,10 @@ class Config(BaseSettings):
 
     @property
     def disease_prevalence_tsv(self) -> Path:
+        # An explicit override (per-CSpec overlay set by the app) wins; otherwise
+        # the conservative aggregated table under data_dir (CLI / batch default).
+        if self.disease_prevalence_tsv_override is not None:
+            return self.disease_prevalence_tsv_override
         return self.data_dir / "shared" / "disease_prevalence.tsv"
 
     @property

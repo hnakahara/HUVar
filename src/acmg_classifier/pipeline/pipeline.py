@@ -195,6 +195,57 @@ def run_pipeline(
     return results
 
 
+def annotate_one(
+    chrom: str,
+    pos: int,
+    ref: str,
+    alt: str,
+    cfg: Config,
+) -> tuple["VariantRecord", "AnnotationData"]:
+    """Annotate a single variant — the heavy, CSpec-independent step.
+
+    The returned annotation is reusable across several CSpec evaluations via
+    :func:`classify_annotated`, so the expensive VEP / splice / in-silico work
+    runs only once even when a variant is classified under multiple CSpecs."""
+    from acmg_classifier.annotation.orchestrator import AnnotationOrchestrator
+
+    variant = VariantRecord(chrom=chrom, pos=pos, ref=ref, alt=alt, assembly=cfg.assembly)
+    orchestrator = AnnotationOrchestrator(cfg)
+    ann = orchestrator.annotate_batch([variant])[variant.key]
+    return variant, ann
+
+
+def classify_annotated(
+    variant: "VariantRecord",
+    ann: "AnnotationData",
+    cfg: Config,
+    supplement: Optional[list[SupplementEntry]] = None,
+) -> ClassificationResult:
+    """Evaluate criteria and classify a pre-annotated variant under ``cfg``.
+
+    The CSpec-dependent step: thresholds come from ``cfg.disease_prevalence_tsv``,
+    so the *same* annotation can be classified under different CSpecs by passing
+    a ``cfg`` whose ``disease_prevalence_tsv_override`` points at the desired
+    per-CSpec overlay table."""
+    from acmg_classifier.criteria.registry import CriteriaRegistry
+    from acmg_classifier.classification.classifier_2015 import Classifier2015
+    from acmg_classifier.classification.classifier_bayesian import ClassifierBayesian
+
+    registry = CriteriaRegistry(cfg)
+    criteria_results = registry.evaluate_all(variant, ann, supplement)
+    classification_2015, rules = Classifier2015().classify(criteria_results)
+    score, classification_bay = ClassifierBayesian().classify(criteria_results)
+
+    return ClassificationResult(
+        variant_id=variant.key,
+        criteria_results=criteria_results,
+        classification_2015=classification_2015,
+        classification_2015_rules=rules,
+        bayesian_score=score,
+        classification_bayesian=classification_bay,
+    )
+
+
 def run_single(
     chrom: str,
     pos: int,
@@ -208,31 +259,9 @@ def run_single(
     ``supplement`` is an optional list of manual curator evidence entries for
     this variant (from ``explain --evidence`` / ``--supplement``); they are
     combined with the automated calls per ``cfg.supplement_mode``."""
-    from acmg_classifier.annotation.orchestrator import AnnotationOrchestrator
-    from acmg_classifier.criteria.registry import CriteriaRegistry
-    from acmg_classifier.classification.classifier_2015 import Classifier2015
-    from acmg_classifier.classification.classifier_bayesian import ClassifierBayesian
     from acmg_classifier.io.report_writer import print_report
 
-    variant = VariantRecord(chrom=chrom, pos=pos, ref=ref, alt=alt, assembly=cfg.assembly)
-    orchestrator = AnnotationOrchestrator(cfg)
-    registry = CriteriaRegistry(cfg)
-
-    ann = orchestrator.annotate_batch([variant])[variant.key]
-    criteria_results = registry.evaluate_all(variant, ann, supplement)
-
-    clf_2015 = Classifier2015()
-    clf_bay = ClassifierBayesian()
-    classification_2015, rules = clf_2015.classify(criteria_results)
-    score, classification_bay = clf_bay.classify(criteria_results)
-
-    result = ClassificationResult(
-        variant_id=variant.key,
-        criteria_results=criteria_results,
-        classification_2015=classification_2015,
-        classification_2015_rules=rules,
-        bayesian_score=score,
-        classification_bayesian=classification_bay,
-    )
+    variant, ann = annotate_one(chrom, pos, ref, alt, cfg)
+    result = classify_annotated(variant, ann, cfg, supplement)
     print_report(result, variant, ann)
     return result

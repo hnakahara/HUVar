@@ -1854,26 +1854,15 @@ def _fmt(x: float) -> str:
     return ("%.10f" % x).rstrip("0").rstrip(".") if x < 1 else str(x)
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--json-dir", default="resources/clingen")
-    ap.add_argument("--out", default="resources/shared/disease_prevalence.tsv")
-    ap.add_argument("--released-only", action="store_true",
-                    help="Only emit specs whose cspecStatus is 'Released'.")
-    ap.add_argument(
-        "--override", action="append", default=[],
-        metavar="GENE:field=val[,field=val]",
-        help="Manually override a gene's resolved values, applied AFTER "
-             "multi-spec resolution. Repeatable. Fields: ba1, bs1, af_basis, "
-             "inheritance. Example: --override RYR1:ba1=0.0038,bs1=0.0007 . "
-             "Use this to pin a disease-appropriate cutoff for genes whose "
-             "multi-spec ambiguity is kept conservative (highest threshold) by "
-             "default.",
-    )
-    args = ap.parse_args()
-    overrides = _parse_overrides(args.override)
+def resolve_rows(files: list[str], released_only: bool = False) -> dict[str, dict]:
+    """Parse every spec file and resolve one merged row per gene — cross-spec
+    aggregation plus per-criterion stamping — exactly as the batch TSV build
+    does. Returns the by-gene map BEFORE curated/CLI overrides are applied, so
+    callers (``main`` and the multispec builder) apply their own overrides.
 
-    files = sorted(glob.glob(os.path.join(args.json_dir, "GN*.json")))
+    Passing a single-spec ``files`` list yields that one spec's standalone
+    resolution for its gene(s) — the basis for the per-CSpec multispec table.
+    """
     by_gene: dict[str, dict] = {}
     # PP2 applicability resolves to the MOST GENE-SPECIFIC spec's decision, the
     # same specificity rule used for BA1/BS1: a single-gene VCEP supersedes a
@@ -1949,7 +1938,7 @@ def main() -> None:
         except Exception as e:
             print(f"  [skip] {path}: {e}")
             continue
-        if args.released_only and status != "Released":
+        if released_only and status != "Released":
             continue
         n_specs += 1
         for row in parse_spec(path):
@@ -2212,6 +2201,106 @@ def main() -> None:
             row[f"revel_pp3_{tier}"] = _fmt(rv_pp3[tier]) if tier in rv_pp3 else ""
             row[f"revel_bp4_{tier}"] = _fmt(rv_bp4[tier]) if tier in rv_bp4 else ""
 
+    return by_gene
+
+
+# Per-CSpec multispec table. A few genes carry several Released, fully populated
+# single-gene VCEPs for clinically distinct diseases / modes of inheritance that
+# the conservative batch aggregation collapses into one row. For these we emit an
+# ADDITIONAL table (one row per gene×CSpec) so the app can evaluate a variant
+# under a specific disease's specification. The batch disease_prevalence.tsv is
+# unchanged; only this extra file is produced.
+#   gene -> [(GN id, cspec_id, disease label, per-CSpec override dict), ...]
+# The override dict carries values the standalone single-spec resolution cannot
+# mine but that the conservative row pins via _CURATED_OVERRIDES — kept in sync
+# so a CSpec uses the same AF metric as the batch row for that gene. RYR1's AF
+# cutoffs are popmax point estimates (see _CURATED_OVERRIDES["RYR1"]); the same
+# basis applies to all three RYR1 CSpecs. ACTA1/VWF carry no AF-basis pin in the
+# batch row, so they stay on the resolver/evaluator default (empty).
+_MULTISPEC_CSPECS: dict[str, list[tuple[str, str, str, dict]]] = {
+    "RYR1": [
+        ("GN012", "malignant_hyperthermia", "悪性高熱症感受性", {"af_basis": "popmax"}),
+        ("GN150", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {"af_basis": "popmax"}),
+        ("GN179", "congenital_myopathy_ar", "先天性ミオパチー (AR)", {"af_basis": "popmax"}),
+    ],
+    "ACTA1": [
+        ("GN147", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {}),
+        ("GN169", "congenital_myopathy_ar", "先天性ミオパチー (AR)", {}),
+    ],
+    "VWF": [
+        ("GN081", "vwd_ad", "フォン・ヴィレブランド病 (AD・1/2型)", {}),
+        ("GN090", "vwd_ar", "フォン・ヴィレブランド病 (AR・3型)", {}),
+    ],
+}
+
+# Extra leading columns the multispec table carries on top of COLUMNS.
+_MULTISPEC_EXTRA_COLUMNS = ["cspec_id", "disease_label", "source_gn"]
+
+
+def build_multispec(files: list[str], out: str) -> None:
+    """Write the per-CSpec multispec threshold table.
+
+    Each target gene×CSpec is resolved STANDALONE (``resolve_rows`` on that one
+    spec file) so its values come solely from that disease's specification —
+    never the conservative cross-spec merge. Curated per-gene overrides that fix
+    the *conservative* row (``_CURATED_OVERRIDES``) are intentionally NOT applied
+    here; per-disease values stand on their own.
+    """
+    by_gn = {os.path.splitext(os.path.basename(p))[0]: p for p in files}
+    rows: list[dict] = []
+    for gene, specs in _MULTISPEC_CSPECS.items():
+        for gn, cspec_id, label, override in specs:
+            path = by_gn.get(gn)
+            if path is None:
+                print(f"  [multispec skip] {gene}/{cspec_id}: {gn}.json not found")
+                continue
+            row = resolve_rows([path]).get(gene)
+            if row is None:
+                print(f"  [multispec skip] {gene}/{cspec_id}: {gn} produced no row")
+                continue
+            row.update(override)
+            row["cspec_id"] = cspec_id
+            row["disease_label"] = label
+            row["source_gn"] = gn
+            rows.append(row)
+    columns = _MULTISPEC_EXTRA_COLUMNS + COLUMNS
+    with open(out, "w", newline="\n", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=columns, delimiter="\t",
+                           extrasaction="ignore", lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows)
+    print(f"multispec rows: {len(rows)} → {out}")
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--json-dir", default="resources/clingen")
+    ap.add_argument("--out", default="resources/shared/disease_prevalence.tsv")
+    ap.add_argument("--released-only", action="store_true",
+                    help="Only emit specs whose cspecStatus is 'Released'.")
+    ap.add_argument(
+        "--multispec-out", default=None, metavar="PATH",
+        help="Also write a per-CSpec multispec table (one row per gene×CSpec) "
+             "for the curated multi-disease genes (RYR1, ACTA1, VWF). The main "
+             "--out table is unaffected. Example: --multispec-out "
+             "resources/shared/disease_prevalence_multispec.tsv",
+    )
+    ap.add_argument(
+        "--override", action="append", default=[],
+        metavar="GENE:field=val[,field=val]",
+        help="Manually override a gene's resolved values, applied AFTER "
+             "multi-spec resolution. Repeatable. Fields: ba1, bs1, af_basis, "
+             "inheritance. Example: --override RYR1:ba1=0.0038,bs1=0.0007 . "
+             "Use this to pin a disease-appropriate cutoff for genes whose "
+             "multi-spec ambiguity is kept conservative (highest threshold) by "
+             "default.",
+    )
+    args = ap.parse_args()
+    overrides = _parse_overrides(args.override)
+
+    files = sorted(glob.glob(os.path.join(args.json_dir, "GN*.json")))
+    by_gene = resolve_rows(files, args.released_only)
+
     # Curated typo/outdated-threshold corrections first, then CLI --override (so
     # an explicit CLI override still wins over a curated default).
     _apply_overrides(by_gene, _CURATED_OVERRIDES)
@@ -2228,8 +2317,11 @@ def main() -> None:
         w.writerows(rows)
 
     with_thr = sum(1 for r in rows if r["ba1_threshold"] or r["bs1_threshold"])
-    print(f"specs parsed: {n_specs} | gene rows: {len(rows)} | with BA1/BS1: {with_thr}")
+    print(f"specs parsed: {len(files)} | gene rows: {len(rows)} | with BA1/BS1: {with_thr}")
     print(f"written → {args.out}")
+
+    if args.multispec_out:
+        build_multispec(files, args.multispec_out)
 
 
 def _to_float(s: str) -> Optional[float]:

@@ -138,3 +138,5 @@ concordance_*.txt
 
 # Internal audit notes — never committed
 .audit/
+
+*.docx
