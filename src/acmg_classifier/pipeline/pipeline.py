@@ -1,7 +1,7 @@
 """Main pipeline: reads VCF → annotates → classifies → writes output."""
 from __future__ import annotations
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 import structlog
 
 from acmg_classifier.config import Config
@@ -11,6 +11,9 @@ from acmg_classifier.models.supplement import SupplementEntry
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.classification import ClassificationResult
 from acmg_classifier.utils.progress import track
+
+if TYPE_CHECKING:
+    from acmg_classifier.models.annotation import AnnotationData
 
 log = structlog.get_logger()
 
