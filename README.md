@@ -774,6 +774,33 @@ specificity) that cannot be derived from the local databases — add them via
 [manual evidence](#manual-evidence-supplement). PP5 / BP6 (reputable-source) are
 **deliberately disabled** per ClinGen SVI 2018 to avoid double-counting ClinVar.
 
+### Multi-disease genes (per-CSpec evaluation)
+
+A few genes carry several **Released, clinically distinct** ClinGen CSpecs whose
+thresholds disagree — e.g. RYR1 (Malignant Hyperthermia `GN012`, Congenital
+Myopathies AD `GN150` / AR `GN179`), ACTA1 (Congenital Myopathies AD `GN147` /
+AR `GN169`), and VWF (von Willebrand Disease AD `GN081` / AR `GN090`). The batch
+`disease_prevalence.tsv` collapses each such gene into **one conservative row**,
+and `classify` / `explain` always use it — **CLI and batch behaviour is
+unchanged** (deliberately conservative for these genes).
+
+For interactive single-variant review the alternative CSpecs are made available
+without altering the evaluators:
+
+- A side table `resources/shared/disease_prevalence_multispec.tsv` carries **one
+  row per gene×CSpec** (each disease's own standalone resolution), built by
+  `scripts/build_disease_thresholds.py --multispec-out <path>`.
+- `src/acmg_classifier/criteria/cspec_overlay.py` produces a drop-in overlay of
+  the base table with the chosen gene's row replaced by the selected CSpec, and
+  exposes it through `Config.disease_prevalence_tsv_override`
+  (`available_cspecs()` lists the choices for a gene, `overlaid_config()` yields a
+  `Config` scoped to one CSpec).
+
+The HUVar app uses this to let a reviewer switch the active CSpec after a
+single-variant analysis. The CLI does not expose a flag for it; left unset,
+`disease_prevalence_tsv_override` is `None` and the conservative aggregated table
+is used.
+
 ### PVS1 decision tree
 
 The Abou Tayoun 2018 LoF decision tree is implemented at
@@ -909,7 +936,8 @@ HUVar/
 │   ├── pvs1/                        # PVS1 decision tree
 │   ├── criteria/
 │   │   ├── pathogenic/              # PVS1 / PS1-4 / PM1-6 / PP1-5
-│   │   └── benign/                  # BA1 / BS1-4 / BP1-7
+│   │   ├── benign/                  # BA1 / BS1-4 / BP1-7
+│   │   └── cspec_overlay.py         # per-CSpec overlay for multi-disease genes (RYR1/ACTA1/VWF)
 │   ├── classification/
 │   │   ├── classifier_2015.py       # ACMG 2015 Table 5 combinatorial rules
 │   │   └── classifier_bayesian.py   # Tavtigian 2020 point system
@@ -919,7 +947,7 @@ HUVar/
 │   └── utils/
 ├── scripts/
 │   ├── setup_data.py                # Database download & build script
-│   ├── build_disease_thresholds.py  # cspec GN*.json → disease_prevalence.tsv
+│   ├── build_disease_thresholds.py  # cspec GN*.json → disease_prevalence.tsv (+ --multispec-out side table)
 │   └── build_pm1_hotspots.py        # cspec_summary.json → pm1_hotspots.tsv
 ├── resources/                       # tracked curated rule tables (copied to data/shared/)
 │   ├── gene_inheritance.tsv         #   gene → AD/AR/XL

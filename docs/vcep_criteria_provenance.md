@@ -146,3 +146,17 @@ Genes covered: **131**.
 | PS1 paralogue | HBA2 (← HBA1) | GN173 | 1.0.0 | Hemoglobinopathy VCEP |
 | PS1 paralogue (analogous-residue alignment) | SCN1A, SCN2A, SCN3A, SCN8A | GN067-070 | 2.0.0 | SCN epilepsy VCEPs |
 | PS1 paralogue (analogous-residue alignment, → KCNQ2, Moderate) | KCNQ1 | GN112 | 1.0.0 | Long QT VCEP |
+
+## Alternative CSpecs (multi-disease genes)
+
+A few genes carry several Released, clinically distinct ClinGen CSpecs. The per-gene table above lists only the single **conservative** spec the batch `disease_prevalence.tsv` resolves to (used by the CLI and batch runs, marked ✓ below); the HUVar app can additionally evaluate these genes under any of the alternatives below, via `resources/shared/disease_prevalence_multispec.tsv`.
+
+| Gene | Disease / mode | GN_ID | Version | Status | Conservative |
+|------|----------------|-------|---------|--------|--------------|
+| RYR1 | 悪性高熱症感受性 | GN012 | 2.0.0 | Released |  |
+| RYR1 | 先天性ミオパチー (AD) | GN150 | 2.0.0 | Released |  |
+| RYR1 | 先天性ミオパチー (AR) | GN179 | 2.0.0 | Released | ✓ |
+| ACTA1 | 先天性ミオパチー (AD) | GN147 | 2.0.0 | Released |  |
+| ACTA1 | 先天性ミオパチー (AR) | GN169 | 1.0.0 | Released | ✓ |
+| VWF | フォン・ヴィレブランド病 (AD・1/2型) | GN081 | 1.0.0 | Released | ✓ |
+| VWF | フォン・ヴィレブランド病 (AR・3型) | GN090 | 1.0.0 | Released |  |

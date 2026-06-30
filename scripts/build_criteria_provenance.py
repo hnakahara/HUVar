@@ -22,6 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DP = ROOT / "resources" / "shared" / "disease_prevalence.tsv"
+MULTISPEC = ROOT / "resources" / "shared" / "disease_prevalence_multispec.tsv"
 PM1 = ROOT / "resources" / "shared" / "pm1_hotspots.tsv"
 PM4 = ROOT / "resources" / "shared" / "pm4_regions.tsv"
 PVS1 = ROOT / "src" / "acmg_classifier" / "pvs1" / "vcep_pvs1.py"
@@ -74,6 +75,34 @@ def _spec_meta() -> dict[str, tuple[str, str, str]]:
     return out
 
 
+def _multispec_rows(meta: dict[str, tuple[str, str, str]],
+                    primary_gn: dict[str, str]) -> list[dict]:
+    """Alternative per-CSpec specs for the multi-disease genes (RYR1/ACTA1/VWF).
+
+    Sourced from ``disease_prevalence_multispec.tsv`` (one row per gene×CSpec).
+    The per-gene table only carries the single conservative spec the batch build
+    resolved; these are the additional CSpecs the HUVar app can switch a variant
+    to. Empty if the multispec table is absent.
+    """
+    if not MULTISPEC.exists():
+        return []
+    out: list[dict] = []
+    for r in csv.DictReader(open(MULTISPEC, encoding="utf-8"), delimiter="\t"):
+        gene = (r.get("gene_symbol") or "").strip()
+        gn = (r.get("source_gn") or "").strip()
+        ver, status, _ = meta.get(gn, ("", "", ""))
+        out.append({
+            "gene": gene,
+            "disease": (r.get("disease_label") or "").strip(),
+            "cspec_id": (r.get("cspec_id") or "").strip(),
+            "GN_ID": gn,
+            "version": ver,
+            "status": status,
+            "conservative": "✓" if primary_gn.get(gene) == gn else "",
+        })
+    return out
+
+
 def main() -> None:
     meta = _spec_meta()
 
@@ -105,6 +134,7 @@ def main() -> None:
         })
 
     rows.sort(key=lambda x: x["gene"])
+    multispec = _multispec_rows(meta, {r["gene"]: r["GN_ID"] for r in rows})
     fields = ["gene", "GN_ID", "version", "status", "VCEP", "criteria"]
     with open(OUT_TSV, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=fields, delimiter="\t")
@@ -143,7 +173,22 @@ def main() -> None:
         for crit, genes, gn, ver, vcep in cross:
             fh.write(f"| {crit} | {genes} | {gn} | {ver} | {vcep} |\n")
 
-    print(f"provenance rows: {len(rows)} | written → {OUT_TSV} and {OUT_MD}")
+        if multispec:
+            fh.write("\n## Alternative CSpecs (multi-disease genes)\n\n")
+            fh.write("A few genes carry several Released, clinically distinct ClinGen "
+                     "CSpecs. The per-gene table above lists only the single "
+                     "**conservative** spec the batch `disease_prevalence.tsv` resolves to "
+                     "(used by the CLI and batch runs, marked ✓ below); the HUVar app can "
+                     "additionally evaluate these genes under any of the alternatives below, "
+                     "via `resources/shared/disease_prevalence_multispec.tsv`.\n\n")
+            fh.write("| Gene | Disease / mode | GN_ID | Version | Status | Conservative |\n")
+            fh.write("|------|----------------|-------|---------|--------|--------------|\n")
+            for x in multispec:
+                fh.write(f"| {x['gene']} | {x['disease']} | {x['GN_ID']} | {x['version']} "
+                         f"| {x['status']} | {x['conservative']} |\n")
+
+    print(f"provenance rows: {len(rows)} | multispec rows: {len(multispec)} "
+          f"| written → {OUT_TSV} and {OUT_MD}")
 
 
 if __name__ == "__main__":
