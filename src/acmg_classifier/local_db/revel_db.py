@@ -1,14 +1,37 @@
 """tabix query for REVEL precomputed scores (PP3/BP4)."""
 from __future__ import annotations
 from pathlib import Path
-from typing import Optional
+from typing import Iterable, Optional
 
 import structlog
 
 from acmg_classifier.models.annotation import RevelData
-from acmg_classifier.utils.tabix import open_tabix, fetch_region
+from acmg_classifier.utils.tabix import TabixReader, open_tabix, fetch_region
 
 log = structlog.get_logger()
+
+
+def _match_revel(lines: Iterable[str], pos: int, ref: str, alt: str) -> Optional[RevelData]:
+    """Pick the REVEL score from tabix region lines matching (pos, ref, alt).
+
+    Shared by the connection-per-call query_revel and the persistent-handle
+    query_revel_reader so both parse identically."""
+    for line in lines:
+        fields = line.split("\t")
+        if len(fields) < 5:
+            continue
+        f_pos, f_ref, f_alt = fields[1], fields[2], fields[3]
+        if f_ref != ref or f_alt != alt:
+            continue
+        try:
+            if int(f_pos) != pos:
+                continue
+            score = float(fields[4])
+        except ValueError:
+            # A single malformed row must not break annotation.
+            continue
+        return RevelData(score=score)
+    return None
 
 
 def query_revel(
@@ -36,21 +59,25 @@ def query_revel(
 
     try:
         with open_tabix(tsv_gz_path) as tf:
-            for line in fetch_region(tf, chrom, pos, pos):
-                fields = line.split("\t")
-                if len(fields) < 5:
-                    continue
-                f_pos, f_ref, f_alt = fields[1], fields[2], fields[3]
-                if f_ref != ref or f_alt != alt:
-                    continue
-                try:
-                    if int(f_pos) != pos:
-                        continue
-                    score = float(fields[4])
-                except ValueError:
-                    # A single malformed row must not break annotation.
-                    continue
-                return RevelData(score=score)
+            return _match_revel(fetch_region(tf, chrom, pos, pos), pos, ref, alt)
+    except Exception as exc:
+        log.error("revel_error", error=str(exc))
+    return None
+
+
+def query_revel_reader(
+    reader: TabixReader,
+    chrom: str,
+    pos: int,
+    ref: str,
+    alt: str,
+) -> Optional[RevelData]:
+    """Batch variant of query_revel using a persistent thread-local handle."""
+    if not reader.exists():
+        log.warning("revel_missing", path=str(reader.path))
+        return None
+    try:
+        return _match_revel(reader.fetch(chrom, pos, pos), pos, ref, alt)
     except Exception as exc:
         log.error("revel_error", error=str(exc))
     return None

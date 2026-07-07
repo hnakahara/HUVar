@@ -1,14 +1,39 @@
 """DuckDB query layer for gnomAD exome data (BA1/BS1/BS2/PM2)."""
 from __future__ import annotations
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import structlog
 
 from acmg_classifier.models.annotation import GnomADData
 from acmg_classifier.utils.chrom import chrom_candidates
 
+if TYPE_CHECKING:
+    from acmg_classifier.models.variant import VariantRecord
+
 log = structlog.get_logger()
+
+
+def _select_expr(cols: set[str]) -> str:
+    """Build the gnomAD `variants` SELECT column list, degrading gracefully
+    against DBs built before af_xy / ac_xx / grpmax / af_non_cancer existed.
+
+    Shared verbatim by the single-variant query() and the batch precompute()
+    so both produce the identical 15-field row layout consumed by _merge_rows
+    (indices: 0 af … 11 filters, 12/13 grpmax, 14 af_non_cancer)."""
+    xy_expr = "af_xy" if "af_xy" in cols else "NULL AS af_xy"
+    has_xx = "ac_xx" in cols and "nhomalt_xx" in cols
+    xx_expr = "ac_xx, nhomalt_xx" if has_xx else "NULL AS ac_xx, NULL AS nhomalt_xx"
+    has_grpmax = "ac_grpmax" in cols and "an_grpmax" in cols
+    grpmax_expr = (
+        "ac_grpmax, an_grpmax" if has_grpmax
+        else "NULL AS ac_grpmax, NULL AS an_grpmax"
+    )
+    nc_expr = "af_non_cancer" if "af_non_cancer" in cols else "NULL AS af_non_cancer"
+    return (
+        "af, an, ac, nhomalt, nhemi, popmax_af, popmax_pop, faf95_popmax, "
+        f"{xy_expr}, {xx_expr}, filters, {grpmax_expr}, {nc_expr}"
+    )
 
 
 def _pass_filter(filters) -> bool:
@@ -85,6 +110,11 @@ class GnomADDB:
         # BS2, e.g. TP53) lacks them, so query() degrades gracefully to NULL
         # rather than erroring (a female-only BS2 gene then withholds BS2).
         self._cols: set[str] | None = None
+        # Per-batch cache populated by precompute(): variant.key -> GnomADData.
+        # cached() reads this instead of opening a connection per variant. Left
+        # empty for the single-variant explain path, where cached() falls back
+        # to query().
+        self._cache: dict[str, GnomADData] = {}
 
     def query(self, chrom: str, pos: int, ref: str, alt: str) -> Optional[GnomADData]:
         """Fetch population statistics for a specific variant.
@@ -105,30 +135,13 @@ class GnomADDB:
             con = duckdb.connect(str(self._db_path), read_only=True)
             # Select af_xy / ac_xx / nhomalt_xx only when the schema has them;
             # otherwise NULL keeps the result tuple shape constant for older DBs.
-            cols = self._columns(con)
-            xy_expr = "af_xy" if "af_xy" in cols else "NULL AS af_xy"
-            has_xx = "ac_xx" in cols and "nhomalt_xx" in cols
-            xx_expr = "ac_xx, nhomalt_xx" if has_xx else "NULL AS ac_xx, NULL AS nhomalt_xx"
-            # GrpMax AC/AN trail after `filters` (indices 12/13) — keep `filters`
-            # at index 11 so the merge's PASS check is unaffected. NULL for DBs
-            # built before these columns were added (graceful degradation).
-            has_grpmax = "ac_grpmax" in cols and "an_grpmax" in cols
-            grpmax_expr = (
-                "ac_grpmax, an_grpmax" if has_grpmax
-                else "NULL AS ac_grpmax, NULL AS an_grpmax"
-            )
-            # Non-cancer subset AF (PM2 for ENIGMA BRCA1/2) — trails after grpmax
-            # at index 14. NULL for DBs built before the column (graceful).
-            nc_expr = (
-                "af_non_cancer" if "af_non_cancer" in cols
-                else "NULL AS af_non_cancer"
-            )
+            # Column list (with graceful NULLs for older schemas) is shared with
+            # precompute() via _select_expr so both paths return the identical
+            # 15-field layout that _merge_rows consumes.
+            select_expr = _select_expr(self._columns(con))
             rows = con.execute(
                 f"""
-                SELECT af, an, ac, nhomalt, nhemi,
-                       popmax_af, popmax_pop, faf95_popmax, {xy_expr},
-                       {xx_expr},
-                       filters, {grpmax_expr}, {nc_expr}
+                SELECT {select_expr}
                 FROM variants
                 WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
                 """,
@@ -176,6 +189,159 @@ class GnomADDB:
                         update["faf95_non_cancer"] = faf_nc
             data = data.model_copy(update=update)
         return data
+
+    def precompute(self, variants: "list[VariantRecord]") -> None:
+        """Batch-fetch gnomAD stats for every variant in a single JOIN.
+
+        Replaces query()'s connection-per-variant with one connection and one
+        hash-join against a temp key table, caching the result by variant.key.
+        The row-processing (_merge_rows + non-cancer backfill) is byte-for-byte
+        identical to query(); only the access pattern changes. cached() then
+        serves the batch without touching DuckDB again."""
+        if not variants:
+            return
+        if not self._db_path.exists():
+            # Leave the cache empty: cached() falls back to query(), which emits
+            # the same gnomad_db_missing warning. This keeps the missing-DB
+            # behaviour identical to the pre-batch path.
+            log.warning("gnomad_db_missing", path=str(self._db_path))
+            return
+        try:
+            import duckdb
+            con = duckdb.connect(str(self._db_path), read_only=True)
+            select_expr = _select_expr(self._columns(con))
+            con.execute(
+                "CREATE TEMP TABLE _keys "
+                "(vkey TEXT, chrom TEXT, pos BIGINT, ref TEXT, alt TEXT)"
+            )
+            # One key row per (variant, chrom-spelling). Only one spelling exists
+            # in the DB, so emitting both candidates can never double-count — it
+            # just lets the equijoin match whichever convention the DB was built
+            # with (the IN (?, ?) contract of query(), expressed as a join).
+            key_rows = [
+                (v.key, cand, v.pos, v.ref, v.alt)
+                for v in variants
+                for cand in chrom_candidates(v.chrom)
+            ]
+            con.executemany("INSERT INTO _keys VALUES (?, ?, ?, ?, ?)", key_rows)
+            rows = con.execute(
+                f"""
+                SELECT k.vkey, {select_expr}
+                FROM _keys k
+                JOIN variants v
+                  ON v.chrom = k.chrom AND v.pos = k.pos
+                 AND v.ref = k.ref AND v.alt = k.alt
+                """
+            ).fetchall()
+            con.close()
+        except Exception as exc:
+            log.error("gnomad_precompute_error", error=str(exc))
+            return
+
+        # Group matched DB rows by variant key; strip the leading vkey column so
+        # each grouped row matches the exact tuple layout _merge_rows expects.
+        by_key: dict[str, list] = {}
+        for row in rows:
+            by_key.setdefault(row[0], []).append(row[1:])
+
+        companion_ok = (
+            self._noncancer_db_path is not None
+            and self._noncancer_db_path.exists()
+        )
+        cache: dict[str, GnomADData] = {}
+        need_nc: dict[str, tuple[str, str, int, str, str]] = {}
+        for v in variants:
+            matched = by_key.get(v.key)
+            if not matched:
+                # "Absent from gnomAD": the same synthetic record query() emits.
+                cache[v.key] = GnomADData(af=0.0, ac=0, an=0, filter_pass=True)
+                continue
+            data = _merge_rows(matched)
+            if companion_ok:
+                # Mark the subset consultable regardless of hit/miss — mirrors
+                # query()'s unconditional non_cancer_queried=True for present rows.
+                data = data.model_copy(update={"non_cancer_queried": True})
+                if data.af_non_cancer is None or data.faf95_non_cancer is None:
+                    c1, c2 = chrom_candidates(v.chrom)
+                    need_nc[v.key] = (c1, c2, v.pos, v.ref, v.alt)
+            cache[v.key] = data
+
+        if need_nc:
+            self._batch_noncancer(cache, need_nc)
+
+        self._cache = cache
+
+    def _batch_noncancer(
+        self,
+        cache: dict[str, GnomADData],
+        need_nc: dict[str, tuple[str, str, int, str, str]],
+    ) -> None:
+        """Batch non-cancer-subset backfill: one JOIN mirroring _query_noncancer.
+
+        Only variants whose af_non_cancer / faf95_non_cancer are still None are
+        passed in (non_cancer_queried is already set by the caller). Per-field MAX
+        over matching rows matches the single-variant path exactly."""
+        try:
+            import duckdb
+            con = duckdb.connect(str(self._noncancer_db_path), read_only=True)
+            cols = {
+                r[1] for r in con.execute(
+                    "PRAGMA table_info('non_cancer')"
+                ).fetchall()
+            }
+            faf_expr = (
+                "faf95_non_cancer" if "faf95_non_cancer" in cols
+                else "NULL AS faf95_non_cancer"
+            )
+            con.execute(
+                "CREATE TEMP TABLE _nckeys "
+                "(vkey TEXT, chrom TEXT, pos BIGINT, ref TEXT, alt TEXT)"
+            )
+            key_rows: list[tuple] = []
+            for vkey, (c1, c2, pos, ref, alt) in need_nc.items():
+                key_rows.append((vkey, c1, pos, ref, alt))
+                key_rows.append((vkey, c2, pos, ref, alt))
+            con.executemany("INSERT INTO _nckeys VALUES (?, ?, ?, ?, ?)", key_rows)
+            rows = con.execute(
+                f"""
+                SELECT k.vkey, n.af_non_cancer, {faf_expr}
+                FROM _nckeys k
+                JOIN non_cancer n
+                  ON n.chrom = k.chrom AND n.pos = k.pos
+                 AND n.ref = k.ref AND n.alt = k.alt
+                """
+            ).fetchall()
+            con.close()
+        except Exception as exc:
+            log.error("gnomad_noncancer_query_error", error=str(exc))
+            return
+
+        nc_by_key: dict[str, list] = {}
+        for r in rows:
+            nc_by_key.setdefault(r[0], []).append((r[1], r[2]))
+        for vkey, matched in nc_by_key.items():
+            af_vals = [a for a, _ in matched if a is not None]
+            faf_vals = [f for _, f in matched if f is not None]
+            af_nc = max(af_vals) if af_vals else None
+            faf_nc = max(faf_vals) if faf_vals else None
+            data = cache[vkey]
+            update: dict = {}
+            if data.af_non_cancer is None and af_nc is not None:
+                update["af_non_cancer"] = af_nc
+            if data.faf95_non_cancer is None and faf_nc is not None:
+                update["faf95_non_cancer"] = faf_nc
+            if update:
+                cache[vkey] = data.model_copy(update=update)
+
+    def cached(self, variant: "VariantRecord") -> Optional[GnomADData]:
+        """Return the precomputed record for *variant*.
+
+        Falls back to a live query() when precompute() was not run or missed the
+        key (the single-variant explain path never precomputes)."""
+        hit = self._cache.get(variant.key)
+        if hit is not None:
+            return hit
+        return self.query(variant.chrom, variant.pos, variant.ref, variant.alt)
 
     def _query_noncancer(
         self, c1: str, c2: str, pos: int, ref: str, alt: str

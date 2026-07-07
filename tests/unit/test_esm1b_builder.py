@@ -3,7 +3,7 @@ import sqlite3
 import zipfile
 from pathlib import Path
 
-from acmg_classifier.local_db.esm1b_db import query_esm1b
+from acmg_classifier.local_db.esm1b_db import Esm1bDB, query_esm1b
 from acmg_classifier.setup.esm1b_builder import (
     _iter_aliases,
     _iter_matrix_rows,
@@ -167,3 +167,39 @@ def test_query_esm1b_strips_human_for_trembl_without_alias(tmp_path: Path):
     res = query_esm1b(dest, "P12345_HUMAN", 1, "R")
     assert res is not None
     assert res.llr == -12.401
+
+
+class TestEsm1bDBEquivalence:
+    """Esm1bDB.lookup() (persistent connection) must equal query_esm1b()."""
+
+    def test_lookup_matches_query_across_cases(self, tmp_path: Path):
+        dest = _build_db_with_aliases(tmp_path)
+        db = Esm1bDB(dest)
+        cases = [
+            ("PK3CD_HUMAN", 1, "R"),   # swissprot entry-name → alias resolution
+            ("P12345", 1, "R"),        # plain accession pass-through
+            ("P12345_HUMAN", 1, "R"),  # trembl _HUMAN strip
+            ("P12345", 1, "K"),        # different alt AA
+            ("P12345", 999, "R"),      # uncovered position → None
+            ("Q0", 1, "R"),            # unknown accession → None
+        ]
+        for uni, pos, alt in cases:
+            assert db.lookup(uni, pos, alt) == query_esm1b(dest, uni, pos, alt)
+
+    def test_lookup_reuses_connection_across_calls(self, tmp_path: Path):
+        # Two calls on the same instance must both succeed (connection reuse).
+        dest = _build_db_with_aliases(tmp_path)
+        db = Esm1bDB(dest)
+        assert db.lookup("P12345", 1, "R").llr == -12.401
+        assert db.lookup("P12345", 1, "A").llr == -9.000
+
+    def test_missing_db_returns_none(self, tmp_path: Path):
+        db = Esm1bDB(tmp_path / "absent.sqlite")
+        assert db.lookup("P12345", 1, "R") is None
+
+    def test_incomplete_inputs_return_none(self, tmp_path: Path):
+        dest = _build_db_with_aliases(tmp_path)
+        db = Esm1bDB(dest)
+        assert db.lookup("", 1, "R") is None
+        assert db.lookup("P12345", None, "R") is None
+        assert db.lookup("P12345", 1, "") is None

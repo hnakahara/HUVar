@@ -8,11 +8,12 @@ is never automatically applied.
 """
 from __future__ import annotations
 from pathlib import Path
+from typing import Iterable
 
 import structlog
 
 from acmg_classifier.models.annotation import ClinVarRecord
-from acmg_classifier.utils.tabix import open_tabix, fetch_region
+from acmg_classifier.utils.tabix import TabixReader, open_tabix, fetch_region
 
 log = structlog.get_logger()
 
@@ -60,6 +61,35 @@ def _star_rating(review_status: str) -> int:
     return 0
 
 
+def _match_clinvar(lines: Iterable[str], pos: int, ref: str, alt: str) -> list[ClinVarRecord]:
+    """Collect all ClinVar records from tabix region lines exactly matching
+    (pos, ref, alt). Shared by query_clinvar_vcf and its reader variant.
+
+    fetch returns ALL variants overlapping [pos, pos]; ALT alleles must be
+    filtered manually because tabix has no concept of allele identity."""
+    records: list[ClinVarRecord] = []
+    for line in lines:
+        fields = line.split("\t")
+        if len(fields) < 8:
+            continue
+        vcf_chrom, vcf_pos_str, vcf_id, vcf_ref, vcf_alt = fields[:5]
+        if int(vcf_pos_str) != pos or vcf_ref != ref or vcf_alt != alt:
+            continue
+        info = _parse_info(fields[7])
+        # ClinVar VCF uses underscores in INFO values (e.g. "Likely_pathogenic")
+        # — restore spaces to match the canonical sig strings used elsewhere.
+        clnsig = info.get("CLNSIG", "").replace("_", " ")
+        clnrevstat = info.get("CLNREVSTAT", "").replace("_", " ")
+        stars = _star_rating(clnrevstat)
+        records.append(ClinVarRecord(
+            variation_id=vcf_id if vcf_id != "." else None,
+            clinical_significance=clnsig,
+            review_status=clnrevstat,
+            star_rating=stars,
+        ))
+    return records
+
+
 def query_clinvar_vcf(
     vcf_gz_path: Path,
     chrom: str,
@@ -78,32 +108,27 @@ def query_clinvar_vcf(
         log.warning("clinvar_vcf_missing", path=str(vcf_gz_path))
         return []
 
-    records: list[ClinVarRecord] = []
     try:
         with open_tabix(vcf_gz_path) as tf:
-            # fetch_region returns ALL variants overlapping [pos, pos];
-            # ALT alleles must be filtered manually because tabix has no
-            # concept of allele identity.
-            for line in fetch_region(tf, chrom, pos, pos):
-                fields = line.split("\t")
-                if len(fields) < 8:
-                    continue
-                vcf_chrom, vcf_pos_str, vcf_id, vcf_ref, vcf_alt = fields[:5]
-                if int(vcf_pos_str) != pos or vcf_ref != ref or vcf_alt != alt:
-                    continue
-                info = _parse_info(fields[7])
-                # ClinVar VCF uses underscores in INFO values (e.g.
-                # "Likely_pathogenic") — restore spaces to match the
-                # canonical sig strings used elsewhere in the codebase.
-                clnsig = info.get("CLNSIG", "").replace("_", " ")
-                clnrevstat = info.get("CLNREVSTAT", "").replace("_", " ")
-                stars = _star_rating(clnrevstat)
-                records.append(ClinVarRecord(
-                    variation_id=vcf_id if vcf_id != "." else None,
-                    clinical_significance=clnsig,
-                    review_status=clnrevstat,
-                    star_rating=stars,
-                ))
+            return _match_clinvar(fetch_region(tf, chrom, pos, pos), pos, ref, alt)
     except Exception as exc:
         log.error("clinvar_vcf_error", error=str(exc))
-    return records
+    return []
+
+
+def query_clinvar_vcf_reader(
+    reader: TabixReader,
+    chrom: str,
+    pos: int,
+    ref: str,
+    alt: str,
+) -> list[ClinVarRecord]:
+    """Batch variant of query_clinvar_vcf using a persistent thread-local handle."""
+    if not reader.exists():
+        log.warning("clinvar_vcf_missing", path=str(reader.path))
+        return []
+    try:
+        return _match_clinvar(reader.fetch(chrom, pos, pos), pos, ref, alt)
+    except Exception as exc:
+        log.error("clinvar_vcf_error", error=str(exc))
+    return []

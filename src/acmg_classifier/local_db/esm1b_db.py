@@ -23,6 +23,7 @@ those back to the accession via the `aliases` table before querying.
 """
 from __future__ import annotations
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Optional
 
@@ -31,6 +32,25 @@ import structlog
 from acmg_classifier.models.annotation import ESM1bData
 
 log = structlog.get_logger()
+
+
+def _select_llr(
+    conn: sqlite3.Connection, uniprot_id: str, aa_pos: int, alt_aa: str
+) -> Optional[ESM1bData]:
+    """Resolve the accession and point-select the LLR on an open connection.
+
+    Shared by the connection-per-call query_esm1b() and the persistent-
+    connection Esm1bDB.lookup() so both do the identical accession resolution
+    and lookup — only the connection lifecycle differs."""
+    accession = _resolve_accession(conn, uniprot_id)
+    row = conn.execute(
+        "SELECT llr FROM scores "
+        "WHERE uniprot_id = ? AND aa_pos = ? AND alt_aa = ? LIMIT 1",
+        (accession, int(aa_pos), alt_aa),
+    ).fetchone()
+    if row is None:
+        return None
+    return ESM1bData(llr=float(row[0]))
 
 
 def _resolve_accession(conn: sqlite3.Connection, uniprot_id: str) -> str:
@@ -84,13 +104,7 @@ def query_esm1b(
         # measurably faster under concurrent access.
         conn = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
         try:
-            accession = _resolve_accession(conn, uniprot_id)
-            cur = conn.execute(
-                "SELECT llr FROM scores "
-                "WHERE uniprot_id = ? AND aa_pos = ? AND alt_aa = ? LIMIT 1",
-                (accession, int(aa_pos), alt_aa),
-            )
-            row = cur.fetchone()
+            return _select_llr(conn, uniprot_id, aa_pos, alt_aa)
         finally:
             conn.close()
     except sqlite3.Error as exc:
@@ -101,6 +115,50 @@ def query_esm1b(
         )
         return None
 
-    if row is None:
-        return None
-    return ESM1bData(llr=float(row[0]))
+
+class Esm1bDB:
+    """Persistent-connection ESM1b reader for batch annotation.
+
+    Replaces the per-variant ``sqlite3.connect()`` in query_esm1b() with a
+    thread-local read-only connection reused across the whole batch (the
+    annotate_batch thread pool calls lookup() from several worker threads, and a
+    SQLite connection may not cross threads — so each thread opens its own once).
+    The accession resolution + point SELECT are identical to query_esm1b via the
+    shared _select_llr helper; only the connection lifecycle differs."""
+
+    def __init__(self, sqlite_path: Path) -> None:
+        self._path = sqlite_path
+        self._local = threading.local()
+
+    def _conn(self) -> Optional[sqlite3.Connection]:
+        conn = getattr(self._local, "conn", None)
+        if conn is None:
+            # RO via URI mirrors query_esm1b: read-only avoids write-lock
+            # contention. Kept per-thread (threading.local) so the default
+            # check_same_thread guard is satisfied without disabling it.
+            conn = sqlite3.connect(f"file:{self._path}?mode=ro", uri=True)
+            self._local.conn = conn
+        return conn
+
+    def lookup(
+        self, uniprot_id: str, aa_pos: int, alt_aa: str
+    ) -> Optional[ESM1bData]:
+        """Look up ESM1b LLR reusing a thread-local connection.
+
+        Same contract as query_esm1b: returns None when the DB is missing, the
+        inputs are incomplete, the protein/position is uncovered, or the lookup
+        raises — never propagates upstream."""
+        if not self._path.exists():
+            log.warning("esm1b_missing", path=str(self._path))
+            return None
+        if not uniprot_id or aa_pos is None or not alt_aa:
+            return None
+        try:
+            return _select_llr(self._conn(), uniprot_id, aa_pos, alt_aa)
+        except sqlite3.Error as exc:
+            log.error(
+                "esm1b_sqlite_error",
+                error=str(exc),
+                uniprot=uniprot_id, aa_pos=aa_pos, alt_aa=alt_aa,
+            )
+            return None

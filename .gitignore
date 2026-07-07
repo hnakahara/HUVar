@@ -140,3 +140,5 @@ concordance_*.txt
 .audit/
 
 *.docx
+*.pdf
+*.xlsx

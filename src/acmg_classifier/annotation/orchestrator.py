@@ -59,6 +59,10 @@ class AnnotationOrchestrator:
         self._clinvar_sqlite_path = cfg.clinvar_sqlite
         self._am_path = cfg.alphamissense_tsv
         self._esm1b_path = cfg.esm1b_sqlite
+        # Persistent-connection ESM1b reader: reuses a thread-local RO connection
+        # across the batch instead of sqlite3.connect() per variant.
+        from acmg_classifier.local_db.esm1b_db import Esm1bDB
+        self._esm1b_db = Esm1bDB(cfg.esm1b_sqlite)
         self._revel_path = cfg.revel_tsv
         self._bayesdel_path = cfg.bayesdel_tsv
         self._cadd_path = cfg.cadd_tsv
@@ -77,6 +81,17 @@ class AnnotationOrchestrator:
                         reason="BayesDel/CADD are licence-gated to REVEL/AlphaMissense; "
                                "not run under the commercial-safe ESM1B path")
         self._repeat_path = cfg.repeatmasker_bed
+        # Persistent thread-local tabix handles reused across the whole batch,
+        # replacing the pysam.TabixFile open (per variant, per file) that
+        # dominated at scale. BayesDel/CADD readers are created only when the
+        # licence-gated opt-in is active so no non-commercial file is opened.
+        from acmg_classifier.utils.tabix import TabixReader
+        self._clinvar_reader = TabixReader(cfg.clinvar_vcf)
+        self._am_reader = TabixReader(cfg.alphamissense_tsv)
+        self._revel_reader = TabixReader(cfg.revel_tsv)
+        self._repeat_reader = TabixReader(cfg.repeatmasker_bed)
+        self._bayesdel_reader = TabixReader(cfg.bayesdel_tsv) if self._use_bayesdel else None
+        self._cadd_reader = TabixReader(cfg.cadd_tsv) if self._use_cadd else None
         self._splice = self._init_splice()
         # SQUIRLS predictor for secondary reporting — always initialized so
         # squirls_score is available in the TSV regardless of which splice tool
@@ -148,6 +163,11 @@ class AnnotationOrchestrator:
         disk waits rather than CPU work."""
         vep_results = self._vep.annotate_batch(variants, batch_size=self._cfg.vep_batch_size)
 
+        # Batch-fetch all gnomAD stats in one JOIN up front (replaces the
+        # per-variant DuckDB connection in _annotate_one — the dominant cost at
+        # scale). _annotate_one then reads the cache via self._gnomad.cached().
+        self._gnomad.precompute(variants)
+
         # OpenSpliceAI runs the model at inference time and caches all scores
         # in one subprocess call. Tabix-backed predictors (SpliceAI/SQUIRLS)
         # have a no-op precompute(), so this is safe to call unconditionally.
@@ -188,12 +208,12 @@ class AnnotationOrchestrator:
         thread pool in annotate_batch already provides the parallelism
         across variants. Doing nested parallelism would oversubscribe the
         DB clients without throughput gain."""
-        from acmg_classifier.local_db.clinvar_vcf import query_clinvar_vcf
-        from acmg_classifier.local_db.alphamissense_db import query_alphamissense
-        from acmg_classifier.local_db.revel_db import query_revel
-        from acmg_classifier.local_db.repeatmasker_db import query_repeat
+        from acmg_classifier.local_db.clinvar_vcf import query_clinvar_vcf_reader
+        from acmg_classifier.local_db.alphamissense_db import query_alphamissense_reader
+        from acmg_classifier.local_db.revel_db import query_revel_reader
+        from acmg_classifier.local_db.repeatmasker_db import query_repeat_reader
 
-        gnomad = self._gnomad.query(variant.chrom, variant.pos, variant.ref, variant.alt)
+        gnomad = self._gnomad.cached(variant)
 
         # `consequences` is pre-sorted by vep_runner._parse_vep_record so the
         # first entry is already the clinically-preferred (MANE > canonical)
@@ -208,8 +228,8 @@ class AnnotationOrchestrator:
         if gnomad and primary:
             gnomad = self._gnomad.enrich_with_constraint(gnomad, primary.gene_symbol)
 
-        clinvar_vcf_recs = query_clinvar_vcf(
-            self._clinvar_vcf_path,
+        clinvar_vcf_recs = query_clinvar_vcf_reader(
+            self._clinvar_reader,
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
 
@@ -217,13 +237,13 @@ class AnnotationOrchestrator:
         # every score for manual review. Only the tool selected by insilico_tool
         # config is used inside the ACMG criteria (PP3/BP4) to avoid inflating
         # evidence by combining tools that share training data.
-        alphamissense = query_alphamissense(
-            self._am_path,
+        alphamissense = query_alphamissense_reader(
+            self._am_reader,
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
         esm1b = self._lookup_esm1b(primary, consequences)
-        revel = query_revel(
-            self._revel_path,
+        revel = query_revel_reader(
+            self._revel_reader,
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
 
@@ -232,16 +252,16 @@ class AnnotationOrchestrator:
         # is ever read or written into the output.
         bayesdel = None
         if self._use_bayesdel:
-            from acmg_classifier.local_db.bayesdel_db import query_bayesdel
-            bayesdel = query_bayesdel(
-                self._bayesdel_path,
+            from acmg_classifier.local_db.bayesdel_db import query_bayesdel_reader
+            bayesdel = query_bayesdel_reader(
+                self._bayesdel_reader,
                 variant.chrom, variant.pos, variant.ref, variant.alt,
             )
         cadd = None
         if self._use_cadd:
-            from acmg_classifier.local_db.cadd_db import query_cadd
-            cadd = query_cadd(
-                self._cadd_path,
+            from acmg_classifier.local_db.cadd_db import query_cadd_reader
+            cadd = query_cadd_reader(
+                self._cadd_reader,
                 variant.chrom, variant.pos, variant.ref, variant.alt,
             )
 
@@ -250,7 +270,7 @@ class AnnotationOrchestrator:
         # When SpliceAI is primary, run SQUIRLS separately for TSV reporting.
         squirls = splice if self._squirls is self._splice else self._squirls.predict(variant)
 
-        repeat = query_repeat(self._repeat_path, variant.chrom, variant.pos)
+        repeat = query_repeat_reader(self._repeat_reader, variant.chrom, variant.pos)
 
         return AnnotationData(
             consequences=consequences,
@@ -301,9 +321,7 @@ class AnnotationOrchestrator:
         if not uniprot_id:
             return None
 
-        from acmg_classifier.local_db.esm1b_db import query_esm1b
-        return query_esm1b(
-            self._esm1b_path,
+        return self._esm1b_db.lookup(
             uniprot_id,
             primary.protein_position,
             alt_aa,
