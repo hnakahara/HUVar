@@ -52,3 +52,26 @@ class TestMergeRows:
         b = _row(0.0001, 0.0001, 0.0001, ac_xx=None, nhomalt_xx=1)
         gd = _merge_rows([a, b])
         assert gd.ac_xx == 5 and gd.nhomalt_xx == 1
+
+    def test_popmax_pop_is_order_independent_on_af_tie(self):
+        # Two datasets (exomes/genomes) sharing the SAME popmax AF must resolve
+        # to the SAME popmax_pop regardless of row order — otherwise query() and
+        # the batch precompute() JOIN (different row orders) disagree. The
+        # deterministic tiebreak prefers larger AN, then the population name.
+        exo = _row(0.001, 0.002, 0.0015, pop="eas")   # AN=100000
+        gen = _row(0.001, 0.002, 0.0015, pop="nfe")   # AN=100000 (AN tie too)
+        forward = _merge_rows([exo, gen])
+        reverse = _merge_rows([gen, exo])
+        assert forward.popmax_pop == reverse.popmax_pop
+        # AN ties → falls through to the population-name total order ("nfe" > "eas").
+        assert forward.popmax_pop == "nfe"
+
+    def test_popmax_pop_prefers_larger_an_on_af_tie(self):
+        # On a popmax-AF tie the row with the larger overall AN wins (more
+        # samples), before the name tiebreak is ever consulted.
+        small = (0.001, 50000, 50, 0, 0, 0.002, "afr", 0.0015,
+                 None, None, None, "PASS")
+        large = (0.001, 200000, 200, 0, 0, 0.002, "eas", 0.0015,
+                 None, None, None, "PASS")
+        assert _merge_rows([small, large]).popmax_pop == "eas"
+        assert _merge_rows([large, small]).popmax_pop == "eas"

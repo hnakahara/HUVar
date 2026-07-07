@@ -57,8 +57,22 @@ def _merge_rows(rows: list) -> GnomADData:
         vals = [r[idx] for r in use if r[idx] is not None]
         return max(vals) if vals else None
 
-    # popmax_pop comes from whichever used row has the highest popmax AF.
-    best = max(use, key=lambda r: (r[5] if r[5] is not None else -1.0))
+    # popmax_pop (and the co-located grpmax AC/AN) come from whichever used row
+    # has the highest popmax AF. The tiebreak is fully deterministic and
+    # independent of row order: on equal popmax AF prefer the larger overall AN
+    # (the dataset with more samples), then the population name as a final
+    # total-order key. Without it, exomes+genomes rows sharing a popmax AF (the
+    # GRCh37 case) would pick popmax_pop by list position — which differs between
+    # the single-variant query() and the batch precompute() JOIN, and even
+    # between runs of the same path (DuckDB row order is not guaranteed).
+    best = max(
+        use,
+        key=lambda r: (
+            r[5] if r[5] is not None else -1.0,
+            r[1] if r[1] is not None else -1,
+            r[6] or "",
+        ),
+    )
     # GrpMax AC and AN must come from the SAME row (the dataset where the
     # subpopulation frequency is highest) so the upper-CI is computed on a
     # consistent count/number pair — never a per-field max that could mix them.
