@@ -52,13 +52,23 @@ class TabixReader:
     def __init__(self, path: Path) -> None:
         self._path = path
         self._local = threading.local()
+        self._exists: bool | None = None
 
     @property
     def path(self) -> Path:
         return self._path
 
     def exists(self) -> bool:
-        return self._path.exists()
+        """Whether the backing file exists, checked once and memoised.
+
+        query_*_reader calls this on every variant; a reference DB never
+        appears or disappears mid-run, so a single ``stat`` is enough. Caching
+        it avoids hundreds of thousands of redundant filesystem stats (a real
+        cost on network mounts, where it dominated after the open-per-variant
+        cost was removed)."""
+        if self._exists is None:
+            self._exists = self._path.exists()
+        return self._exists
 
     def _handle(self) -> pysam.TabixFile:
         tf = getattr(self._local, "tf", None)

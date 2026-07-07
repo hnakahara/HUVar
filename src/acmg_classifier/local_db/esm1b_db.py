@@ -129,6 +129,15 @@ class Esm1bDB:
     def __init__(self, sqlite_path: Path) -> None:
         self._path = sqlite_path
         self._local = threading.local()
+        self._exists: Optional[bool] = None
+
+    def _db_exists(self) -> bool:
+        """Existence of the SQLite file, checked once and memoised — lookup()
+        runs per variant, and the DB never appears/disappears mid-run, so a
+        single stat suffices (network-mount stats are otherwise a real cost)."""
+        if self._exists is None:
+            self._exists = self._path.exists()
+        return self._exists
 
     def _conn(self) -> Optional[sqlite3.Connection]:
         conn = getattr(self._local, "conn", None)
@@ -148,7 +157,7 @@ class Esm1bDB:
         Same contract as query_esm1b: returns None when the DB is missing, the
         inputs are incomplete, the protein/position is uncovered, or the lookup
         raises — never propagates upstream."""
-        if not self._path.exists():
+        if not self._db_exists():
             log.warning("esm1b_missing", path=str(self._path))
             return None
         if not uniprot_id or aa_pos is None or not alt_aa:
