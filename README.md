@@ -215,6 +215,13 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   `manual-only` (listed variants are classified purely from the supplement;
   variants not listed fall back to the tool's automated calls).
 - **GRCh37 and GRCh38** both supported with separate database trees.
+- **Batched annotation for scale**: database lookups reuse persistent per-batch
+  connections/handles rather than opening one per variant — a single gnomAD
+  DuckDB JOIN is computed up front, thread-local tabix (ClinVar / AlphaMissense /
+  REVEL / RepeatMasker / opt-in BayesDel / CADD) and ESM1b SQLite handles are
+  reused across the batch, and reference-DB file-existence checks are memoized.
+  This is a large speedup on ~10⁵-variant VCFs and on network-mounted databases,
+  with byte-identical output.
 - **Deterministic / reproducible**: no remote API calls, no randomness in the
   scoring logic; output is byte-stable for a fixed (code, data) pair.
 

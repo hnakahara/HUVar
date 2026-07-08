@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Performance
+
+- **Batched, connection-reuse annotation.** The per-variant annotation path was
+  reworked to remove the per-variant database setup that dominated wall-time at
+  scale (~300k-variant VCFs), especially on network-mounted data. Output is
+  byte-identical to the previous per-variant path (covered by new equivalence
+  tests):
+  - **gnomAD** stats are fetched for the whole batch in a single DuckDB JOIN up
+    front (`GnomadDB.precompute()` → `cached()`), replacing a per-variant DuckDB
+    connection + query in `_annotate_one`.
+  - **Tabix-backed readers** (ClinVar VCF, AlphaMissense, REVEL, RepeatMasker,
+    and the opt-in BayesDel / CADD) reuse a persistent thread-local
+    `pysam.TabixFile` handle across the batch instead of opening the file per
+    variant. BayesDel / CADD handles are created only when their licence-gated
+    opt-in is active, so no non-commercial file is opened otherwise.
+  - **ESM1b** uses a persistent thread-local read-only SQLite connection for the
+    batch instead of `sqlite3.connect()` per variant.
+  - Reference-DB file-existence checks are **memoized** for the reader/DB
+    lifetime, avoiding a `stat()` per variant per file (6+ tabix files + ESM1b) —
+    a real cost on network mounts.
+
 ### Added
 
 - **`setup_data.py --force-clinvar`** — force a fresh ClinVar download/rebuild
@@ -276,6 +297,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **RYR1 multi-spec AF basis (CSpec overlay).** The per-CSpec side table
+  (`disease_prevalence_multispec.tsv`, used by the interactive CSpec switch; the
+  conservative batch/CLI row is unaffected) wrongly pinned the RYR1 Congenital
+  Myopathy CSpecs (GN150 AD / GN179 AR) to the popmax **point** estimate
+  inherited from the Malignant Hyperthermia spec (GN012). Their text specifies
+  the **filtering allele frequency (FAF95)**; on few alleles the point AF ≫ FAF95
+  and could wrongly fire BS1. The AF metric is now resolved per-CSpec, so both
+  congenital-myopathy specs fall back to the FAF95 evaluator default.
+- **gnomAD `popmax_pop` label determinism.** On a popmax-AF tie between the
+  exomes and genomes rows (GRCh37), `_merge_rows` picked the population label by
+  list position, so the single-variant `query()` and the batch `precompute()`
+  JOIN could report different `gnomad_popmax_pop` values for the same variant. A
+  deterministic tiebreak (larger AN, then population name) makes both paths — and
+  repeat runs — agree. Label-only: AF / FAF95 / nhomalt and all classifications
+  were already identical.
 - **eRepo benchmark false positives/negatives** addressed across criteria:
   - **PM1** — RYR1 pore-only over-firing (Malignant Hyperthermia broad regions
     were merged in), ITGA2B/ITGB3 ("highly polymorphic" → not applicable), and
