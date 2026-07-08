@@ -1088,8 +1088,7 @@ diagnostic purposes.**
 
 HUVar (`acmg-classifier`) is **not** an in vitro diagnostic device and is **not
 certified for clinical decision making**. Any variant interpretation produced
-by this tool must be reviewed by qualified clinical personnel before being
-used to inform patient care.
+by this tool must be reviewed by qualified clinical personnel.
 
 The authors and the Department of Clinical and Molecular Genetics, Hiroshima
 University Hospital make no warranty as to the accuracy or fitness for purpose
