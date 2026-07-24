@@ -104,8 +104,8 @@ class AnnotationOrchestrator:
             self._squirls = SquirlsPredictor(cfg.squirls_db_dir)
 
     def _init_vep(self):
-        from acmg_classifier.local_db.vep_runner import LocalVEPRunner
         from acmg_classifier.local_db.mane_db import load_mane_map
+        from acmg_classifier.local_db.vep_runner import LocalVEPRunner
         from acmg_classifier.setup.vep_installer import find_vep_cmd
         vep_cmd = find_vep_cmd()
         return LocalVEPRunner(
