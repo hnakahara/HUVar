@@ -159,7 +159,33 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
     )
 
 
-def _parse_vep_record(record: dict[str, Any]) -> tuple[str, list[ConsequenceInfo]]:
+def _apply_mane_fallback(
+    consequences: list[ConsequenceInfo],
+    mane_map: dict[str, tuple[str, str]] | None,
+) -> None:
+    """Recover the MANE Select flag when VEP provides none (GRCh37 cache).
+
+    VEP only sets ``mane_select`` in the GRCh38 cache. When no consequence is
+    flagged, mark the one whose transcript base accession matches the gene's
+    MANE Select RefSeq/Ensembl accession, so the existing MANE-first ordering
+    and ``primary_consequence`` pick the MANE-equivalent transcript on GRCh37.
+    Mutates ``consequences`` in place; no-op when a real flag already exists."""
+    if not mane_map or any(c.is_mane_select for c in consequences):
+        return
+    for c in consequences:
+        mane = mane_map.get(c.gene_symbol)
+        if not mane:
+            continue
+        refseq_base, ensembl_base = mane
+        tx_base = c.transcript_id.split(".", 1)[0]
+        if tx_base and (tx_base == refseq_base or tx_base == ensembl_base):
+            c.is_mane_select = True
+
+
+def _parse_vep_record(
+    record: dict[str, Any],
+    mane_map: dict[str, tuple[str, str]] | None = None,
+) -> tuple[str, list[ConsequenceInfo]]:
     """Translate one VEP JSON line into (variant_key, [consequences]).
 
     The 3-step key resolution is defensive: VEP can drop or rename the
@@ -199,6 +225,9 @@ def _parse_vep_record(record: dict[str, Any]) -> tuple[str, list[ConsequenceInfo
         if c:
             consequences.append(c)
 
+    # GRCh37 has no VEP mane_select flag — recover it by accession before sorting.
+    _apply_mane_fallback(consequences, mane_map)
+
     # Pre-sort so AnnotationData.primary_consequence (which picks the first
     # match) sees the clinically-preferred transcript first:
     #   1. MANE Select before non-MANE
@@ -224,12 +253,16 @@ class LocalVEPRunner:
         fasta: Path,
         assembly: str,
         workers: int = 4,
+        mane_map: dict[str, tuple[str, str]] | None = None,
     ) -> None:
         self._vep_cmd = vep_cmd
         self._cache_dir = cache_dir
         self._fasta = fasta
         self._assembly = assembly
         self._workers = workers
+        # gene -> (refseq_base, ensembl_base) for recovering the MANE flag on
+        # caches that don't provide it (GRCh37). None disables the fallback.
+        self._mane_map = mane_map
 
     def annotate_batch(
         self,
@@ -341,6 +374,6 @@ class LocalVEPRunner:
                     record = json.loads(line)
                 except json.JSONDecodeError:
                     continue
-                key, consequences = _parse_vep_record(record)
+                key, consequences = _parse_vep_record(record, self._mane_map)
                 results[key] = consequences
         return results

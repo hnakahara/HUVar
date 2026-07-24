@@ -319,6 +319,13 @@ class Config(BaseSettings):
         return self.data_dir / "shared" / "gene_inheritance.tsv"
 
     @property
+    def mane_select_tsv(self) -> Path:
+        """gene -> MANE Select transcript map (GRCh37 fallback for VEP's missing
+        mane_select flag). Loader falls back to the packaged resources copy when
+        this data_dir path is absent, so no extra staging is required."""
+        return self.data_dir / "shared" / "mane_select.tsv"
+
+    @property
     def tp53_codes_tsv(self) -> Path:
         """ClinGen TP53 VCEP precomputed per-missense PP3/BP4 codes (built from the
         VCEP supplementary table by scripts/build_tp53_codes.py). Carries the

@@ -105,6 +105,7 @@ class AnnotationOrchestrator:
 
     def _init_vep(self):
         from acmg_classifier.local_db.vep_runner import LocalVEPRunner
+        from acmg_classifier.local_db.mane_db import load_mane_map
         from acmg_classifier.setup.vep_installer import find_vep_cmd
         vep_cmd = find_vep_cmd()
         return LocalVEPRunner(
@@ -113,6 +114,9 @@ class AnnotationOrchestrator:
             fasta=self._cfg.genome_fasta,
             assembly=self._cfg.assembly.value,
             workers=self._cfg.workers,
+            # GRCh37 fallback: VEP emits no mane_select flag there, so recover
+            # the MANE-equivalent transcript by accession from this map.
+            mane_map=load_mane_map(self._cfg.mane_select_tsv),
         )
 
     def _init_gnomad(self):
