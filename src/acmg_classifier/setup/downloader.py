@@ -87,8 +87,11 @@ def validate_data_dir(cfg: Config) -> bool:
 
 
 def print_status(data_dir: Path) -> None:
+    """Show local data files (present / missing) and the recorded data versions."""
     from rich.console import Console
     from rich.table import Table
+    from acmg_classifier.config import Config
+    from acmg_classifier.provenance import collect
     console = Console()
     table = Table(title="Local Data Status")
     table.add_column("Assembly")
@@ -100,15 +103,28 @@ def print_status(data_dir: Path) -> None:
             p = asm_dir / rel
             status = "[green]OK[/green]" if p.exists() else "[red]MISSING[/red]"
             table.add_row(asm.value, rel, status)
-        # MMSplice GTF row DISABLED (MMSplice integration is off). Retained:
-        # gtf_p = asm_dir / _MMSPLICE_GTF[asm]
-        # status = "[green]OK[/green]" if gtf_p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
-        # table.add_row(asm.value, _MMSPLICE_GTF[asm], status)
     # ESM1b is assembly-independent; show it once.
     p = data_dir / _ESM1B_REL
     status = "[green]OK[/green]" if p.exists() else "[yellow]OPTIONAL/MISSING[/yellow]"
     table.add_row("(shared)", _ESM1B_REL, status)
     console.print(table)
+
+    # Data versions (data_manifest.json + auto-detected file headers).
+    for asm in Assembly:
+        if not (data_dir / asm.value).exists():
+            continue
+        prov = collect(Config(data_dir=data_dir, assembly=asm))
+        vt = Table(title=f"Data versions — {asm.value} (HUVar {prov['huvar_version']})")
+        vt.add_column("Resource")
+        vt.add_column("Version / release")
+        vt.add_column("Downloaded")
+        for name, entry in sorted(prov["resources"].items()):
+            ver = ", ".join(f"{k}={v}" for k, v in entry.items()
+                            if k not in ("downloaded", "path", "source"))
+            vt.add_row(name, ver, str(entry.get("downloaded", "")))
+        console.print(vt)
+        for w in prov["warnings"]:
+            console.print(f"[yellow]WARNING:[/yellow] {w}")
 
 
 def run_setup(cfg: Config) -> None:

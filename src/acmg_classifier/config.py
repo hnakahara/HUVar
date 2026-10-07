@@ -365,6 +365,22 @@ class Config(BaseSettings):
         return self.data_dir / "shared" / "pm4_regions.tsv"
 
     @property
+    def clingen_dosage_tsv(self) -> Path:
+        """ClinGen Dosage Sensitivity gene curation list
+        (``ClinGen_gene_curation_list_GRCh38.tsv`` from ftp.clinicalgenome.org).
+        Haploinsufficiency score 3 establishes LoF as a disease mechanism (PVS1).
+        Optional — absent file disables the HI route."""
+        return self.data_dir / "shared" / "ClinGen_gene_curation_list_GRCh38.tsv"
+
+    @property
+    def clingen_gene_validity_csv(self) -> Path:
+        """ClinGen Gene-Disease Validity export (CSV from
+        search.clinicalgenome.org/kb/gene-validity/download). Genes curated only
+        as Limited or below are capped at VUS. Optional — absent file disables
+        the cap."""
+        return self.data_dir / "shared" / "clingen_gene_disease_validity.csv"
+
+    @property
     def vcep_pvs1_splice_exons_tsv(self) -> Path:
         """Optional reviewer-supplied per-(gene, skipped-exon) PVS1 splice-strength
         overrides. Absent file → flat per-gene splice defaults (unchanged

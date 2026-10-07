@@ -124,6 +124,11 @@ def run_pipeline(
         score, classification_bay = clf_bay.classify(criteria_results)
 
         pc = ann.primary_consequence
+        from acmg_classifier.classification.gene_validity import apply_gene_validity
+        classification_2015, classification_bay, gdv_warn = apply_gene_validity(
+            pc.gene_symbol if pc else None, classification_2015, classification_bay, cfg,
+        )
+        extra_warnings = list(extra_warnings) + gdv_warn
         result = ClassificationResult(
             variant_id=variant.key,
             chrom=variant.chrom,
@@ -181,6 +186,18 @@ def run_pipeline(
 
     write_tsv(results, output_path)
 
+    # Data provenance (HUVar version + resource versions) next to the output,
+    # and a warning when the local ClinVar release is stale.
+    try:
+        from acmg_classifier.provenance import collect, write_sidecar
+        if output_path is not None:
+            side = write_sidecar(cfg, output_path)
+            log.info("provenance_written", path=str(side))
+        for w in collect(cfg)["warnings"]:
+            log.warning("data_version_warning", message=w)
+    except Exception as exc:  # noqa: BLE001 — provenance must never break a run
+        log.warning("provenance_failed", error=str(exc))
+
     if skipped:
         if output_path is not None:
             skipped_path = output_path.with_name(
@@ -234,10 +251,16 @@ def classify_annotated(
     from acmg_classifier.classification.classifier_2015 import Classifier2015
     from acmg_classifier.classification.classifier_bayesian import ClassifierBayesian
 
+    from acmg_classifier.classification.gene_validity import apply_gene_validity
+
     registry = CriteriaRegistry(cfg)
     criteria_results = registry.evaluate_all(variant, ann, supplement)
     classification_2015, rules = Classifier2015().classify(criteria_results)
     score, classification_bay = ClassifierBayesian().classify(criteria_results)
+    pc = ann.primary_consequence if ann is not None else None
+    classification_2015, classification_bay, gdv_warn = apply_gene_validity(
+        pc.gene_symbol if pc else None, classification_2015, classification_bay, cfg,
+    )
 
     return ClassificationResult(
         variant_id=variant.key,
@@ -246,6 +269,7 @@ def classify_annotated(
         classification_2015_rules=rules,
         bayesian_score=score,
         classification_bayesian=classification_bay,
+        warnings=gdv_warn,
     )
 
 

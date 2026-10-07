@@ -1,4 +1,4 @@
-"""Evaluate transcript-level properties needed for PVS1 decision tree."""
+"""Evaluate transcript- and gene-level properties needed for the PVS1 decision tree."""
 from __future__ import annotations
 from acmg_classifier.models.annotation import AnnotationData, ConsequenceInfo
 
@@ -24,12 +24,9 @@ def has_alternative_transcript_rescue(annotation: AnnotationData) -> bool:
         ConsequenceType.TRANSCRIPT_ABLATION,
     }
 
-    # Count LoF transcripts vs MANE/canonical transcripts that escape LoF.
-    # A "rescue" exists only when BOTH conditions hold: at least one
-    # transcript carries the LoF, AND at least one clinically-relevant
-    # (MANE/canonical) transcript carries a non-LoF consequence. We do not
-    # rescue against arbitrary minor isoforms — those are unlikely to
-    # produce enough protein to mitigate haploinsufficiency.
+    # A "rescue" exists only when BOTH conditions hold: at least one transcript
+    # carries the LoF, AND at least one clinically-relevant (MANE/canonical)
+    # transcript carries a non-LoF consequence. Minor isoforms are ignored.
     lof_transcripts = 0
     non_lof_mane_canonical = 0
 
@@ -42,29 +39,47 @@ def has_alternative_transcript_rescue(annotation: AnnotationData) -> bool:
     return non_lof_mane_canonical > 0 and lof_transcripts > 0
 
 
-_MIN_PLP_NULL = 3       # ClinVar P/LP null variants establishing LoF mechanism
-_LOEUF_INTOLERANT = 0.35  # gnomAD LOEUF below which the gene is LoF-constrained
+# Minimum number of P/LP null variants (nonsense, frameshift, canonical ±1/2
+# splice; ClinVar review status >=1 star) that establishes LoF as a disease
+# mechanism for a gene without a VCEP PVS1 decision or a ClinGen HI score of 3.
+# The use of reported pathogenic null variants follows the approach of the
+# Franklin platform; the value 3 is our choice of the minimum indicating
+# recurrent pathogenic null variants (not independently calibrated).
+_MIN_PLP_NULL = 3
 
 
 def gene_has_lof_mechanism(
-    consequence: ConsequenceInfo,
-    gnomad_loeuf: float | None,
+    consequence: ConsequenceInfo | None,
+    gnomad_loeuf: float | None = None,
     clinvar_plp_null: int = 0,
+    hi_score: str | None = None,
 ) -> bool:
-    """Heuristic: is loss-of-function an established disease mechanism for the gene?
+    """Is loss-of-function an established disease mechanism for the gene?
 
-    Primary signal — the gene already has several P/LP null (nonsense/frameshift)
-    variants in ClinVar (cf. Franklin's "pathogenic null variants reported").
-    Many bona-fide LoF disease genes (tumour suppressors, recessive genes) are
-    NOT population-constrained, so gnomAD LOEUF alone misclassifies them; LOEUF
-    is therefore only a secondary signal.
+    Established when the gene has a ClinGen Dosage Sensitivity haploinsufficiency
+    score of 3, or when ClinVar reports >= 3 P/LP null variants for the gene.
+    (A VCEP that explicitly applies PVS1 is handled by the caller.)
 
-    Established when: >=3 P/LP null ClinVar variants OR LOEUF < 0.35.
-    When neither signal is present (no ClinVar nulls AND no LOEUF), LoF is treated
-    as NOT established and PVS1 is not applied — consistent with ClinGen/Franklin.
+    gnomAD LOEUF is NOT used: population constraint alone does not establish
+    LoF as a disease mechanism (ACGS 2023; AutoPVS1 uses pLI for reference only).
+    The argument is retained for backward compatibility and reporting.
     """
+    return lof_mechanism_reason(gnomad_loeuf, clinvar_plp_null, hi_score)[0]
+
+
+def lof_mechanism_reason(
+    gnomad_loeuf: float | None,
+    clinvar_plp_null: int,
+    hi_score: str | None,
+) -> tuple[bool, str]:
+    """``(established, explanation)`` — see :func:`gene_has_lof_mechanism`."""
+    loeuf_note = f"; LOEUF={gnomad_loeuf:.2f} (reference only)" if gnomad_loeuf is not None else ""
+    if (hi_score or "").strip() == "3":
+        return True, f"ClinGen haploinsufficiency score 3{loeuf_note}"
     if clinvar_plp_null >= _MIN_PLP_NULL:
-        return True
-    if gnomad_loeuf is not None and gnomad_loeuf < _LOEUF_INTOLERANT:
-        return True
-    return False
+        return True, f"{clinvar_plp_null} ClinVar P/LP null variants (>= {_MIN_PLP_NULL}){loeuf_note}"
+    hi_note = f"ClinGen HI score {hi_score}" if hi_score else "no ClinGen HI score"
+    return False, (
+        f"LoF mechanism not established: {hi_note}, {clinvar_plp_null} ClinVar P/LP "
+        f"null variants (< {_MIN_PLP_NULL}){loeuf_note}"
+    )

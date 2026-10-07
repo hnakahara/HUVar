@@ -16,29 +16,11 @@ from acmg_classifier.config import Config
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.enums import ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
-from acmg_classifier.pvs1.nmd_predictor import (
-    predicts_nmd,
-    is_last_exon,
-    is_penultimate_exon,
-)
+from acmg_classifier.pvs1.nmd_predictor import nmd_status
 from acmg_classifier.pvs1.transcript_evaluator import (
     has_alternative_transcript_rescue,
-    gene_has_lof_mechanism,
+    lof_mechanism_reason,
 )
-
-# ClinGen SVI PVS1 strength caps (Franklin-aligned). When the gene has fewer
-# than _MIN_PLP_NULL_FOR_FULL_PVS1 P/LP null variants in ClinVar, PVS1 strength
-# is limited to Moderate in either of two situations:
-#   - missense-dominant:  >= _MIN_PLP_MISS_FOR_CAP P/LP missense (mechanism
-#                         skews to missense, not haploinsufficiency).
-#   - undercurated:       total P/LP (null + missense) <
-#                         _MIN_PLP_TOTAL_FOR_FULL_PVS1, so there is too little
-#                         clinical evidence to establish LoF as the mechanism
-#                         even when LOEUF/Z indicate population-level constraint.
-_MIN_PLP_NULL_FOR_FULL_PVS1 = 3
-_MIN_PLP_MISS_FOR_CAP = 10
-_MIN_PLP_TOTAL_FOR_FULL_PVS1 = 5
-
 
 def evaluate_pvs1(
     variant: VariantRecord,
@@ -51,8 +33,8 @@ def evaluate_pvs1(
 
     ``lof_established`` overrides the LoF-mechanism question: a VCEP that
     explicitly applies PVS1 has, by definition, established LoF as the disease
-    mechanism, so pass ``True`` to skip the ClinVar/LOEUF heuristic (which can
-    miss under-represented genes). ``None`` (default) uses the heuristic.
+    mechanism, so pass ``True`` to skip the ClinGen HI / ClinVar check.
+    ``None`` (default) uses ClinGen HI score 3 or >= 3 ClinVar P/LP nulls.
 
     Returns (strength, evidence_string).
     strength == NOT_MET means PVS1 should not be applied.
@@ -65,16 +47,22 @@ def evaluate_pvs1(
     loeuf = gd.loeuf if gd else None
     alt_rescue = has_alternative_transcript_rescue(annotation)
 
-    # "Is LoF a known disease mechanism?" — when the VCEP explicitly applies PVS1
-    # (lof_established=True) the mechanism is settled; otherwise the primary
-    # signal is the count of P/LP null variants already reported in ClinVar for
-    # the gene (Franklin-style), with LOEUF as a secondary constraint hint.
+    # "Is LoF a known disease mechanism?" — the first node of the ClinGen PVS1
+    # decision tree. Established when (i) the VCEP explicitly applies PVS1
+    # (lof_established=True), (ii) the gene has a ClinGen Dosage Sensitivity
+    # haploinsufficiency score of 3, or (iii) ClinVar reports >= 3 P/LP null
+    # variants. gnomAD LOEUF is reported for reference only. When none holds,
+    # PVS1 is not applied.
     if lof_established:
-        lof_mechanism = True
+        lof_mechanism, lof_note = True, "VCEP applies PVS1 (LoF established)"
     else:
         from acmg_classifier.local_db.clinvar_sqlite import query_pathogenic_null_count
+        from acmg_classifier.local_db.clingen_gene_db import hi_score
         plp_null = query_pathogenic_null_count(cfg.clinvar_sqlite, pc.gene_symbol)
-        lof_mechanism = gene_has_lof_mechanism(pc, loeuf, plp_null)
+        hi = hi_score(getattr(cfg, "clingen_dosage_tsv", None), pc.gene_symbol)
+        lof_mechanism, lof_note = lof_mechanism_reason(loeuf, plp_null, hi)
+    if not lof_mechanism:
+        return CriterionStrength.NOT_MET, lof_note
 
     # ---- Branch dispatch (compute strength + evidence) ---------------------
     if pc.consequence == ConsequenceType.TRANSCRIPT_ABLATION:
@@ -89,8 +77,11 @@ def evaluate_pvs1(
                 "Transcript ablation; LoF mechanism uncertain",
             )
     elif pc.consequence == ConsequenceType.START_LOST:
-        # Already at Moderate — never subject to cap.
-        return CriterionStrength.MODERATE, "Start-loss; assumed partial LoF (no downstream AUG data)"
+        # Initiation codon: Moderate (no downstream in-frame AUG data); only
+        # reached once LoF has been established as the disease mechanism.
+        return CriterionStrength.MODERATE, (
+            f"Start-loss; assumed partial LoF (no downstream AUG data) [{lof_note}]"
+        )
     elif pc.consequence in (ConsequenceType.SPLICE_DONOR, ConsequenceType.SPLICE_ACCEPTOR):
         strength, evidence = _splice_branch(
             variant, annotation, cfg, lof_mechanism, alt_rescue, pc,
@@ -103,37 +94,7 @@ def evaluate_pvs1(
             f"Consequence {pc.consequence.value} not handled by PVS1",
         )
 
-    # ---- ClinGen SVI strength caps -----------------------------------------
-    # When the gene has few P/LP null variants, two caps may apply:
-    #   (1) missense-dominant: many P/LP missense imply the disease mechanism is
-    #       NOT haploinsufficiency, so a new null cannot be VeryStrong/Strong.
-    #   (2) undercurated: very few P/LP overall — there is too little clinical
-    #       evidence in ClinVar to establish LoF as the disease mechanism even
-    #       when LOEUF/Z indicate population-level constraint.
-    # Either situation caps PVS1 strength to Moderate (cf. Franklin's PVS1).
-    # Skipped when the VCEP explicitly applies PVS1 (lof_established) — the panel
-    # has already established LoF as the mechanism, so the ClinVar-curation caps
-    # do not apply.
-    if not lof_established \
-            and strength in (CriterionStrength.VERY_STRONG, CriterionStrength.STRONG) \
-            and plp_null < _MIN_PLP_NULL_FOR_FULL_PVS1:
-        from acmg_classifier.local_db.clinvar_sqlite import query_pathogenic_missense_count
-        plp_miss = query_pathogenic_missense_count(cfg.clinvar_sqlite, pc.gene_symbol)
-        plp_total = plp_null + plp_miss
-        if plp_miss >= _MIN_PLP_MISS_FOR_CAP:
-            evidence = (
-                f"{evidence} [capped to Moderate: only {plp_null} P/LP null "
-                f"but {plp_miss} P/LP missense — missense-dominant gene]"
-            )
-            strength = CriterionStrength.MODERATE
-        elif plp_total < _MIN_PLP_TOTAL_FOR_FULL_PVS1:
-            evidence = (
-                f"{evidence} [capped to Moderate: only {plp_null} P/LP null "
-                f"and {plp_miss} P/LP missense (<{_MIN_PLP_TOTAL_FOR_FULL_PVS1} "
-                f"total) — insufficient ClinVar evidence for LoF mechanism]"
-            )
-            strength = CriterionStrength.MODERATE
-    return strength, evidence
+    return strength, f"{evidence} [{lof_note}]"
 
 
 # ---------------------------------------------------------------------------
@@ -155,7 +116,7 @@ def _nmd_branch(
     truncated protein may still be expressed; severity then depends on what
     region is removed (functional-domain truncation is more damaging than
     truncation of an uncharacterised C-terminus)."""
-    nmd = predicts_nmd(pc)
+    nmd, nmd_note = nmd_status(pc)
 
     # Gate: if LoF is not a known mechanism for the gene, PVS1 does not apply
     # regardless of how convincing the molecular evidence is — this is the
@@ -163,37 +124,20 @@ def _nmd_branch(
     if not lof_mechanism:
         return CriterionStrength.NOT_MET, "Gene LoF mechanism not established"
 
+    cq = pc.consequence.value
     if nmd:
         if not alt_rescue:
-            return CriterionStrength.VERY_STRONG, f"{pc.consequence.value}; NMD predicted; no rescue transcript"
-        else:
-            return CriterionStrength.STRONG, f"{pc.consequence.value}; NMD predicted; alt transcript may rescue"
-    else:
-        # NMD is escaped when the premature stop is in the last exon or within
-        # ~50 bp of the last exon-exon junction (penultimate exon). These two
-        # cases are usually grouped because the rule of thumb cannot
-        # distinguish them without splice-junction-level precision.
-        last = is_last_exon(pc)
-        penult = is_penultimate_exon(pc)
-        note = "last exon" if last else ("penultimate exon" if penult else "NMD escape")
+            return CriterionStrength.VERY_STRONG, f"{cq}; {nmd_note}; no rescue transcript"
+        return CriterionStrength.STRONG, f"{cq}; {nmd_note}; alt transcript may rescue"
 
-        if last or penult:
-            # NMD escapes, so a (largely) full-length protein is still made.
-            # Per the ClinGen SVI PVS1 decision tree, PVS1 then applies only when
-            # the truncation removes a CRITICAL functional region; otherwise it
-            # is N/A. Domain presence is our proxy for "critical region
-            # truncated": with a functional domain in the truncated tail → Strong;
-            # WITHOUT any domain evidence we must NOT assume criticality (the old
-            # "Moderate" over-applied PVS1 to last-exon truncations the VCEPs
-            # leave uncalled, e.g. APC/MYOC), so PVS1 is withheld.
-            domains = pc.domains or []
-            has_domain = bool(domains)
-            if has_domain:
-                return CriterionStrength.STRONG, f"{pc.consequence.value}; {note}; truncated region contains functional domain"
-            else:
-                return CriterionStrength.NOT_MET, f"{pc.consequence.value}; {note}; no critical region removed (NMD escaped) — PVS1 N/A"
-        else:
-            return CriterionStrength.SUPPORTING, f"{pc.consequence.value}; NMD not predicted; uncertain impact"
+    # NMD escaped (PTC in the last exon or the 3'-most 50 nt of the penultimate
+    # exon): a truncated protein may be produced. PVS1 applies only when the
+    # truncation removes a critical region; annotated functional-domain overlap
+    # is used as the proxy (Strong); without it PVS1 is withheld. (The decision
+    # tree's protein-length (10%) branch is not implemented in this generic path.)
+    if pc.domains:
+        return CriterionStrength.STRONG, f"{cq}; {nmd_note}; truncated region contains functional domain"
+    return CriterionStrength.NOT_MET, f"{cq}; {nmd_note}; no critical region removed (NMD escaped) — PVS1 N/A"
 
 
 # ---------------------------------------------------------------------------

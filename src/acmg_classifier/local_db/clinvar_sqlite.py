@@ -719,33 +719,43 @@ def query_pathogenic_null_count(
     gene_symbol: Optional[str],
     min_stars: int = 1,
 ) -> int:
-    """Count P/LP null (nonsense/frameshift) variants reported in ClinVar for a gene.
+    """Count P/LP null variants reported in ClinVar for a gene.
 
-    Used by PVS1's LoF-mechanism gate (cf. Franklin's "pathogenic null variants
-    reported"). Counts >=min_stars Pathogenic/Likely-pathogenic records whose
-    protein change is a stop-gain or frameshift (HGVS p. contains Ter / fs / *).
-    Canonical-splice nulls without a protein HGVS are not counted, but
-    nonsense+frameshift counts are sufficient to establish the signal.
+    Used by PVS1's LoF-mechanism gate. Counts >=min_stars Pathogenic/Likely-
+    pathogenic records that are nonsense or frameshift (HGVS p. contains
+    Ter / fs / *) or canonical ±1/2 splice-site changes (HGVS c. ``+1``, ``+2``,
+    ``-1``, ``-2`` intronic offsets).
     """
     if not db_path.exists() or not gene_symbol:
         return 0
     try:
         con = _get_conn(db_path)
-        row = con.execute(
+        rows = con.execute(
             """
-            SELECT COUNT(*)
+            SELECT hgvs_c, hgvs_p
             FROM variants
             WHERE gene_symbol = ?
               AND star_rating >= ?
               AND clinical_significance IN (?,?,?)
-              AND (hgvs_p LIKE '%Ter%' OR hgvs_p LIKE '%fs%' OR hgvs_p LIKE '%*%')
             """,
             (gene_symbol, min_stars, *_PP2_PATH),
-        ).fetchone()
-        return int(row[0]) if row and row[0] is not None else 0
+        ).fetchall()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="pvs1_null", error=str(exc))
         return 0
+    return sum(1 for hc, hp in rows if _is_null_change(hc, hp))
+
+
+_TRUNC_P_RE = re.compile(r"(Ter|fs|\*)")
+_CANON_SPLICE_RE = re.compile(r"c\.[-*]?\d+[+-][12](?!\d)")
+
+
+def _is_null_change(hgvs_c: Optional[str], hgvs_p: Optional[str]) -> bool:
+    """Nonsense / frameshift (protein HGVS) or canonical ±1/2 splice (cDNA HGVS)."""
+    hp = (hgvs_p or "").split(":")[-1]
+    if hp and "ext" not in hp and _TRUNC_P_RE.search(hp):
+        return True
+    return bool(hgvs_c and _CANON_SPLICE_RE.search(hgvs_c))
 
 
 @lru_cache(maxsize=8192)

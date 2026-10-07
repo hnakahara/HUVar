@@ -595,6 +595,8 @@ def step_clinvar_vcf(asm_dir: Path, assembly: str, urls: dict, force: bool = Fal
     _download(urls["clinvar_vcf"], dest, "ClinVar VCF (~120 MB)")
     print("  Building index with tabix...")
     _run(["tabix", "-p", "vcf", str(dest)])
+    _record_manifest(asm_dir.parent, f"clinvar_vcf_{assembly}", source=urls["clinvar_vcf"],
+                     release=_clinvar_release(dest))
     return True
 
 
@@ -1166,6 +1168,49 @@ def step_phylop(asm_dir: Path, assembly: str, urls: dict, skip: bool) -> bool:
     return True
 
 
+# ClinGen gene-level curations (assembly-independent; stored in data/shared).
+# The Dosage Sensitivity HI score establishes LoF as a disease mechanism (PVS1);
+# Gene-Disease Validity caps genes curated only as Limited or below at VUS.
+CLINGEN_URLS = {
+    "dosage": "https://ftp.clinicalgenome.org/ClinGen_gene_curation_list_GRCh38.tsv",
+    "validity": "https://search.clinicalgenome.org/kb/gene-validity/download",
+}
+
+
+def step_clingen(data_dir: Path, force: bool = False) -> bool:
+    """Download ClinGen Dosage Sensitivity and Gene-Disease Validity tables."""
+    shared = data_dir / "shared"
+    shared.mkdir(parents=True, exist_ok=True)
+    targets = {
+        "dosage": shared / "ClinGen_gene_curation_list_GRCh38.tsv",
+        "validity": shared / "clingen_gene_disease_validity.csv",
+    }
+    for key, dest in targets.items():
+        if dest.exists() and dest.stat().st_size > 1000 and not force:
+            print(f"  [SKIP] {dest.name}")
+            continue
+        _download(CLINGEN_URLS[key], dest, f"ClinGen {key}")
+        _record_manifest(data_dir, f"clingen_{key}", source=CLINGEN_URLS[key], path=dest)
+    return True
+
+
+def _clinvar_release(vcf: Path) -> str | None:
+    try:
+        from acmg_classifier.provenance import _clinvar_vcf_date
+        return _clinvar_vcf_date(vcf)
+    except Exception:
+        return None
+
+
+def _record_manifest(data_dir: Path, resource: str, **fields) -> None:
+    """Record provenance for a resource in ``<data_dir>/data_manifest.json``."""
+    try:
+        from acmg_classifier.provenance import record_resource
+        record_resource(data_dir, resource, **fields)
+    except Exception as exc:  # never fail setup because of bookkeeping
+        print(f"  [WARN] could not update data manifest for {resource}: {exc}")
+
+
 def step_mmsplice_gtf(asm_dir: Path, assembly: str, urls: dict, skip: bool) -> bool:
     """DISABLED — not registered in the steps list (MMSplice integration is off).
     Retained for re-enabling later. See the SpliceTool enum for context.
@@ -1297,12 +1342,15 @@ def main() -> None:
     # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
     # parser.add_argument("--skip-mmsplice-gtf", action="store_true",
     #                     help="Skip MMSplice GTF download/filter (~50 MB)")
+    parser.add_argument("--force-clingen", action="store_true",
+                        help="Re-download the ClinGen Dosage Sensitivity and Gene-Disease "
+                             "Validity tables even when present (they are updated continuously).")
     parser.add_argument("--only", nargs="+", default=None, metavar="STEP",
                         help="Run only the named step(s) and skip the rest. Step "
                              "keys: genome, vep, clinvar-vcf, clinvar-sqlite, "
                              "alphamissense, esm1b, revel, cadd, bayesdel, "
                              "openspliceai, gnomad-constraint, gnomad-coverage, "
-                             "gnomad, gnomad-noncancer, repeatmasker, phylop. "
+                             "gnomad, gnomad-noncancer, repeatmasker, phylop, clingen. "
                              "Each step is idempotent: it checks for existing "
                              "files and downloads only what is missing. Example: "
                              "--only openspliceai")
@@ -1348,6 +1396,7 @@ def main() -> None:
         ("gnomad-noncancer",  "gnomAD non-cancer", lambda: step_gnomad_noncancer(asm_dir, assembly, urls, args.gnomad_noncancer_vcf_dir, nc_chroms, args.skip_gnomad_noncancer, args.workers)),
         ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
         ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
+        ("clingen",           "ClinGen dosage / gene validity", lambda: step_clingen(data_dir, args.force_clingen)),
     ]
 
     if args.only:

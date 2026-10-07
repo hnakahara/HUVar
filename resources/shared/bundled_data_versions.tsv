@@ -1,0 +1,6 @@
+# Versions of the curated resources bundled in resources/ (update when they are regenerated)
+resource	version	retrieved	source
+clingen_cspec	CSpec Registry snapshot (cspecStatus=Released specifications)	2026-06-05	https://cspec.genome.network/cspec/ui/svi/
+clingen_erepo_supplement	ClinGen Evidence Repository export	2026-05-28	https://erepo.clinicalgenome.org/evrepo/
+mane_exon_structures	MANE Release v1.5 (NCBI GFF, annotation date 2025-08-01)	2025-12-04	https://ftp.ncbi.nlm.nih.gov/refseq/MANE/
+gene_inheritance	NIH Clinical Genomic Database + curated seed	2026-06	https://research.nih.gov/cgd/

@@ -131,8 +131,20 @@ class TestNMDPredictor:
 
 
 class TestGeneLoFMechanism:
-    def test_lof_intolerant_low_loeuf(self):
-        assert gene_has_lof_mechanism(None, gnomad_loeuf=0.10) is True
+    def test_low_loeuf_alone_does_not_establish_lof(self):
+        # Population constraint alone no longer establishes LoF (reviewer
+        # response, GM revision): LOEUF is reported for reference only.
+        assert gene_has_lof_mechanism(None, gnomad_loeuf=0.10) is False
+
+    def test_hi_score_3_establishes_lof(self):
+        assert gene_has_lof_mechanism(None, gnomad_loeuf=None, hi_score="3") is True
+
+    def test_hi_score_below_3_does_not(self):
+        assert gene_has_lof_mechanism(None, gnomad_loeuf=None, hi_score="2") is False
+
+    def test_three_clinvar_nulls_establish_lof(self):
+        assert gene_has_lof_mechanism(None, clinvar_plp_null=3) is True
+        assert gene_has_lof_mechanism(None, clinvar_plp_null=2) is False
 
     def test_lof_tolerant_high_loeuf(self):
         assert gene_has_lof_mechanism(None, gnomad_loeuf=0.80) is False
@@ -167,12 +179,42 @@ class TestPVS1DecisionTree:
         assert strength == CriterionStrength.VERY_STRONG
 
     def test_start_loss_moderate(self):
+        from unittest.mock import patch
         from acmg_classifier.pvs1.decision_tree import evaluate_pvs1
         c = _consequence(ConsequenceType.START_LOST, exon="1/24")
         ann = AnnotationData(consequences=[c])
         v = VariantRecord(chrom="chr17", pos=100, ref="G", alt="A", assembly=Assembly.GRCH38)
-        strength, evidence = evaluate_pvs1(v, ann, self.cfg)
+        with patch(
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
+            return_value=5,
+        ):
+            strength, evidence = evaluate_pvs1(v, ann, self.cfg)
         assert strength == CriterionStrength.MODERATE
+
+    def test_start_loss_without_lof_mechanism_not_met(self):
+        # The LoF-mechanism gate now precedes the initiation-codon branch.
+        from acmg_classifier.pvs1.decision_tree import evaluate_pvs1
+        c = _consequence(ConsequenceType.START_LOST, exon="1/24")
+        ann = AnnotationData(consequences=[c], gnomad=GnomADData(loeuf=0.05))
+        v = VariantRecord(chrom="chr17", pos=100, ref="G", alt="A", assembly=Assembly.GRCH38)
+        strength, evidence = evaluate_pvs1(v, ann, self.cfg)
+        assert strength == CriterionStrength.NOT_MET
+        assert "LOEUF=0.05 (reference only)" in evidence
+
+    def test_few_nulls_no_moderate_cap_any_more(self):
+        # The former "PVS1_Moderate when <3 P/LP nulls" cap is gone: with LoF
+        # not established PVS1 is not applied at all.
+        from unittest.mock import patch
+        from acmg_classifier.pvs1.decision_tree import evaluate_pvs1
+        c = _consequence(ConsequenceType.STOP_GAINED, exon="5/24")
+        ann = AnnotationData(consequences=[c], gnomad=GnomADData(loeuf=0.10))
+        v = VariantRecord(chrom="chr17", pos=100, ref="G", alt="A", assembly=Assembly.GRCH38)
+        with patch(
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
+            return_value=2,
+        ):
+            strength, _ = evaluate_pvs1(v, ann, self.cfg)
+        assert strength == CriterionStrength.NOT_MET
 
     def test_last_exon_frameshift_no_domain_not_met(self):
         # SVI: a last-exon truncation escapes NMD; without evidence that a
