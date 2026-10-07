@@ -443,3 +443,36 @@ def combo_active(spec: InSilicoGeneSpec, gene: Optional[str], cfg) -> bool:
         return False
     req = spec.requires(gene)
     return (req == "cadd" and cfg.use_cadd) or (req == "bayesdel" and cfg.use_bayesdel)
+
+
+_AUX_LABEL = {
+    "bayesdel": "BayesDel",
+    "cadd": "REVEL with CADD agreement",
+}
+
+
+def vcep_predictor_note(gene: Optional[str], cfg, spec: "InSilicoGeneSpec", revel_spec,
+                        criterion: str) -> Optional[str]:
+    """Explain when the gene's VCEP names a missense predictor that this run is
+    not using, so the reported PP3/BP4 call is visibly based on the genome-wide
+    calibrated default rather than on the VCEP specification (Genome Medicine
+    revision, Reviewer 3). None when the VCEP predictor is in use or none is
+    specified."""
+    from acmg_classifier.models.enums import InSilicoTool
+    if not gene:
+        return None
+    tool = getattr(cfg.insilico_tool, "value", str(cfg.insilico_tool))
+    req = spec.requires(gene)
+    if req and not combo_active(spec, gene, cfg):
+        flag = "--insilico-tool revel --with-" + req
+        return (f"[note: {gene} VCEP specifies {_AUX_LABEL.get(req, req)} for {criterion}; "
+                f"not active in this run (tool={tool}), genome-wide calibrated thresholds "
+                f"applied; use {flag} to follow the VCEP]")
+    rule = revel_spec.get(gene) if revel_spec is not None else None
+    tiers = None
+    if rule is not None:
+        tiers = rule.pp3 if criterion == "PP3" else rule.bp4
+    if tiers and cfg.insilico_tool != InSilicoTool.REVEL:
+        return (f"[note: {gene} VCEP specifies REVEL cutoffs for {criterion}; "
+                f"{tool} with genome-wide calibrated thresholds applied instead]")
+    return None

@@ -137,6 +137,22 @@ class PP3Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
+        result = self._evaluate(variant, annotation, supplement)
+        pc = annotation.primary_consequence
+        if pc is not None and pc.consequence == ConsequenceType.MISSENSE:
+            from acmg_classifier.criteria.insilico_genes import vcep_predictor_note
+            note = vcep_predictor_note(pc.gene_symbol, self._cfg, self._insilico_spec,
+                                       self._revel_spec, "PP3")
+            if note:
+                result.evidence = f"{result.evidence} {note}".strip()
+        return result
+
+    def _evaluate(
+        self,
+        variant: VariantRecord,
+        annotation: AnnotationData,
+        supplement: list[SupplementEntry] | None = None,
+    ) -> CriteriaResult:
         pc = annotation.primary_consequence
         if pc is None:
             return CriteriaResult.not_met(ACMGCriterion.PP3, "No consequence")

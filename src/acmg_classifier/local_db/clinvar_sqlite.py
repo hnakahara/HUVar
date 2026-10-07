@@ -593,62 +593,82 @@ def query_hotspot_cluster(
     protein_position: Optional[int],
     window: int = 25,
     min_path_variants: int = 3,
+    chrom: Optional[str] = None,
+    pos: Optional[int] = None,
+    ref: Optional[str] = None,
+    alt: Optional[str] = None,
+    min_stars: int = 1,
 ) -> tuple[bool, str]:
     """
-    Return (is_hotspot, evidence) by counting P/LP variants in a +/-window aa window (PM1).
+    Return (is_hotspot, evidence) for the PM1 fallback heuristic (genes without
+    VCEP-curated hotspot definitions).
 
-    A cluster of >=3 P/LP variants within 25 amino acids is considered a hotspot.
+    The region is a hotspot when it contains >= ``min_path_variants`` distinct
+    P/LP *missense* changes (>= ``min_stars``) within +/- ``window`` amino acids
+    and no B/LB missense change. Only missense changes are counted (nonsense,
+    frameshift and synonymous records that share a codon number are a different
+    mechanism), and the query variant itself is excluded when its coordinates are
+    given, so a variant cannot contribute to its own hotspot (Genome Medicine
+    revision, Reviewer 3).
     """
     if not db_path.exists() or protein_position is None:
         return False, "No protein position or DB unavailable"
     try:
         con = _get_conn(db_path)
-        count = con.execute(
+        rows = con.execute(
             """
-            SELECT COUNT(DISTINCT amino_acid_change)
+            SELECT chrom, pos, ref, alt, hgvs_p, amino_acid_change, clinical_significance
             FROM variants
             WHERE gene_symbol = ?
               AND codon_position BETWEEN ? AND ?
-              AND star_rating >= 1
-              AND clinical_significance IN (
-                  'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
-              )
+              AND star_rating >= ?
+              AND clinical_significance IN (?,?,?,?,?,?)
             """,
-            (gene_symbol, protein_position - window, protein_position + window),
-        ).fetchone()[0]
-        # PM1 requires the region to be "without benign variation". If any B/LB
-        # variant (>=1 star) lies in the same window, PM1 is not applicable.
-        benign_count = con.execute(
-            """
-            SELECT COUNT(DISTINCT amino_acid_change)
-            FROM variants
-            WHERE gene_symbol = ?
-              AND codon_position BETWEEN ? AND ?
-              AND star_rating >= 1
-              AND clinical_significance IN (
-                  'Benign', 'Likely benign', 'Benign/Likely benign'
-              )
-            """,
-            (gene_symbol, protein_position - window, protein_position + window),
-        ).fetchone()[0]
+            (gene_symbol, protein_position - window, protein_position + window,
+             min_stars, *_PP2_PATH, *_PP2_BENIGN),
+        ).fetchall()
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="hotspot", error=str(exc))
         return False, str(exc)
 
+    q_chrom = _strip_chr_prefix(chrom) if chrom is not None else None
+    path_changes: set[str] = set()
+    benign_changes: set[str] = set()
+    for r_chrom, r_pos, r_ref, r_alt, hgvs_p, aa_change, sig in rows:
+        if not _is_missense_p(hgvs_p):
+            continue
+        if (q_chrom is not None and pos is not None
+                and _strip_chr_prefix(str(r_chrom)) == q_chrom and r_pos == pos
+                and r_ref == ref and r_alt == alt):
+            continue  # the query variant itself
+        key = aa_change or hgvs_p
+        if sig in _PP2_PATH:
+            path_changes.add(key)
+        else:
+            benign_changes.add(key)
+
+    count = len(path_changes)
+    benign_count = len(benign_changes)
     if benign_count > 0:
         return False, (
-            "Benign variation present within " + str(window) + " aa of position "
-            + str(protein_position) + " in " + gene_symbol + " ("
-            + str(benign_count) + " B/LB variant(s)) — PM1 not applicable"
+            f"Benign missense variation present within {window} aa of position "
+            f"{protein_position} in {gene_symbol} ({benign_count} B/LB variant(s)) "
+            "— PM1 not applicable"
         )
-
     if count >= min_path_variants:
         return True, (
-            "Hotspot cluster: " + str(count) + " P/LP variants within "
-            + str(window) + " aa of position " + str(protein_position)
-            + " in " + gene_symbol
+            f"Hotspot cluster (heuristic): {count} other P/LP missense variants "
+            f"within {window} aa of position {protein_position} in {gene_symbol}, "
+            "no B/LB missense"
         )
-    return False, "No hotspot cluster (" + str(count) + " P/LP variants in window)"
+    return False, (
+        f"No hotspot cluster ({count} other P/LP missense in +/-{window} aa; "
+        f"needs >= {min_path_variants})"
+    )
+
+
+def _strip_chr_prefix(c: str) -> str:
+    return c[3:] if c.lower().startswith("chr") else c
 
 
 # --- PP2: missense is a common disease mechanism with low benign missense rate ---
@@ -697,17 +717,29 @@ def query_pp2_eligible(
     gene_symbol: Optional[str],
     mis_z: float | None = None,
     min_stars: int = 1,
+    common_missense: int = 0,
+    min_path: int = _PP2_MIN_PATH,
+    max_benign_frac: float = _PP2_MAX_BENIGN_FRAC,
+    min_mis_z: float = _PP2_MIN_MIS_Z,
+    z_max_benign_frac: float = _PP2_Z_MAX_BENIGN_FRAC,
 ) -> tuple[bool, str]:
     """PP2 eligibility (ClinVar + gnomAD missense constraint).
 
     The gene qualifies when missense is a recurrent pathogenic mechanism
-    (>= _PP2_MIN_PATH P/LP missense, >=1 star) AND at least one of:
-      (a) ClinVar benign missense rate <= _PP2_MAX_BENIGN_FRAC, OR
-      (b) gnomAD missense Z-score >= _PP2_MIN_MIS_Z (constrained gene).
+    (>= min_path P/LP missense, >=1 star) AND at least one of:
+      (a) ClinVar benign missense rate <= max_benign_frac, OR
+      (b) gnomAD missense Z-score >= min_mis_z (constrained gene).
 
     The Z-score branch matches Franklin's PP2 logic and rescues genes with a
     slightly elevated benign-missense rate that are nonetheless strongly
     constrained against missense (e.g. clean tumour-suppressor / kinase genes).
+
+    ``common_missense`` is the number of gnomAD missense variants in the gene
+    whose allele frequency meets the gene's BS1 threshold (precomputed by
+    scripts/build_pp2_gene_stats.py). They are added to the benign side, because
+    ClinVar under-reports benign missense variation for genes that are rarely
+    tested (Genome Medicine revision, Reviewer 3). Thresholds are parameters so
+    that they can be set from Config.
     """
     if not db_path.exists() or not gene_symbol:
         return False, "No gene or DB unavailable"
@@ -728,47 +760,50 @@ def query_pp2_eligible(
         return False, str(exc)
 
     path = sum(1 for hp, sig in rows if sig in _PP2_PATH and _is_missense_p(hp))
-    benign = sum(1 for hp, sig in rows if sig in _PP2_BENIGN and _is_missense_p(hp))
+    benign_clinvar = sum(1 for hp, sig in rows if sig in _PP2_BENIGN and _is_missense_p(hp))
+    benign = benign_clinvar + max(0, int(common_missense or 0))
     total = path + benign
+    src = (f"ClinVar B/LB {benign_clinvar} + gnomAD common {common_missense}"
+           if common_missense else f"ClinVar B/LB {benign_clinvar}")
 
-    if path < _PP2_MIN_PATH:
+    if path < min_path:
         return False, (
-            f"{gene_symbol}: only {path} P/LP missense (<{_PP2_MIN_PATH}) — PP2 not applicable"
+            f"{gene_symbol}: only {path} P/LP missense (<{min_path}) — PP2 not applicable"
         )
 
     frac = benign / total if total else 0.0
-    benign_ok = frac <= _PP2_MAX_BENIGN_FRAC
+    benign_ok = frac <= max_benign_frac
     z_ok = (
         mis_z is not None
-        and mis_z >= _PP2_MIN_MIS_Z
-        and frac <= _PP2_Z_MAX_BENIGN_FRAC
+        and mis_z >= min_mis_z
+        and frac <= z_max_benign_frac
     )
 
     if benign_ok:
         return True, (
             f"{gene_symbol}: {path} P/LP missense, benign missense rate {frac:.0%} "
-            f"({benign}/{total}) — missense is a common disease mechanism"
+            f"({benign}/{total}; {src}) — missense is a common disease mechanism"
         )
     if z_ok:
         return True, (
             f"{gene_symbol}: {path} P/LP missense, missense Z={mis_z:.2f} "
-            f">= {_PP2_MIN_MIS_Z} (constrained against missense; benign rate {frac:.0%} "
-            f"{benign}/{total} <= {_PP2_Z_MAX_BENIGN_FRAC:.0%} permitted via Z-score branch)"
+            f">= {min_mis_z} (constrained against missense; benign rate {frac:.0%} "
+            f"{benign}/{total} <= {z_max_benign_frac:.0%} permitted via Z-score branch)"
         )
     # Neither branch qualifies — report why, distinguishing a low Z-score from a
     # high-Z gene blocked by the benign-rate ceiling on the rescue branch.
     if mis_z is None:
         z_note = ", missense Z unavailable"
-    elif mis_z < _PP2_MIN_MIS_Z:
-        z_note = f", missense Z={mis_z:.2f} < {_PP2_MIN_MIS_Z}"
+    elif mis_z < min_mis_z:
+        z_note = f", missense Z={mis_z:.2f} < {min_mis_z}"
     else:
         z_note = (
             f", missense Z={mis_z:.2f} but benign rate {frac:.0%} "
-            f"> {_PP2_Z_MAX_BENIGN_FRAC:.0%} Z-rescue ceiling"
+            f"> {z_max_benign_frac:.0%} Z-rescue ceiling"
         )
     return False, (
-        f"{gene_symbol}: benign missense rate {frac:.0%} > {_PP2_MAX_BENIGN_FRAC:.0%} "
-        f"({benign}/{total}){z_note} — PP2 not applicable"
+        f"{gene_symbol}: benign missense rate {frac:.0%} > {max_benign_frac:.0%} "
+        f"({benign}/{total}; {src}){z_note} — PP2 not applicable"
     )
 
 

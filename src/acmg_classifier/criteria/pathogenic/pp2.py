@@ -14,6 +14,11 @@ Gene eligibility is decided in priority order:
 Only missense variants in eligible genes receive PP2.
 """
 from __future__ import annotations
+
+import csv
+from functools import lru_cache
+from pathlib import Path
+
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.criteria.pp2_genes import (
@@ -24,6 +29,23 @@ from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
+
+
+@lru_cache(maxsize=4)
+def load_common_missense(path: Path) -> dict[str, int]:
+    """``{gene: n gnomAD missense variants meeting the gene's BS1 threshold}``
+    from ``pp2_gene_stats.tsv`` (scripts/build_pp2_gene_stats.py). Empty when the
+    file is absent, in which case PP2 uses ClinVar B/LB missense only."""
+    out: dict[str, int] = {}
+    if not isinstance(path, Path) or not path.exists():
+        return out
+    with path.open(encoding="utf-8") as fh:
+        for r in csv.DictReader((ln for ln in fh if not ln.startswith("#")), delimiter="\t"):
+            try:
+                out[r["gene"].strip()] = int(r["common_missense"])
+            except (KeyError, ValueError):
+                continue
+    return out
 
 
 class PP2Evaluator(CriterionEvaluator):
@@ -71,9 +93,23 @@ class PP2Evaluator(CriterionEvaluator):
         #    be None for genes not in the constraint table; the query handles it.
         from acmg_classifier.local_db.clinvar_sqlite import query_pp2_eligible
         mis_z = annotation.gnomad.mis_z if annotation.gnomad else None
+        cfg = self._cfg
+        stats_path = getattr(cfg, "pp2_gene_stats_tsv", None)
+        common = load_common_missense(stats_path).get(pc.gene_symbol, 0) if stats_path else 0
         eligible, evidence = query_pp2_eligible(
-            self._cfg.clinvar_sqlite, pc.gene_symbol, mis_z=mis_z,
+            cfg.clinvar_sqlite, pc.gene_symbol, mis_z=mis_z,
+            common_missense=common,
+            min_path=_num(cfg, "pp2_min_path", 10),
+            max_benign_frac=_num(cfg, "pp2_max_benign_frac", 0.05),
+            min_mis_z=_num(cfg, "pp2_min_mis_z", 3.09),
+            z_max_benign_frac=_num(cfg, "pp2_z_max_benign_frac", 0.15),
         )
         if not eligible:
             return CriteriaResult.not_met(ACMGCriterion.PP2, evidence)
         return CriteriaResult.met(ACMGCriterion.PP2, CriterionStrength.SUPPORTING, evidence)
+
+
+def _num(cfg, name: str, default):
+    """Config value if numeric (tests pass MagicMock configs), else the default."""
+    v = getattr(cfg, name, default)
+    return v if isinstance(v, (int, float)) and not isinstance(v, bool) else default

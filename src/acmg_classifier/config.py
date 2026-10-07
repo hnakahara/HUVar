@@ -87,6 +87,21 @@ class Config(BaseSettings):
     # "automated-only" evaluation against the eRepo does not read the reference
     # curation itself. Off for normal use. ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.
     exclude_self_expert_panel: bool = False
+    # PM1 fallback heuristic (genes without VCEP hotspot definitions): a region
+    # of +/- pm1_window residues holding >= pm1_min_path_variants other P/LP
+    # missense changes and no B/LB missense. ACMG_PM1_WINDOW / ACMG_PM1_MIN_PATH_VARIANTS.
+    pm1_window: int = 25
+    pm1_min_path_variants: int = 3
+    # PP2 fallback heuristic (genes without a VCEP PP2 decision). A gene
+    # qualifies with >= pp2_min_path P/LP missense and a benign-missense fraction
+    # <= pp2_max_benign_frac, or (missense Z >= pp2_min_mis_z and fraction <=
+    # pp2_z_max_benign_frac). The benign side counts ClinVar B/LB missense plus,
+    # when data/<assembly>/pp2_gene_stats.tsv is present, gnomAD missense
+    # variants common enough to meet the gene's BS1 threshold.
+    pp2_min_path: int = 10
+    pp2_max_benign_frac: float = 0.05
+    pp2_min_mis_z: float = 3.09
+    pp2_z_max_benign_frac: float = 0.15
 
     @field_validator("data_dir")
     @classmethod
@@ -152,6 +167,12 @@ class Config(BaseSettings):
     @property
     def clinvar_vcf(self) -> Path:
         return self.assembly_dir / "clinvar" / f"clinvar_{self.assembly.value}.vcf.gz"
+
+    @property
+    def pp2_gene_stats_tsv(self) -> Path:
+        """Per-gene gnomAD common-missense counts used on the benign side of the
+        PP2 heuristic (scripts/build_pp2_gene_stats.py). Optional."""
+        return self.assembly_dir / "pp2_gene_stats.tsv"
 
     @property
     def clinvar_sqlite(self) -> Path:

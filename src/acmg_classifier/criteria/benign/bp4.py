@@ -121,6 +121,22 @@ class BP4Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
+        result = self._evaluate(variant, annotation, supplement)
+        pc = annotation.primary_consequence
+        if pc is not None and pc.consequence == ConsequenceType.MISSENSE:
+            from acmg_classifier.criteria.insilico_genes import vcep_predictor_note
+            note = vcep_predictor_note(pc.gene_symbol, self._cfg, self._insilico_spec,
+                                       self._revel_spec, "BP4")
+            if note:
+                result.evidence = f"{result.evidence} {note}".strip()
+        return result
+
+    def _evaluate(
+        self,
+        variant: VariantRecord,
+        annotation: AnnotationData,
+        supplement: list[SupplementEntry] | None = None,
+    ) -> CriteriaResult:
         # BP4 mirrors PP3: same predictors and the same one-tool-only rule
         # for protein-level missense scoring (to prevent dual-counting
         # tools that share training data). The strength functions above use

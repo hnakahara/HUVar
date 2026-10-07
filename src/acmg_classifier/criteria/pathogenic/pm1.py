@@ -98,9 +98,12 @@ class PM1Evaluator(CriterionEvaluator):
             self._cfg.clinvar_sqlite,
             gene,
             pc.protein_position,
+            window=_int(self._cfg, "pm1_window", 25),
+            min_path_variants=_int(self._cfg, "pm1_min_path_variants", 3),
+            chrom=variant.chrom, pos=variant.pos, ref=variant.ref, alt=variant.alt,
         )
         if not is_hotspot:
-            return CriteriaResult.not_met(ACMGCriterion.PM1, "Not in hotspot cluster")
+            return CriteriaResult.not_met(ACMGCriterion.PM1, f"Not in hotspot cluster: {evidence}")
         return CriteriaResult.met(ACMGCriterion.PM1, evidence=evidence)
 
 
@@ -111,3 +114,8 @@ def _alt_aa(amino_acids: str | None) -> str | None:
         return None
     alt = amino_acids.partition("/")[2].strip()
     return alt if len(alt) == 1 else None
+
+
+def _int(cfg, name: str, default: int) -> int:
+    v = getattr(cfg, name, default)
+    return v if isinstance(v, int) and not isinstance(v, bool) else default

@@ -184,6 +184,11 @@ def collect(cfg) -> dict[str, Any]:
                       ("clingen_gene_validity", "clingen_gene_validity_csv")):
         p = getattr(cfg, attr, None)
         put(key, file=Path(p).name if p is not None and Path(p).exists() else None)
+    pp2 = getattr(cfg, "pp2_gene_stats_tsv", None)
+    if isinstance(pp2, Path) and pp2.exists():
+        with pp2.open(encoding="utf-8") as fh:
+            head = fh.readline().lstrip("# ").strip()
+        put("pp2_gene_stats", file=pp2.name, note=head or None)
     put("insilico", missense=getattr(cfg.insilico_tool, "value", str(cfg.insilico_tool)),
         splice=getattr(cfg.splice_tool, "value", str(cfg.splice_tool)))
     other_asm = "GRCh37" if asm == "GRCh38" else "GRCh38"
