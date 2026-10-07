@@ -129,6 +129,9 @@ def run_pipeline(
             pc.gene_symbol if pc else None, classification_2015, classification_bay, cfg,
         )
         extra_warnings = list(extra_warnings) + gdv_warn
+        from acmg_classifier.local_db.erepo_db import vcep_warning
+        extra_warnings += vcep_warning(cfg.assembly.value, variant.chrom, variant.pos,
+                                       variant.ref, variant.alt)
         result = ClassificationResult(
             variant_id=variant.key,
             chrom=variant.chrom,
@@ -269,8 +272,17 @@ def classify_annotated(
         classification_2015_rules=rules,
         bayesian_score=score,
         classification_bayesian=classification_bay,
-        warnings=gdv_warn,
+        warnings=gdv_warn + _vcep_warning(cfg, variant),
     )
+
+
+def _vcep_warning(cfg: Config, variant) -> list[str]:
+    from acmg_classifier.local_db.erepo_db import vcep_warning
+    try:
+        return vcep_warning(cfg.assembly.value, variant.chrom, variant.pos,
+                            variant.ref, variant.alt)
+    except Exception:  # never fail a classification on the lookup
+        return []
 
 
 def run_single(
