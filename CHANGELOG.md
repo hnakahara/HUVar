@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed (Genome Medicine revision)
+
+- **PVS1**: applied only when LoF is an established mechanism (VCEP, ClinGen
+  haploinsufficiency score 3, or ≥3 ClinVar P/LP null variants); LOEUF is shown
+  for reference only. NMD is predicted from the PTC position and the MANE v1.5
+  exon structure (50-nt rule). The ClinVar-count Moderate caps were removed.
+- **Gene-disease validity**: P/LP capped at VUS when all ClinGen curations for
+  the gene are Limited or weaker; uncurated genes are flagged.
+- **PS3** text mining counts distinct cited PMIDs and is capped at Supporting;
+  **PS4** and **PP1** are applied only from curated sources (supplement or
+  ClinVar expert-panel criteria); evidence text names the source.
+- **BS2**: the dominant healthy-carrier route requires a VCEP that applies BS2
+  with population data.
+- **PS1/PM5**: VCEP-classified comparators where the VCEP requires them
+  (`vcep_comparator_rules.tsv`, eRepo snapshot 2026-05-28).
+- **PM1** fallback counts only other P/LP missense; **PP2** fallback adds gnomAD
+  missense meeting the gene's BS1 threshold to the benign side
+  (`pp2_gene_stats.tsv`); both configurable.
+- **PP3/BP4**: note when the gene's VCEP predictor is not active in the run.
+- Only **Released** ClinGen specifications are used; the criteria provenance
+  table (S1) reports `cspecStatus`.
+- Supplement rows from the user take priority over eRepo rows.
+
+### Added
+
+- Data provenance: `data_manifest.json` written by `setup_data.py`,
+  `<output>.provenance.json` per run, data versions in `acmg-classify status`.
+- `setup_data.py --force-clingen` (ClinGen dosage / gene-validity tables).
+- `--exclude-self-expert-panel` (benchmark mode).
+- ClinVar SQLite columns `functional_pmids` and `ep_criteria` (rebuild the
+  SQLite with `--only clinvar-sqlite` after moving the old file aside).
+
 ### Performance
 
 - **Batched, connection-reuse annotation.** The per-variant annotation path was

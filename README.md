@@ -115,6 +115,13 @@ on every run:
 | `ps1_paralog_map.tsv` | PS1 cross-gene paralogue residue map (SCN1A/2A/3A/8A, KCNQ1↔KCNQ2) |
 | `vcep_pvs1_splice_exons.tsv` | optional per-skipped-exon PVS1 splice strengths (absent → flat per-gene splice defaults) |
 
+Read directly from `resources/` (no copy needed): `shared/mane_exons.tsv` (MANE
+v1.5 exon structures for the PVS1 NMD rule), `shared/vcep_comparator_rules.tsv`
+(genes whose VCEP requires VCEP-classified PS1/PM5 comparators),
+`<assembly>/erepo_classifications_*.tsv` (eRepo snapshot used for those
+comparators), `<assembly>/pp2_gene_stats.tsv` (gnomAD common missense per gene for
+PP2) and `shared/bundled_data_versions.tsv`.
+
 The eRepo file is **not** auto-loaded — it is a ready-made manual-evidence
 supplement (ClinGen Evidence Repository curated calls for criteria the tool
 cannot derive automatically, e.g. PS4 / PP4). Pass it with `--supplement` at
@@ -142,24 +149,45 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   Tavtigian 2020 Bayesian point system reported side-by-side, so reviewers can
   spot disagreements at a glance.
 - **All 28 ACMG criteria** supported, with ClinGen SVI strength adjustments and
-  the Bergquist-2024 3-point extension. The ~18 derivable from local data
-  (PVS1, PS1/PS3/PS4, PM1/PM2/PM4/PM5, PP1–PP3, BA1, BS1/BS2, BP1/BP3/BP4/BP7)
-  are evaluated **automatically**; the evidence-dependent rest (PS2, PM3, PM6,
-  PP4, BS3/BS4, BP2/BP5) are added via the [manual supplement](#manual-evidence-supplement),
-  and PP5/BP6 are disabled per ClinGen SVI. See
-  [Per-criterion decision basis](#per-criterion-decision-basis).
-- **PVS1 decision tree** (Abou Tayoun et al. 2018) applied for LoF variants
-  including NMD prediction, last-exon rescue, and biological-relevance gating.
+  the Bergquist-2024 3-point extension. Criteria fall into three groups:
+  - **Automated** from local data: PVS1, PS1, PM1, PM2, PM4, PM5, PP2, PP3,
+    BA1, BS1, BS2, BP1, BP3, BP4, BP7, plus PS3 at **Supporting** from ClinVar
+    submission text (counted by distinct cited PMIDs).
+  - **Curated evidence only**: PS4 and PP1 (and PS3 above Supporting) are applied
+    only from curated sources — the [manual supplement](#manual-evidence-supplement)
+    (your own curation or the bundled ClinGen eRepo supplement) or the criterion
+    as applied by a ClinGen expert panel (ClinVar ≥3★) to the same variant.
+    ClinVar case/segregation counts are shown for information but never scored.
+  - **Manual only**: PS2, PM3, PM6, PP4, BS3, BS4, BP2, BP5. PP5/BP6 are disabled
+    per ClinGen SVI.
+
+  Every curated call carries its source in the evidence text
+  (`[curated supplement]`, `[ClinVar expert panel]`, `[ClinVar text mining]`).
+  See [Per-criterion decision basis](#per-criterion-decision-basis).
+- **PVS1 decision tree** (Abou Tayoun et al. 2018) applied for LoF variants,
+  gated on LoF being an established disease mechanism (VCEP, ClinGen
+  haploinsufficiency score 3, or ≥3 ClinVar P/LP null variants). NMD is predicted
+  from the premature-stop position against the MANE exon structure (50-nt rule).
+- **Gene-disease validity check**: P/LP calls in genes whose ClinGen
+  gene-disease validity curations are all Limited or weaker are capped at VUS
+  (`GENE_VALIDITY_LIMITED` warning); genes without a ClinGen curation are flagged
+  (`GENE_VALIDITY_NOT_CURATED`).
+- **Data provenance**: every run writes `<output>.provenance.json` with the
+  release dates / versions of ClinVar, VEP, gnomAD, ClinGen and the bundled
+  tables, plus the run options; `acmg-classify status` prints the same.
 - **Inheritance-aware PM2** (BS1/BS2 also) thresholds switch between dominant
   and recessive frequencies using a per-gene inheritance table.
 - **Per-gene ClinGen VCEP rules** mined from the cspec specifications
   (`resources/shared/disease_prevalence.tsv`, `pm1_hotspots.tsv`): disease-
   specific BA1/BS1 cutoffs, PVS1 applicability (gain-of-function genes decline
   it) and the APC-specific PVS1 tree, PP2 applicability, PM5 Grantham-distance
-  gating, PM1 hotspot regions, inheritance-aware BS2 (incl. a dominant
-  heterozygote rule and a ≥3★ ClinVar fallback), the PS1 splice extension
+  gating, PM1 hotspot regions, inheritance-aware BS2 (the dominant
+  healthy-carrier rule only where the VCEP applies BS2 with population data; a
+  ≥3★ ClinVar fallback where it bars gnomAD), VCEP-classified PS1/PM5 comparators
+  where the VCEP requires them, the PS1 splice extension
   (canonical vs non-canonical), BP1/BP3 applicability, per-gene BP7 phyloP /
-  intronic-range policy, and PM2 subpopulation / homozygote-count rules.
+  intronic-range policy, and PM2 subpopulation / homozygote-count rules. Only
+  specifications with ClinGen status **Released** are used.
   X-linked "in males" genes are compared against the gnomAD male (XY) allele
   frequency; a homozygote/hemizygote-count BA1 rule (`ba1_hom_count`, e.g.
   SLC6A8/OTC ≥10) fires independently of frequency. See `resources/clingen/README.md`.
@@ -333,6 +361,10 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data \
 python scripts/setup_data.py --data-dir /path/to/download/directory/data \
     --force-clinvar --only clinvar-vcf clinvar-sqlite --workers 12
 
+# Refresh the ClinGen Dosage Sensitivity / Gene-Disease Validity tables
+python scripts/setup_data.py --data-dir /path/to/download/directory/data \
+    --only clingen --force-clingen
+
 # Opt-in auxiliary predictors — CADD (downloads the ~80 GB GRCh38 SNV file and
 # normalises it) and BayesDel (staged from a manually-downloaded raw file):
 python scripts/setup_data.py --data-dir /path/to/download/directory/data --only cadd --with-cadd
@@ -351,6 +383,8 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data --only 
 | `--gnomad-chromosomes CHR ...` | Subset of chromosomes (default all 24) |
 | `--workers N` | Build parallelism for the ClinVar (XML parse, max 24) and gnomAD (DuckDB) steps (default = CPU - 1) |
 | `--force-clinvar` | Force a fresh ClinVar download/rebuild even when local files exist (ClinVar is a rolling weekly release at a fixed URL). Re-acquires the VCF, the source RCV XML, and the PS1/PM5 SQLite. Combine with `--only clinvar-vcf clinvar-sqlite` to refresh ClinVar alone. |
+| `--force-clingen` | Re-download the ClinGen Dosage Sensitivity (`ClinGen_gene_curation_list_GRCh38.tsv`) and Gene-Disease Validity (`clingen_gene_disease_validity.csv`) tables into `data/shared/`. Downloaded once by default. Combine with `--only clingen`. |
+| `--only STEP ...` | Run only the named steps (e.g. `clingen`, `clinvar-vcf clinvar-sqlite`). Always pass `--data-dir` as well. |
 | `--skip-gnomad` | Skip gnomAD download (~ 1.5 TB) |
 | `--skip-gnomad-coverage` | Skip the gnomAD exomes coverage summary download + DuckDB build (per-locus mean read depth; used by the PM2 read-depth gate for ENIGMA BRCA1/2). Downloaded by default. |
 | `--skip-gnomad-noncancer` | Skip the gnomAD v3.1.2 non-cancer companion DB (GRCh38). PM2 for ENIGMA BRCA1/2 then falls back to the overall AF. |
@@ -385,7 +419,10 @@ data/
 │   ├── pm4_regions.tsv              #   per-gene PM4 region/strength rules
 │   ├── ps1_paralog_map.tsv          #   PS1 cross-gene paralogue residue map
 │   ├── vcep_pvs1_splice_exons.tsv   #   per-skipped-exon PVS1 splice strengths
-│   └── tp53_pp3_bp4_codes.tsv       #   ClinGen TP53 VCEP per-missense PP3/BP4 codes (aGVGD+BayesDel)
+│   ├── tp53_pp3_bp4_codes.tsv       #   ClinGen TP53 VCEP per-missense PP3/BP4 codes (aGVGD+BayesDel)
+│   ├── ClinGen_gene_curation_list_GRCh38.tsv  # ClinGen Dosage Sensitivity (PVS1 LoF mechanism)
+│   └── clingen_gene_disease_validity.csv      # ClinGen Gene-Disease Validity (VUS cap)
+├── data_manifest.json               # source / release recorded by setup_data.py
 ├── vep_cache/                       # VEP indexed cache, both assemblies
 ├── esm1b/                           # (optional) protein-coordinate, shared across assemblies
 │   └── esm1b_llr.sqlite             #   built from Brandes 2023 archive
@@ -489,6 +526,7 @@ Full option list:
 | `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory (only when `--splice-tool spliceai`) |
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
 | `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
+| `--exclude-self-expert-panel` | flag | off | Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar expert-panel (≥3★) record of the variant itself, so an evaluation against the eRepo does not read the reference curation. Recorded in the provenance sidecar. |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
 > ⚠️ **BayesDel / CADD are opt-in at classification time too.** `--with-bayesdel`
@@ -563,7 +601,9 @@ acmg-classify explain chr17 7674221 G A --supplement manual_evidence.tsv
 acmg-classify validate --data-dir /path/to/download/directory/data --assembly GRCh38
 acmg-classify validate --data-dir /path/to/download/directory/data --assembly both
 
-# Show DB versions / build dates
+# Show local files and the recorded data versions (ClinVar release, VEP, gnomAD,
+# ClinGen downloads, bundled CSpec / eRepo snapshots). Warns when ClinVar is
+# older than 90 days.
 acmg-classify status --data-dir /path/to/download/directory/data
 
 # (Re)run downloads — same effect as scripts/setup_data.py without
@@ -600,6 +640,10 @@ chr17:43044295:G:A	PP1	Supporting	3 affected family members segregating variant
 - `strength` is one of `VeryStrong`, `Strong`, `ThreePoint`, `Moderate`,
   `Supporting`.
 - `evidence` is a free-text rationale shown in the `*_evidence` column.
+- `source` (optional) is `user` or `erepo`. Without it, rows whose evidence
+  starts with "eRepo" are treated as `erepo`, all others as `user`. When both
+  name the same criterion for a variant, **your own curation wins** over the
+  eRepo row (a warning notes the duplicate).
 
 Manual entries can override **any** criterion — including ones the tool
 evaluates automatically (PVS1, PS1, PM2, BP1, …), not just the curation-only
@@ -694,6 +738,14 @@ For each of the 28 ACMG codes (`PVS1`…`BP7`) three columns are emitted:
 
 `warnings` — pipeline-level non-fatal issues, semicolon separated.
 
+### Provenance (sidecar)
+
+`<output>.provenance.json` records the data versions used (ClinVar VCF/XML
+release, VEP release and cache, gnomAD build, ClinGen downloads, bundled CSpec /
+eRepo / MANE snapshots, in-silico tools) and the run options
+(`exclude_self_expert_panel`, PM1/PP2 parameters). JSON output carries the same
+block under `metadata`.
+
 ### Skipped records (sidecar)
 
 Sites with `ALT='.'` (no variant) are filtered out of the main TSV and written
@@ -744,24 +796,25 @@ which path fired.
 
 Three cross-criterion rules are enforced after the per-criterion calls:
 the allele-frequency criteria are **mutually exclusive** (BA1 > BS1 > PM2 — a
-variant gets at most one); **PVS1 and PP3 are not co-applied**; and PVS1 strength
-caps interact with ClinVar P/LP-null counts (see [PVS1](#pvs1-decision-tree)).
+variant gets at most one); **PVS1 and PP3 are not co-applied**; and P/LP calls
+in genes whose ClinGen gene-disease validity is Limited or weaker are capped at
+VUS.
 
 **Pathogenic**
 
 | Criterion | Decision basis (default) | VCEP gene-specific rule |
 |-----------|--------------------------|-------------------------|
-| **PVS1** | LoF consequence (nonsense/frameshift/canonical-splice/start-loss/whole-gene-deletion) run through the Abou Tayoun 2018 tree (NMD, last-exon, rescue transcript, single-exon). See [PVS1 decision tree](#pvs1-decision-tree). | **Extensive.** `pvs1` applicability gate (LoF-not-the-mechanism genes withhold PVS1) + gene-specific trees for ~60 genes (`pvs1/vcep_pvs1.py`, APC in `pvs1/apc.py`): codon-range / critical-domain / NMD-boundary gates, per-gene initiation-codon and canonical-splice strengths, and an optional per-skipped-exon splice table. |
-| **PS1** | Same amino-acid change as an established P/LP ClinVar variant (≥`pm5_min_stars`). Strong if any comparator is Pathogenic; Moderate if all are only Likely pathogenic. | `ps1_splice` extends PS1 to splice-equivalent variants for genes whose VCEP allows it. |
-| **PS3** | Functional evidence: manual supplement (may reach Strong with OddsPath) or ClinVar SCV text-mining (1–2 SCV → Supporting, ≥3 → Moderate cap). | — (strength via supplement). |
-| **PS4** | Unrelated affected-proband count from ClinVar P/LP `AffectedStatus=yes` SCVs: ≥10 → Strong, 6–9 → Moderate, 2–5 → Supporting. Gated on rarity (FAF95_popmax < 0.0001 or AC=0) **and** ≥2 probands. | — |
-| **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`); statistical fallback where no VCEP table exists. | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
+| **PVS1** | LoF consequence (nonsense/frameshift/canonical-splice/start-loss/whole-gene-deletion) in a gene where LoF is an established mechanism (ClinGen HI score 3 or ≥3 ClinVar P/LP null variants; LOEUF shown for reference only), run through the Abou Tayoun 2018 tree (PTC-based NMD 50-nt rule, last-exon, rescue transcript, single-exon). See [PVS1 decision tree](#pvs1-decision-tree). | **Extensive.** `pvs1` applicability gate (LoF-not-the-mechanism genes withhold PVS1) + gene-specific trees for ~60 genes (`pvs1/vcep_pvs1.py`, APC in `pvs1/apc.py`): codon-range / critical-domain / NMD-boundary gates, per-gene initiation-codon and canonical-splice strengths, and an optional per-skipped-exon splice table. |
+| **PS1** | Same amino-acid change as an established P/LP ClinVar variant (≥`pm5_min_stars`). Strong if any comparator is Pathogenic; Moderate if all are only Likely pathogenic. | `ps1_splice` extends PS1 to splice-equivalent variants for genes whose VCEP allows it. Where the VCEP requires the comparator to be VCEP-classified (`vcep_comparator_rules.tsv`), only eRepo P/LP or ClinVar expert-panel comparators count, minus those the VCEP excludes (e.g. classified with PS1/PM5 or PVS1). |
+| **PS3** | Functional evidence, in priority order: curated supplement (any strength); PS3 as applied by a ClinGen expert panel to the variant in ClinVar (≥3★, panel's strength); text mining of other ClinVar submissions citing a damaging assay, counted by **distinct PMIDs** and **capped at Supporting** (assay validation per Brnich 2019 cannot be judged from text). | Text mining suppressed for genes whose VCEP has no PS3 or restricts it (PALB2, PDHA1, POLG, CAPN3, ANO5). |
+| **PS4** | **Curated evidence only**: curated supplement or PS4 applied by a ClinGen expert panel in ClinVar (≥3★). The number of ClinVar submissions reporting affected individuals is shown for information but not scored (individuals cannot be de-duplicated across submitters). | — |
+| **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`). Fallback where no VCEP table exists: ≥3 other P/LP **missense** changes (ClinVar ≥1★, the query variant excluded) within ±25 residues and no B/LB missense (`ACMG_PM1_WINDOW`, `ACMG_PM1_MIN_PATH_VARIANTS`). | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
 | **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi); `pm2_subset=non_cancer` and `pm2_min_depth` (ENIGMA BRCA1/2). Gene-specific cSpec wording is hard-coded for a few genes (F8/F9 "absent in males", RYR1 "1 allele allowed", ATM "n=1 in a single subpopulation", PTEN single-vs-multi-allele subpop, RUNX1 GrpMax-FAF-then-all-subpop). |
 | **PM4** | Protein-length change from an in-frame indel or stop-loss (outside repeat regions). | `pm4 = not_applicable` withholds PM4 for genes whose VCEP declined it. |
-| **PM5** | Different missense at a codon with an established P/LP missense in ClinVar — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`, `pm5_min_count` (ACVRL1/ENG require ≥2 distinct same-codon LP/P → Strong). |
-| **PP1** | Cosegregation: manual supplement or ClinVar text-mining; capped at Supporting (no meiosis counting from free text). | — |
-| **PP2** | Missense in a gene where missense is a common mechanism & benign missense is rare. | **Yes (dominant lever)** — `pp2` applicability is authoritative; `pp2_requires` adds co-requirements (e.g. BMPR2 needs PM2+PP3). ClinVar-stats fallback only when no VCEP covers the gene. |
-| **PP3** | Computational deleterious prediction (missense: ESM1b/AlphaMissense/REVEL; splice: OpenSpliceAI/SpliceAI), Bergquist 2024 tiers. See [In-silico aggregation](#in-silico-aggregation-pp3--bp4). | **Yes (REVEL)** — per-gene `revel_pp3_*` cutoffs from cspec override the genome-wide default and cap the gene's strength. **Opt-in auxiliary rules (`--with-bayesdel`/`--with-cadd`, licence-gated to REVEL/AlphaMissense):** BayesDel for ENIGMA BRCA1/2 (domain-gated) and TP53 (VCEP code table); REVEL∧CADD agreement for CTLA4/PIK3CD/PIK3R1; 2-of-3 REVEL/AM/CADD for BMPR2; CADD for ABCA4 synonymous/indel. When active the gene rule is authoritative. |
+| **PM5** | Different missense at a codon with an established P/LP missense in ClinVar — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`, `pm5_min_count` (ACVRL1/ENG require ≥2 distinct same-codon LP/P → Strong). VCEP-classified comparators required where the VCEP says so (as for PS1). |
+| **PP1** | **Curated evidence only**: curated supplement or PP1 applied by a ClinGen expert panel in ClinVar (≥3★). ClinVar segregation mentions are shown for information but not scored (meioses cannot be counted from free text). | — |
+| **PP2** | Missense in a gene where missense is a common mechanism & benign missense is rare. Fallback where no VCEP decides: ≥10 P/LP missense in ClinVar and a benign-missense fraction ≤5% (≤15% when gnomAD missense Z ≥ 3.09); the benign side counts ClinVar B/LB missense **plus gnomAD missense variants meeting the gene's BS1 threshold** (`pp2_gene_stats.tsv`). Thresholds via `ACMG_PP2_*`. | **Yes (dominant lever)** — `pp2` applicability is authoritative; `pp2_requires` adds co-requirements (e.g. BMPR2 needs PM2+PP3). |
+| **PP3** | Computational deleterious prediction (missense: ESM1b/AlphaMissense/REVEL; splice: OpenSpliceAI/SpliceAI), Bergquist 2024 tiers. When the gene's VCEP names a predictor that the run is not using (REVEL cutoffs, BayesDel, REVEL+CADD), the evidence says so and names the option that would follow the VCEP. See [In-silico aggregation](#in-silico-aggregation-pp3--bp4). | **Yes (REVEL)** — per-gene `revel_pp3_*` cutoffs from cspec override the genome-wide default and cap the gene's strength. **Opt-in auxiliary rules (`--with-bayesdel`/`--with-cadd`, licence-gated to REVEL/AlphaMissense):** BayesDel for ENIGMA BRCA1/2 (domain-gated) and TP53 (VCEP code table); REVEL∧CADD agreement for CTLA4/PIK3CD/PIK3R1; 2-of-3 REVEL/AM/CADD for BMPR2; CADD for ABCA4 synonymous/indel. When active the gene rule is authoritative. |
 
 **Benign**
 
@@ -769,11 +822,13 @@ caps interact with ClinVar P/LP-null counts (see [PVS1](#pvs1-decision-tree)).
 |-----------|--------------------------|-------------------------|
 | **BA1** | gnomAD FAF95_popmax ≥ cutoff (stand-alone). Default 5%; disease-specific `min(0.05, 10×maxAF)` where parameters exist. | **Yes** — `ba1_threshold` / `af_basis` (`males` = XY AF, `popmax` = point grpmax AF) / `ba1_hom_count` (homo/hemizygote-count rule) per gene. |
 | **BS1** | gnomAD FAF95_popmax above the disorder-specific expectation. | **Yes** — `bs1_threshold` / `bs1_strength`; `bs1_exclude` bars a specific recurrent disease allele from BS1 (e.g. MYOC p.Gln368Ter). |
-| **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes, AD→het carriers). | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
+| **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes). The AD healthy-carrier route is used **only** when the gene's VCEP applies BS2 with population data (penetrance and age of onset cannot be judged automatically). | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
 | **BP1** | Variant-type-vs-mechanism: applied only for genes whose VCEP names a target consequence. | **Yes (gate)** — `bp1` / `bp1_target` (`missense` for PALB2/APC/BRCA1/2; `truncating` for GoF RASopathy genes), `bp1_strength`, `bp1_exclude`, `bp1_no_splice`. No VCEP decision → not applied. |
 | **BP3** | In-frame indel in a repetitive region of unknown function. | **Yes** — VCEP-gated (`bp3`) + `bp3_regions`. |
 | **BP4** | Computational no-impact prediction (same tools as PP3), Bergquist 2024 tiers. | **Yes (REVEL)** — per-gene `revel_bp4_*` cutoffs. **Opt-in auxiliary rules** mirror PP3 (BayesDel for BRCA1/2 & TP53; REVEL∧CADD for CTLA4/PIK3CD/PIK3R1; 2-of-3 for BMPR2; CADD for ABCA4 synonymous/indel), licence-gated and authoritative when active. |
 | **BP7** | Synonymous / deep-intronic with no predicted splice impact and (default) low conservation. Safe-distance ≥ +7 (donor) / ≤ −21 (acceptor). | **Yes** — `bp7_phylop` conservation cutoff (or `na` where the VCEP deemed conservation non-informative), `bp7_intronic = noncanonical` extends BP7 to any non-±1,2 intronic position. |
+
+**Curated only.** PS4 and PP1 (see above).
 
 **Not auto-applied.** PS2, PM3, PM6, PP4, BS3, BS4, BP2, BP5 require evidence
 (de novo confirmation, trans/cis phase, segregation meioses, phenotype
@@ -814,7 +869,15 @@ The Abou Tayoun 2018 LoF decision tree is implemented at
 `src/acmg_classifier/pvs1/` and decides whether PVS1 should fire as Very
 Strong, Strong, Moderate, Supporting, or be entirely suppressed based on:
 
-- NMD predicted vs escape
+- LoF-mechanism gate: the VCEP applies PVS1, the gene has a ClinGen
+  haploinsufficiency score of 3, or ClinVar reports ≥3 P/LP null variants
+  (nonsense, frameshift, canonical ±1/2 splice) for the gene. The ≥3 cut-off
+  follows the approach of Franklin (Genoox); the value itself is our choice.
+  gnomAD LOEUF is reported for reference only. Otherwise PVS1 is not applied.
+- NMD predicted vs escape, from the premature termination codon (stop-gained
+  codon, or the frameshift's new stop from `fsTerN`) and the MANE v1.5 exon
+  structure: NMD when the PTC lies > 50 nt upstream of the last exon–exon
+  junction
 - Last-exon / final 50 nt of penultimate exon rules — a truncation there with
   no functional-domain evidence is **N/A** (a critical region must be shown
   removed); a domain in the truncated tail downgrades to Strong
@@ -831,8 +894,7 @@ it applies, evaluated before the generic tree and its strength caps):
   the RASopathy panel, the cardiomyopathy genes, the activating PIK3 genes,
   VWF, …) — withhold PVS1 entirely. Conversely, a VCEP that **explicitly applies**
   PVS1 (`pvs1=applicable`) has established LoF as the mechanism, so the decision
-  tree skips the ClinVar/LOEUF LoF-mechanism heuristic and the undercuration
-  strength caps for those genes (e.g. the Congenital Myopathies VCEP applies
+  tree skips the LoF-mechanism gate for those genes (e.g. the Congenital Myopathies VCEP applies
   PVS1 Very Strong to ACTA1/RYR1 null variants — note RYR1's other VCEPs are
   gain-of-function, a multi-disease gene resolved here to the LoF context).
 - **Gene-specific decision trees** for ~60 genes (`src/acmg_classifier/pvs1/vcep_pvs1.py`,
@@ -994,6 +1056,13 @@ export ACMG_BS2_MIN_HEMI=2         # BS2 healthy-hemizygote count (X-linked)
 export ACMG_BS2_MIN_HET=3          # BS2 healthy-carrier count (dominant)
 export ACMG_POPMAX_AF_BASIS=true   # false → force every gene's BA1/BS1 onto FAF95
                                    # (ignore per-gene af_basis=popmax point estimate)
+export ACMG_PM1_WINDOW=25          # PM1 fallback: ± residues
+export ACMG_PM1_MIN_PATH_VARIANTS=3
+export ACMG_PP2_MIN_PATH=10        # PP2 fallback thresholds
+export ACMG_PP2_MAX_BENIGN_FRAC=0.05
+export ACMG_PP2_MIN_MIS_Z=3.09
+export ACMG_PP2_Z_MAX_BENIGN_FRAC=0.15
+export ACMG_EXCLUDE_SELF_EXPERT_PANEL=false  # true = benchmark mode (see classify)
 ```
 
 CLI flags take precedence over environment variables.
@@ -1028,6 +1097,9 @@ CLI flags take precedence over environment variables.
 - **SpliceAI.** The non-default `--splice-tool spliceai` uses pre-computed
   score VCFs that are not redistributed. Users with an Illumina license can
   place them under `data/<asm>/spliceai/`.
+- **Gene-disease validity.** The VUS cap uses the ClinGen Gene-Disease Validity
+  download; a gene with several curations is capped only when *all* are Limited
+  or weaker. It does not check that the variant's disease matches a curated one.
 - **No DUP/CNV support.** Only SNV / small INDEL / MNV are classified. SV
   callers should be paired with a dedicated CNV interpreter.
 - **Single-sample input.** Multi-sample joint VCFs are accepted but only
