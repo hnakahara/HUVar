@@ -2280,8 +2280,11 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json-dir", default="resources/clingen")
     ap.add_argument("--out", default="resources/shared/disease_prevalence.tsv")
+    ap.add_argument("--include-unreleased", action="store_true",
+                    help="Also use specs whose cspecStatus is not 'Released'. By "
+                         "default only Released specifications are used.")
     ap.add_argument("--released-only", action="store_true",
-                    help="Only emit specs whose cspecStatus is 'Released'.")
+                    help=argparse.SUPPRESS)  # kept for backward compatibility (default)
     ap.add_argument(
         "--multispec-out", default=None, metavar="PATH",
         help="Also write a per-CSpec multispec table (one row per gene×CSpec) "
@@ -2303,7 +2306,7 @@ def main() -> None:
     overrides = _parse_overrides(args.override)
 
     files = sorted(glob.glob(os.path.join(args.json_dir, "GN*.json")))
-    by_gene = resolve_rows(files, args.released_only)
+    by_gene = resolve_rows(files, released_only=not args.include_unreleased)
 
     # Curated typo/outdated-threshold corrections first, then CLI --override (so
     # an explicit CLI override still wins over a curated default).

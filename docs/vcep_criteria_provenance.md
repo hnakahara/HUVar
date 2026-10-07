@@ -4,15 +4,17 @@ Per gene: the governing ClinGen specification (GN id + version) the app's VCEP-s
 
 Genes covered: **131**.
 
+Status is the specification's release status (`cspecStatus`).
+
 | Gene | GN_ID | Version | Status | VCEP | Implemented criteria |
 |------|-------|---------|--------|------|----------------------|
-| ABCA4 | GN164 | 1.0.0 | Pilot Rules In Prep | ABCA4 Expert Panel for ABCA4 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| ABCA4 | GN164 | 1.0.0 | Released | ABCA4 Expert Panel for ABCA4 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | ABCD1 | GN105 | 1.0.0 | Released | Peroxisomal Disorders Expert Panel for ABCD1 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | ACADVL | GN021 | 2.1.0 | Released | ACADVL Expert Panel for ACADVL Version 2.1.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | ACTA1 | GN169 | 1.0.0 | Released | Congenital Myopathies Expert Panel for ACTA1 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | ACTC1 | GN101 | 1.0.0 | Released | Cardiomyopathy Expert Panel for ACTC1 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | ACVRL1 | GN135 | 1.1.0 | Released | Hereditary Hemorrhagic Telangiectasia Expert Panel for ACVRL1 Version  | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| ADA | GN114 | 2.1.0 | Pilot Rules Submitted | Severe Combined Immunodeficiency Disease Expert Panel for ADA Version  | BA1 BP1 BP3 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
+| ADA | GN114 | 2.1.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for ADA Version  | BA1 BP1 BP3 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | AIPL1 | GN208 | 1.0.0 | Released | Leber Congenital Amaurosis/early onset Retinal Dystrophy Expert Panel  | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | AKT3 | GN018 | 1.1.0 | Released | Brain Malformations Expert Panel Version 1.1.0 | BA1 BP1 BP3 BP7 BS1 BS2 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | ANO5 | GN188 | 2.0.0 | Released | Limb Girdle Muscular Dystrophy Expert Panel for ANO5 Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -27,7 +29,7 @@ Genes covered: **131**.
 | CDH23 | GN005 | 2.0.0 | Released | Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | CDKL5 | GN034 | 6.0.0 | Released | Rett and Angelman-like Disorders Expert Panel for CDKL5 Version 6.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | COCH | GN005 | 2.0.0 | Released | Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| CTLA4 | GN122 | 1.0.0 | Pilot Rules In Prep | Antibody Deficiencies Expert Panel for CTLA4 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| CTLA4 | GN122 | 1.0.0 | Released | Antibody Deficiencies Expert Panel for CTLA4 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | CYP1B1 | GN104 | 1.0.0 | Released | Glaucoma Expert Panel for CYP1B1 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | DCLRE1C | GN116 | 2.2.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for DCLRE1C Vers | BA1 BP1 BP3 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | DICER1 | GN024 | 1.4.0 | Released | DICER1 and miRNA-Processing Gene Expert Panel for DICER1 Version 1.4.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -37,7 +39,7 @@ Genes covered: **131**.
 | ETHE1 | GN014 | 1.0.0 | Released | Mitochondrial Disease Nuclear and Mitochondrial Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | F8 | GN071 | 2.0.0 | Released | Coagulation Factor Deficiency Expert Panel for F8 Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | F9 | GN080 | 2.1.0 | Released | Coagulation Factor Deficiency Expert Panel for F9 Version 2.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| FBN1 | GN022 | 1.0.0 | Pilot Rules Submitted | FBN1 Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| FBN1 | GN022 | 1.0.0 | Released | FBN1 Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | FOXG1 | GN035 | 6.0.0 | Released | Rett and Angelman-like Disorders Expert Panel for FOXG1 Version 6.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | FOXN1 | GN113 | 2.3.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for FOXN1 Versio | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | GAA | GN010 | 2.0.0 | Released | Lysosomal Storage Disorders Variant Curation Expert Panel Version 2 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -64,15 +66,15 @@ Genes covered: **131**.
 | KCNQ1 | GN112 | 1.0.0 | Released | Potassium Channel Arrhythmia Expert Panel for KCNQ1 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | KCNQ4 | GN005 | 2.0.0 | Released | Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | KRAS | GN044 | 2.3.0 | Released | RASopathy Expert Panel for KRAS Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| LDLR | GN013 | 1.2.0 | Pilot Rules In Prep | Familial Hypercholesterolemia Expert Panel Specifications to the ACMG/ | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| LDLR | GN013 | 1.2.0 | Released | Familial Hypercholesterolemia Expert Panel Specifications to the ACMG/ | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | LZTR1 | GN094 | 1.3.0 | Released | RASopathy Expert Panel for LZTR1 Version 1.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | MAP2K1 | GN045 | 2.3.0 | Released | RASopathy Expert Panel for MAP2K1 Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | MAP2K2 | GN048 | 2.3.0 | Released | RASopathy Expert Panel for MAP2K2 Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | MECP2 | GN036 | 6.0.0 | Released | Rett and Angelman-like Disorders Expert Panel for MECP2 Version 6.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| MLH1 | GN115 | 2.0.0 | Pilot Rules Submitted | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for MLH1 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
+| MLH1 | GN115 | 2.0.0 | Released | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for MLH1 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | MRAS | GN087 | 1.4.0 | Released | RASopathy Expert Panel for MRAS Version 1.4.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| MSH2 | GN137 | 2.0.0 | Pilot Rules Submitted | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for MSH2 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
-| MSH6 | GN138 | 2.0.0 | Pilot Rules Submitted | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for MSH6 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
+| MSH2 | GN137 | 2.0.0 | Released | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for MSH2 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
+| MSH6 | GN138 | 2.0.0 | Released | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for MSH6 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | MTM1 | GN149 | 1.0.0 | Released | Congenital Myopathies Expert Panel for MTM1 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | MTOR | GN018 | 1.1.0 | Released | Brain Malformations Expert Panel Version 1.1.0 | BA1 BP1 BP3 BP7 BS1 BS2 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | MYBPC3 | GN095 | 1.0.0 | Released | Cardiomyopathy Expert Panel for MYBPC3 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -84,17 +86,17 @@ Genes covered: **131**.
 | MYO7A | GN005 | 2.0.0 | Released | Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | MYOC | GN019 | 2.1.0 | Released | Glaucoma Expert Panel for MYOC Version 2.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | NEB | GN146 | 1.0.0 | Released | Congenital Myopathies Expert Panel for NEB Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| NRAS | GN039 | 2.3.0 | Pilot Rules In Prep | RASopathy Expert Panel for NRAS Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| NRAS | GN039 | 2.3.0 | Released | RASopathy Expert Panel for NRAS Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | OTC | GN156 | 1.0.0 | Released | Urea Cycle Disorders Expert Panel for OTC Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | OTOF | GN023 | 1.0.0 | Released | Hearing Loss Expert Panel for OTOF and MYO15A Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| PAH | GN006 | 2.0.0 | Approved For Release | Phenylketonuria Expert Panel for PAH Version 2.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| PAH | GN006 | 2.0.0 | Released | Phenylketonuria Expert Panel for PAH Version 2.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | PALB2 | GN077 | 1.2.0 | Released | Hereditary Breast, Ovarian and Pancreatic Cancer Expert Panel for PALB | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | PDHA1 | GN014 | 1.0.0 | Released | Mitochondrial Disease Nuclear and Mitochondrial Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | PIK3CA | GN018 | 1.1.0 | Released | Brain Malformations Expert Panel Version 1.1.0 | BA1 BP1 BP3 BP7 BS1 BS2 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | PIK3CD | GN141 | 1.0.0 | Released | Antibody Deficiencies Expert Panel for PIK3CD Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | PIK3R1 | GN160 | 1.0.0 | Released | Antibody Deficiencies Expert Panel for PIK3R1 Version 1.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | PIK3R2 | GN018 | 1.1.0 | Released | Brain Malformations Expert Panel Version 1.1.0 | BA1 BP1 BP3 BP7 BS1 BS2 PM2 PM4 PM5 PP2 PS1 PVS1 |
-| PMS2 | GN139 | 2.0.0 | Pilot Rules Submitted | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for PMS2 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
+| PMS2 | GN139 | 2.0.0 | Released | InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel for PMS2 V | BA1 BP1 BP3 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PS1 PVS1 |
 | POLG | GN014 | 1.0.0 | Released | Mitochondrial Disease Nuclear and Mitochondrial Expert Panel Version 1 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | PPP1CB | GN128 | 1.3.0 | Released | RASopathy Expert Panel for PPP1CB Version 1.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | PTEN | GN003 | 3.2.0 | Released | PTEN Expert Panel for PTEN Version 3.2.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -106,7 +108,7 @@ Genes covered: **131**.
 | RMRP | GN088 | 1.3.0 | Released | Severe Combined Immunodeficiency Disease Expert Panel for RMRP Version | BA1 BP1 BP3 BS1 BS2 PM2 PM4 PP2 PS1 PVS1 |
 | RPE65 | GN120 | 1.0.0 | Released | Leber Congenital Amaurosis/early onset Retinal Dystrophy Expert Panel  | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | RPGR | GN106 | 1.0.0 | Released | X-linked Inherited Retinal Disease Expert Panel for RPGR Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| RRAS2 | GN127 | 1.3.0 | Pilot Rules In Prep | RASopathy Expert Panel for RRAS2 Version 1.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| RRAS2 | GN127 | 1.3.0 | Released | RASopathy Expert Panel for RRAS2 Version 1.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | RS1 | GN126 | 1.0.0 | Released | X-linked Inherited Retinal Disease Expert Panel for RS1 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | RUNX1 | GN008 | 3.1.0 | Released | Myeloid Malignancy Expert Panel for RUNX1 Version 3.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | RYR1 | GN179 | 2.0.0 | Released | Congenital Myopathies Expert Panel for RYR1 Version 2.0.0 | BA1 BP1 BP3 BP4 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -115,7 +117,7 @@ Genes covered: **131**.
 | SCN2A | GN068 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN2A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
 | SCN3A | GN069 | 2.1.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN3A Version 2.1.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
 | SCN8A | GN070 | 2.0.0 | Released | Epilepsy Sodium Channel Expert Panel for SCN8A Version 2.0.0 | BA1 BP1 BP3 BS1 BS2 PM1 PM4 PM5 PP2 PS1 PVS1 |
-| SERPINC1 | GN084 | 1.1.0 | Pilot Rules In Prep | Thrombosis Expert Panel for SERPINC1 Version 1.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| SERPINC1 | GN084 | 1.1.0 | Released | Thrombosis Expert Panel for SERPINC1 Version 1.1.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | SGCA | GN189 | 2.0.0 | Released | Limb Girdle Muscular Dystrophy Expert Panel for SGCA Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | SGCB | GN184 | 2.0.0 | Released | Limb Girdle Muscular Dystrophy Expert Panel for SGCB Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | SGCD | GN186 | 2.0.0 | Released | Limb Girdle Muscular Dystrophy Expert Panel for SGCD Version 2.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
@@ -125,8 +127,8 @@ Genes covered: **131**.
 | SLC26A4 | GN005 | 2.0.0 | Released | Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | SLC6A8 | GN027 | 2.0.0 | Released | Cerebral Creatine Deficiency Syndromes Expert Panel for SLC6A8 Version | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | SLC9A6 | GN033 | 6.0.0 | Released | Rett and Angelman-like Disorders Expert Panel for SLC9A6 Version 6.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| SOS1 | GN041 | 2.3.0 | Pilot Rules In Prep | RASopathy Expert Panel for SOS1 Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
-| SOS2 | GN042 | 2.3.0 | Pilot Rules In Prep | RASopathy Expert Panel for SOS2 Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| SOS1 | GN041 | 2.3.0 | Released | RASopathy Expert Panel for SOS1 Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
+| SOS2 | GN042 | 2.3.0 | Released | RASopathy Expert Panel for SOS2 Version 2.3.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | TCF4 | GN032 | 6.0.0 | Released | Rett and Angelman-like Disorders Expert Panel for TCF4 Version 6.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | TECTA | GN005 | 2.0.0 | Released | Hearing Loss Expert Panel for CDH23, COCH, GJB2, KCNQ4, MYO6, MYO7A, S | BA1 BP1 BP3 BP4 BS1 BS2 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |
 | TNNI3 | GN098 | 1.0.0 | Released | Cardiomyopathy Expert Panel for TNNI3 Version 1.0.0 | BA1 BP1 BP3 BP4 BP7 BS1 BS2 PM1 PM2 PM4 PM5 PP2 PP3 PS1 PVS1 |

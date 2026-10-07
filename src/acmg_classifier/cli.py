@@ -104,6 +104,11 @@ def cli(log_level: str):
                    "criteria the tool left not-met. 'manual-only': for variants listed in "
                    "the supplement, classify purely from it; variants not listed fall back "
                    "to the tool's automated calls.")
+@click.option("--exclude-self-expert-panel", is_flag=True, default=False,
+              help="Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar "
+                   "expert-panel (>=3-star) record of the variant being classified, so the "
+                   "evaluation does not read the reference curation itself. "
+                   "Env: ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.")
 @click.option("--workers", type=int, default=4, show_default=True)
 @click.option("--no-progress", is_flag=True, default=False,
               help="Disable progress bars (auto-disabled when stderr is not a TTY).")
@@ -127,6 +132,7 @@ def classify(
     spliceai_dir: Optional[Path],
     supplement: Optional[Path],
     supplement_mode: str,
+    exclude_self_expert_panel: bool,
     workers: int,
     no_progress: bool,
     limit: Optional[int],
@@ -152,6 +158,8 @@ def classify(
         spliceai_dir=spliceai_dir,
         supplement_mode=SupplementMode(supplement_mode),
         workers=workers,
+        # Only override when the flag is given, so the env variable still works.
+        **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
     )
     run_pipeline(
         vcf, cfg,
@@ -212,6 +220,11 @@ def classify(
                    "entries override the strength of any criterion they name and add "
                    "criteria left not-met. 'manual-only': classify purely from the "
                    "supplied evidence.")
+@click.option("--exclude-self-expert-panel", is_flag=True, default=False,
+              help="Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar "
+                   "expert-panel (>=3-star) record of the variant being classified, so the "
+                   "evaluation does not read the reference curation itself. "
+                   "Env: ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.")
 @click.pass_context
 def explain(
     ctx: click.Context,
@@ -231,6 +244,7 @@ def explain(
     evidence: tuple[str, ...],
     supplement: Optional[Path],
     supplement_mode: str,
+    exclude_self_expert_panel: bool,
 ) -> None:
     """Show detailed classification for a single variant (CHROM POS REF ALT).
 
@@ -254,6 +268,7 @@ def explain(
         openspliceai_flanking_size=openspliceai_flanking_size,
         spliceai_dir=spliceai_dir,
         supplement_mode=SupplementMode(supplement_mode),
+        **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
     )
 
     # Assemble manual evidence for this variant: TSV rows keyed to it + inline.
