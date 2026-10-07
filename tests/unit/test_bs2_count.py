@@ -142,3 +142,19 @@ class TestBS2HomOnly:
         ev = BS2Evaluator(_cfg(tmp_path))
         r = ev.evaluate(_snv(), _ann("BMPR2", ac=700, nhomalt=2))
         assert not r.triggered
+
+
+def test_ad_carrier_route_requires_vcep_applicable(tmp_path):
+    # GM revision: a dominant gene whose VCEP does not explicitly apply BS2
+    # (bs2 blank) no longer receives BS2 from healthy heterozygous carriers —
+    # adult-onset / incompletely penetrant disorders have carriers in gnomAD.
+    p = tmp_path / "dp.tsv"
+    p.write_text("gene_symbol\tbs2\tinheritance\nADLATE\t\tAD\nADOK\tapplicable\tAD\nARGENE\t\tAR\n",
+                 encoding="utf-8")
+    cfg = _cfg(tmp_path)
+    cfg.disease_prevalence_tsv = p
+    ev = BS2Evaluator(cfg)
+    assert not ev.evaluate(_snv(), _ann("ADLATE", ac=50, nhomalt=0)).triggered
+    assert ev.evaluate(_snv(), _ann("ADOK", ac=50, nhomalt=0)).triggered
+    # recessive homozygote route is unaffected
+    assert ev.evaluate(_snv(), _ann("ARGENE", ac=50, nhomalt=2)).triggered

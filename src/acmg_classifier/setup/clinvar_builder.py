@@ -40,7 +40,9 @@ CREATE TABLE IF NOT EXISTS variants (
     functional_evidence INTEGER DEFAULT 0,
     segregation_evidence INTEGER DEFAULT 0,
     bs2_evidence INTEGER DEFAULT 0,
-    bs2_strength TEXT
+    bs2_strength TEXT,
+    functional_pmids TEXT,
+    ep_criteria TEXT
 );
 """
 
@@ -185,6 +187,70 @@ def _mine_bs2(text: str) -> tuple[int, str | None]:
     if best is None:
         return 0, None
     return 1, best
+
+
+# --- Expert-panel criterion import (PS3 / PS4 / PP1) ---
+# ClinGen expert-panel records (>=3 stars) usually list the criteria the VCEP
+# applied ("... PS3_Moderate, PM2_Supporting, PP1_Strong"). These are imported
+# as expert-curated evidence (not text mining) at the strength the panel stated;
+# a bare code takes its ACMG default strength.
+_EP_CODES = ("PS3", "PS4", "PP1")
+_EP_DEFAULT = {"PS3": "Strong", "PS4": "Strong", "PP1": "Supporting"}
+_EP_STRENGTH_RANK = {"Supporting": 1, "Moderate": 2, "Strong": 3, "VeryStrong": 4}
+
+
+def _ep_pos(code: str) -> re.Pattern:
+    return re.compile(
+        rf"\b{code}(?:[_\s]?(VeryStrong|Very[\s_]Strong|Strong|Moderate|Supporting))?\b",
+        re.IGNORECASE,
+    )
+
+
+def _ep_neg(code: str) -> re.Pattern:
+    return re.compile(
+        rf"{code}[\s_]*(?:\w+\s+){{0,1}}(?:is\s+|was\s+|were\s+)?(?:not\s+(?:applicable|met|applied)|n/?a\b)|"
+        rf"(?:not\s+(?:met|applied|applicable)|does\s+not\s+meet|did\s+not\s+meet)\s*:?[^.]{{0,40}}?\b{code}\b",
+        re.IGNORECASE,
+    )
+
+
+_EP_POS = {c: _ep_pos(c) for c in _EP_CODES}
+_EP_NEG = {c: _ep_neg(c) for c in _EP_CODES}
+
+
+def _mine_ep_criteria(text: str) -> str | None:
+    """``"PS3:Moderate;PP1:Strong"`` for codes an expert panel cited, else None."""
+    if not text:
+        return None
+    found: dict[str, str] = {}
+    for code in _EP_CODES:
+        if _EP_NEG[code].search(text):
+            continue
+        best, rank = None, -1
+        for m in _EP_POS[code].finditer(text):
+            st = _norm_bs2_strength(m.group(1)) if m.group(1) else _EP_DEFAULT[code]
+            if _EP_STRENGTH_RANK[st] > rank:
+                best, rank = st, _EP_STRENGTH_RANK[st]
+        if best:
+            found[code] = best
+    return ";".join(f"{k}:{v}" for k, v in sorted(found.items())) or None
+
+
+_PMID_NUM_RE = re.compile(r"\bPMIDs?\b\s*:?\s*(\d{4,9})", re.IGNORECASE)
+
+
+def _scv_pmids(scv: ET.Element, text: str) -> set[str]:
+    """PubMed IDs cited by an SCV (structured citations + PMIDs in the text)."""
+    ids = {c.text.strip() for c in scv.findall(".//Citation/ID[@Source='PubMed']")
+           if c.text and c.text.strip().isdigit()}
+    ids |= set(_PMID_NUM_RE.findall(text or ""))
+    return ids
+
+
+def _scv_is_expert_panel(scv: ET.Element) -> bool:
+    rs = scv.find(".//ReviewStatus")
+    t = (rs.text or "").lower() if rs is not None else ""
+    return "expert panel" in t or "practice guideline" in t
 
 
 # Non-coding / uncharacterised locus prefixes. When a variant overlaps such a
@@ -460,7 +526,7 @@ def build_clinvar_sqlite(
     con.execute("PRAGMA cache_size = -262144")  # ~256 MB page cache
     con.executescript(_CREATE_TABLE)  # table only; indexes are built after the load
 
-    insert_sql = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    insert_sql = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     n_rows = 0
     n_seen = 0
     # Default to 4 parse processes; cap at 24 so the main process (gzip
@@ -575,6 +641,7 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
         affected = 0
         functional = 0
         segregation = 0
+        functional_pmids: set[str] = set()
         for scv in elem.findall(".//ClinVarAssertion"):
             # PS4 counts affected probands ONLY from P/LP submissions. An affected
             # individual reported by a Benign/VUS submitter is an incidental finding,
@@ -595,12 +662,16 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
                 if desc.text:
                     texts.append(desc.text)
             combined = " ".join(texts)
-            if combined:
+            # Expert-panel SCVs are imported separately as curated evidence
+            # (ep_criteria below); they are excluded from free-text mining so the
+            # same assertion is never counted twice.
+            if combined and not _scv_is_expert_panel(scv):
                 if _FUNCTIONAL_POS.search(combined) and not _FUNCTIONAL_NEG.search(combined):
                     # A quantitative functional claim must cite a PMID to count.
                     if not (_QUANT_FUNCTIONAL.search(combined)
                             and not _PMID_RE.search(combined)):
                         functional += 1
+                        functional_pmids |= _scv_pmids(scv, combined)
                 if _SEGREGATION_POS.search(combined) and not _SEGREGATION_NEG.search(combined):
                     segregation += 1
 
@@ -621,9 +692,13 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
                 if d.text
             ]
             bs2_evidence, bs2_strength = _mine_bs2(" ".join(bs2_texts))
+            ep_criteria = _mine_ep_criteria(" ".join(bs2_texts))
+        else:
+            ep_criteria = None
 
         return (var_id, chrom, pos, ref, alt, gene, hgvs_c, hgvs_p,
                 aa_change, codon_pos, clinsig, rev_status, stars, last_eval,
-                affected, functional, segregation, bs2_evidence, bs2_strength)
+                affected, functional, segregation, bs2_evidence, bs2_strength,
+                ",".join(sorted(functional_pmids)) or None, ep_criteria)
     except Exception:
         return None

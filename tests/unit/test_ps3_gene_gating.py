@@ -35,7 +35,13 @@ def _var():
 
 
 def _patch_count(monkeypatch, n):
+    # Old ClinVar build (no functional_pmids column) -> SCV-count fallback.
+    monkeypatch.setattr(clinvar_sqlite, "query_functional_pmids", lambda *a, **k: None)
     monkeypatch.setattr(clinvar_sqlite, "query_functional_evidence", lambda *a, **k: n)
+
+
+def _patch_pmids(monkeypatch, pmids):
+    monkeypatch.setattr(clinvar_sqlite, "query_functional_pmids", lambda *a, **k: set(pmids))
 
 
 class TestSuppression:
@@ -73,10 +79,34 @@ class TestSupportingCap:
 
 
 class TestUncappedGene:
-    def test_normal_gene_reaches_moderate(self, tmp_path, monkeypatch):
+    def test_text_mining_capped_at_supporting(self, tmp_path, monkeypatch):
+        # GM revision: text-mined PS3 never exceeds Supporting.
         _patch_count(monkeypatch, 3)
         r = PS3Evaluator(_cfg(tmp_path)).evaluate(_var(), _ann("GAA"))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+
+    def test_counts_distinct_pmids(self, tmp_path, monkeypatch):
+        _patch_pmids(monkeypatch, ["123456", "234567"])
+        r = PS3Evaluator(_cfg(tmp_path)).evaluate(_var(), _ann("GAA"))
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
+        assert "2 distinct cited publication" in r.evidence and "[ClinVar text mining]" in r.evidence
+
+    def test_no_pmid_no_ps3(self, tmp_path, monkeypatch):
+        _patch_pmids(monkeypatch, [])
+        r = PS3Evaluator(_cfg(tmp_path)).evaluate(_var(), _ann("GAA"))
+        assert not r.triggered
+
+    def test_expert_panel_import(self, tmp_path, monkeypatch):
+        _patch_pmids(monkeypatch, [])
+        monkeypatch.setattr(clinvar_sqlite, "query_expert_panel_criteria",
+                            lambda *a, **k: {"PS3": "Moderate"})
+        cfg = _cfg(tmp_path)
+        cfg.exclude_self_expert_panel = False
+        r = PS3Evaluator(cfg).evaluate(_var(), _ann("GAA"))
         assert r.triggered and r.strength == CriterionStrength.MODERATE
+        assert "[ClinVar expert panel]" in r.evidence
+        cfg.exclude_self_expert_panel = True
+        assert not PS3Evaluator(cfg).evaluate(_var(), _ann("GAA")).triggered
 
     def test_normal_gene_single_supporting(self, tmp_path, monkeypatch):
         _patch_count(monkeypatch, 1)

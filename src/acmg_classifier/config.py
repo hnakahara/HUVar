@@ -82,6 +82,11 @@ class Config(BaseSettings):
     # The gate is applied only when the phyloP file is present (graceful
     # degradation); otherwise BP7 falls back to the splice-only logic.
     bp7_phylop_max: float = 2.0
+    # Benchmark option: ignore criteria imported from the ClinVar expert-panel
+    # (>=3-star) record of the variant being evaluated (PS3/PS4/PP1/BS2), so an
+    # "automated-only" evaluation against the eRepo does not read the reference
+    # curation itself. Off for normal use. ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.
+    exclude_self_expert_panel: bool = False
 
     @field_validator("data_dir")
     @classmethod

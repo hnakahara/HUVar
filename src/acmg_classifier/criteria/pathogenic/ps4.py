@@ -1,19 +1,18 @@
 """
-PS4 -- variant prevalence in affected individuals significantly higher than controls.
+PS4 -- prevalence in affected individuals significantly increased over controls.
 
-Proband-count-only implementation (no case-control / OR data required).
+Curated-evidence-only criterion (Genome Medicine revision). ClinVar submissions
+cannot be de-duplicated at the level of individuals (the same patient may be
+reported by several laboratories, in literature-only submissions or via
+GenomeConnect) and do not indicate whether the reported individual is an
+affected proband, a carrier of a recessive condition or someone ascertained by
+screening. PS4 is therefore applied only from
 
-Adjusted PS4 weightings (ClinGen SVI 2019, ACMG 2015):
-- Strong       (PS4):            >=10 unrelated affected probands
-- Moderate     (PS4_Moderate):   6-9 unrelated affected probands
-- Supporting   (PS4_Supporting): 2-5 unrelated affected probands
+1. curator-supplied evidence (user curation or the eRepo supplement), or
+2. PS4 applied by a ClinGen expert panel to this variant in ClinVar (>=3 stars).
 
-Each ClinVar SCV submission that classified the variant as P/LP and reported
-AffectedStatus="yes" is approximated as one unrelated proband. Affected
-observations from Benign/VUS submitters are incidental findings and are NOT
-counted (see clinvar_builder._parse_clinvarset). Both rarity (FAF95_popmax <
-0.0001 or AC=0) AND >=2 affected observations are required to trigger any
-strength.
+The number of P/LP ClinVar submissions reporting affected individuals is still
+reported in the evidence text, for the curator's information only.
 """
 from __future__ import annotations
 from acmg_classifier.config import Config
@@ -24,17 +23,6 @@ from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
-_FAF95_RARE = 0.0001
-
-
-def _ps4_strength(n_affected: int) -> CriterionStrength | None:
-    if n_affected >= 10:
-        return CriterionStrength.STRONG
-    if n_affected >= 6:
-        return CriterionStrength.MODERATE
-    if n_affected >= 2:
-        return CriterionStrength.SUPPORTING
-    return None
 
 
 class PS4Evaluator(CriterionEvaluator):
@@ -47,50 +35,19 @@ class PS4Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        # 1. Rarity gate (mirrors PM2): a common variant cannot satisfy PS4
-        #    because case enrichment over controls is the entire point. Prefer
-        #    FAF95_popmax (Karczewski 2020) over raw popmax/AF — FAF gives a
-        #    conservative upper bound that is robust to small population
-        #    sample sizes. An absent gnomAD record is treated as "rare".
-        gd = annotation.gnomad
-        if gd is None:
-            rare = True
-        else:
-            # A failed gnomAD QC filter means AF is unreliable — refuse to
-            # commit either way rather than risk a false PS4 trigger.
-            if not gd.filter_pass:
-                return CriteriaResult.not_met(ACMGCriterion.PS4, "gnomAD filter failed")
-            faf = gd.faf95_popmax
-            if faf is None:
-                # Fall back to popmax_af, then AF — FAF is missing for very
-                # rare variants where the upper bound is undefined.
-                faf = gd.popmax_af or gd.af or 0.0
-            rare = (faf == 0.0 or gd.ac == 0 or faf < _FAF95_RARE)
-
-        if not rare:
-            return CriteriaResult.not_met(
-                ACMGCriterion.PS4, "Not rare enough in gnomAD for PS4"
-            )
-
-        # 2. Proxy proband count: number of ClinVar SCVs that BOTH classified
-        #    the variant as P/LP AND reported AffectedStatus="yes". This is an
-        #    approximation — one SCV ≈ one proband — chosen because true
-        #    case/control statistics are unavailable from public data.
-        from acmg_classifier.local_db.clinvar_sqlite import query_affected_cases
-        n_affected = query_affected_cases(
-            self._cfg.clinvar_sqlite,
-            variant.chrom, variant.pos, variant.ref, variant.alt,
+        from acmg_classifier.criteria.curated_sources import (
+            SRC_INFO, from_expert_panel, from_supplement,
         )
-
-        strength = _ps4_strength(n_affected)
-        if strength is None:
-            return CriteriaResult.not_met(
-                ACMGCriterion.PS4,
-                f"Insufficient affected probands in ClinVar ({n_affected} < 2)",
-            )
-
-        return CriteriaResult.met(
-            ACMGCriterion.PS4,
-            strength,
-            evidence=f"Rare + {n_affected} unrelated affected SCV(s) ({strength.value})",
+        for r in (from_supplement(ACMGCriterion.PS4, supplement),
+                  from_expert_panel(ACMGCriterion.PS4, self._cfg, variant)):
+            if r is not None:
+                return r
+        from acmg_classifier.local_db.clinvar_sqlite import query_affected_cases
+        n = query_affected_cases(
+            self._cfg.clinvar_sqlite, variant.chrom, variant.pos, variant.ref, variant.alt,
+        )
+        note = (f"; {SRC_INFO} {n} P/LP ClinVar submission(s) report affected individuals "
+                "(not de-duplicated; review case-level data)") if n else ""
+        return CriteriaResult.not_met(
+            ACMGCriterion.PS4, f"PS4 requires curated case-level evidence{note}"
         )

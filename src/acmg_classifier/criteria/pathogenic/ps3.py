@@ -2,16 +2,14 @@
 PS3 -- well-established functional studies show a damaging effect.
 
 Evidence sources (in priority order):
-1. Manual supplement entry (curated) -- takes precedence, may reach Strong if the
-   curator has performed OddsPath calibration.
-2. ClinVar SCV free-text comments describing a damaging functional assay (text-mined).
-
-Strength per Brnich et al. 2019 (Genome Med 13073): PS3 Strong requires OddsPath > 18.7
-established from documented pathogenic/benign control counts. That calibration cannot be
-derived from ClinVar free text, so text-mined PS3 is capped at Moderate. SCV count is used
-only as a weak confidence proxy:
-   1-2 SCVs  -> Supporting
-   >=3 SCVs  -> Moderate (cap)
+1. Curator-supplied supplement (user curation or the eRepo supplement) — any strength.
+2. PS3 applied by a ClinGen expert panel to this variant in ClinVar (>=3 stars),
+   imported at the strength the panel stated (curated evidence, not text mining).
+3. Text mining of other (non-expert-panel) ClinVar submissions describing a
+   damaging wet-lab assay. Evidence is counted by DISTINCT cited PMIDs (so several
+   submissions citing the same study count once) and is capped at Supporting:
+   the assay validation required by Brnich et al. 2019 (positive/negative
+   controls, OddsPath) cannot be assessed from submission text.
 """
 from __future__ import annotations
 from acmg_classifier.config import Config
@@ -41,12 +39,9 @@ _PS3_MAX_SUPPORTING = frozenset({
 
 
 def _functional_strength(n: int) -> CriterionStrength | None:
-    # Capped at Moderate: OddsPath calibration for Strong is unavailable from ClinVar text.
-    if n >= 3:
-        return CriterionStrength.MODERATE
-    if n >= 1:
-        return CriterionStrength.SUPPORTING
-    return None
+    # Text-mined functional evidence is limited to Supporting regardless of the
+    # number of publications (Brnich 2019 validation cannot be read from text).
+    return CriterionStrength.SUPPORTING if n >= 1 else None
 
 
 class PS3Evaluator(CriterionEvaluator):
@@ -59,13 +54,14 @@ class PS3Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        # 1. Manual supplement takes precedence over the text-mined fallback:
-        #    if a curator has reviewed the underlying paper they can assert a
-        #    higher strength (including PS3 Strong, which the text-mined path
-        #    cannot reach — see module docstring on OddsPath calibration).
-        for e in (supplement or []):
-            if e.criterion == ACMGCriterion.PS3:
-                return CriteriaResult.met(ACMGCriterion.PS3, e.strength, e.evidence)
+        from acmg_classifier.criteria.curated_sources import (
+            SRC_TEXT_MINING, from_expert_panel, from_supplement,
+        )
+        # 1. Curator-supplied evidence, 2. expert-panel assertion in ClinVar.
+        for r in (from_supplement(ACMGCriterion.PS3, supplement),
+                  from_expert_panel(ACMGCriterion.PS3, self._cfg, variant)):
+            if r is not None:
+                return r
 
         # Gene gate: some VCEPs do not allow a text-mined PS3 at all (no PS3 code,
         # or PS3 not applicable for in vitro assays). Withhold the free-text
@@ -78,24 +74,30 @@ class PS3Evaluator(CriterionEvaluator):
                 f"{gene}: VCEP does not permit a ClinVar-text PS3 (no PS3 / in vitro N/A)",
             )
 
-        # 2. Fallback: count ClinVar SCVs whose free-text comment matches a
-        #    damaging-functional-study pattern. Strength is capped at Moderate
-        #    because OddsPath cannot be derived from free text alone.
-        from acmg_classifier.local_db.clinvar_sqlite import query_functional_evidence
-        n = query_functional_evidence(
-            self._cfg.clinvar_sqlite,
-            variant.chrom, variant.pos, variant.ref, variant.alt,
+        # 3. Text mining: distinct PMIDs cited by non-expert-panel SCVs that
+        #    describe a damaging functional assay (Supporting cap).
+        from acmg_classifier.local_db.clinvar_sqlite import (
+            query_functional_evidence, query_functional_pmids,
         )
+        pmids = query_functional_pmids(
+            self._cfg.clinvar_sqlite, variant.chrom, variant.pos, variant.ref, variant.alt,
+        )
+        if pmids is None:  # old ClinVar build without PMIDs -> SCV count
+            n = query_functional_evidence(
+                self._cfg.clinvar_sqlite, variant.chrom, variant.pos, variant.ref, variant.alt,
+            )
+            unit = "ClinVar SCV(s)"
+        else:
+            n = len(pmids)
+            unit = "distinct cited publication(s)" + (f" (PMID {', '.join(sorted(pmids)[:5])})" if pmids else "")
         strength = _functional_strength(n)
         if strength is None:
             return CriteriaResult.not_met(
-                ACMGCriterion.PS3, "No ClinVar SCV describing damaging functional study"
+                ACMGCriterion.PS3, "No ClinVar submission citing a damaging functional study"
             )
-        # Per-gene VCEP cap: several VCEPs allow PS3 only at Supporting.
-        if gene in _PS3_MAX_SUPPORTING and strength != CriterionStrength.SUPPORTING:
-            strength = CriterionStrength.SUPPORTING
         return CriteriaResult.met(
             ACMGCriterion.PS3,
             strength,
-            evidence=f"{n} ClinVar SCV(s) report damaging functional study ({strength.value})",
+            evidence=f"{SRC_TEXT_MINING} {n} {unit} report a damaging functional study "
+                     "(capped at Supporting)",
         )

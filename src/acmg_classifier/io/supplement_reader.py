@@ -20,11 +20,17 @@ def read_supplement(tsv_path: Path) -> dict[str, list[SupplementEntry]]:
             raise SupplementParseError(f"Supplement TSV missing columns: {missing}")
         for lineno, row in enumerate(reader, start=2):
             try:
+                evidence = row["evidence"].strip()
+                source = (row.get("source") or "").strip().lower()
+                if not source:
+                    # The precompiled eRepo supplement marks its rows "eRepo".
+                    source = "erepo" if evidence.lower().startswith("erepo") else "user"
                 entry = SupplementEntry(
                     variant_id=row["variant_id"].strip(),
                     criterion=ACMGCriterion(row["criterion"].strip()),
                     strength=CriterionStrength(row["strength"].strip()),
-                    evidence=row["evidence"].strip(),
+                    evidence=evidence,
+                    source=source,
                 )
             except (KeyError, ValueError) as exc:
                 raise SupplementParseError(

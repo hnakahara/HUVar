@@ -101,3 +101,26 @@ def test_manual_only_with_no_supplement_falls_back_to_tool():
     assert before == after
     # Tool calls are preserved.
     assert all(r.triggered for r in results)
+
+
+def test_user_curation_wins_over_erepo_regardless_of_order(tmp_path):
+    from acmg_classifier.io.supplement_reader import read_supplement
+    p = tmp_path / "s.tsv"
+    p.write_text("variant_id\tcriterion\tstrength\tevidence\n"
+                 "chr1:1:A:G\tPS4\tSupporting\teRepo\n"
+                 "chr1:1:A:G\tPS4\tStrong\tin-house case series PMID:1\n", encoding="utf-8")
+    entries = read_supplement(p)["chr1:1:A:G"]
+    assert [e.source for e in entries] == ["erepo", "user"]
+
+
+def test_registry_prefers_user_over_erepo_entry():
+    reg = _registry(SupplementMode.MERGE)
+    results = _tool_results()
+    sup = [
+        SupplementEntry(variant_id="x", criterion=ACMGCriterion.PS1,
+                        strength=CriterionStrength.SUPPORTING, evidence="eRepo", source="erepo"),
+        SupplementEntry(variant_id="x", criterion=ACMGCriterion.PS1,
+                        strength=CriterionStrength.MODERATE, evidence="own review", source="user"),
+    ]
+    reg._apply_supplement_override(results, sup)
+    assert _by_crit(results)[ACMGCriterion.PS1].strength == CriterionStrength.MODERATE

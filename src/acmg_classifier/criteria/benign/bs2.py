@@ -16,7 +16,7 @@ homozygote/hemizygote heuristic.
 from __future__ import annotations
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
-from acmg_classifier.criteria.bs2_genes import BS2Applicability, NOT_APPLICABLE
+from acmg_classifier.criteria.bs2_genes import APPLICABLE, BS2Applicability, NOT_APPLICABLE
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
@@ -129,6 +129,15 @@ class BS2Evaluator(CriterionEvaluator):
         if "XL" in modes and nhemi >= hemi_thr:
             return self._met(f"X-linked: nhemi={nhemi} >= {hemi_thr}")
         if "AD" in modes:
+            # Healthy heterozygous carriers argue against a dominant disorder only
+            # when full penetrance at an early age is expected. HUVar cannot judge
+            # penetrance / age of onset itself, so the carrier route is used only
+            # when the gene's VCEP explicitly applies BS2 with population data
+            # (bs2 == applicable). Otherwise adult-onset / incompletely penetrant
+            # disorders, whose carriers are expected in gnomAD, would receive a
+            # false BS2 (Genome Medicine revision, Reviewer 3).
+            if self._vcep.status(gene) != APPLICABLE and not tiers and vcep_count is None:
+                return self._not_met(nhomalt, nhemi, het_carriers)
             # Incomplete-penetrance dominant gene: count homozygotes, not the
             # healthy heterozygous carriers that the standard AD path uses.
             if hom_only:
@@ -149,6 +158,12 @@ class BS2Evaluator(CriterionEvaluator):
         """BS2 from an expert-panel (>=3-star) ClinVar review when the VCEP bars
         the gnomAD-count path. The strength is the one the panel cited (a bare
         "BS2" applies at its Strong default)."""
+        if getattr(self._cfg, "exclude_self_expert_panel", False) is True:
+            return CriteriaResult.not_met(
+                ACMGCriterion.BS2,
+                f"{gene}: VCEP bars gnomAD-based BS2; expert-panel import disabled "
+                "(exclude_self_expert_panel)",
+            )
         from acmg_classifier.local_db.clinvar_sqlite import query_bs2_benign_evidence
 
         has_bs2, strength_label = query_bs2_benign_evidence(

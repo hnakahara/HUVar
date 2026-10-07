@@ -1,0 +1,56 @@
+gene	criterion	comparator	exclude_codes	protein_level	source_text
+ABCD1	PM5	vcep	PM5	1	Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before. Example: Arg156His is pathoge
+ABCD1	PS1	vcep	PS1	0	*   Splicing abnormalities (using VCEP-specified prediction algorithms or evidence from literature) should be excluded for all missense variants *   PS1 will be
+ADA	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+ADA	PS1	vcep		0	It can also be applied for splice variants at the same nucleotide and with similar impact prediction as previously reported pathogenic variant (if the predicted
+ANO5	PM5	vcep		0	Apply only for missense variants for which the amino acid change is the expected mechanism of disease. For the missense variant under curation and the variant(s
+ANO5	PS1	vcep		0	For missense variants for which the amino acid change is the expected mechanism of disease, apply at Strong for 1 pathogenic or 2 likely pathogenic variants res
+CAPN3	PM5	vcep		0	Apply only for missense variants for which the amino acid change is the expected mechanism of disease. For the missense variant under curation and the variant(s
+CAPN3	PS1	vcep		0	For missense variants for which the amino acid change is the expected mechanism of disease, apply at Strong for 1 pathogenic or 2 likely pathogenic variants res
+CTLA4	PS1	vcep	PS1	0	*   Use PS1 for missense variants when other variant was classified pathogenic by VCEP standards without using PS1. *   Beware of changes that impact splicing r
+DCLRE1C	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+DCLRE1C	PS1	vcep		0	It can also be applied for splice variants at the same nucleotide and with similar impact prediction as previously reported pathogenic variant (if the predicted
+DYSF	PM5	vcep		0	Apply only for missense variants for which the amino acid change is the expected mechanism of disease. For the missense variant under curation and the variant(s
+DYSF	PS1	vcep		0	For missense variants for which the amino acid change is the expected mechanism of disease, apply at Strong for 1 pathogenic or 2 likely pathogenic variants res
+FOXN1	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+FOXN1	PS1	vcep		0	Applicable for a same amino acid change if previously established variant is classified as pathogenic by SCID VCEP specifications for _FOXN1._  Can also be appl
+GALT	PM5	vcep	PM5	0	*   Splicing abnormalities (using VCEP-specified prediction algorithms or evidence from literature) should be excluded for all missense variants *   PM5 will be
+GALT	PS1	vcep	PS1	0	*   Splicing abnormalities (using VCEP-specified prediction algorithms or evidence from literature) should be excluded for all missense variants *   PS1 will be
+GAMT	PM5	vcep		0	*   This criterion is applicable for any variant resulting in a different amino acid change, at the same amino acid position, as a variant that has been previou
+GAMT	PS1	vcep		0	*   This criterion is applicable for any variant resulting in the same amino acid change as a variant that has been previously established as pathogenic by the 
+GCK	PS1	vcep		0	Applicable for a same amino acid change if the previously established variant is classified as pathogenic by ClinGen MDEP specifications.  PS1 can also be appli
+HNF1A	PS1	vcep		0	Applicable for a same amino acid change if the previously established variant is classified as pathogenic by ClinGen MDEP specifications.  PS1 can also be appli
+HNF4A	PS1	vcep		0	Applicable for a same amino acid change if the previously established variant is classified as pathogenic by ClinGen MDEP specifications.  PS1 can also be appli
+IL2RG	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+IL2RG	PS1	vcep		0	Strength modification depending upon classification of previously established variant (pathogenic vs. likely pathogenic).  Previously established variant must b
+IL7R	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+IL7R	PS1	vcep		0	It can also be applied for splice variants at the same nucleotide and with similar impact prediction as previously reported pathogenic variant (if the predicted
+JAK3	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+JAK3	PS1	vcep		0	It can also be applied for splice variants at the same nucleotide and with similar impact prediction as previously reported pathogenic variant (if the predicted
+MLH1	PM5	vcep		1	Missense change at an amino acid residue where a different missense change was classified by this VCEP as Pathogenic on the protein level and not due to aberran
+MLH1	PS1	vcep		1	A predicted missense substitution that encodes the same amino acid change with a different underlying nucleotide change previously established by this VCEP as P
+MSH2	PM5	vcep		1	Missense change at an amino acid residue where a different missense change was classified by this VCEP as Pathogenic on the protein level and not due to aberran
+MSH2	PS1	vcep		1	A predicted missense substitution that encodes the same amino acid change with a different underlying nucleotide change previously established by this VCEP as P
+MSH6	PM5	vcep		1	Missense change at an amino acid residue where a different missense change was classified by this VCEP as Pathogenic on the protein level and not due to aberran
+MSH6	PS1	vcep		1	A predicted missense substitution that encodes the same amino acid change with a different underlying nucleotide change previously established by this VCEP as P
+PIK3R1	PM5	vcep	PM5	0	*   Use PM5 at the default (moderate) strength level for a missense variant when another missense variant encoding a different amino acid change in the same cod
+PIK3R1	PS1	vcep	PS1	0	*   Use PS1 for missense variants when other variant was classified pathogenic by VCEP standards without using PS1. Beware of changes that impact splicing rathe
+PMS2	PM5	vcep		1	Missense change at an amino acid residue where a different missense change was classified by this VCEP as Pathogenic on the protein level and not due to aberran
+PMS2	PS1	vcep		1	A predicted missense substitution that encodes the same amino acid change with a different underlying nucleotide change previously established by this VCEP as P
+RAG1	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+RAG1	PS1	vcep		0	It can also be applied for splice variants at the same nucleotide and with similar impact prediction as previously reported pathogenic variant (if the predicted
+RAG2	PM5	vcep		0	PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points from informative variants (see below point table). PM5\_Strong should b
+RAG2	PS1	vcep		0	It can also be applied for splice variants at the same nucleotide and with similar impact prediction as previously reported pathogenic variant (if the predicted
+RMRP	PS1	vcep		0	Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.  *   Downgraded to PS1\_Supporting. *   Applicable if a d
+SGCA	PM5	vcep		0	Apply only for missense variants for which the amino acid change is the expected mechanism of disease. For the missense variant under curation and the variant(s
+SGCA	PS1	vcep		0	For missense variants for which the amino acid change is the expected mechanism of disease, apply at Strong for 1 pathogenic or 2 likely pathogenic variants res
+SGCB	PM5	vcep		0	Apply only for missense variants for which the amino acid change is the expected mechanism of disease. For the missense variant under curation and the variant(s
+SGCB	PS1	vcep		0	For missense variants for which the amino acid change is the expected mechanism of disease, apply at Strong for 1 pathogenic or 2 likely pathogenic variants res
+SGCD	PM5	vcep		0	Apply only for missense variants for which the amino acid change is the expected mechanism of disease. For the missense variant under curation and the variant(s
+SGCD	PS1	vcep		0	For missense variants for which the amino acid change is the expected mechanism of disease, apply at Strong for 1 pathogenic or 2 likely pathogenic variants res
+SGCG	PM5	vcep		0	Apply only for missense variants for which the amino acid change is the expected mechanism of disease. For the missense variant under curation and the variant(s
+SGCG	PS1	vcep		0	For missense variants for which the amino acid change is the expected mechanism of disease, apply at Strong for 1 pathogenic or 2 likely pathogenic variants res
+TP53	PM5	vcep		0	Missense variant at an amino acid residue where ≥2 different missense variants previously determined to be pathogenic according to the _TP53_ VCEP’s specificati
+VHL	PM5	vcep		0	Pathogenicity of prior variant is established by interpretation of the VHL VCEP or variants with pathogenicity established using VHL VCEP specifications. The Gr
+VHL	PS1	vcep		0	Applied only to variants with interpretation by the VHL VCEP or by a variant with pathogenicity established using VHL VCEP specifications.
+VWF	PS1	vcep		0	Use with no specification except comparison variant must be classified as pathogenic using rules from the VWD VCEP.

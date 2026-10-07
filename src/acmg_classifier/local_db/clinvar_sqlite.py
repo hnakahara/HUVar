@@ -215,6 +215,7 @@ def query_same_aa_change(
             hgvs_c=r[5],
             hgvs_p=r[6],
             amino_acid_change=r[7],
+            chrom=comp_chrom, pos=comp_pos, ref=r[10], alt=r[11],
         ))
     return results
 
@@ -245,7 +246,7 @@ def query_same_codon_different_aa(
         rows = con.execute(
             """
             SELECT variation_id, clinical_significance, review_status, star_rating,
-                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos
+                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
             FROM variants
             WHERE gene_symbol = ?
               AND codon_position = ?
@@ -288,6 +289,7 @@ def query_same_codon_different_aa(
             hgvs_c=r[5],
             hgvs_p=r[6],
             amino_acid_change=r[7],
+            chrom=comp_chrom, pos=comp_pos, ref=r[10], alt=r[11],
         ))
     return out
 
@@ -318,7 +320,7 @@ def query_same_splice_site(
         rows = con.execute(
             """
             SELECT variation_id, clinical_significance, review_status, star_rating,
-                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change
+                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
             FROM variants
             WHERE chrom IN (?, ?)
               AND pos = ?
@@ -344,6 +346,8 @@ def query_same_splice_site(
             hgvs_c=r[5],
             hgvs_p=r[6],
             amino_acid_change=r[7],
+            chrom=strip_chr(str(r[8])) if r[8] is not None else None,
+            pos=r[9], ref=r[10], alt=r[11],
         )
         for r in rows
     ]
@@ -468,6 +472,65 @@ def query_affected_cases(db_path: Path, chrom: str, pos: int, ref: str, alt: str
 def query_functional_evidence(db_path: Path, chrom: str, pos: int, ref: str, alt: str) -> int:
     """Total SCV submissions describing damaging functional studies (PS3)."""
     return _sum_column(db_path, "functional_evidence", chrom, pos, ref, alt)
+
+
+def query_functional_pmids(db_path: Path, chrom: str, pos: int, ref: str, alt: str) -> Optional[set[str]]:
+    """Distinct PMIDs cited by non-expert-panel SCVs describing a damaging
+    functional study (PS3 text mining). ``None`` for an old ClinVar build without
+    the ``functional_pmids`` column (caller falls back to the SCV count)."""
+    if not db_path.exists():
+        return set()
+    c1, c2 = chrom_candidates(chrom)
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT functional_pmids FROM variants
+            WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
+            """,
+            (c1, c2, pos, ref, alt),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return None
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="functional_pmids", error=str(exc))
+        return set()
+    out: set[str] = set()
+    for (v,) in rows:
+        out |= {x for x in (v or "").split(",") if x}
+    return out
+
+
+def query_expert_panel_criteria(db_path: Path, chrom: str, pos: int, ref: str, alt: str) -> dict[str, str]:
+    """Criteria (PS3/PS4/PP1) applied by a ClinGen expert panel to this variant in
+    ClinVar (review status >= 3 stars), as ``{code: strength}``. Empty for an old
+    build without the ``ep_criteria`` column."""
+    if not db_path.exists():
+        return {}
+    c1, c2 = chrom_candidates(chrom)
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT ep_criteria FROM variants
+            WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ?
+              AND star_rating >= 3 AND ep_criteria IS NOT NULL
+            """,
+            (c1, c2, pos, ref, alt),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return {}
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="ep_criteria", error=str(exc))
+        return {}
+    rank = {"Supporting": 1, "Moderate": 2, "Strong": 3, "VeryStrong": 4}
+    out: dict[str, str] = {}
+    for (v,) in rows:
+        for item in (v or "").split(";"):
+            code, _, st = item.partition(":")
+            if code and st and rank.get(st, 0) > rank.get(out.get(code, ""), 0):
+                out[code] = st
+    return out
 
 
 def query_segregation_evidence(db_path: Path, chrom: str, pos: int, ref: str, alt: str) -> int:

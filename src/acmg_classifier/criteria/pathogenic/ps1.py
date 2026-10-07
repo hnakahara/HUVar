@@ -113,11 +113,16 @@ class PS1Evaluator(CriterionEvaluator):
             exclude_alt=variant.alt,
             min_stars=1,
         )
+        from acmg_classifier.criteria.vcep_comparators import filter_comparators
+        hits, vcep_note = filter_comparators(
+            pc.gene_symbol, "PS1", hits, variant.assembly.value,
+        )
         if hits:
             strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
             evidence = (
                 f"ClinVar same AA (different nucleotide), comparator {strength.value}: "
                 f"{', '.join(h.variation_id or '' for h in hits[:3])}"
+                + (f" [{vcep_note}]" if vcep_note else "")
             )
             return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
 
@@ -188,7 +193,11 @@ class PS1Evaluator(CriterionEvaluator):
                     f"{strength.value}: {ids}",
                 )
 
-        return CriteriaResult.not_met(ACMGCriterion.PS1, "No ClinVar >=1 star same-AA hit (excluding self)")
+        return CriteriaResult.not_met(
+            ACMGCriterion.PS1,
+            "No ClinVar >=1 star same-AA hit (excluding self)"
+            + (f" [{vcep_note}]" if vcep_note else ""),
+        )
 
     def _evaluate_splice(self, variant: VariantRecord, pc) -> CriteriaResult:
         # PS1's splice extension is opt-in per VCEP. Genes whose PS1 is the
@@ -221,9 +230,15 @@ class PS1Evaluator(CriterionEvaluator):
             variant.chrom, variant.pos, variant.ref, variant.alt,
             min_stars=1,
         )
+        from acmg_classifier.criteria.vcep_comparators import filter_comparators
+        hits, vcep_note = filter_comparators(
+            pc.gene_symbol, "PS1", hits, variant.assembly.value,
+        )
         if not hits:
             return CriteriaResult.not_met(
-                ACMGCriterion.PS1, "No ClinVar >=1 star same-splice-site P/LP hit"
+                ACMGCriterion.PS1,
+                "No ClinVar >=1 star same-splice-site P/LP hit"
+                + (f" [{vcep_note}]" if vcep_note else ""),
             )
         strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
         evidence = (

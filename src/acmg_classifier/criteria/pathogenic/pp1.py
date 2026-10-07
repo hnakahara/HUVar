@@ -1,12 +1,15 @@
 """
 PP1 -- cosegregation with disease in multiple affected family members.
 
-Evidence sources (in priority order):
-1. Manual supplement entry (curated) -- takes precedence.
-2. ClinVar SCV free-text comments describing cosegregation (text-mined).
+Curated-evidence-only criterion (Genome Medicine revision). The number of
+informative meioses cannot be derived from ClinVar submission text, and several
+submissions may describe the same family; automated PP1 from text mining
+over-assigned the criterion relative to the eRepo. PP1 is applied only from
 
-Strength is kept at Supporting: rigorous PP1 up-weighting (Moderate/Strong) requires
-counting informative meioses, which cannot be derived from free-text comments.
+1. curator-supplied evidence (user curation or the eRepo supplement), or
+2. PP1 applied by a ClinGen expert panel to this variant in ClinVar (>=3 stars).
+
+ClinVar submissions mentioning co-segregation are reported for information only.
 """
 from __future__ import annotations
 from acmg_classifier.config import Config
@@ -28,28 +31,18 @@ class PP1Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        # 1. Curator-asserted supplement overrides the automatic path so a
-        #    reviewer who has counted informative meioses can up-weight PP1
-        #    above Supporting (the only level the text-mined path can emit).
-        for e in (supplement or []):
-            if e.criterion == ACMGCriterion.PP1:
-                return CriteriaResult.met(ACMGCriterion.PP1, e.strength, e.evidence)
-
-        # 2. Fallback: ANY ClinVar SCV with a cosegregation phrase. We do not
-        #    scale strength by the SCV count because each SCV may describe a
-        #    different family — counting them is not equivalent to counting
-        #    meioses, so we stay at Supporting regardless of N.
+        from acmg_classifier.criteria.curated_sources import (
+            SRC_INFO, from_expert_panel, from_supplement,
+        )
+        for r in (from_supplement(ACMGCriterion.PP1, supplement),
+                  from_expert_panel(ACMGCriterion.PP1, self._cfg, variant)):
+            if r is not None:
+                return r
         from acmg_classifier.local_db.clinvar_sqlite import query_segregation_evidence
         n = query_segregation_evidence(
-            self._cfg.clinvar_sqlite,
-            variant.chrom, variant.pos, variant.ref, variant.alt,
+            self._cfg.clinvar_sqlite, variant.chrom, variant.pos, variant.ref, variant.alt,
         )
-        if n < 1:
-            return CriteriaResult.not_met(
-                ACMGCriterion.PP1, "No ClinVar SCV describing cosegregation"
-            )
-        return CriteriaResult.met(
-            ACMGCriterion.PP1,
-            CriterionStrength.SUPPORTING,
-            evidence=f"{n} ClinVar SCV(s) report cosegregation with disease",
+        note = (f"; {SRC_INFO} {n} ClinVar submission(s) mention co-segregation") if n else ""
+        return CriteriaResult.not_met(
+            ACMGCriterion.PP1, f"PP1 requires curated segregation evidence{note}"
         )

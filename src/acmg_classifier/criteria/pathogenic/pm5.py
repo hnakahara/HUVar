@@ -50,9 +50,9 @@ class PM5Evaluator(CriterionEvaluator):
         )
 
         # Same-codon P/LP missense comparators with a DIFFERENT amino-acid
-        # change (an exact match would be PS1, not PM5). min_stars defaults to 2
-        # (multiple submitters / expert) so single-submitter assertions do not
-        # anchor PM5 — the dominant source of PM5 over-assignment.
+        # change (an exact match would be PS1, not PM5). min_stars comes from
+        # Config.pm5_min_stars (default 1); genes whose VCEP requires a
+        # VCEP-classified comparator are further restricted below.
         hits = query_same_codon_different_aa(
             self._cfg.clinvar_sqlite,
             pc.gene_symbol,
@@ -62,10 +62,15 @@ class PM5Evaluator(CriterionEvaluator):
             query_chrom=variant.chrom,
             query_pos=variant.pos,
         )
+        from acmg_classifier.criteria.vcep_comparators import filter_comparators
+        hits, vcep_note = filter_comparators(
+            pc.gene_symbol, "PM5", hits, variant.assembly.value,
+        )
         if not hits:
             return CriteriaResult.not_met(
                 ACMGCriterion.PM5,
-                f"No ClinVar >={self._cfg.pm5_min_stars} star same-codon different-AA hit",
+                f"No ClinVar >={self._cfg.pm5_min_stars} star same-codon different-AA hit"
+                + (f" [{vcep_note}]" if vcep_note else ""),
             )
 
         # Do not apply at a codon where any benign variant is known (a VCEP

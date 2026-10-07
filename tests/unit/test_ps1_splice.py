@@ -4,6 +4,7 @@ PS1's amino-acid rule cannot fire for intronic/splice variants (no protein
 change). The ClinGen SVI splicing extension recognises a DIFFERENT nucleotide
 change at the SAME splice-site position as having the same predicted effect.
 """
+import pytest
 import sqlite3
 from unittest.mock import MagicMock
 
@@ -99,6 +100,14 @@ class TestQuerySameSpliceSite:
             _row("1", "12", 120989033, "G", "C", "OTHER", "c.1G>C", "Pathogenic"),
         ])
         assert query_same_splice_site(db, "HNF1A", "chr12", 120989033, "G", "T") == []
+
+
+@pytest.fixture(autouse=True)
+def _no_vcep_comparator_rules(monkeypatch):
+    # These tests exercise the splice-extension modes; the VCEP-classified-
+    # comparator requirement (HNF1A, MSH2) is tested in test_vcep_comparators.
+    import acmg_classifier.criteria.vcep_comparators as vc
+    monkeypatch.setattr(vc, "requires_vcep_comparator", lambda *a, **k: None)
 
 
 # Standard PS1 spec fixture: HNF1A extends to canonical splice, MSH2 only to

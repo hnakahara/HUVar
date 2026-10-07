@@ -204,9 +204,23 @@ class CriteriaRegistry:
 
         # First curator row per criterion wins (rows are expected unique per
         # (variant, criterion)); matches the manual.py "entries[0]" convention.
+        # One entry per criterion. When several rows name the same criterion
+        # (e.g. the user's own curation concatenated with the eRepo supplement),
+        # the user's curation takes priority over the eRepo, independent of row
+        # order, and a warning is logged so the duplicate is visible.
+        _prio = {"user": 0, "supplement": 0, "erepo": 1}
         sup_by_crit: dict[ACMGCriterion, SupplementEntry] = {}
         for e in (supplement or []):
-            sup_by_crit.setdefault(e.criterion, e)
+            cur = sup_by_crit.get(e.criterion)
+            if cur is None:
+                sup_by_crit[e.criterion] = e
+                continue
+            import structlog
+            structlog.get_logger().warning(
+                "supplement_duplicate_criterion", variant=e.variant_id,
+                criterion=e.criterion.value, kept=cur.source, other=e.source)
+            if _prio.get(e.source, 0) < _prio.get(cur.source, 0):
+                sup_by_crit[e.criterion] = e
 
         mode = self._cfg.supplement_mode
         # No curator input for this variant → keep the tool's automated calls

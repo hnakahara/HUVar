@@ -157,6 +157,12 @@ class ClinVarRecord(BaseModel):
     hgvs_c: Optional[str] = None
     hgvs_p: Optional[str] = None
     amino_acid_change: Optional[str] = None
+    # Genomic coordinates of the comparator (when the query returns them); used
+    # to match comparators against VCEP classifications in the eRepo.
+    chrom: Optional[str] = None
+    pos: Optional[int] = None
+    ref: Optional[str] = None
+    alt: Optional[str] = None
 
 
 class RepeatMaskerRegion(BaseModel):
