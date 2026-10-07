@@ -171,8 +171,14 @@ class Config(BaseSettings):
     @property
     def pp2_gene_stats_tsv(self) -> Path:
         """Per-gene gnomAD common-missense counts used on the benign side of the
-        PP2 heuristic (scripts/build_pp2_gene_stats.py). Optional."""
-        return self.assembly_dir / "pp2_gene_stats.tsv"
+        PP2 heuristic (scripts/build_pp2_gene_stats.py). A copy under
+        ``data_dir/<assembly>/`` takes precedence; otherwise the bundled
+        ``resources/<assembly>/pp2_gene_stats.tsv`` is used."""
+        local = self.assembly_dir / "pp2_gene_stats.tsv"
+        if local.exists():
+            return local
+        return (Path(__file__).resolve().parents[2] / "resources"
+                / self.assembly.value / "pp2_gene_stats.tsv")
 
     @property
     def clinvar_sqlite(self) -> Path:

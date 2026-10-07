@@ -1,4 +1,4 @@
-"""Build ``data/<assembly>/pp2_gene_stats.tsv`` — gnomAD common missense per gene.
+"""Build ``resources/<assembly>/pp2_gene_stats.tsv`` — gnomAD common missense per gene.
 
 The PP2 fallback heuristic (genes without a ClinGen VCEP PP2 decision) asks
 whether a gene has "a low rate of benign missense variation". ClinVar alone
@@ -19,7 +19,10 @@ and writes ``gene  common_missense  bs1_threshold``. Simplifications relative to
 the per-variant BS1 evaluator: male-only and non-cancer AF subsets and the
 ``bs1_exclude`` variant lists are not applied.
 
-The file is optional: when absent, PP2 falls back to ClinVar B/LB counts only.
+The table is bundled in ``resources/GRCh38/`` and ``resources/GRCh37/`` (gene-level
+counts do not depend on the assembly, so the GRCh38 build is copied to GRCh37). A
+copy placed in ``data/<assembly>/`` overrides the bundled one. When neither is
+present, PP2 falls back to ClinVar B/LB counts only.
 
 Usage (on the server holding the gnomAD DuckDB and the VEP cache)::
 
@@ -150,11 +153,12 @@ def main() -> None:
     if a.assembly == "GRCh37":
         # MANE coordinates are GRCh38; GRCh37 runs reuse the GRCh38 table
         # (gene-level counts are assembly-independent).
-        raise SystemExit("Build on GRCh38 and copy the TSV to data/GRCh37/.")
+        raise SystemExit("Build on GRCh38 and copy the TSV to resources/GRCh37/.")
     if a.vep_cmd is None:
         from acmg_classifier.setup.vep_installer import find_vep_cmd
         a.vep_cmd = find_vep_cmd()
-    out_path = a.out or cfg.pp2_gene_stats_tsv
+    out_path = a.out or (Path(__file__).resolve().parents[1] / "resources"
+                         / a.assembly / "pp2_gene_stats.tsv")
 
     thresholds = DiseaseThresholds(cfg.disease_prevalence_tsv)
     intervals = mane_cds_intervals(a.mane_gff)
