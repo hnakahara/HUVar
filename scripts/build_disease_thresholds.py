@@ -526,6 +526,11 @@ _BS2_GNOMAD_COUNTABLE = re.compile(r"homozyg|hemizyg|gnomad", re.IGNORECASE)
 #   VHL      GN078 — ≥65y, full phenotyping & screening for VHL cancers
 #   PTEN     GN003 — homozygous in healthy / PHTS-unaffected (clinical PHTS exclusion)
 #   SERPINC1 GN084 — normal antithrombin level > 0.8 IU/mL (lab value)
+#   PAH      GN006 — "homozygous state in a healthy adult": unaffected status
+#            requires a normal blood phenylalanine level (mild HPA is
+#            asymptomatic), so gnomAD homozygotes cannot establish it; the
+#            gnomAD route gave BS2 to eRepo P/LP mild-HPA alleles (p.Ala403Val,
+#            p.Pro119Ser; Genome Medicine revision, Reviewer 3).
 #   MLH1/MSH2/MSH6/PMS2 GN115/137/138/139 — co-occurrence IN TRANS with a known
 #            pathogenic variant + Lynch-cancer phenotype (gnomAD has no phase)
 #   Hearing Loss GN005/GN023 (CDH23, GJB2, MYO6, MYO7A, SLC26A4, TECTA, USH2A,
@@ -547,7 +552,7 @@ _BS2_GNOMAD_COUNTABLE = re.compile(r"homozyg|hemizyg|gnomad", re.IGNORECASE)
 #   Other:                APC (GN089)
 #
 # NOT listed (reclassified to *applicable*): IL7R, RAG1, RAG2 (SCID GN119/123/
-# 124), ADA (GN114), PAH (GN006), POLG, ETHE1 (Mito GN014), GAMT (CCDS GN026).
+# 124), ADA (GN114), POLG, ETHE1 (Mito GN014), GAMT (CCDS GN026).
 # Their VCEP BS2 has an explicit gnomAD homozygote-count path ("≥N homozygotes" /
 # "observed in the homozygous state in a healthy adult"), so a gnomAD-derived BS2
 # is legitimate and was previously a FALSE NEGATIVE. They are recessive (or
@@ -557,7 +562,7 @@ _BS2_CLINICAL_CONFIRMATION = frozenset({
     "HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
     "CDH1", "UBE3A", "DICER1", "SERPINC1", "TP53",
     # batch 2 — reason (1): phase / lab / specific phenotype
-    "HNF1A", "GCK", "IDUA", "GP1BA", "GP1BB", "GP9",
+    "HNF1A", "GCK", "IDUA", "GP1BA", "GP1BB", "GP9", "PAH",
     "VHL", "PTEN", "MLH1", "MSH2", "MSH6", "PMS2",
     "CDH23", "GJB2", "MYO6", "MYO7A", "SLC26A4", "TECTA",
     "USH2A", "MYO15A", "OTOF",

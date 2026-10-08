@@ -178,7 +178,7 @@ class TestResolvedTSV:
             "HNF4A", "RYR1", "LDLR", "GAA", "ITGA2B", "ITGB3",
             "CDH1", "UBE3A", "DICER1", "SERPINC1", "TP53",
             # batch 2 — phase / lab assay / specific phenotype
-            "HNF1A", "GCK", "IDUA", "GP1BA", "GP1BB", "GP9", "VHL", "PTEN",
+            "HNF1A", "GCK", "IDUA", "GP1BA", "GP1BB", "GP9", "PAH", "VHL", "PTEN",
             "MLH1", "MSH2", "MSH6", "PMS2",
             "CDH23", "GJB2", "MYO6", "MYO7A", "SLC26A4", "TECTA", "USH2A",
             "MYO15A", "OTOF",
@@ -221,7 +221,7 @@ class TestResolvedTSV:
         tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "disease_prevalence.tsv"
         with tsv.open(encoding="utf-8") as f:
             rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
-        for gene in ("IL7R", "RAG1", "RAG2", "PAH", "POLG", "GAMT", "ETHE1", "ADA"):
+        for gene in ("IL7R", "RAG1", "RAG2", "POLG", "GAMT", "ETHE1", "ADA"):
             assert rows[gene]["bs2"] == "applicable", gene
 
     def test_committed_tsv_tiered_count_uses_supporting_threshold(self):

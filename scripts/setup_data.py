@@ -1190,7 +1190,8 @@ def step_clingen(data_dir: Path, force: bool = False) -> bool:
             print(f"  [SKIP] {dest.name}")
             continue
         _download(CLINGEN_URLS[key], dest, f"ClinGen {key}")
-        _record_manifest(data_dir, f"clingen_{key}", source=CLINGEN_URLS[key], path=dest)
+        name = "clingen_gene_validity" if key == "validity" else f"clingen_{key}"
+        _record_manifest(data_dir, name, source=CLINGEN_URLS[key], path=dest)
     return True
 
 
