@@ -47,3 +47,25 @@ def test_sidecar(tmp_path):
     side = provenance.write_sidecar(Config(data_dir=d, assembly=Assembly.GRCH38), out)
     assert side.name == "res.tsv.provenance.json"
     assert json.loads(side.read_text())["resources"]["clinvar_vcf"]["release"] == "2026-05-30"
+
+
+def test_vep_info_uses_the_run_assembly(tmp_path):
+    from acmg_classifier.provenance import _vep_info
+    for asm, gc in (("GRCh37", "GENCODE 19"), ("GRCh38", "GENCODE 45")):
+        d = tmp_path / "homo_sapiens_merged" / f"111_{asm}"
+        d.mkdir(parents=True)
+        (d / "info.txt").write_text(f"assembly\t{asm}\nsource_gencode\t{gc}\n")
+    info = _vep_info(tmp_path, "GRCh38")
+    assert info["assembly"] == "GRCh38" and info["source_gencode"] == "GENCODE 45"
+    assert info["release"] == "111"
+
+
+def test_gene_validity_manifest_alias(tmp_path):
+    import json
+    from acmg_classifier.config import Config
+    from acmg_classifier.provenance import collect
+    (tmp_path / "data_manifest.json").write_text(json.dumps(
+        {"clingen_validity": {"downloaded": "2026-10-07"}}))
+    res = collect(Config(data_dir=tmp_path))["resources"]
+    assert res["clingen_gene_validity"]["downloaded"] == "2026-10-07"
+    assert "clingen_validity" not in res

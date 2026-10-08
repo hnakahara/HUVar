@@ -9,11 +9,21 @@ The count that argues *benign* depends on the gene's inheritance mode:
 
 Whether BS2 may use general-population data at all is a per-gene VCEP decision
 (`bs2` column of ``disease_prevalence.tsv``): a VCEP that bars population data
-(e.g. RASopathy GN004) resolves to ``not_applicable`` and BS2 is withheld. When
-no VCEP covers the gene, the evaluator falls back to the mode-agnostic
-homozygote/hemizygote heuristic.
+(e.g. RASopathy GN004) resolves to ``not_applicable`` and BS2 is withheld.
+
+Genes without a VCEP BS2 rule take their inheritance mode from
+``gene_inheritance.tsv`` (CGD):
+
+* AR → homozygotes >= ``bs2_min_homalt``
+* XL → hemizygotes >= ``bs2_min_hemi``
+* AD → heterozygous carriers >= ``bs2_min_het``, **only** in LoF-constrained
+  genes (gnomAD LOEUF < ``bs2_ad_max_loeuf``, default 0.5). Carriers of
+  adult-onset or incompletely penetrant dominant disorders are expected in
+  gnomAD, whereas LoF-constrained genes are depleted of pathogenic alleles.
+* unknown mode (or MT/YL) → homozygotes or hemizygotes (mode-agnostic).
 """
 from __future__ import annotations
+from pathlib import Path
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.criteria.bs2_genes import APPLICABLE, BS2Applicability, NOT_APPLICABLE
@@ -88,6 +98,11 @@ class BS2Evaluator(CriterionEvaluator):
         # BS2 on a pathogenic variant. The VCEP states "≥N homozygotes in gnomAD".
         hom_only = self._vcep.hom_only(gene)
 
+        # Genes without a VCEP BS2 rule: inheritance from gene_inheritance.tsv,
+        # dominant carriers only in LoF-constrained genes.
+        if self._vcep.status(gene) == "":
+            return self._non_vcep(gene, gd, nhomalt, nhemi, het_carriers)
+
         modes = self._vcep.modes(gene)
 
         # Count→strength tiers (e.g. GUCY2D Strong>=6 / Supporting>=3; BMPR2
@@ -150,6 +165,52 @@ class BS2Evaluator(CriterionEvaluator):
             if het_carriers >= het_thr:
                 who = "healthy female carriers" if female_only else "healthy carriers"
                 return self._met(f"dominant: {who}={het_carriers} >= {het_thr}")
+        return self._not_met(nhomalt, nhemi, het_carriers)
+
+    def _gene_modes(self, gene: str | None) -> tuple[frozenset[str], str]:
+        """Inheritance modes (subset of {AD, AR, XL}) and the raw CGD code for a
+        gene without VCEP data; empty when unknown or MT/YL."""
+        path = getattr(self._cfg, "gene_inheritance_tsv", None)
+        if not gene or not isinstance(path, Path):
+            return frozenset(), ""
+        from acmg_classifier.local_db.inheritance_db import load_inheritance_map
+        code = (load_inheritance_map(path).get(gene) or "").upper()
+        modes = {m for m in ("AD", "AR", "XL") if m in code}
+        return frozenset(modes), code
+
+    def _non_vcep(self, gene, gd, nhomalt: int, nhemi: int, het_carriers: int) -> CriteriaResult:
+        hom_thr = self._cfg.bs2_min_homalt
+        hemi_thr = self._cfg.bs2_min_hemi
+        het_thr = self._cfg.bs2_min_het
+        modes, code = self._gene_modes(gene)
+        if not modes:
+            if nhomalt >= hom_thr:
+                return self._met(f"nhomalt={nhomalt} >= {hom_thr} (inheritance unknown)")
+            if nhemi >= hemi_thr:
+                return self._met(f"nhemi={nhemi} >= {hemi_thr} (inheritance unknown)")
+            return self._not_met(nhomalt, nhemi, het_carriers)
+        if "AR" in modes and nhomalt >= hom_thr:
+            return self._met(f"recessive ({code}): nhomalt={nhomalt} >= {hom_thr}")
+        if "XL" in modes and nhemi >= hemi_thr:
+            return self._met(f"X-linked ({code}): nhemi={nhemi} >= {hemi_thr}")
+        if "AD" in modes:
+            max_loeuf = getattr(self._cfg, "bs2_ad_max_loeuf", 0.5)
+            if not isinstance(max_loeuf, (int, float)):
+                max_loeuf = 0.5
+            loeuf = gd.loeuf
+            if loeuf is None or loeuf >= max_loeuf:
+                lo = "unavailable" if loeuf is None else f"{loeuf:.3f}"
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BS2,
+                    f"dominant ({code}): carrier route only for LoF-constrained genes "
+                    f"(LOEUF {lo}, required < {max_loeuf}); gnomAD nhomalt={nhomalt}, "
+                    f"nhemi={nhemi}, carriers={het_carriers}",
+                )
+            if het_carriers >= het_thr:
+                return self._met(
+                    f"dominant ({code}), LoF-constrained (LOEUF {loeuf:.3f} < {max_loeuf}): "
+                    f"healthy carriers={het_carriers} >= {het_thr}"
+                )
         return self._not_met(nhomalt, nhemi, het_carriers)
 
     def _clinvar_fallback(

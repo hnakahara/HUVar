@@ -42,6 +42,15 @@ class Config(BaseSettings):
     bs2_min_homalt: int = 2
     bs2_min_hemi: int = 2
     bs2_min_het: int = 3
+    # Genes without a VCEP BS2 rule: the inheritance mode comes from
+    # gene_inheritance.tsv (CGD). Healthy heterozygous carriers count against a
+    # dominant disorder only in LoF-constrained genes (gnomAD LOEUF below this
+    # value), where pathogenic alleles are expected to be removed by selection
+    # (early-onset, highly penetrant disease). Adult-onset or incompletely
+    # penetrant dominant disorders, whose carriers are expected in gnomAD, are
+    # thereby excluded (Genome Medicine revision, Reviewer 3; same approach as
+    # BIAS-2015). Override via ACMG_BS2_AD_MAX_LOEUF.
+    bs2_ad_max_loeuf: float = 0.5
     # When True, genes whose VCEP defines the BA1/BS1 cutoff on the *point*
     # grpmax/popmax allele frequency (af_basis="popmax" in disease_prevalence.tsv
     # — e.g. RUNX1, GAA, MYOC) compare against the gnomAD popmax point estimate

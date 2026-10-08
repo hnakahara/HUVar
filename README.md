@@ -822,7 +822,7 @@ VUS.
 |-----------|--------------------------|-------------------------|
 | **BA1** | gnomAD FAF95_popmax ≥ cutoff (stand-alone). Default 5%; disease-specific `min(0.05, 10×maxAF)` where parameters exist. | **Yes** — `ba1_threshold` / `af_basis` (`males` = XY AF, `popmax` = point grpmax AF) / `ba1_hom_count` (homo/hemizygote-count rule) per gene. |
 | **BS1** | gnomAD FAF95_popmax above the disorder-specific expectation. | **Yes** — `bs1_threshold` / `bs1_strength`; `bs1_exclude` bars a specific recurrent disease allele from BS1 (e.g. MYOC p.Gln368Ter). |
-| **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes). The AD healthy-carrier route is used **only** when the gene's VCEP applies BS2 with population data (penetrance and age of onset cannot be judged automatically). | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
+| **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes). For genes with a VCEP, the AD healthy-carrier route is used **only** when the VCEP applies BS2 with population data. For genes without a VCEP, the inheritance mode comes from `gene_inheritance.tsv`, and the AD carrier route (≥3 carriers) is used only in LoF-constrained genes (gnomAD LOEUF < 0.5), because carriers of adult-onset or incompletely penetrant dominant disorders are expected in gnomAD. | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
 | **BP1** | Variant-type-vs-mechanism: applied only for genes whose VCEP names a target consequence. | **Yes (gate)** — `bp1` / `bp1_target` (`missense` for PALB2/APC/BRCA1/2; `truncating` for GoF RASopathy genes), `bp1_strength`, `bp1_exclude`, `bp1_no_splice`. No VCEP decision → not applied. |
 | **BP3** | In-frame indel in a repetitive region of unknown function. | **Yes** — VCEP-gated (`bp3`) + `bp3_regions`. |
 | **BP4** | Computational no-impact prediction (same tools as PP3), Bergquist 2024 tiers. | **Yes (REVEL)** — per-gene `revel_bp4_*` cutoffs. **Opt-in auxiliary rules** mirror PP3 (BayesDel for BRCA1/2 & TP53; REVEL∧CADD for CTLA4/PIK3CD/PIK3R1; 2-of-3 for BMPR2; CADD for ABCA4 synonymous/indel), licence-gated and authoritative when active. |
@@ -1054,6 +1054,7 @@ export ACMG_PM5_MIN_STARS=1        # min ClinVar review stars for a PM5 comparat
 export ACMG_BS2_MIN_HOMALT=2       # BS2 healthy-homozygote count (recessive)
 export ACMG_BS2_MIN_HEMI=2         # BS2 healthy-hemizygote count (X-linked)
 export ACMG_BS2_MIN_HET=3          # BS2 healthy-carrier count (dominant)
+export ACMG_BS2_AD_MAX_LOEUF=0.5   # non-VCEP genes: dominant carrier route only below this LOEUF
 export ACMG_POPMAX_AF_BASIS=true   # false → force every gene's BA1/BS1 onto FAF95
                                    # (ignore per-gene af_basis=popmax point estimate)
 export ACMG_PM1_WINDOW=25          # PM1 fallback: ± residues

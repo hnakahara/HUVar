@@ -19,7 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   **PS4** and **PP1** are applied only from curated sources (supplement or
   ClinVar expert-panel criteria); evidence text names the source.
 - **BS2**: the dominant healthy-carrier route requires a VCEP that applies BS2
-  with population data.
+  with population data. Genes without a VCEP BS2 rule take their inheritance
+  mode from `gene_inheritance.tsv` (AR → homozygotes, XL → hemizygotes); the
+  dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
+  < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
+  dominant disorders are expected among gnomAD carriers.
 - **PS1/PM5**: VCEP-classified comparators where the VCEP requires them
   (`vcep_comparator_rules.tsv`, eRepo snapshot 2026-05-28).
 - **PM1** fallback counts only other P/LP missense; **PP2** fallback adds gnomAD
