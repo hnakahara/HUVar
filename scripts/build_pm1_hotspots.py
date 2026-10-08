@@ -266,6 +266,23 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
         2618, 2619, 2624, 2627, 2629, 2648, 2650, 2651, 2662, 2665, 2668, 2669,
         2670,
     ]),
+    # Brain Malformations VCEP (MTOR/AKT3/PIK3CA/PIK3R2; multi-gene spec, so the
+    # miner skips it) — PM1_Supporting only; domains from the VCEP gene table (MTOR NM_004958.3,
+    # AKT3 NM_005465.4, PIK3CA NM_006218.3, PIK3R2 NM_005027.3).
+    ("MTOR", "Supporting"): ([(1382, 1982), (2015, 2114)], []),
+    ("AKT3", "Supporting"): ([(5, 109), (151, 388), (425, 475)], []),
+    ("PIK3CA", "Supporting"): ([(31, 108), (173, 292), (322, 483), (797, 1068)], []),
+    ("PIK3R2", "Supporting"): ([(328, 716)], []),
+    # IL2RG (SCID VCEP) — PM1_Strong: conserved Cys62/72/102/115; CpG Arg224,
+    # Arg226, Arg285 (the spec's c. numbers use a legacy cDNA numbering, +14 nt);
+    # WSxWS motif Trp237-Ser241. Transmembrane residues 263-283 only when a
+    # charged/polar residue is introduced: see _CURATED_ALT. Co-requirements
+    # (PM2 met; BA1/BS1/BS2 not met): PM1_CO_REQUIREMENTS in pm1_hotspots.py.
+    ("IL2RG", "Strong"): ([(237, 241)], [62, 72, 102, 115, 224, 226, 285]),
+    # HBA2 (Hemoglobinopathy VCEP) — AHSP-binding residues α32R, α104H, α118F,
+    # α120P (HGVS numbering). The poly(A) signal is non-coding (not a missense
+    # PM1 target).
+    ("HBA2", "Moderate"): ([], [32, 104, 118, 120]),
     # FBN1 Cys-creating variants: a missense introducing a new cysteine anywhere
     # in a disulfide-bonded domain (EGF-like / cbEGF / TB / hybrid) → PM1_Moderate
     # (handled by the evaluator as alt=Cys within these ranges). UniProt P35555
@@ -276,6 +293,25 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
         (1028, 1527), (1532, 1589), (1606, 1688), (1693, 1748), (1766, 2054),
         (2059, 2111), (2127, 2332), (2337, 2390), (2402, 2687),
     ], []),
+}
+
+
+# Curated rows restricted to substitutions introducing particular residues
+# (written with an alt_aa column). gene -> (strength, regions, residues, alt_aa).
+_CURATED_ALT: dict[str, tuple[str, list[tuple[int, int]], list[int], str]] = {
+    # IL2RG transmembrane domain: charged or polar residue introduced
+    # (Asn, Asp, Arg, Cys, His, Glu, Gln, Lys, Ser, Thr, Tyr).
+    "IL2RG": ("Strong", [(263, 283)], [], "NDRCHEQKSTY"),
+}
+
+# Curated not-applicable genes from multi-gene specs (skipped by the miner):
+#  * Hearing Loss VCEP: PM1 applies only to the KCNQ4 pore-forming region
+#    (271-292); every other gene of the panel has no PM1 hotspot.
+#  * HBB (Hemoglobinopathy VCEP): PM1 covers only the TATA box and the poly(A)
+#    signal (non-coding), so no missense variant qualifies.
+_CURATED_NOT_APPLICABLE = {
+    "CDH23", "COCH", "GJB2", "MYO15A", "MYO6", "MYO7A", "OTOF", "SLC26A4",
+    "TECTA", "USH2A", "HBB",
 }
 
 
@@ -335,7 +371,7 @@ def build(summary_path: str) -> dict[tuple[str, str], tuple[set, set]]:
     # Curated not-applicable: ITGA2B/ITGB3 (GN011) declare PM1 "does not apply due
     # to genes being highly polymorphic". They sit in a MULTI-gene spec, which the
     # single-gene miner above skips, so force them here.
-    not_applicable |= {"ITGA2B", "ITGB3"}
+    not_applicable |= {"ITGA2B", "ITGB3"} | _CURATED_NOT_APPLICABLE
 
     # Materialise not_applicable as its own strength row (only if the gene has no
     # positive hotspot rows from any spec).
@@ -359,10 +395,18 @@ def main() -> None:
             "strength": strength,
             "regions": ";".join(f"{a}-{b}" for a, b in sorted(ranges)),
             "residues": ",".join(str(r) for r in sorted(residues)),
+            "alt_aa": "",
         })
+    for gene, (strength, ranges, residues, alt) in sorted(_CURATED_ALT.items()):
+        rows.append({
+            "gene_symbol": gene, "strength": strength,
+            "regions": ";".join(f"{a}-{b}" for a, b in sorted(ranges)),
+            "residues": ",".join(str(r) for r in sorted(residues)), "alt_aa": alt,
+        })
+    rows.sort(key=lambda r: (r["gene_symbol"], r["strength"], r["alt_aa"]))
     with open(args.out, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(
-            fh, fieldnames=["gene_symbol", "strength", "regions", "residues"],
+            fh, fieldnames=["gene_symbol", "strength", "regions", "residues", "alt_aa"],
             delimiter="\t",
         )
         w.writeheader()

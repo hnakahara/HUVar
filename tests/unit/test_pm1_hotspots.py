@@ -178,8 +178,99 @@ class TestPM1Evaluator:
         )
         assert not r.triggered and "missense variants only" in r.evidence
 
-    def test_uncurated_gene_uses_fallback(self, tmp_path):
-        # No curated rows + absent ClinVar DB -> heuristic runs and finds nothing,
-        # but crucially it reached the fallback (not the curated/NA gates).
+    def test_uncurated_gene_heuristic_off_by_default(self, tmp_path):
         r = PM1Evaluator(_cfg(tmp_path)).evaluate(_snv(), _ann("NOVCEP", 100))
+        assert not r.triggered and "heuristic disabled" in r.evidence
+
+    def test_uncurated_gene_uses_fallback_when_enabled(self, tmp_path):
+        # Opt-in: no curated rows + absent ClinVar DB -> heuristic runs and finds
+        # nothing, but crucially it reached the fallback.
+        cfg = _cfg(tmp_path)
+        cfg.pm1_heuristic = True
+        r = PM1Evaluator(cfg).evaluate(_snv(), _ann("NOVCEP", 100))
         assert not r.triggered and "hotspot cluster" in r.evidence
+
+
+class TestCuratedMultiGeneSpecs:
+    """PM1 definitions from multi-gene specs that the miner skips (Genome
+    Medicine revision): Hearing Loss, Brain Malformations, SCID (IL2RG),
+    Hemoglobinopathy."""
+
+    def _hot(self):
+        tsv = Path(__file__).resolve().parents[2] / "resources" / "shared" / "pm1_hotspots.tsv"
+        return PM1Hotspots(tsv)
+
+    def test_hearing_loss_only_kcnq4(self):
+        h = self._hot()
+        for g in ("CDH23", "COCH", "GJB2", "MYO15A", "MYO6", "MYO7A", "OTOF",
+                  "SLC26A4", "TECTA", "USH2A"):
+            assert h.is_not_applicable(g), g
+        assert h.lookup("KCNQ4", 280) is not None
+        assert h.lookup("KCNQ4", 300) is None
+
+    def test_brain_malformation_domains(self):
+        h = self._hot()
+        from acmg_classifier.models.enums import CriterionStrength
+        assert h.lookup("MTOR", 1500) == CriterionStrength.SUPPORTING
+        assert h.lookup("MTOR", 2000) is None
+        assert h.lookup("PIK3CA", 1047) is not None
+        assert h.lookup("AKT3", 17) is not None
+        assert h.lookup("PIK3R2", 400) is not None
+
+    def test_il2rg_residues_and_polar_tm(self):
+        from acmg_classifier.models.enums import CriterionStrength
+        h = self._hot()
+        assert h.lookup("IL2RG", 62) == CriterionStrength.STRONG
+        assert h.lookup("IL2RG", 239) == CriterionStrength.STRONG
+        # transmembrane 263-283: only charged/polar residues introduced
+        assert h.lookup("IL2RG", 270, "D") == CriterionStrength.STRONG
+        assert h.lookup("IL2RG", 270, "V") is None
+        assert h.lookup("IL2RG", 270) is None
+
+    def test_hemoglobin(self):
+        h = self._hot()
+        assert h.lookup("HBA2", 104) is not None and h.lookup("HBA2", 105) is None
+        assert h.is_not_applicable("HBB")
+
+
+def test_alt_restricted_row(tmp_path):
+    from acmg_classifier.models.enums import CriterionStrength
+    p = tmp_path / "pm1_hotspots.tsv"
+    p.write_text("gene_symbol\tstrength\tregions\tresidues\talt_aa\n"
+                 "G1\tModerate\t10-20\t\t\nG1\tStrong\t30-40\t\tDE\n", encoding="utf-8")
+    h = PM1Hotspots(p)
+    assert h.lookup("G1", 15) == CriterionStrength.MODERATE
+    assert h.lookup("G1", 35, "E") == CriterionStrength.STRONG
+    assert h.lookup("G1", 35, "A") is None
+
+
+class TestPM1CoRequirements:
+    """IL2RG: PM1 only together with PM2 and without BA1/BS1/BS2."""
+
+    def _results(self, *codes):
+        from acmg_classifier.models.criteria import CriteriaResult
+        from acmg_classifier.models.enums import ACMGCriterion
+        out = [CriteriaResult.met(ACMGCriterion.PM1, strength=CriterionStrength.STRONG, evidence="x")]
+        for c in codes:
+            out.append(CriteriaResult.met(ACMGCriterion(c), evidence="y"))
+        return out
+
+    def _run(self, gene, *codes):
+        from acmg_classifier.criteria.registry import _apply_pm1_co_requirements
+        res = self._results(*codes)
+        _apply_pm1_co_requirements(res, _ann(gene, 62))
+        return res[0]
+
+    def test_il2rg_with_pm2_kept(self):
+        assert not self._run("IL2RG", "PM2").suppressed
+
+    def test_il2rg_without_pm2_suppressed(self):
+        r = self._run("IL2RG")
+        assert r.suppressed and "requires PM2" in r.evidence
+
+    def test_il2rg_with_bs1_suppressed(self):
+        r = self._run("IL2RG", "PM2", "BS1")
+        assert r.suppressed and "not with BS1" in r.evidence
+
+    def test_other_gene_unaffected(self):
+        assert not self._run("MYH7").suppressed

@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
   < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
   dominant disorders are expected among gnomAD carriers.
+- **PM1**: the ClinVar hotspot heuristic for genes without a VCEP definition is
+  now **off by default** (`ACMG_PM1_HEURISTIC=true` to enable); calibrated
+  against the VCEP-defined regions it reached a residue-level F1 of ~0.3.
+  IL2RG PM1 requires PM2 and no BA1/BS1/BS2 (`PM1_CO_REQUIREMENTS`).
+- **PM1**: VCEP definitions added for genes of multi-gene specifications that the
+  CSpec miner skipped — Hearing Loss (PM1 only for the KCNQ4 pore region; the
+  other 10 genes not applicable), Brain Malformations (MTOR, AKT3, PIK3CA,
+  PIK3R2 domains, Supporting), IL2RG (PM1_Strong residues; transmembrane 263-283 only when a
+  charged/polar residue is introduced, new `alt_aa` column), HBA2 (AHSP-binding
+  residues) and HBB (non-coding only → not applicable to missense).
 - **PP2** fallback thresholds re-derived against the VCEP PP2 decisions
   (131 genes, gene-level train/test split): ≥5 P/LP missense (was 10) and a
   Z-branch benign ceiling of 30% (was 15%).

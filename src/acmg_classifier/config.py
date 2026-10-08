@@ -101,6 +101,11 @@ class Config(BaseSettings):
     # missense changes and no B/LB missense. ACMG_PM1_WINDOW / ACMG_PM1_MIN_PATH_VARIANTS.
     pm1_window: int = 25
     pm1_min_path_variants: int = 3
+    # The ClinVar hotspot heuristic is OFF by default: calibrated against the
+    # VCEP-defined PM1 regions it reached a residue-level F1 of only ~0.3 (Genome
+    # Medicine revision, Reviewer 3), so genes without a VCEP PM1 definition get
+    # PM1 only from curated evidence. ACMG_PM1_HEURISTIC=true re-enables it.
+    pm1_heuristic: bool = False
     # PP2 fallback heuristic (genes without a VCEP PP2 decision). A gene
     # qualifies with >= pp2_min_path P/LP missense and a benign-missense fraction
     # <= pp2_max_benign_frac, or (missense Z >= pp2_min_mis_z and fraction <=

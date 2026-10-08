@@ -28,6 +28,14 @@ _RANK = {
 }
 
 
+# Gene-specific PM1 conditions: (criteria that must also be met, criteria that
+# must not be met). IL2RG (SCID VCEP): "Variant must also meet PM2" and "must
+# not meet BS1, BS2, or BA1". Enforced post-hoc in the criterion registry.
+PM1_CO_REQUIREMENTS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
+    "IL2RG": (("PM2",), ("BA1", "BS1", "BS2")),
+}
+
+
 class PM1Hotspots:
     """VCEP PM1 hotspot regions per gene, loaded once from the TSV.
 
@@ -37,8 +45,10 @@ class PM1Hotspots:
     """
 
     def __init__(self, tsv_path: Path) -> None:
-        # gene -> list of (strength, ranges:list[(a,b)], residues:frozenset[int])
-        self._by_gene: dict[str, list[tuple[CriterionStrength, list, frozenset]]] = {}
+        # gene -> list of (strength, ranges:list[(a,b)], residues:frozenset[int],
+        # alt_aa:frozenset[str]); alt_aa restricts the row to substitutions that
+        # introduce one of these residues (empty = any substitution).
+        self._by_gene: dict[str, list[tuple[CriterionStrength, list, frozenset, frozenset]]] = {}
         self._not_applicable: set[str] = set()
         # gene -> disulfide-domain ranges where a Cys-creating missense (alt=Cys)
         # earns PM1_Moderate (FBN1).
@@ -69,7 +79,8 @@ class PM1Hotspots:
                 residues = _parse_residues(row.get("residues") or "")
                 if not ranges and not residues:
                     continue
-                self._by_gene.setdefault(gene, []).append((strength, ranges, residues))
+                alt_aa = frozenset((row.get("alt_aa") or "").strip().upper())
+                self._by_gene.setdefault(gene, []).append((strength, ranges, residues, alt_aa))
 
     def is_not_applicable(self, gene: str | None) -> bool:
         """True if the gene's VCEP declared PM1 not applicable (e.g. ABCA4, ATM,
@@ -81,12 +92,20 @@ class PM1Hotspots:
         should be skipped)."""
         return bool(gene) and gene in self._by_gene
 
-    def lookup(self, gene: str | None, position: int | None) -> CriterionStrength | None:
-        """Strongest PM1 strength whose hotspot contains *position*, or None."""
+    def lookup(
+        self, gene: str | None, position: int | None, alt_aa: str | None = None,
+    ) -> CriterionStrength | None:
+        """Strongest PM1 strength whose hotspot contains *position*, or None.
+
+        Rows with an ``alt_aa`` restriction (e.g. IL2RG transmembrane residues,
+        PM1 only when a charged or polar residue is introduced) match only when
+        the variant's alternate residue (1-letter) is in that set."""
         if not gene or position is None:
             return None
         best: CriterionStrength | None = None
-        for strength, ranges, residues in self._by_gene.get(gene, ()):
+        for strength, ranges, residues, alts in self._by_gene.get(gene, ()):
+            if alts and (not alt_aa or alt_aa.upper() not in alts):
+                continue
             if position in residues or any(a <= position <= b for a, b in ranges):
                 if best is None or _RANK[strength] > _RANK[best]:
                     best = strength

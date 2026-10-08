@@ -175,6 +175,10 @@ class CriteriaRegistry:
         # the highest-priority one (see _apply_af_mutual_exclusion).
         _apply_af_mutual_exclusion(results)
 
+        # Gene-specific PM1 co-requirements (IL2RG: PM2 must be met and BA1/BS1/BS2
+        # must not be). Run last so the frequency criteria are final.
+        _apply_pm1_co_requirements(results, annotation)
+
         return results
 
     def _apply_supplement_override(
@@ -318,3 +322,30 @@ class CriteriaRegistry:
             if r.criterion == ACMGCriterion.PP2 and r.triggered and not r.suppressed:
                 r.suppressed = True
                 r.evidence = (r.evidence + f" [suppressed: PP2 requires {need}]").strip()
+
+
+def _apply_pm1_co_requirements(results: list[CriteriaResult], annotation: AnnotationData) -> None:
+    """Suppress PM1 when the gene's VCEP makes it conditional on other criteria
+    (``PM1_CO_REQUIREMENTS``): every required criterion must be triggered and
+    no excluded criterion may be triggered."""
+    from acmg_classifier.criteria.pm1_hotspots import PM1_CO_REQUIREMENTS
+
+    pc = annotation.primary_consequence
+    rule = PM1_CO_REQUIREMENTS.get(pc.gene_symbol if pc else None)
+    if not rule:
+        return
+    required, excluded = rule
+    active = {r.criterion.value for r in results if r.triggered and not r.suppressed}
+    missing = [c for c in required if c not in active]
+    clash = [c for c in excluded if c in active]
+    if not missing and not clash:
+        return
+    why = []
+    if missing:
+        why.append("requires " + "+".join(missing))
+    if clash:
+        why.append("not with " + "/".join(clash))
+    for r in results:
+        if r.criterion == ACMGCriterion.PM1 and r.triggered and not r.suppressed:
+            r.suppressed = True
+            r.evidence = (r.evidence + f" [suppressed: PM1 {'; '.join(why)}]").strip()

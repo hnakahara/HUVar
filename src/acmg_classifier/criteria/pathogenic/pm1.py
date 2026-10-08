@@ -71,7 +71,10 @@ class PM1Evaluator(CriterionEvaluator):
         #    awards PM1 at the VCEP strength; a miss withholds PM1 (do NOT fall
         #    back to the statistical heuristic, which the VCEP regions supersede).
         if self._hotspots.has_gene(gene) or self._hotspots.has_cys_creating(gene):
-            strength = self._hotspots.lookup(gene, pc.protein_position)
+            strength = self._hotspots.lookup(
+                gene, pc.protein_position, _alt_aa(pc.amino_acids)
+                if pc.consequence == ConsequenceType.MISSENSE else None,
+            )
             evidence = f"{gene} residue {pc.protein_position} in VCEP PM1 hotspot"
             # Cys-creating missense: a substitution introducing a new cysteine in a
             # disulfide-bonded domain (FBN1 EGF/cbEGF/TB/hybrid) earns PM1_Moderate
@@ -91,8 +94,15 @@ class PM1Evaluator(CriterionEvaluator):
                 ACMGCriterion.PM1, strength=strength, evidence=evidence,
             )
 
-        # 3. No curated VCEP data for the gene — fall back to the statistical
-        #    hotspot heuristic (nearby pathogenic ClinVar clustering).
+        # 3. No curated VCEP data for the gene. The statistical hotspot heuristic
+        #    (nearby pathogenic ClinVar clustering) is opt-in (Config.pm1_heuristic);
+        #    by default PM1 is left to curated evidence for such genes.
+        if getattr(self._cfg, "pm1_heuristic", False) is not True:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM1,
+                f"{gene}: no VCEP PM1 definition; ClinVar hotspot heuristic disabled "
+                "(PM1 from curated evidence only; ACMG_PM1_HEURISTIC=true to enable)",
+            )
         from acmg_classifier.local_db.clinvar_sqlite import query_hotspot_cluster
         is_hotspot, evidence = query_hotspot_cluster(
             self._cfg.clinvar_sqlite,
