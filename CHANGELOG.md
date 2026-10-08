@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
   < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
   dominant disorders are expected among gnomAD carriers.
+- **Expert-panel criterion import (PS3/PS4/PP1/BS2)** now reads only the
+  expert-panel SCVs (not other submitters' comments on the same variant) and
+  applies clause-level negation ("cannot be applied", "below the threshold",
+  "not assessed", "insufficient to apply", …). The previous rule imported PS4/PP1
+  that the VCEP had explicitly not applied. Requires rebuilding the ClinVar
+  SQLite (`setup_data.py --only clinvar-sqlite`).
 - **PM1**: the ClinVar hotspot heuristic for genes without a VCEP definition is
   now **off by default** (`ACMG_PM1_HEURISTIC=true` to enable); calibrated
   against the VCEP-defined regions it reached a residue-level F1 of ~0.3.

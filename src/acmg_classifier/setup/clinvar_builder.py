@@ -168,6 +168,44 @@ def _norm_bs2_strength(modifier: str | None) -> str:
     }.get(key, "Strong")
 
 
+# Clause-level reading of expert-panel narratives (Genome Medicine revision).
+# VCEP summaries are free text that cite codes both when applied ("identified in
+# 4 probands (PS4_Moderate)") and when NOT applied ("however, PS4_Moderate cannot
+# be applied because ...", "below the threshold for PP1", "PS3 not assessed").
+# A code counts only if at least one clause that cites it carries no negation or
+# hedging cue. Clauses are split at sentence ends, semicolons and contrastive
+# conjunctions so a negation about one code does not suppress another.
+_CLAUSE_SPLIT = re.compile(
+    r"(?<=[.!?])\s+(?=[A-Z(])|;|\b(?:but|however|whereas|although|though)\b",
+    re.IGNORECASE,
+)
+_CLAUSE_NEG = re.compile(
+    r"\b(?:not|no|cannot|can't|couldn't|unable|insufficient(?:ly)?|neither|nor|"
+    r"below|potential(?:ly)?|without|n/a|unmet|instead|rather\s+than|"
+    r"fail(?:s|ed)?|lack(?:s|ing)?|absence|did\s+not|does\s+not|do\s+not|"
+    r"doesn't|didn't|won't|unclear|uncertain|considered\s+but)\b",
+    re.IGNORECASE,
+)
+
+
+def _clauses(text: str) -> list[str]:
+    return [c for c in _CLAUSE_SPLIT.split(text or "") if c and c.strip()]
+
+
+def _mine_code(text: str, pattern: re.Pattern, default: str) -> str | None:
+    """Strongest strength of *pattern* cited in a non-negated clause, else None."""
+    best, rank = None, -1
+    for clause in _clauses(text):
+        hits = list(pattern.finditer(clause))
+        if not hits or _CLAUSE_NEG.search(clause):
+            continue
+        for m in hits:
+            st = _norm_bs2_strength(m.group(1)) if m.group(1) else default
+            if _BS2_STRENGTH_RANK[st] > rank:
+                best, rank = st, _BS2_STRENGTH_RANK[st]
+    return best
+
+
 def _mine_bs2(text: str) -> tuple[int, str | None]:
     """(hit, strength) for an expert-panel BS2 citation in *text*.
 
@@ -175,15 +213,9 @@ def _mine_bs2(text: str) -> tuple[int, str | None]:
     ``(1, strength)`` with the strongest cited strength ("Strong" for a bare
     "BS2"). The caller gates on star_rating >= 3, so this is only mined from
     expert-panel / practice-guideline reviews."""
-    if not text or _BS2_NEG.search(text):
+    if not text:
         return 0, None
-    best: str | None = None
-    best_rank = -1
-    for m in _BS2_POS.finditer(text):
-        strength = _norm_bs2_strength(m.group(1))
-        rank = _BS2_STRENGTH_RANK[strength]
-        if rank > best_rank:
-            best, best_rank = strength, rank
+    best = _mine_code(text, _BS2_POS, "Strong")
     if best is None:
         return 0, None
     return 1, best
@@ -224,13 +256,7 @@ def _mine_ep_criteria(text: str) -> str | None:
         return None
     found: dict[str, str] = {}
     for code in _EP_CODES:
-        if _EP_NEG[code].search(text):
-            continue
-        best, rank = None, -1
-        for m in _EP_POS[code].finditer(text):
-            st = _norm_bs2_strength(m.group(1)) if m.group(1) else _EP_DEFAULT[code]
-            if _EP_STRENGTH_RANK[st] > rank:
-                best, rank = st, _EP_STRENGTH_RANK[st]
+        best = _mine_code(text, _EP_POS[code], _EP_DEFAULT[code])
         if best:
             found[code] = best
     return ";".join(f"{k}:{v}" for k, v in sorted(found.items())) or None
@@ -245,6 +271,17 @@ def _scv_pmids(scv: ET.Element, text: str) -> set[str]:
            if c.text and c.text.strip().isdigit()}
     ids |= set(_PMID_NUM_RE.findall(text or ""))
     return ids
+
+
+def _ep_scv_texts(elem: ET.Element) -> list[str]:
+    """Comment / description texts of the expert-panel SCVs of a ClinVarSet."""
+    out: list[str] = []
+    for scv in elem.findall(".//ClinVarAssertion"):
+        if not _scv_is_expert_panel(scv):
+            continue
+        out += [c.text for c in scv.findall(".//Comment") if c.text]
+        out += [d.text for d in scv.findall(".//Attribute[@Type='Description']") if d.text]
+    return out
 
 
 def _scv_is_expert_panel(scv: ET.Element) -> bool:
@@ -683,18 +720,14 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
         # the data.
         bs2_evidence = 0
         bs2_strength: str | None = None
+        ep_criteria = None
         if stars >= 3:
-            bs2_texts: list[str] = [
-                c.text for c in elem.findall(".//Comment") if c.text
-            ]
-            bs2_texts += [
-                d.text for d in elem.findall(".//Attribute[@Type='Description']")
-                if d.text
-            ]
-            bs2_evidence, bs2_strength = _mine_bs2(" ".join(bs2_texts))
-            ep_criteria = _mine_ep_criteria(" ".join(bs2_texts))
-        else:
-            ep_criteria = None
+            # Only the expert-panel / practice-guideline submissions themselves:
+            # other submitters' comments on the same variant often cite criteria
+            # (their own classification) and must not be read as the VCEP's.
+            ep_text = " ".join(_ep_scv_texts(elem))
+            bs2_evidence, bs2_strength = _mine_bs2(ep_text)
+            ep_criteria = _mine_ep_criteria(ep_text)
 
         return (var_id, chrom, pos, ref, alt, gene, hgvs_c, hgvs_p,
                 aa_change, codon_pos, clinsig, rev_status, stars, last_eval,
