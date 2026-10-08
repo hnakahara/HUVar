@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
   < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
   dominant disorders are expected among gnomAD carriers.
+- **PP2** fallback thresholds re-derived against the VCEP PP2 decisions
+  (131 genes, gene-level train/test split): ≥5 P/LP missense (was 10) and a
+  Z-branch benign ceiling of 30% (was 15%).
 - **BS2 / PAH**: the gnomAD homozygote route is withheld for PAH (GN006 requires
   homozygosity "in a healthy adult", i.e. a normal phenylalanine level, which
   gnomAD cannot establish); BS2 for PAH comes only from curated sources.

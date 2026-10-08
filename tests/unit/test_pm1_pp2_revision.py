@@ -85,8 +85,8 @@ class TestPP2CommonMissense:
 
     def test_thresholds_are_parameters(self, tmp_path):
         db = _db(tmp_path, _pp2_rows("GT", 6))
-        assert not query_pp2_eligible(db, "GT")[0]
-        assert query_pp2_eligible(db, "GT", min_path=5)[0]
+        assert query_pp2_eligible(db, "GT")[0]            # default min_path = 5
+        assert not query_pp2_eligible(db, "GT", min_path=10)[0]
 
 
 class TestPP2Evaluator:

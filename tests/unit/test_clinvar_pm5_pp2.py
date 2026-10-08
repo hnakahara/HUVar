@@ -164,11 +164,11 @@ class TestPP2Eligibility:
         assert ok
 
     def test_below_min_path_not_eligible(self, tmp_path):
-        # 9 P/LP missense < tightened _PP2_MIN_PATH (10).
-        db = _db(tmp_path, _pp2_rows("FEWPATH", 9, 0))
+        # 4 P/LP missense < _PP2_MIN_PATH (5).
+        db = _db(tmp_path, _pp2_rows("FEWPATH", 4, 0))
         ok, evidence = query_pp2_eligible(db, "FEWPATH")
         assert not ok
-        assert "only 9 P/LP missense" in evidence
+        assert "only 4 P/LP missense" in evidence
 
     def test_benign_rate_above_5pct_needs_z(self, tmp_path):
         # 10 path + 1 benign → frac ~9% > 5% ; no Z → not eligible.
@@ -177,15 +177,15 @@ class TestPP2Eligibility:
         assert not ok
 
     def test_z_rescue_within_ceiling(self, tmp_path):
-        # Same gene, frac ~9% <= 15% Z-ceiling, constrained → eligible via Z.
+        # Same gene, frac ~9% <= 30% Z-ceiling, constrained → eligible via Z.
         db = _db(tmp_path, _pp2_rows("ZRESCUE", 10, 1))
         ok, evidence = query_pp2_eligible(db, "ZRESCUE", mis_z=4.0)
         assert ok
         assert "Z-score branch" in evidence
 
     def test_z_rescue_blocked_by_benign_ceiling(self, tmp_path):
-        # 10 path + 3 benign → frac ~23% > 15% ceiling: Z must NOT rescue.
-        db = _db(tmp_path, _pp2_rows("DIRTY", 10, 3))
+        # 10 path + 5 benign → frac ~33% > 30% ceiling: Z must NOT rescue.
+        db = _db(tmp_path, _pp2_rows("DIRTY", 10, 5))
         ok, evidence = query_pp2_eligible(db, "DIRTY", mis_z=5.0)
         assert not ok
         assert "Z-rescue ceiling" in evidence

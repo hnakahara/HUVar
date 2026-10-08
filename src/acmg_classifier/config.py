@@ -107,10 +107,14 @@ class Config(BaseSettings):
     # pp2_z_max_benign_frac). The benign side counts ClinVar B/LB missense plus,
     # when data/<assembly>/pp2_gene_stats.tsv is present, gnomAD missense
     # variants common enough to meet the gene's BS1 threshold.
-    pp2_min_path: int = 10
+    # Thresholds were selected against the VCEP PP2 decisions (131 genes) on a
+    # stratified half of the genes and evaluated on the other half (500 repeated
+    # splits: balanced accuracy 0.82 vs 0.74 for the previous 10 / 0.15;
+    # Genome Medicine revision, Reviewer 3).
+    pp2_min_path: int = 5
     pp2_max_benign_frac: float = 0.05
     pp2_min_mis_z: float = 3.09
-    pp2_z_max_benign_frac: float = 0.15
+    pp2_z_max_benign_frac: float = 0.30
 
     @field_validator("data_dir")
     @classmethod

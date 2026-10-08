@@ -813,7 +813,7 @@ VUS.
 | **PM4** | Protein-length change from an in-frame indel or stop-loss (outside repeat regions). | `pm4 = not_applicable` withholds PM4 for genes whose VCEP declined it. |
 | **PM5** | Different missense at a codon with an established P/LP missense in ClinVar — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`, `pm5_min_count` (ACVRL1/ENG require ≥2 distinct same-codon LP/P → Strong). VCEP-classified comparators required where the VCEP says so (as for PS1). |
 | **PP1** | **Curated evidence only**: curated supplement or PP1 applied by a ClinGen expert panel in ClinVar (≥3★). ClinVar segregation mentions are shown for information but not scored (meioses cannot be counted from free text). | — |
-| **PP2** | Missense in a gene where missense is a common mechanism & benign missense is rare. Fallback where no VCEP decides: ≥10 P/LP missense in ClinVar and a benign-missense fraction ≤5% (≤15% when gnomAD missense Z ≥ 3.09); the benign side counts ClinVar B/LB missense **plus gnomAD missense variants meeting the gene's BS1 threshold** (`pp2_gene_stats.tsv`). Thresholds via `ACMG_PP2_*`. | **Yes (dominant lever)** — `pp2` applicability is authoritative; `pp2_requires` adds co-requirements (e.g. BMPR2 needs PM2+PP3). |
+| **PP2** | Missense in a gene where missense is a common mechanism & benign missense is rare. Fallback where no VCEP decides: ≥5 P/LP missense in ClinVar and a benign-missense fraction ≤5% (≤30% when gnomAD missense Z ≥ 3.09; thresholds selected against the VCEP PP2 decisions); the benign side counts ClinVar B/LB missense **plus gnomAD missense variants meeting the gene's BS1 threshold** (`pp2_gene_stats.tsv`). Thresholds via `ACMG_PP2_*`. | **Yes (dominant lever)** — `pp2` applicability is authoritative; `pp2_requires` adds co-requirements (e.g. BMPR2 needs PM2+PP3). |
 | **PP3** | Computational deleterious prediction (missense: ESM1b/AlphaMissense/REVEL; splice: OpenSpliceAI/SpliceAI), Bergquist 2024 tiers. When the gene's VCEP names a predictor that the run is not using (REVEL cutoffs, BayesDel, REVEL+CADD), the evidence says so and names the option that would follow the VCEP. See [In-silico aggregation](#in-silico-aggregation-pp3--bp4). | **Yes (REVEL)** — per-gene `revel_pp3_*` cutoffs from cspec override the genome-wide default and cap the gene's strength. **Opt-in auxiliary rules (`--with-bayesdel`/`--with-cadd`, licence-gated to REVEL/AlphaMissense):** BayesDel for ENIGMA BRCA1/2 (domain-gated) and TP53 (VCEP code table); REVEL∧CADD agreement for CTLA4/PIK3CD/PIK3R1; 2-of-3 REVEL/AM/CADD for BMPR2; CADD for ABCA4 synonymous/indel. When active the gene rule is authoritative. |
 
 **Benign**
@@ -1059,10 +1059,10 @@ export ACMG_POPMAX_AF_BASIS=true   # false → force every gene's BA1/BS1 onto F
                                    # (ignore per-gene af_basis=popmax point estimate)
 export ACMG_PM1_WINDOW=25          # PM1 fallback: ± residues
 export ACMG_PM1_MIN_PATH_VARIANTS=3
-export ACMG_PP2_MIN_PATH=10        # PP2 fallback thresholds
+export ACMG_PP2_MIN_PATH=5         # PP2 fallback thresholds
 export ACMG_PP2_MAX_BENIGN_FRAC=0.05
 export ACMG_PP2_MIN_MIS_Z=3.09
-export ACMG_PP2_Z_MAX_BENIGN_FRAC=0.15
+export ACMG_PP2_Z_MAX_BENIGN_FRAC=0.30
 export ACMG_EXCLUDE_SELF_EXPERT_PANEL=false  # true = benchmark mode (see classify)
 ```
 

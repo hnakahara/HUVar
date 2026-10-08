@@ -674,16 +674,15 @@ def _strip_chr_prefix(c: str) -> str:
 # --- PP2: missense is a common disease mechanism with low benign missense rate ---
 _PP2_PATH = ("Pathogenic", "Likely pathogenic", "Pathogenic/Likely pathogenic")
 _PP2_BENIGN = ("Benign", "Likely benign", "Benign/Likely benign")
-# Eligibility thresholds — tightened to curb PP2 over-assignment (the gene-level
-# heuristic previously qualified ~4x as many genes as the eRepo truth set).
-# Tune these against the validation set if precision/recall need rebalancing.
-_PP2_MIN_PATH = 10           # missense must be a *recurrent* pathogenic mechanism
+# Eligibility thresholds, selected against the VCEP PP2 decisions (gene-level
+# train/test split; see Config.pp2_* and reviewer3/pm1_pp2_calibration.py).
+_PP2_MIN_PATH = 5            # missense must be a *recurrent* pathogenic mechanism
 _PP2_MAX_BENIGN_FRAC = 0.05  # gene must have a low rate of benign missense
 _PP2_MIN_MIS_Z = 3.09        # gnomAD missense Z-score qualifying a constrained gene
 # The Z-score rescue must still see a modest benign-missense rate: a gene with
 # many benign missense variants is not PP2-eligible no matter how constrained
 # gnomAD says it is. Without this ceiling the Z branch let such genes through.
-_PP2_Z_MAX_BENIGN_FRAC = 0.15
+_PP2_Z_MAX_BENIGN_FRAC = 0.30
 
 # Match a missense protein change (p.Val377Ile); the trailing AA must not be
 # Ter (stop). We use the 3-letter HGVS form because ClinVar normalises to it.
