@@ -625,7 +625,9 @@ chr17:43044295:G:A	PP1	Supporting	3 affected family members segregating variant
 > Repository manual criteria ships per assembly at
 > `resources/<assembly>/erepo_manual_criteria_{hg38,hg19}.tsv` (copied to
 > `data/shared/` in [Step 4](#quick-start)). It carries calls the tool cannot
-> derive automatically (e.g. PS4, PP4) for variants in the eRepo. Use it as-is —
+> derive automatically for variants in the eRepo: PS2, PS4, PM3, PM6, PP1, PP4,
+> BS3, BS4, BP2, BP5, and BS2 for genes whose VCEP does not allow population
+> (gnomAD) data for BS2 (internal-cohort / clinical BS2, e.g. TP53, CDH1, MECP2). Use it as-is —
 > match the file to your assembly:
 > ```bash
 > acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 \

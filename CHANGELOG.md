@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
   < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
   dominant disorders are expected among gnomAD carriers.
+- **eRepo supplement**: BS2 added for genes whose VCEP bars gnomAD-based BS2
+  (`bs2 = not_applicable`; 586 GRCh38 rows), so internal-cohort BS2 no longer
+  depends on reading the ClinVar expert-panel record.
 - **Expert-panel criterion import (PS3/PS4/PP1/BS2)** now reads only the
   expert-panel SCVs (not other submitters' comments on the same variant) and
   applies clause-level negation ("cannot be applied", "below the threshold",
