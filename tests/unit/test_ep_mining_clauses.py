@@ -57,3 +57,37 @@ def test_only_expert_panel_scvs_are_read():
     texts = _ep_scv_texts(ET.fromstring(xml))
     assert texts == ["Applied: BA1."]
     assert _mine_ep_criteria(" ".join(texts)) is None
+
+
+# Expert-panel sentences checked manually against ClinVar (2026-10-09): the VCEP
+# did NOT apply the code in each of them.
+_MANUALLY_CHECKED_NOT_APPLIED = (
+    "however, PS3_Supporting was not scored as PVS1 has already been met.",
+    "Experimental study showed the R155H mutant retained 55% activity, but this is higher "
+    "than the cutoff set by PAH VCEP for PS3.",
+    "The assays in this study (PMID: 17615537), measuring solubility and secretion of the "
+    "Tyr479His protein, did not meet the OddsPath threshold for PS3_Supporting (> 2.1).",
+    "This variant was identified in an individual with diabetes; however, the calculated MODY "
+    "probability is <50%, and PS4_Moderate cannot be applied because this number is below the "
+    "ClinGen MDEP threshold (PMID: 18003757, internal lab contributor).",
+    "This variant was identified in two unrelated individuals who do not have autoimmune or "
+    "absolute/near-absolute insulin-deficient diabetes; however, PS4_Moderate cannot be applied "
+    "because this number is below the ClinGen MDEP threshold (PMID 18003757, internal lab contributors).",
+    "However, the high MAF in the NFE population in gnomAD precludes the use of PS4.",
+    "This variant was identified in three unrelated individuals with non-autoimmune and "
+    "non-absolute/near-absolute insulin-deficient diabetes; however, PS4_Moderate cannot be "
+    "applied because this number is below the ClinGen MDEP threshold (internal lab contributors).",
+    "however, PS4 cannot be applied due to the gnomAD frequency. Computational analysis "
+    "prediction tools suggest that the p.(Ile47Val) variant does not have a deleterious impact;",
+    "Only 1 proband with primary open angle glaucoma had been reported (PMID: 20668460), not "
+    "meeting the ≥ 2 probands threshold required to meet PS4_Supporting.",
+    "however, this is insufficient to apply the PS4 criterion.",
+    "however, this data is insufficient to apply the PS4 criterion.",
+    "however, PS4_Moderate cannot be applied because this number is below the ClinGen MDEP "
+    "threshold (PMID: 30245511, internal lab contributors).",
+)
+
+
+def test_manually_checked_expert_panel_sentences():
+    for t in _MANUALLY_CHECKED_NOT_APPLIED:
+        assert _mine_ep_criteria(t) is None, t

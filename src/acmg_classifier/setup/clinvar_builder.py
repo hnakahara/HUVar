@@ -183,7 +183,9 @@ _CLAUSE_NEG = re.compile(
     r"\b(?:not|no|cannot|can't|couldn't|unable|insufficient(?:ly)?|neither|nor|"
     r"below|potential(?:ly)?|without|n/a|unmet|instead|rather\s+than|"
     r"fail(?:s|ed)?|lack(?:s|ing)?|absence|did\s+not|does\s+not|do\s+not|"
-    r"doesn't|didn't|won't|unclear|uncertain|considered\s+but)\b",
+    r"doesn't|didn't|won't|unclear|uncertain|considered\s+but|"
+    r"preclud\w*|rules?\s+out|ruled\s+out|exclud\w*\s+the\s+use|"
+    r"(?:higher|greater)\s+than\s+the\s+(?:\S+\s+){0,4}?(?:cutoff|cut-off))\b",
     re.IGNORECASE,
 )
 
