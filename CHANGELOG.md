@@ -24,6 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
   < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
   dominant disorders are expected among gnomAD carriers.
+- **TP53 PS3/BS3** from the VCEP functional flowchart on systematic assay data
+  (`resources/shared/tp53_functional.tsv`, built by
+  `scripts/build_tp53_functional.py` from the NCI TP53 Database R21: Kato 2003,
+  Giacomelli 2018, Kotler 2018, Kawaguchi 2005), with the VCEP caveats (no
+  SpliceAI-based PP3; PVS1). Priority: supplement > ClinVar expert panel > TP53
+  assay data > text mining. **Opt-in** (`--with-tp53-functional`,
+  `ACMG_USE_TP53_FUNCTIONAL`): the database terms prohibit monetization, so the
+  default stays commercial-use ready; attribution added to NOTICE and README. Matches the TP53 VCEP PS3/BS3 calls for 160 of 172
+  eRepo variants.
 - **eRepo supplement**: BS2 added for genes whose VCEP bars gnomAD-based BS2
   (`bs2 = not_applicable`; 586 GRCh38 rows), so internal-cohort BS2 no longer
   depends on reading the ClinVar expert-panel record.

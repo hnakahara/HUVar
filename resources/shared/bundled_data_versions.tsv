@@ -4,3 +4,4 @@ clingen_cspec	CSpec Registry snapshot (cspecStatus=Released specifications)	2026
 clingen_erepo_supplement	ClinGen Evidence Repository export	2026-05-28	https://erepo.clinicalgenome.org/evrepo/
 mane_exon_structures	MANE Release v1.5 (NCBI GFF, annotation date 2025-08-01)	2025-12-04	https://ftp.ncbi.nlm.nih.gov/refseq/MANE/
 gene_inheritance	NIH Clinical Genomic Database + curated seed	2026-06	https://research.nih.gov/cgd/
+tp53_functional	NCI TP53 Database R21 (Kato 2003, Giacomelli 2018, Kotler 2018, Kawaguchi 2005)	2026-10-09	https://tp53.cancer.gov/get_tp53data

@@ -152,13 +152,15 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   the Bergquist-2024 3-point extension. Criteria fall into three groups:
   - **Automated** from local data: PVS1, PS1, PM1, PM2, PM4, PM5, PP2, PP3,
     BA1, BS1, BS2, BP1, BP3, BP4, BP7, plus PS3 at **Supporting** from ClinVar
-    submission text (counted by distinct cited PMIDs).
+    submission text (counted by distinct cited PMIDs), and — opt-in with
+    `--with-tp53-functional` — PS3/BS3 for **TP53** missense variants from the VCEP
+    functional flowchart on systematic assay data (NCI TP53 Database; non-commercial).
   - **Curated evidence only**: PS4 and PP1 (and PS3 above Supporting) are applied
     only from curated sources — the [manual supplement](#manual-evidence-supplement)
     (your own curation or the bundled ClinGen eRepo supplement) or the criterion
     as applied by a ClinGen expert panel (ClinVar ≥3★) to the same variant.
     ClinVar case/segregation counts are shown for information but never scored.
-  - **Manual only**: PS2, PM3, PM6, PP4, BS3, BS4, BP2, BP5. PP5/BP6 are disabled
+  - **Manual only**: PS2, PM3, PM6, PP4, BS3 (except TP53), BS4, BP2, BP5. PP5/BP6 are disabled
     per ClinGen SVI.
 
   Every curated call carries its source in the evidence text
@@ -526,6 +528,7 @@ Full option list:
 | `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory (only when `--splice-tool spliceai`) |
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
 | `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
+| `--with-tp53-functional` | flag | off | TP53 PS3/BS3 from the VCEP functional flowchart on the bundled NCI TP53 Database assay classes (`resources/shared/tp53_functional.tsv`). Off by default because the database terms prohibit any use that results in direct or indirect monetization; turn it on for non-commercial use. Env: `ACMG_USE_TP53_FUNCTIONAL=true`. Recorded in the provenance sidecar. |
 | `--exclude-self-expert-panel` | flag | off | Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar expert-panel (≥3★) record of the variant itself, so an evaluation against the eRepo does not read the reference curation. Recorded in the provenance sidecar. |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
@@ -808,7 +811,7 @@ VUS.
 |-----------|--------------------------|-------------------------|
 | **PVS1** | LoF consequence (nonsense/frameshift/canonical-splice/start-loss/whole-gene-deletion) in a gene where LoF is an established mechanism (ClinGen HI score 3 or ≥3 ClinVar P/LP null variants; LOEUF shown for reference only), run through the Abou Tayoun 2018 tree (PTC-based NMD 50-nt rule, last-exon, rescue transcript, single-exon). See [PVS1 decision tree](#pvs1-decision-tree). | **Extensive.** `pvs1` applicability gate (LoF-not-the-mechanism genes withhold PVS1) + gene-specific trees for ~60 genes (`pvs1/vcep_pvs1.py`, APC in `pvs1/apc.py`): codon-range / critical-domain / NMD-boundary gates, per-gene initiation-codon and canonical-splice strengths, and an optional per-skipped-exon splice table. |
 | **PS1** | Same amino-acid change as an established P/LP ClinVar variant (≥`pm5_min_stars`). Strong if any comparator is Pathogenic; Moderate if all are only Likely pathogenic. | `ps1_splice` extends PS1 to splice-equivalent variants for genes whose VCEP allows it. Where the VCEP requires the comparator to be VCEP-classified (`vcep_comparator_rules.tsv`), only eRepo P/LP or ClinVar expert-panel comparators count, minus those the VCEP excludes (e.g. classified with PS1/PM5 or PVS1). |
-| **PS3** | Functional evidence, in priority order: curated supplement (any strength); PS3 as applied by a ClinGen expert panel to the variant in ClinVar (≥3★, panel's strength); text mining of other ClinVar submissions citing a damaging assay, counted by **distinct PMIDs** and **capped at Supporting** (assay validation per Brnich 2019 cannot be judged from text). | Text mining suppressed for genes whose VCEP has no PS3 or restricts it (PALB2, PDHA1, POLG, CAPN3, ANO5). |
+| **PS3** | Functional evidence, in priority order: curated supplement (any strength); PS3 as applied by a ClinGen expert panel to the variant in ClinVar (≥3★, panel's strength); text mining of other ClinVar submissions citing a damaging assay, counted by **distinct PMIDs** and **capped at Supporting** (assay validation per Brnich 2019 cannot be judged from text). | Text mining suppressed for genes whose VCEP has no PS3 or restricts it (PALB2, PDHA1, POLG, CAPN3, ANO5). **TP53** (opt-in `--with-tp53-functional`; the NCI TP53 Database terms prohibit monetization): PS3/BS3 for missense variants from the VCEP functional flowchart (`tp53_functional.tsv`, NCI TP53 Database R21: Kato 2003 transactivation class, with Giacomelli 2018, Kotler 2018 and Kawaguchi 2005 as the other assays; "majority" counts a non-functional/functional Kato result). PS3 Strong / Moderate / Supporting and BS3 Strong / Supporting as in the flowchart; not applied with a SpliceAI-based PP3, PS3 not applied with PVS1 and downgraded to Moderate with PVS1_Strong. When assay data exist, ClinVar text mining is not used. Agreement with the TP53 VCEP PS3/BS3 calls in the eRepo: 160/172 variants. |
 | **PS4** | **Curated evidence only**: curated supplement or PS4 applied by a ClinGen expert panel in ClinVar (≥3★). The number of ClinVar submissions reporting affected individuals is shown for information but not scored (individuals cannot be de-duplicated across submitters). | — |
 | **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`; optional `alt_aa` restriction, e.g. IL2RG transmembrane residues; IL2RG PM1 also requires PM2 and no BA1/BS1/BS2). Genes without a VCEP definition: PM1 from curated evidence only. An opt-in ClinVar fallback (`ACMG_PM1_HEURISTIC=true`: ≥3 other P/LP **missense** changes, ClinVar ≥1★, the query variant excluded, within ±25 residues and no B/LB missense; `ACMG_PM1_WINDOW`, `ACMG_PM1_MIN_PATH_VARIANTS`) is off by default because it reproduced the VCEP-defined regions poorly (residue-level F1 ≈ 0.3). | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
 | **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi); `pm2_subset=non_cancer` and `pm2_min_depth` (ENIGMA BRCA1/2). Gene-specific cSpec wording is hard-coded for a few genes (F8/F9 "absent in males", RYR1 "1 allele allowed", ATM "n=1 in a single subpopulation", PTEN single-vs-multi-allele subpop, RUNX1 GrpMax-FAF-then-all-subpop). |
@@ -832,7 +835,7 @@ VUS.
 
 **Curated only.** PS4 and PP1 (see above).
 
-**Not auto-applied.** PS2, PM3, PM6, PP4, BS3, BS4, BP2, BP5 require evidence
+**Not auto-applied.** PS2, PM3, PM6, PP4, BS3 (except TP53, see PS3), BS4, BP2, BP5 require evidence
 (de novo confirmation, trans/cis phase, segregation meioses, phenotype
 specificity) that cannot be derived from the local databases — add them via
 [manual evidence](#manual-evidence-supplement). PP5 / BP6 (reputable-source) are
@@ -990,6 +993,10 @@ Notes:
   the openspliceai repo (CC BY-NC 4.0) for commercial work — use OSAI_MANE.
 - **SpliceAI** (`--splice-tool spliceai`) remains a separate
   Illumina-licensed option.
+- **TP53 functional data** (`--with-tp53-functional`, off by default): the
+  bundled `tp53_functional.tsv` is derived from the NCI TP53 Database, whose terms
+  allow free use and reproduction with acknowledgement but prohibit any use that
+  results in direct or indirect monetization (<https://tp53.cancer.gov/about>).
 - gnomAD, ClinVar, VEP are commercially permissive.
 
 ---
@@ -1133,6 +1140,12 @@ HUVar (acmg-classifier). Department of Clinical and Molecular Genetics,
 Hiroshima University Hospital, 2026.
 https://github.com/hnakahara/HUVar
 ```
+
+When using `--with-tp53-functional`, also cite the TP53 Database as requested by
+its maintainers — *The TP53 Database (R21, Jan 2025): https://tp53.cancer.gov*;
+de Andrade KC et al. *Cell Death Differ* 2022;29:1071–1073 — and the assay
+studies: Kato et al. 2003 (PMID 12826609), Giacomelli et al. 2018 (PMID 30224644),
+Kotler et al. 2018 (PMID 29979965), Kawaguchi et al. 2005 (PMID 16007150).
 
 A machine-readable `CITATION.cff` is shipped with the repository for tools
 that consume it (Zenodo, GitHub citation widget, etc.).

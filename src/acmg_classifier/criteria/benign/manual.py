@@ -25,6 +25,10 @@ _MANUAL_CRITERIA = (
 class ManualBenignEvaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        from acmg_classifier.criteria.tp53_functional import TP53Functional
+        # Opt-in (non-commercial data terms): Config.use_tp53_functional.
+        self._tp53 = TP53Functional(
+            cfg.tp53_functional_tsv if getattr(cfg, "use_tp53_functional", False) is True else None)
 
     def evaluate(
         self,
@@ -42,6 +46,16 @@ class ManualBenignEvaluator(CriterionEvaluator):
             if entries:
                 entry = entries[0]
                 results.append(CriteriaResult.met(criterion, entry.strength, entry.evidence))
+            elif criterion == ACMGCriterion.BS3 and self._tp53_bs3(annotation) is not None:
+                # TP53: BS3 from the VCEP functional flowchart on systematic assay data.
+                results.append(self._tp53_bs3(annotation))
             else:
                 results.append(CriteriaResult.not_met(criterion, "No manual evidence provided"))
         return results
+
+    def _tp53_bs3(self, annotation: AnnotationData) -> CriteriaResult | None:
+        pc = annotation.primary_consequence
+        if pc is None or pc.gene_symbol != "TP53" or not self._tp53:
+            return None
+        from acmg_classifier.criteria.pathogenic.ps3 import tp53_functional_result
+        return tp53_functional_result(self._tp53, pc, ACMGCriterion.BS3)

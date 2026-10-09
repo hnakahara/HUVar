@@ -106,6 +106,12 @@ class Config(BaseSettings):
     # Medicine revision, Reviewer 3), so genes without a VCEP PM1 definition get
     # PM1 only from curated evidence. ACMG_PM1_HEURISTIC=true re-enables it.
     pm1_heuristic: bool = False
+    # TP53 VCEP PS3/BS3 from the NCI TP53 Database assay classes
+    # (resources/shared/tp53_functional.tsv). OFF by default because the database
+    # terms prohibit any use that results in direct or indirect monetization; the
+    # defaults stay commercial-use ready. --with-tp53-functional /
+    # ACMG_USE_TP53_FUNCTIONAL=true turns it on (non-commercial use).
+    use_tp53_functional: bool = False
     # PP2 fallback heuristic (genes without a VCEP PP2 decision). A gene
     # qualifies with >= pp2_min_path P/LP missense and a benign-missense fraction
     # <= pp2_max_benign_frac, or (missense Z >= pp2_min_mis_z and fraction <=
@@ -383,6 +389,13 @@ class Config(BaseSettings):
         under the BayesDel licence gate (insilico_tool REVEL/AlphaMissense +
         --with-bayesdel). Absent file → TP53 auxiliary PP3/BP4 simply not applied."""
         return self.data_dir / "shared" / "tp53_pp3_bp4_codes.tsv"
+
+    @property
+    def tp53_functional_tsv(self) -> Path:
+        """TP53 VCEP functional assay classes (Kato / Giacomelli / Kotler /
+        Kawaguchi) from the NCI TP53 Database, for the TP53 PS3/BS3 rules (built by
+        scripts/build_tp53_functional.py). Falls back to the packaged resources copy."""
+        return self.data_dir / "shared" / "tp53_functional.tsv"
 
     @property
     def pm1_hotspots_tsv(self) -> Path:

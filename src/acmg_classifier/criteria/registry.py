@@ -144,6 +144,10 @@ class CriteriaRegistry:
         # for ANY criterion — not just the historically supplement-aware ones.
         self._apply_supplement_override(results, supplement)
 
+        # TP53 VCEP caveats for the protein-level functional codes (run before the
+        # PVS1<->PP3 pass, which would otherwise hide a splice-based PP3).
+        _apply_tp53_functional_caveats(results, annotation)
+
         # PVS1 ↔ PP3 mutual exclusion (Walker 2023, ClinGen SVI splicing WG):
         # PVS1 already encodes null-variant/splice-disruption evidence at
         # Very Strong, which subsumes in-silico splicing/missense evidence
@@ -349,3 +353,35 @@ def _apply_pm1_co_requirements(results: list[CriteriaResult], annotation: Annota
         if r.criterion == ACMGCriterion.PM1 and r.triggered and not r.suppressed:
             r.suppressed = True
             r.evidence = (r.evidence + f" [suppressed: PM1 {'; '.join(why)}]").strip()
+
+
+def _apply_tp53_functional_caveats(results: list[CriteriaResult], annotation: AnnotationData) -> None:
+    """TP53 VCEP: PS3/BS3 from protein-level assays (Kato, Giacomelli...) are not
+    applied when PP3 is based on SpliceAI; PS3 is not applied with PVS1 at full
+    strength and is downgraded to Moderate with PVS1_Strong. Only results from the
+    systematic TP53 functional data are touched (curated entries are left as given)."""
+    from acmg_classifier.criteria.tp53_functional import SRC_TP53_FUNCTIONAL
+    from acmg_classifier.models.enums import CriterionStrength
+
+    pc = annotation.primary_consequence
+    if pc is None or pc.gene_symbol != "TP53":
+        return
+    func = [r for r in results if r.criterion in (ACMGCriterion.PS3, ACMGCriterion.BS3)
+            and r.triggered and not r.suppressed and (r.evidence or "").startswith(SRC_TP53_FUNCTIONAL)]
+    if not func:
+        return
+    splice_pp3 = any(r.criterion == ACMGCriterion.PP3 and r.triggered
+                     and "splice impact" in (r.evidence or "") for r in results)
+    pvs1 = next((r for r in results if r.criterion == ACMGCriterion.PVS1
+                 and r.triggered and not r.suppressed), None)
+    for r in func:
+        if splice_pp3:
+            r.suppressed = True
+            r.evidence += " [suppressed: TP53 VCEP — not with SpliceAI-based PP3]"
+        elif r.criterion == ACMGCriterion.PS3 and pvs1 is not None:
+            if pvs1.strength == CriterionStrength.VERY_STRONG:
+                r.suppressed = True
+                r.evidence += " [suppressed: TP53 VCEP — not with PVS1]"
+            elif pvs1.strength == CriterionStrength.STRONG and r.strength == CriterionStrength.STRONG:
+                r.strength = CriterionStrength.MODERATE
+                r.evidence += " [downgraded to Moderate: TP53 VCEP — PVS1_Strong]"

@@ -44,6 +44,22 @@ Third-party data and tools used at runtime (not redistributed by this project):
 * RepeatMasker (UCSC tracks distributed under the Dfam/UCSC terms)
     https://www.repeatmasker.org/
 
+------------------------------------------------------------------------------
+Third-party data redistributed in resources/ (derived tables):
+------------------------------------------------------------------------------
+
+* NCI TP53 Database, release R21 (Jan 2025) — https://tp53.cancer.gov
+    resources/shared/tp53_functional.tsv is derived from MutationView_r21.csv,
+    FunctionIshiokaDownload_r21.csv and FunctionDownload_r21.csv (assay classes
+    from Kato et al. 2003, Giacomelli et al. 2018, Kotler et al. 2018 and
+    Kawaguchi et al. 2005). The database terms allow the data to be freely
+    accessed, used, downloaded and reproduced with appropriate acknowledgement,
+    and prohibit any use that results in direct or indirect monetization
+    (https://tp53.cancer.gov/about). The table is used only when
+    --with-tp53-functional is given (off by default).
+    Cite: The TP53 Database (R21, Jan 2025): https://tp53.cancer.gov;
+    de Andrade KC et al., Cell Death Differ 2022;29:1071-1073.
+
 This NOTICE file does not modify the License; it provides attribution
 to upstream data sources whose terms may apply when end-users download
 data via `scripts/setup_data.py`.

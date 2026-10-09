@@ -5,6 +5,10 @@ Evidence sources (in priority order):
 1. Curator-supplied supplement (user curation or the eRepo supplement) — any strength.
 2. PS3 applied by a ClinGen expert panel to this variant in ClinVar (>=3 stars),
    imported at the strength the panel stated (curated evidence, not text mining).
+2b. TP53 missense variants, opt-in (--with-tp53-functional; NCI TP53 Database terms
+   are non-commercial): the TP53 VCEP functional flowchart on systematic assay data
+   (Kato / Giacomelli / Kotler / Kawaguchi; criteria/tp53_functional.py). When such
+   data exist for the variant, text mining is not used.
 3. Text mining of other (non-expert-panel) ClinVar submissions describing a
    damaging wet-lab assay. Evidence is counted by DISTINCT cited PMIDs (so several
    submissions citing the same study count once) and is capped at Supporting:
@@ -44,9 +48,32 @@ def _functional_strength(n: int) -> CriterionStrength | None:
     return CriterionStrength.SUPPORTING if n >= 1 else None
 
 
+def tp53_functional_result(tp53, pc, criterion: ACMGCriterion) -> CriteriaResult | None:
+    """PS3 or BS3 for a TP53 missense variant from the VCEP functional flowchart.
+    Returns None when no systematic assay data exist for the variant (the caller
+    falls back to its generic path); a not-met result when data exist but the
+    flowchart does not give this criterion."""
+    from acmg_classifier.criteria.tp53_functional import SRC_TP53_FUNCTIONAL
+    aa = tp53.aa_change(pc.amino_acids, pc.protein_position, pc.hgvs_p)
+    assays = tp53.lookup(aa)
+    if assays is None:
+        return None
+    d = tp53.decide(assays)
+    if d is not None and d[0] == criterion:
+        return CriteriaResult.met(
+            criterion, d[1], f"{SRC_TP53_FUNCTIONAL} {aa}: {d[2]} ({assays.describe()})")
+    return CriteriaResult.not_met(
+        criterion, f"{SRC_TP53_FUNCTIONAL} {aa}: {criterion.value} not met by the VCEP "
+                   f"functional flowchart ({assays.describe()})")
+
+
 class PS3Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
+        from acmg_classifier.criteria.tp53_functional import TP53Functional
+        # Opt-in (non-commercial data terms): Config.use_tp53_functional.
+        self._tp53 = TP53Functional(
+            cfg.tp53_functional_tsv if getattr(cfg, "use_tp53_functional", False) is True else None)
 
     def evaluate(
         self,
@@ -68,6 +95,10 @@ class PS3Evaluator(CriterionEvaluator):
         # fallback for those genes (a manual supplement above still applies).
         pc = annotation.primary_consequence
         gene = pc.gene_symbol if pc else None
+        if gene == "TP53" and pc is not None and self._tp53:
+            r = tp53_functional_result(self._tp53, pc, ACMGCriterion.PS3)
+            if r is not None:
+                return r
         if gene in _PS3_NOT_APPLICABLE:
             return CriteriaResult.not_met(
                 ACMGCriterion.PS3,

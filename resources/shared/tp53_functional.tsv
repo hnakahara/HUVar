@@ -1,0 +1,7700 @@
+# TP53 functional assay classes for the ClinGen TP53 VCEP PS3/BS3 rules. Derived from The TP53 Database (R21, Jan 2025), https://tp53.cancer.gov (de Andrade et al., Cell Death Differ 2022): Kato 2003, Giacomelli 2018, Kotler 2018, Kawaguchi 2005. Free use with acknowledgement; use resulting in monetization is prohibited (https://tp53.cancer.gov/about). Built by scripts/build_tp53_functional.py
+aa_change	kato	giacomelli	kotler	kawaguchi
+M1I		LOF		
+M1K		noLOF		
+M1L		LOF		
+M1R		LOF		
+M1T		LOF		
+M1V		LOF		
+E2A	functional	LOF		
+E2C		noLOF		
+E2D	functional	noLOF		
+E2E		noLOF		
+E2F		noLOF		
+E2G	functional	LOF		
+E2H		noLOF		
+E2I		noLOF		
+E2K	functional	noLOF		
+E2L		noLOF		
+E2M		noLOF		
+E2N		noLOF		
+E2P		noLOF		
+E2Q	functional	noLOF		
+E2R		noLOF		
+E2S		noLOF		
+E2T		noLOF		
+E2V	functional	noLOF		
+E2W		LOF		
+E2Y		noLOF		
+E3A	functional	noLOF		
+E3C		noLOF		
+E3D	functional	noLOF		
+E3E		noLOF		
+E3F		noLOF		
+E3G	functional	LOF		
+E3H		noLOF		
+E3I		noLOF		
+E3K	functional	noLOF		
+E3L		noLOF		
+E3M		noLOF		
+E3N		noLOF		
+E3P		noLOF		
+E3Q	functional	noLOF		
+E3R		LOF		
+E3S		noLOF		
+E3T		noLOF		
+E3V	functional	LOF		
+E3W		noLOF		
+E3Y		noLOF		
+P4A	functional	LOF		
+P4C		noLOF		
+P4D		noLOF		
+P4E		noLOF		
+P4F		noLOF		
+P4G		noLOF		
+P4H		noLOF		
+P4I		noLOF		
+P4K		noLOF		
+P4L	functional	noLOF		
+P4M		noLOF		
+P4N		noLOF		
+P4P		noLOF		
+P4Q	functional	noLOF		
+P4R	functional	noLOF		
+P4S	functional	noLOF		
+P4T	functional	noLOF		
+P4V		noLOF		
+P4W		noLOF		
+P4Y		noLOF		
+Q5A		LOF		
+Q5C		noLOF		
+Q5D		noLOF		
+Q5E	functional	noLOF		
+Q5F		noLOF		
+Q5G		noLOF		
+Q5H	functional	noLOF		
+Q5I		noLOF		
+Q5K	functional	noLOF		
+Q5L	functional	noLOF		
+Q5M		noLOF		
+Q5N		noLOF		
+Q5P	partial	noLOF		
+Q5Q		noLOF		
+Q5R	functional	noLOF		
+Q5S		noLOF		
+Q5T		noLOF		
+Q5V		noLOF		
+Q5W		noLOF		
+Q5Y		noLOF		
+S6A	partial	LOF		
+S6C		noLOF		
+S6D		noLOF		
+S6E		noLOF		
+S6F		noLOF		
+S6G		noLOF		
+S6H		noLOF		
+S6I		noLOF		
+S6K		noLOF		
+S6L	functional	noLOF		
+S6M		noLOF		
+S6N		noLOF		
+S6P	functional	noLOF		
+S6Q		noLOF		
+S6R		noLOF		
+S6S		noLOF		
+S6T	functional	noLOF		
+S6V		LOF		
+S6W		LOF		
+S6Y		noLOF		
+D7A	partial	noLOF		
+D7C		noLOF		
+D7D		LOF		
+D7E	functional	noLOF		
+D7F		noLOF		
+D7G	partial	noLOF		
+D7H	functional	noLOF		
+D7I		noLOF		
+D7K		noLOF		
+D7L		noLOF		
+D7M		noLOF		
+D7N	functional	noLOF		
+D7P		noLOF		
+D7Q		noLOF		
+D7R		LOF		
+D7S		noLOF		
+D7T		noLOF		
+D7V	partial	noLOF		
+D7W		noLOF		
+D7Y	functional	noLOF		
+P8A	functional	noLOF		
+P8C		noLOF		
+P8D		noLOF		
+P8E		noLOF		
+P8F		noLOF		
+P8G		noLOF		
+P8H	functional	noLOF		
+P8I		noLOF		
+P8K		noLOF		
+P8L	functional	noLOF		
+P8M		noLOF		
+P8N		noLOF		
+P8P		noLOF		
+P8Q		noLOF		
+P8R	functional	noLOF		
+P8S	functional	LOF		
+P8T	functional	noLOF		
+P8V		noLOF		
+P8W		noLOF		
+P8Y		noLOF		
+S9A		noLOF		
+S9C	functional	noLOF		
+S9D		noLOF		
+S9E		noLOF		
+S9F		noLOF		
+S9G	functional	noLOF		
+S9H		noLOF		
+S9I	functional	noLOF		
+S9K		noLOF		
+S9L		noLOF		
+S9M		noLOF		
+S9N	partial	noLOF		
+S9P		noLOF		
+S9Q		noLOF		
+S9R	functional	noLOF		
+S9S		noLOF		
+S9T	functional	noLOF		
+S9V		noLOF		
+S9W		noLOF		
+S9Y		LOF		
+V10A	functional	noLOF		
+V10C		noLOF		
+V10D	partial	noLOF		
+V10E		noLOF		
+V10F	functional	noLOF		
+V10G	functional	noLOF		
+V10H		noLOF		
+V10I	functional	noLOF		
+V10K		noLOF		
+V10L	functional	noLOF		
+V10M		noLOF		
+V10N		noLOF		
+V10P		noLOF		
+V10Q		noLOF		
+V10R		LOF		
+V10S		noLOF		
+V10T		noLOF		
+V10V		noLOF		
+V10W		noLOF		
+V10Y		noLOF		
+E11A	functional	noLOF		
+E11C		noLOF		
+E11D	functional	noLOF		
+E11E		noLOF		
+E11F		noLOF		
+E11G	functional	noLOF		
+E11H		noLOF		
+E11I		noLOF		
+E11K	functional	noLOF		
+E11L		noLOF		
+E11M		noLOF		
+E11N		noLOF		
+E11P		noLOF		
+E11Q	functional	noLOF		
+E11R		LOF		
+E11S		LOF		
+E11T		noLOF		
+E11V	functional	noLOF		
+E11W		noLOF		
+E11Y		noLOF		
+P12A	functional	LOF		
+P12C		noLOF		
+P12D		noLOF		
+P12E		noLOF		
+P12F		noLOF		
+P12G		noLOF		
+P12H	functional	noLOF		
+P12I		noLOF		
+P12K		noLOF		
+P12L	functional	noLOF		
+P12M		noLOF		
+P12N		noLOF		
+P12P		noLOF		
+P12Q		noLOF		
+P12R	functional	noLOF		
+P12S	partial	noLOF		
+P12T	partial	noLOF		
+P12V		noLOF		
+P12W		LOF		
+P12Y		noLOF		
+P13A	functional	noLOF		
+P13C		noLOF		
+P13D		noLOF		
+P13E		noLOF		
+P13F		noLOF		
+P13G		noLOF		
+P13H	functional	noLOF		
+P13I		noLOF		
+P13K		noLOF		
+P13L	functional	LOF		
+P13M		noLOF		
+P13N		noLOF		
+P13P		LOF		
+P13Q		noLOF		
+P13R	functional	noLOF		
+P13S	functional	noLOF		
+P13T	functional	noLOF		
+P13V		noLOF		
+P13W		noLOF		
+P13Y		noLOF		
+L14A		noLOF		
+L14C		noLOF		
+L14D		noLOF		
+L14E		noLOF		
+L14F		noLOF		
+L14G		noLOF		
+L14H		noLOF		
+L14I		noLOF		
+L14K		noLOF		
+L14L		noLOF		
+L14M	functional	noLOF		
+L14N		noLOF		
+L14P	functional	noLOF		
+L14Q	functional	noLOF		
+L14R	functional	noLOF		
+L14S		noLOF		
+L14T		noLOF		
+L14V	functional	noLOF		
+L14W		noLOF		
+L14Y		noLOF		
+S15A		noLOF		
+S15C	functional	noLOF		
+S15D		LOF		
+S15E		LOF		
+S15F		noLOF		
+S15G	functional	noLOF		
+S15H		noLOF		
+S15I	functional	noLOF		
+S15K		noLOF		
+S15L		noLOF		
+S15M		noLOF		
+S15N	functional	noLOF		
+S15P		noLOF		
+S15Q		noLOF		
+S15R	functional	noLOF		
+S15S		LOF		
+S15T	functional	noLOF		
+S15V		noLOF		
+S15W		noLOF		
+S15Y		noLOF		
+Q16A		noLOF		
+Q16C		noLOF		
+Q16D		noLOF		
+Q16E	functional	noLOF		
+Q16F		noLOF		
+Q16G		noLOF		
+Q16H	functional	noLOF		
+Q16I		noLOF		
+Q16K	functional	noLOF		
+Q16L	functional	noLOF		
+Q16M		noLOF		
+Q16N		noLOF		
+Q16P	functional	LOF		
+Q16Q		noLOF		
+Q16R	functional	noLOF		
+Q16S		LOF		
+Q16T		noLOF		
+Q16V		noLOF		
+Q16W		noLOF		
+Q16Y		noLOF		
+E17A	functional	noLOF		
+E17C		noLOF		
+E17D	functional	noLOF		
+E17E		noLOF		
+E17F		noLOF		
+E17G	functional	LOF		
+E17H		noLOF		
+E17I		noLOF		
+E17K	functional	noLOF		
+E17L		noLOF		
+E17M		noLOF		
+E17N		noLOF		
+E17P		noLOF		
+E17Q	functional	noLOF		
+E17R		LOF		
+E17S		noLOF		
+E17T		noLOF		
+E17V	functional	noLOF		
+E17W		noLOF		
+E17Y		noLOF		
+T18A	functional	LOF		
+T18C		noLOF		
+T18D		LOF		
+T18E		LOF		
+T18F		LOF		
+T18G		LOF		
+T18H		LOF		
+T18I	functional	LOF		
+T18K	functional	noLOF		
+T18L		noLOF		
+T18M		noLOF		
+T18N		LOF		
+T18P	functional	LOF		
+T18Q		noLOF		
+T18R	functional	noLOF		
+T18S	functional	noLOF		
+T18T		LOF		
+T18V		LOF		
+T18W		LOF		
+T18Y		noLOF		
+F19A		LOF		
+F19C	partial	LOF		
+F19D		LOF		
+F19E		LOF		
+F19F		noLOF		
+F19G		LOF		
+F19H		LOF		
+F19I	functional	LOF		
+F19K		LOF		
+F19L	functional	LOF		
+F19M		LOF		
+F19N		LOF		
+F19P		LOF		
+F19Q		LOF		
+F19R		LOF		
+F19S	partial	LOF		
+F19T		LOF		
+F19V	functional	LOF		
+F19W		LOF		
+F19Y	functional	LOF		
+S20A	functional	noLOF		
+S20C		noLOF		
+S20D		LOF		
+S20E		noLOF		
+S20F		LOF		
+S20G		noLOF		
+S20H		noLOF		
+S20I		noLOF		
+S20K		noLOF		
+S20L	functional	noLOF		
+S20M		noLOF		
+S20N		LOF		
+S20P	functional	noLOF		
+S20Q		LOF		
+S20R		LOF		
+S20S		noLOF		
+S20T	functional	noLOF		
+S20V		noLOF		
+S20Y		noLOF		
+D21A	functional	noLOF		
+D21C		noLOF		
+D21D		noLOF		
+D21E	functional	noLOF		
+D21F		noLOF		
+D21G	functional	noLOF		
+D21H	functional	noLOF		
+D21I		LOF		
+D21K		noLOF		
+D21L		LOF		
+D21M		noLOF		
+D21N	functional	noLOF		
+D21P		LOF		
+D21Q		noLOF		
+D21R		LOF		
+D21S		LOF		
+D21T		LOF		
+D21V	functional	noLOF		
+D21W		LOF		
+D21Y	functional	noLOF		
+L22A		LOF		
+L22C		LOF		
+L22D		LOF		
+L22E		LOF		
+L22F		noLOF		
+L22G		LOF		
+L22H		LOF		
+L22I	functional	noLOF		
+L22K		LOF		
+L22L		LOF		
+L22M		noLOF		
+L22N		LOF		
+L22P	partial	LOF		
+L22Q	partial	LOF		
+L22R	partial	LOF		
+L22S		LOF		
+L22T		LOF		
+L22V	partial	LOF		
+L22W		noLOF		
+L22Y		noLOF		
+W23A		LOF		
+W23C	partial	LOF		
+W23D		LOF		
+W23E		LOF		
+W23F		LOF		
+W23G	partial	LOF		
+W23H		LOF		
+W23I		LOF		
+W23K		LOF		
+W23L	functional	LOF		
+W23M		LOF		
+W23N		LOF		
+W23P		LOF		
+W23Q		LOF		
+W23R	partial	LOF		
+W23S	partial	LOF		
+W23T		LOF		
+W23V		LOF		
+W23Y		LOF		
+K24A		noLOF		
+K24C		LOF		
+K24D		LOF		
+K24E	partial	LOF		
+K24F		LOF		
+K24G		LOF		
+K24H		LOF		
+K24I	partial	LOF		
+K24K		noLOF		
+K24L		noLOF		
+K24M		LOF		
+K24N	functional	LOF		
+K24P		LOF		
+K24Q	functional	LOF		
+K24R	functional	noLOF		
+K24S		noLOF		
+K24T	partial	LOF		
+K24V		LOF		
+K24W		LOF		
+K24Y		LOF		
+L25A		noLOF		
+L25C		noLOF		
+L25D		LOF		
+L25E		noLOF		
+L25F		LOF		
+L25G		noLOF		
+L25H		noLOF		
+L25I	functional	LOF		
+L25K		noLOF		
+L25L		LOF		
+L25M		noLOF		
+L25N		LOF		
+L25P	partial	LOF		
+L25Q	partial	noLOF		
+L25R	partial	noLOF		
+L25S		noLOF		
+L25T		LOF		
+L25V	partial	LOF		
+L25W		LOF		
+L25Y		LOF		
+L26A		LOF		
+L26C		LOF		
+L26D		LOF		
+L26E		LOF		
+L26F	functional	LOF		
+L26G		LOF		
+L26H	partial	LOF		
+L26I	functional	noLOF		
+L26K		LOF		
+L26L		LOF		
+L26M		LOF		
+L26N		LOF		
+L26P	partial	LOF		
+L26Q		LOF		
+L26R	partial	LOF		
+L26S		LOF		
+L26T		LOF		
+L26V	functional	noLOF		
+L26W		LOF		
+L26Y		LOF		
+P27A	functional			
+P27F		noLOF		
+P27H	nonfunctional	noLOF		
+P27K		noLOF		
+P27L	nonfunctional	LOF		
+P27N		noLOF		
+P27P		noLOF		
+P27R	functional	noLOF		
+P27S	functional	LOF		
+P27T	functional	noLOF		
+P27W		noLOF		
+E28A	functional	noLOF		
+E28C		noLOF		
+E28D	functional	noLOF		
+E28E		noLOF		
+E28F		noLOF		
+E28G	functional	noLOF		
+E28H		noLOF		
+E28K	functional	noLOF		
+E28L		noLOF		
+E28M		noLOF		
+E28N		noLOF		
+E28P		noLOF		
+E28Q	functional	noLOF		
+E28R		noLOF		
+E28S		noLOF		
+E28T		noLOF		
+E28V	functional	noLOF		
+E28W		noLOF		
+E28Y		noLOF		
+N29A		noLOF		
+N29C		noLOF		
+N29D	functional	noLOF		
+N29E		noLOF		
+N29G		noLOF		
+N29H	functional	noLOF		
+N29I	functional			
+N29K	functional	LOF		
+N29M		noLOF		
+N29N		noLOF		
+N29Q		noLOF		
+N29R		noLOF		
+N29S	functional	noLOF		
+N29T	functional	LOF		
+N29V		noLOF		
+N29Y	functional			
+N30A		noLOF		
+N30C		noLOF		
+N30D	functional	noLOF		
+N30E		noLOF		
+N30G		noLOF		
+N30H	functional	LOF		
+N30I	functional	noLOF		
+N30K	functional	noLOF		
+N30M		noLOF		
+N30N		noLOF		
+N30P		noLOF		
+N30Q		LOF		
+N30R		noLOF		
+N30S	functional	noLOF		
+N30T	functional	LOF		
+N30V		noLOF		
+N30Y	functional	noLOF		
+V31A	functional	noLOF		
+V31C		noLOF		
+V31D	partial	noLOF		
+V31E		noLOF		
+V31F	partial	LOF		
+V31G	functional	noLOF		
+V31H		noLOF		
+V31I	functional	noLOF		
+V31K		noLOF		
+V31L	functional	LOF		
+V31M		noLOF		
+V31N		noLOF		
+V31P		noLOF		
+V31Q		noLOF		
+V31R		LOF		
+V31S		noLOF		
+V31T		LOF		
+V31V		LOF		
+V31W		noLOF		
+V31Y		noLOF		
+L32A		LOF		
+L32C		LOF		
+L32D		noLOF		
+L32E		LOF		
+L32F		LOF		
+L32G		noLOF		
+L32H		noLOF		
+L32I		noLOF		
+L32K		noLOF		
+L32L		LOF		
+L32M	functional	noLOF		
+L32N		LOF		
+L32P	functional	noLOF		
+L32Q	functional	noLOF		
+L32R	functional	noLOF		
+L32S		LOF		
+L32T		noLOF		
+L32V	functional	noLOF		
+L32W		noLOF		
+L32Y		noLOF		
+S33A	partial	LOF		
+S33C	functional	noLOF		
+S33D		noLOF		
+S33E		noLOF		
+S33F	functional	noLOF		
+S33G		noLOF		
+S33H		noLOF		
+S33I		noLOF		
+S33K		noLOF		
+S33L		noLOF		
+S33M		noLOF		
+S33N		noLOF		
+S33P	functional	LOF		
+S33Q		noLOF		
+S33R		noLOF		
+S33S		noLOF		
+S33T	functional	noLOF		
+S33V		LOF		
+S33W		noLOF		
+S33Y	functional	noLOF		
+P34A	functional	noLOF		
+P34C		noLOF		
+P34D		noLOF		
+P34E		noLOF		
+P34F		noLOF		
+P34G		noLOF		
+P34H	functional	noLOF		
+P34I		noLOF		
+P34K		noLOF		
+P34L	nonfunctional	noLOF		
+P34M		noLOF		
+P34N		noLOF		
+P34P		LOF		
+P34Q		noLOF		
+P34R	functional	noLOF		
+P34S	nonfunctional	noLOF		
+P34T	functional	noLOF		
+P34V		noLOF		
+P34W		noLOF		
+P34Y		noLOF		
+L35A		noLOF		
+L35C		LOF		
+L35D		noLOF		
+L35E		noLOF		
+L35F	functional	noLOF		
+L35G		noLOF		
+L35H		noLOF		
+L35I		noLOF		
+L35K		noLOF		
+L35L		noLOF		
+L35M	functional	noLOF		
+L35N		noLOF		
+L35P		noLOF		
+L35Q		noLOF		
+L35R		noLOF		
+L35S	partial	noLOF		
+L35T		noLOF		
+L35V	partial	noLOF		
+L35W	functional	noLOF		
+L35Y		noLOF		
+P36A	partial	LOF		
+P36C		noLOF		
+P36D		noLOF		
+P36E		noLOF		
+P36F		noLOF		
+P36G		noLOF		
+P36H		noLOF		
+P36I		noLOF		
+P36K		noLOF		
+P36L	nonfunctional	noLOF		
+P36M		noLOF		
+P36N		noLOF		
+P36P		noLOF		
+P36Q	functional	noLOF		
+P36R	functional	LOF		
+P36S	partial	noLOF		
+P36T	functional	noLOF		
+P36V		noLOF		
+P36W		noLOF		
+P36Y		noLOF		
+S37A	functional	noLOF		
+S37C	partial	noLOF		
+S37D		noLOF		
+S37E		noLOF		
+S37F	functional	noLOF		
+S37G		noLOF		
+S37H		noLOF		
+S37I		noLOF		
+S37K		noLOF		
+S37L		noLOF		
+S37M		noLOF		
+S37N		noLOF		
+S37P	functional	noLOF		
+S37Q		noLOF		
+S37R		noLOF		
+S37S		noLOF		
+S37T	partial	noLOF		
+S37V		LOF		
+S37W		noLOF		
+S37Y	functional	noLOF		
+Q38A		noLOF		
+Q38C		noLOF		
+Q38D		noLOF		
+Q38E	functional	noLOF		
+Q38F		noLOF		
+Q38G		noLOF		
+Q38H	functional	noLOF		
+Q38I		noLOF		
+Q38K	functional	noLOF		
+Q38L	functional	noLOF		
+Q38M		noLOF		
+Q38N		noLOF		
+Q38P	partial	LOF		
+Q38Q		noLOF		
+Q38R	functional	noLOF		
+Q38S		noLOF		
+Q38T		noLOF		
+Q38V		noLOF		
+Q38W		noLOF		
+Q38Y		noLOF		
+A39A		LOF		
+A39C		noLOF		
+A39D		noLOF		
+A39E	functional	noLOF		
+A39F		noLOF		
+A39G	functional	noLOF		
+A39H		noLOF		
+A39I		noLOF		
+A39K		noLOF		
+A39L		noLOF		
+A39M		noLOF		
+A39N		noLOF		
+A39P	partial	noLOF		
+A39Q		LOF		
+A39R		noLOF		
+A39S	functional	noLOF		
+A39T	functional	noLOF		
+A39V	functional	noLOF		
+A39W		noLOF		
+A39Y		noLOF		
+M40A		noLOF		
+M40C		noLOF		
+M40D		noLOF		
+M40E		noLOF		
+M40F		noLOF		
+M40G		noLOF		
+M40H		noLOF		
+M40I	functional	noLOF		
+M40K	functional	noLOF		
+M40L	functional	noLOF		
+M40N		noLOF		
+M40P		noLOF		
+M40Q		noLOF		
+M40R	functional	noLOF		
+M40S		noLOF		
+M40T	functional	noLOF		
+M40V	functional	noLOF		
+M40W		LOF		
+M40Y		noLOF		
+D41A	partial	noLOF		
+D41C		noLOF		
+D41D		noLOF		
+D41E	partial	noLOF		
+D41F		noLOF		
+D41G	functional	noLOF		
+D41H	functional	noLOF		
+D41I		noLOF		
+D41K		noLOF		
+D41L		noLOF		
+D41M		noLOF		
+D41N	functional	noLOF		
+D41P		noLOF		
+D41Q		noLOF		
+D41R		noLOF		
+D41S		noLOF		
+D41T		noLOF		
+D41V	functional	noLOF		
+D41W		noLOF		
+D41Y	functional	noLOF		
+D42A	functional	noLOF		
+D42C		noLOF		
+D42D		noLOF		
+D42E	functional	noLOF		
+D42F		noLOF		
+D42G	functional	noLOF		
+D42H	functional	noLOF		
+D42I		noLOF		
+D42K		noLOF		
+D42L		noLOF		
+D42M		noLOF		
+D42N	functional	noLOF		
+D42P		noLOF		
+D42Q		noLOF		
+D42R		noLOF		
+D42S		noLOF		
+D42T		noLOF		
+D42V	functional	noLOF		
+D42W		noLOF		
+D42Y	nonfunctional	noLOF		
+L43A		noLOF		
+L43C		noLOF		
+L43D		noLOF		
+L43E		noLOF		
+L43F	functional	noLOF		
+L43G		noLOF		
+L43H		noLOF		
+L43I		noLOF		
+L43K		noLOF		
+L43L		noLOF		
+L43M	functional	noLOF		
+L43N		noLOF		
+L43P		noLOF		
+L43Q		noLOF		
+L43R		noLOF		
+L43S	functional	noLOF		
+L43T		noLOF		
+L43V	functional	noLOF		
+L43W	functional	noLOF		
+L43Y		noLOF		
+M44A		LOF		
+M44C		noLOF		
+M44D		noLOF		
+M44E		noLOF		
+M44F		noLOF		
+M44H		noLOF		
+M44I	functional	noLOF		
+M44K	partial	noLOF		
+M44L	functional	noLOF		
+M44N		noLOF		
+M44P		noLOF		
+M44Q		noLOF		
+M44R	functional	noLOF		
+M44S		noLOF		
+M44T	partial	noLOF		
+M44V	functional	noLOF		
+M44W		noLOF		
+M44Y		noLOF		
+L45A		noLOF		
+L45C		noLOF		
+L45D		noLOF		
+L45E		noLOF		
+L45F		noLOF		
+L45G		noLOF		
+L45H		noLOF		
+L45I		noLOF		
+L45K		noLOF		
+L45L		noLOF		
+L45M	functional	noLOF		
+L45N		noLOF		
+L45P	functional	noLOF		
+L45Q	functional	noLOF		
+L45R	functional	noLOF		
+L45S		noLOF		
+L45T		noLOF		
+L45V	functional	noLOF		
+L45W		noLOF		
+L45Y		noLOF		
+S46A	nonfunctional	noLOF		
+S46C	functional	noLOF		
+S46D		noLOF		
+S46E		noLOF		
+S46F	functional	noLOF		
+S46G		noLOF		
+S46H		noLOF		
+S46I		noLOF		
+S46K		noLOF		
+S46L		noLOF		
+S46M		noLOF		
+S46N		noLOF		
+S46P	functional	noLOF		
+S46Q		noLOF		
+S46R		noLOF		
+S46S		noLOF		
+S46T	functional	noLOF		
+S46V		LOF		
+S46W		noLOF		
+S46Y	functional	noLOF		
+P47A	functional	noLOF		
+P47C		noLOF		
+P47D		noLOF		
+P47E		noLOF		
+P47F		noLOF		
+P47G		noLOF		
+P47H		noLOF		
+P47I		noLOF		
+P47K		noLOF		
+P47L	partial	noLOF		
+P47M		noLOF		
+P47N		noLOF		
+P47P		noLOF		
+P47Q	functional	noLOF		
+P47R	functional	noLOF		
+P47S	functional	noLOF		
+P47T	functional	noLOF		
+P47V		noLOF		
+P47W		noLOF		
+P47Y		noLOF		
+D48A	functional	noLOF		
+D48C		noLOF		
+D48D		noLOF		
+D48E	functional	noLOF		
+D48F		noLOF		
+D48G	functional	noLOF		
+D48H	functional	noLOF		
+D48I		noLOF		
+D48K		noLOF		
+D48L		noLOF		
+D48M		noLOF		
+D48N	functional	noLOF		
+D48P		noLOF		
+D48Q		noLOF		
+D48R		noLOF		
+D48S		noLOF		
+D48T		noLOF		
+D48V	functional	noLOF		
+D48W		noLOF		
+D48Y	functional	noLOF		
+D49A	functional	noLOF		
+D49C		noLOF		
+D49D		noLOF		
+D49E	functional	noLOF		
+D49F		noLOF		
+D49G	functional	noLOF		
+D49H	nonfunctional	noLOF		
+D49I		LOF		
+D49K		noLOF		
+D49L		noLOF		
+D49M		noLOF		
+D49N	functional	noLOF		
+D49P		noLOF		
+D49Q		noLOF		
+D49R		LOF		
+D49S		noLOF		
+D49T		noLOF		
+D49V	partial	noLOF		
+D49W		noLOF		
+D49Y	functional	noLOF		
+I50A		noLOF		
+I50C		noLOF		
+I50D		noLOF		
+I50E		noLOF		
+I50F	functional	noLOF		
+I50G		noLOF		
+I50H		noLOF		
+I50I		noLOF		
+I50K		noLOF		
+I50L	functional	noLOF		
+I50M	functional	noLOF		
+I50N	partial	noLOF		
+I50P		noLOF		
+I50Q		noLOF		
+I50R		noLOF		
+I50S	partial	noLOF		
+I50T	partial	noLOF		
+I50V	functional	noLOF		
+I50W		noLOF		
+I50Y		LOF		
+E51A	functional	noLOF		
+E51C		noLOF		
+E51D	functional	noLOF		
+E51E		noLOF		
+E51F		noLOF		
+E51G	functional	noLOF		
+E51H		noLOF		
+E51I		noLOF		
+E51K	functional	noLOF		
+E51L		noLOF		
+E51M		noLOF		
+E51N		LOF		
+E51P		noLOF		
+E51Q	functional	noLOF		
+E51R		noLOF		
+E51S		noLOF		
+E51T		noLOF		
+E51V	functional	noLOF		
+E51W		noLOF		
+E51Y		noLOF		
+Q52A		noLOF		
+Q52C		noLOF		
+Q52D		noLOF		
+Q52E	functional	noLOF		
+Q52F		noLOF		
+Q52G		noLOF		
+Q52H	functional	noLOF		
+Q52I		noLOF		
+Q52K	functional	noLOF		
+Q52L	functional	noLOF		
+Q52M		noLOF		
+Q52N		LOF		
+Q52P	functional	noLOF		
+Q52Q		noLOF		
+Q52R	functional	LOF		
+Q52S		noLOF		
+Q52T		LOF		
+Q52V		noLOF		
+Q52W		noLOF		
+Q52Y		noLOF		
+W53A		noLOF		
+W53C	partial	noLOF		
+W53D		noLOF		
+W53E		noLOF		
+W53F		noLOF		
+W53G	partial	noLOF		
+W53H		noLOF		
+W53I		noLOF		
+W53K		LOF		
+W53L	functional	noLOF		
+W53M		LOF		
+W53N		noLOF		
+W53P		noLOF		
+W53Q		noLOF		
+W53R	partial	noLOF		
+W53S	partial	noLOF		
+W53T		noLOF		
+W53V		noLOF		
+W53Y		noLOF		
+F54A		noLOF		
+F54C	partial	noLOF		
+F54D		noLOF		
+F54E		noLOF		
+F54F		noLOF		
+F54G		noLOF		
+F54H		noLOF		
+F54I	functional	noLOF		
+F54K		noLOF		
+F54L	functional	noLOF		
+F54M		noLOF		
+F54N		noLOF		
+F54P		noLOF		
+F54Q		noLOF		
+F54R		noLOF		
+F54S	partial	noLOF		
+F54T		noLOF		
+F54V	partial	LOF		
+F54W		noLOF		
+F54Y	partial	noLOF		
+T55A	functional	noLOF		
+T55C		noLOF		
+T55D		noLOF		
+T55E		noLOF		
+T55F		noLOF		
+T55G		noLOF		
+T55H		noLOF		
+T55I	functional	noLOF		
+T55K		noLOF		
+T55L		LOF		
+T55M		noLOF		
+T55N	functional	noLOF		
+T55P	functional	noLOF		
+T55Q		noLOF		
+T55R		noLOF		
+T55S	partial	noLOF		
+T55T		noLOF		
+T55V		noLOF		
+T55W		noLOF		
+T55Y		noLOF		
+E56A	functional	noLOF		
+E56C		noLOF		
+E56D	functional	noLOF		
+E56E		noLOF		
+E56F		noLOF		
+E56G	functional	noLOF		
+E56H		noLOF		
+E56I		noLOF		
+E56K	partial	noLOF		
+E56L		noLOF		
+E56M		noLOF		
+E56N		noLOF		
+E56P		noLOF		
+E56Q	functional	noLOF		
+E56R		noLOF		
+E56S		noLOF		
+E56T		noLOF		
+E56V	functional	noLOF		
+E56W		noLOF		
+E56Y		noLOF		
+D57A	nonfunctional	noLOF		
+D57C		noLOF		
+D57D		noLOF		
+D57E	functional	noLOF		
+D57F		noLOF		
+D57G	functional	noLOF		
+D57H	functional	noLOF		
+D57I		noLOF		
+D57K		noLOF		
+D57L		noLOF		
+D57M		noLOF		
+D57N	functional	noLOF		
+D57P		noLOF		
+D57Q		noLOF		
+D57R		LOF		
+D57S		noLOF		
+D57T		noLOF		
+D57V	functional	noLOF		
+D57W		noLOF		
+D57Y	functional	noLOF		
+P58A	functional	noLOF		
+P58C		noLOF		
+P58D		noLOF		
+P58E		noLOF		
+P58F		noLOF		
+P58G		noLOF		
+P58H		noLOF		
+P58I		noLOF		
+P58K		noLOF		
+P58L	functional	noLOF		
+P58M		noLOF		
+P58N		noLOF		
+P58P		LOF		
+P58Q	functional	noLOF		
+P58R	functional	noLOF		
+P58S	partial	noLOF		
+P58T	functional	noLOF		
+P58V		noLOF		
+P58W		noLOF		
+P58Y		noLOF		
+G59A	functional	noLOF		
+G59C	functional	noLOF		
+G59D	functional	noLOF		
+G59E		noLOF		
+G59F		noLOF		
+G59G		noLOF		
+G59H		noLOF		
+G59I		noLOF		
+G59K		noLOF		
+G59L		noLOF		
+G59M		noLOF		
+G59N		noLOF		
+G59P		noLOF		
+G59Q		noLOF		
+G59R	functional	LOF		
+G59S	partial	noLOF		
+G59T		noLOF		
+G59V	functional	noLOF		
+G59W		noLOF		
+G59Y		noLOF		
+P60A	functional	noLOF		
+P60C		noLOF		
+P60D		noLOF		
+P60E		noLOF		
+P60F		noLOF		
+P60G		noLOF		
+P60H		noLOF		
+P60I		noLOF		
+P60K		noLOF		
+P60L	functional	noLOF		
+P60M		noLOF		
+P60N		noLOF		
+P60P		noLOF		
+P60Q	functional	noLOF		
+P60R	functional	noLOF		
+P60S	partial	LOF		
+P60T	functional	noLOF		
+P60V		noLOF		
+P60W		LOF		
+P60Y		noLOF		
+D61A	functional	noLOF		
+D61C		noLOF		
+D61D		noLOF		
+D61E	functional	noLOF		
+D61F		noLOF		
+D61G	functional	noLOF		
+D61H	functional	noLOF		
+D61I		noLOF		
+D61K		noLOF		
+D61L		noLOF		
+D61M		noLOF		
+D61N	functional	noLOF		
+D61P		noLOF		
+D61Q		noLOF		
+D61R		noLOF		
+D61S		LOF		
+D61T		noLOF		
+D61V	functional	noLOF		
+D61W		noLOF		
+D61Y	functional	noLOF		
+E62A	functional	noLOF		
+E62C		noLOF		
+E62D	functional	noLOF		
+E62E		noLOF		
+E62F		noLOF		
+E62G	functional	noLOF		
+E62H		noLOF		
+E62I		noLOF		
+E62K	functional	noLOF		
+E62L		noLOF		
+E62M		noLOF		
+E62N		noLOF		
+E62P		noLOF		
+E62Q	functional	noLOF		
+E62R		noLOF		
+E62S		noLOF		
+E62T		noLOF		
+E62V	nonfunctional	noLOF		
+E62W		noLOF		
+E62Y		noLOF		
+A63A		noLOF		
+A63C		noLOF		
+A63D	functional	noLOF		
+A63E		noLOF		
+A63F		noLOF		
+A63G	functional	noLOF		
+A63H		noLOF		
+A63I		noLOF		
+A63K		LOF		
+A63L		LOF		
+A63M		noLOF		
+A63N		LOF		
+A63P	functional	noLOF		
+A63Q		noLOF		
+A63R		noLOF		
+A63S	partial	noLOF		
+A63T	functional	noLOF		
+A63V	functional	noLOF		
+A63W		noLOF		
+A63Y		noLOF		
+P64A	partial	noLOF		
+P64C		noLOF		
+P64D		noLOF		
+P64E		LOF		
+P64F		noLOF		
+P64G		noLOF		
+P64H	functional	noLOF		
+P64I		LOF		
+P64K		noLOF		
+P64L	functional	noLOF		
+P64M		noLOF		
+P64N		noLOF		
+P64P		noLOF		
+P64Q		noLOF		
+P64R	functional	noLOF		
+P64S	functional	noLOF		
+P64T	functional	noLOF		
+P64V		noLOF		
+P64W		noLOF		
+P64Y		noLOF		
+R65A		noLOF		
+R65C		noLOF		
+R65D		noLOF		
+R65E		LOF		
+R65F		noLOF		
+R65G	functional	noLOF		
+R65H		noLOF		
+R65I	functional	noLOF		
+R65K	functional	noLOF		
+R65L		noLOF		
+R65M		noLOF		
+R65N		noLOF		
+R65P		noLOF		
+R65Q		noLOF		
+R65R		LOF		
+R65S	functional	noLOF		
+R65T	functional	noLOF		
+R65V		noLOF		
+R65W		noLOF		
+R65Y		noLOF		
+M66A		noLOF		
+M66C		noLOF		
+M66D		noLOF		
+M66E		noLOF		
+M66F		noLOF		
+M66G		noLOF		
+M66H		noLOF		
+M66I	functional	noLOF		
+M66K	functional	noLOF		
+M66L	functional	noLOF		
+M66N		noLOF		
+M66P		noLOF		
+M66Q		noLOF		
+M66R	functional	noLOF		
+M66S		noLOF		
+M66T	partial	noLOF		
+M66V	functional	noLOF		
+M66W		noLOF		
+M66Y		noLOF		
+P67A	functional	LOF		
+P67C		noLOF		
+P67D		noLOF		
+P67E		noLOF		
+P67F		noLOF		
+P67G		noLOF		
+P67H		noLOF		
+P67I		noLOF		
+P67K		noLOF		
+P67L	functional	noLOF		
+P67M		noLOF		
+P67N		noLOF		
+P67P		noLOF		
+P67Q	functional	noLOF		
+P67R	functional	noLOF		
+P67S	functional	noLOF		
+P67T	functional	noLOF		
+P67V		noLOF		
+P67W		noLOF		
+P67Y		noLOF		
+E68A	functional	noLOF		
+E68C		noLOF		
+E68D	functional	noLOF		
+E68E		noLOF		
+E68F		noLOF		
+E68G	functional	LOF		
+E68H		noLOF		
+E68I		noLOF		
+E68K	functional	noLOF		
+E68L		noLOF		
+E68M		noLOF		
+E68N		noLOF		
+E68P		noLOF		
+E68Q	functional	noLOF		
+E68R		LOF		
+E68S		noLOF		
+E68T		noLOF		
+E68V	functional	noLOF		
+E68W		noLOF		
+E68Y		noLOF		
+A69A		noLOF		
+A69C		noLOF		
+A69D	partial	noLOF		
+A69E		noLOF		
+A69F		noLOF		
+A69G	functional	LOF		
+A69H		noLOF		
+A69I		noLOF		
+A69K		noLOF		
+A69L		noLOF		
+A69M		noLOF		
+A69N		noLOF		
+A69P	functional	noLOF		
+A69Q		noLOF		
+A69R		noLOF		
+A69S	functional	noLOF		
+A69T	functional	noLOF		
+A69V	functional	noLOF		
+A69W		noLOF		
+A69Y		noLOF		
+A70A		noLOF		
+A70C		LOF		
+A70D	functional	noLOF		
+A70E		noLOF		
+A70F		LOF		
+A70G	functional	noLOF		
+A70H		noLOF		
+A70I		noLOF		
+A70K		noLOF		
+A70L		LOF		
+A70M		noLOF		
+A70N		noLOF		
+A70P	functional	noLOF		
+A70Q		noLOF		
+A70R		noLOF		
+A70S	functional	noLOF		
+A70T	functional	noLOF		
+A70V	functional	noLOF		
+A70W		noLOF		
+A70Y		noLOF		
+P71A	functional	noLOF		
+P71C		noLOF		
+P71D		noLOF		
+P71E		noLOF		
+P71F		noLOF		
+P71G		noLOF		
+P71H	functional	noLOF		
+P71I		noLOF		
+P71K		noLOF		
+P71L	partial	noLOF		
+P71M		noLOF		
+P71N		noLOF		
+P71P		noLOF		
+P71Q		noLOF		
+P71R	partial	noLOF		
+P71S	partial	noLOF		
+P71T	partial	noLOF		
+P71V		noLOF		
+P71W		noLOF		
+P71Y		noLOF		
+R72A		LOF		
+R72C		noLOF		
+R72D		noLOF		
+R72E		noLOF		
+R72F		noLOF		
+R72H		noLOF		
+R72I		LOF		
+R72K		noLOF		
+R72L		noLOF		
+R72M		noLOF		
+R72N		noLOF		
+R72Q		noLOF		
+R72R		noLOF		
+R72T		noLOF		
+R72V		noLOF		
+R72W		LOF		
+R72Y		noLOF		
+V73A	functional	noLOF		
+V73C		noLOF		
+V73D		noLOF		
+V73E	functional	noLOF		
+V73F		noLOF		
+V73G	functional	noLOF		
+V73H		noLOF		
+V73I		noLOF		
+V73K		noLOF		
+V73L	functional	noLOF		
+V73M	functional	noLOF		
+V73N		noLOF		
+V73P		LOF		
+V73Q		noLOF		
+V73R		LOF		
+V73S		noLOF		
+V73T		noLOF		
+V73V		noLOF		
+V73W		LOF		
+V73Y		noLOF		
+A74A		noLOF		
+A74C		LOF		
+A74D	functional	noLOF		
+A74E		noLOF		
+A74F		noLOF		
+A74G	functional	noLOF		
+A74H		noLOF		
+A74I		noLOF		
+A74K		noLOF		
+A74L		noLOF		
+A74M		noLOF		
+A74N		noLOF		
+A74P	functional	LOF		
+A74Q		noLOF		
+A74R		noLOF		
+A74S	partial	noLOF		
+A74T	partial	noLOF		
+A74V	functional	noLOF		
+A74W		noLOF		
+A74Y		noLOF		
+P75A	functional	noLOF		
+P75C		noLOF		
+P75D		noLOF		
+P75E		noLOF		
+P75F		noLOF		
+P75G		noLOF		
+P75H	functional	noLOF		
+P75I		noLOF		
+P75K		noLOF		
+P75L	nonfunctional	LOF		
+P75M		noLOF		
+P75N		noLOF		
+P75P		noLOF		
+P75Q		noLOF		
+P75R	functional	noLOF		
+P75S	functional	noLOF		
+P75T	functional	noLOF		
+P75V		noLOF		
+P75W		noLOF		
+P75Y		noLOF		
+A76A		noLOF		
+A76C		LOF		
+A76D		noLOF		
+A76E	functional	noLOF		
+A76F		noLOF		
+A76G	functional	noLOF		
+A76H		LOF		
+A76I		noLOF		
+A76K		noLOF		
+A76L		noLOF		
+A76M		noLOF		
+A76N		noLOF		
+A76P	functional	noLOF		
+A76Q		noLOF		
+A76R		noLOF		
+A76S	functional	noLOF		
+A76T	functional	noLOF		
+A76V	partial	noLOF		
+A76W		noLOF		
+A76Y		noLOF		
+P77A	functional	noLOF		
+P77C		noLOF		
+P77D		noLOF		
+P77E		noLOF		
+P77F		noLOF		
+P77G		noLOF		
+P77H		noLOF		
+P77I		noLOF		
+P77K		noLOF		
+P77L	functional	noLOF		
+P77M		noLOF		
+P77N		noLOF		
+P77P		noLOF		
+P77Q	functional	noLOF		
+P77R	functional	noLOF		
+P77S	functional	noLOF		
+P77T	functional	noLOF		
+P77V		noLOF		
+P77W		noLOF		
+P77Y		noLOF		
+A78A		noLOF		
+A78C		noLOF		
+A78D		noLOF		
+A78E	functional	noLOF		
+A78F		noLOF		
+A78G	functional	noLOF		
+A78H		noLOF		
+A78I		noLOF		
+A78K		noLOF		
+A78L		LOF		
+A78M		noLOF		
+A78N		noLOF		
+A78P	functional	noLOF		
+A78Q		noLOF		
+A78R		noLOF		
+A78S	functional	noLOF		
+A78T	functional	noLOF		
+A78V	functional	noLOF		
+A78W		noLOF		
+A78Y		noLOF		
+A79A		noLOF		
+A79C		noLOF		
+A79D	functional	noLOF		
+A79E		noLOF		
+A79F		noLOF		
+A79G	functional	noLOF		
+A79H		noLOF		
+A79I		noLOF		
+A79K		noLOF		
+A79L		LOF		
+A79M		noLOF		
+A79N		noLOF		
+A79P	functional	noLOF		
+A79Q		noLOF		
+A79R		noLOF		
+A79S	functional	noLOF		
+A79T	functional	noLOF		
+A79V	functional	noLOF		
+A79W		noLOF		
+A79Y		noLOF		
+P80A	functional	noLOF		
+P80C		noLOF		
+P80D		noLOF		
+P80E		noLOF		
+P80F		noLOF		
+P80G		noLOF		
+P80H	functional	noLOF		
+P80I		noLOF		
+P80K		noLOF		
+P80L	functional	LOF		
+P80M		noLOF		
+P80N		noLOF		
+P80P		noLOF		
+P80Q		noLOF		
+P80R	functional	noLOF		
+P80S	functional	LOF		
+P80T	functional	noLOF		
+P80V		noLOF		
+P80W		noLOF		
+P80Y		noLOF		
+T81A	functional	noLOF		
+T81C		noLOF		
+T81D		noLOF		
+T81E		noLOF		
+T81F		noLOF		
+T81G		noLOF		
+T81H		LOF		
+T81I	functional	noLOF		
+T81K	functional	noLOF		
+T81L		LOF		
+T81M		noLOF		
+T81N		noLOF		
+T81P	functional	noLOF		
+T81Q		noLOF		
+T81R	functional	noLOF		
+T81S	partial	LOF		
+T81T		noLOF		
+T81V		noLOF		
+T81W		noLOF		
+T81Y		LOF		
+P82A	functional	noLOF		
+P82C		noLOF		
+P82D		noLOF		
+P82E		noLOF		
+P82F		noLOF		
+P82G		noLOF		
+P82H		noLOF		
+P82I		noLOF		
+P82K		noLOF		
+P82L	functional	noLOF		
+P82M		noLOF		
+P82N		noLOF		
+P82P		noLOF		
+P82Q	functional	noLOF		
+P82R	functional	noLOF		
+P82S	functional	noLOF		
+P82T	functional	noLOF		
+P82V		noLOF		
+P82W		noLOF		
+P82Y		noLOF		
+A83A		noLOF		
+A83C		LOF		
+A83D		noLOF		
+A83E	functional	noLOF		
+A83F		noLOF		
+A83G	functional	LOF		
+A83H		noLOF		
+A83I		noLOF		
+A83K		noLOF		
+A83L		noLOF		
+A83M		noLOF		
+A83N		noLOF		
+A83P	functional	noLOF		
+A83Q		noLOF		
+A83R		LOF		
+A83S	functional	noLOF		
+A83T	partial	noLOF		
+A83V	functional	noLOF		
+A83W		noLOF		
+A83Y		noLOF		
+A84A		noLOF		
+A84C		noLOF		
+A84D	partial	noLOF		
+A84E		noLOF		
+A84F		noLOF		
+A84G	functional	LOF		
+A84H		noLOF		
+A84I		noLOF		
+A84K		noLOF		
+A84L		noLOF		
+A84M		noLOF		
+A84N		noLOF		
+A84P	functional	LOF		
+A84Q		noLOF		
+A84R		noLOF		
+A84S	partial	noLOF		
+A84T	functional	noLOF		
+A84V	functional	noLOF		
+A84W		noLOF		
+A84Y		noLOF		
+P85A	functional	noLOF		
+P85C		noLOF		
+P85D		noLOF		
+P85E		noLOF		
+P85F		noLOF		
+P85G		noLOF		
+P85H	partial	noLOF		
+P85I		noLOF		
+P85K		noLOF		
+P85L	functional	LOF		
+P85M		noLOF		
+P85N		noLOF		
+P85P		LOF		
+P85Q		noLOF		
+P85R	functional	noLOF		
+P85S	functional	noLOF		
+P85T	functional	noLOF		
+P85V		noLOF		
+P85W		noLOF		
+P85Y		noLOF		
+A86A		noLOF		
+A86C		LOF		
+A86D		noLOF		
+A86E	functional	noLOF		
+A86F		noLOF		
+A86G	functional	noLOF		
+A86H		LOF		
+A86I		noLOF		
+A86K		noLOF		
+A86L		LOF		
+A86M		noLOF		
+A86N		noLOF		
+A86P	functional	noLOF		
+A86Q		LOF		
+A86R		LOF		
+A86S	partial	noLOF		
+A86T	functional	noLOF		
+A86V	functional	noLOF		
+A86W		noLOF		
+A86Y		noLOF		
+P87A	functional	noLOF		
+P87C		noLOF		
+P87D		noLOF		
+P87E		noLOF		
+P87F		noLOF		
+P87G		noLOF		
+P87H		LOF		
+P87I		noLOF		
+P87K		noLOF		
+P87L	functional	noLOF		
+P87M		noLOF		
+P87N		noLOF		
+P87P		noLOF		
+P87Q	functional	noLOF		
+P87R	functional	noLOF		
+P87S	functional	noLOF		
+P87T	functional	LOF		
+P87V		noLOF		
+P87W		noLOF		
+P87Y		noLOF		
+A88A		noLOF		
+A88C		noLOF		
+A88D	partial	noLOF		
+A88E		noLOF		
+A88F		noLOF		
+A88G	functional	noLOF		
+A88H		noLOF		
+A88I		noLOF		
+A88K		LOF		
+A88L		noLOF		
+A88M		noLOF		
+A88N		noLOF		
+A88P	functional	LOF		
+A88Q		noLOF		
+A88R		noLOF		
+A88S	partial	LOF		
+A88T	functional	noLOF		
+A88V	functional	noLOF		
+A88W		noLOF		
+A88Y		noLOF		
+P89A	functional	noLOF		
+P89C		noLOF		
+P89D		noLOF		
+P89E		noLOF		
+P89F		LOF		
+P89G		noLOF		
+P89H	nonfunctional	noLOF		
+P89I		noLOF		
+P89K		noLOF		
+P89L	functional	noLOF		
+P89M		LOF		
+P89N		noLOF		
+P89P		LOF		
+P89Q		noLOF		
+P89R	functional	noLOF		
+P89S	functional	noLOF		
+P89T	functional	noLOF		
+P89V		noLOF		
+P89W		noLOF		
+P89Y		noLOF		
+S90A	functional	noLOF		
+S90C	functional	noLOF		
+S90D		noLOF		
+S90E		noLOF		
+S90F	functional	noLOF		
+S90G		noLOF		
+S90H		LOF		
+S90I		noLOF		
+S90K		noLOF		
+S90L		LOF		
+S90M		noLOF		
+S90N		noLOF		
+S90P	functional	LOF		
+S90Q		noLOF		
+S90R		noLOF		
+S90S		noLOF		
+S90T	functional	noLOF		
+S90V		noLOF		
+S90W		noLOF		
+S90Y	functional	noLOF		
+W91A		noLOF		
+W91C	functional	noLOF		
+W91D		noLOF		
+W91E		LOF		
+W91F		noLOF		
+W91G	partial	LOF		
+W91H		noLOF		
+W91I		LOF		
+W91K		noLOF		
+W91L	functional	LOF		
+W91M		noLOF		
+W91N		noLOF		
+W91P		LOF		
+W91Q		noLOF		
+W91R	partial	LOF		
+W91S	partial	noLOF		
+W91T		noLOF		
+W91V		noLOF		
+W91Y		noLOF		
+P92A	nonfunctional	LOF		
+P92C		noLOF		
+P92D		noLOF		
+P92E		noLOF		
+P92F		noLOF		
+P92G		noLOF		
+P92H	functional	noLOF		
+P92I		noLOF		
+P92K		noLOF		
+P92L	functional	noLOF		
+P92M		noLOF		
+P92N		LOF		
+P92P		noLOF		
+P92Q		noLOF		
+P92R	functional	noLOF		
+P92S	functional	noLOF		
+P92T	functional	noLOF		
+P92V		noLOF		
+P92W		noLOF		
+P92Y		noLOF		
+L93A		noLOF		
+L93C		LOF		
+L93D		noLOF		
+L93F		noLOF		
+L93G		noLOF		
+L93H		noLOF		
+L93I		noLOF		
+L93K		LOF		
+L93L		noLOF		
+L93M	functional	noLOF		
+L93N		noLOF		
+L93P	partial	noLOF		
+L93Q	functional	noLOF		
+L93R	functional	noLOF		
+L93S		noLOF		
+L93V	functional			
+L93W		noLOF		
+L93Y		noLOF		
+S94A	functional	noLOF		
+S94C		noLOF		
+S94D		noLOF		
+S94E		noLOF		
+S94F		noLOF		
+S94G		noLOF		
+S94H		LOF		
+S94I		noLOF		
+S94K		noLOF		
+S94L	functional	noLOF		
+S94M		noLOF		
+S94N		noLOF		
+S94P	functional	noLOF		
+S94Q		noLOF		
+S94R		noLOF		
+S94S		noLOF		
+S94T	functional	noLOF		
+S94V		LOF		
+S94W		noLOF		
+S95A	functional	noLOF		
+S95C	functional	noLOF		
+S95D		noLOF		
+S95E		noLOF		
+S95F	partial	noLOF		
+S95G		noLOF		
+S95H		LOF		
+S95I		LOF		
+S95K		noLOF		
+S95L		LOF		
+S95M		noLOF		
+S95N		noLOF		
+S95P	functional	noLOF		
+S95Q		noLOF		
+S95R		noLOF		
+S95S		noLOF		
+S95T	functional	noLOF		
+S95V		noLOF		
+S95W		noLOF		
+S95Y	functional	noLOF		
+S96A	partial	noLOF		
+S96C	functional	noLOF		
+S96D		noLOF		
+S96E		noLOF		
+S96F	partial	noLOF		
+S96G		noLOF		
+S96H		noLOF		
+S96I		noLOF		
+S96K		noLOF		
+S96L		LOF		
+S96M		noLOF		
+S96N		noLOF		
+S96P	partial	noLOF		
+S96Q		noLOF		
+S96S		noLOF		
+S96T	partial	noLOF		
+S96V		noLOF		
+S96W		noLOF		
+S96Y	functional	noLOF		
+V97A	partial			
+V97C		LOF		
+V97D	nonfunctional	noLOF		
+V97E		noLOF		
+V97F	functional	noLOF		
+V97G	nonfunctional	noLOF		
+V97H		noLOF		
+V97I	functional	noLOF		
+V97K		noLOF		
+V97L	partial	noLOF		
+V97N		noLOF		
+V97P		LOF		
+V97Q		noLOF		
+V97R		noLOF		
+V97S		LOF		
+V97T		LOF		
+V97V		noLOF		
+V97W		noLOF		
+V97Y		noLOF		
+P98A	partial	noLOF		
+P98E		noLOF		
+P98F		noLOF		
+P98H	nonfunctional	noLOF		
+P98I		noLOF		
+P98L	partial	noLOF		
+P98M		noLOF		
+P98N		noLOF		
+P98P		noLOF		
+P98Q		noLOF		
+P98R	partial			
+P98S	nonfunctional	noLOF		
+P98T	nonfunctional	noLOF		
+P98V		noLOF		
+S99A	partial	noLOF		
+S99C	functional	noLOF		
+S99D		noLOF		
+S99E		noLOF		
+S99F	partial	noLOF		
+S99G		noLOF		
+S99H		noLOF		
+S99K		noLOF		
+S99L		LOF		
+S99M		noLOF		
+S99N		noLOF		
+S99P	partial	noLOF		
+S99Q		noLOF		
+S99R		noLOF		
+S99S		noLOF		
+S99T	partial	noLOF		
+S99V		noLOF		
+S99W		noLOF		
+S99Y	partial	noLOF		
+Q100A		LOF		
+Q100C		noLOF		
+Q100D		noLOF		
+Q100E	functional	noLOF		
+Q100F		noLOF		
+Q100G		noLOF		
+Q100H	partial	noLOF		
+Q100I		noLOF		
+Q100K	functional	noLOF		
+Q100L	partial	noLOF		
+Q100M		noLOF		
+Q100N		noLOF		
+Q100P	partial	noLOF		
+Q100Q		noLOF		
+Q100R	partial	noLOF		
+Q100S		noLOF		
+Q100T		noLOF		
+Q100V		noLOF		
+Q100W		noLOF		
+Q100Y		noLOF		
+K101A		noLOF		
+K101C		noLOF		
+K101D		noLOF		
+K101E	functional	LOF		
+K101F		noLOF		
+K101G		LOF		
+K101H		noLOF		
+K101I	partial	noLOF		
+K101K		LOF		
+K101L		noLOF		
+K101M		noLOF		
+K101N	partial	noLOF		
+K101P		noLOF		
+K101Q	partial	noLOF		
+K101R	functional	LOF		
+K101S		noLOF		
+K101T	functional	noLOF		
+K101V		noLOF		
+K101W		noLOF		
+K101Y		noLOF		
+T102A	partial	noLOF	noLOF	
+T102C		noLOF	noLOF	
+T102D			noLOF	
+T102E		noLOF		
+T102F		noLOF	noLOF	
+T102G		noLOF	noLOF	
+T102H		noLOF	noLOF	
+T102I	functional	noLOF	noLOF	
+T102K		noLOF	noLOF	
+T102L		noLOF	noLOF	
+T102M		noLOF	noLOF	
+T102N	functional	noLOF	noLOF	
+T102P	partial	noLOF	noLOF	
+T102Q		noLOF		
+T102R		noLOF	noLOF	
+T102S	functional	noLOF	noLOF	
+T102T		noLOF	noLOF	
+T102V		noLOF	noLOF	
+T102W		noLOF		
+T102Y		noLOF	noLOF	
+Y103A		noLOF	noLOF	
+Y103C	partial	noLOF	noLOF	
+Y103D	partial	noLOF	noLOF	
+Y103E		noLOF	noLOF	
+Y103F	partial	noLOF	noLOF	
+Y103G			LOF	
+Y103H	partial	noLOF	noLOF	
+Y103I		noLOF	noLOF	
+Y103K		noLOF	noLOF	
+Y103L		LOF	noLOF	
+Y103M		LOF		
+Y103N	partial	noLOF	noLOF	
+Y103P		LOF	LOF	
+Y103Q		noLOF	noLOF	
+Y103R		noLOF	noLOF	
+Y103S	partial	noLOF	noLOF	
+Y103T		LOF	noLOF	
+Y103V		noLOF	noLOF	
+Y103W		LOF	noLOF	
+Y103Y		noLOF	noLOF	
+Q104A		noLOF	noLOF	
+Q104C		noLOF		
+Q104D		noLOF	noLOF	
+Q104E	functional	noLOF	noLOF	
+Q104G		noLOF	noLOF	
+Q104H	partial	noLOF	noLOF	
+Q104I		noLOF		
+Q104K	functional	noLOF	noLOF	
+Q104L	functional	noLOF	noLOF	
+Q104M		noLOF		
+Q104N			noLOF	
+Q104P	partial	noLOF	noLOF	
+Q104Q		noLOF	noLOF	
+Q104R	partial	noLOF	noLOF	
+Q104S		noLOF	noLOF	
+Q104T		noLOF	noLOF	
+Q104V		noLOF	noLOF	
+Q104W			noLOF	
+Q104Y		noLOF	noLOF	
+G105A	partial	LOF	LOF	
+G105C	nonfunctional	noLOF	LOF	
+G105D	partial	LOF	noLOF	
+G105E		LOF	LOF	
+G105F		LOF	LOF	
+G105G		noLOF	noLOF	
+G105H		LOF	LOF	
+G105I		LOF	LOF	
+G105K		LOF		
+G105L		LOF	LOF	
+G105M		LOF		
+G105N			noLOF	
+G105P		LOF	LOF	
+G105Q		LOF		
+G105R	nonfunctional	LOF	LOF	
+G105S	nonfunctional	noLOF	noLOF	
+G105T		noLOF	noLOF	
+G105V	nonfunctional	noLOF	LOF	
+G105W		LOF	LOF	
+G105Y		LOF	LOF	
+S106A		LOF	noLOF	
+S106C	functional	noLOF	noLOF	
+S106D		LOF	noLOF	
+S106E		noLOF		
+S106F		noLOF	noLOF	
+S106G	functional	noLOF	noLOF	
+S106H		LOF	noLOF	
+S106I	partial	noLOF	noLOF	
+S106K		LOF	noLOF	
+S106L		noLOF	noLOF	
+S106M		noLOF	noLOF	
+S106N	partial	noLOF	noLOF	
+S106P		noLOF	noLOF	
+S106Q		LOF		
+S106R	partial	noLOF	noLOF	
+S106S		noLOF	noLOF	
+S106T	partial	noLOF	noLOF	
+S106V		noLOF	noLOF	
+S106W		noLOF	noLOF	
+S106Y		noLOF	noLOF	
+Y107A		LOF	noLOF	
+Y107C	partial	LOF	noLOF	
+Y107D	nonfunctional	LOF	LOF	
+Y107E		LOF	LOF	
+Y107F	functional	noLOF	noLOF	
+Y107G		LOF	LOF	
+Y107H	partial	noLOF	noLOF	
+Y107I		noLOF	noLOF	
+Y107K		LOF	LOF	
+Y107L		LOF	noLOF	
+Y107M		LOF		
+Y107N	partial	noLOF	noLOF	
+Y107P		LOF	LOF	
+Y107Q		LOF	LOF	
+Y107R		LOF	LOF	
+Y107S	nonfunctional	noLOF	noLOF	
+Y107T			noLOF	
+Y107V		noLOF	noLOF	
+Y107W		noLOF	noLOF	
+Y107Y		noLOF	noLOF	
+G108A	partial	noLOF	noLOF	
+G108C	partial	noLOF	noLOF	
+G108D	nonfunctional		noLOF	
+G108E		LOF	noLOF	
+G108F		noLOF	noLOF	
+G108G		noLOF	noLOF	
+G108H		noLOF	noLOF	
+G108I		noLOF	noLOF	
+G108K		noLOF		
+G108L		LOF	noLOF	
+G108M		noLOF		
+G108N		noLOF	noLOF	
+G108P		LOF	LOF	
+G108Q		noLOF		
+G108R	partial	LOF	noLOF	
+G108S	partial	noLOF	noLOF	
+G108T		noLOF	noLOF	
+G108V	partial	noLOF	noLOF	
+G108W		LOF	LOF	
+G108Y		noLOF	noLOF	
+F109A		LOF	LOF	
+F109C	nonfunctional	LOF	LOF	
+F109D		LOF	LOF	
+F109E		LOF		
+F109F		noLOF	noLOF	
+F109G		LOF	LOF	
+F109H		LOF	LOF	
+F109I	nonfunctional	LOF	LOF	
+F109K		LOF		
+F109L	partial	noLOF	noLOF	
+F109M		noLOF		
+F109N		LOF	LOF	
+F109P		LOF	LOF	
+F109Q		LOF		
+F109R		LOF	LOF	
+F109S	nonfunctional	LOF	LOF	
+F109T		LOF	LOF	
+F109V	nonfunctional	LOF	LOF	
+F109W		LOF	LOF	
+F109Y	nonfunctional	LOF	noLOF	
+R110A		noLOF	noLOF	
+R110C	nonfunctional	noLOF	noLOF	
+R110D		LOF	LOF	
+R110E		noLOF		
+R110F		LOF	noLOF	
+R110G	nonfunctional	LOF	noLOF	
+R110H	partial	noLOF	noLOF	
+R110I		LOF	LOF	
+R110K		noLOF		
+R110L	nonfunctional		LOF	
+R110M		noLOF		
+R110N		noLOF	noLOF	
+R110P	nonfunctional	LOF	LOF	
+R110Q		noLOF	noLOF	
+R110R		noLOF	noLOF	
+R110S	nonfunctional	noLOF	noLOF	
+R110T		noLOF	noLOF	
+R110V		LOF	noLOF	
+R110W		LOF	LOF	
+R110Y		noLOF	noLOF	
+L111A		LOF	LOF	
+L111C		LOF		
+L111D		LOF		
+L111E		LOF	LOF	
+L111F		LOF	LOF	
+L111G		LOF	LOF	
+L111H		LOF	LOF	
+L111I		noLOF	noLOF	
+L111K		LOF	LOF	
+L111L		noLOF	noLOF	
+L111M	partial	noLOF	noLOF	
+L111N		LOF		
+L111P	nonfunctional	LOF	LOF	
+L111Q	nonfunctional	LOF	LOF	
+L111R	nonfunctional	LOF	LOF	
+L111S		LOF	LOF	
+L111T		LOF	noLOF	
+L111V	partial	noLOF	noLOF	
+L111W		LOF	LOF	
+L111Y		LOF		
+G112A	partial		noLOF	
+G112C	partial	noLOF	noLOF	
+G112D	partial	noLOF	noLOF	
+G112E		noLOF	noLOF	
+G112F		noLOF	noLOF	
+G112G		noLOF	noLOF	
+G112H		noLOF	noLOF	
+G112I		LOF	noLOF	
+G112K		noLOF		
+G112L		LOF	noLOF	
+G112M		LOF		
+G112N		noLOF	noLOF	
+G112P		LOF	LOF	
+G112Q		noLOF		
+G112R	functional	noLOF	noLOF	
+G112S	partial	noLOF	noLOF	
+G112T		noLOF	noLOF	
+G112V	partial	noLOF	noLOF	
+G112W		LOF	LOF	
+G112Y			noLOF	
+F113A		LOF	LOF	
+F113C	nonfunctional	LOF	LOF	
+F113D		LOF	LOF	
+F113E		LOF		
+F113F		noLOF	noLOF	
+F113G		LOF	LOF	
+F113H		noLOF	noLOF	
+F113I	nonfunctional		LOF	
+F113K		LOF		
+F113L	nonfunctional	noLOF	noLOF	
+F113M		LOF		
+F113N		LOF	LOF	
+F113P		LOF	LOF	
+F113Q		LOF		
+F113R		LOF	LOF	
+F113S	nonfunctional	LOF	LOF	
+F113T		LOF	LOF	
+F113V	nonfunctional	LOF	LOF	
+F113W		noLOF	noLOF	
+F113Y	partial	noLOF	noLOF	
+L114A		noLOF	noLOF	
+L114C		LOF	noLOF	
+L114D		noLOF		
+L114E		noLOF	noLOF	
+L114F	functional	noLOF	noLOF	
+L114G		noLOF	noLOF	
+L114H		noLOF		
+L114I		noLOF	noLOF	
+L114K		noLOF	noLOF	
+L114L		noLOF	noLOF	
+L114M	functional	noLOF	noLOF	
+L114N		LOF		
+L114P		noLOF	noLOF	
+L114Q		noLOF	noLOF	
+L114R		noLOF	noLOF	
+L114S	functional	noLOF	noLOF	
+L114T		noLOF	noLOF	
+L114V	functional	noLOF	noLOF	
+L114W	partial	noLOF	noLOF	
+L114Y		noLOF	noLOF	
+H115A		LOF	noLOF	
+H115C		noLOF	noLOF	
+H115D	functional	noLOF	noLOF	
+H115E		noLOF	noLOF	
+H115F		noLOF		
+H115G		noLOF	noLOF	
+H115H		noLOF	noLOF	
+H115I		LOF	noLOF	
+H115K		noLOF	noLOF	
+H115L	functional	noLOF	noLOF	
+H115M		noLOF		
+H115N	functional	noLOF	noLOF	
+H115P	functional	noLOF	noLOF	
+H115Q	functional	noLOF	noLOF	
+H115R	functional	noLOF	noLOF	
+H115S		LOF	noLOF	
+H115T		LOF	noLOF	
+H115V		noLOF	noLOF	
+H115W		noLOF		
+H115Y	functional	noLOF	noLOF	
+S116A	functional	noLOF	noLOF	
+S116C	partial	noLOF	noLOF	
+S116D		noLOF	noLOF	
+S116E		noLOF		
+S116F	functional	LOF	noLOF	
+S116G		noLOF	noLOF	
+S116H		noLOF	noLOF	
+S116I		noLOF	noLOF	
+S116K		noLOF		
+S116L		LOF	noLOF	
+S116M		LOF		
+S116N		noLOF	noLOF	
+S116P	nonfunctional	noLOF	noLOF	
+S116Q		noLOF		
+S116R		LOF	noLOF	
+S116S		noLOF	noLOF	
+S116T	functional	noLOF	noLOF	
+S116V		LOF	noLOF	
+S116W			noLOF	
+S116Y	partial	noLOF	noLOF	
+G117A	partial	noLOF	noLOF	
+G117C		noLOF	noLOF	
+G117D			noLOF	
+G117E	partial	noLOF	noLOF	
+G117G		noLOF	noLOF	
+G117H		noLOF		
+G117K		LOF	noLOF	
+G117L		noLOF		
+G117M		noLOF	noLOF	
+G117N		noLOF		
+G117P		noLOF	noLOF	
+G117Q		noLOF	noLOF	
+G117R	partial	noLOF	noLOF	
+G117S		noLOF	noLOF	
+G117T		noLOF	noLOF	
+G117V	nonfunctional	noLOF	noLOF	
+G117W	nonfunctional	noLOF	noLOF	
+T118A	functional	noLOF	noLOF	
+T118C		noLOF		
+T118D		LOF		
+T118E		LOF	noLOF	
+T118F		noLOF		
+T118G		LOF	noLOF	
+T118H		LOF		
+T118I	functional	noLOF	noLOF	
+T118K	functional	noLOF	noLOF	
+T118L		noLOF	noLOF	
+T118M		noLOF	noLOF	
+T118N		noLOF	noLOF	
+T118P	nonfunctional	noLOF	noLOF	
+T118Q		noLOF	noLOF	
+T118R	partial	noLOF	noLOF	
+T118S	functional		noLOF	
+T118T		noLOF	noLOF	
+T118V		noLOF	noLOF	
+T118W		noLOF		
+T118Y		noLOF		
+A119A		noLOF	noLOF	
+A119C			noLOF	
+A119D	nonfunctional	noLOF	noLOF	
+A119E		noLOF	noLOF	
+A119F		noLOF	noLOF	
+A119G	partial	noLOF	noLOF	
+A119H		noLOF	noLOF	
+A119I			noLOF	
+A119K		noLOF		
+A119L		noLOF	noLOF	
+A119M		LOF		
+A119N		noLOF	noLOF	
+A119P	partial	noLOF	noLOF	
+A119Q		noLOF		
+A119R		noLOF	noLOF	
+A119S	functional	noLOF	noLOF	
+A119T	functional	noLOF	noLOF	
+A119V	partial	noLOF	noLOF	
+A119W		noLOF		
+A119Y		noLOF	noLOF	
+K120A		LOF	noLOF	
+K120C		noLOF		
+K120D		LOF	LOF	
+K120E	nonfunctional	LOF	LOF	
+K120F		LOF		
+K120G			noLOF	
+K120H		noLOF	noLOF	
+K120I		LOF	LOF	
+K120K		noLOF	noLOF	
+K120L		noLOF		
+K120M	nonfunctional	noLOF	noLOF	
+K120N	nonfunctional	noLOF	noLOF	
+K120P		LOF	noLOF	
+K120Q	nonfunctional	LOF	noLOF	
+K120R	partial	noLOF	noLOF	
+K120S		LOF	noLOF	
+K120T	nonfunctional	noLOF	noLOF	
+K120V		noLOF	noLOF	
+K120W		LOF	noLOF	
+K120Y		LOF	noLOF	
+S121A	partial	LOF	noLOF	
+S121C	functional	noLOF	noLOF	
+S121D		LOF	LOF	
+S121E		LOF		
+S121F	functional	LOF	noLOF	
+S121G		noLOF	noLOF	
+S121H			noLOF	
+S121I		LOF	noLOF	
+S121K		noLOF		
+S121L		LOF	noLOF	
+S121M		LOF		
+S121N		noLOF	noLOF	
+S121P	nonfunctional		noLOF	
+S121Q		noLOF		
+S121R		noLOF	noLOF	
+S121S		noLOF	noLOF	
+S121T	functional	noLOF	noLOF	
+S121V		LOF	noLOF	
+S121W		LOF	noLOF	
+S121Y	functional	noLOF	noLOF	
+V122A	nonfunctional	noLOF	noLOF	
+V122C		LOF		
+V122D		noLOF	noLOF	
+V122E	partial	noLOF	noLOF	
+V122F		noLOF	noLOF	
+V122G	nonfunctional	LOF	noLOF	
+V122H		noLOF		
+V122I			noLOF	
+V122K		noLOF	noLOF	
+V122L	nonfunctional	noLOF	noLOF	
+V122M	partial		noLOF	
+V122N		LOF		
+V122P		LOF	noLOF	
+V122Q		noLOF	noLOF	
+V122R		noLOF	noLOF	
+V122S		noLOF	noLOF	
+V122T		LOF	noLOF	
+V122V		noLOF	noLOF	
+V122W			noLOF	
+V122Y		noLOF		
+T123A	functional	LOF	noLOF	
+T123C		noLOF	noLOF	
+T123D		LOF	noLOF	
+T123F		noLOF		
+T123G		noLOF	noLOF	
+T123H		LOF	noLOF	
+T123I	partial	noLOF	noLOF	
+T123K		noLOF	noLOF	
+T123L			noLOF	
+T123M		noLOF	noLOF	
+T123N	functional	noLOF	noLOF	
+T123P	nonfunctional	LOF	noLOF	
+T123R		LOF	noLOF	
+T123S	functional	noLOF	noLOF	
+T123T		noLOF	noLOF	
+T123V			noLOF	
+T123W		noLOF		
+T123Y			noLOF	
+C124A		LOF	noLOF	
+C124C		noLOF	noLOF	
+C124D		LOF	LOF	
+C124E		LOF		
+C124F	functional	noLOF	noLOF	
+C124G	partial	LOF	noLOF	
+C124H			noLOF	
+C124I		LOF	LOF	
+C124K		LOF		
+C124L		LOF	LOF	
+C124M		noLOF		
+C124N		noLOF	noLOF	
+C124P		LOF	LOF	
+C124R	nonfunctional	LOF	LOF	
+C124S	functional	noLOF	noLOF	
+C124T			noLOF	
+C124V		noLOF	noLOF	
+C124W	functional	noLOF	noLOF	
+C124Y	functional	noLOF	noLOF	
+T125A	partial		noLOF	
+T125C		noLOF		
+T125D		LOF		
+T125E			noLOF	
+T125F		LOF		
+T125G		LOF	LOF	
+T125H		LOF		
+T125I			noLOF	
+T125K	nonfunctional	LOF	LOF	
+T125L		noLOF		
+T125M	nonfunctional	noLOF	noLOF	
+T125N		LOF	noLOF	
+T125P	nonfunctional	LOF	LOF	
+T125Q		LOF	noLOF	
+T125R	nonfunctional	LOF	LOF	
+T125S	partial		noLOF	
+T125T		noLOF	noLOF	
+T125V			noLOF	
+T125W		LOF	LOF	
+T125Y		LOF		
+Y126A		LOF	LOF	
+Y126C	nonfunctional	LOF	LOF	
+Y126D	nonfunctional	LOF	LOF	
+Y126E		LOF	LOF	
+Y126F	functional	noLOF	noLOF	
+Y126G		LOF	LOF	
+Y126H	nonfunctional	LOF	LOF	
+Y126I		LOF	LOF	
+Y126K		LOF	LOF	
+Y126L		LOF	LOF	
+Y126M		LOF		
+Y126N	nonfunctional	LOF	LOF	
+Y126P		LOF	LOF	
+Y126Q		LOF	LOF	
+Y126R		LOF	LOF	
+Y126S	nonfunctional	LOF	LOF	
+Y126T		LOF	LOF	
+Y126V		LOF	LOF	
+Y126W		noLOF	noLOF	
+Y126Y		noLOF	noLOF	
+S127A	partial	noLOF	noLOF	
+S127C	nonfunctional	LOF	noLOF	
+S127D		LOF	LOF	
+S127E		LOF		
+S127F	nonfunctional	LOF	LOF	
+S127G		LOF	LOF	
+S127H		LOF	LOF	
+S127I		LOF	LOF	
+S127K		LOF		
+S127L		LOF	LOF	
+S127M		LOF		
+S127N		LOF	LOF	
+S127P	nonfunctional	LOF	LOF	
+S127Q		LOF		
+S127R		LOF	LOF	
+S127S		noLOF	noLOF	
+S127T	nonfunctional	LOF	LOF	
+S127V		LOF	LOF	
+S127W		LOF	LOF	
+S127Y	nonfunctional		LOF	
+P128A	functional	noLOF	noLOF	
+P128C		noLOF	noLOF	
+P128D		noLOF	noLOF	
+P128E		noLOF		
+P128F		noLOF	noLOF	
+P128G		noLOF	noLOF	
+P128H	functional	noLOF	noLOF	
+P128I		noLOF	noLOF	
+P128K		noLOF		
+P128L	partial	LOF	noLOF	
+P128M		noLOF		
+P128N		noLOF	noLOF	
+P128P		LOF	noLOF	
+P128Q		noLOF	noLOF	
+P128R	functional	noLOF	noLOF	
+P128S	functional	noLOF	noLOF	
+P128T	functional	noLOF	noLOF	
+P128V		LOF	noLOF	
+P128W		noLOF		
+P128Y		noLOF	noLOF	
+A129A		noLOF	noLOF	
+A129C		LOF	noLOF	
+A129D	functional	noLOF	noLOF	
+A129E		noLOF	noLOF	
+A129F		noLOF	noLOF	
+A129G	functional	noLOF	noLOF	
+A129H		noLOF	noLOF	
+A129I		noLOF	noLOF	
+A129K		noLOF		
+A129L		noLOF	noLOF	
+A129M		noLOF		
+A129N			noLOF	
+A129P	functional	LOF	noLOF	
+A129Q		noLOF		
+A129R		noLOF	noLOF	
+A129S	functional	noLOF	noLOF	
+A129T	functional	noLOF	noLOF	
+A129V	functional	noLOF	noLOF	
+A129Y		noLOF	noLOF	
+L130A		LOF	LOF	
+L130C		LOF	noLOF	
+L130D		LOF	LOF	
+L130E		LOF		
+L130F	nonfunctional	LOF	LOF	
+L130G		LOF	LOF	
+L130H	nonfunctional	LOF	LOF	
+L130I	partial	noLOF	noLOF	
+L130K		LOF		
+L130L		noLOF	noLOF	
+L130M		noLOF		
+L130N		LOF	LOF	
+L130P	nonfunctional	LOF	LOF	
+L130Q		LOF	LOF	
+L130R	nonfunctional	LOF	LOF	
+L130S		LOF	LOF	
+L130T		LOF	LOF	
+L130V	nonfunctional	LOF	LOF	
+L130W		LOF		
+L130Y		LOF	LOF	
+N131A		LOF	noLOF	
+N131C		LOF	noLOF	
+N131D	partial	noLOF	noLOF	
+N131E		LOF	LOF	
+N131F		LOF	LOF	
+N131G		noLOF	noLOF	
+N131H	partial	noLOF	noLOF	
+N131I	nonfunctional	LOF	LOF	
+N131K	partial	noLOF	noLOF	
+N131L		LOF	LOF	
+N131M		LOF	LOF	
+N131N		noLOF	noLOF	
+N131P		LOF	LOF	
+N131Q		LOF	noLOF	
+N131R		noLOF	noLOF	
+N131S	partial		noLOF	
+N131T	partial	LOF	noLOF	
+N131V		LOF	LOF	
+N131W		LOF		
+N131Y	nonfunctional	LOF	LOF	
+K132A		LOF	LOF	
+K132C		LOF		
+K132D		LOF	LOF	
+K132E	nonfunctional	LOF	LOF	
+K132F		LOF		
+K132G		LOF	LOF	
+K132H		LOF	LOF	
+K132I		LOF	LOF	
+K132K		noLOF	noLOF	
+K132L		LOF		
+K132M	nonfunctional	LOF	LOF	
+K132N	nonfunctional	LOF	LOF	
+K132P		LOF	LOF	
+K132Q	nonfunctional	LOF	LOF	
+K132R	nonfunctional	LOF	LOF	
+K132S		LOF	LOF	
+K132T	nonfunctional	LOF	LOF	
+K132V		LOF	LOF	
+K132W		LOF	LOF	
+K132Y		LOF	LOF	
+M133A			noLOF	
+M133C		LOF		
+M133D		LOF		
+M133E		LOF	LOF	
+M133F		LOF	noLOF	
+M133G		LOF	LOF	
+M133H		LOF		
+M133I	functional	noLOF	noLOF	
+M133K	nonfunctional	LOF	LOF	
+M133L	functional	noLOF	noLOF	
+M133N		LOF	LOF	
+M133P		LOF	LOF	
+M133Q		LOF	LOF	
+M133R	nonfunctional	LOF	LOF	
+M133S		LOF	LOF	
+M133T	nonfunctional	LOF	LOF	
+M133V	functional	noLOF	noLOF	
+M133W		LOF	LOF	
+M133Y		noLOF		
+F134A		LOF	LOF	
+F134C	nonfunctional	LOF	LOF	
+F134D		LOF	LOF	
+F134E		LOF		
+F134F		noLOF	noLOF	
+F134G		LOF	LOF	
+F134H		LOF	LOF	
+F134I	nonfunctional	LOF	LOF	
+F134K		LOF		
+F134L	nonfunctional	LOF	LOF	
+F134M		LOF		
+F134N		LOF	LOF	
+F134P		LOF	LOF	
+F134Q		LOF		
+F134R		LOF	LOF	
+F134S	nonfunctional	LOF	LOF	
+F134T		LOF	LOF	
+F134V	nonfunctional	LOF	LOF	
+F134W		LOF	noLOF	
+F134Y	partial	noLOF	noLOF	
+C135A		LOF	noLOF	
+C135C		noLOF	noLOF	
+C135D		LOF	LOF	
+C135E		LOF		
+C135F	nonfunctional	LOF	LOF	
+C135G	nonfunctional	LOF	LOF	
+C135H		LOF	LOF	
+C135I		noLOF	noLOF	
+C135K		LOF		
+C135L		LOF	noLOF	
+C135M		LOF		
+C135N		LOF	LOF	
+C135P		LOF	LOF	
+C135Q		LOF		
+C135R	nonfunctional	LOF	LOF	
+C135S	nonfunctional	LOF	LOF	
+C135T		noLOF	noLOF	
+C135V		noLOF	noLOF	
+C135W	partial	LOF	LOF	
+C135Y	nonfunctional	LOF	LOF	
+Q136A		noLOF	noLOF	
+Q136D		LOF	LOF	
+Q136E	nonfunctional	LOF	LOF	
+Q136F		LOF		
+Q136G		noLOF	noLOF	
+Q136H	nonfunctional	noLOF	noLOF	
+Q136I			noLOF	
+Q136K	functional	noLOF	noLOF	
+Q136L	partial	noLOF	noLOF	
+Q136N		LOF	noLOF	
+Q136P	nonfunctional	LOF	LOF	
+Q136Q			noLOF	
+Q136R	functional	noLOF	noLOF	
+Q136S		noLOF	noLOF	
+Q136T		noLOF	noLOF	
+Q136V		noLOF	noLOF	
+Q136W		LOF		
+Q136Y			noLOF	
+L137A		noLOF	noLOF	
+L137C		noLOF		
+L137D		LOF		
+L137E		LOF	LOF	
+L137F		noLOF	noLOF	
+L137G		LOF	LOF	
+L137H			noLOF	
+L137I		noLOF	noLOF	
+L137K		noLOF	noLOF	
+L137L		noLOF	noLOF	
+L137M	partial	noLOF	noLOF	
+L137P	functional	noLOF	noLOF	
+L137Q	functional	noLOF	noLOF	
+L137R	functional	noLOF	noLOF	
+L137S		noLOF	noLOF	
+L137T		LOF	noLOF	
+L137V	functional	noLOF	noLOF	
+L137W		LOF	noLOF	
+L137Y		noLOF		
+A138A		noLOF	noLOF	
+A138C		noLOF	noLOF	
+A138D	partial	noLOF	noLOF	
+A138E		noLOF	noLOF	
+A138F			noLOF	
+A138G	nonfunctional	LOF	noLOF	
+A138H		noLOF	noLOF	
+A138I		LOF	LOF	
+A138K		noLOF		
+A138L		LOF	LOF	
+A138M		noLOF		
+A138N		noLOF	noLOF	
+A138P	nonfunctional	LOF	LOF	
+A138Q		noLOF		
+A138R		noLOF	noLOF	
+A138S	functional	noLOF	noLOF	
+A138T	partial	noLOF	noLOF	
+A138V	partial	LOF	LOF	
+A138Y			noLOF	
+K139A		noLOF	noLOF	
+K139C		noLOF		
+K139D		LOF	LOF	
+K139E	functional		LOF	
+K139F		LOF		
+K139G			noLOF	
+K139H		noLOF	noLOF	
+K139I			LOF	
+K139K		noLOF	noLOF	
+K139L		LOF		
+K139M	partial	noLOF	noLOF	
+K139N	nonfunctional		noLOF	
+K139P		LOF	LOF	
+K139Q	partial	LOF	noLOF	
+K139R	functional	LOF	noLOF	
+K139S		noLOF	noLOF	
+K139T	partial	noLOF	noLOF	
+K139V		noLOF	noLOF	
+K139W		LOF	LOF	
+K139Y		LOF	LOF	
+T140A	nonfunctional	noLOF	noLOF	
+T140C		noLOF	noLOF	
+T140D		LOF	noLOF	
+T140E		LOF		
+T140F		LOF	noLOF	
+T140G		noLOF	noLOF	
+T140H		LOF	noLOF	
+T140I	partial	noLOF	noLOF	
+T140K		LOF	noLOF	
+T140L		noLOF	noLOF	
+T140M		noLOF	noLOF	
+T140N	partial	noLOF	noLOF	
+T140P	functional	LOF	noLOF	
+T140R		LOF	noLOF	
+T140S	partial	noLOF	noLOF	
+T140T		noLOF	noLOF	
+T140V		noLOF	noLOF	
+T140W		LOF		
+T140Y		LOF	noLOF	
+C141A		LOF	noLOF	
+C141C		noLOF	noLOF	
+C141D		LOF	LOF	
+C141E		LOF		
+C141F	partial		noLOF	
+C141G	nonfunctional	LOF	LOF	
+C141H		LOF	LOF	
+C141I		noLOF	noLOF	
+C141K		LOF		
+C141L		LOF	LOF	
+C141M		noLOF		
+C141N		LOF	LOF	
+C141P		LOF	LOF	
+C141Q		LOF		
+C141R	nonfunctional	LOF	LOF	
+C141S	partial	noLOF	noLOF	
+C141T			noLOF	
+C141V		LOF	noLOF	
+C141W	nonfunctional	LOF	LOF	
+C141Y	nonfunctional	LOF	LOF	
+P142A	functional	noLOF	noLOF	
+P142C		noLOF	noLOF	
+P142D			noLOF	
+P142E		noLOF		
+P142F		LOF	noLOF	
+P142G		noLOF	noLOF	
+P142H	functional	noLOF	noLOF	
+P142I		noLOF	noLOF	
+P142K		noLOF		
+P142L	partial	LOF	noLOF	
+P142N		noLOF	noLOF	
+P142P		noLOF	noLOF	
+P142Q		noLOF	noLOF	
+P142R	partial	LOF	noLOF	
+P142S	partial	noLOF	noLOF	
+P142T	partial	noLOF	noLOF	
+P142V		LOF	noLOF	
+P142W		LOF		
+P142Y		noLOF	noLOF	
+V143A	nonfunctional	LOF	LOF	
+V143C		LOF		
+V143D		LOF	LOF	
+V143E	nonfunctional	LOF	LOF	
+V143F		LOF	LOF	
+V143G	nonfunctional	LOF	LOF	
+V143H		LOF		
+V143I		noLOF	noLOF	
+V143K		LOF	LOF	
+V143L	partial	noLOF	noLOF	
+V143M	nonfunctional	LOF	noLOF	
+V143N		LOF		
+V143P		LOF	LOF	
+V143Q		LOF	LOF	
+V143R		LOF	LOF	
+V143S		LOF	LOF	
+V143T		LOF	LOF	
+V143V		noLOF	noLOF	
+V143W		LOF	LOF	
+V143Y		LOF		
+Q144A		LOF	noLOF	
+Q144C		noLOF		
+Q144D			noLOF	
+Q144E	functional		noLOF	
+Q144F		noLOF		
+Q144G		noLOF	noLOF	
+Q144H	partial	noLOF	noLOF	
+Q144I		LOF		
+Q144K	partial	noLOF	noLOF	
+Q144L	partial	noLOF	noLOF	
+Q144N		noLOF	noLOF	
+Q144P	nonfunctional	LOF	LOF	
+Q144Q		noLOF	noLOF	
+Q144R	partial	noLOF	noLOF	
+Q144S		noLOF	noLOF	
+Q144T		noLOF	noLOF	
+Q144V			noLOF	
+Q144W		LOF	LOF	
+Q144Y			noLOF	
+L145A		LOF	LOF	
+L145C		noLOF		
+L145D		LOF		
+L145E		LOF	LOF	
+L145F			noLOF	
+L145G		LOF	LOF	
+L145H		LOF	LOF	
+L145I		noLOF	noLOF	
+L145K		LOF	LOF	
+L145L		noLOF	noLOF	
+L145M	functional	noLOF	noLOF	
+L145N		LOF		
+L145P	nonfunctional	LOF	LOF	
+L145Q	nonfunctional	LOF	LOF	
+L145R	nonfunctional	LOF	LOF	
+L145S		LOF	LOF	
+L145T		LOF	noLOF	
+L145V	functional	LOF	noLOF	
+L145W		LOF	LOF	
+W146A		noLOF	noLOF	
+W146C	partial	noLOF	noLOF	
+W146D		LOF		
+W146E		LOF	noLOF	
+W146F		noLOF	noLOF	
+W146G	nonfunctional	LOF	noLOF	
+W146H		noLOF		
+W146I		noLOF		
+W146K		noLOF	noLOF	
+W146L	functional	noLOF	noLOF	
+W146P		LOF	LOF	
+W146Q			noLOF	
+W146R	functional	noLOF	noLOF	
+W146S	partial	noLOF	noLOF	
+W146T			noLOF	
+W146V		LOF	noLOF	
+W146Y		noLOF	noLOF	
+V147A	partial		noLOF	
+V147C		LOF	noLOF	
+V147D	nonfunctional	LOF	LOF	
+V147E		LOF	LOF	
+V147F	functional	noLOF	noLOF	
+V147G	nonfunctional	LOF	LOF	
+V147H		LOF	LOF	
+V147I	partial		noLOF	
+V147K		LOF		
+V147L	partial	LOF	noLOF	
+V147M		noLOF	noLOF	
+V147N		LOF	noLOF	
+V147P		LOF	LOF	
+V147Q		LOF		
+V147R		LOF	LOF	
+V147S		LOF	noLOF	
+V147T		noLOF	noLOF	
+V147V		noLOF	noLOF	
+V147W		LOF		
+V147Y		LOF	LOF	
+D148A	functional	LOF	noLOF	
+D148C		LOF	noLOF	
+D148D		noLOF	noLOF	
+D148E	functional	noLOF	noLOF	
+D148F		LOF	noLOF	
+D148G	partial	noLOF	noLOF	
+D148H	functional	noLOF	noLOF	
+D148I		LOF	noLOF	
+D148K			noLOF	
+D148L		LOF	noLOF	
+D148M		noLOF		
+D148N	functional	noLOF	LOF	
+D148P		LOF	LOF	
+D148Q		noLOF	noLOF	
+D148R		noLOF	noLOF	
+D148S		LOF	noLOF	
+D148T		LOF	noLOF	
+D148V	partial	LOF	noLOF	
+D148W		noLOF		
+D148Y	partial	noLOF	noLOF	
+S149A	functional	noLOF	noLOF	
+S149C	partial	noLOF	noLOF	
+S149D		LOF	noLOF	
+S149F	partial	LOF	noLOF	
+S149G		noLOF	noLOF	
+S149H		noLOF	LOF	
+S149I		LOF	noLOF	
+S149L		LOF	noLOF	
+S149M		noLOF		
+S149N		noLOF	noLOF	
+S149P	partial	noLOF	noLOF	
+S149Q		noLOF		
+S149R		LOF	noLOF	
+S149S		noLOF	noLOF	
+S149T	functional	noLOF	noLOF	
+S149V		LOF	noLOF	
+S149W		noLOF	noLOF	
+S149Y	functional	noLOF	noLOF	
+T150A	functional		noLOF	
+T150E			noLOF	
+T150F		noLOF		
+T150G		noLOF	noLOF	
+T150H		LOF		
+T150I	functional	noLOF	noLOF	
+T150K	functional	noLOF	noLOF	
+T150L		LOF	noLOF	
+T150M		noLOF	noLOF	
+T150N		LOF	noLOF	
+T150P	functional	LOF	noLOF	
+T150Q		LOF		
+T150R	functional		noLOF	
+T150S	functional	LOF	noLOF	
+T150T		noLOF	noLOF	
+T150V		noLOF	noLOF	
+T150Y		noLOF		
+P151A	nonfunctional	LOF		
+P151C			noLOF	
+P151D		LOF	LOF	
+P151E		LOF		
+P151F		LOF	LOF	
+P151G		LOF	LOF	
+P151H	nonfunctional		LOF	
+P151I		LOF	noLOF	
+P151K		LOF		
+P151L	partial		noLOF	
+P151M		LOF		
+P151N		LOF	LOF	
+P151P		noLOF	noLOF	
+P151Q		LOF	LOF	
+P151R	nonfunctional	LOF	LOF	
+P151S	nonfunctional	LOF	LOF	
+P151T	nonfunctional	LOF	LOF	
+P151V		LOF	noLOF	
+P151W		LOF		
+P151Y		LOF	LOF	
+P152A	nonfunctional		noLOF	
+P152C		LOF		
+P152D		LOF		
+P152E		LOF	noLOF	
+P152F		LOF		
+P152G		LOF	noLOF	
+P152H		LOF	LOF	
+P152I		LOF		
+P152K		LOF	noLOF	
+P152L	nonfunctional	LOF	noLOF	
+P152M		LOF		
+P152N		LOF		
+P152P			noLOF	
+P152Q	nonfunctional		noLOF	
+P152R	nonfunctional	LOF	LOF	
+P152S	nonfunctional	LOF	noLOF	
+P152T	nonfunctional		noLOF	
+P152V		LOF	LOF	
+P152W		LOF	LOF	
+P152Y		LOF		
+P153A	functional	LOF	noLOF	
+P153C		noLOF	noLOF	
+P153D		noLOF	noLOF	
+P153E		noLOF		
+P153F		noLOF	noLOF	
+P153G		LOF	noLOF	
+P153H	partial		noLOF	
+P153I			noLOF	
+P153K		LOF		
+P153L	partial	noLOF	noLOF	
+P153M		LOF		
+P153N		LOF	noLOF	
+P153P		noLOF	noLOF	
+P153Q		noLOF	noLOF	
+P153R	partial	noLOF	noLOF	
+P153S	partial	noLOF	noLOF	
+P153T	partial	noLOF	noLOF	
+P153V		noLOF	noLOF	
+P153W		noLOF		
+P153Y		noLOF	noLOF	
+G154A	partial		noLOF	
+G154C	partial	noLOF	LOF	
+G154D	partial	noLOF	noLOF	
+G154E		noLOF	noLOF	
+G154F		noLOF	noLOF	
+G154G		noLOF	noLOF	
+G154H		noLOF		
+G154I		LOF	LOF	
+G154K		noLOF		
+G154L			noLOF	
+G154M		noLOF		
+G154N		LOF	noLOF	
+G154P		LOF		
+G154Q		LOF		
+G154R	partial	LOF	noLOF	
+G154S	partial		noLOF	
+G154T		LOF	noLOF	
+G154V	nonfunctional	LOF	LOF	
+G154W		noLOF	noLOF	
+G154Y		noLOF	noLOF	
+T155A	functional		noLOF	
+T155C		noLOF	noLOF	
+T155D		LOF	LOF	
+T155E		LOF		
+T155F		LOF	LOF	
+T155G		LOF	LOF	
+T155H		LOF	LOF	
+T155I	nonfunctional	LOF	LOF	
+T155K		LOF	LOF	
+T155L			noLOF	
+T155M		LOF	LOF	
+T155N	nonfunctional		LOF	
+T155P	nonfunctional	LOF	noLOF	
+T155Q		LOF		
+T155R		LOF	LOF	
+T155S	functional	noLOF	noLOF	
+T155T		noLOF	noLOF	
+T155V		noLOF	noLOF	
+T155W		LOF		
+T155Y		LOF	LOF	
+R156A		LOF	noLOF	
+R156C	partial	noLOF	noLOF	
+R156D		LOF	LOF	
+R156E		LOF		
+R156F		noLOF	noLOF	
+R156G	nonfunctional	LOF	LOF	
+R156H	partial		noLOF	
+R156I		noLOF	noLOF	
+R156K		noLOF		
+R156L	functional	noLOF	noLOF	
+R156M		noLOF		
+R156N		noLOF	noLOF	
+R156P	nonfunctional	LOF	LOF	
+R156Q		LOF	noLOF	
+R156R		noLOF	noLOF	
+R156S	partial	noLOF	noLOF	
+R156T		LOF	noLOF	
+R156V		noLOF	noLOF	
+R156W		noLOF	noLOF	
+R156Y		LOF	noLOF	
+V157A	nonfunctional	LOF		
+V157C		noLOF	noLOF	
+V157D	nonfunctional	LOF	LOF	
+V157E		LOF	LOF	
+V157F	nonfunctional		LOF	
+V157G	nonfunctional	LOF	LOF	
+V157H		LOF	LOF	
+V157I	partial	noLOF	noLOF	
+V157K		LOF		
+V157L	nonfunctional	LOF	noLOF	
+V157M		LOF	LOF	
+V157N		LOF	LOF	
+V157P		LOF		
+V157Q		LOF		
+V157R		LOF	LOF	
+V157S		LOF	LOF	
+V157T		LOF	LOF	
+V157V		noLOF	noLOF	
+V157W		LOF		
+V157Y		LOF	LOF	
+R158A		noLOF	noLOF	
+R158C	partial		noLOF	
+R158D		LOF	LOF	
+R158E		LOF		
+R158F		LOF	LOF	
+R158G	nonfunctional	LOF	LOF	
+R158H	nonfunctional	LOF	LOF	
+R158I		noLOF	noLOF	
+R158K		noLOF		
+R158L	nonfunctional	LOF	LOF	
+R158M		LOF		
+R158N		LOF	LOF	
+R158P	nonfunctional	LOF	LOF	
+R158Q		LOF	LOF	
+R158R		noLOF	noLOF	
+R158S	nonfunctional	noLOF	noLOF	
+R158T		LOF	LOF	
+R158V			noLOF	
+R158W		LOF	LOF	
+R158Y		LOF	LOF	
+A159A		noLOF	noLOF	
+A159C		noLOF	noLOF	
+A159D	nonfunctional	noLOF	LOF	
+A159E		LOF	LOF	
+A159F		LOF	LOF	
+A159G	partial	LOF	noLOF	
+A159H		LOF	LOF	
+A159I		LOF	LOF	
+A159K		LOF		
+A159L		LOF	LOF	
+A159M		LOF		
+A159N		LOF	LOF	
+A159P	nonfunctional	LOF	LOF	
+A159Q		LOF		
+A159R		LOF	LOF	
+A159S	partial	noLOF	noLOF	
+A159T	functional	noLOF	noLOF	
+A159V	nonfunctional	LOF	LOF	
+A159W		LOF		
+A159Y		LOF	LOF	
+M160A		noLOF	noLOF	
+M160C		LOF		
+M160D		LOF		
+M160E		noLOF	noLOF	
+M160F		noLOF	noLOF	
+M160G		LOF	LOF	
+M160H		LOF		
+M160I	partial	noLOF	noLOF	
+M160K	partial	LOF	noLOF	
+M160L	functional	noLOF	noLOF	
+M160N		LOF	LOF	
+M160P		LOF	LOF	
+M160Q			noLOF	
+M160R	partial	noLOF	noLOF	
+M160S		LOF	noLOF	
+M160T	functional	noLOF	noLOF	
+M160V	functional	noLOF	noLOF	
+M160W		LOF	LOF	
+A161A		noLOF	noLOF	
+A161C		noLOF	noLOF	
+A161D	nonfunctional		LOF	
+A161E		LOF	LOF	
+A161F		LOF	LOF	
+A161G	partial	LOF	noLOF	
+A161H		LOF	LOF	
+A161I		LOF	LOF	
+A161K		LOF		
+A161L		LOF	noLOF	
+A161M		LOF		
+A161N		LOF	LOF	
+A161P	partial		noLOF	
+A161Q		LOF		
+A161R		LOF	LOF	
+A161S	partial	noLOF	noLOF	
+A161T	partial	LOF	LOF	
+A161V	partial	noLOF	noLOF	
+A161W		LOF		
+A161Y		LOF	LOF	
+I162A		LOF	noLOF	
+I162C		noLOF	noLOF	
+I162D		LOF	LOF	
+I162E		LOF		
+I162F	nonfunctional	LOF	LOF	
+I162G		LOF	LOF	
+I162H		LOF	LOF	
+I162I		noLOF	noLOF	
+I162K		LOF	noLOF	
+I162L	partial	noLOF	noLOF	
+I162M	partial	noLOF	noLOF	
+I162N	nonfunctional	LOF	LOF	
+I162P		LOF		
+I162Q		LOF		
+I162R		LOF	noLOF	
+I162S	nonfunctional	LOF	LOF	
+I162T	nonfunctional	noLOF	noLOF	
+I162V	partial	noLOF	noLOF	
+I162W		LOF		
+I162Y		LOF	LOF	
+Y163A		LOF	LOF	
+Y163C	nonfunctional	LOF	LOF	
+Y163D	nonfunctional	LOF	LOF	
+Y163E		LOF	LOF	
+Y163F	functional	noLOF	noLOF	
+Y163G		LOF	LOF	
+Y163H	nonfunctional	LOF	LOF	
+Y163I		LOF	LOF	
+Y163K		LOF	LOF	
+Y163L		LOF	LOF	
+Y163M		LOF		
+Y163N	nonfunctional	LOF	LOF	
+Y163P		LOF	LOF	
+Y163Q		LOF	LOF	
+Y163R		LOF	LOF	
+Y163S	nonfunctional	LOF	LOF	
+Y163T		LOF	LOF	
+Y163V		LOF	LOF	
+Y163W		LOF	LOF	
+Y163Y		noLOF	noLOF	
+K164A		noLOF	noLOF	
+K164C		noLOF		
+K164D		LOF	LOF	
+K164E	nonfunctional	LOF	LOF	
+K164F		LOF		
+K164G		LOF	LOF	
+K164H		LOF	LOF	
+K164I			noLOF	
+K164K		noLOF	noLOF	
+K164M	partial	noLOF	noLOF	
+K164N	partial		noLOF	
+K164P		noLOF	LOF	
+K164Q	partial		noLOF	
+K164R	partial		noLOF	
+K164S		LOF	noLOF	
+K164T	partial	noLOF	noLOF	
+K164V		noLOF	noLOF	
+K164W		LOF	LOF	
+K164Y		LOF	LOF	
+Q165A		noLOF	noLOF	
+Q165C		noLOF		
+Q165D		noLOF	noLOF	
+Q165E	functional	noLOF	noLOF	
+Q165F		noLOF		
+Q165G		noLOF	noLOF	
+Q165H	functional	noLOF	noLOF	
+Q165I		LOF		
+Q165K	partial	noLOF	noLOF	
+Q165L	partial		noLOF	
+Q165M		noLOF		
+Q165N		noLOF	noLOF	
+Q165P	partial	noLOF	noLOF	
+Q165Q		noLOF	noLOF	
+Q165R	partial		noLOF	
+Q165S		LOF	noLOF	
+Q165T		LOF	noLOF	
+Q165V		noLOF	noLOF	
+Q165W		noLOF	noLOF	
+Q165Y		noLOF	noLOF	
+S166A	functional	noLOF	noLOF	
+S166C		noLOF	noLOF	
+S166D		noLOF		
+S166E		noLOF	noLOF	
+S166F		noLOF	noLOF	
+S166G			noLOF	
+S166H		LOF		
+S166I		noLOF	noLOF	
+S166K		noLOF	noLOF	
+S166L	partial		noLOF	
+S166M		noLOF		
+S166N		noLOF		
+S166P	functional	noLOF	noLOF	
+S166Q		noLOF	noLOF	
+S166R		noLOF	noLOF	
+S166S		noLOF	noLOF	
+S166T	functional	noLOF	noLOF	
+S166V		noLOF	noLOF	
+S166W		LOF	noLOF	
+S166Y		noLOF	noLOF	
+Q167A		noLOF	noLOF	
+Q167C		noLOF		
+Q167D		noLOF	noLOF	
+Q167E	functional		noLOF	
+Q167F		LOF		
+Q167G		noLOF	noLOF	
+Q167H	partial	noLOF	noLOF	
+Q167I		LOF		
+Q167K	partial	noLOF	noLOF	
+Q167L	partial	noLOF	noLOF	
+Q167M		noLOF		
+Q167N		noLOF	noLOF	
+Q167P	partial	noLOF	noLOF	
+Q167Q		noLOF	noLOF	
+Q167R	partial	noLOF	noLOF	
+Q167S		noLOF	noLOF	
+Q167T		noLOF	noLOF	
+Q167V		LOF	noLOF	
+Q167W		noLOF	noLOF	
+Q167Y		LOF	noLOF	
+H168A		noLOF	noLOF	
+H168C		noLOF	noLOF	
+H168D	partial		noLOF	
+H168E		noLOF	LOF	
+H168F		noLOF	noLOF	
+H168G		LOF	LOF	
+H168H		noLOF	noLOF	
+H168I		LOF	LOF	
+H168K		LOF	LOF	
+H168L	nonfunctional	LOF	LOF	
+H168M		LOF		
+H168N	partial	noLOF	noLOF	
+H168P	nonfunctional	LOF	LOF	
+H168Q	partial		noLOF	
+H168R	nonfunctional	LOF	LOF	
+H168S			noLOF	
+H168T		LOF	LOF	
+H168V		LOF	noLOF	
+H168Y	functional	noLOF	noLOF	
+M169A		noLOF	noLOF	
+M169C		noLOF		
+M169E		LOF	noLOF	
+M169F		LOF	noLOF	
+M169G		noLOF	noLOF	
+M169I	partial	noLOF	noLOF	
+M169K	partial	noLOF	noLOF	
+M169L	partial	noLOF	noLOF	
+M169N		LOF	noLOF	
+M169P		LOF	LOF	
+M169Q		noLOF	noLOF	
+M169R	functional	noLOF	noLOF	
+M169S		noLOF	noLOF	
+M169T	functional	noLOF	noLOF	
+M169V	partial		noLOF	
+M169W		noLOF	noLOF	
+T170A	partial	noLOF	noLOF	
+T170D		noLOF		
+T170E		noLOF	noLOF	
+T170F		LOF		
+T170G		noLOF	noLOF	
+T170H		noLOF		
+T170I		LOF	noLOF	
+T170K	partial	noLOF	noLOF	
+T170L		noLOF		
+T170M	partial	noLOF	noLOF	
+T170N		noLOF	noLOF	
+T170P	partial	LOF	noLOF	
+T170Q		noLOF	noLOF	
+T170R	partial	LOF	noLOF	
+T170S	partial	noLOF	noLOF	
+T170T		noLOF	noLOF	
+T170V		noLOF	noLOF	
+T170W		LOF	noLOF	
+T170Y		noLOF		
+E171A	partial	noLOF	noLOF	
+E171D	partial	noLOF	noLOF	
+E171E		noLOF	noLOF	
+E171F		LOF		
+E171G	nonfunctional	LOF	LOF	
+E171H		noLOF	noLOF	
+E171I		LOF		
+E171K	functional	noLOF	noLOF	
+E171L		LOF		
+E171M		LOF	noLOF	
+E171N			noLOF	
+E171P		LOF	LOF	
+E171Q	partial	noLOF	noLOF	
+E171R		LOF	noLOF	
+E171S		noLOF	noLOF	
+E171T			noLOF	
+E171V	partial	noLOF	noLOF	
+E171W		LOF	LOF	
+E171Y		LOF	noLOF	
+V172A	functional	noLOF	noLOF	
+V172C		noLOF	noLOF	
+V172D	nonfunctional	LOF	LOF	
+V172E		LOF	LOF	
+V172F	nonfunctional		LOF	
+V172G	nonfunctional	LOF	noLOF	
+V172H		noLOF	noLOF	
+V172I	functional	noLOF	noLOF	
+V172K		LOF		
+V172L	partial		noLOF	
+V172M		noLOF	noLOF	
+V172N		noLOF	noLOF	
+V172P		noLOF	noLOF	
+V172Q		noLOF		
+V172R		LOF	LOF	
+V172S		noLOF	noLOF	
+V172T		noLOF	noLOF	
+V172V		noLOF	noLOF	
+V172W		LOF		
+V172Y		LOF	LOF	
+V173A	partial	LOF	LOF	
+V173C		LOF		
+V173D		LOF	LOF	
+V173E	nonfunctional	LOF	LOF	
+V173F		LOF	LOF	
+V173G	nonfunctional	LOF	LOF	
+V173H		LOF		
+V173I		LOF	LOF	
+V173K		LOF	LOF	
+V173L	nonfunctional		LOF	
+V173M	nonfunctional	LOF	LOF	
+V173N		LOF		
+V173P		LOF	noLOF	
+V173Q		LOF	LOF	
+V173R		LOF	LOF	
+V173S		LOF	LOF	
+V173T		LOF	LOF	
+V173V		noLOF	noLOF	
+V173W		LOF	LOF	
+V173Y		LOF		
+R174A			noLOF	
+R174C			noLOF	
+R174D		LOF		
+R174E		LOF	LOF	
+R174F		LOF		
+R174G	partial	noLOF	noLOF	
+R174H		LOF		
+R174I		LOF	noLOF	
+R174K	functional	noLOF	noLOF	
+R174L		noLOF		
+R174M	partial	noLOF	noLOF	
+R174N		LOF	LOF	
+R174P		LOF	LOF	
+R174Q		LOF	noLOF	
+R174R		noLOF	noLOF	
+R174S	partial	noLOF	noLOF	
+R174T	partial	noLOF	noLOF	
+R174V		LOF	noLOF	
+R174W	nonfunctional	LOF	LOF	
+R175A		LOF	noLOF	
+R175C	partial	noLOF	noLOF	
+R175D		LOF	LOF	
+R175E		LOF	LOF	
+R175F		LOF	LOF	
+R175G	nonfunctional	LOF	LOF	
+R175H	nonfunctional	LOF	LOF	
+R175I			noLOF	
+R175K		LOF	noLOF	
+R175L	partial		noLOF	
+R175M			noLOF	
+R175N		LOF	noLOF	
+R175P	nonfunctional	noLOF	noLOF	
+R175Q		LOF	LOF	
+R175R		noLOF	noLOF	
+R175S	partial	noLOF	noLOF	
+R175T		noLOF	noLOF	
+R175V			noLOF	
+R175W		LOF	LOF	
+R175Y		LOF	LOF	
+C176A		LOF		
+C176C		noLOF	noLOF	
+C176D		LOF	LOF	
+C176E		LOF		
+C176F	partial	LOF	LOF	
+C176G	nonfunctional	LOF	LOF	
+C176H		LOF	LOF	
+C176I		LOF	LOF	
+C176K		LOF		
+C176L		LOF	LOF	
+C176M		LOF		
+C176N		LOF	LOF	
+C176P		LOF		
+C176Q		LOF		
+C176R	nonfunctional	LOF	LOF	
+C176S	nonfunctional	LOF	LOF	
+C176T		LOF	LOF	
+C176V		LOF	LOF	
+C176W	nonfunctional	LOF	LOF	
+C176Y	nonfunctional	LOF	LOF	
+P177A	partial	noLOF	noLOF	
+P177C		LOF	noLOF	
+P177D		LOF	LOF	
+P177E		LOF		
+P177F		LOF	noLOF	
+P177G		LOF	noLOF	
+P177H	partial		noLOF	
+P177I			noLOF	
+P177K		LOF		
+P177L	nonfunctional		noLOF	
+P177M		LOF		
+P177N		LOF	LOF	
+P177P		noLOF	noLOF	
+P177Q		LOF	LOF	
+P177R	nonfunctional	LOF	LOF	
+P177S	partial	noLOF	noLOF	
+P177T	partial	noLOF	noLOF	
+P177V			LOF	
+P177Y			noLOF	
+H178A		LOF	noLOF	
+H178C			noLOF	
+H178D	nonfunctional	LOF	LOF	
+H178E		LOF	LOF	
+H178F		noLOF	noLOF	
+H178G		LOF	noLOF	
+H178H		noLOF	noLOF	
+H178I		noLOF	noLOF	
+H178K		LOF	noLOF	
+H178L	partial	noLOF	noLOF	
+H178M		LOF		
+H178N	partial		noLOF	
+H178P	nonfunctional	LOF	LOF	
+H178Q	nonfunctional	noLOF	noLOF	
+H178R	partial	noLOF	noLOF	
+H178S		LOF	LOF	
+H178T		LOF	noLOF	
+H178V			noLOF	
+H178W		noLOF		
+H178Y	partial	noLOF	noLOF	
+H179A		LOF	LOF	
+H179C		LOF	LOF	
+H179D	partial	LOF	LOF	
+H179E		LOF	LOF	
+H179F		LOF	LOF	
+H179G		LOF	LOF	
+H179H		noLOF	noLOF	
+H179I		LOF	LOF	
+H179K		LOF	LOF	
+H179L	partial	LOF	LOF	
+H179M		LOF		
+H179N	partial		LOF	
+H179P	partial	LOF	LOF	
+H179Q	nonfunctional	LOF	LOF	
+H179R	nonfunctional	LOF	LOF	
+H179S		LOF	LOF	
+H179T		LOF	LOF	
+H179V		LOF	LOF	
+H179W		LOF		
+H179Y	partial	LOF	LOF	
+E180A	partial	LOF	noLOF	
+E180C		LOF		
+E180D	partial		noLOF	
+E180E		LOF	noLOF	
+E180F		noLOF		
+E180G	partial	noLOF	noLOF	
+E180H		LOF	noLOF	
+E180I		LOF		
+E180K	partial	LOF	LOF	
+E180L		LOF		
+E180M		LOF	noLOF	
+E180N		noLOF	noLOF	
+E180P		LOF	LOF	
+E180Q	partial	LOF	noLOF	
+E180R		LOF	noLOF	
+E180S		noLOF	noLOF	
+E180T		noLOF	noLOF	
+E180V	partial	LOF	noLOF	
+E180W		LOF	noLOF	
+E180Y			noLOF	
+R181A		LOF	noLOF	
+R181C	partial	noLOF	noLOF	
+R181D		LOF	LOF	
+R181E		LOF		
+R181F		noLOF	noLOF	
+R181G	partial	noLOF	noLOF	
+R181H	partial		noLOF	
+R181I		noLOF	noLOF	
+R181K		LOF		
+R181L	partial		noLOF	
+R181M		noLOF		
+R181N		LOF	noLOF	
+R181P	nonfunctional	LOF	LOF	
+R181Q			noLOF	
+R181R		noLOF	noLOF	
+R181S	partial	noLOF	noLOF	
+R181T		noLOF	noLOF	
+R181V		LOF	noLOF	
+R181W		LOF	noLOF	
+R181Y		LOF	noLOF	
+C182A		LOF	noLOF	
+C182C		LOF	noLOF	
+C182D		noLOF		
+C182E		noLOF		
+C182F	functional	noLOF	noLOF	
+C182G	partial		noLOF	
+C182H		LOF	noLOF	
+C182I		noLOF	noLOF	
+C182K		noLOF		
+C182L		LOF	noLOF	
+C182M		noLOF		
+C182N		noLOF	noLOF	
+C182P			noLOF	
+C182Q		noLOF		
+C182R	partial	noLOF	noLOF	
+C182S	functional	LOF	noLOF	
+C182T		noLOF	noLOF	
+C182V		noLOF	noLOF	
+C182W	functional	noLOF	noLOF	
+C182Y	partial	noLOF	noLOF	
+S183A	functional	noLOF	noLOF	
+S183C		noLOF	noLOF	
+S183D		noLOF		
+S183E		noLOF	noLOF	
+S183F		noLOF	noLOF	
+S183G		noLOF	noLOF	
+S183H		noLOF		
+S183I		noLOF	noLOF	
+S183K		noLOF	noLOF	
+S183L	functional	LOF	noLOF	
+S183M		noLOF		
+S183N		noLOF		
+S183P	functional	LOF	noLOF	
+S183Q		LOF	noLOF	
+S183R		noLOF	noLOF	
+S183S			noLOF	
+S183T	functional	noLOF		
+S183V		noLOF	noLOF	
+S183W		noLOF	noLOF	
+S183Y		LOF	noLOF	
+D184A	functional	noLOF	noLOF	
+D184C		LOF	noLOF	
+D184D		noLOF	noLOF	
+D184E	partial	noLOF	noLOF	
+D184F			noLOF	
+D184G	functional	noLOF	noLOF	
+D184H	partial	noLOF	noLOF	
+D184I		LOF	noLOF	
+D184K		noLOF	noLOF	
+D184L		noLOF	noLOF	
+D184M		LOF		
+D184N	partial	LOF	noLOF	
+D184P		LOF	noLOF	
+D184Q		LOF	noLOF	
+D184R		LOF	noLOF	
+D184S		LOF	noLOF	
+D184T		LOF	noLOF	
+D184V	functional	LOF	noLOF	
+D184Y	functional	noLOF	noLOF	
+S185A		LOF	noLOF	
+S185C	partial	noLOF	noLOF	
+S185D		noLOF	noLOF	
+S185E		noLOF		
+S185F		noLOF	noLOF	
+S185G	partial		noLOF	
+S185H		noLOF	noLOF	
+S185I	functional	noLOF	noLOF	
+S185K		noLOF	noLOF	
+S185L		noLOF	noLOF	
+S185M		noLOF	noLOF	
+S185N	functional	noLOF	noLOF	
+S185P		noLOF	noLOF	
+S185Q		noLOF		
+S185R	functional	noLOF	noLOF	
+S185S		noLOF	noLOF	
+S185T	functional	LOF	noLOF	
+S185V		noLOF	noLOF	
+S185W		noLOF	noLOF	
+S185Y		noLOF	noLOF	
+D186A	functional	noLOF	noLOF	
+D186C			noLOF	
+D186D		noLOF	noLOF	
+D186E	functional	noLOF	noLOF	
+D186F		noLOF	noLOF	
+D186G	functional	noLOF	noLOF	
+D186H	partial	noLOF	noLOF	
+D186I		LOF	noLOF	
+D186K		noLOF	noLOF	
+D186L		noLOF	noLOF	
+D186M		LOF		
+D186N	functional	noLOF	noLOF	
+D186P		noLOF	noLOF	
+D186Q		LOF	noLOF	
+D186R		LOF	noLOF	
+D186S		noLOF	noLOF	
+D186T		noLOF	noLOF	
+D186V	functional	noLOF	noLOF	
+D186W		noLOF		
+D186Y	partial	noLOF	noLOF	
+G187A	partial	noLOF	noLOF	
+G187C	partial	noLOF	noLOF	
+G187D	partial	noLOF	noLOF	
+G187E		noLOF	noLOF	
+G187F		noLOF	noLOF	
+G187G		noLOF	noLOF	
+G187H		noLOF	noLOF	
+G187I		noLOF	noLOF	
+G187K		noLOF		
+G187L		noLOF	noLOF	
+G187M		noLOF		
+G187N		noLOF	noLOF	
+G187P		noLOF	noLOF	
+G187Q		noLOF		
+G187R	functional	noLOF	noLOF	
+G187S	functional	noLOF	noLOF	
+G187T		noLOF	noLOF	
+G187V	partial	LOF	noLOF	
+G187W		LOF	noLOF	
+G187Y		noLOF	noLOF	
+L188A		noLOF	noLOF	
+L188C		noLOF		
+L188D		noLOF		
+L188E		noLOF	noLOF	
+L188F		noLOF	noLOF	
+L188G		LOF	noLOF	
+L188H		noLOF	noLOF	
+L188I		noLOF	noLOF	
+L188K		noLOF	noLOF	
+L188L		noLOF	noLOF	
+L188M	partial	noLOF	noLOF	
+L188N		noLOF		
+L188P	partial	noLOF	noLOF	
+L188Q	partial	noLOF	noLOF	
+L188R	partial	noLOF	noLOF	
+L188S		LOF	noLOF	
+L188T			noLOF	
+L188V	functional	noLOF	noLOF	
+L188W		LOF	noLOF	
+L188Y		noLOF		
+A189A		noLOF	noLOF	
+A189C		noLOF	noLOF	
+A189D	partial		noLOF	
+A189E		noLOF	noLOF	
+A189F		noLOF	noLOF	
+A189G	partial	LOF	noLOF	
+A189H		LOF	noLOF	
+A189I		noLOF	noLOF	
+A189K		LOF		
+A189L		noLOF	noLOF	
+A189M		noLOF		
+A189N		LOF	LOF	
+A189P	partial	LOF	noLOF	
+A189Q		noLOF		
+A189R		LOF	LOF	
+A189S	partial	noLOF	noLOF	
+A189T	partial	noLOF	noLOF	
+A189V	functional	noLOF	noLOF	
+A189W		noLOF		
+A189Y		LOF	noLOF	
+P190A	partial		noLOF	
+P190C		LOF	LOF	
+P190D		LOF	noLOF	
+P190E		LOF		
+P190F		noLOF	noLOF	
+P190G		LOF	noLOF	
+P190H	partial	noLOF	noLOF	
+P190I		LOF	LOF	
+P190K		noLOF		
+P190L	partial	LOF	LOF	
+P190M		LOF		
+P190N		noLOF	noLOF	
+P190P		LOF	noLOF	
+P190Q		LOF	LOF	
+P190R	partial	LOF	noLOF	
+P190S	partial	noLOF	noLOF	
+P190T	partial	LOF	LOF	
+P190V		LOF	LOF	
+P190W		LOF		
+P190Y		noLOF	noLOF	
+P191A	functional	noLOF	noLOF	
+P191C		noLOF	noLOF	
+P191D		noLOF	noLOF	
+P191E		noLOF		
+P191F		noLOF	noLOF	
+P191G		noLOF	noLOF	
+P191H	partial	noLOF	noLOF	
+P191I		noLOF	noLOF	
+P191K		noLOF		
+P191L	partial	LOF	noLOF	
+P191M		noLOF		
+P191N		noLOF	noLOF	
+P191P		noLOF	noLOF	
+P191Q		noLOF	noLOF	
+P191R	functional	noLOF	noLOF	
+P191S	functional	LOF	noLOF	
+P191T	functional	noLOF	noLOF	
+P191V		noLOF	noLOF	
+P191W		LOF		
+P191Y		noLOF	noLOF	
+Q192A		noLOF	noLOF	
+Q192C		noLOF		
+Q192D			noLOF	
+Q192E	functional	noLOF	noLOF	
+Q192F		noLOF		
+Q192G		noLOF	noLOF	
+Q192H	functional	noLOF	noLOF	
+Q192I		noLOF		
+Q192K	functional	noLOF	noLOF	
+Q192L	functional	noLOF	noLOF	
+Q192M		noLOF		
+Q192N		noLOF	noLOF	
+Q192P	functional	noLOF	noLOF	
+Q192Q		noLOF	noLOF	
+Q192R	functional	noLOF	noLOF	
+Q192S		LOF	noLOF	
+Q192T		noLOF	noLOF	
+Q192V		noLOF	noLOF	
+Q192W		noLOF	noLOF	
+Q192Y		noLOF	LOF	
+H193A		LOF	noLOF	
+H193C		LOF	LOF	
+H193D	nonfunctional	LOF	LOF	
+H193E		LOF	LOF	
+H193F		LOF	noLOF	
+H193G		LOF	LOF	
+H193H		LOF	noLOF	
+H193I		LOF	LOF	
+H193K		LOF	LOF	
+H193L	nonfunctional	LOF	LOF	
+H193M		noLOF		
+H193N	nonfunctional	LOF	LOF	
+H193P	nonfunctional	LOF	LOF	
+H193Q	partial		noLOF	
+H193R	nonfunctional	LOF	LOF	
+H193S		LOF	LOF	
+H193T		LOF	LOF	
+H193V		LOF	LOF	
+H193W		LOF		
+H193Y	nonfunctional	LOF	LOF	
+L194A		LOF	LOF	
+L194C		LOF	noLOF	
+L194D		LOF	LOF	
+L194E		LOF		
+L194F	nonfunctional	LOF	LOF	
+L194G		LOF	LOF	
+L194H	nonfunctional	LOF	LOF	
+L194I	functional	noLOF	noLOF	
+L194K		LOF		
+L194L		LOF	noLOF	
+L194M		LOF		
+L194N		LOF	LOF	
+L194P	nonfunctional	LOF	LOF	
+L194Q		LOF	LOF	
+L194R	nonfunctional	LOF	LOF	
+L194S		LOF	LOF	
+L194T		LOF	LOF	
+L194V	functional	noLOF	noLOF	
+L194W		LOF		
+L194Y		LOF	LOF	
+I195A		LOF	LOF	
+I195C		LOF	LOF	
+I195D		LOF	LOF	
+I195E		LOF		
+I195F	nonfunctional	LOF	LOF	
+I195G		LOF	LOF	
+I195H		LOF	LOF	
+I195I		noLOF	noLOF	
+I195K		LOF	LOF	
+I195L	functional	noLOF	noLOF	
+I195M	partial	noLOF	noLOF	
+I195N	nonfunctional	LOF	LOF	
+I195P		LOF	LOF	
+I195Q		LOF		
+I195R		LOF	LOF	
+I195S	nonfunctional	LOF	LOF	
+I195T	nonfunctional	LOF	LOF	
+I195V	functional		noLOF	
+I195W		LOF		
+I195Y		LOF	LOF	
+R196A		noLOF	noLOF	
+R196C		noLOF	noLOF	
+R196D		LOF		
+R196E		LOF	LOF	
+R196F		LOF		
+R196G	partial		noLOF	
+R196H		noLOF	noLOF	
+R196I		noLOF	noLOF	
+R196K			noLOF	
+R196L	partial	noLOF	noLOF	
+R196M		noLOF		
+R196N		noLOF		
+R196P	nonfunctional	LOF	LOF	
+R196Q	partial		noLOF	
+R196R		noLOF	noLOF	
+R196S		noLOF	noLOF	
+R196T		noLOF	noLOF	
+R196V		noLOF	noLOF	
+R196W		LOF	noLOF	
+R196Y		LOF		
+V197A	functional		noLOF	
+V197D		LOF	LOF	
+V197E	nonfunctional	LOF	LOF	
+V197F		LOF	noLOF	
+V197G	nonfunctional	LOF	noLOF	
+V197H		LOF		
+V197I		noLOF		
+V197K		LOF	LOF	
+V197L	partial		noLOF	
+V197M	partial	LOF	LOF	
+V197N		LOF		
+V197P		LOF	LOF	
+V197Q		LOF	LOF	
+V197R		LOF	LOF	
+V197S		LOF	noLOF	
+V197T		noLOF	noLOF	
+V197V		noLOF	noLOF	
+V197W		LOF	LOF	
+V197Y		noLOF		
+E198A	functional	noLOF	noLOF	
+E198C		noLOF		
+E198D	partial	noLOF	noLOF	
+E198E			noLOF	
+E198F		noLOF		
+E198G	partial	noLOF	noLOF	
+E198H		noLOF	noLOF	
+E198I		noLOF	noLOF	
+E198K	functional	noLOF	noLOF	
+E198L		noLOF	noLOF	
+E198M		noLOF		
+E198N		noLOF	noLOF	
+E198P		noLOF	noLOF	
+E198Q	functional	noLOF	noLOF	
+E198R		noLOF	noLOF	
+E198S		noLOF	noLOF	
+E198T		noLOF	noLOF	
+E198V	functional	noLOF	noLOF	
+E198W		noLOF		
+E198Y		noLOF	noLOF	
+G199A	partial	noLOF	noLOF	
+G199C		noLOF	noLOF	
+G199D		noLOF	noLOF	
+G199E	nonfunctional		noLOF	
+G199F		LOF		
+G199G		noLOF	noLOF	
+G199H		noLOF		
+G199I		LOF	LOF	
+G199K		noLOF	noLOF	
+G199L		LOF	LOF	
+G199M		noLOF		
+G199N		noLOF		
+G199P		noLOF	noLOF	
+G199Q		noLOF	noLOF	
+G199R	functional	noLOF	noLOF	
+G199S		noLOF	noLOF	
+G199T		noLOF	noLOF	
+G199V	nonfunctional	LOF	LOF	
+G199W		LOF	LOF	
+G199Y		noLOF		
+N200A		noLOF	noLOF	
+N200C		noLOF	noLOF	
+N200D	nonfunctional	noLOF	noLOF	
+N200E		noLOF	noLOF	
+N200F		noLOF	noLOF	
+N200G		noLOF	noLOF	
+N200H	functional	noLOF	noLOF	
+N200I	partial	LOF	noLOF	
+N200K	partial	LOF	noLOF	
+N200L		noLOF	noLOF	
+N200M		noLOF	noLOF	
+N200N		noLOF	noLOF	
+N200P		noLOF	LOF	
+N200Q		noLOF	noLOF	
+N200R		noLOF	noLOF	
+N200S	functional	noLOF	noLOF	
+N200T	functional	noLOF	noLOF	
+N200V		noLOF	noLOF	
+N200W		LOF		
+N200Y	nonfunctional	noLOF	noLOF	
+L201A		noLOF	noLOF	
+L201C		LOF	noLOF	
+L201D		noLOF		
+L201E		noLOF	noLOF	
+L201F	functional	noLOF	noLOF	
+L201G		noLOF	noLOF	
+L201H		noLOF		
+L201I		noLOF	noLOF	
+L201K		noLOF	noLOF	
+L201L		noLOF	noLOF	
+L201M	functional	noLOF	noLOF	
+L201N		noLOF		
+L201P		noLOF	noLOF	
+L201Q		noLOF	noLOF	
+L201R		noLOF	noLOF	
+L201S	functional	noLOF	noLOF	
+L201T		noLOF	noLOF	
+L201V	functional	noLOF	noLOF	
+L201W	functional	noLOF	noLOF	
+L201Y		noLOF	noLOF	
+R202A		LOF	noLOF	
+R202C	functional	noLOF	noLOF	
+R202D		noLOF	noLOF	
+R202E		noLOF		
+R202F		noLOF	noLOF	
+R202G	functional	noLOF	noLOF	
+R202H	functional	noLOF	noLOF	
+R202I		noLOF	noLOF	
+R202K		noLOF		
+R202L	nonfunctional	noLOF	noLOF	
+R202M		noLOF		
+R202N		noLOF	noLOF	
+R202P	partial	noLOF	noLOF	
+R202Q		noLOF		
+R202R		noLOF	noLOF	
+R202S	functional	noLOF	noLOF	
+R202T		noLOF	noLOF	
+R202V		LOF	noLOF	
+R202W		noLOF	noLOF	
+R202Y		noLOF	noLOF	
+V203A	functional	noLOF	noLOF	
+V203C		LOF		
+V203D		LOF	LOF	
+V203E	partial	LOF	LOF	
+V203F		LOF	LOF	
+V203G	partial	noLOF	noLOF	
+V203H		LOF		
+V203I			noLOF	
+V203K			noLOF	
+V203L	partial	LOF	LOF	
+V203M	partial		noLOF	
+V203N		LOF		
+V203P		noLOF	LOF	
+V203Q		noLOF	noLOF	
+V203R			noLOF	
+V203S		noLOF	noLOF	
+V203T		noLOF	noLOF	
+V203V		noLOF	noLOF	
+V203W		LOF	LOF	
+V203Y		LOF		
+E204A	functional	noLOF	noLOF	
+E204C		noLOF		
+E204D	functional	noLOF	noLOF	
+E204E		noLOF	noLOF	
+E204G	partial	LOF	noLOF	
+E204H		noLOF	noLOF	
+E204I		noLOF		
+E204K	functional	noLOF	noLOF	
+E204L		noLOF		
+E204M		noLOF	noLOF	
+E204N		noLOF	noLOF	
+E204P		LOF	LOF	
+E204Q	functional	noLOF	noLOF	
+E204R		noLOF	noLOF	
+E204S		LOF	noLOF	
+E204T		noLOF	noLOF	
+E204V	functional	noLOF	noLOF	
+E204W		noLOF	noLOF	
+E204Y		noLOF	noLOF	
+Y205A		LOF	LOF	
+Y205C	nonfunctional	LOF	LOF	
+Y205D	nonfunctional	LOF	LOF	
+Y205E		LOF	LOF	
+Y205F	nonfunctional	LOF	LOF	
+Y205G		LOF	LOF	
+Y205H	nonfunctional	LOF	LOF	
+Y205I		LOF	LOF	
+Y205K		LOF	LOF	
+Y205L		LOF	LOF	
+Y205M		LOF		
+Y205N	nonfunctional	LOF	LOF	
+Y205P		LOF	LOF	
+Y205Q		LOF	LOF	
+Y205R		LOF	LOF	
+Y205S	nonfunctional	LOF	LOF	
+Y205T		LOF	LOF	
+Y205V		LOF	LOF	
+Y205W		LOF	LOF	
+Y205Y		noLOF	noLOF	
+L206A		noLOF	noLOF	
+L206C		noLOF	noLOF	
+L206D		noLOF		
+L206E		noLOF	noLOF	
+L206F	partial	noLOF	noLOF	
+L206G		noLOF	noLOF	
+L206H		noLOF		
+L206I		noLOF	noLOF	
+L206K		noLOF	noLOF	
+L206L		noLOF	noLOF	
+L206M	functional	noLOF	noLOF	
+L206N		noLOF		
+L206P		noLOF	noLOF	
+L206Q		noLOF	noLOF	
+L206R		noLOF	noLOF	
+L206S	functional	noLOF	noLOF	
+L206T		noLOF	noLOF	
+L206V	functional	noLOF	noLOF	
+L206W	functional	LOF	noLOF	
+L206Y		LOF	noLOF	
+D207A	functional	noLOF	noLOF	
+D207C		noLOF	noLOF	
+D207D		noLOF	noLOF	
+D207E	functional	noLOF	noLOF	
+D207F		noLOF	noLOF	
+D207G	partial	LOF	noLOF	
+D207H	functional	noLOF	noLOF	
+D207I		noLOF	noLOF	
+D207K		noLOF	noLOF	
+D207L		noLOF	noLOF	
+D207M		noLOF		
+D207N	functional	noLOF	noLOF	
+D207P		LOF	LOF	
+D207Q		noLOF	noLOF	
+D207R		noLOF	noLOF	
+D207S		noLOF	noLOF	
+D207T		noLOF	noLOF	
+D207V	functional	noLOF	noLOF	
+D207W		noLOF		
+D207Y	functional	noLOF	noLOF	
+D208A	nonfunctional	LOF	noLOF	
+D208C		noLOF	noLOF	
+D208D		noLOF	noLOF	
+D208E	partial	noLOF	noLOF	
+D208F		LOF	noLOF	
+D208G	functional		noLOF	
+D208H	partial	noLOF	noLOF	
+D208I		LOF	LOF	
+D208K		LOF	LOF	
+D208L		LOF	LOF	
+D208M		LOF		
+D208N	functional	noLOF	noLOF	
+D208P		LOF	LOF	
+D208Q		LOF	noLOF	
+D208R		LOF	LOF	
+D208S		noLOF	noLOF	
+D208T		LOF	LOF	
+D208V	nonfunctional	LOF	LOF	
+D208W		noLOF		
+D208Y	nonfunctional	noLOF	noLOF	
+R209A		noLOF	noLOF	
+R209C		noLOF	noLOF	
+R209D		noLOF		
+R209E		noLOF	noLOF	
+R209F		noLOF		
+R209G	functional	noLOF	noLOF	
+R209H		noLOF		
+R209I	functional	noLOF	noLOF	
+R209K	functional	noLOF	noLOF	
+R209L		noLOF	noLOF	
+R209M		noLOF	noLOF	
+R209N		noLOF	noLOF	
+R209P		noLOF	noLOF	
+R209Q		LOF	noLOF	
+R209R		LOF	noLOF	
+R209S	functional	noLOF	noLOF	
+R209T	nonfunctional	noLOF	noLOF	
+R209V		noLOF	noLOF	
+R209W		noLOF	noLOF	
+R209Y		noLOF		
+N210A		noLOF	noLOF	
+N210C		noLOF	noLOF	
+N210D	functional	noLOF	noLOF	
+N210E			noLOF	
+N210F		noLOF	noLOF	
+N210G		noLOF	noLOF	
+N210H	functional	noLOF	noLOF	
+N210I	functional	noLOF	noLOF	
+N210K	functional	LOF	noLOF	
+N210L		noLOF	noLOF	
+N210M		noLOF	noLOF	
+N210N		noLOF	noLOF	
+N210P			noLOF	
+N210Q		noLOF	noLOF	
+N210R		noLOF	noLOF	
+N210S	functional	noLOF	noLOF	
+N210T	functional	LOF	noLOF	
+N210V		noLOF	noLOF	
+N210W		noLOF		
+N210Y	functional	noLOF	noLOF	
+T211A	partial		noLOF	
+T211C		noLOF	noLOF	
+T211D		noLOF	noLOF	
+T211E		LOF		
+T211F		noLOF	noLOF	
+T211G			noLOF	
+T211H		LOF	noLOF	
+T211I	partial	LOF	LOF	
+T211K		LOF	LOF	
+T211L		LOF	noLOF	
+T211M		LOF	LOF	
+T211N	functional	noLOF	noLOF	
+T211P	nonfunctional	LOF	noLOF	
+T211Q		LOF		
+T211R		LOF	LOF	
+T211S	functional	noLOF	noLOF	
+T211T		noLOF	noLOF	
+T211V		LOF	LOF	
+T211Y		noLOF	noLOF	
+F212A			noLOF	
+F212C	partial	noLOF	noLOF	
+F212D			noLOF	
+F212F		LOF	noLOF	
+F212G		noLOF	noLOF	
+F212H		noLOF	noLOF	
+F212I	nonfunctional		noLOF	
+F212L	functional	noLOF	noLOF	
+F212N		noLOF	noLOF	
+F212P			noLOF	
+F212Q		noLOF		
+F212R		noLOF	noLOF	
+F212S	functional	noLOF	noLOF	
+F212T			noLOF	
+F212V	partial	LOF	noLOF	
+F212W		LOF	noLOF	
+F212Y	functional	noLOF	noLOF	
+R213A		LOF	LOF	
+R213C		LOF	LOF	
+R213D		LOF		
+R213E		LOF	LOF	
+R213F		LOF		
+R213G	nonfunctional	LOF	LOF	
+R213H			noLOF	
+R213I		LOF	LOF	
+R213K		LOF	LOF	
+R213L	nonfunctional	LOF	LOF	
+R213M		LOF		
+R213N		LOF		
+R213P	nonfunctional	LOF	LOF	
+R213Q	nonfunctional	LOF	noLOF	
+R213R		noLOF	noLOF	
+R213S		LOF	LOF	
+R213T		LOF	LOF	
+R213V		LOF	LOF	
+R213W		LOF	LOF	
+R213Y		LOF		
+H214A		LOF	LOF	
+H214C		LOF	noLOF	
+H214D	nonfunctional	LOF	noLOF	
+H214E		LOF	noLOF	
+H214F		LOF	LOF	
+H214G		LOF	LOF	
+H214H		noLOF	noLOF	
+H214I		LOF	LOF	
+H214K		LOF	noLOF	
+H214L	nonfunctional	LOF	noLOF	
+H214M		LOF		
+H214N	partial		noLOF	
+H214P	functional	LOF	LOF	
+H214Q	functional	noLOF	noLOF	
+H214R	nonfunctional	LOF	LOF	
+H214S		LOF	noLOF	
+H214T		LOF	noLOF	
+H214V		LOF	LOF	
+H214W		LOF		
+H214Y	partial		noLOF	
+S215A			noLOF	
+S215C	partial		noLOF	
+S215D		LOF	LOF	
+S215E		LOF		
+S215F		LOF	LOF	
+S215G	nonfunctional	LOF	LOF	
+S215H		LOF	LOF	
+S215I	nonfunctional	LOF	LOF	
+S215K		LOF	LOF	
+S215L		LOF	LOF	
+S215M		LOF	noLOF	
+S215N	nonfunctional	LOF	LOF	
+S215P		LOF	LOF	
+S215Q		LOF		
+S215R	nonfunctional	LOF	LOF	
+S215S		noLOF	noLOF	
+S215T	partial	LOF	noLOF	
+S215V		LOF	LOF	
+S215W		LOF	LOF	
+S215Y			noLOF	
+V216A	partial	noLOF	noLOF	
+V216C		LOF		
+V216D		LOF	LOF	
+V216E	nonfunctional	LOF	LOF	
+V216F		LOF	LOF	
+V216G	nonfunctional	LOF	LOF	
+V216H		LOF		
+V216I		LOF	LOF	
+V216K		LOF	LOF	
+V216L	nonfunctional	LOF	LOF	
+V216M	nonfunctional	LOF	LOF	
+V216N		LOF		
+V216P		LOF	LOF	
+V216Q		LOF	LOF	
+V216R		LOF	LOF	
+V216S		LOF	LOF	
+V216T		noLOF	noLOF	
+V216V		noLOF	noLOF	
+V216W		LOF	LOF	
+V216Y		LOF		
+V217A	functional	noLOF	noLOF	
+V217C		LOF		
+V217D		LOF	LOF	
+V217E	functional	LOF	LOF	
+V217F		noLOF	noLOF	
+V217G	nonfunctional	LOF	LOF	
+V217H		LOF		
+V217I		noLOF	noLOF	
+V217K		LOF	noLOF	
+V217L	functional	noLOF	noLOF	
+V217M	functional	noLOF	noLOF	
+V217N		LOF		
+V217P		LOF	LOF	
+V217Q			noLOF	
+V217R		noLOF	noLOF	
+V217S		noLOF	noLOF	
+V217T		noLOF	noLOF	
+V217V		noLOF	noLOF	
+V217W		LOF	noLOF	
+V218A	functional	noLOF	noLOF	
+V218C		LOF		
+V218D		LOF	LOF	
+V218E	nonfunctional	LOF	LOF	
+V218F		LOF	noLOF	
+V218G	functional	LOF	LOF	
+V218H		LOF		
+V218I			noLOF	
+V218K		LOF	LOF	
+V218L	functional	noLOF	noLOF	
+V218M	nonfunctional		noLOF	
+V218N		LOF		
+V218P		LOF	LOF	
+V218Q		LOF	LOF	
+V218R		LOF	LOF	
+V218S		LOF	LOF	
+V218T			noLOF	
+V218V		noLOF	noLOF	
+V218W		LOF	LOF	
+V218Y		LOF		
+P219A	partial	LOF	noLOF	
+P219C		LOF	noLOF	
+P219D			noLOF	
+P219E		noLOF		
+P219F		LOF	noLOF	
+P219G			noLOF	
+P219H	nonfunctional	noLOF	noLOF	
+P219I		LOF	LOF	
+P219K		LOF		
+P219L	nonfunctional	noLOF	noLOF	
+P219M		noLOF		
+P219N		noLOF	noLOF	
+P219P		noLOF	noLOF	
+P219Q		noLOF	noLOF	
+P219R	nonfunctional	noLOF	noLOF	
+P219S	nonfunctional	noLOF	noLOF	
+P219T	nonfunctional	noLOF	noLOF	
+P219V			LOF	
+P219W		noLOF		
+P219Y		noLOF	noLOF	
+Y220A		LOF	LOF	
+Y220C	nonfunctional	LOF	LOF	
+Y220D	nonfunctional	LOF	LOF	
+Y220E		LOF	LOF	
+Y220F	functional	noLOF	noLOF	
+Y220G		LOF	LOF	
+Y220H	nonfunctional	LOF	LOF	
+Y220I		LOF	LOF	
+Y220K		LOF	LOF	
+Y220L		LOF	noLOF	
+Y220M		LOF		
+Y220N	nonfunctional	LOF	LOF	
+Y220P		LOF	LOF	
+Y220Q		LOF	LOF	
+Y220R		LOF	LOF	
+Y220S	nonfunctional	LOF	LOF	
+Y220T		LOF	LOF	
+Y220V		LOF	LOF	
+Y220W			noLOF	
+Y220Y		noLOF	noLOF	
+E221A	functional		noLOF	
+E221C		LOF		
+E221D	functional	noLOF	noLOF	
+E221E		noLOF	noLOF	
+E221F		noLOF		
+E221G	partial		noLOF	
+E221H		noLOF	noLOF	
+E221I		noLOF		
+E221K	functional	noLOF	noLOF	
+E221M		noLOF	noLOF	
+E221N		noLOF	noLOF	
+E221P		noLOF	noLOF	
+E221Q	functional	noLOF	noLOF	
+E221R			noLOF	
+E221S		LOF	noLOF	
+E221T			noLOF	
+E221V	functional	noLOF	noLOF	
+E221W		noLOF	noLOF	
+E221Y		noLOF	noLOF	
+P222A	functional	LOF	noLOF	
+P222C		noLOF		
+P222D		noLOF		
+P222E			noLOF	
+P222F		noLOF		
+P222G		noLOF	noLOF	
+P222H			noLOF	
+P222I		noLOF		
+P222K		noLOF	noLOF	
+P222L	functional	noLOF	noLOF	
+P222M		noLOF		
+P222N		noLOF		
+P222P		noLOF	noLOF	
+P222Q	functional	noLOF	noLOF	
+P222R	functional		noLOF	
+P222S	functional	noLOF	noLOF	
+P222T	functional	noLOF	noLOF	
+P222V		noLOF	noLOF	
+P222W		noLOF	noLOF	
+P222Y		noLOF		
+P223A	partial	LOF	noLOF	
+P223C			noLOF	
+P223D		noLOF	noLOF	
+P223E		LOF		
+P223F		LOF	LOF	
+P223G		noLOF	noLOF	
+P223H	nonfunctional	noLOF	noLOF	
+P223I		noLOF	noLOF	
+P223K		noLOF		
+P223L	partial	LOF	LOF	
+P223N		noLOF	noLOF	
+P223P		noLOF	noLOF	
+P223Q			noLOF	
+P223R	partial	noLOF	noLOF	
+P223S	partial	noLOF	noLOF	
+P223T	partial	noLOF	noLOF	
+P223V			noLOF	
+P223W		LOF		
+P223Y		LOF	LOF	
+E224A	functional	LOF	noLOF	
+E224C		noLOF		
+E224D	functional	noLOF	noLOF	
+E224E		noLOF	noLOF	
+E224G	functional		noLOF	
+E224H		noLOF	noLOF	
+E224I		noLOF		
+E224K	partial	noLOF	noLOF	
+E224L		noLOF		
+E224M		LOF	noLOF	
+E224N		noLOF	noLOF	
+E224P		noLOF	noLOF	
+E224Q	functional		noLOF	
+E224R		noLOF	noLOF	
+E224S			noLOF	
+E224T		noLOF	noLOF	
+E224V	functional	noLOF	noLOF	
+E224W			noLOF	
+E224Y		noLOF	noLOF	
+V225A	functional	noLOF	noLOF	
+V225C		noLOF	noLOF	
+V225D	functional	noLOF	noLOF	
+V225E		noLOF	noLOF	
+V225F	functional	noLOF	noLOF	
+V225G	functional	LOF	noLOF	
+V225H		noLOF	noLOF	
+V225I	functional	noLOF	noLOF	
+V225K		noLOF		
+V225L	functional	LOF	noLOF	
+V225M		LOF	noLOF	
+V225N		LOF	noLOF	
+V225P		noLOF	noLOF	
+V225Q		noLOF		
+V225R		noLOF	noLOF	
+V225S		noLOF	noLOF	
+V225T		noLOF	noLOF	
+V225V		noLOF	noLOF	
+V225W		LOF		
+V225Y		noLOF	noLOF	
+G226A	functional	LOF	noLOF	
+G226C	functional	noLOF	noLOF	
+G226D	functional	noLOF	noLOF	
+G226E			noLOF	
+G226F		LOF	noLOF	
+G226G		noLOF	noLOF	
+G226H		noLOF	noLOF	
+G226I			noLOF	
+G226K		noLOF		
+G226L		noLOF	noLOF	
+G226M		noLOF		
+G226N			noLOF	
+G226P		noLOF	noLOF	
+G226R	functional	noLOF	noLOF	
+G226S	functional	noLOF	noLOF	
+G226T		noLOF	noLOF	
+G226V	functional	noLOF	noLOF	
+G226W		LOF	noLOF	
+G226Y		LOF	noLOF	
+S227A	functional	noLOF	noLOF	
+S227C	functional	noLOF	noLOF	
+S227D		noLOF	noLOF	
+S227E		noLOF		
+S227F	partial	noLOF	noLOF	
+S227G		noLOF	noLOF	
+S227H		noLOF	noLOF	
+S227I			noLOF	
+S227K		LOF		
+S227L		LOF	noLOF	
+S227M		noLOF		
+S227N			noLOF	
+S227P	partial	noLOF	noLOF	
+S227R			noLOF	
+S227S		noLOF	noLOF	
+S227T	functional	noLOF	noLOF	
+S227V		noLOF	noLOF	
+S227W		noLOF	noLOF	
+S227Y	partial	noLOF	noLOF	
+D228A	functional	noLOF	noLOF	
+D228C		noLOF	noLOF	
+D228D		noLOF	noLOF	
+D228E	functional	noLOF	noLOF	
+D228F		noLOF	noLOF	
+D228G	functional	noLOF	noLOF	
+D228H	functional	noLOF	noLOF	
+D228I		noLOF	noLOF	
+D228K		noLOF	noLOF	
+D228L		LOF	noLOF	
+D228M		noLOF		
+D228N	partial	noLOF	noLOF	
+D228P		noLOF	noLOF	
+D228Q		noLOF	noLOF	
+D228R		LOF	noLOF	
+D228S		noLOF	noLOF	
+D228T		LOF	noLOF	
+D228V	functional	noLOF	noLOF	
+D228W		noLOF		
+D228Y	functional	noLOF	noLOF	
+C229A		LOF	noLOF	
+C229C		noLOF	noLOF	
+C229D		LOF	LOF	
+C229F	functional	noLOF	noLOF	
+C229G	partial		noLOF	
+C229H		noLOF	noLOF	
+C229I			noLOF	
+C229L		LOF	noLOF	
+C229M		noLOF		
+C229N			noLOF	
+C229P		noLOF	noLOF	
+C229Q		noLOF		
+C229R	partial		noLOF	
+C229S	partial	noLOF	noLOF	
+C229T			noLOF	
+C229V		LOF	noLOF	
+C229W	partial		noLOF	
+C229Y	partial	noLOF	noLOF	
+T230A	partial		noLOF	
+T230C		noLOF	noLOF	
+T230D		LOF	LOF	
+T230E		LOF		
+T230F		noLOF	noLOF	
+T230G		LOF	LOF	
+T230H			noLOF	
+T230I	functional	noLOF	noLOF	
+T230K			noLOF	
+T230L		noLOF	noLOF	
+T230M		noLOF	noLOF	
+T230N	partial	noLOF	noLOF	
+T230P	partial	LOF	noLOF	
+T230Q		noLOF		
+T230R		noLOF	noLOF	
+T230S	partial	noLOF	noLOF	
+T230T		noLOF	noLOF	
+T230V		noLOF	noLOF	
+T230W		noLOF		
+T230Y		LOF	noLOF	
+T231A	partial	noLOF	noLOF	
+T231C		noLOF	noLOF	
+T231D		LOF	noLOF	
+T231E		noLOF		
+T231F		LOF	noLOF	
+T231G		LOF	LOF	
+T231H		LOF	noLOF	
+T231I	functional	noLOF	noLOF	
+T231K		noLOF	noLOF	
+T231L			noLOF	
+T231M		noLOF	noLOF	
+T231N	partial	noLOF	noLOF	
+T231P	nonfunctional	LOF	noLOF	
+T231Q		LOF		
+T231R			noLOF	
+T231S	partial		noLOF	
+T231T		noLOF	noLOF	
+T231V		LOF	noLOF	
+T231W		LOF		
+T231Y		LOF	noLOF	
+I232A		LOF	LOF	
+I232C		LOF	LOF	
+I232D		LOF	LOF	
+I232E		LOF		
+I232F	nonfunctional		LOF	
+I232G		LOF	LOF	
+I232H		LOF	LOF	
+I232I		noLOF	noLOF	
+I232K		LOF	LOF	
+I232L	nonfunctional	noLOF	noLOF	
+I232M	partial		noLOF	
+I232N	nonfunctional	LOF	LOF	
+I232P		LOF	LOF	
+I232Q		LOF		
+I232R		LOF	LOF	
+I232S	nonfunctional	LOF	LOF	
+I232T	nonfunctional	LOF	LOF	
+I232V	functional	noLOF	noLOF	
+I232W		LOF		
+I232Y		LOF	noLOF	
+H233A			noLOF	
+H233C		noLOF	noLOF	
+H233D	nonfunctional	LOF	noLOF	
+H233E			noLOF	
+H233F		noLOF	noLOF	
+H233G			noLOF	
+H233H		noLOF	noLOF	
+H233I			noLOF	
+H233K		LOF	noLOF	
+H233L	functional	noLOF	noLOF	
+H233M		noLOF		
+H233N	partial	noLOF	noLOF	
+H233P	functional	LOF	noLOF	
+H233Q	partial	noLOF	noLOF	
+H233R	functional	noLOF	noLOF	
+H233S		noLOF	noLOF	
+H233T		LOF	noLOF	
+H233V			noLOF	
+H233W		noLOF		
+H233Y	functional		noLOF	
+Y234A		LOF	LOF	
+Y234C	nonfunctional	LOF	LOF	
+Y234D	nonfunctional	LOF	LOF	
+Y234E		LOF	LOF	
+Y234F	functional	noLOF	noLOF	
+Y234G		LOF	LOF	
+Y234H	nonfunctional	LOF	LOF	
+Y234I		noLOF	noLOF	
+Y234K		LOF	LOF	
+Y234L		LOF	noLOF	
+Y234N	nonfunctional	LOF	LOF	
+Y234P		LOF	LOF	
+Y234Q		LOF	LOF	
+Y234R		LOF	LOF	
+Y234S	nonfunctional	LOF	LOF	
+Y234T		LOF	LOF	
+Y234V		LOF	noLOF	
+Y234W		LOF	LOF	
+Y234Y		noLOF	noLOF	
+N235A		noLOF	noLOF	
+N235C		noLOF	noLOF	
+N235D	partial	LOF	LOF	
+N235E		noLOF	noLOF	
+N235F			noLOF	
+N235G			noLOF	
+N235H	functional	LOF	noLOF	
+N235I	partial	noLOF	noLOF	
+N235K	functional	noLOF	noLOF	
+N235L		noLOF	noLOF	
+N235M		noLOF	noLOF	
+N235N		noLOF	noLOF	
+N235P		LOF	LOF	
+N235Q		LOF	noLOF	
+N235R		noLOF	noLOF	
+N235S	functional	noLOF	noLOF	
+N235T	functional	LOF	noLOF	
+N235V		noLOF	noLOF	
+N235Y	partial		noLOF	
+Y236A		LOF	LOF	
+Y236C	nonfunctional	LOF	LOF	
+Y236D	nonfunctional	LOF	LOF	
+Y236E		LOF	LOF	
+Y236F	functional	noLOF	noLOF	
+Y236G		LOF	LOF	
+Y236H	nonfunctional	LOF	LOF	
+Y236I		LOF	LOF	
+Y236K		LOF	LOF	
+Y236L		LOF	LOF	
+Y236M		LOF		
+Y236N	functional	LOF	LOF	
+Y236P		LOF	LOF	
+Y236Q		LOF	LOF	
+Y236R		LOF	LOF	
+Y236S	nonfunctional	LOF	LOF	
+Y236T		LOF	LOF	
+Y236V		LOF	LOF	
+Y236W			noLOF	
+Y236Y		noLOF	noLOF	
+M237A		noLOF	noLOF	
+M237C		LOF		
+M237D		LOF		
+M237E		LOF	LOF	
+M237F		LOF	LOF	
+M237G		noLOF	noLOF	
+M237H		LOF		
+M237I	nonfunctional	LOF	LOF	
+M237K	nonfunctional	LOF	LOF	
+M237L	partial		noLOF	
+M237N		noLOF	noLOF	
+M237P		LOF	LOF	
+M237Q			noLOF	
+M237R	partial		noLOF	
+M237S			noLOF	
+M237T	partial		noLOF	
+M237V	partial	LOF	LOF	
+M237W		noLOF	noLOF	
+M237Y		LOF		
+C238A		LOF	LOF	
+C238C		noLOF	noLOF	
+C238D		LOF	LOF	
+C238E		LOF		
+C238F	nonfunctional	LOF	LOF	
+C238G	nonfunctional	LOF	LOF	
+C238H		LOF	LOF	
+C238I		LOF	LOF	
+C238K		LOF		
+C238L		LOF	LOF	
+C238M		LOF		
+C238N		LOF	LOF	
+C238P		LOF	LOF	
+C238Q		LOF		
+C238R	nonfunctional	LOF	LOF	
+C238S	nonfunctional	LOF	LOF	
+C238T		LOF	LOF	
+C238V		LOF	LOF	
+C238W	nonfunctional	LOF	LOF	
+C238Y	nonfunctional	LOF	LOF	
+N239A		LOF	LOF	
+N239C		LOF	LOF	
+N239D	nonfunctional	LOF	LOF	
+N239E		LOF	LOF	
+N239F		LOF	noLOF	
+N239G		LOF	LOF	
+N239H	functional	noLOF	noLOF	
+N239I	nonfunctional	LOF	LOF	
+N239K	nonfunctional	noLOF	LOF	
+N239L		noLOF	noLOF	
+N239M		noLOF	noLOF	
+N239N		noLOF	noLOF	
+N239P		LOF	LOF	
+N239Q			noLOF	
+N239R		noLOF	noLOF	
+N239S	nonfunctional	LOF	LOF	
+N239T	nonfunctional	LOF	LOF	
+N239V		LOF	noLOF	
+N239W		noLOF		
+N239Y	functional	LOF	noLOF	
+S240A		LOF	LOF	
+S240C	partial	LOF	noLOF	
+S240D		LOF	LOF	
+S240E		LOF		
+S240F		LOF	LOF	
+S240G	nonfunctional	LOF	LOF	
+S240H		LOF	LOF	
+S240I	partial	noLOF	noLOF	
+S240K		LOF	LOF	
+S240L			noLOF	
+S240M			noLOF	
+S240N	partial		noLOF	
+S240P		LOF	LOF	
+S240Q		LOF		
+S240R	partial	LOF	LOF	
+S240S		noLOF	noLOF	
+S240T	partial	noLOF	noLOF	
+S240V		LOF	noLOF	
+S240W		LOF	LOF	
+S240Y		LOF	LOF	
+S241A	nonfunctional	LOF	LOF	
+S241C	nonfunctional	LOF	LOF	
+S241D		LOF	LOF	
+S241E		LOF		
+S241F	nonfunctional	LOF	LOF	
+S241G		LOF	LOF	
+S241H		LOF	LOF	
+S241I		LOF	LOF	
+S241K		LOF		
+S241L		LOF	LOF	
+S241M		LOF		
+S241N		LOF	LOF	
+S241P	nonfunctional	LOF	LOF	
+S241Q		LOF		
+S241R		LOF	LOF	
+S241S		noLOF	noLOF	
+S241T	nonfunctional	LOF	LOF	
+S241V		LOF	LOF	
+S241W		LOF	LOF	
+S241Y	nonfunctional		LOF	
+C242A		LOF	LOF	
+C242C		noLOF	noLOF	
+C242D		LOF	LOF	
+C242E		LOF		
+C242F	nonfunctional		LOF	
+C242G	nonfunctional	LOF		
+C242H		LOF	LOF	
+C242I		LOF	LOF	
+C242K		LOF		
+C242L		LOF	LOF	
+C242M		LOF		
+C242N		LOF	LOF	
+C242P		LOF	LOF	
+C242Q		LOF		
+C242R	nonfunctional	LOF	LOF	
+C242S	nonfunctional	LOF	LOF	
+C242T		LOF	LOF	
+C242V		LOF	LOF	
+C242W	nonfunctional	LOF	noLOF	
+C242Y	nonfunctional	LOF	LOF	
+M243A			noLOF	
+M243D		LOF		
+M243E		LOF	LOF	
+M243F		LOF	noLOF	
+M243G		LOF	noLOF	
+M243H		LOF		
+M243I	functional	noLOF	noLOF	
+M243K	functional	noLOF	noLOF	
+M243L	nonfunctional		noLOF	
+M243N			noLOF	
+M243P		noLOF	noLOF	
+M243Q			noLOF	
+M243R	functional	LOF	noLOF	
+M243S			noLOF	
+M243T	nonfunctional		noLOF	
+M243V	partial	noLOF	noLOF	
+M243W		LOF	LOF	
+M243Y		LOF		
+G244A	nonfunctional	LOF	LOF	
+G244C	nonfunctional		LOF	
+G244D	nonfunctional	LOF	LOF	
+G244E		LOF	LOF	
+G244F		LOF	LOF	
+G244G		noLOF	noLOF	
+G244H		LOF	LOF	
+G244I		LOF	LOF	
+G244K		LOF		
+G244L		LOF	LOF	
+G244M		LOF		
+G244N		LOF	LOF	
+G244P		LOF	LOF	
+G244Q		LOF		
+G244R	nonfunctional	LOF	LOF	
+G244S	nonfunctional	LOF	LOF	
+G244T		LOF	LOF	
+G244V	nonfunctional	LOF	LOF	
+G244W		LOF	LOF	
+G244Y		LOF	LOF	
+G245A	nonfunctional	LOF	LOF	
+G245C	nonfunctional		LOF	
+G245D	nonfunctional		LOF	
+G245E		LOF	LOF	
+G245F		LOF	LOF	
+G245G		noLOF	noLOF	
+G245H		LOF	LOF	
+G245I		LOF	LOF	
+G245K		LOF	LOF	
+G245L		LOF	LOF	
+G245M		LOF		
+G245N		LOF	LOF	
+G245P		LOF	LOF	
+G245Q		LOF	LOF	
+G245R	nonfunctional	LOF	LOF	
+G245S	nonfunctional	LOF	LOF	
+G245T		LOF	LOF	
+G245V	nonfunctional	LOF	LOF	
+G245W		LOF		
+G245Y		LOF	LOF	
+M246A		LOF	LOF	
+M246C		LOF		
+M246D		LOF		
+M246E		LOF	LOF	
+M246F		LOF	LOF	
+M246G		LOF	LOF	
+M246H		LOF		
+M246I	nonfunctional		noLOF	
+M246K	nonfunctional	LOF	LOF	
+M246L	nonfunctional	LOF	noLOF	
+M246N		LOF	LOF	
+M246P			LOF	
+M246Q		LOF	LOF	
+M246R	nonfunctional	LOF	noLOF	
+M246S		LOF	LOF	
+M246T	nonfunctional	LOF	LOF	
+M246V	nonfunctional	LOF	LOF	
+M246W		LOF	LOF	
+M246Y		LOF		
+N247A		noLOF	noLOF	
+N247C			noLOF	
+N247D	partial		noLOF	
+N247E		noLOF	noLOF	
+N247F			LOF	
+N247G			noLOF	
+N247H	functional	noLOF	noLOF	
+N247I	nonfunctional	LOF	LOF	
+N247K	functional	noLOF	noLOF	
+N247L		LOF	LOF	
+N247M			noLOF	
+N247N		noLOF	noLOF	
+N247P		LOF	LOF	
+N247Q			noLOF	
+N247R		noLOF	noLOF	
+N247S	functional	noLOF	noLOF	
+N247T	nonfunctional	LOF	LOF	
+N247V		LOF	LOF	
+N247Y	partial		noLOF	
+R248A		LOF	LOF	
+R248C		LOF		
+R248D		LOF	LOF	
+R248E		LOF	LOF	
+R248F		LOF	LOF	
+R248G	nonfunctional	LOF	LOF	
+R248H		LOF	LOF	
+R248I		LOF	LOF	
+R248K		LOF	noLOF	
+R248L	nonfunctional	LOF	LOF	
+R248M		LOF	LOF	
+R248N		LOF	LOF	
+R248P	nonfunctional	LOF	LOF	
+R248Q	nonfunctional	LOF	LOF	
+R248R		noLOF	noLOF	
+R248S		LOF	LOF	
+R248T		LOF	LOF	
+R248V		LOF	LOF	
+R248W	nonfunctional	LOF	LOF	
+R248Y		LOF	LOF	
+R249A		LOF	LOF	
+R249C		LOF	LOF	
+R249D		LOF	LOF	
+R249E		LOF	LOF	
+R249F		LOF	LOF	
+R249G	nonfunctional	LOF	LOF	
+R249H		LOF	LOF	
+R249I		LOF	LOF	
+R249K	nonfunctional		LOF	
+R249L		LOF	LOF	
+R249M	nonfunctional		LOF	
+R249N		LOF	LOF	
+R249P		LOF	LOF	
+R249Q		LOF	LOF	
+R249R		noLOF	noLOF	
+R249S	nonfunctional	LOF	LOF	
+R249T	nonfunctional	LOF	LOF	
+R249V		LOF	LOF	
+R249W	nonfunctional	LOF	LOF	
+R249Y		LOF	LOF	
+P250A	functional	LOF	noLOF	
+P250C		noLOF	noLOF	
+P250D		LOF	LOF	
+P250E		LOF		
+P250F		LOF	LOF	
+P250G			noLOF	
+P250H	nonfunctional	noLOF	LOF	
+P250I		LOF	LOF	
+P250K		noLOF		
+P250L	nonfunctional	LOF	LOF	
+P250M		LOF		
+P250N		noLOF	LOF	
+P250P		noLOF	noLOF	
+P250Q			noLOF	
+P250R	partial		noLOF	
+P250S	functional	noLOF	noLOF	
+P250T	partial	noLOF	noLOF	
+P250V		noLOF	noLOF	
+P250W		LOF		
+P250Y		LOF	LOF	
+I251A		LOF	LOF	
+I251C		LOF	LOF	
+I251D		LOF	LOF	
+I251E		LOF		
+I251F	nonfunctional	LOF	LOF	
+I251G		LOF	LOF	
+I251H		LOF	LOF	
+I251I		noLOF	noLOF	
+I251K		LOF	LOF	
+I251L	nonfunctional	LOF	LOF	
+I251M	partial			
+I251N	nonfunctional	LOF	LOF	
+I251P		LOF	LOF	
+I251Q		LOF		
+I251R		LOF	LOF	
+I251S	nonfunctional	LOF	LOF	
+I251T	nonfunctional		LOF	
+I251V	partial	noLOF	noLOF	
+I251W		LOF		
+I251Y		LOF	LOF	
+L252A		noLOF	noLOF	
+L252C		noLOF	noLOF	
+L252D		noLOF	noLOF	
+L252E		noLOF		
+L252F	functional		noLOF	
+L252G		LOF	LOF	
+L252H	partial	noLOF	noLOF	
+L252I	functional	noLOF	noLOF	
+L252K		noLOF		
+L252L		noLOF	noLOF	
+L252M		noLOF		
+L252N		noLOF	noLOF	
+L252P	nonfunctional	LOF	LOF	
+L252Q		noLOF	noLOF	
+L252R	functional	noLOF	noLOF	
+L252S		LOF	noLOF	
+L252T		noLOF	noLOF	
+L252V	functional	noLOF	noLOF	
+L252W		noLOF		
+L252Y			noLOF	
+T253A	nonfunctional	LOF	LOF	
+T253C		noLOF	noLOF	
+T253D		LOF	LOF	
+T253E		LOF		
+T253F		LOF	LOF	
+T253G		LOF	LOF	
+T253H		LOF	noLOF	
+T253I	partial		LOF	
+T253K		LOF	LOF	
+T253L		LOF	LOF	
+T253M			noLOF	
+T253N	partial	noLOF	LOF	
+T253P	nonfunctional	LOF	LOF	
+T253Q		noLOF		
+T253R		LOF	LOF	
+T253S	partial	noLOF	noLOF	
+T253T		noLOF	noLOF	
+T253V		noLOF	noLOF	
+T253W		LOF		
+T253Y		LOF	LOF	
+I254A		LOF		
+I254C		LOF	LOF	
+I254D		LOF	LOF	
+I254E		LOF		
+I254F	nonfunctional		noLOF	
+I254G		LOF	LOF	
+I254H		LOF	LOF	
+I254I		noLOF	noLOF	
+I254K		LOF	LOF	
+I254L	functional	noLOF	noLOF	
+I254M	partial		noLOF	
+I254N	nonfunctional	LOF	LOF	
+I254P		LOF	LOF	
+I254Q		LOF		
+I254R		LOF	LOF	
+I254S	nonfunctional	LOF	LOF	
+I254T	nonfunctional	LOF	LOF	
+I254V	functional	noLOF	noLOF	
+I254W		LOF		
+I254Y		LOF	LOF	
+I255A		LOF	LOF	
+I255C		LOF	LOF	
+I255D		LOF	LOF	
+I255E		LOF		
+I255F	nonfunctional	LOF	LOF	
+I255G		LOF	LOF	
+I255H		LOF	LOF	
+I255I		noLOF	noLOF	
+I255K		LOF	LOF	
+I255L	functional	noLOF	noLOF	
+I255M	partial	noLOF	noLOF	
+I255N	nonfunctional	LOF	LOF	
+I255P		LOF	LOF	
+I255Q		LOF		
+I255R		LOF	LOF	
+I255S	nonfunctional	LOF	LOF	
+I255T	nonfunctional	LOF	LOF	
+I255V	functional	noLOF	noLOF	
+I255W		LOF		
+I255Y		LOF	LOF	
+T256A	partial	noLOF	noLOF	
+T256C		noLOF		
+T256D		noLOF		
+T256E		noLOF	noLOF	
+T256F		LOF		
+T256G		LOF	LOF	
+T256H		LOF		
+T256I	partial	noLOF	noLOF	
+T256K	partial	noLOF	LOF	
+T256L			noLOF	
+T256M			noLOF	
+T256N			noLOF	
+T256P	nonfunctional	LOF	LOF	
+T256Q		noLOF	noLOF	
+T256R	partial		noLOF	
+T256S	functional		noLOF	
+T256T		noLOF	noLOF	
+T256V		noLOF	LOF	
+T256W		LOF		
+L257A		LOF	LOF	
+L257C		LOF		
+L257D		LOF		
+L257E		LOF	LOF	
+L257F		LOF	LOF	
+L257G		LOF	LOF	
+L257H		LOF	LOF	
+L257I		noLOF	noLOF	
+L257K		LOF	LOF	
+L257L		noLOF	noLOF	
+L257M	functional	noLOF	noLOF	
+L257N		LOF		
+L257P	nonfunctional	LOF	LOF	
+L257Q	nonfunctional	LOF	LOF	
+L257R	nonfunctional	LOF	LOF	
+L257S		LOF	LOF	
+L257T		LOF	LOF	
+L257V	nonfunctional	LOF	LOF	
+L257W		LOF	LOF	
+L257Y		LOF		
+E258A	nonfunctional	LOF	LOF	
+E258C		LOF		
+E258D	nonfunctional	LOF	LOF	
+E258E		noLOF	noLOF	
+E258F		LOF		
+E258G	nonfunctional	LOF	LOF	
+E258H		LOF	LOF	
+E258I		LOF	LOF	
+E258K	nonfunctional	LOF	LOF	
+E258L		LOF	LOF	
+E258M		LOF		
+E258N		LOF	LOF	
+E258P		LOF	LOF	
+E258Q	partial	LOF	LOF	
+E258R		LOF	LOF	
+E258S		LOF	LOF	
+E258T		LOF	LOF	
+E258V	nonfunctional	LOF	LOF	
+E258W		LOF		
+E258Y		LOF	LOF	
+D259A	nonfunctional	noLOF	noLOF	
+D259C		noLOF	noLOF	
+D259D		noLOF	noLOF	
+D259E	nonfunctional	noLOF	noLOF	
+D259F		LOF	LOF	
+D259G	partial	noLOF	noLOF	
+D259H	nonfunctional	noLOF	LOF	
+D259I		LOF	LOF	
+D259K		LOF	LOF	
+D259L		LOF	LOF	
+D259M		LOF		
+D259N	partial	noLOF	noLOF	
+D259P		LOF	LOF	
+D259Q		LOF	LOF	
+D259R		LOF	LOF	
+D259S		noLOF	noLOF	
+D259T			noLOF	
+D259V	nonfunctional	LOF	LOF	
+D259W		LOF		
+D259Y	nonfunctional	LOF	LOF	
+S260A	functional		noLOF	
+S260C	functional	noLOF	noLOF	
+S260D			noLOF	
+S260E		noLOF		
+S260F	nonfunctional	noLOF	noLOF	
+S260G			noLOF	
+S260H			noLOF	
+S260I			noLOF	
+S260L		LOF	noLOF	
+S260M		noLOF		
+S260N		noLOF	noLOF	
+S260P	partial	noLOF	noLOF	
+S260Q		noLOF		
+S260R			noLOF	
+S260S		noLOF	noLOF	
+S260T	nonfunctional	noLOF	noLOF	
+S260V		noLOF	noLOF	
+S260W		noLOF	noLOF	
+S260Y	functional	noLOF	noLOF	
+S261A		noLOF	noLOF	
+S261C	functional	noLOF	noLOF	
+S261D		noLOF	noLOF	
+S261E		noLOF		
+S261F			noLOF	
+S261G	functional	noLOF	noLOF	
+S261H			noLOF	
+S261I	functional		noLOF	
+S261K			noLOF	
+S261L		noLOF	noLOF	
+S261M		LOF	noLOF	
+S261N	functional		noLOF	
+S261P		LOF	LOF	
+S261Q		LOF		
+S261R	functional	noLOF	noLOF	
+S261S			noLOF	
+S261T	functional		noLOF	
+S261V		LOF	noLOF	
+S261W			noLOF	
+S261Y		noLOF	noLOF	
+G262A	nonfunctional		noLOF	
+G262C	nonfunctional	noLOF	noLOF	
+G262D	partial		noLOF	
+G262E		LOF	noLOF	
+G262F		noLOF	LOF	
+G262G		noLOF	noLOF	
+G262H		noLOF	noLOF	
+G262I		LOF	LOF	
+G262L			LOF	
+G262M		noLOF		
+G262N			noLOF	
+G262P		LOF	LOF	
+G262Q		noLOF		
+G262R	partial		noLOF	
+G262S	nonfunctional	noLOF	noLOF	
+G262T		LOF	LOF	
+G262V	nonfunctional	LOF	LOF	
+G262W		LOF	LOF	
+G262Y			noLOF	
+N263A			noLOF	
+N263C		noLOF	noLOF	
+N263D	partial	noLOF	noLOF	
+N263E		noLOF	noLOF	
+N263F		noLOF	noLOF	
+N263G		noLOF	noLOF	
+N263H	functional	noLOF	noLOF	
+N263I	nonfunctional	LOF	noLOF	
+N263K	functional	noLOF	noLOF	
+N263L		noLOF	noLOF	
+N263M		noLOF	noLOF	
+N263N		noLOF	noLOF	
+N263P		LOF	LOF	
+N263Q		noLOF	noLOF	
+N263R			noLOF	
+N263S	functional	noLOF	noLOF	
+N263T	functional	noLOF	noLOF	
+N263V		noLOF	noLOF	
+N263Y	partial		noLOF	
+L264A		noLOF	noLOF	
+L264C		LOF		
+L264D		noLOF		
+L264E		noLOF	noLOF	
+L264F			noLOF	
+L264G		LOF	LOF	
+L264H		noLOF	noLOF	
+L264I	functional	noLOF	noLOF	
+L264K			noLOF	
+L264L		noLOF	noLOF	
+L264M		noLOF		
+L264N		noLOF		
+L264P	functional		noLOF	
+L264Q	functional		noLOF	
+L264R	nonfunctional	LOF	LOF	
+L264S		LOF	noLOF	
+L264T		LOF	noLOF	
+L264V	functional	noLOF	noLOF	
+L264W		LOF		
+L264Y		LOF		
+L265A		LOF	LOF	
+L265C		LOF		
+L265D		LOF		
+L265E		LOF	LOF	
+L265F		noLOF	noLOF	
+L265G		LOF	LOF	
+L265H		LOF	LOF	
+L265I		noLOF	noLOF	
+L265K		LOF	LOF	
+L265L		noLOF	noLOF	
+L265M	partial	noLOF	noLOF	
+L265N		LOF		
+L265P	nonfunctional	LOF	LOF	
+L265Q	nonfunctional	LOF	LOF	
+L265R	nonfunctional	LOF	LOF	
+L265S		LOF	LOF	
+L265T		LOF	LOF	
+L265V	partial	noLOF	noLOF	
+L265W		LOF	LOF	
+L265Y		noLOF		
+G266A	partial		noLOF	
+G266C		LOF	LOF	
+G266D		LOF	LOF	
+G266E	nonfunctional	LOF	LOF	
+G266F		LOF		
+G266G		LOF	noLOF	
+G266H		LOF		
+G266I		LOF	LOF	
+G266K		LOF	LOF	
+G266L		LOF	LOF	
+G266M		LOF		
+G266N		LOF		
+G266P		LOF	LOF	
+G266Q		LOF	LOF	
+G266R	nonfunctional	LOF	LOF	
+G266S		LOF	LOF	
+G266T		LOF	LOF	
+G266V	nonfunctional	LOF	LOF	
+G266W		LOF	LOF	
+G266Y		LOF		
+R267A			noLOF	
+R267C			noLOF	
+R267D		LOF		
+R267E		LOF	LOF	
+R267F		LOF		
+R267G	nonfunctional	LOF	LOF	
+R267H		LOF	LOF	
+R267K		noLOF	noLOF	
+R267L	partial	noLOF	noLOF	
+R267N		LOF		
+R267P	nonfunctional	LOF	LOF	
+R267Q	partial	noLOF	noLOF	
+R267R		noLOF	noLOF	
+R267S		noLOF	noLOF	
+R267T		LOF	LOF	
+R267V			LOF	
+R267W	nonfunctional		LOF	
+N268A			noLOF	
+N268C			noLOF	
+N268D	functional	noLOF	noLOF	
+N268E		LOF	noLOF	
+N268F			noLOF	
+N268G			noLOF	
+N268H	functional		noLOF	
+N268I	partial	LOF	LOF	
+N268K	functional	noLOF	noLOF	
+N268L		LOF	LOF	
+N268M		noLOF	noLOF	
+N268N		noLOF	noLOF	
+N268P		LOF	LOF	
+N268Q		LOF	noLOF	
+N268R			noLOF	
+N268S	functional	noLOF	noLOF	
+N268T	functional	LOF	noLOF	
+N268V			noLOF	
+N268W		LOF		
+N268Y	partial		noLOF	
+S269A		LOF	noLOF	
+S269C	functional	noLOF	noLOF	
+S269D		LOF	LOF	
+S269F			noLOF	
+S269G	partial	noLOF	noLOF	
+S269H		noLOF	noLOF	
+S269I	functional		noLOF	
+S269K			noLOF	
+S269L		LOF	noLOF	
+S269M			noLOF	
+S269N	partial		noLOF	
+S269P		LOF	LOF	
+S269Q		LOF		
+S269R	partial	noLOF	noLOF	
+S269S		LOF	noLOF	
+S269T	functional		noLOF	
+S269V			noLOF	
+S269W			LOF	
+S269Y		noLOF	noLOF	
+F270A		LOF	LOF	
+F270C	nonfunctional	LOF	LOF	
+F270D		LOF	LOF	
+F270E		LOF		
+F270F		noLOF	noLOF	
+F270G		LOF		
+F270H		LOF	LOF	
+F270I	nonfunctional	LOF	LOF	
+F270K		LOF		
+F270L	nonfunctional	LOF	LOF	
+F270M		LOF		
+F270N		LOF	LOF	
+F270P		LOF	LOF	
+F270Q		LOF		
+F270R		LOF	LOF	
+F270S	nonfunctional	LOF	LOF	
+F270T		LOF	LOF	
+F270V	nonfunctional	LOF	LOF	
+F270W		LOF	LOF	
+F270Y	functional		noLOF	
+E271A	partial		noLOF	
+E271D	functional		noLOF	
+E271E		noLOF	noLOF	
+E271F		LOF		
+E271G	functional		noLOF	
+E271H			noLOF	
+E271I		LOF		
+E271K	partial	LOF	LOF	
+E271M		LOF	LOF	
+E271N			noLOF	
+E271P		LOF	LOF	
+E271Q	partial		noLOF	
+E271R		LOF	LOF	
+E271S			noLOF	
+E271T		noLOF	noLOF	
+E271V	nonfunctional	LOF	LOF	
+E271W		LOF	LOF	
+E271Y		LOF	LOF	
+V272A	partial		LOF	
+V272C		noLOF		
+V272D		LOF	LOF	
+V272E	nonfunctional	LOF	LOF	
+V272F		LOF	LOF	
+V272G	nonfunctional	LOF	LOF	
+V272H		LOF		
+V272I			noLOF	
+V272K		LOF	LOF	
+V272L	nonfunctional	LOF	LOF	
+V272M	nonfunctional	LOF	LOF	
+V272N		LOF		
+V272P		LOF	LOF	
+V272Q		LOF	LOF	
+V272R		LOF	LOF	
+V272S		LOF	LOF	
+V272T		noLOF	noLOF	
+V272V		noLOF	noLOF	
+V272W		LOF	LOF	
+V272Y		LOF		
+R273A		LOF	LOF	
+R273C	nonfunctional	LOF	LOF	
+R273D		LOF	LOF	
+R273E		LOF	LOF	
+R273F		LOF	LOF	
+R273G	nonfunctional	LOF	LOF	
+R273H	nonfunctional	LOF	LOF	
+R273I		LOF	LOF	
+R273K		noLOF	noLOF	
+R273L	nonfunctional	LOF	LOF	
+R273M		LOF	LOF	
+R273N		LOF	LOF	
+R273P	nonfunctional	LOF	LOF	
+R273Q		LOF	LOF	
+R273R		noLOF	noLOF	
+R273S	nonfunctional	LOF	LOF	
+R273T		LOF	LOF	
+R273V		LOF	LOF	
+R273W		LOF	LOF	
+R273Y		LOF	LOF	
+V274A	nonfunctional	LOF	LOF	
+V274C		LOF	LOF	
+V274D	nonfunctional	LOF	LOF	
+V274E		LOF	LOF	
+V274F	nonfunctional	LOF	LOF	
+V274G	nonfunctional	LOF	LOF	
+V274H		LOF	LOF	
+V274I	functional	noLOF	noLOF	
+V274K		LOF		
+V274L	nonfunctional	LOF	LOF	
+V274M		LOF	LOF	
+V274N		LOF	LOF	
+V274P		LOF	LOF	
+V274Q		LOF		
+V274R		LOF	LOF	
+V274S		LOF	LOF	
+V274T		LOF	LOF	
+V274V		noLOF	noLOF	
+V274W		LOF		
+V274Y		LOF	LOF	
+C275A		LOF	LOF	
+C275C		noLOF	noLOF	
+C275D		LOF	LOF	
+C275E		LOF		
+C275F	nonfunctional	LOF	LOF	
+C275G	nonfunctional	LOF	LOF	
+C275H		LOF		
+C275I		LOF	LOF	
+C275K		LOF		
+C275L		LOF	LOF	
+C275M		LOF		
+C275N		LOF	LOF	
+C275P		LOF	LOF	
+C275Q		LOF		
+C275R	nonfunctional	LOF	LOF	
+C275S	nonfunctional	noLOF	LOF	
+C275T		LOF	LOF	
+C275V		LOF	LOF	
+C275W	nonfunctional	LOF	LOF	
+C275Y	nonfunctional	LOF	LOF	
+A276A		noLOF	noLOF	
+A276C		LOF	noLOF	
+A276D	nonfunctional	LOF	LOF	
+A276E		LOF	LOF	
+A276F		LOF	LOF	
+A276G	nonfunctional	LOF	LOF	
+A276H		LOF	LOF	
+A276I		LOF	LOF	
+A276K		LOF		
+A276L		LOF	LOF	
+A276M		LOF		
+A276N		LOF	LOF	
+A276P	nonfunctional	LOF	LOF	
+A276Q		LOF		
+A276R		LOF	LOF	
+A276S	functional	noLOF	noLOF	
+A276T	functional	noLOF	noLOF	
+A276V	partial	noLOF	noLOF	
+A276W		LOF		
+A276Y		LOF	LOF	
+C277A		noLOF	LOF	
+C277C			noLOF	
+C277D		LOF	LOF	
+C277E		LOF		
+C277F	nonfunctional	LOF	LOF	
+C277G	nonfunctional	LOF	LOF	
+C277H		LOF	noLOF	
+C277I			noLOF	
+C277K		LOF		
+C277L		noLOF	noLOF	
+C277M		noLOF		
+C277N		noLOF	noLOF	
+C277P		LOF	LOF	
+C277R	nonfunctional	noLOF	noLOF	
+C277S	functional	LOF	noLOF	
+C277T		LOF	LOF	
+C277V			noLOF	
+C277W	nonfunctional	noLOF	noLOF	
+C277Y	nonfunctional	LOF	noLOF	
+P278A	nonfunctional	LOF	LOF	
+P278C		LOF	LOF	
+P278D		LOF	LOF	
+P278E		LOF		
+P278F		LOF		
+P278G		LOF	LOF	
+P278H	nonfunctional	LOF	LOF	
+P278I		LOF	LOF	
+P278K		LOF		
+P278L	nonfunctional	LOF	LOF	
+P278M		LOF		
+P278N		LOF	LOF	
+P278P		noLOF	noLOF	
+P278Q		LOF	LOF	
+P278R	nonfunctional	LOF	LOF	
+P278S	nonfunctional	LOF	LOF	
+P278T	nonfunctional	LOF	LOF	
+P278V		LOF		
+P278W		LOF		
+P278Y		LOF	LOF	
+G279A	nonfunctional	noLOF	noLOF	
+G279C		noLOF	noLOF	
+G279D		LOF	LOF	
+G279E	nonfunctional	LOF	LOF	
+G279F		noLOF		
+G279G		LOF	noLOF	
+G279H		noLOF		
+G279I		noLOF		
+G279K		noLOF	noLOF	
+G279L		noLOF		
+G279M		noLOF	noLOF	
+G279N		noLOF		
+G279P		LOF	LOF	
+G279Q		noLOF	noLOF	
+G279R	nonfunctional	noLOF	noLOF	
+G279S		noLOF	noLOF	
+G279T		noLOF	noLOF	
+G279V	nonfunctional	noLOF	noLOF	
+G279W	nonfunctional	noLOF	noLOF	
+G279Y		noLOF		
+R280A		LOF	LOF	
+R280C		LOF	LOF	
+R280D		LOF		
+R280E		LOF	LOF	
+R280F		LOF		
+R280G	nonfunctional	LOF	LOF	
+R280H		LOF		
+R280I	nonfunctional	LOF	LOF	
+R280K	nonfunctional	LOF	LOF	
+R280L		LOF	LOF	
+R280M		LOF	LOF	
+R280N		LOF	LOF	
+R280P		LOF	LOF	
+R280Q		LOF	LOF	
+R280R		noLOF	noLOF	
+R280S	nonfunctional	LOF	LOF	
+R280T	nonfunctional	LOF	LOF	
+R280V		LOF		
+R280W		LOF	LOF	
+R280Y		LOF		
+D281A	nonfunctional	LOF	LOF	
+D281C		LOF	LOF	
+D281D			noLOF	
+D281E	nonfunctional	LOF	LOF	
+D281F		LOF	LOF	
+D281G	nonfunctional	LOF	LOF	
+D281H	nonfunctional	LOF	LOF	
+D281I		LOF	LOF	
+D281K		LOF	LOF	
+D281L		LOF	LOF	
+D281M		LOF		
+D281N	nonfunctional	LOF	LOF	
+D281P		LOF	LOF	
+D281Q		LOF	LOF	
+D281R		LOF	LOF	
+D281S		LOF	LOF	
+D281T		LOF	LOF	
+D281V	nonfunctional	LOF	LOF	
+D281W		LOF		
+D281Y	nonfunctional	LOF	LOF	
+R282A		noLOF	noLOF	
+R282C		noLOF	noLOF	
+R282D		LOF	LOF	
+R282E		LOF	LOF	
+R282F		LOF	LOF	
+R282G	nonfunctional	LOF	LOF	
+R282H		LOF	LOF	
+R282I		noLOF	noLOF	
+R282K		noLOF	noLOF	
+R282L	functional	noLOF	noLOF	
+R282M		noLOF	noLOF	
+R282N		LOF	LOF	
+R282P	nonfunctional	LOF	LOF	
+R282Q	partial		noLOF	
+R282R		noLOF	noLOF	
+R282S		LOF	LOF	
+R282T		LOF	LOF	
+R282V		noLOF	LOF	
+R282W	nonfunctional	LOF	LOF	
+R282Y		LOF	LOF	
+R283A		LOF	noLOF	
+R283C	functional	noLOF	noLOF	
+R283D		LOF	noLOF	
+R283E		LOF		
+R283F		noLOF	noLOF	
+R283G	partial	noLOF	noLOF	
+R283H	nonfunctional	noLOF	noLOF	
+R283I		noLOF	noLOF	
+R283K		noLOF		
+R283L	functional	noLOF	noLOF	
+R283M		noLOF		
+R283N		noLOF	noLOF	
+R283P	nonfunctional	LOF	LOF	
+R283Q		noLOF	noLOF	
+R283R		noLOF	noLOF	
+R283S	functional	noLOF	noLOF	
+R283T		noLOF	noLOF	
+R283V		noLOF	noLOF	
+R283W		noLOF	noLOF	
+R283Y		noLOF	noLOF	
+T284A	functional	noLOF	noLOF	
+T284C		noLOF		
+T284D		LOF		
+T284E		LOF	LOF	
+T284F		noLOF		
+T284G		noLOF	noLOF	
+T284H		noLOF		
+T284I	functional	noLOF	noLOF	
+T284K	functional	noLOF	noLOF	
+T284L		noLOF	noLOF	
+T284M		noLOF	noLOF	
+T284N		noLOF	noLOF	
+T284P	nonfunctional	LOF	LOF	
+T284Q		LOF	noLOF	
+T284R	functional	noLOF	noLOF	
+T284S	functional	noLOF	noLOF	
+T284T		noLOF	noLOF	
+T284V		noLOF	noLOF	
+T284W		noLOF		
+T284Y		noLOF		
+E285A	functional	noLOF	noLOF	
+E285C		noLOF		
+E285D	partial		noLOF	
+E285E		noLOF	noLOF	
+E285G	nonfunctional		noLOF	
+E285H		noLOF	noLOF	
+E285I		LOF		
+E285K	nonfunctional	LOF	LOF	
+E285L		LOF		
+E285M		noLOF	noLOF	
+E285N		LOF	LOF	
+E285P		LOF	LOF	
+E285Q	functional	noLOF	noLOF	
+E285R		LOF	LOF	
+E285S		noLOF	noLOF	
+E285T		LOF	LOF	
+E285V	nonfunctional	LOF	LOF	
+E285W		LOF	LOF	
+E285Y		LOF	LOF	
+E286A	nonfunctional	LOF	LOF	
+E286C		LOF		
+E286D	nonfunctional	LOF	LOF	
+E286E		LOF	noLOF	
+E286F		LOF		
+E286G	nonfunctional	LOF	LOF	
+E286H		LOF	LOF	
+E286I		LOF	LOF	
+E286K	nonfunctional	LOF	LOF	
+E286L		LOF	LOF	
+E286M		LOF		
+E286N		LOF	LOF	
+E286P		LOF	LOF	
+E286Q	nonfunctional	LOF	LOF	
+E286R		LOF	LOF	
+E286S		LOF	LOF	
+E286T		LOF	LOF	
+E286V	nonfunctional	LOF	LOF	
+E286W		LOF		
+E286Y		LOF	LOF	
+E287A	functional	noLOF	noLOF	
+E287C		noLOF		
+E287D	functional	noLOF	noLOF	
+E287E		noLOF	noLOF	
+E287F		noLOF		
+E287G	functional	noLOF	noLOF	
+E287H		noLOF	noLOF	
+E287I		noLOF		
+E287K	functional	noLOF	noLOF	
+E287L		noLOF		
+E287M		noLOF	noLOF	
+E287N		noLOF	noLOF	
+E287P		LOF	LOF	
+E287Q	functional	noLOF	noLOF	
+E287R		noLOF	noLOF	
+E287S		noLOF	noLOF	
+E287T		noLOF	noLOF	
+E287V	functional		noLOF	
+E287W		noLOF	noLOF	
+E287Y		noLOF	noLOF	
+N288A		noLOF	noLOF	
+N288C		noLOF	noLOF	
+N288D	partial	noLOF	noLOF	
+N288E		LOF	noLOF	
+N288F		noLOF	noLOF	
+N288G		noLOF	noLOF	
+N288H	functional	noLOF	noLOF	
+N288I	functional	noLOF	noLOF	
+N288K	functional	noLOF	noLOF	
+N288L		noLOF	noLOF	
+N288M		noLOF	LOF	
+N288N		LOF	noLOF	
+N288P		noLOF	noLOF	
+N288Q		noLOF	noLOF	
+N288R		noLOF	noLOF	
+N288S	functional	noLOF	noLOF	
+N288T	functional	noLOF	noLOF	
+N288V		noLOF	noLOF	
+N288W		noLOF		
+N288Y	functional	noLOF	noLOF	
+L289A		noLOF	noLOF	
+L289C		noLOF	noLOF	
+L289D			noLOF	
+L289E		noLOF		
+L289F	functional	noLOF	noLOF	
+L289G		noLOF	noLOF	
+L289H	functional	noLOF	noLOF	
+L289I	functional	noLOF	noLOF	
+L289K		noLOF		
+L289L		noLOF	noLOF	
+L289M		noLOF		
+L289N		noLOF	noLOF	
+L289P	functional	noLOF	noLOF	
+L289Q		noLOF	noLOF	
+L289R	functional	noLOF	noLOF	
+L289S		noLOF	noLOF	
+L289T		noLOF	noLOF	
+L289V	functional	noLOF	noLOF	
+L289W		noLOF		
+L289Y			noLOF	
+R290A		noLOF	noLOF	
+R290C	functional	noLOF	noLOF	
+R290D		noLOF	noLOF	
+R290E		noLOF		
+R290F		noLOF	noLOF	
+R290G	functional	noLOF	noLOF	
+R290H	functional	noLOF	noLOF	
+R290I		noLOF	noLOF	
+R290K		noLOF		
+R290L	functional	noLOF	noLOF	
+R290M		noLOF		
+R290N		noLOF	noLOF	
+R290P	partial	noLOF	noLOF	
+R290Q		noLOF	noLOF	
+R290R		noLOF	noLOF	
+R290S	functional	noLOF	noLOF	
+R290T			noLOF	
+R290V		noLOF	noLOF	
+R290W		noLOF	noLOF	
+R290Y		noLOF	noLOF	
+K291A		noLOF	noLOF	
+K291C		noLOF		
+K291D		noLOF	noLOF	
+K291E	functional	noLOF	noLOF	
+K291F		noLOF		
+K291G		noLOF	noLOF	
+K291H		noLOF	noLOF	
+K291I			noLOF	
+K291K		noLOF	noLOF	
+K291L		noLOF		
+K291M	functional	noLOF	noLOF	
+K291N	functional	noLOF	noLOF	
+K291P		noLOF	noLOF	
+K291Q	functional	noLOF	noLOF	
+K291R	functional	noLOF	noLOF	
+K291S		noLOF	noLOF	
+K291T	functional	noLOF	noLOF	
+K291V		noLOF	noLOF	
+K291W		noLOF	noLOF	
+K291Y		noLOF	noLOF	
+K292A		noLOF	noLOF	
+K292C		noLOF		
+K292D		noLOF	LOF	
+K292E	functional	noLOF	noLOF	
+K292F		noLOF		
+K292G		noLOF	noLOF	
+K292H		noLOF	noLOF	
+K292I	functional	noLOF	noLOF	
+K292K		LOF		
+K292L		noLOF	noLOF	
+K292M		noLOF	noLOF	
+K292N	functional	noLOF	noLOF	
+K292P		noLOF	noLOF	
+K292Q	functional	noLOF	noLOF	
+K292R	functional	noLOF	noLOF	
+K292S		noLOF	noLOF	
+K292T	functional	noLOF	noLOF	
+K292V		noLOF	noLOF	
+K292W		noLOF		
+K292Y		noLOF	noLOF	
+G293A	nonfunctional	noLOF		
+G293C		noLOF		
+G293D		noLOF		
+G293E	functional	noLOF		
+G293F		noLOF		
+G293G		noLOF		
+G293H		noLOF		
+G293I		noLOF		
+G293K		noLOF		
+G293L		noLOF		
+G293M		noLOF		
+G293N		noLOF		
+G293P		noLOF		
+G293Q		noLOF		
+G293R	functional	noLOF		
+G293S		noLOF		
+G293T		noLOF		
+G293V	functional	noLOF		
+G293W	functional	noLOF		
+G293Y		noLOF		
+E294A	functional	noLOF		
+E294C		noLOF		
+E294D	functional	noLOF		
+E294E		noLOF		
+E294F		noLOF		
+E294G	functional	LOF		
+E294H		noLOF		
+E294I		noLOF		
+E294K	functional	noLOF		
+E294L		noLOF		
+E294M		noLOF		
+E294P		noLOF		
+E294Q	functional	noLOF		
+E294R		noLOF		
+E294T		noLOF		
+E294V	functional	noLOF		
+E294W		noLOF		
+E294Y		noLOF		
+P295A	functional	LOF		
+P295C		noLOF		
+P295D		noLOF		
+P295E		noLOF		
+P295H	nonfunctional	noLOF		
+P295I		noLOF		
+P295L	functional	LOF		
+P295M		noLOF		
+P295N		noLOF		
+P295P		noLOF		
+P295R	functional	noLOF		
+P295S	functional			
+P295T	functional	noLOF		
+P295V		noLOF		
+P295W		noLOF		
+H296C		noLOF		
+H296D	functional	noLOF		
+H296F		noLOF		
+H296G		noLOF		
+H296H		noLOF		
+H296I		noLOF		
+H296K		noLOF		
+H296L	functional			
+H296M		noLOF		
+H296N	functional	noLOF		
+H296P	functional	noLOF		
+H296Q	functional	noLOF		
+H296R	functional	noLOF		
+H296S		LOF		
+H296T		LOF		
+H296V		noLOF		
+H296W		noLOF		
+H296Y	functional	noLOF		
+H297A		noLOF		
+H297C		noLOF		
+H297D	functional	noLOF		
+H297G		noLOF		
+H297H		noLOF		
+H297I		noLOF		
+H297K		noLOF		
+H297L	partial	noLOF		
+H297M		noLOF		
+H297N	functional	noLOF		
+H297P	functional	LOF		
+H297Q	nonfunctional	noLOF		
+H297R	functional	noLOF		
+H297T		LOF		
+H297V		noLOF		
+H297Y	nonfunctional	noLOF		
+E298A	functional	noLOF		
+E298D	functional	noLOF		
+E298G	functional	noLOF		
+E298K	functional	noLOF		
+E298N		noLOF		
+E298P		noLOF		
+E298Q	functional	noLOF		
+E298R		LOF		
+E298S		LOF		
+E298T		noLOF		
+E298V	functional	noLOF		
+L299A		LOF		
+L299C		LOF		
+L299D		noLOF		
+L299E		noLOF		
+L299F		noLOF		
+L299G		noLOF		
+L299I		noLOF		
+L299K		LOF		
+L299L		noLOF		
+L299M	functional	noLOF		
+L299P	functional	noLOF		
+L299Q	functional			
+L299R	functional	noLOF		
+L299S		LOF		
+L299T		noLOF		
+L299V	functional	noLOF		
+L299W		noLOF		
+L299Y		noLOF		
+P300A	functional	LOF		
+P300E		noLOF		
+P300F		noLOF		
+P300H	functional	noLOF		
+P300I		noLOF		
+P300L	functional	noLOF		
+P300P		noLOF		
+P300Q		noLOF		
+P300R	functional	LOF		
+P300S	functional	noLOF		
+P300T	nonfunctional	noLOF		
+P300V		noLOF		
+P300W		noLOF		
+P301A	functional	noLOF		
+P301C		noLOF		
+P301D		noLOF		
+P301E		LOF		
+P301F		noLOF		
+P301G		noLOF		
+P301H		noLOF		
+P301K		LOF		
+P301L	functional	noLOF		
+P301P		LOF		
+P301Q	functional	LOF		
+P301R	functional	LOF		
+P301S	functional	noLOF		
+P301T	functional	noLOF		
+P301V		noLOF		
+P301W		noLOF		
+G302A	functional	noLOF		
+G302C		noLOF		
+G302D		noLOF		
+G302E	functional	noLOF		
+G302F		noLOF		
+G302G		noLOF		
+G302H		noLOF		
+G302I		noLOF		
+G302K		noLOF		
+G302L		noLOF		
+G302M		noLOF		
+G302N		noLOF		
+G302P		noLOF		
+G302Q		noLOF		
+G302R	functional	noLOF		
+G302S		noLOF		
+G302T		noLOF		
+G302V	functional	noLOF		
+G302W	functional	noLOF		
+G302Y		noLOF		
+S303A		LOF		
+S303C	functional	noLOF		
+S303D		noLOF		
+S303E		LOF		
+S303F		noLOF		
+S303G	functional	noLOF		
+S303H		noLOF		
+S303I	functional	noLOF		
+S303K		noLOF		
+S303L		noLOF		
+S303M		noLOF		
+S303N	functional	noLOF		
+S303P		noLOF		
+S303Q		noLOF		
+S303R	functional	noLOF		
+S303S		noLOF		
+S303T	functional	LOF		
+S303V		noLOF		
+S303W		noLOF		
+S303Y		noLOF		
+T304A	functional	noLOF		
+T304C		noLOF		
+T304D		noLOF		
+T304E		noLOF		
+T304F		noLOF		
+T304G		noLOF		
+T304H		LOF		
+T304I	nonfunctional	noLOF		
+T304K		noLOF		
+T304L		LOF		
+T304M		noLOF		
+T304N	nonfunctional	noLOF		
+T304P	functional	noLOF		
+T304Q		noLOF		
+T304R		noLOF		
+T304S	functional	noLOF		
+T304T		noLOF		
+T304V		noLOF		
+T304W		noLOF		
+T304Y		noLOF		
+K305A		noLOF		
+K305C		noLOF		
+K305D		noLOF		
+K305E	nonfunctional	noLOF		
+K305F		noLOF		
+K305G		noLOF		
+K305H		noLOF		
+K305I		noLOF		
+K305K		noLOF		
+K305L		noLOF		
+K305M	nonfunctional	noLOF		
+K305N	partial	noLOF		
+K305P		noLOF		
+K305Q	nonfunctional	LOF		
+K305R	nonfunctional	noLOF		
+K305S		LOF		
+K305T	partial	LOF		
+K305V		noLOF		
+K305W		noLOF		
+K305Y		noLOF		
+R306A		noLOF		
+R306C		noLOF		
+R306D		noLOF		
+R306E		LOF		
+R306F		noLOF		
+R306G	nonfunctional	noLOF		
+R306H		noLOF		
+R306I		noLOF		
+R306K		noLOF		
+R306L	partial	noLOF		
+R306M		noLOF		
+R306N		noLOF		
+R306P	nonfunctional	noLOF		
+R306Q	nonfunctional	noLOF		
+R306R		noLOF		
+R306S		noLOF		
+R306T		noLOF		
+R306V		noLOF		
+R306W		noLOF		
+R306Y		noLOF		
+A307A		noLOF		
+A307C		noLOF		
+A307D		noLOF		
+A307E	partial	noLOF		
+A307F		noLOF		
+A307G	functional	noLOF		
+A307H		LOF		
+A307I		noLOF		
+A307K		noLOF		
+A307L		noLOF		
+A307M		noLOF		
+A307N		noLOF		
+A307P	functional	noLOF		
+A307Q		noLOF		
+A307R		noLOF		
+A307S	functional	noLOF		
+A307T	functional	noLOF		
+A307V	functional	noLOF		
+A307W		noLOF		
+A307Y		noLOF		
+L308A		noLOF		
+L308C		LOF		
+L308D		noLOF		
+L308E		noLOF		
+L308F		noLOF		
+L308G		noLOF		
+L308H		noLOF		
+L308I		noLOF		
+L308K		noLOF		
+L308L		noLOF		
+L308M	functional	noLOF		
+L308N		noLOF		
+L308P	functional	noLOF		
+L308Q	nonfunctional	noLOF		
+L308R	functional	noLOF		
+L308S		noLOF		
+L308T		noLOF		
+L308V	functional	noLOF		
+L308W		noLOF		
+L308Y		noLOF		
+P309A	functional	LOF		
+P309C		noLOF		
+P309D		noLOF		
+P309E		noLOF		
+P309F		noLOF		
+P309G		noLOF		
+P309H	functional	noLOF		
+P309I		noLOF		
+P309K		noLOF		
+P309L	functional	noLOF		
+P309M		noLOF		
+P309N		noLOF		
+P309P		noLOF		
+P309Q		noLOF		
+P309R	functional	noLOF		
+P309S	functional	noLOF		
+P309T	functional	noLOF		
+P309V		noLOF		
+P309W		noLOF		
+P309Y		noLOF		
+N310A		noLOF		
+N310C		noLOF		
+N310D	functional	noLOF		
+N310E		noLOF		
+N310F		noLOF		
+N310G		noLOF		
+N310H	functional	noLOF		
+N310I	functional	noLOF		
+N310K	functional	noLOF		
+N310L		noLOF		
+N310M		noLOF		
+N310N		noLOF		
+N310P		noLOF		
+N310Q		LOF		
+N310R		noLOF		
+N310S	functional	noLOF		
+N310T	functional	LOF		
+N310V		noLOF		
+N310W		noLOF		
+N310Y	functional	noLOF		
+N311A		noLOF		
+N311C		noLOF		
+N311D	functional	noLOF		
+N311E		noLOF		
+N311F		noLOF		
+N311G		noLOF		
+N311H	functional	LOF		
+N311I	functional	noLOF		
+N311K	functional	noLOF		
+N311L		noLOF		
+N311M		noLOF		
+N311N		noLOF		
+N311P		noLOF		
+N311Q		noLOF		
+N311R		noLOF		
+N311S	functional	noLOF		
+N311T	partial	LOF		
+N311V		noLOF		
+N311W		noLOF		
+N311Y	functional	noLOF		
+T312A	functional	noLOF		
+T312C		noLOF		
+T312D		noLOF		
+T312E		noLOF		
+T312F		noLOF		
+T312G		noLOF		
+T312H		noLOF		
+T312I	functional	noLOF		
+T312K		noLOF		
+T312L		noLOF		
+T312M		noLOF		
+T312N	functional	noLOF		
+T312P	functional	noLOF		
+T312Q		noLOF		
+T312R		LOF		
+T312S	functional	noLOF		
+T312T		noLOF		
+T312V		noLOF		
+T312W		noLOF		
+T312Y		noLOF		
+S313A		LOF		
+S313C	functional	noLOF		
+S313D		noLOF		
+S313E		noLOF		
+S313F		noLOF		
+S313G	functional	noLOF		
+S313H		noLOF		
+S313I	functional	noLOF		
+S313K		noLOF		
+S313L		noLOF		
+S313M		noLOF		
+S313N	functional	noLOF		
+S313P		noLOF		
+S313Q		LOF		
+S313R	functional	noLOF		
+S313S		noLOF		
+S313T	functional	noLOF		
+S313V		noLOF		
+S313W		noLOF		
+S313Y		noLOF		
+S314A	functional	noLOF		
+S314C	functional	noLOF		
+S314D		noLOF		
+S314E		noLOF		
+S314F	functional	noLOF		
+S314G		noLOF		
+S314H		noLOF		
+S314I		noLOF		
+S314K		noLOF		
+S314L		LOF		
+S314M		noLOF		
+S314N		noLOF		
+S314P	functional	noLOF		
+S314Q		noLOF		
+S314R		noLOF		
+S314S		noLOF		
+S314T	functional	noLOF		
+S314V		noLOF		
+S314W		noLOF		
+S314Y	functional	noLOF		
+S315A	functional	noLOF		
+S315C	functional	noLOF		
+S315D		noLOF		
+S315E		noLOF		
+S315F	functional	noLOF		
+S315G		noLOF		
+S315H		LOF		
+S315I		noLOF		
+S315K		noLOF		
+S315L		LOF		
+S315M		noLOF		
+S315N		noLOF		
+S315P	functional	noLOF		
+S315Q		noLOF		
+S315R		noLOF		
+S315S		noLOF		
+S315T	functional	noLOF		
+S315V		noLOF		
+S315W		noLOF		
+S315Y	functional	noLOF		
+P316A	partial	noLOF		
+P316C		noLOF		
+P316D		noLOF		
+P316E		noLOF		
+P316F		noLOF		
+P316G		noLOF		
+P316H	functional	noLOF		
+P316I		noLOF		
+P316K		noLOF		
+P316L	functional	noLOF		
+P316M		noLOF		
+P316N		noLOF		
+P316P		noLOF		
+P316Q		noLOF		
+P316R	functional	noLOF		
+P316S	functional	noLOF		
+P316T	nonfunctional	noLOF		
+P316V		noLOF		
+P316W		noLOF		
+P316Y		noLOF		
+Q317A		noLOF		
+Q317C		noLOF		
+Q317D		noLOF		
+Q317E	functional	noLOF		
+Q317F		noLOF		
+Q317G		noLOF		
+Q317H	functional	noLOF		
+Q317I		noLOF		
+Q317K	functional	noLOF		
+Q317L	functional	noLOF		
+Q317M		noLOF		
+Q317N		noLOF		
+Q317P	functional	noLOF		
+Q317Q		noLOF		
+Q317R	functional	noLOF		
+Q317S		LOF		
+Q317T		noLOF		
+Q317V		noLOF		
+Q317W		noLOF		
+Q317Y		noLOF		
+P318A	functional	LOF		
+P318C		noLOF		
+P318D		noLOF		
+P318E		noLOF		
+P318F		noLOF		
+P318G		noLOF		
+P318H		noLOF		
+P318I		noLOF		
+P318K		noLOF		
+P318L	functional	noLOF		
+P318M		noLOF		
+P318N		noLOF		
+P318P		noLOF		
+P318Q	functional	noLOF		
+P318R	functional	noLOF		
+P318S	functional	noLOF		
+P318T	functional	noLOF		
+P318V		noLOF		
+P318W		noLOF		
+P318Y		noLOF		
+K319A		noLOF		
+K319C		noLOF		
+K319D		noLOF		
+K319E	partial	noLOF		
+K319F		noLOF		
+K319G		noLOF		
+K319H		noLOF		
+K319I		noLOF		
+K319K		noLOF		
+K319L		noLOF		
+K319M	functional	noLOF		
+K319N	functional	noLOF		
+K319P		noLOF		
+K319Q	partial	noLOF		
+K319R	functional	noLOF		
+K319S		noLOF		
+K319T	functional	noLOF		
+K319V		noLOF		
+K319W		noLOF		
+K319Y		noLOF		
+K320A		noLOF		
+K320C		noLOF		
+K320D		noLOF		
+K320E	partial	noLOF		
+K320F		noLOF		
+K320G		noLOF		
+K320H		noLOF		
+K320I		noLOF		
+K320K		noLOF		
+K320L		noLOF		
+K320M	partial	noLOF		
+K320N	partial	noLOF		
+K320P		noLOF		
+K320Q	partial	noLOF		
+K320R	functional	LOF		
+K320S		noLOF		
+K320T	partial	noLOF		
+K320V		noLOF		
+K320W		noLOF		
+K320Y		noLOF		
+K321A		noLOF		
+K321C		noLOF		
+K321D		noLOF		
+K321E	partial	noLOF		
+K321F		noLOF		
+K321G		noLOF		
+K321H		noLOF		
+K321I	functional	noLOF		
+K321K		noLOF		
+K321L		noLOF		
+K321M		noLOF		
+K321N	partial	LOF		
+K321P		noLOF		
+K321Q	partial	noLOF		
+K321R	functional	noLOF		
+K321S		noLOF		
+K321T	partial	noLOF		
+K321V		noLOF		
+K321W		noLOF		
+K321Y		noLOF		
+P322A	functional	noLOF		noLOF
+P322C		noLOF		
+P322D		noLOF		
+P322E		noLOF		
+P322F		noLOF		
+P322G		noLOF		
+P322H		LOF		
+P322I		noLOF		
+P322K		noLOF		
+P322L	functional	noLOF		noLOF
+P322M		noLOF		
+P322N		noLOF		
+P322P		noLOF		
+P322Q	functional	noLOF		noLOF
+P322R	functional	noLOF		noLOF
+P322S	functional	noLOF		noLOF
+P322T	functional	noLOF		
+P322V		noLOF		
+P322W		noLOF		
+P322Y		noLOF		
+L323A		noLOF		
+L323C		noLOF		
+L323D		noLOF		
+L323E		noLOF		
+L323F		noLOF		
+L323G		noLOF		
+L323H		noLOF		
+L323I		noLOF		
+L323K		noLOF		
+L323L		noLOF		
+L323M	functional	noLOF		noLOF
+L323N		noLOF		
+L323P	functional	noLOF		noLOF
+L323Q	functional	noLOF		noLOF
+L323R	functional	noLOF		noLOF
+L323S		noLOF		
+L323T		noLOF		
+L323V	functional	noLOF		noLOF
+L323W		LOF		
+L323Y		noLOF		
+D324A	functional	noLOF		noLOF
+D324C		noLOF		
+D324D		noLOF		
+D324E	functional	noLOF		noLOF
+D324F		noLOF		
+D324G	functional	noLOF		noLOF
+D324H	functional	noLOF		noLOF
+D324I		noLOF		
+D324K		noLOF		
+D324L		noLOF		
+D324M		noLOF		
+D324N	functional	noLOF		noLOF
+D324P		noLOF		
+D324Q		noLOF		
+D324R		noLOF		
+D324S		noLOF		
+D324T		noLOF		
+D324V	functional	noLOF		noLOF
+D324W		noLOF		
+D324Y	functional	noLOF		
+G325A	functional	noLOF		noLOF
+G325C		noLOF		
+G325D		noLOF		
+G325E	functional	noLOF		noLOF
+G325F		noLOF		
+G325G		noLOF		
+G325H		noLOF		
+G325I		noLOF		
+G325K		noLOF		
+G325L		noLOF		
+G325M		noLOF		
+G325N		noLOF		
+G325P		noLOF		
+G325Q		noLOF		
+G325R	functional	noLOF		noLOF
+G325S		noLOF		
+G325T		noLOF		
+G325V	functional	noLOF		noLOF
+G325W		noLOF		
+G325Y		noLOF		
+E326A	functional	noLOF		noLOF
+E326C		noLOF		
+E326D	functional	noLOF		noLOF
+E326E		noLOF		
+E326F		noLOF		
+E326G	functional	noLOF		noLOF
+E326H		noLOF		
+E326I		noLOF		
+E326K	functional	noLOF		noLOF
+E326L		noLOF		
+E326M		noLOF		
+E326N		noLOF		
+E326P		noLOF		
+E326Q	functional	noLOF		noLOF
+E326R		LOF		
+E326S		noLOF		
+E326T		noLOF		
+E326V	functional	noLOF		noLOF
+E326W		noLOF		
+E326Y		noLOF		
+Y327A		noLOF		
+Y327C	functional	noLOF		noLOF
+Y327D	functional	noLOF		noLOF
+Y327E		noLOF		
+Y327F	functional	LOF		noLOF
+Y327G		noLOF		
+Y327H	functional	noLOF		noLOF
+Y327I		LOF		
+Y327K		noLOF		
+Y327L		noLOF		
+Y327M		noLOF		
+Y327N	functional	noLOF		noLOF
+Y327P		noLOF		
+Y327Q		noLOF		
+Y327R		noLOF		
+Y327S	functional	noLOF		noLOF
+Y327T		noLOF		
+Y327V		noLOF		
+Y327W		noLOF		
+Y327Y		noLOF		
+F328A		noLOF		
+F328C	functional	noLOF		noLOF
+F328D		noLOF		
+F328E		noLOF		
+F328F		LOF		
+F328G		noLOF		
+F328H		noLOF		
+F328I	functional	noLOF		noLOF
+F328K		noLOF		
+F328L	functional	noLOF		noLOF
+F328M		noLOF		
+F328N		noLOF		
+F328P		noLOF		
+F328Q		noLOF		
+F328R		noLOF		
+F328S	partial	LOF		noLOF
+F328T		noLOF		
+F328V	partial	noLOF		noLOF
+F328W		noLOF		
+F328Y	functional	noLOF		noLOF
+T329A	functional	noLOF		noLOF
+T329C		noLOF		
+T329D		noLOF		
+T329E		noLOF		
+T329F		noLOF		
+T329G		noLOF		
+T329H		LOF		
+T329I	functional	noLOF		
+T329K		noLOF		
+T329L		noLOF		
+T329M		noLOF		
+T329N	functional	noLOF		noLOF
+T329P	functional	LOF		noLOF
+T329Q		noLOF		
+T329R		noLOF		
+T329S	functional	noLOF		noLOF
+T329T		noLOF		
+T329V		noLOF		
+T329W		noLOF		
+T329Y		noLOF		
+L330A		LOF		
+L330C		noLOF		
+L330D		LOF		
+L330E		LOF		
+L330F	functional	LOF		noLOF
+L330G		LOF		
+L330H	nonfunctional	noLOF		LOF
+L330I	functional	noLOF		noLOF
+L330K		LOF		
+L330L		noLOF		
+L330M		noLOF		
+L330N		LOF		
+L330P	nonfunctional	LOF		LOF
+L330Q		noLOF		
+L330R	nonfunctional	LOF		LOF
+L330S		LOF		
+L330T		LOF		
+L330V	functional	noLOF		noLOF
+L330W		LOF		
+L330Y		noLOF		
+Q331A		noLOF		
+Q331C		noLOF		
+Q331D		LOF		
+Q331E	functional	noLOF		noLOF
+Q331F		noLOF		
+Q331G		noLOF		
+Q331H	functional	noLOF		noLOF
+Q331I		noLOF		
+Q331K	functional	noLOF		noLOF
+Q331L	functional	noLOF		noLOF
+Q331M		noLOF		
+Q331N		noLOF		
+Q331P	functional	LOF		
+Q331Q		noLOF		
+Q331R	functional	LOF		noLOF
+Q331S		LOF		
+Q331T		noLOF		
+Q331V		noLOF		
+Q331W		noLOF		
+Q331Y		noLOF		
+I332A		LOF		
+I332C		noLOF		
+I332D		LOF		
+I332E		LOF		
+I332F	partial	noLOF		noLOF
+I332G		LOF		
+I332H		LOF		
+I332I		noLOF		
+I332K		LOF		
+I332L	functional	noLOF		noLOF
+I332M	partial	noLOF		noLOF
+I332N	nonfunctional	LOF		LOF
+I332P		LOF		
+I332Q		LOF		
+I332R		LOF		
+I332S	nonfunctional	LOF		LOF
+I332T	nonfunctional	LOF		noLOF
+I332V	functional	noLOF		noLOF
+I332W		LOF		
+I332Y		LOF		
+R333A		noLOF		
+R333C	functional	noLOF		noLOF
+R333D		noLOF		
+R333E		noLOF		
+R333F		noLOF		
+R333G	partial	noLOF		noLOF
+R333H	functional	noLOF		noLOF
+R333I		noLOF		
+R333K		noLOF		
+R333L	functional	noLOF		noLOF
+R333M		noLOF		
+R333N		noLOF		
+R333P	partial	noLOF		LOF
+R333Q		noLOF		
+R333R		noLOF		
+R333S	functional	noLOF		noLOF
+R333T		noLOF		
+R333V		noLOF		
+R333W		noLOF		
+R333Y		noLOF		
+G334A	partial	LOF		noLOF
+G334C		noLOF		
+G334D		noLOF		
+G334E	partial	noLOF		LOF
+G334F		noLOF		
+G334G		noLOF		
+G334H		noLOF		
+G334I		LOF		
+G334K		noLOF		
+G334L		noLOF		
+G334M		noLOF		
+G334N		noLOF		
+G334P		noLOF		
+G334Q		noLOF		
+G334R	functional	noLOF		noLOF
+G334S		noLOF		
+G334T		noLOF		
+G334V	partial	LOF		LOF
+G334W	partial	noLOF		noLOF
+G334Y		noLOF		
+R335A		noLOF		
+R335C	functional	noLOF		noLOF
+R335D		noLOF		
+R335E		noLOF		
+R335F		noLOF		
+R335G	functional	noLOF		noLOF
+R335H	functional	noLOF		noLOF
+R335I		noLOF		
+R335K		noLOF		
+R335L	functional	noLOF		noLOF
+R335M		noLOF		
+R335N		noLOF		
+R335P	functional	noLOF		noLOF
+R335Q		noLOF		
+R335R		noLOF		
+R335S	functional	noLOF		noLOF
+R335T		noLOF		
+R335V		noLOF		
+R335W		noLOF		
+R335Y		noLOF		
+E336A	functional	noLOF		noLOF
+E336C		noLOF		
+E336D	functional	noLOF		noLOF
+E336E		noLOF		
+E336F		noLOF		
+E336G	functional	noLOF		noLOF
+E336H		noLOF		
+E336I		noLOF		
+E336K	functional	noLOF		noLOF
+E336L		noLOF		
+E336M		noLOF		
+E336N		noLOF		
+E336P		noLOF		
+E336Q	functional	noLOF		noLOF
+E336R		noLOF		
+E336S		noLOF		
+E336T		noLOF		
+E336V	functional	noLOF		noLOF
+E336W		noLOF		
+E336Y		noLOF		
+R337A		LOF		
+R337C	nonfunctional	LOF		LOF
+R337D		LOF		
+R337E		LOF		
+R337F		LOF		
+R337G	nonfunctional	LOF		LOF
+R337H	partial	noLOF		LOF
+R337I		LOF		
+R337K		noLOF		
+R337L	nonfunctional	LOF		LOF
+R337M		LOF		
+R337N		noLOF		
+R337P	nonfunctional	LOF		
+R337Q		LOF		
+R337R		noLOF		
+R337S	nonfunctional	LOF		LOF
+R337T		LOF		
+R337V		LOF		
+R337W		noLOF		
+R337Y		noLOF		
+F338A		noLOF		
+F338C	partial	noLOF		noLOF
+F338D		LOF		
+F338E		LOF		
+F338F		noLOF		
+F338G		LOF		
+F338H		noLOF		
+F338I	partial	noLOF		noLOF
+F338K		noLOF		
+F338L	functional	noLOF		noLOF
+F338M		noLOF		
+F338N		LOF		
+F338P		LOF		
+F338Q		noLOF		
+F338R		noLOF		
+F338S	partial	LOF		noLOF
+F338T		noLOF		
+F338V	partial	noLOF		noLOF
+F338W		noLOF		
+F338Y	functional	noLOF		noLOF
+E339A	functional	noLOF		noLOF
+E339C		noLOF		
+E339D	functional	noLOF		noLOF
+E339E		noLOF		
+E339F		noLOF		
+E339G	functional	noLOF		noLOF
+E339H		noLOF		
+E339I		noLOF		
+E339K	functional	noLOF		noLOF
+E339L		noLOF		
+E339M		noLOF		
+E339N		noLOF		
+E339P		LOF		
+E339Q	functional	noLOF		noLOF
+E339R		noLOF		
+E339S		noLOF		
+E339T		noLOF		
+E339V	functional	noLOF		noLOF
+E339W		noLOF		
+E339Y		noLOF		
+M340A		noLOF		
+M340C		noLOF		
+M340D		LOF		
+M340E		noLOF		
+M340F		noLOF		
+M340G		LOF		
+M340H		noLOF		
+M340I	functional	noLOF		noLOF
+M340K	partial	noLOF		LOF
+M340L	functional	noLOF		noLOF
+M340N		noLOF		
+M340P		LOF		
+M340Q		noLOF		
+M340R	functional	noLOF		LOF
+M340S		noLOF		
+M340T	functional	noLOF		noLOF
+M340V	functional	noLOF		noLOF
+M340W		noLOF		
+M340Y		noLOF		
+F341A		LOF		
+F341C	nonfunctional	LOF		LOF
+F341D		LOF		
+F341E		LOF		
+F341F		noLOF		
+F341G		LOF		
+F341H		LOF		
+F341I	functional	noLOF		noLOF
+F341K		LOF		
+F341L	functional	noLOF		LOF
+F341M		noLOF		
+F341N		LOF		
+F341P		LOF		
+F341Q		LOF		
+F341R		LOF		
+F341S	nonfunctional	LOF		LOF
+F341T		LOF		
+F341V	partial	LOF		LOF
+F341W		LOF		
+F341Y	nonfunctional	LOF		LOF
+R342A		noLOF		
+R342C		noLOF		
+R342D		noLOF		
+R342E		LOF		
+R342F		noLOF		
+R342G	partial	noLOF		noLOF
+R342H		noLOF		
+R342I		noLOF		
+R342K		noLOF		
+R342L	functional	noLOF		noLOF
+R342M		noLOF		
+R342N		noLOF		
+R342P	nonfunctional	LOF		LOF
+R342Q	functional	noLOF		
+R342R		noLOF		
+R342S		noLOF		
+R342T		noLOF		
+R342V		noLOF		
+R342W		noLOF		
+R342Y		noLOF		
+E343A	functional	noLOF		LOF
+E343C		noLOF		
+E343D	functional	noLOF		LOF
+E343E		noLOF		
+E343F		noLOF		
+E343G	functional	noLOF		LOF
+E343H		noLOF		
+E343I		noLOF		
+E343K	functional	noLOF		LOF
+E343L		noLOF		
+E343M		noLOF		
+E343N		noLOF		
+E343P		LOF		
+E343Q	functional	noLOF		LOF
+E343R		noLOF		
+E343S		noLOF		
+E343T		noLOF		
+E343V	functional	noLOF		LOF
+E343W		noLOF		
+E343Y		noLOF		
+L344A		noLOF		
+L344C		noLOF		
+L344D		LOF		
+L344E		LOF		
+L344F		noLOF		
+L344G		LOF		
+L344H		LOF		
+L344I		noLOF		
+L344K		LOF		
+L344L		noLOF		
+L344M	partial	noLOF		LOF
+L344N		LOF		
+L344P	nonfunctional	LOF		LOF
+L344Q	partial	noLOF		LOF
+L344R	nonfunctional	LOF		LOF
+L344S		LOF		
+L344T		LOF		
+L344V	partial	noLOF		
+L344W		noLOF		
+L344Y		noLOF		
+N345A		noLOF		
+N345C		noLOF		
+N345D	partial	noLOF		LOF
+N345E		noLOF		
+N345F		LOF		
+N345G		noLOF		
+N345H	functional	noLOF		LOF
+N345I	functional	noLOF		noLOF
+N345K	functional	noLOF		LOF
+N345L		noLOF		
+N345M		noLOF		
+N345N		noLOF		
+N345P		LOF		
+N345Q		noLOF		
+N345R		noLOF		
+N345S	functional	noLOF		LOF
+N345T	partial	noLOF		LOF
+N345V		noLOF		
+N345W		noLOF		
+N345Y	functional	noLOF		LOF
+E346A	functional	noLOF		LOF
+E346C		noLOF		
+E346D	functional	noLOF		noLOF
+E346E		noLOF		
+E346F		noLOF		
+E346G	functional	noLOF		LOF
+E346H		noLOF		
+E346I		noLOF		
+E346K	functional	noLOF		LOF
+E346L		noLOF		
+E346M		noLOF		
+E346N		noLOF		
+E346P		LOF		
+E346Q	functional	noLOF		LOF
+E346R		noLOF		
+E346S		noLOF		
+E346T		noLOF		
+E346V	functional	noLOF		LOF
+E346W		noLOF		
+E346Y		noLOF		
+A347A		noLOF		
+A347C		noLOF		
+A347D	nonfunctional	noLOF		LOF
+A347E		noLOF		
+A347F		noLOF		
+A347G	functional	noLOF		noLOF
+A347H		noLOF		
+A347I		noLOF		
+A347K		noLOF		
+A347L		noLOF		
+A347M		noLOF		
+A347N		noLOF		
+A347P	nonfunctional	LOF		LOF
+A347Q		noLOF		
+A347R		noLOF		
+A347S	functional	noLOF		LOF
+A347T	partial	noLOF		LOF
+A347V	partial	noLOF		LOF
+A347W		noLOF		
+A347Y		noLOF		
+L348A		noLOF		
+L348C		noLOF		
+L348D		LOF		
+L348E		LOF		
+L348F	functional	noLOF		LOF
+L348G		LOF		
+L348H		noLOF		
+L348I		noLOF		
+L348K		LOF		
+L348L		noLOF		
+L348M	functional	noLOF		noLOF
+L348N		LOF		
+L348P		LOF		
+L348Q		noLOF		
+L348R		LOF		
+L348S	nonfunctional	noLOF		LOF
+L348T		noLOF		
+L348V	functional	noLOF		noLOF
+L348W	partial	LOF		LOF
+L348Y		noLOF		
+E349A	functional	noLOF		
+E349C		noLOF		
+E349D	functional	noLOF		noLOF
+E349E		noLOF		
+E349F		noLOF		
+E349G	functional	noLOF		noLOF
+E349H		noLOF		
+E349I		noLOF		
+E349K	functional	noLOF		LOF
+E349L		noLOF		
+E349M		noLOF		
+E349N		LOF		
+E349P		LOF		
+E349Q	functional	noLOF		noLOF
+E349R		noLOF		
+E349S		noLOF		
+E349T		noLOF		
+E349V	partial	noLOF		LOF
+E349W		noLOF		
+E349Y		noLOF		
+L350A		noLOF		
+L350C		noLOF		
+L350D		noLOF		
+L350E		noLOF		
+L350F	functional	noLOF		noLOF
+L350G		noLOF		
+L350H	functional	noLOF		noLOF
+L350I	functional	noLOF		noLOF
+L350K		noLOF		
+L350L		noLOF		
+L350M		noLOF		
+L350N		noLOF		
+L350P	nonfunctional	LOF		LOF
+L350Q		noLOF		
+L350R	functional	noLOF		LOF
+L350S		noLOF		
+L350T		noLOF		
+L350V	functional	noLOF		noLOF
+L350W		noLOF		
+L350Y		noLOF		
+K351A		noLOF		
+K351C		noLOF		
+K351D		noLOF		
+K351E	nonfunctional	noLOF		LOF
+K351F		noLOF		
+K351G		noLOF		
+K351H		noLOF		
+K351I		noLOF		
+K351K		noLOF		
+K351L		noLOF		
+K351M	partial	noLOF		noLOF
+K351N	functional	noLOF		noLOF
+K351P		LOF		
+K351Q	functional	noLOF		noLOF
+K351R	functional	noLOF		noLOF
+K351S		noLOF		
+K351T	functional	noLOF		noLOF
+K351V		noLOF		
+K351W		noLOF		
+K351Y		noLOF		
+D352A	functional	noLOF		LOF
+D352C		noLOF		
+D352D		noLOF		
+D352E	functional	noLOF		
+D352F		noLOF		
+D352G	functional	noLOF		LOF
+D352H	functional	noLOF		LOF
+D352I		noLOF		
+D352K		noLOF		
+D352L		noLOF		
+D352M		noLOF		
+D352N	functional	noLOF		LOF
+D352P		noLOF		
+D352Q		noLOF		
+D352R		noLOF		
+D352S		noLOF		
+D352T		noLOF		
+D352V	functional	noLOF		LOF
+D352W		noLOF		
+D352Y	functional	noLOF		LOF
+A353A		noLOF		
+A353C		noLOF		
+A353D	functional	noLOF		noLOF
+A353E		noLOF		
+A353F		noLOF		
+A353G	functional	noLOF		noLOF
+A353H		noLOF		
+A353I		noLOF		
+A353K		noLOF		
+A353L		noLOF		
+A353M		noLOF		
+A353N		noLOF		
+A353P	functional	noLOF		LOF
+A353Q		noLOF		
+A353R		noLOF		
+A353S	partial	noLOF		LOF
+A353T	functional	noLOF		noLOF
+A353V	functional	noLOF		noLOF
+A353W		noLOF		
+A353Y		noLOF		
+Q354A		noLOF		
+Q354C		noLOF		
+Q354D		noLOF		
+Q354E	functional	noLOF		noLOF
+Q354F		noLOF		
+Q354G		noLOF		
+Q354H	functional	noLOF		noLOF
+Q354I		noLOF		
+Q354K	functional	noLOF		noLOF
+Q354L	functional	noLOF		
+Q354M		noLOF		
+Q354N		noLOF		
+Q354P	functional	noLOF		noLOF
+Q354Q		noLOF		
+Q354R	functional	noLOF		noLOF
+Q354S		noLOF		
+Q354T		noLOF		
+Q354V		noLOF		
+Q354W		noLOF		
+Q354Y		noLOF		
+A355A		noLOF		
+A355C		noLOF		
+A355D	functional	noLOF		
+A355E		noLOF		
+A355F		noLOF		
+A355G	functional	noLOF		
+A355H		noLOF		
+A355I		noLOF		
+A355K		noLOF		
+A355L		noLOF		
+A355M		noLOF		
+A355N		noLOF		
+A355P	functional	noLOF		
+A355Q		noLOF		
+A355R		noLOF		
+A355S	functional	noLOF		
+A355T	functional	noLOF		
+A355V	functional	noLOF		
+A355W		noLOF		
+A355Y		noLOF		
+G356A	functional	noLOF		
+G356C		noLOF		
+G356D		noLOF		
+G356E	partial	noLOF		
+G356F		noLOF		
+G356G		noLOF		
+G356H		noLOF		
+G356I		noLOF		
+G356K		noLOF		
+G356L		noLOF		
+G356M		noLOF		
+G356N		noLOF		
+G356P		noLOF		
+G356Q		noLOF		
+G356R	functional	noLOF		
+G356S		noLOF		
+G356T		noLOF		
+G356V	functional	noLOF		
+G356W	functional	noLOF		
+G356Y		noLOF		
+K357A		noLOF		
+K357C		noLOF		
+K357D		noLOF		
+K357E	partial	noLOF		
+K357F		noLOF		
+K357G		noLOF		
+K357H		noLOF		
+K357I		noLOF		
+K357K		noLOF		
+K357L		noLOF		
+K357M	partial	noLOF		
+K357N	partial	noLOF		
+K357P		noLOF		
+K357Q	partial	noLOF		
+K357R	functional	noLOF		
+K357S		noLOF		
+K357T	partial	noLOF		
+K357V		noLOF		
+K357W		noLOF		
+K357Y		noLOF		
+E358A	partial	noLOF		
+E358C		noLOF		
+E358D	functional	noLOF		
+E358E		noLOF		
+E358F		noLOF		
+E358G	partial	noLOF		
+E358H		noLOF		
+E358I		noLOF		
+E358K	functional	noLOF		
+E358L		noLOF		
+E358M		noLOF		
+E358N		noLOF		
+E358P		noLOF		
+E358Q	functional	noLOF		
+E358R		noLOF		
+E358S		noLOF		
+E358T		noLOF		
+E358V	functional	noLOF		
+E358W		noLOF		
+E358Y		noLOF		
+P359A	partial	noLOF		
+P359C		noLOF		
+P359D		noLOF		
+P359E		noLOF		
+P359F		noLOF		
+P359G		noLOF		
+P359H		noLOF		
+P359I		noLOF		
+P359K		noLOF		
+P359L	partial	noLOF		
+P359M		noLOF		
+P359N		noLOF		
+P359P		noLOF		
+P359Q	partial	noLOF		
+P359R	functional	noLOF		
+P359S	partial	noLOF		
+P359T	partial	noLOF		
+P359V		noLOF		
+P359W		noLOF		
+P359Y		noLOF		
+G360A	partial	noLOF		
+G360C		noLOF		
+G360D		noLOF		
+G360E	partial	noLOF		
+G360F		noLOF		
+G360G		noLOF		
+G360H		noLOF		
+G360I		noLOF		
+G360K		noLOF		
+G360L		noLOF		
+G360M		noLOF		
+G360N		noLOF		
+G360P		noLOF		
+G360Q		noLOF		
+G360R	partial	noLOF		
+G360S		noLOF		
+G360T		noLOF		
+G360V	functional	noLOF		
+G360W	partial	noLOF		
+G360Y		noLOF		
+G361A	partial	noLOF		
+G361C		noLOF		
+G361D		noLOF		
+G361E	partial	noLOF		
+G361F		noLOF		
+G361G		noLOF		
+G361H		noLOF		
+G361I		noLOF		
+G361K		noLOF		
+G361L		noLOF		
+G361M		noLOF		
+G361N		noLOF		
+G361P		noLOF		
+G361Q		noLOF		
+G361R	partial	noLOF		
+G361S		noLOF		
+G361T		noLOF		
+G361V	partial	noLOF		
+G361W	nonfunctional	noLOF		
+G361Y		noLOF		
+S362A		noLOF		
+S362C	partial	noLOF		
+S362D		noLOF		
+S362E		noLOF		
+S362F		noLOF		
+S362G	partial	noLOF		
+S362H		noLOF		
+S362I	partial	noLOF		
+S362K		noLOF		
+S362L		noLOF		
+S362M		noLOF		
+S362N	functional	noLOF		
+S362P		noLOF		
+S362Q		noLOF		
+S362R	partial	noLOF		
+S362S		noLOF		
+S362T	partial	noLOF		
+S362V		noLOF		
+S362W		noLOF		
+S362Y		noLOF		
+R363A		noLOF		
+R363C		noLOF		
+R363D		noLOF		
+R363E		noLOF		
+R363F		noLOF		
+R363G	functional	noLOF		
+R363H		noLOF		
+R363I		noLOF		
+R363K	partial	noLOF		
+R363L		noLOF		
+R363M	functional	noLOF		
+R363N		noLOF		
+R363P		noLOF		
+R363Q		noLOF		
+R363R		noLOF		
+R363S	partial	noLOF		
+R363T	partial	noLOF		
+R363V		noLOF		
+R363W	partial	noLOF		
+R363Y		noLOF		
+A364A		noLOF		
+A364C		noLOF		
+A364D	partial	noLOF		
+A364E		noLOF		
+A364F		noLOF		
+A364G	nonfunctional	noLOF		
+A364H		noLOF		
+A364I		noLOF		
+A364K		noLOF		
+A364L		noLOF		
+A364M		noLOF		
+A364N		noLOF		
+A364P	partial	noLOF		
+A364Q		noLOF		
+A364R		noLOF		
+A364S	partial	noLOF		
+A364T	partial	noLOF		
+A364V	partial	noLOF		
+A364W		noLOF		
+A364Y		noLOF		
+H365A		noLOF		
+H365C		noLOF		
+H365D	functional	noLOF		
+H365E		noLOF		
+H365F		noLOF		
+H365G		noLOF		
+H365H		noLOF		
+H365I		noLOF		
+H365K		noLOF		
+H365L	partial	noLOF		
+H365M		noLOF		
+H365N	partial	noLOF		
+H365P	partial	noLOF		
+H365Q	functional	noLOF		
+H365R	partial	noLOF		
+H365S		noLOF		
+H365T		noLOF		
+H365V		noLOF		
+H365W		noLOF		
+H365Y	functional	noLOF		
+S366A	functional	noLOF		
+S366C	partial	noLOF		
+S366D		noLOF		
+S366E		noLOF		
+S366F	functional	noLOF		
+S366G		noLOF		
+S366H		noLOF		
+S366I		noLOF		
+S366K		noLOF		
+S366L		noLOF		
+S366M		noLOF		
+S366N		noLOF		
+S366P	functional	noLOF		
+S366Q		noLOF		
+S366R		noLOF		
+S366S		noLOF		
+S366T	nonfunctional	noLOF		
+S366V		noLOF		
+S366W		noLOF		
+S366Y	functional	noLOF		
+S367A		noLOF		
+S367C	functional	noLOF		
+S367D		noLOF		
+S367E		noLOF		
+S367F		noLOF		
+S367G	partial	noLOF		
+S367H		noLOF		
+S367I	partial	noLOF		
+S367K		noLOF		
+S367L		noLOF		
+S367M		noLOF		
+S367N	functional	noLOF		
+S367P		noLOF		
+S367Q		noLOF		
+S367R	partial	noLOF		
+S367S		noLOF		
+S367T	partial	noLOF		
+S367V		noLOF		
+S367W		noLOF		
+S367Y		noLOF		
+H368A		noLOF		
+H368C		noLOF		
+H368D	partial	noLOF		
+H368E		noLOF		
+H368F		noLOF		
+H368G		noLOF		
+H368H		noLOF		
+H368I		noLOF		
+H368K		noLOF		
+H368L	functional	noLOF		
+H368M		noLOF		
+H368N	partial	noLOF		
+H368P	partial	noLOF		
+H368Q	functional	noLOF		
+H368R	functional	noLOF		
+H368S		noLOF		
+H368T		noLOF		
+H368V		noLOF		
+H368W		noLOF		
+H368Y	partial	noLOF		
+L369A		noLOF		
+L369C		noLOF		
+L369D		noLOF		
+L369E		noLOF		
+L369F		noLOF		
+L369G		noLOF		
+L369H		noLOF		
+L369I		noLOF		
+L369K		noLOF		
+L369L		noLOF		
+L369M	functional	noLOF		
+L369N		noLOF		
+L369P	partial	noLOF		
+L369Q	functional	noLOF		
+L369R	partial	noLOF		
+L369S		noLOF		
+L369T		noLOF		
+L369V	functional	noLOF		
+L369W		noLOF		
+L369Y		noLOF		
+K370A		noLOF		
+K370C		noLOF		
+K370D		noLOF		
+K370E	functional	noLOF		
+K370F		noLOF		
+K370G		noLOF		
+K370H		noLOF		
+K370I		noLOF		
+K370K		noLOF		
+K370L		noLOF		
+K370M	partial	noLOF		
+K370N	partial	noLOF		
+K370P		noLOF		
+K370Q	functional	noLOF		
+K370R	functional	noLOF		
+K370S		noLOF		
+K370T	functional	noLOF		
+K370V		noLOF		
+K370W		noLOF		
+K370Y		noLOF		
+S371A	functional	noLOF		
+S371C	functional	noLOF		
+S371D		noLOF		
+S371E		noLOF		
+S371F	functional	noLOF		
+S371G		noLOF		
+S371H		noLOF		
+S371I		noLOF		
+S371K		noLOF		
+S371L		noLOF		
+S371M		noLOF		
+S371N		noLOF		
+S371P	functional	noLOF		
+S371Q		noLOF		
+S371R		noLOF		
+S371S		noLOF		
+S371T	partial	noLOF		
+S371V		noLOF		
+S371W		noLOF		
+S371Y	functional	noLOF		
+K372A		noLOF		
+K372C		noLOF		
+K372D		noLOF		
+K372E	partial	noLOF		
+K372F		noLOF		
+K372G		noLOF		
+K372H		noLOF		
+K372I	functional	noLOF		
+K372K		noLOF		
+K372L		noLOF		
+K372M		noLOF		
+K372N	functional	noLOF		
+K372P		noLOF		
+K372Q	functional	noLOF		
+K372R	functional	noLOF		
+K372S		noLOF		
+K372T	functional	noLOF		
+K372V		noLOF		
+K372W		noLOF		
+K372Y		noLOF		
+K373A		noLOF		
+K373C		noLOF		
+K373D		noLOF		
+K373E	partial	noLOF		
+K373F		noLOF		
+K373G		noLOF		
+K373H		noLOF		
+K373I		noLOF		
+K373K		noLOF		
+K373L		noLOF		
+K373M	partial	noLOF		
+K373N	partial	noLOF		
+K373P		noLOF		
+K373Q	partial	noLOF		
+K373R	functional	noLOF		
+K373S		noLOF		
+K373T	partial	noLOF		
+K373V		noLOF		
+K373W		noLOF		
+K373Y		noLOF		
+G374A	functional	noLOF		
+G374C	functional	noLOF		
+G374D	functional	noLOF		
+G374E		noLOF		
+G374F		noLOF		
+G374G		noLOF		
+G374H		noLOF		
+G374I		noLOF		
+G374K		noLOF		
+G374L		noLOF		
+G374M		noLOF		
+G374N		noLOF		
+G374P		noLOF		
+G374Q		noLOF		
+G374R	functional	noLOF		
+G374S	functional	noLOF		
+G374T		noLOF		
+G374V	functional	noLOF		
+G374W		noLOF		
+G374Y		noLOF		
+Q375A		noLOF		
+Q375C		noLOF		
+Q375D		noLOF		
+Q375E	functional	noLOF		
+Q375F		noLOF		
+Q375G		noLOF		
+Q375H	partial	noLOF		
+Q375I		noLOF		
+Q375K	functional	noLOF		
+Q375L	functional	noLOF		
+Q375M		noLOF		
+Q375N		noLOF		
+Q375P	functional	noLOF		
+Q375Q		noLOF		
+Q375R	nonfunctional	noLOF		
+Q375S		noLOF		
+Q375T		noLOF		
+Q375V		noLOF		
+Q375W		noLOF		
+Q375Y		noLOF		
+S376A	partial	noLOF		
+S376C	functional	noLOF		
+S376D		noLOF		
+S376E		noLOF		
+S376F	functional	noLOF		
+S376G		noLOF		
+S376H		noLOF		
+S376I		noLOF		
+S376K		noLOF		
+S376L		noLOF		
+S376M		noLOF		
+S376N		noLOF		
+S376P	partial	noLOF		
+S376Q		noLOF		
+S376R		noLOF		
+S376S		noLOF		
+S376T	functional	noLOF		
+S376V		noLOF		
+S376W		noLOF		
+S376Y	partial	noLOF		
+T377A	partial	noLOF		
+T377C		noLOF		
+T377D		noLOF		
+T377E		noLOF		
+T377F		noLOF		
+T377G		noLOF		
+T377H		noLOF		
+T377I	functional	noLOF		
+T377K		noLOF		
+T377L		noLOF		
+T377M		noLOF		
+T377N	functional	noLOF		
+T377P	functional	noLOF		
+T377Q		noLOF		
+T377R		noLOF		
+T377S	functional	noLOF		
+T377T		noLOF		
+T377V		noLOF		
+T377W		noLOF		
+T377Y		noLOF		
+S378A	functional	noLOF		
+S378C	partial	noLOF		
+S378D		noLOF		
+S378E		noLOF		
+S378F	partial	noLOF		
+S378G		noLOF		
+S378H		noLOF		
+S378I		noLOF		
+S378K		noLOF		
+S378L		noLOF		
+S378M		noLOF		
+S378N		noLOF		
+S378P	functional	noLOF		
+S378Q		noLOF		
+S378R		noLOF		
+S378S		noLOF		
+S378T	functional	noLOF		
+S378V		noLOF		
+S378W		noLOF		
+S378Y	functional	noLOF		
+R379A		noLOF		
+R379C	partial	noLOF		
+R379D		noLOF		
+R379E		noLOF		
+R379F		noLOF		
+R379G	functional	noLOF		
+R379H	functional	noLOF		
+R379I		noLOF		
+R379K		noLOF		
+R379L	partial	noLOF		
+R379M		noLOF		
+R379N		noLOF		
+R379P	partial	noLOF		
+R379Q		noLOF		
+R379R		noLOF		
+R379S	partial	noLOF		
+R379T		noLOF		
+R379V		noLOF		
+R379W		noLOF		
+R379Y		noLOF		
+H380A		noLOF		
+H380C		noLOF		
+H380D	partial	noLOF		
+H380E		noLOF		
+H380F		noLOF		
+H380G		noLOF		
+H380H		noLOF		
+H380I		noLOF		
+H380K		noLOF		
+H380L	functional	noLOF		
+H380M		noLOF		
+H380N	functional	noLOF		
+H380P	functional	noLOF		
+H380Q	functional	noLOF		
+H380R	functional	noLOF		
+H380S		noLOF		
+H380T		noLOF		
+H380V		noLOF		
+H380W		noLOF		
+H380Y	functional	noLOF		
+K381A		noLOF		
+K381C		noLOF		
+K381D		noLOF		
+K381E	partial	noLOF		
+K381F		noLOF		
+K381G		noLOF		
+K381H		noLOF		
+K381I	partial	noLOF		
+K381K		noLOF		
+K381L		noLOF		
+K381M		noLOF		
+K381N	partial	noLOF		
+K381P		noLOF		
+K381Q	partial	noLOF		
+K381R	partial	noLOF		
+K381S		noLOF		
+K381T	partial	noLOF		
+K381V		noLOF		
+K381W		noLOF		
+K381Y		noLOF		
+K382A		noLOF		
+K382C		noLOF		
+K382D		noLOF		
+K382E	partial	noLOF		
+K382F		noLOF		
+K382G		noLOF		
+K382H		noLOF		
+K382I	partial	noLOF		
+K382K		noLOF		
+K382L		noLOF		
+K382M		noLOF		
+K382N	functional	noLOF		
+K382P		noLOF		
+K382Q	partial	noLOF		
+K382R	functional	noLOF		
+K382S		noLOF		
+K382T	partial	noLOF		
+K382V		noLOF		
+K382W		noLOF		
+K382Y		noLOF		
+L383A		noLOF		
+L383C		noLOF		
+L383D		noLOF		
+L383E		noLOF		
+L383F	functional	noLOF		
+L383G		noLOF		
+L383H	partial	noLOF		
+L383I	functional	noLOF		
+L383K		noLOF		
+L383L		noLOF		
+L383M		noLOF		
+L383N		noLOF		
+L383P	partial	noLOF		
+L383Q		noLOF		
+L383R	functional	noLOF		
+L383S		noLOF		
+L383T		noLOF		
+L383V	partial	noLOF		
+L383W		noLOF		
+L383Y		noLOF		
+M384A		noLOF		
+M384C		noLOF		
+M384D		noLOF		
+M384E		noLOF		
+M384F		noLOF		
+M384G		noLOF		
+M384H		noLOF		
+M384I	functional	noLOF		
+M384K	functional	noLOF		
+M384L	functional	noLOF		
+M384N		noLOF		
+M384P		noLOF		
+M384Q		noLOF		
+M384R	functional	noLOF		
+M384S		noLOF		
+M384T	functional	noLOF		
+M384V	partial	noLOF		
+M384W		noLOF		
+M384Y		noLOF		
+F385A		noLOF		
+F385C	functional	noLOF		
+F385D		noLOF		
+F385E		noLOF		
+F385F		noLOF		
+F385G		noLOF		
+F385H		noLOF		
+F385I	functional	noLOF		
+F385K		noLOF		
+F385L	functional	noLOF		
+F385M		noLOF		
+F385N		noLOF		
+F385P		noLOF		
+F385Q		noLOF		
+F385R		noLOF		
+F385S	functional	noLOF		
+F385T		noLOF		
+F385V	partial	noLOF		
+F385W		noLOF		
+F385Y	functional	noLOF		
+K386A		noLOF		
+K386C		noLOF		
+K386D		noLOF		
+K386E	functional	noLOF		
+K386F		noLOF		
+K386G		noLOF		
+K386H		noLOF		
+K386I		noLOF		
+K386K		noLOF		
+K386L		noLOF		
+K386M	functional	noLOF		
+K386N	functional	noLOF		
+K386P		noLOF		
+K386Q	functional	noLOF		
+K386R	functional	noLOF		
+K386S		noLOF		
+K386T	functional	noLOF		
+K386V		noLOF		
+K386W		noLOF		
+K386Y		noLOF		
+T387A	functional	noLOF		
+T387C		noLOF		
+T387D		noLOF		
+T387E		noLOF		
+T387F		noLOF		
+T387G		noLOF		
+T387H		noLOF		
+T387I	functional	noLOF		
+T387K	functional	noLOF		
+T387L		noLOF		
+T387M		noLOF		
+T387N		noLOF		
+T387P	functional	noLOF		
+T387Q		noLOF		
+T387R	functional	noLOF		
+T387S	functional	noLOF		
+T387T		noLOF		
+T387V		noLOF		
+T387W		noLOF		
+T387Y		noLOF		
+E388A	functional	noLOF		
+E388C		noLOF		
+E388D	functional	noLOF		
+E388E		noLOF		
+E388F		noLOF		
+E388G	functional	noLOF		
+E388H		noLOF		
+E388I		noLOF		
+E388K	functional	noLOF		
+E388L		noLOF		
+E388M		noLOF		
+E388N		noLOF		
+E388P		noLOF		
+E388Q	functional	noLOF		
+E388R		noLOF		
+E388S		noLOF		
+E388T		noLOF		
+E388V	functional	noLOF		
+E388W		noLOF		
+E388Y		noLOF		
+G389A	functional	noLOF		
+G389C		noLOF		
+G389D		noLOF		
+G389E	partial	noLOF		
+G389F		noLOF		
+G389G		noLOF		
+G389H		noLOF		
+G389I		noLOF		
+G389K		noLOF		
+G389L		noLOF		
+G389M		noLOF		
+G389N		noLOF		
+G389P		noLOF		
+G389Q		noLOF		
+G389R	functional	noLOF		
+G389S		noLOF		
+G389T		noLOF		
+G389V	functional	noLOF		
+G389W	functional	noLOF		
+G389Y		noLOF		
+P390A	functional	noLOF		
+P390C		noLOF		
+P390D		noLOF		
+P390E		noLOF		
+P390F		noLOF		
+P390G		noLOF		
+P390H	functional	noLOF		
+P390I		noLOF		
+P390K		noLOF		
+P390L	functional	noLOF		
+P390M		noLOF		
+P390N		noLOF		
+P390P		noLOF		
+P390Q		noLOF		
+P390R	functional	noLOF		
+P390S	partial	noLOF		
+P390T	partial	noLOF		
+P390V		noLOF		
+P390W		noLOF		
+P390Y		noLOF		
+D391A	functional	noLOF		
+D391C		noLOF		
+D391D		noLOF		
+D391E	functional	noLOF		
+D391F		noLOF		
+D391G	functional	noLOF		
+D391H	partial	noLOF		
+D391I		noLOF		
+D391K		noLOF		
+D391L		noLOF		
+D391M		noLOF		
+D391N	functional	noLOF		
+D391P		noLOF		
+D391Q		noLOF		
+D391R		noLOF		
+D391S		noLOF		
+D391T		noLOF		
+D391V	functional	noLOF		
+D391W		noLOF		
+D391Y	partial	noLOF		
+S392A	functional	noLOF		
+S392C		noLOF		
+S392D		noLOF		
+S392E		noLOF		
+S392F		noLOF		
+S392G		noLOF		
+S392H		noLOF		
+S392I		noLOF		
+S392K		noLOF		
+S392L	functional	noLOF		
+S392M		noLOF		
+S392N		noLOF		
+S392P	functional	noLOF		
+S392Q		noLOF		
+S392R		noLOF		
+S392S		noLOF		
+S392T	functional	noLOF		
+S392V		noLOF		
+S392W		noLOF		
+S392Y		noLOF		
+D393A	functional	noLOF		
+D393C		noLOF		
+D393D		noLOF		
+D393E	functional	noLOF		
+D393F		noLOF		
+D393G	functional	noLOF		
+D393H	functional	noLOF		
+D393I		noLOF		
+D393K		noLOF		
+D393L		noLOF		
+D393M		noLOF		
+D393N	functional	noLOF		
+D393P		noLOF		
+D393Q		noLOF		
+D393R		noLOF		
+D393S		noLOF		
+D393T		noLOF		
+D393V	functional	noLOF		
+D393W		noLOF		
+D393Y	functional	noLOF		

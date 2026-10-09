@@ -104,6 +104,11 @@ def cli(log_level: str):
                    "criteria the tool left not-met. 'manual-only': for variants listed in "
                    "the supplement, classify purely from it; variants not listed fall back "
                    "to the tool's automated calls.")
+@click.option("--with-tp53-functional", is_flag=True, default=False,
+              help="TP53 PS3/BS3 from the VCEP functional flowchart on the NCI TP53 "
+                   "Database assay classes (bundled tp53_functional.tsv). Off by default: "
+                   "the database terms prohibit use that results in monetization. "
+                   "Env: ACMG_USE_TP53_FUNCTIONAL=true.")
 @click.option("--exclude-self-expert-panel", is_flag=True, default=False,
               help="Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar "
                    "expert-panel (>=3-star) record of the variant being classified, so the "
@@ -132,6 +137,7 @@ def classify(
     spliceai_dir: Optional[Path],
     supplement: Optional[Path],
     supplement_mode: str,
+    with_tp53_functional: bool,
     exclude_self_expert_panel: bool,
     workers: int,
     no_progress: bool,
@@ -160,6 +166,7 @@ def classify(
         workers=workers,
         # Only override when the flag is given, so the env variable still works.
         **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
+        **({"use_tp53_functional": True} if with_tp53_functional else {}),
     )
     run_pipeline(
         vcf, cfg,
@@ -220,6 +227,11 @@ def classify(
                    "entries override the strength of any criterion they name and add "
                    "criteria left not-met. 'manual-only': classify purely from the "
                    "supplied evidence.")
+@click.option("--with-tp53-functional", is_flag=True, default=False,
+              help="TP53 PS3/BS3 from the VCEP functional flowchart on the NCI TP53 "
+                   "Database assay classes (bundled tp53_functional.tsv). Off by default: "
+                   "the database terms prohibit use that results in monetization. "
+                   "Env: ACMG_USE_TP53_FUNCTIONAL=true.")
 @click.option("--exclude-self-expert-panel", is_flag=True, default=False,
               help="Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar "
                    "expert-panel (>=3-star) record of the variant being classified, so the "
@@ -244,6 +256,7 @@ def explain(
     evidence: tuple[str, ...],
     supplement: Optional[Path],
     supplement_mode: str,
+    with_tp53_functional: bool,
     exclude_self_expert_panel: bool,
 ) -> None:
     """Show detailed classification for a single variant (CHROM POS REF ALT).
@@ -269,6 +282,7 @@ def explain(
         spliceai_dir=spliceai_dir,
         supplement_mode=SupplementMode(supplement_mode),
         **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
+        **({"use_tp53_functional": True} if with_tp53_functional else {}),
     )
 
     # Assemble manual evidence for this variant: TSV rows keyed to it + inline.
