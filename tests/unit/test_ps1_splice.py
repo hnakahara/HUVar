@@ -124,6 +124,7 @@ _PS1_TSV = (
 def _cfg(db, tmp_path):
     cfg = MagicMock()
     cfg.clinvar_sqlite = db
+    cfg.ps1_min_stars = 1  # fixtures are 1-star records (default is 2)
     tsv = tmp_path / "disease_prevalence.tsv"
     tsv.write_text(_PS1_TSV, encoding="utf-8")
     cfg.disease_prevalence_tsv = tsv

@@ -32,8 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   concern other diseases (PIK3CA, POLG were wrongly capped).
 - **PS4 vs PM3**: for genes without a VCEP specification, PS4 is suppressed when
   PM3 is met, with the reason in the PS4 evidence.
-- **PS1 comparator stars** configurable (`ACMG_PS1_MIN_STARS`, default 1), for
-  the ≥2-star evaluation requested by Reviewer 1; recorded in the provenance.
+- **PS1/PM5 comparators** must have ClinVar review status ≥2 stars by default
+  (`ACMG_PS1_MIN_STARS` / `ACMG_PM5_MIN_STARS`; 1 restores the previous policy);
+  recorded in the provenance. On the eRepo benchmark with curated evidence this
+  raised PS1 F1 0.311→0.384 and PM5 0.470→0.505 and the exact five-tier
+  agreement by 0.5–0.8 points (Reviewer 1).
 - **TP53 PS3/BS3** from the VCEP functional flowchart on systematic assay data
   (`resources/shared/tp53_functional.tsv`, built by
   `scripts/build_tp53_functional.py` from the NCI TP53 Database R21: Kato 2003,

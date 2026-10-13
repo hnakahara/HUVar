@@ -354,7 +354,7 @@ class TestPm5ComparatorQuality:
         # only legitimate PM5 anchor. ACMG_PM5_MIN_STARS=2 opts into the stricter
         # expert/multi-submitter-only policy.
         from acmg_classifier.config import Config
-        assert Config().pm5_min_stars == 1
+        assert Config().pm5_min_stars == 2
 
     def test_benign_at_codon_blocks_any_gene(self, tmp_path):
         db = _db(tmp_path, [

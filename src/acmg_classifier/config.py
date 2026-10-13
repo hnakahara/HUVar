@@ -22,20 +22,19 @@ class Config(BaseSettings):
     assembly: Assembly = Assembly.GRCH38
     workers: int = 4
     vep_batch_size: int = 500
-    # Minimum ClinVar review stars for a PM5 same-codon comparator. Default 1
-    # ("criteria provided"; excludes only 0-star no-assertion records). A
-    # single-submitter (1-star) P/LP is often the only — and a legitimate —
-    # PM5 anchor (e.g. comparators the eRepo truth set relies on), so requiring
-    # 2 stars drops real PM5 calls. Precision is instead handled by the surgical
-    # PM5 gates (benign-at-codon, Grantham, LP->Supporting, PM1 exclusion). Set
-    # ACMG_PM5_MIN_STARS=2 for a stricter expert/multi-submitter-only policy.
-    pm5_min_stars: int = 1
-    # Minimum ClinVar review status (stars) of a PS1 comparator (same amino-acid
-    # change / same splice site). Default 1; ACMG_PS1_MIN_STARS=2 (with
-    # ACMG_PM5_MIN_STARS=2) is the stricter policy suggested by Reviewer 1 and
-    # evaluated against the eRepo (Genome Medicine revision). VCEP-classified
-    # comparators (eRepo / expert panel) are unaffected.
-    ps1_min_stars: int = 1
+    # Minimum ClinVar review status (stars) of a PM5 same-codon comparator and a
+    # PS1 comparator (same amino-acid change / same splice site). Default 2
+    # (multiple submitters, no conflicts, or higher), as suggested by Reviewer 1
+    # (Genome Medicine revision): against the eRepo with curated evidence,
+    # >=2 stars raised criterion-level F1 (PS1 0.31->0.38, PM5 0.47->0.51) and
+    # brought the final classifications closer to the VCEP assertions (REVEL
+    # configuration: exact concordance 80.0%->80.8%, P/LP F1 0.942->0.945). With
+    # automated evidence only, P/LP recall is lower, because a single-submitter
+    # comparator is then often the only pathogenic evidence. Set
+    # ACMG_PM5_MIN_STARS=1 / ACMG_PS1_MIN_STARS=1 for the previous policy.
+    # VCEP-classified comparators (eRepo / expert panel) are unaffected.
+    pm5_min_stars: int = 2
+    ps1_min_stars: int = 2
     # BS2 (observed in a healthy individual) gnomAD count thresholds, by the
     # gene's inheritance mode. Recessive counts homozygotes, X-linked counts
     # hemizygotes, dominant counts heterozygous carriers (AC - nhomalt). Defaults

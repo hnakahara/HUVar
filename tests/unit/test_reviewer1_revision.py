@@ -115,9 +115,11 @@ def test_ps4_kept_for_vcep_gene_or_without_pm3(tmp_path):
 def test_ps1_min_stars_config():
     from acmg_classifier.config import Config
     from acmg_classifier.criteria.pathogenic.ps1 import PS1Evaluator
-    assert Config(data_dir=Path("./data")).ps1_min_stars == 1
+    assert Config(data_dir=Path("./data")).ps1_min_stars == 2
     ev = PS1Evaluator.__new__(PS1Evaluator)
     ev._cfg = SimpleNamespace(ps1_min_stars=2)
     assert ev._min_stars == 2
     ev._cfg = SimpleNamespace()
+    assert ev._min_stars == 2
+    ev._cfg = SimpleNamespace(ps1_min_stars=1)
     assert ev._min_stars == 1

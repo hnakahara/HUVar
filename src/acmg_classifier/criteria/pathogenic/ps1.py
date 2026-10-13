@@ -64,8 +64,8 @@ class PS1Evaluator(CriterionEvaluator):
 
     @property
     def _min_stars(self) -> int:
-        v = getattr(self._cfg, "ps1_min_stars", 1)
-        return v if isinstance(v, int) and v >= 0 else 1
+        v = getattr(self._cfg, "ps1_min_stars", 2)
+        return v if isinstance(v, int) and v >= 0 else 2
 
     def evaluate(
         self,
@@ -106,7 +106,7 @@ class PS1Evaluator(CriterionEvaluator):
     def _evaluate_missense(self, variant: VariantRecord, pc) -> CriteriaResult:
         # Same amino-acid change at the same codon via a DIFFERENT nucleotide.
         # Exclude the variant itself by genomic coordinate so it cannot "match
-        # itself". Config.ps1_min_stars (default 1): the prior assertion must be a reviewed submission.
+        # itself". Config.ps1_min_stars (default 2): the prior assertion must be a multi-submitter or expert-reviewed record.
         from acmg_classifier.local_db.clinvar_sqlite import query_same_aa_change
         hits = query_same_aa_change(
             self._cfg.clinvar_sqlite,

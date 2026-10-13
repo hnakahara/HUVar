@@ -51,7 +51,7 @@ class PM5Evaluator(CriterionEvaluator):
 
         # Same-codon P/LP missense comparators with a DIFFERENT amino-acid
         # change (an exact match would be PS1, not PM5). min_stars comes from
-        # Config.pm5_min_stars (default 1); genes whose VCEP requires a
+        # Config.pm5_min_stars (default 2); genes whose VCEP requires a
         # VCEP-classified comparator are further restricted below.
         hits = query_same_codon_different_aa(
             self._cfg.clinvar_sqlite,
