@@ -858,8 +858,34 @@ thresholds disagree — e.g. RYR1 (Malignant Hyperthermia `GN012`, Congenital
 Myopathies AD `GN150` / AR `GN179`), ACTA1 (Congenital Myopathies AD `GN147` /
 AR `GN169`), and VWF (von Willebrand Disease AD `GN081` / AR `GN090`). The batch
 `disease_prevalence.tsv` collapses each such gene into **one conservative row**,
-and `classify` / `explain` always use it — **CLI and batch behaviour is
-unchanged** (deliberately conservative for these genes).
+which `classify` / `explain` use **by default** (deliberately conservative for
+these genes). To evaluate a gene under the specification that matches the
+patient's phenotype, pass `--cspec GENE=CSPEC_ID` (repeatable; `classify` and
+`explain`):
+
+| Gene | `CSPEC_ID` | Specification |
+|------|------------|---------------|
+| RYR1 | `malignant_hyperthermia` | Malignant Hyperthermia Susceptibility VCEP (`GN012`) |
+| RYR1 | `congenital_myopathy_ad` | Congenital Myopathies VCEP, autosomal dominant (`GN150`) |
+| RYR1 | `congenital_myopathy_ar` | Congenital Myopathies VCEP, autosomal recessive (`GN179`) |
+| ACTA1 | `congenital_myopathy_ad` | Congenital Myopathies VCEP, autosomal dominant (`GN147`) |
+| ACTA1 | `congenital_myopathy_ar` | Congenital Myopathies VCEP, autosomal recessive (`GN169`) |
+| VWF | `vwd_ad` | von Willebrand Disease VCEP, types 1/2 (`GN081`) |
+| VWF | `vwd_ar` | von Willebrand Disease VCEP, type 3 (`GN090`) |
+
+```bash
+# malignant hyperthermia work-up: RYR1 under the MH specification
+acmg-classify classify sample.vcf.gz -o sample.tsv --cspec RYR1=malignant_hyperthermia
+acmg-classify explain chr19 38496283 C T --cspec RYR1=congenital_myopathy_ar   # RYR1 c.6617C>T
+```
+
+The chosen specification is noted in the `warnings` column (`CSPEC: …`) of the
+variants in that gene and recorded in the provenance sidecar
+(`run_options.cspec_selection`). The same variant can be classified differently
+under different specifications (e.g. population-frequency thresholds differ by
+orders of magnitude between malignant hyperthermia and dominant congenital
+myopathy), so review classifications in these genes with the specification
+relevant to the patient.
 
 For interactive single-variant review the alternative CSpecs are made available
 without altering the evaluators:
