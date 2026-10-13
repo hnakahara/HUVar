@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
   < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
   dominant disorders are expected among gnomAD carriers.
+- **Input variant types** (Reviewer 1): symbolic CNV/SV alleles, breakends and
+  `*` are skipped with the reason in `<output>.not_annotated.tsv`; `explain`
+  rejects them; indels > 50 bp are classified with a `LARGE_INDEL` warning.
+- **Gene-disease validity cap**: genes with an implemented VCEP specification
+  are exempt (`GENE_VALIDITY_NOTE` instead), because their ClinGen curations may
+  concern other diseases (PIK3CA, POLG were wrongly capped).
+- **PS4 vs PM3**: for genes without a VCEP specification, PS4 is suppressed when
+  PM3 is met, with the reason in the PS4 evidence.
+- **PS1 comparator stars** configurable (`ACMG_PS1_MIN_STARS`, default 1), for
+  the ≥2-star evaluation requested by Reviewer 1; recorded in the provenance.
 - **TP53 PS3/BS3** from the VCEP functional flowchart on systematic assay data
   (`resources/shared/tp53_functional.tsv`, built by
   `scripts/build_tp53_functional.py` from the NCI TP53 Database R21: Kato 2003,

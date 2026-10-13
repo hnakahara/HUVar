@@ -148,6 +148,12 @@ class CriteriaRegistry:
         # PVS1<->PP3 pass, which would otherwise hide a splice-based PP3).
         _apply_tp53_functional_caveats(results, annotation)
 
+        # PS4 vs PM3 (Reviewer 1): for genes without a VCEP specification, PS4 is
+        # not counted when PM3 is met, so the same probands are not counted as
+        # both case-control/proband evidence and in-trans evidence. VCEP genes
+        # follow their specification (the curator applies them accordingly).
+        _apply_ps4_pm3_exclusion(results, annotation, self._cfg)
+
         # PVS1 ↔ PP3 mutual exclusion (Walker 2023, ClinGen SVI splicing WG):
         # PVS1 already encodes null-variant/splice-disruption evidence at
         # Very Strong, which subsumes in-silico splicing/missense evidence
@@ -385,3 +391,23 @@ def _apply_tp53_functional_caveats(results: list[CriteriaResult], annotation: An
             elif pvs1.strength == CriterionStrength.STRONG and r.strength == CriterionStrength.STRONG:
                 r.strength = CriterionStrength.MODERATE
                 r.evidence += " [downgraded to Moderate: TP53 VCEP — PVS1_Strong]"
+
+
+def _apply_ps4_pm3_exclusion(results: list[CriteriaResult], annotation: AnnotationData, cfg) -> None:
+    """Non-VCEP genes: when PM3 and PS4 are both met, keep PM3 and suppress PS4,
+    stating the reason in the PS4 evidence."""
+    from acmg_classifier.classification.gene_validity import _vcep_genes
+
+    pc = annotation.primary_consequence
+    gene = pc.gene_symbol if pc else None
+    if gene and gene in _vcep_genes(getattr(cfg, "disease_prevalence_tsv", None)):
+        return
+    active = {r.criterion for r in results if r.triggered and not r.suppressed}
+    if ACMGCriterion.PM3 not in active or ACMGCriterion.PS4 not in active:
+        return
+    for r in results:
+        if r.criterion == ACMGCriterion.PS4 and r.triggered and not r.suppressed:
+            r.suppressed = True
+            r.evidence = ((r.evidence or "") + " [suppressed: PS4 not applied because PM3 is met "
+                          "(in-trans evidence takes priority; avoids counting the same probands twice; "
+                          "gene without a VCEP specification)]").strip()

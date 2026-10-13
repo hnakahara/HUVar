@@ -193,6 +193,8 @@ def collect(cfg) -> dict[str, Any]:
         exclude_self_expert_panel=bool(getattr(cfg, "exclude_self_expert_panel", False) is True),
         pm1_heuristic=bool(getattr(cfg, "pm1_heuristic", False) is True),
         tp53_functional=bool(getattr(cfg, "use_tp53_functional", False) is True),
+        ps1_min_stars=getattr(cfg, "ps1_min_stars", None),
+        pm5_min_stars=getattr(cfg, "pm5_min_stars", None),
         pm1_window=getattr(cfg, "pm1_window", None),
         pm1_min_path_variants=getattr(cfg, "pm1_min_path_variants", None),
         pp2_min_path=getattr(cfg, "pp2_min_path", None),

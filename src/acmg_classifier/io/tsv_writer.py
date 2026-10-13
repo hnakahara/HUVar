@@ -67,11 +67,11 @@ _SKIPPED_HEADER = ["chrom", "pos", "ref", "alt", "vcf_id", "filter", "reason"]
 _SKIPPED_REASON = "no ALT allele (ALT='.'): not a variant, excluded from annotation/classification"
 
 
-def write_skipped(records: list[VariantRecord], output_path: Path) -> None:
-    """Write VCF records excluded from classification (e.g. ALT='.' no-variant sites).
-
-    These sites carry no alternate allele, so they cannot be ACMG-classified. This
-    file documents which input rows were skipped so the user can reconcile counts.
+def write_skipped(records: list[VariantRecord], output_path: Path,
+                  reasons: Optional[dict] = None) -> None:
+    """Write VCF records excluded from classification (ALT='.' no-variant sites,
+    symbolic CNV/SV alleles, breakends, '*'), one row per record with the reason,
+    so the user can reconcile counts.
     """
     with open(output_path, "w", newline="", encoding="utf-8") as fh:
         writer = csv.writer(fh, delimiter="\t")
@@ -84,7 +84,7 @@ def write_skipped(records: list[VariantRecord], output_path: Path) -> None:
                 r.alt or ".",
                 r.vcf_id or "",
                 r.filter or "",
-                _SKIPPED_REASON,
+                (reasons or {}).get(r.key) or _SKIPPED_REASON,
             ])
 
 

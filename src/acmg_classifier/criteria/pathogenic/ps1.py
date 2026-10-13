@@ -62,6 +62,11 @@ class PS1Evaluator(CriterionEvaluator):
         from acmg_classifier.criteria.ps1_paralog import PS1ParalogMap
         self._paralog_map = PS1ParalogMap(cfg.ps1_paralog_map_tsv)
 
+    @property
+    def _min_stars(self) -> int:
+        v = getattr(self._cfg, "ps1_min_stars", 1)
+        return v if isinstance(v, int) and v >= 0 else 1
+
     def evaluate(
         self,
         variant: VariantRecord,
@@ -101,7 +106,7 @@ class PS1Evaluator(CriterionEvaluator):
     def _evaluate_missense(self, variant: VariantRecord, pc) -> CriteriaResult:
         # Same amino-acid change at the same codon via a DIFFERENT nucleotide.
         # Exclude the variant itself by genomic coordinate so it cannot "match
-        # itself". min_stars=1: the prior assertion must be a reviewed submission.
+        # itself". Config.ps1_min_stars (default 1): the prior assertion must be a reviewed submission.
         from acmg_classifier.local_db.clinvar_sqlite import query_same_aa_change
         hits = query_same_aa_change(
             self._cfg.clinvar_sqlite,
@@ -111,7 +116,7 @@ class PS1Evaluator(CriterionEvaluator):
             exclude_pos=variant.pos,
             exclude_ref=variant.ref,
             exclude_alt=variant.alt,
-            min_stars=1,
+            min_stars=self._min_stars,
         )
         from acmg_classifier.criteria.vcep_comparators import filter_comparators
         hits, vcep_note = filter_comparators(
@@ -138,7 +143,7 @@ class PS1Evaluator(CriterionEvaluator):
             para = []
             for sib in siblings:
                 para.extend(query_same_aa_change(
-                    self._cfg.clinvar_sqlite, sib, pc.hgvs_p, min_stars=1,
+                    self._cfg.clinvar_sqlite, sib, pc.hgvs_p, min_stars=self._min_stars,
                 ))
             if para:
                 fixed = self._spec.paralog_strength(pc.gene_symbol)
@@ -167,7 +172,7 @@ class PS1Evaluator(CriterionEvaluator):
             any_plp: list = []
             for sib, spos in analogs.items():
                 hits = query_paralog_aa_change(
-                    self._cfg.clinvar_sqlite, sib, f"{ref}{spos}{alt}", min_stars=1,
+                    self._cfg.clinvar_sqlite, sib, f"{ref}{spos}{alt}", min_stars=self._min_stars,
                 )
                 for h in hits:
                     any_plp.append(h)
@@ -195,7 +200,7 @@ class PS1Evaluator(CriterionEvaluator):
 
         return CriteriaResult.not_met(
             ACMGCriterion.PS1,
-            "No ClinVar >=1 star same-AA hit (excluding self)"
+            f"No ClinVar >={self._min_stars} star same-AA hit (excluding self)"
             + (f" [{vcep_note}]" if vcep_note else ""),
         )
 
@@ -228,7 +233,7 @@ class PS1Evaluator(CriterionEvaluator):
             self._cfg.clinvar_sqlite,
             pc.gene_symbol,
             variant.chrom, variant.pos, variant.ref, variant.alt,
-            min_stars=1,
+            min_stars=self._min_stars,
         )
         from acmg_classifier.criteria.vcep_comparators import filter_comparators
         hits, vcep_note = filter_comparators(
@@ -237,7 +242,7 @@ class PS1Evaluator(CriterionEvaluator):
         if not hits:
             return CriteriaResult.not_met(
                 ACMGCriterion.PS1,
-                "No ClinVar >=1 star same-splice-site P/LP hit"
+                f"No ClinVar >={self._min_stars} star same-splice-site P/LP hit"
                 + (f" [{vcep_note}]" if vcep_note else ""),
             )
         strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))

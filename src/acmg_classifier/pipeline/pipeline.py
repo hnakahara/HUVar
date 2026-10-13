@@ -71,11 +71,16 @@ def run_pipeline(
     # cannot be classified. Exclude them from the main output and write them
     # to a `.not_annotated` sidecar so users can see *which* rows were
     # skipped (silent dropping would surprise reviewers).
-    variants = [v for v in all_records if v.alt and v.alt != "."]
-    skipped = [v for v in all_records if not (v.alt and v.alt != ".")]
+    # Symbolic (<DEL>, <DUP>, <CNV>...), breakend and '*' alleles are structural
+    # variants or placeholders that HUVar cannot classify; they go to the same
+    # sidecar with the reason (Reviewer 1, Genome Medicine revision).
+    from acmg_classifier.models.variant import unsupported_allele_reason
+    skip_reason = {v.key: unsupported_allele_reason(v.ref, v.alt) for v in all_records}
+    variants = [v for v in all_records if skip_reason[v.key] is None]
+    skipped = [v for v in all_records if skip_reason[v.key] is not None]
     log.info(
         "variants_loaded",
-        total=len(all_records), classifiable=len(variants), skipped_no_alt=len(skipped),
+        total=len(all_records), classifiable=len(variants), skipped=len(skipped),
     )
 
     # --limit truncates AFTER skip filtering so the user gets the requested
@@ -129,6 +134,10 @@ def run_pipeline(
             pc.gene_symbol if pc else None, classification_2015, classification_bay, cfg,
         )
         extra_warnings = list(extra_warnings) + gdv_warn
+        from acmg_classifier.models.variant import large_indel_warning
+        big = large_indel_warning(variant.ref, variant.alt)
+        if big:
+            extra_warnings.append(big)
         from acmg_classifier.local_db.erepo_db import vcep_warning
         extra_warnings += vcep_warning(cfg.assembly.value, variant.chrom, variant.pos,
                                        variant.ref, variant.alt)
@@ -206,7 +215,7 @@ def run_pipeline(
             skipped_path = output_path.with_name(
                 output_path.stem + ".not_annotated" + output_path.suffix
             )
-            write_skipped(skipped, skipped_path)
+            write_skipped(skipped, skipped_path, reasons=skip_reason)
             log.info("skipped_file_written", path=str(skipped_path), count=len(skipped))
         else:
             log.warning(
@@ -231,11 +240,21 @@ def annotate_one(
     :func:`classify_annotated`, so the expensive VEP / splice / in-silico work
     runs only once even when a variant is classified under multiple CSpecs."""
     from acmg_classifier.annotation.orchestrator import AnnotationOrchestrator
+    from acmg_classifier.models.variant import unsupported_allele_reason
 
+    why = unsupported_allele_reason(ref, alt)
+    if why is not None:
+        raise ValueError(f"{chrom}:{pos}:{ref}:{alt}: {why}")
     variant = VariantRecord(chrom=chrom, pos=pos, ref=ref, alt=alt, assembly=cfg.assembly)
     orchestrator = AnnotationOrchestrator(cfg)
     ann = orchestrator.annotate_batch([variant])[variant.key]
     return variant, ann
+
+
+def _large_indel(variant) -> list[str]:
+    from acmg_classifier.models.variant import large_indel_warning
+    w = large_indel_warning(variant.ref, variant.alt)
+    return [w] if w else []
 
 
 def classify_annotated(
@@ -272,7 +291,7 @@ def classify_annotated(
         classification_2015_rules=rules,
         bayesian_score=score,
         classification_bayesian=classification_bay,
-        warnings=gdv_warn + _vcep_warning(cfg, variant),
+        warnings=gdv_warn + _large_indel(variant) + _vcep_warning(cfg, variant),
     )
 
 

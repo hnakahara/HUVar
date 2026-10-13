@@ -173,7 +173,14 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 - **Gene-disease validity check**: P/LP calls in genes whose ClinGen
   gene-disease validity curations are all Limited or weaker are capped at VUS
   (`GENE_VALIDITY_LIMITED` warning); genes without a ClinGen curation are flagged
-  (`GENE_VALIDITY_NOT_CURATED`).
+  (`GENE_VALIDITY_NOT_CURATED`). Genes with an implemented VCEP specification are
+  not capped (the VCEP's disease relationship is established; their ClinGen
+  curations may concern other diseases, e.g. PIK3CA, POLG) and get a
+  `GENE_VALIDITY_NOTE` instead.
+- **Input variant types**: SNVs, MNVs and indels written with explicit bases.
+  Symbolic CNV/SV alleles (`<DEL>`, `<DUP>`, `<CNV>`…), breakends and `*` are not
+  classified and are listed with the reason in `<output>.not_annotated.tsv`;
+  indels > 50 bp are classified but flagged (`LARGE_INDEL`).
 - **Data provenance**: every run writes `<output>.provenance.json` with the
   release dates / versions of ClinVar, VEP, gnomAD, ClinGen and the bundled
   tables, plus the run options; `acmg-classify status` prints the same.
@@ -799,11 +806,13 @@ Gene-specific parameters are stored per gene in
 and replaces the genome-wide default. The audit-trail `*_evidence` column records
 which path fired.
 
-Three cross-criterion rules are enforced after the per-criterion calls:
+Four cross-criterion rules are enforced after the per-criterion calls:
 the allele-frequency criteria are **mutually exclusive** (BA1 > BS1 > PM2 — a
-variant gets at most one); **PVS1 and PP3 are not co-applied**; and P/LP calls
-in genes whose ClinGen gene-disease validity is Limited or weaker are capped at
-VUS.
+variant gets at most one); **PVS1 and PP3 are not co-applied**; for genes without
+a VCEP specification, **PS4 is not counted when PM3 is met** (the PS4 evidence
+states the reason; VCEP genes follow their specification); and P/LP calls in
+genes without a VCEP specification whose ClinGen gene-disease validity is
+Limited or weaker are capped at VUS.
 
 **Pathogenic**
 
@@ -812,7 +821,7 @@ VUS.
 | **PVS1** | LoF consequence (nonsense/frameshift/canonical-splice/start-loss/whole-gene-deletion) in a gene where LoF is an established mechanism (ClinGen HI score 3 or ≥3 ClinVar P/LP null variants; LOEUF shown for reference only), run through the Abou Tayoun 2018 tree (PTC-based NMD 50-nt rule, last-exon, rescue transcript, single-exon). See [PVS1 decision tree](#pvs1-decision-tree). | **Extensive.** `pvs1` applicability gate (LoF-not-the-mechanism genes withhold PVS1) + gene-specific trees for ~60 genes (`pvs1/vcep_pvs1.py`, APC in `pvs1/apc.py`): codon-range / critical-domain / NMD-boundary gates, per-gene initiation-codon and canonical-splice strengths, and an optional per-skipped-exon splice table. |
 | **PS1** | Same amino-acid change as an established P/LP ClinVar variant (≥`pm5_min_stars`). Strong if any comparator is Pathogenic; Moderate if all are only Likely pathogenic. | `ps1_splice` extends PS1 to splice-equivalent variants for genes whose VCEP allows it. Where the VCEP requires the comparator to be VCEP-classified (`vcep_comparator_rules.tsv`), only eRepo P/LP or ClinVar expert-panel comparators count, minus those the VCEP excludes (e.g. classified with PS1/PM5 or PVS1). |
 | **PS3** | Functional evidence, in priority order: curated supplement (any strength); PS3 as applied by a ClinGen expert panel to the variant in ClinVar (≥3★, panel's strength); text mining of other ClinVar submissions citing a damaging assay, counted by **distinct PMIDs** and **capped at Supporting** (assay validation per Brnich 2019 cannot be judged from text). | Text mining suppressed for genes whose VCEP has no PS3 or restricts it (PALB2, PDHA1, POLG, CAPN3, ANO5). **TP53** (opt-in `--with-tp53-functional`; the NCI TP53 Database terms prohibit monetization): PS3/BS3 for missense variants from the VCEP functional flowchart (`tp53_functional.tsv`, NCI TP53 Database R21: Kato 2003 transactivation class, with Giacomelli 2018, Kotler 2018 and Kawaguchi 2005 as the other assays; "majority" counts a non-functional/functional Kato result). PS3 Strong / Moderate / Supporting and BS3 Strong / Supporting as in the flowchart; not applied with a SpliceAI-based PP3, PS3 not applied with PVS1 and downgraded to Moderate with PVS1_Strong. When assay data exist, ClinVar text mining is not used. Agreement with the TP53 VCEP PS3/BS3 calls in the eRepo: 160/172 variants. |
-| **PS4** | **Curated evidence only**: curated supplement or PS4 applied by a ClinGen expert panel in ClinVar (≥3★). The number of ClinVar submissions reporting affected individuals is shown for information but not scored (individuals cannot be de-duplicated across submitters). | — |
+| **PS4** | **Curated evidence only**: curated supplement or PS4 applied by a ClinGen expert panel in ClinVar (≥3★). The number of ClinVar submissions reporting affected individuals is shown for information but not scored (individuals cannot be de-duplicated across submitters). Genes without a VCEP: not counted when PM3 is met. | — |
 | **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`; optional `alt_aa` restriction, e.g. IL2RG transmembrane residues; IL2RG PM1 also requires PM2 and no BA1/BS1/BS2). Genes without a VCEP definition: PM1 from curated evidence only. An opt-in ClinVar fallback (`ACMG_PM1_HEURISTIC=true`: ≥3 other P/LP **missense** changes, ClinVar ≥1★, the query variant excluded, within ±25 residues and no B/LB missense; `ACMG_PM1_WINDOW`, `ACMG_PM1_MIN_PATH_VARIANTS`) is off by default because it reproduced the VCEP-defined regions poorly (residue-level F1 ≈ 0.3). | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
 | **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi); `pm2_subset=non_cancer` and `pm2_min_depth` (ENIGMA BRCA1/2). Gene-specific cSpec wording is hard-coded for a few genes (F8/F9 "absent in males", RYR1 "1 allele allowed", ATM "n=1 in a single subpopulation", PTEN single-vs-multi-allele subpop, RUNX1 GrpMax-FAF-then-all-subpop). |
 | **PM4** | Protein-length change from an in-frame indel or stop-loss (outside repeat regions). | `pm4 = not_applicable` withholds PM4 for genes whose VCEP declined it. |
@@ -1060,6 +1069,7 @@ export ACMG_SUPPLEMENT_MODE=merge   # or manual-only
 
 # Criterion tunables (sensible defaults; override only to trade precision/recall)
 export ACMG_PM5_MIN_STARS=1        # min ClinVar review stars for a PM5 comparator
+export ACMG_PS1_MIN_STARS=1        # min ClinVar review stars for a PS1 comparator
 export ACMG_BS2_MIN_HOMALT=2       # BS2 healthy-homozygote count (recessive)
 export ACMG_BS2_MIN_HEMI=2         # BS2 healthy-hemizygote count (X-linked)
 export ACMG_BS2_MIN_HET=3          # BS2 healthy-carrier count (dominant)
@@ -1111,8 +1121,12 @@ CLI flags take precedence over environment variables.
 - **Gene-disease validity.** The VUS cap uses the ClinGen Gene-Disease Validity
   download; a gene with several curations is capped only when *all* are Limited
   or weaker. It does not check that the variant's disease matches a curated one.
-- **No DUP/CNV support.** Only SNV / small INDEL / MNV are classified. SV
-  callers should be paired with a dedicated CNV interpreter.
+- **No DUP/CNV support.** Only SNV / INDEL / MNV with explicit bases are
+  classified. Symbolic CNV/SV alleles, breakends and `*` are skipped (listed in
+  `<output>.not_annotated.tsv` with the reason); indels > 50 bp are classified
+  but flagged `LARGE_INDEL`, because allele-matched gnomAD/ClinVar evidence and
+  in-silico/splice predictors are designed for small variants. SV callers should
+  be paired with a dedicated CNV interpreter.
 - **Single-sample input.** Multi-sample joint VCFs are accepted but only
   variant-level (not genotype-level) information is consumed.
 
