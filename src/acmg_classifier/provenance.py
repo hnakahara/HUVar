@@ -193,6 +193,9 @@ def collect(cfg) -> dict[str, Any]:
         exclude_self_expert_panel=bool(getattr(cfg, "exclude_self_expert_panel", False) is True),
         pm1_heuristic=bool(getattr(cfg, "pm1_heuristic", False) is True),
         tp53_functional=bool(getattr(cfg, "use_tp53_functional", False) is True),
+        cspec_selection=(dict(getattr(cfg, "cspec_selection", None))
+                         if isinstance(getattr(cfg, "cspec_selection", None), dict)
+                         and getattr(cfg, "cspec_selection") else None),
         ps1_min_stars=getattr(cfg, "ps1_min_stars", None),
         pm5_min_stars=getattr(cfg, "pm5_min_stars", None),
         pm1_window=getattr(cfg, "pm1_window", None),

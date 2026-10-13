@@ -536,6 +536,7 @@ Full option list:
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
 | `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
 | `--with-tp53-functional` | flag | off | TP53 PS3/BS3 from the VCEP functional flowchart on the bundled NCI TP53 Database assay classes (`resources/shared/tp53_functional.tsv`). Off by default because the database terms prohibit any use that results in direct or indirect monetization; turn it on for non-commercial use. Env: `ACMG_USE_TP53_FUNCTIONAL=true`. Recorded in the provenance sidecar. |
+| `--cspec GENE=CSPEC_ID` | repeatable | — | Evaluate a gene with several released ClinGen specifications for clinically distinct diseases under the chosen one (as in HUVar_app): RYR1 `malignant_hyperthermia` / `congenital_myopathy_ad` / `congenital_myopathy_ar`; ACTA1 `congenital_myopathy_ad` / `congenital_myopathy_ar`; VWF `vwd_ad` / `vwd_ar` (`resources/shared/disease_prevalence_multispec.tsv`). Without it, the conservative merged specification is used. Also for `explain`. Shown in the warnings column (`CSPEC:`) and recorded in the provenance. |
 | `--exclude-self-expert-panel` | flag | off | Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar expert-panel (≥3★) record of the variant itself, so an evaluation against the eRepo does not read the reference curation. Recorded in the provenance sidecar. |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
@@ -873,7 +874,8 @@ without altering the evaluators:
   `Config` scoped to one CSpec).
 
 The HUVar app uses this to let a reviewer switch the active CSpec after a
-single-variant analysis. The CLI does not expose a flag for it; left unset,
+single-variant analysis. The CLI exposes the same choice with `--cspec GENE=CSPEC_ID`
+(repeatable; `apply_cspec_selection()` chains the overlay over all selected genes). Left unset,
 `disease_prevalence_tsv_override` is `None` and the conservative aggregated table
 is used.
 

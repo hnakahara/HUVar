@@ -291,8 +291,18 @@ def classify_annotated(
         classification_2015_rules=rules,
         bayesian_score=score,
         classification_bayesian=classification_bay,
-        warnings=gdv_warn + _large_indel(variant) + _vcep_warning(cfg, variant),
+        warnings=gdv_warn + _large_indel(variant) + _vcep_warning(cfg, variant)
+        + _cspec_note(cfg, pc),
     )
+
+
+def _cspec_note(cfg: Config, pc) -> list[str]:
+    """Name the CSpec chosen with --cspec for this variant's gene."""
+    sel = getattr(cfg, "cspec_selection", None)
+    gene = getattr(pc, "gene_symbol", None) if pc is not None else None
+    if isinstance(sel, dict) and gene in sel:
+        return [f"CSPEC: {gene} evaluated under the '{sel[gene]}' specification (--cspec)"]
+    return []
 
 
 def _vcep_warning(cfg: Config, variant) -> list[str]:

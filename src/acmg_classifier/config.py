@@ -83,6 +83,11 @@ class Config(BaseSettings):
     # base table with one gene's row replaced by a specific disease's spec) to
     # evaluate a variant under that CSpec without touching the batch behaviour.
     disease_prevalence_tsv_override: Optional[Path] = None
+    # CSpec selection for genes with several released, clinically distinct
+    # specifications (RYR1, ACTA1, VWF): {"RYR1": "congenital_myopathy_ar", ...}.
+    # Applied by the CLI (--cspec GENE=CSPEC_ID) through cspec_overlay; recorded
+    # in the provenance. Empty = the conservative merged row per gene.
+    cspec_selection: dict[str, str] = {}
     # OpenSpliceAI model context length (nt). Default 80 (the smallest OSAI_MANE
     # variant) for fast CPU inference — runtime scales with the flanking window,
     # so 80nt is ~25x lighter than 2000nt. Raise to 400/2000/10000 (all staged
@@ -373,6 +378,17 @@ class Config(BaseSettings):
         if self.disease_prevalence_tsv_override is not None:
             return self.disease_prevalence_tsv_override
         return self.data_dir / "shared" / "disease_prevalence.tsv"
+
+    @property
+    def disease_prevalence_multispec_tsv(self) -> Path:
+        """One row per gene x CSpec for the multi-specification genes
+        (scripts/build_disease_thresholds.py --multispec-out). data_dir copy first,
+        then the bundled resources copy."""
+        local = self.data_dir / "shared" / "disease_prevalence_multispec.tsv"
+        if local.exists():
+            return local
+        return (Path(__file__).resolve().parents[2] / "resources"
+                / "shared" / "disease_prevalence_multispec.tsv")
 
     @property
     def gene_inheritance_tsv(self) -> Path:

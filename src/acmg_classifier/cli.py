@@ -61,6 +61,18 @@ def cli(log_level: str):
 # classify
 # ---------------------------------------------------------------------------
 
+def _with_cspec(cfg, cspec):
+    """Apply --cspec GENE=CSPEC_ID selections (cspec_overlay) or exit with the choices."""
+    if not cspec:
+        return cfg
+    from acmg_classifier.criteria.cspec_overlay import apply_cspec_selection, parse_cspec_options
+    try:
+        sel = parse_cspec_options(cspec, cfg.disease_prevalence_multispec_tsv)
+    except ValueError as exc:
+        raise click.BadParameter(str(exc), param_hint="--cspec")
+    return apply_cspec_selection(cfg, sel)
+
+
 @cli.command()
 @click.argument("vcf", type=click.Path(exists=True, path_type=Path))
 @click.option("-o", "--output", type=click.Path(path_type=Path), default=None,
@@ -109,6 +121,14 @@ def cli(log_level: str):
                    "Database assay classes (bundled tp53_functional.tsv). Off by default: "
                    "the database terms prohibit use that results in monetization. "
                    "Env: ACMG_USE_TP53_FUNCTIONAL=true.")
+@click.option("--cspec", "cspec", multiple=True, metavar="GENE=CSPEC_ID",
+              help="Evaluate GENE under one of its disease-specific ClinGen CSpecs "
+                   "(genes with several released specifications: RYR1, ACTA1, VWF), e.g. "
+                   "--cspec RYR1=congenital_myopathy_ar (repeatable). Without it, the "
+                   "conservative merged specification is used. Choices: "
+                   "malignant_hyperthermia, congenital_myopathy_ad, congenital_myopathy_ar "
+                   "(RYR1); congenital_myopathy_ad, congenital_myopathy_ar (ACTA1); "
+                   "vwd_ad, vwd_ar (VWF).")
 @click.option("--exclude-self-expert-panel", is_flag=True, default=False,
               help="Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar "
                    "expert-panel (>=3-star) record of the variant being classified, so the "
@@ -138,6 +158,7 @@ def classify(
     supplement: Optional[Path],
     supplement_mode: str,
     with_tp53_functional: bool,
+    cspec: tuple[str, ...],
     exclude_self_expert_panel: bool,
     workers: int,
     no_progress: bool,
@@ -168,6 +189,7 @@ def classify(
         **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
         **({"use_tp53_functional": True} if with_tp53_functional else {}),
     )
+    cfg = _with_cspec(cfg, cspec)
     run_pipeline(
         vcf, cfg,
         output_path=output,
@@ -232,6 +254,14 @@ def classify(
                    "Database assay classes (bundled tp53_functional.tsv). Off by default: "
                    "the database terms prohibit use that results in monetization. "
                    "Env: ACMG_USE_TP53_FUNCTIONAL=true.")
+@click.option("--cspec", "cspec", multiple=True, metavar="GENE=CSPEC_ID",
+              help="Evaluate GENE under one of its disease-specific ClinGen CSpecs "
+                   "(genes with several released specifications: RYR1, ACTA1, VWF), e.g. "
+                   "--cspec RYR1=congenital_myopathy_ar (repeatable). Without it, the "
+                   "conservative merged specification is used. Choices: "
+                   "malignant_hyperthermia, congenital_myopathy_ad, congenital_myopathy_ar "
+                   "(RYR1); congenital_myopathy_ad, congenital_myopathy_ar (ACTA1); "
+                   "vwd_ad, vwd_ar (VWF).")
 @click.option("--exclude-self-expert-panel", is_flag=True, default=False,
               help="Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar "
                    "expert-panel (>=3-star) record of the variant being classified, so the "
@@ -257,6 +287,7 @@ def explain(
     supplement: Optional[Path],
     supplement_mode: str,
     with_tp53_functional: bool,
+    cspec: tuple[str, ...],
     exclude_self_expert_panel: bool,
 ) -> None:
     """Show detailed classification for a single variant (CHROM POS REF ALT).
@@ -284,6 +315,7 @@ def explain(
         **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
         **({"use_tp53_functional": True} if with_tp53_functional else {}),
     )
+    cfg = _with_cspec(cfg, cspec)
 
     # Assemble manual evidence for this variant: TSV rows keyed to it + inline.
     variant_key = VariantRecord(

@@ -37,6 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   recorded in the provenance. On the eRepo benchmark with curated evidence this
   raised PS1 F1 0.311→0.384 and PM5 0.470→0.505 and the exact five-tier
   agreement by 0.5–0.8 points (Reviewer 1).
+- **`--cspec GENE=CSPEC_ID`** (classify / explain): evaluate RYR1, ACTA1 or VWF
+  under one of their disease-specific ClinGen specifications, as in HUVar_app
+  (Reviewer 2); default remains the conservative merged specification.
 - **TP53 PS3/BS3** from the VCEP functional flowchart on systematic assay data
   (`resources/shared/tp53_functional.tsv`, built by
   `scripts/build_tp53_functional.py` from the NCI TP53 Database R21: Kato 2003,

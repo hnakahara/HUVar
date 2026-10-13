@@ -12,7 +12,8 @@ that one gene's row with the chosen CSpec's row, and point
 ``Config.disease_prevalence_tsv_override`` at the result. This module builds that
 overlay table and lists the CSpecs available for a gene.
 
-The batch ``disease_prevalence.tsv`` and all CLI / batch behaviour are untouched.
+The batch ``disease_prevalence.tsv`` is untouched; the CLI applies a selection
+only when ``--cspec GENE=CSPEC_ID`` is given (:func:`apply_cspec_selection`).
 """
 from __future__ import annotations
 
@@ -133,3 +134,44 @@ def overlaid_config(
             tmp.unlink()
         except OSError:
             pass
+
+
+def parse_cspec_options(values, multispec_tsv: Path | str) -> dict[str, str]:
+    """``("RYR1=congenital_myopathy_ar", ...)`` -> ``{"RYR1": "congenital_myopathy_ar"}``.
+
+    Raises ``ValueError`` with the available choices for an unknown gene/CSpec."""
+    out: dict[str, str] = {}
+    for v in values or ():
+        gene, sep, cspec = str(v).partition("=")
+        gene, cspec = gene.strip(), cspec.strip()
+        if not sep or not gene or not cspec:
+            raise ValueError(f"--cspec expects GENE=CSPEC_ID, got {v!r}")
+        choices = [c["cspec_id"] for c in available_cspecs(gene, multispec_tsv)]
+        if cspec not in choices:
+            raise ValueError(
+                f"unknown CSpec {cspec!r} for {gene}; available: "
+                + (", ".join(choices) if choices else "none (gene has a single specification)"))
+        out[gene] = cspec
+    return out
+
+
+def apply_cspec_selection(cfg: "Config", selection: dict[str, str]) -> "Config":
+    """Return a copy of *cfg* evaluating each gene in *selection* under the chosen
+    CSpec (overlay table chained over all selected genes) and recording the
+    selection in ``cfg.cspec_selection``. The overlay file lives for the process
+    (written to the temp directory)."""
+    if not selection:
+        return cfg
+    multispec = cfg.disease_prevalence_multispec_tsv
+    base = cfg.disease_prevalence_tsv
+    tmps = []
+    for gene, cspec in selection.items():
+        base = overlay_tsv(base, multispec, gene, cspec)
+        tmps.append(base)
+    for t in tmps[:-1]:
+        try:
+            t.unlink()
+        except OSError:
+            pass
+    return cfg.model_copy(update={"disease_prevalence_tsv_override": base,
+                                  "cspec_selection": dict(selection)})
