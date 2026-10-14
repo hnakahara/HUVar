@@ -311,16 +311,18 @@ def _bmpr2_bp4(sc: InSilicoScores) -> Outcome:
         return None
     if _splice_impact(sc, 0.1):
         return (None, f"BMPR2 BP4 blocked by predicted splice impact (delta={_f(sc.splice_max)})")
+    # BP4 (unlike PP3's 2-of-3) requires all three: CADD <= 22.7, AlphaMissense
+    # <= 0.169 and REVEL <= 0.29 (Pulmonary Hypertension VCEP specification).
     passes = sum((
         sc.cadd is not None and sc.cadd <= 22.7,
         sc.alphamissense is not None and sc.alphamissense <= 0.169,
         sc.revel is not None and sc.revel <= 0.29,
     ))
-    if passes >= 2:
-        return (_SUP, f"BMPR2: {passes}/3 of CADD<=22.7/AM<=0.169/REVEL<=0.29 "
+    if passes == 3:
+        return (_SUP, f"BMPR2: CADD<=22.7, AM<=0.169 and REVEL<=0.29 all met "
                       f"(CADD={_f(sc.cadd)} AM={_f(sc.alphamissense)} REVEL={_f(sc.revel)}, Supporting)")
-    return (None, f"BMPR2 BP4 not met (<2 of 3 pass; CADD={_f(sc.cadd)} "
-                  f"AM={_f(sc.alphamissense)} REVEL={_f(sc.revel)})")
+    return (None, f"BMPR2 BP4 not met ({passes}/3 of CADD<=22.7/AM<=0.169/REVEL<=0.29; "
+                  f"CADD={_f(sc.cadd)} AM={_f(sc.alphamissense)} REVEL={_f(sc.revel)})")
 
 
 # ---------------------------------------------------------------------------

@@ -14,6 +14,7 @@ VCEP-published cutoff be used verbatim). Genes absent from the table — or with
 incomplete parameters — fall back to the historical flat defaults.
 """
 from __future__ import annotations
+import re
 
 import csv
 import math
@@ -106,6 +107,49 @@ class GeneThresholds:
     # frequency (a recurrent disease allele, e.g. MYOC p.Gln368Ter). The BS1
     # evaluator withholds BS1 for a variant matching one of these.
     bs1_exclude: str = ""
+    # Same format for BA1 (LGMD "BS1 exception" variants are barred from both).
+    ba1_exclude: str = ""
+
+
+def variant_listed(listing: str, hgvs_c: str | None, hgvs_p: str | None) -> str:
+    """Return the entry of a comma-separated VCEP variant list (bs1_exclude /
+    ba1_exclude) that matches this variant, or "". Entries are protein changes
+    ("p.Gln368Ter") or MANE transcript changes ("c.2697+1G>A", "c.191dup");
+    a transcript prefix and the inserted/deleted bases of a dup/del are ignored,
+    and "*" equals "Ter"."""
+    if not listing:
+        return ""
+    c = _norm_c(hgvs_c)
+    p = _norm_p(hgvs_p)
+    for tok in listing.split(","):
+        tok = tok.strip()
+        if not tok:
+            continue
+        if tok.startswith("c.") and c and _norm_c(tok) == c:
+            return tok
+        if tok.startswith("p.") and p and _norm_p(tok) == p:
+            return tok
+    return ""
+
+
+_P_RE = re.compile(r"p\.\(?([A-Za-z]{3}\d+(?:[A-Za-z]{3}|Ter|\*|=)(?:fs(?:Ter|\*)?\d*)?)\)?")
+
+
+def _norm_p(h: str | None) -> str:
+    if not h:
+        return ""
+    m = _P_RE.search(h)
+    return m.group(1).replace("*", "Ter").lower() if m else ""
+
+
+def _norm_c(h: str | None) -> str:
+    if not h:
+        return ""
+    h = h.split(":", 1)[1] if ":" in h else h
+    h = h.strip()
+    # c.191dupA -> c.191dup ; c.100_102delAAA -> c.100_102del
+    h = re.sub(r"(dup|del)[ACGTN]+$", r"\1", h)
+    return h.lower()
 
 
 _DEFAULT_THRESHOLDS = GeneThresholds(ba1=_DEFAULT_BA1, bs1=_DEFAULT_BS1)
@@ -181,6 +225,7 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
         (row.get("bs1_strength") or "").strip(), CriterionStrength.STRONG
     )
     bs1_exclude = (row.get("bs1_exclude") or "").strip()
+    ba1_exclude = (row.get("ba1_exclude") or "").strip()
     raw_hom = (row.get("ba1_hom_count") or "").strip()
     try:
         ba1_hom_count = int(raw_hom) if raw_hom else None
@@ -188,7 +233,7 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
         ba1_hom_count = None
     return GeneThresholds(
         ba1=ba1, bs1=bs1, af_basis=af_basis, af_subset=af_subset,
-        bs1_strength=bs1_strength, bs1_exclude=bs1_exclude,
+        bs1_strength=bs1_strength, bs1_exclude=bs1_exclude, ba1_exclude=ba1_exclude,
         ba1_hom_count=ba1_hom_count,
     )
 

@@ -9,7 +9,7 @@ from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
-from acmg_classifier.criteria.allele_frequency import DiseaseThresholds
+from acmg_classifier.criteria.allele_frequency import DiseaseThresholds, variant_listed
 
 # Bare protein change from an HGVS p. string, tolerant of a transcript prefix
 # and ClinVar/VEP parentheses; "*" is normalised to "Ter" so p.Gln368* and
@@ -68,14 +68,15 @@ class BS1Evaluator(CriterionEvaluator):
         # Variant-level BS1 exclusion: a recurrent disease allele the VCEP bars
         # from BS1 regardless of its population frequency (e.g. MYOC p.Gln368Ter,
         # whose ~2.6% allelic contribution is disease-driven, not benign).
-        if gt.bs1_exclude:
-            excluded = {_norm_pchange(x) for x in gt.bs1_exclude.split(",")}
-            if _norm_pchange(pc.hgvs_p if pc else None) in excluded:
-                return CriteriaResult.not_met(
-                    ACMGCriterion.BS1,
-                    f"{gene}: VCEP excludes BS1 for {gt.bs1_exclude} "
-                    "(recurrent disease allele)",
-                )
+        # Entries may be protein ("p.") or MANE transcript ("c.") changes — the
+        # LGMD VCEP "BS1 exception" variants include intronic changes.
+        hit = variant_listed(gt.bs1_exclude, pc.hgvs_c if pc else None, pc.hgvs_p if pc else None)
+        if hit:
+            return CriteriaResult.not_met(
+                ACMGCriterion.BS1,
+                f"{gene}: VCEP excludes BS1 for {hit} "
+                "(recurrent / common pathogenic or hypomorphic allele)",
+            )
 
         # Non-cancer subset (ENIGMA BRCA1/2): the VCEP judges BS1 on gnomAD's
         # non-cancer subset, so use its popmax FAF95 (recomputed at build time

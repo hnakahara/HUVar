@@ -32,7 +32,8 @@ from typing import Optional
 
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
-    "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "af_basis",
+    "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "ba1_exclude",
+    "af_basis",
     "ba1_hom_count",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
     "pm2_subset", "pm2_min_depth",
@@ -43,7 +44,8 @@ COLUMNS = [
     "ps1", "ps1_splice", "ps1_max", "ps1_paralog_group", "ps1_paralog_strength",
     "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
-    "bp4_splice_cutoff", "bp7_splice_cutoff",
+    "bp4_splice_cutoff", "bp4_scope", "bp4_missense_splice_max", "bp4_exclude_c",
+    "bp7_splice_cutoff",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
     "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
     "source_vcep", "cspec_url", "notes",
@@ -652,8 +654,60 @@ _BP7_INTRONIC_NONCANONICAL = frozenset({
 #   MYOC (GN019) — "Does not apply to p.Gln368Ter" (the common pathogenic POAG
 #   allele, ~2.6% allelic contribution; its frequency is disease-driven, not
 #   benign). Not present in the JSON-LD BS1 description, so curated here.
+#   LGMD VCEP (GN078-GN081) "BS1 exception" variants — neither BA1 nor BS1 is
+#   applied: DYSF NM_003494.3:c.2643+1G>A (= MANE NM_001130987.2:c.2697+1G>A;
+#   common pathogenic variant), ANO5 c.191dup p.(Asn64LysfsTer15) (common
+#   pathogenic variant), CAPN3 c.1746-20C>G (proposed hypomorph) and CAPN3
+#   c.2120A>G p.(Asp707Gly) (likely East Asian founder). Entries may be protein
+#   ("p.") or MANE transcript ("c.") changes, comma-separated.
 _BS1_EXCLUDE_VARIANTS: dict[str, str] = {
     "MYOC": "p.Gln368Ter",
+    "DYSF": "c.2697+1G>A",
+    "ANO5": "c.191dup",
+    "CAPN3": "c.1746-20C>G,c.2120A>G",
+}
+
+# Per-gene, VARIANT-LEVEL BA1 exclusions (same format as above). The LGMD
+# "BS1 exception" variants are barred from BA1 as well.
+_BA1_EXCLUDE_VARIANTS: dict[str, str] = {
+    "DYSF": "c.2697+1G>A",
+    "ANO5": "c.191dup",
+    "CAPN3": "c.1746-20C>G,c.2120A>G",
+}
+
+# Per-gene BP4 scope / gating from the VCEP specifications (PP3/BP4 texts),
+# curated because the JSON-LD does not encode them:
+#   bp4_scope
+#     not_applicable  BP4 not applicable (SCID VCEP: DCLRE1C, IL2RG, IL7R, JAK3, RAG1)
+#     splice_only     protein-based predictors not used, BP4 not applicable to
+#                     missense; splicing prediction only (CDH1, PALB2)
+#     missense_only   BP4 only for missense (REVEL); no splice-based BP4
+#                     (RASopathy HRAS, KRAS, SOS1)
+#     no_synonymous   BP4 not applied to synonymous variants (PAH)
+#   bp4_missense_splice_max  a missense variant meets BP4 only when the splice
+#                     predictor is <= this value (GP9: SpliceAI = 0; RUNX1: <= 0.20)
+#   bp4_exclude_c     MANE c. positions where BP4 must not be applied, as
+#                     comma-separated tokens: "c.N+" (intronic, donor side of
+#                     base N), "c.N-" (intronic, acceptor side of base N) and
+#                     "c.A_B" (exonic bases A..B). PTEN: variants that may impact
+#                     the intron 1 donor/acceptor = intron 1 (c.79+N, c.80-N) and
+#                     the exonic bases c.77-c.82 flanking it
+#   bp4_splice_cutoff GP9 synonymous/intronic: SpliceAI score of zero
+_BP4_RULES: dict[str, dict[str, str]] = {
+    "DCLRE1C": {"bp4_scope": "not_applicable"},
+    "IL2RG": {"bp4_scope": "not_applicable"},
+    "IL7R": {"bp4_scope": "not_applicable"},
+    "JAK3": {"bp4_scope": "not_applicable"},
+    "RAG1": {"bp4_scope": "not_applicable"},
+    "CDH1": {"bp4_scope": "splice_only"},
+    "PALB2": {"bp4_scope": "splice_only"},
+    "HRAS": {"bp4_scope": "missense_only"},
+    "KRAS": {"bp4_scope": "missense_only"},
+    "SOS1": {"bp4_scope": "missense_only"},
+    "PAH": {"bp4_scope": "no_synonymous"},
+    "GP9": {"bp4_missense_splice_max": "0", "bp4_splice_cutoff": "0"},
+    "RUNX1": {"bp4_missense_splice_max": "0.20"},
+    "PTEN": {"bp4_exclude_c": "c.79+,c.80-,c.77_82"},
 }
 
 
@@ -1760,6 +1814,7 @@ def parse_spec(path: str) -> list[dict]:
                 "bs1_strength": bs1_strength,
                 "bs1_exclude": "",
                 "ba1_threshold": "" if ba1 is None else _fmt(ba1),
+                "ba1_exclude": "",
                 "af_basis": af_basis,
                 "pm2_threshold": "",
                 "pm2_strength": "",
@@ -1797,6 +1852,9 @@ def parse_spec(path: str) -> list[dict]:
                 "bp7_phylop": "",
                 "bp7_intronic": "",
                 "bp4_splice_cutoff": "",
+                "bp4_scope": "",
+                "bp4_missense_splice_max": "",
+                "bp4_exclude_c": "",
                 "bp7_splice_cutoff": "",
                 "revel_pp3_supporting": "",
                 "revel_pp3_moderate": "",
@@ -2199,6 +2257,11 @@ def resolve_rows(files: list[str], released_only: bool = False) -> dict[str, dic
             row["bp7_intronic"] = "noncanonical"
         # Curated variant-level BS1 exclusion (e.g. MYOC p.Gln368Ter).
         row["bs1_exclude"] = _BS1_EXCLUDE_VARIANTS.get(g, "")
+        row["ba1_exclude"] = _BA1_EXCLUDE_VARIANTS.get(g, "")
+        for k in ("bp4_scope", "bp4_missense_splice_max", "bp4_exclude_c"):
+            row[k] = ""
+        for k, v in _BP4_RULES.get(g, {}).items():
+            row[k] = v
         rvc = revel_choice.get(g)
         rv_pp3 = rvc[1] if rvc else {}
         rv_bp4 = rvc[2] if rvc else {}
@@ -2349,6 +2412,7 @@ _OVERRIDE_FIELDS = {
     "bs1": "bs1_threshold",
     "bs1_strength": "bs1_strength",
     "bs1_exclude": "bs1_exclude",
+    "ba1_exclude": "ba1_exclude",
     "af_basis": "af_basis",
     "ba1_hom_count": "ba1_hom_count",
     "pm2_threshold": "pm2_threshold",
@@ -2388,6 +2452,9 @@ _OVERRIDE_FIELDS = {
     "bp7_phylop": "bp7_phylop",
     "bp7_intronic": "bp7_intronic",
     "bp4_splice_cutoff": "bp4_splice_cutoff",
+    "bp4_scope": "bp4_scope",
+    "bp4_missense_splice_max": "bp4_missense_splice_max",
+    "bp4_exclude_c": "bp4_exclude_c",
     "bp7_splice_cutoff": "bp7_splice_cutoff",
     "revel_pp3_supporting": "revel_pp3_supporting",
     "revel_pp3_moderate": "revel_pp3_moderate",

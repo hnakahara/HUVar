@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **BA1/BS1 variant exceptions**: new `ba1_exclude` column, and `bs1_exclude` now
+  accepts MANE `c.` changes as well as `p.` changes. The LGMD VCEP "BS1 exception"
+  alleles (DYSF c.2697+1G>A = NM_003494.3:c.2643+1G>A, ANO5 c.191dup, CAPN3
+  c.1746-20C>G and c.2120A>G) receive neither BA1 nor BS1.
+- **BP4 VCEP scope**: new `bp4_scope` (`not_applicable` DCLRE1C/IL2RG/IL7R/JAK3/RAG1;
+  `splice_only` CDH1/PALB2; `missense_only` HRAS/KRAS/SOS1; `no_synonymous` PAH),
+  `bp4_missense_splice_max` (GP9 SpliceAI = 0, also for synonymous/intronic via
+  `bp4_splice_cutoff` 0; RUNX1 missense SpliceAI ≤ 0.20) and `bp4_exclude_c`
+  (PTEN intron 1 donor/acceptor). BMPR2 BP4 now requires all three of CADD ≤ 22.7,
+  AlphaMissense ≤ 0.169 and REVEL ≤ 0.29 (was 2 of 3).
+- **BP4, all genes**: splice-prediction BP4 is no longer applied to variants in
+  introns 5' of the coding start (5'UTR introns, `c.-N+M` / `c.-N-M`; e.g. GAA
+  c.-32-13T>G).
 - **PVS1**: applied only when LoF is an established mechanism (VCEP, ClinGen
   haploinsufficiency score 3, or null variants ≥20% of the gene's ≥5 ClinVar
   P/LP variants — `ACMG_PVS1_MIN_NULL_FRACTION` / `ACMG_PVS1_MIN_PLP`; replaces

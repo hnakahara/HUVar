@@ -7,7 +7,7 @@ from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
-from acmg_classifier.criteria.allele_frequency import DiseaseThresholds
+from acmg_classifier.criteria.allele_frequency import DiseaseThresholds, variant_listed
 
 
 class BA1Evaluator(CriterionEvaluator):
@@ -35,6 +35,17 @@ class BA1Evaluator(CriterionEvaluator):
         gene = pc.gene_symbol if pc else ""
         gt = self._thresholds.get(gene)
         threshold = gt.ba1
+
+        # Variant-level BA1 exclusion: VCEP "BS1 exception" variants (LGMD
+        # common pathogenic / hypomorphic / founder alleles) are barred from
+        # BA1 as well as BS1, whatever their population frequency.
+        hit = variant_listed(gt.ba1_exclude, pc.hgvs_c if pc else None, pc.hgvs_p if pc else None)
+        if hit:
+            return CriteriaResult.not_met(
+                ACMGCriterion.BA1,
+                f"{gene}: VCEP excludes BA1/BS1 for {hit} "
+                "(common pathogenic / hypomorphic / founder allele)",
+            )
 
         # Homozygote/hemizygote-count OR-clause (SLC6A8, OTC: BA1 if >=10 hom or
         # hemizygotes regardless of frequency). Evaluated first since it is an

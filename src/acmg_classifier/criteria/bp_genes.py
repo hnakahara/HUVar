@@ -27,9 +27,11 @@ The BP counterpart to :class:`~acmg_classifier.criteria.pp2_genes.PP2Applicabili
 from __future__ import annotations
 
 import csv
+import re
 from pathlib import Path
 
 APPLICABLE = "applicable"
+BP4_SCOPES = ("not_applicable", "splice_only", "missense_only", "no_synonymous")
 NOT_APPLICABLE = "not_applicable"
 
 
@@ -50,6 +52,9 @@ class BPApplicability:
         self._bp7_intronic: dict[str, str] = {}
         self._bp7_intronic_cutoffs: dict[str, tuple[int, int]] = {}
         self._bp4_splice_cutoff: dict[str, float] = {}
+        self._bp4_scope: dict[str, str] = {}
+        self._bp4_missense_splice_max: dict[str, float] = {}
+        self._bp4_exclude_c: dict[str, list[tuple[str, int, int]]] = {}
         self._bp7_splice_cutoff: dict[str, float] = {}
         self._load(tsv_path)
 
@@ -99,7 +104,14 @@ class BPApplicability:
                     if cutoffs is not None:
                         self._bp7_intronic[gene] = "parametric"
                         self._bp7_intronic_cutoffs[gene] = cutoffs
+                scope = (row.get("bp4_scope") or "").strip().lower()
+                if scope in BP4_SCOPES:
+                    self._bp4_scope[gene] = scope
+                excl_c = _parse_c_positions(row.get("bp4_exclude_c") or "")
+                if excl_c:
+                    self._bp4_exclude_c[gene] = excl_c
                 for col, store in (
+                    ("bp4_missense_splice_max", self._bp4_missense_splice_max),
                     ("bp4_splice_cutoff", self._bp4_splice_cutoff),
                     ("bp7_splice_cutoff", self._bp7_splice_cutoff),
                 ):
@@ -116,6 +128,40 @@ class BPApplicability:
         if not gene:
             return None
         return self._bp4_splice_cutoff.get(gene)
+
+    def bp4_scope(self, gene: str | None) -> str:
+        """VCEP BP4 scope: ``not_applicable`` / ``splice_only`` (no protein-based
+        predictors; BP4 not for missense) / ``missense_only`` (no splice-based BP4)
+        / ``no_synonymous`` / "" (no restriction)."""
+        if not gene:
+            return ""
+        return self._bp4_scope.get(gene, "")
+
+    def bp4_missense_splice_max(self, gene: str | None) -> float | None:
+        """Maximum splice-predictor score allowed for a missense BP4 (GP9: 0;
+        RUNX1: 0.20), or ``None`` (the default splice-impact gate applies)."""
+        if not gene:
+            return None
+        return self._bp4_missense_splice_max.get(gene)
+
+    def bp4_excluded_position(self, gene: str | None, hgvs_c: str | None) -> bool:
+        """True if the variant's MANE c. position is one where the VCEP bars BP4
+        (PTEN: variants that may impact the intron 1 donor/acceptor)."""
+        rules = self._bp4_exclude_c.get(gene or "")
+        if not rules or not hgvs_c:
+            return False
+        pos = _c_position(hgvs_c)
+        if pos is None:
+            return False
+        base, offset = pos
+        for kind, a, b in rules:
+            if kind == "+" and offset > 0 and base == a:
+                return True
+            if kind == "-" and offset < 0 and base == a:
+                return True
+            if kind == "range" and offset == 0 and a <= base <= b:
+                return True
+        return False
 
     def bp7_splice_cutoff(self, gene: str | None) -> float | None:
         """Per-gene SpliceAI no-impact cutoff for the BP7 splice gate, or
@@ -236,4 +282,35 @@ def _parse_ranges(raw: str) -> list[tuple[int, int]]:
             out.append((int(a), int(b)))
         except ValueError:
             continue
+    return out
+
+
+_C_POS_RE = re.compile(r"c\.(\d+)([+-]\d+)?")
+
+
+def _c_position(hgvs_c: str) -> tuple[int, int] | None:
+    """(base, intronic offset) of the first position of a MANE c. change:
+    'c.79+7A>G' -> (79, 7); 'c.80-3C>T' -> (80, -3); 'c.78C>T' -> (78, 0).
+    None for UTR ('c.-12', 'c.*5') or unparsable changes."""
+    h = hgvs_c.split(":", 1)[1] if ":" in hgvs_c else hgvs_c
+    m = _C_POS_RE.match(h.strip())
+    if not m:
+        return None
+    return int(m.group(1)), int(m.group(2) or 0)
+
+
+def _parse_c_positions(raw: str) -> list[tuple[str, int, int]]:
+    """Parse bp4_exclude_c tokens: 'c.N+' (intronic, donor side of base N),
+    'c.N-' (intronic, acceptor side of base N), 'c.A_B' (exonic bases A..B)."""
+    out: list[tuple[str, int, int]] = []
+    for tok in raw.split(","):
+        tok = tok.strip()
+        m = re.fullmatch(r"c\.(\d+)([+-])", tok)
+        if m:
+            out.append((m.group(2), int(m.group(1)), int(m.group(1))))
+            continue
+        m = re.fullmatch(r"c\.(\d+)(?:_(\d+))?", tok)
+        if m:
+            a = int(m.group(1))
+            out.append(("range", a, int(m.group(2) or a)))
     return out

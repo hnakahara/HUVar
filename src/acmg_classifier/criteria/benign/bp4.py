@@ -1,5 +1,6 @@
 """BP4 -- computational evidence suggesting no impact (Bergquist 2024 thresholds)."""
 from __future__ import annotations
+import re
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
@@ -100,6 +101,16 @@ def _squirls_bp4(score: float) -> CriterionStrength | None:
 #     return None
 
 
+_UTR5_INTRON_RE = re.compile(r"c\.-\d+[+-]\d+")
+
+
+def _bare_c(hgvs_c: str | None) -> str:
+    """'NM_x:c.-32-13T>G' -> 'c.-32-13T>G' ("" when absent)."""
+    if not hgvs_c:
+        return ""
+    return (hgvs_c.split(":", 1)[1] if ":" in hgvs_c else hgvs_c).strip()
+
+
 class BP4Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
@@ -145,12 +156,45 @@ class BP4Evaluator(CriterionEvaluator):
         if pc is None:
             return CriteriaResult.not_met(ACMGCriterion.BP4, "No consequence")
 
+        # Per-gene VCEP BP4 scope (bp4_scope / bp4_exclude_c in disease_prevalence.tsv).
+        gene = pc.gene_symbol
+        scope = self._bp_spec.bp4_scope(gene)
+        if scope == "not_applicable":
+            return CriteriaResult.not_met(ACMGCriterion.BP4, f"{gene}: BP4 not applicable per VCEP")
+        if self._bp_spec.bp4_excluded_position(gene, pc.hgvs_c):
+            return CriteriaResult.not_met(
+                ACMGCriterion.BP4,
+                f"{gene}: BP4 not applied at {pc.hgvs_c} per VCEP (may impact a splice site the VCEP excludes)",
+            )
+
         if pc.consequence == ConsequenceType.MISSENSE:
+            if scope == "splice_only":
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BP4,
+                    f"{gene}: protein-based predictors not used; BP4 not applicable to missense per VCEP",
+                )
             sp = annotation.splice
+            # Gene-specific splice requirement for a missense BP4 (GP9: SpliceAI
+            # = 0; RUNX1: <= 0.20). A missing splice prediction cannot satisfy it.
+            ms_max = self._bp_spec.bp4_missense_splice_max(gene)
+            if ms_max is not None:
+                if not (sp and sp.is_available and sp.tool in ("spliceai", "openspliceai")
+                        and sp.max_delta is not None):
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.BP4,
+                        f"{gene}: VCEP requires splice prediction <= {ms_max:g} for missense BP4 "
+                        "(no splice prediction available)",
+                    )
+                if sp.max_delta > ms_max:
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.BP4,
+                        f"{gene}: splice max_delta={sp.max_delta:.3f} > {ms_max:g} "
+                        "(VCEP missense BP4 requirement)",
+                    )
             # A missense with predicted splice impact (SpliceAI ≥ 0.20)
             # cannot be claimed as benign by computation alone — the splice
             # mechanism overrides the protein-level prediction.
-            if sp and sp.is_available and sp.tool in ("spliceai", "openspliceai") and sp.max_delta is not None:
+            elif sp and sp.is_available and sp.tool in ("spliceai", "openspliceai") and sp.max_delta is not None:
                 if sp.max_delta >= 0.20:
                     tool_label = "SpliceAI" if sp.tool == "spliceai" else "OpenSpliceAI"
                     return CriteriaResult.not_met(
@@ -224,6 +268,14 @@ class BP4Evaluator(CriterionEvaluator):
             ConsequenceType.INTRON,
             ConsequenceType.SYNONYMOUS,
         ):
+            if scope == "missense_only":
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BP4, f"{gene}: BP4 applies to missense variants only per VCEP",
+                )
+            if scope == "no_synonymous" and pc.consequence == ConsequenceType.SYNONYMOUS:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BP4, f"{gene}: BP4 not applied to synonymous variants per VCEP",
+                )
             # Gene auxiliary CADD path for synonymous (e.g. ABCA4, BMPR2). Only a
             # *met* outcome short-circuits — a non-met must not suppress the
             # splice-based BP4 below, so we fall through otherwise.
@@ -233,6 +285,16 @@ class BP4Evaluator(CriterionEvaluator):
                 if outcome is not None and outcome[0] is not None:
                     return CriteriaResult.met(ACMGCriterion.BP4, outcome[0], outcome[1])
 
+            # Introns 5' of the coding start (5'UTR introns, c.-N+M / c.-N-M):
+            # splice predictors are not reliable enough here to support a benign
+            # call (e.g. GAA c.-32-13T>G, a common pathogenic splice variant, has
+            # a low SpliceAI score), so splice-based BP4 is not applied (all genes).
+            if _UTR5_INTRON_RE.match(_bare_c(pc.hgvs_c)):
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BP4,
+                    f"{pc.hgvs_c}: intron 5' of the coding start (5'UTR intron) — "
+                    "splice-prediction BP4 not applied",
+                )
             sp = annotation.splice
             # No splice predictor (e.g. default --splice-tool none) → say so
             # explicitly rather than implying a score was computed and rejected.
@@ -260,9 +322,11 @@ class BP4Evaluator(CriterionEvaluator):
                 return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score unavailable")
 
             if strength:
+                note = (" [VCEP requires >=3 splice predictors in agreement; only one available]"
+                        if scope == "splice_only" else "")
                 return CriteriaResult.met(
                     ACMGCriterion.BP4, strength,
-                    f"{score_str} ({strength.value})",
+                    f"{score_str} ({strength.value}){note}",
                 )
             return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score not in benign range")
 
