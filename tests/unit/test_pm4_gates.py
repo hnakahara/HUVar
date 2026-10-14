@@ -188,11 +188,22 @@ class TestPM4Exclusions:
         reg._apply_pm4_exclusions(results, _ann("FBN1", ConsequenceType.INFRAME_DELETION))
         assert not results[0].suppressed
 
-    def test_non_listed_gene_untouched(self, tmp_path):
+    def test_non_listed_gene_pvs1_still_excludes_pm4(self, tmp_path):
+        # ClinGen SVI PVS1 recommendation: PM4 is never combined with PVS1,
+        # also for genes without a VCEP exclusion.
         reg = self._registry(tmp_path)
         results = [
             CriteriaResult.met(ACMGCriterion.PM4),
             CriteriaResult.met(ACMGCriterion.PVS1),
+        ]
+        reg._apply_pm4_exclusions(results, _ann("RPE65", ConsequenceType.INFRAME_DELETION))
+        assert results[0].suppressed
+
+    def test_non_listed_gene_pp3_untouched(self, tmp_path):
+        reg = self._registry(tmp_path)
+        results = [
+            CriteriaResult.met(ACMGCriterion.PM4),
+            CriteriaResult.met(ACMGCriterion.PP3),
         ]
         reg._apply_pm4_exclusions(results, _ann("RPE65", ConsequenceType.INFRAME_DELETION))
         assert not results[0].suppressed

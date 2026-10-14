@@ -843,6 +843,35 @@ def query_pathogenic_null_count(
     return sum(1 for hc, hp in rows if _is_null_change(hc, hp))
 
 
+@lru_cache(maxsize=8192)
+def query_pathogenic_null_stats(
+    db_path: Path,
+    gene_symbol: Optional[str],
+    min_stars: int = 1,
+) -> tuple[int, int]:
+    """``(P/LP null variants, all P/LP variants)`` reported in ClinVar for a gene
+    (>= ``min_stars``). PVS1's LoF-mechanism gate uses the proportion of null
+    variants among the gene's P/LP variants (see ``lof_mechanism_reason``)."""
+    if not db_path.exists() or not gene_symbol:
+        return 0, 0
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT hgvs_c, hgvs_p
+            FROM variants
+            WHERE gene_symbol = ?
+              AND star_rating >= ?
+              AND clinical_significance IN (?,?,?)
+            """,
+            (gene_symbol, min_stars, *_PP2_PATH),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="pvs1_null_stats", error=str(exc))
+        return 0, 0
+    return sum(1 for hc, hp in rows if _is_null_change(hc, hp)), len(rows)
+
+
 _TRUNC_P_RE = re.compile(r"(Ter|fs|\*)")
 _CANON_SPLICE_RE = re.compile(r"c\.[-*]?\d+[+-][12](?!\d)")
 

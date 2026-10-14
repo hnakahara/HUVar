@@ -1,5 +1,6 @@
 """PVS1 — null variant in gene where LoF is disease mechanism (ClinGen 2019 decision tree)."""
 from __future__ import annotations
+from pathlib import Path
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
@@ -108,4 +109,44 @@ class PVS1Evaluator(CriterionEvaluator):
         )
         if strength == CriterionStrength.NOT_MET:
             return CriteriaResult.not_met(ACMGCriterion.PVS1, evidence)
+        strength, evidence = self._gene_validity_downgrade(pc.gene_symbol, strength, evidence)
+        if strength == CriterionStrength.NOT_MET:
+            return CriteriaResult.not_met(ACMGCriterion.PVS1, evidence)
         return CriteriaResult.met(ACMGCriterion.PVS1, strength, evidence)
+
+    def _gene_validity_downgrade(
+        self, gene: str | None, strength: CriterionStrength, evidence: str,
+    ) -> tuple[CriterionStrength, str]:
+        """ClinGen SVI PVS1 recommendation (Abou Tayoun et al. 2018, Table 1): the
+        decision tree applies at full strength only to genes with a Definitive or
+        Strong gene-disease relationship. For other genes without a VCEP
+        specification (ClinGen gene-disease validity Moderate or weaker, or not
+        curated), the final strength is decreased by two levels (Very Strong ->
+        Moderate, Strong -> Supporting; Moderate / Supporting -> not applied).
+        The one-level option of Table 1 needs a null mouse model, which HUVar
+        does not evaluate. Genes with a VCEP specification follow the VCEP."""
+        if not getattr(self._cfg, "pvs1_gdv_downgrade", True) is True or not gene:
+            return strength, evidence
+        from acmg_classifier.classification.gene_validity import _vcep_genes
+        if gene in _vcep_genes(getattr(self._cfg, "disease_prevalence_tsv", None)):
+            return strength, evidence
+        path = getattr(self._cfg, "clingen_gene_validity_csv", None)
+        if not isinstance(path, Path) or not path.exists():
+            return strength, evidence
+        from acmg_classifier.local_db.clingen_gene_db import load_gene_validity
+        classes = load_gene_validity(path).get(gene, [])
+        if any(c in ("definitive", "strong") for c in classes):
+            return strength, evidence
+        gdv = ("ClinGen gene-disease validity " + "/".join(sorted(set(classes)))
+               if classes else "no ClinGen gene-disease validity curation")
+        new = _LEVEL_DOWN2.get(strength, CriterionStrength.NOT_MET)
+        note = (f"{evidence}; decreased two levels from {strength.value} ({gdv}; "
+                "full strength requires a Definitive/Strong gene-disease relationship, "
+                "ClinGen SVI PVS1 Table 1)")
+        return new, note
+
+
+_LEVEL_DOWN2 = {
+    CriterionStrength.VERY_STRONG: CriterionStrength.MODERATE,
+    CriterionStrength.STRONG: CriterionStrength.SUPPORTING,
+}

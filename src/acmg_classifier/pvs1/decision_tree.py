@@ -22,6 +22,16 @@ from acmg_classifier.pvs1.transcript_evaluator import (
     lof_mechanism_reason,
 )
 
+def _lof_thresholds(cfg) -> dict:
+    """Config.pvs1_min_plp / pvs1_min_null_fraction (defaults when unset)."""
+    from acmg_classifier.pvs1.transcript_evaluator import MIN_NULL_FRACTION, MIN_PLP
+    mp = getattr(cfg, "pvs1_min_plp", MIN_PLP)
+    mf = getattr(cfg, "pvs1_min_null_fraction", MIN_NULL_FRACTION)
+    return {"min_plp": mp if isinstance(mp, int) and not isinstance(mp, bool) else MIN_PLP,
+            "min_null_fraction": float(mf) if isinstance(mf, (int, float))
+            and not isinstance(mf, bool) else MIN_NULL_FRACTION}
+
+
 def evaluate_pvs1(
     variant: VariantRecord,
     annotation: AnnotationData,
@@ -34,7 +44,7 @@ def evaluate_pvs1(
     ``lof_established`` overrides the LoF-mechanism question: a VCEP that
     explicitly applies PVS1 has, by definition, established LoF as the disease
     mechanism, so pass ``True`` to skip the ClinGen HI / ClinVar check.
-    ``None`` (default) uses ClinGen HI score 3 or >= 3 ClinVar P/LP nulls.
+    ``None`` (default) uses ClinGen HI score 3 or >= 20% null among >= 5 ClinVar P/LP variants.
 
     Returns (strength, evidence_string).
     strength == NOT_MET means PVS1 should not be applied.
@@ -50,17 +60,19 @@ def evaluate_pvs1(
     # "Is LoF a known disease mechanism?" — the first node of the ClinGen PVS1
     # decision tree. Established when (i) the VCEP explicitly applies PVS1
     # (lof_established=True), (ii) the gene has a ClinGen Dosage Sensitivity
-    # haploinsufficiency score of 3, or (iii) ClinVar reports >= 3 P/LP null
+    # haploinsufficiency score of 3, or (iii) null variants make up >= 20% of
+    # >= 5 ClinVar P/LP variants (was: >= 3 P/LP null
     # variants. gnomAD LOEUF is reported for reference only. When none holds,
     # PVS1 is not applied.
     if lof_established:
         lof_mechanism, lof_note = True, "VCEP applies PVS1 (LoF established)"
     else:
-        from acmg_classifier.local_db.clinvar_sqlite import query_pathogenic_null_count
+        from acmg_classifier.local_db.clinvar_sqlite import query_pathogenic_null_stats
         from acmg_classifier.local_db.clingen_gene_db import hi_score
-        plp_null = query_pathogenic_null_count(cfg.clinvar_sqlite, pc.gene_symbol)
+        plp_null, plp_total = query_pathogenic_null_stats(cfg.clinvar_sqlite, pc.gene_symbol)
         hi = hi_score(getattr(cfg, "clingen_dosage_tsv", None), pc.gene_symbol)
-        lof_mechanism, lof_note = lof_mechanism_reason(loeuf, plp_null, hi)
+        lof_mechanism, lof_note = lof_mechanism_reason(
+            loeuf, plp_null, hi, plp_total, **_lof_thresholds(cfg))
     if not lof_mechanism:
         return CriterionStrength.NOT_MET, lof_note
 

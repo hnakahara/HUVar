@@ -10,9 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed (Genome Medicine revision)
 
 - **PVS1**: applied only when LoF is an established mechanism (VCEP, ClinGen
-  haploinsufficiency score 3, or ≥3 ClinVar P/LP null variants); LOEUF is shown
-  for reference only. NMD is predicted from the PTC position and the MANE v1.5
+  haploinsufficiency score 3, or null variants ≥20% of the gene's ≥5 ClinVar
+  P/LP variants — `ACMG_PVS1_MIN_NULL_FRACTION` / `ACMG_PVS1_MIN_PLP`; replaces
+  the earlier ≥3-null count, selected against the VCEP PVS1 decisions and HI
+  scores, Reviewer 2); LOEUF is shown for reference only. NMD is predicted from the PTC position and the MANE v1.5
   exon structure (50-nt rule). The ClinVar-count Moderate caps were removed.
+- **PVS1 and gene-disease validity** (ClinGen SVI PVS1 Table 1): for genes
+  without a VCEP specification, PVS1 is decreased by two levels (Very Strong →
+  Moderate) unless the ClinGen gene-disease validity is Definitive or Strong
+  (Moderate, weaker or not curated); `ACMG_PVS1_GDV_DOWNGRADE`.
+- **PM4 not with PVS1** at any strength for all genes (SVI PVS1 recommendation).
 - **Gene-disease validity**: P/LP capped at VUS when all ClinGen curations for
   the gene are Limited or weaker; uncurated genes are flagged.
 - **PS3** text mining counts distinct cited PMIDs and is capped at Supporting;

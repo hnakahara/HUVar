@@ -35,6 +35,17 @@ class Config(BaseSettings):
     # VCEP-classified comparators (eRepo / expert panel) are unaffected.
     pm5_min_stars: int = 2
     ps1_min_stars: int = 2
+    # PVS1 LoF-mechanism question, ClinVar route (genes without a VCEP PVS1
+    # decision or a ClinGen HI score of 3): null variants >= this fraction of the
+    # gene's ClinVar P/LP variants (>=1 star), with >= pvs1_min_plp P/LP variants.
+    # Env: ACMG_PVS1_MIN_PLP / ACMG_PVS1_MIN_NULL_FRACTION.
+    pvs1_min_plp: int = 5
+    pvs1_min_null_fraction: float = 0.20
+    # PVS1 at full strength only for genes with a Definitive/Strong ClinGen
+    # gene-disease validity (SVI PVS1, Table 1); Moderate / weaker / not curated
+    # genes without a VCEP: two levels down. Env: ACMG_PVS1_GDV_DOWNGRADE=false
+    # to disable.
+    pvs1_gdv_downgrade: bool = True
     # BS2 (observed in a healthy individual) gnomAD count thresholds, by the
     # gene's inheritance mode. Recessive counts homozygotes, X-linked counts
     # hemizygotes, dominant counts heterozygous carriers (AC - nhomalt). Defaults

@@ -142,9 +142,12 @@ class TestGeneLoFMechanism:
     def test_hi_score_below_3_does_not(self):
         assert gene_has_lof_mechanism(None, gnomad_loeuf=None, hi_score="2") is False
 
-    def test_three_clinvar_nulls_establish_lof(self):
-        assert gene_has_lof_mechanism(None, clinvar_plp_null=3) is True
-        assert gene_has_lof_mechanism(None, clinvar_plp_null=2) is False
+    def test_clinvar_null_fraction_establishes_lof(self):
+        # >= 20% null among >= 5 P/LP variants
+        assert gene_has_lof_mechanism(None, clinvar_plp_null=1, clinvar_plp_total=5) is True
+        assert gene_has_lof_mechanism(None, clinvar_plp_null=3, clinvar_plp_total=4) is False  # < 5 P/LP
+        assert gene_has_lof_mechanism(None, clinvar_plp_null=19, clinvar_plp_total=100) is False  # 19%
+        assert gene_has_lof_mechanism(None, clinvar_plp_null=20, clinvar_plp_total=100) is True
 
     def test_lof_tolerant_high_loeuf(self):
         assert gene_has_lof_mechanism(None, gnomad_loeuf=0.80) is False
@@ -169,8 +172,8 @@ class TestPVS1DecisionTree:
         # Bypass the ClinGen SVI strength cap by simulating a gene with
         # established LoF mechanism (>= _MIN_PLP_NULL_FOR_FULL_PVS1 P/LP nulls).
         with patch(
-            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
-            return_value=5,
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_stats",
+            return_value=(5, 10),
         ), patch(
             "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_missense_count",
             return_value=0,
@@ -185,8 +188,8 @@ class TestPVS1DecisionTree:
         ann = AnnotationData(consequences=[c])
         v = VariantRecord(chrom="chr17", pos=100, ref="G", alt="A", assembly=Assembly.GRCH38)
         with patch(
-            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
-            return_value=5,
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_stats",
+            return_value=(5, 10),
         ):
             strength, evidence = evaluate_pvs1(v, ann, self.cfg)
         assert strength == CriterionStrength.MODERATE
@@ -210,8 +213,8 @@ class TestPVS1DecisionTree:
         ann = AnnotationData(consequences=[c], gnomad=GnomADData(loeuf=0.10))
         v = VariantRecord(chrom="chr17", pos=100, ref="G", alt="A", assembly=Assembly.GRCH38)
         with patch(
-            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
-            return_value=2,
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_stats",
+            return_value=(2, 40),
         ):
             strength, _ = evaluate_pvs1(v, ann, self.cfg)
         assert strength == CriterionStrength.NOT_MET
@@ -240,11 +243,34 @@ class TestPVS1DecisionTree:
         v = VariantRecord(chrom="chr17", pos=100, ref="GA", alt="G", assembly=Assembly.GRCH38)
         # Established LoF mechanism (>= P/LP nulls) so the SVI cap does not apply.
         with patch(
-            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_count",
-            return_value=5,
+            "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_null_stats",
+            return_value=(5, 10),
         ), patch(
             "acmg_classifier.local_db.clinvar_sqlite.query_pathogenic_missense_count",
             return_value=0,
         ):
             strength, evidence = evaluate_pvs1(v, ann, self.cfg)
         assert strength == CriterionStrength.STRONG
+
+
+def test_lof_reason_thresholds_and_text():
+    from acmg_classifier.pvs1.transcript_evaluator import lof_mechanism_reason
+    ok, txt = lof_mechanism_reason(None, 3, None, 10)
+    assert ok and "3/10" in txt and ">= 20%" in txt
+    ok, txt = lof_mechanism_reason(None, 3, None, 4)
+    assert not ok and "fewer than 5 P/LP" in txt
+    ok, txt = lof_mechanism_reason(None, 46, None, 1465)   # missense-dominant gene (MYH7-like)
+    assert not ok and "< 20% null" in txt
+    assert lof_mechanism_reason(None, 3, None, 20, min_plp=5, min_null_fraction=0.15)[0]
+
+
+def test_lof_thresholds_from_config():
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+    from acmg_classifier.config import Config
+    from acmg_classifier.pvs1.decision_tree import _lof_thresholds
+    c = Config()
+    assert (c.pvs1_min_plp, c.pvs1_min_null_fraction) == (5, 0.20)
+    assert _lof_thresholds(MagicMock()) == {"min_plp": 5, "min_null_fraction": 0.20}
+    assert _lof_thresholds(SimpleNamespace(pvs1_min_plp=10, pvs1_min_null_fraction=0.1)) == {
+        "min_plp": 10, "min_null_fraction": 0.1}

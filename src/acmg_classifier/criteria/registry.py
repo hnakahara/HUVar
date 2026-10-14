@@ -296,10 +296,19 @@ class CriteriaRegistry:
         self, results: list[CriteriaResult], annotation: AnnotationData
     ) -> None:
         """Suppress PM4 when it is mutually exclusive with another triggered
-        criterion (FBN1: PVS1; KCNQ1/CTLA4/PIK3R1: PVS1 and PP3 — avoiding
-        double-counting the same in-silico / loss-of-function evidence)."""
+        criterion. For all genes, PM4 is not applied together with PVS1 at any
+        strength (ClinGen SVI PVS1 recommendation, Abou Tayoun et al. 2018: avoids
+        double-counting PVS1_Moderate and PM4). Gene-specific exclusions from the
+        VCEP specifications (KCNQ1/CTLA4/PIK3R1: also PP3) are applied as well."""
         pc = annotation.primary_consequence
         gene = pc.gene_symbol if pc else None
+        if any(r.criterion == ACMGCriterion.PVS1 and r.triggered and not r.suppressed
+               for r in results):
+            for r in results:
+                if r.criterion == ACMGCriterion.PM4 and r.triggered and not r.suppressed:
+                    r.suppressed = True
+                    r.evidence = (r.evidence + " [suppressed: PM4 not with PVS1 "
+                                  "(ClinGen SVI PVS1 recommendation)]").strip()
         excluded = self._pm4_regions.excludes(gene)
         if not excluded:
             return
