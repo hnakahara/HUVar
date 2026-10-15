@@ -715,8 +715,10 @@ Bayesian thresholds:
 ```
 
 The benign side is asymmetric (prior P = 0.10): less evidence is needed to reach
-benign, per Tavtigian 2020. `BA1` triggers stand-alone Benign regardless of the
-sum.
+benign, per Tavtigian 2020. `BA1` is scored like a Very Strong benign criterion
+(−8) and the class follows the final sum (BA1 alone → Benign; BA1 with strong
+pathogenic evidence → VUS or higher). The 2015 classifier keeps BA1 as stand-alone
+Benign.
 
 ### Annotation snapshot
 
@@ -771,7 +773,14 @@ reconciled.
 
 ### ACMG 2015 (rule-based)
 
-Implements Table 5 of Richards et al. *Genet Med* 2015 with the following
+Implements Table 5 of Richards et al. *Genet Med* 2015 as written:
+Benign = ≥2 Strong benign; Likely benign = 1 Strong + 1 Supporting benign or
+≥2 Supporting benign (a single Strong benign criterion alone is VUS); when both
+a pathogenic and a benign rule are met, the evidence is contradictory and the
+variant is VUS. BA1 always gives Benign (also with pathogenic evidence; the VCEP
+BA1 exception alleles are handled in BA1 itself). Criteria are counted at the
+strength at which they were applied (e.g. PM2 at Supporting); benign Moderate
+counts as Supporting and the +3 point tier as Moderate. With the following
 ClinGen SVI updates:
 
 - **PM2 downgraded to Supporting** (SVI recommendation, 2020)

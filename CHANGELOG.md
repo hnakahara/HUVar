@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **2015 classifier = Richards et al. 2015 Table 5 as written**: 1 BS + 1 BP is now
+  Likely benign (was Benign); a single BS alone is VUS (was Likely benign); when a
+  pathogenic and a benign rule are both met the result is VUS (pathogenic rules
+  previously took precedence). BA1 still always gives Benign.
+- **Bayesian classifier, BA1**: BA1 no longer overrides the point sum; it contributes
+  −8 points and the class follows the final score (BA1 alone is still Benign).
 - **BA1/BS1 variant exceptions**: new `ba1_exclude` column, and `bs1_exclude` now
   accepts MANE `c.` changes as well as `p.` changes. The LGMD VCEP "BS1 exception"
   alleles (DYSF c.2697+1G>A = NM_003494.3:c.2643+1G>A, ANO5 c.191dup, CAPN3

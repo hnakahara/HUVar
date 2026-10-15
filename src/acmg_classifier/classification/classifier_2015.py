@@ -126,39 +126,41 @@ class Classifier2015:
         rule_str = " + ".join(triggered_names) if triggered_names else "none"
 
         # BA1 is "stand-alone" benign — a single trigger ends classification
-        # before any pathogenic combination is considered. Per ACMG 2015 BA1
-        # always wins over otherwise-pathogenic evidence (it represents
-        # population-level frequency that excludes Mendelian disease).
+        # before any pathogenic combination is considered (HUVar policy: BA1
+        # always gives Benign, also when pathogenic evidence is present; the
+        # VCEP BA1 exception alleles are handled in the BA1 criterion itself).
         if ba:
             return Pathogenicity.BENIGN, rule_str
 
-        # --- Pathogenic ---
-        if (
+        # Richards et al. 2015, Table 5.
+        pathogenic = (
             (pvs >= 1 and (ps >= 1 or pm >= 2 or (pm >= 1 and pp >= 1) or pp >= 2))
             or (ps >= 2)
             or (ps >= 1 and (pm >= 3 or (pm >= 2 and pp >= 2) or (pm >= 1 and pp >= 4)))
-        ):
-            return Pathogenicity.PATHOGENIC, rule_str
-
-        # --- Likely Pathogenic ---
-        if (
+        )
+        likely_pathogenic = (
             (pvs >= 1 and pm >= 1)
             or (ps >= 1 and pm >= 1)
             or (ps >= 1 and pp >= 2)
             or (pm >= 3)
             or (pm >= 2 and pp >= 2)
             or (pm >= 1 and pp >= 4)
-        ):
+        )
+        benign = bs >= 2                                  # (BA1 handled above)
+        likely_benign = (bs >= 1 and bp >= 1) or bp >= 2
+
+        # "If criteria are contradictory, the variant should be classified as
+        # an uncertain significance" (Table 5 footnote): both a pathogenic and
+        # a benign rule are met -> VUS.
+        if (pathogenic or likely_pathogenic) and (benign or likely_benign):
+            return Pathogenicity.VUS, rule_str
+        if pathogenic:
+            return Pathogenicity.PATHOGENIC, rule_str
+        if likely_pathogenic:
             return Pathogenicity.LIKELY_PATHOGENIC, rule_str
-
-        # --- Benign ---
-        if bs >= 2 or (bs >= 1 and bp >= 1):
-            # not quite Benign unless 2×Strong benign or 1×Strong + supporting
-            # ACMG table says: ≥2 Strong OR (1 Strong + 1 Supporting)
+        if benign:
             return Pathogenicity.BENIGN, rule_str
-
-        # --- Likely Benign ---
-        if bs >= 1 or bp >= 2:
+        if likely_benign:
             return Pathogenicity.LIKELY_BENIGN, rule_str
-
+        # A single BS (or a single BP) on its own meets no Table 5 rule.
         return Pathogenicity.VUS, rule_str

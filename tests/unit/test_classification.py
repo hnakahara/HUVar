@@ -79,7 +79,26 @@ class TestClassifier2015:
     def test_bs1_bp4_likely_benign(self):
         results = [_bs1(), _bp4()]
         path, _ = clf_2015.classify(results)
-        assert path == Pathogenicity.BENIGN  # 1 Strong + 1 Supporting = Benign (ACMG 2015 Table 5)
+        assert path == Pathogenicity.LIKELY_BENIGN  # 1 Strong + 1 Supporting = Likely benign (Table 5)
+
+    def test_two_strong_benign(self):
+        bs2 = CriteriaResult.met(ACMGCriterion.BS2)
+        path, _ = clf_2015.classify([_bs1(), bs2])
+        assert path == Pathogenicity.BENIGN
+
+    def test_single_bs_is_vus(self):
+        path, _ = clf_2015.classify([_bs1()])
+        assert path == Pathogenicity.VUS  # no Table 5 rule for one BS alone
+
+    def test_contradictory_evidence_is_vus(self):
+        ps2 = CriteriaResult.met(ACMGCriterion.PS2)
+        bp7 = CriteriaResult.met(ACMGCriterion.BP7)
+        path, _ = clf_2015.classify([_ps1(), ps2, _bp4(), bp7])
+        assert path == Pathogenicity.VUS  # Pathogenic + Likely benign rules both met
+
+    def test_ba1_overrides_pathogenic(self):
+        path, _ = clf_2015.classify([_pvs1(), _ps1(), _ba1()])
+        assert path == Pathogenicity.BENIGN
 
 
 class TestClassifierBayesian:
@@ -110,9 +129,15 @@ class TestClassifierBayesian:
         assert score == -8
         assert path == Pathogenicity.BENIGN
 
+    def test_ba1_is_scored_not_overriding(self):
+        # BA1 (-8) + PVS1 (+8) + PS1 (+4) = +4 -> VUS by the point thresholds
+        score, path = clf_bay.classify([_ba1(), _pvs1(), _ps1()])
+        assert score == 4
+        assert path == Pathogenicity.VUS
+
     # Benign-side thresholds (Tavtigian 2020, asymmetric): VUS 0..5,
     # Likely Benign -1..-6, Benign <= -7. Exercised via non-BA1 criteria so the
-    # point-sum threshold logic runs (BA1 is stand-alone benign).
+    # point-sum threshold logic runs.
     def test_supporting_benign_minus1_is_likely_benign(self):
         score, path = clf_bay.classify([_bp4()])           # -1
         assert score == -1
