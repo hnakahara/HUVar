@@ -179,6 +179,7 @@ class CriteriaRegistry:
         # Gene-specific PM5 exclusions (RUNX1: not with PM1; DICER1: not with
         # PM1/PS1). Suppress PM5 when an excluded criterion fired for the gene.
         self._apply_pm5_exclusions(results, annotation)
+        self._apply_pm5_ptc_requires_pvs1(results, annotation)
         self._apply_pm4_exclusions(results, annotation)
 
         # BA1 / BS1 / PM2 are mutually exclusive frequency criteria — keep only
@@ -291,6 +292,26 @@ class CriteriaRegistry:
             if r.criterion == ACMGCriterion.PM5 and r.triggered and not r.suppressed:
                 r.suppressed = True
                 r.evidence = (r.evidence + f" [suppressed: PM5 not with {with_}]").strip()
+
+    def _apply_pm5_ptc_requires_pvs1(
+        self, results: list[CriteriaResult], annotation: AnnotationData
+    ) -> None:
+        """ENIGMA (BRCA1/BRCA2): PM5_PTC justifies additional weight only for PTC
+        variants annotated as PVS1. Suppress a PTC-based PM5 when PVS1 is not met
+        (at any strength) for the variant."""
+        from acmg_classifier.criteria.pm5_ptc import is_ptc_variant, requires_pvs1
+        pc = annotation.primary_consequence
+        if pc is None or not requires_pvs1(pc.gene_symbol) or not is_ptc_variant(pc):
+            return
+        if any(r.criterion == ACMGCriterion.PVS1 and r.triggered and not r.suppressed
+               for r in results):
+            return
+        for r in results:
+            if (r.criterion == ACMGCriterion.PM5 and r.triggered and not r.suppressed
+                    and (r.evidence or "").startswith("PM5_PTC")):
+                r.suppressed = True
+                r.evidence = (r.evidence + " [suppressed: PM5_PTC requires PVS1 "
+                              "(ENIGMA)]").strip()
 
     def _apply_pm4_exclusions(
         self, results: list[CriteriaResult], annotation: AnnotationData

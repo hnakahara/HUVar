@@ -200,6 +200,7 @@ def collect(cfg) -> dict[str, Any]:
         pvs1_min_plp=getattr(cfg, "pvs1_min_plp", None),
         pvs1_min_null_fraction=getattr(cfg, "pvs1_min_null_fraction", None),
         pvs1_gdv_downgrade=bool(getattr(cfg, "pvs1_gdv_downgrade", True) is True),
+        pm5_ptc=bool(getattr(cfg, "pm5_ptc", True) is True),
         pp2_min_path=getattr(cfg, "pp2_min_path", None),
         pp2_max_benign_frac=getattr(cfg, "pp2_max_benign_frac", None))
     put("insilico", missense=getattr(cfg.insilico_tool, "value", str(cfg.insilico_tool)),

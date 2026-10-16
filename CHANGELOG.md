@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PM5 for protein-truncating variants (PM5_PTC)** (`criteria/pm5_ptc.py`):
+  nonsense/frameshift variants receive PM5 where the VCEP specifies it —
+  RUNX1 (variant downstream of c.98 of NM_001754.4, SpliceAI ≤ 0.20, not with
+  PM1), CDH1 (predicted NMD, or PTC upstream of p.Glu836Ter — the most 3'
+  truncating variant the CDH1 VCEP classified Pathogenic in the eRepo), ATM (PTC upstream of p.Arg3047) and PALB2 (PTC
+  upstream of p.Tyr1183) at Supporting; BRCA1/BRCA2 by the exon containing the
+  termination codon, from ENIGMA Specifications Table 4 V1.2 (Strong / Moderate /
+  Supporting / not applicable, last-exon codon cutoffs p.1854 / p.3309), applied
+  only when PVS1 is met. The PTC is the new stop codon for frameshifts. Splice
+  variants (ATM/PALB2 need RNA evidence) and the SCID VCEP point system are not
+  automated. `ACMG_PM5_PTC=false` restores missense-only PM5.
 - **2015 classifier = Richards et al. 2015 Table 5 as written**: 1 BS + 1 BP is now
   Likely benign (was Benign); a single BS alone is VUS (was Likely benign); when a
   pathogenic and a benign rule are both met the result is VUS (pathogenic rules

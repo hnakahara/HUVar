@@ -46,6 +46,11 @@ class Config(BaseSettings):
     # genes without a VCEP: two levels down. Env: ACMG_PVS1_GDV_DOWNGRADE=false
     # to disable.
     pvs1_gdv_downgrade: bool = True
+    # PM5 for protein-truncating variants (PM5_PTC) as specified by the VCEPs:
+    # RUNX1 / CDH1 / ATM / PALB2 (Supporting, position rules) and BRCA1 / BRCA2
+    # (per-exon strength, ENIGMA Specifications Table 4; only with PVS1).
+    # Env: ACMG_PM5_PTC=false to restrict PM5 to missense variants.
+    pm5_ptc: bool = True
     # BS2 (observed in a healthy individual) gnomAD count thresholds, by the
     # gene's inheritance mode. Recessive counts homozygotes, X-linked counts
     # hemizygotes, dominant counts heterozygous carriers (AC - nhomalt). Defaults

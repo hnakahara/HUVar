@@ -41,6 +41,17 @@ class PM5Evaluator(CriterionEvaluator):
         # comparable codon-level interpretation, and synonymous changes by
         # definition do not change the amino acid.
         pc = annotation.primary_consequence
+        # PTC-based PM5 (nonsense / frameshift) for the VCEPs that specify it
+        # (RUNX1, CDH1, ATM, PALB2: Supporting; BRCA1/BRCA2: per-exon ENIGMA
+        # Table 4). See criteria/pm5_ptc.py. Disable with ACMG_PM5_PTC=false.
+        if pc is not None and getattr(self._cfg, "pm5_ptc", True) is True:
+            from acmg_classifier.criteria.pm5_ptc import evaluate_pm5_ptc
+            ptc = evaluate_pm5_ptc(pc, annotation)
+            if ptc is not None:
+                strength, evidence = ptc
+                if strength == CriterionStrength.NOT_MET:
+                    return CriteriaResult.not_met(ACMGCriterion.PM5, evidence)
+                return CriteriaResult.met(ACMGCriterion.PM5, strength=strength, evidence=evidence)
         if pc is None or pc.consequence != ConsequenceType.MISSENSE:
             return CriteriaResult.not_met(ACMGCriterion.PM5, "Not a missense variant")
 
