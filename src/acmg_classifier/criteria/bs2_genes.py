@@ -58,6 +58,7 @@ class BS2Applicability:
         self._tiers: dict[str, tuple[tuple[CriterionStrength, int], ...]] = {}
         self._female_only: set[str] = set()
         self._hom_only: set[str] = set()
+        self._xl_hom: set[str] = set()
         self._load(tsv_path)
 
     def _load(self, tsv_path: Path) -> None:
@@ -97,6 +98,10 @@ class BS2Applicability:
                 # heterozygous carriers do not count toward benign evidence.
                 if (row.get("bs2_hom_only") or "").strip() in ("1", "true", "yes"):
                     self._hom_only.add(gene)
+                # X-linked gene whose VCEP counts homozygous females as well as
+                # hemizygous males (MTM1: >=1 hemizygote or >=1 female homozygote).
+                if (row.get("bs2_xl_hom") or "").strip() in ("1", "true", "yes"):
+                    self._xl_hom.add(gene)
 
     @staticmethod
     def _parse_tiers(raw: str) -> tuple[tuple[CriterionStrength, int], ...]:
@@ -164,3 +169,10 @@ class BS2Applicability:
         if not gene:
             return False
         return gene in self._hom_only
+
+    def xl_hom(self, gene: str | None) -> bool:
+        """True if, for this X-linked gene, homozygous females (gnomAD nhomalt)
+        count toward BS2 in addition to hemizygous males (MTM1)."""
+        if not gene:
+            return False
+        return gene in self._xl_hom

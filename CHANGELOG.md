@@ -53,6 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   genes whose VCEP bars population data, BS2 comes from curated evidence or a
   ClinVar expert-panel (>=3-star) assertion. `ACMG_BS2_AD_MAX_LOEUF` (the
   interim LOEUF gate) was removed and is ignored.
+- **BS2 VCEP rules checked against the CSpec text**: ADA (≥3 homozygotes Strong,
+  ≥1 Supporting); ETHE1, POLG, SLC19A3, GAMT and SCN1B (≥1 homozygote, "observed
+  in a healthy individual"); MTM1 (≥1 hemizygous male or ≥1 homozygous female; new
+  `bs2_xl_hom` column); GALT (GALT activity confirmation) and COCH/KCNQ4 (internal
+  cohort) set to not applicable. 23 genes now use gnomAD-based BS2, all with
+  VCEP-stated thresholds.
 - **Input variant types** (Reviewer 1): symbolic CNV/SV alleles, breakends and
   `*` are skipped with the reason in `<output>.not_annotated.tsv`; `explain`
   rejects them; indels > 50 bp are classified with a `LARGE_INDEL` warning.

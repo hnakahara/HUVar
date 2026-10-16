@@ -56,3 +56,34 @@ def test_vcep_gene_still_uses_gnomad(tmp_path):
     ev = BS2Evaluator(_cfg(tmp_path))
     assert ev.evaluate(_V, _ann("VCEPGENE", ac=50, nhomalt=2)).triggered
     assert not ev.evaluate(_V, _ann("VCEPGENE", ac=50, nhomalt=1)).triggered
+
+
+def _cfg_rows(tmp_path: Path, rows: str) -> MagicMock:
+    cfg = _cfg(tmp_path)
+    cfg.disease_prevalence_tsv.write_text(
+        "gene_symbol\tbs2\tinheritance\tbs2_count\tbs2_strength\tbs2_female_only\tbs2_hom_only\tbs2_xl_hom\n"
+        + rows, encoding="utf-8")
+    return cfg
+
+
+def test_xl_female_homozygotes(tmp_path):
+    # MTM1: >=1 hemizygous male or >=1 homozygous female
+    ev = BS2Evaluator(_cfg_rows(tmp_path, "MTM1\tapplicable\tXL\t1\t\t\t\t1\n"
+                                         "OTHERXL\tapplicable\tXL\t1\t\t\t\t\n"))
+    assert ev.evaluate(_V, _ann("MTM1", ac=2, nhemi=1)).triggered
+    assert ev.evaluate(_V, _ann("MTM1", ac=2, nhomalt=1)).triggered
+    assert not ev.evaluate(_V, _ann("MTM1", ac=2)).triggered
+    # without the flag, female homozygotes do not count
+    assert not ev.evaluate(_V, _ann("OTHERXL", ac=2, nhomalt=1)).triggered
+
+
+def test_hom_only_count_one_and_tiers(tmp_path):
+    ev = BS2Evaluator(_cfg_rows(tmp_path, "ETHE1\tapplicable\t\t1\t\t\t1\t\n"
+                                         "SCN1B\tapplicable\tAD,AR\t1\t\t\t1\t\n"
+                                         "ADA\tapplicable\tAR\t\tStrong:3,Supporting:1\t\t1\t\n"))
+    assert ev.evaluate(_V, _ann("ETHE1", ac=2, nhomalt=1)).triggered
+    assert not ev.evaluate(_V, _ann("SCN1B", ac=50, nhomalt=0)).triggered   # carriers ignored
+    assert ev.evaluate(_V, _ann("SCN1B", ac=50, nhomalt=1)).triggered
+    from acmg_classifier.models.enums import CriterionStrength
+    assert ev.evaluate(_V, _ann("ADA", ac=4, nhomalt=1)).strength == CriterionStrength.SUPPORTING
+    assert ev.evaluate(_V, _ann("ADA", ac=8, nhomalt=3)).strength == CriterionStrength.STRONG

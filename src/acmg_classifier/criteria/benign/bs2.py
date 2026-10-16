@@ -139,6 +139,8 @@ class BS2Evaluator(CriterionEvaluator):
             return self._met(f"recessive: nhomalt={nhomalt} >= {hom_thr}")
         if "XL" in modes and nhemi >= hemi_thr:
             return self._met(f"X-linked: nhemi={nhemi} >= {hemi_thr}")
+        if "XL" in modes and self._vcep.xl_hom(gene) and nhomalt >= hom_thr:
+            return self._met(f"X-linked: female homozygotes nhomalt={nhomalt} >= {hom_thr}")
         if "AD" in modes:
             # Healthy heterozygous carriers argue against a dominant disorder only
             # when full penetrance at an early age is expected. HUVar cannot judge

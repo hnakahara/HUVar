@@ -40,7 +40,7 @@ COLUMNS = [
     "pm4", "pm4_supporting_max_aa", "pp2",
     "pp2_requires", "pm5_grantham", "pm5_excludes", "pm5_max", "pm5_lp",
     "pm5_min_count", "bs2",
-    "bs2_count", "bs2_strength", "bs2_female_only", "bs2_hom_only", "pvs1",
+    "bs2_count", "bs2_strength", "bs2_female_only", "bs2_hom_only", "bs2_xl_hom", "pvs1",
     "ps1", "ps1_splice", "ps1_max", "ps1_paralog_group", "ps1_paralog_strength",
     "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
@@ -572,6 +572,11 @@ _BS2_CLINICAL_CONFIRMATION = frozenset({
     "ACTA1", "DNM2", "NEB", "SCN1A", "SCN2A", "SCN3A", "SCN8A",
     "GATM", "HBB", "HBA2",
     "FOXG1", "TCF4", "APC",
+    # batch 3 (Genome Medicine revision, checked against the CSpec text):
+    # GALT (GN158) — BS2 only when the individual is confirmed unaffected by GALT
+    # activity levels; COCH / KCNQ4 (Hearing Loss GN005) — population-frequency
+    # BS2 requires an internal phenotyped cohort.
+    "GALT", "COCH", "KCNQ4",
     # NB: DCLRE1C (GN116) is NOT here — its SCID VCEP takes the homozygote count
     # "in gnomAD" (BS2_Strong >=3 / Supporting >=1 hom), so it is population-count
     # eligible; routed applicable with bs2_strength tiers.
@@ -599,6 +604,27 @@ _BS2_XLINKED_INTERNAL = frozenset({
     # ">=3 in gnomAD" (Strong) / ">=2 in gnomAD" (Supporting), so it is
     # gnomAD-eligible; routed applicable with bs2_strength tiers.
 })
+
+
+# Manually curated BS2 rules for genes whose CSpec BS2 text the parser does not
+# resolve into a count (checked against the CSpec text, Genome Medicine revision).
+# Keys: bs2_count / bs2_strength (count→strength tiers) / bs2_hom_only /
+# bs2_xl_hom (X-linked: female homozygotes count as well as male hemizygotes).
+#   ADA (SCID GN114)          — BS2_Strong >=3 homozygotes, BS2_Supporting >=1.
+#   ETHE1, POLG, SLC19A3 (Mitochondrial GN014), GAMT (CCDS GN026), SCN1B (Epilepsy
+#     Sodium Channel GN076) — "observed in a healthy individual", applied as
+#     recessive: >=1 homozygote.
+#   MTM1 (Congenital Myopathies GN149) — X-linked: >=1 hemizygous male or >=1
+#     homozygous female.
+_BS2_MANUAL = {
+    "ADA": {"bs2_count": "", "bs2_strength": "Strong:3,Supporting:1", "bs2_hom_only": "1"},
+    "ETHE1": {"bs2_count": "1", "bs2_hom_only": "1"},
+    "POLG": {"bs2_count": "1", "bs2_hom_only": "1"},
+    "SLC19A3": {"bs2_count": "1", "bs2_hom_only": "1"},
+    "GAMT": {"bs2_count": "1", "bs2_hom_only": "1"},
+    "SCN1B": {"bs2_count": "1", "bs2_hom_only": "1"},
+    "MTM1": {"bs2_count": "1", "bs2_xl_hom": "1"},
+}
 
 
 # BP7 genes whose VCEP declared evolutionary conservation NON-informative (so no
@@ -1836,6 +1862,7 @@ def parse_spec(path: str) -> list[dict]:
                 "bs2_strength": "",
                 "bs2_female_only": "",
                 "bs2_hom_only": "",
+                "bs2_xl_hom": "",
                 "pvs1": "",
                 "ps1": "",
                 "ps1_splice": "",
@@ -2204,6 +2231,9 @@ def resolve_rows(files: list[str], released_only: bool = False) -> dict[str, dic
         row["bs2_female_only"] = bchoice[3] if (_bs2_applic and bchoice) else ""
         row["bs2_hom_only"] = bchoice[4] if (_bs2_applic and bchoice) else ""
         row["bs2_strength"] = bchoice[5] if (_bs2_applic and bchoice) else ""
+        row["bs2_xl_hom"] = ""
+        if _bs2_applic and g in _BS2_MANUAL:
+            row.update(_BS2_MANUAL[g])
         pm4c = pm4_choice.get(g)
         row["pm4"] = pm4c[1] if pm4c else ""
         row["pm4_supporting_max_aa"] = (
@@ -2436,6 +2466,7 @@ _OVERRIDE_FIELDS = {
     "bs2_strength": "bs2_strength",
     "bs2_female_only": "bs2_female_only",
     "bs2_hom_only": "bs2_hom_only",
+    "bs2_xl_hom": "bs2_xl_hom",
     "pvs1": "pvs1",
     "ps1": "ps1",
     "ps1_splice": "ps1_splice",
