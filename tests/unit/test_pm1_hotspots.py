@@ -178,17 +178,13 @@ class TestPM1Evaluator:
         )
         assert not r.triggered and "missense variants only" in r.evidence
 
-    def test_uncurated_gene_heuristic_off_by_default(self, tmp_path):
-        r = PM1Evaluator(_cfg(tmp_path)).evaluate(_snv(), _ann("NOVCEP", 100))
-        assert not r.triggered and "heuristic disabled" in r.evidence
-
-    def test_uncurated_gene_uses_fallback_when_enabled(self, tmp_path):
-        # Opt-in: no curated rows + absent ClinVar DB -> heuristic runs and finds
-        # nothing, but crucially it reached the fallback.
+    def test_uncurated_gene_no_heuristic(self, tmp_path):
+        # Genes without a VCEP PM1 definition: PM1 from curated evidence only.
+        # The ClinVar hotspot heuristic was removed and cannot be re-enabled.
         cfg = _cfg(tmp_path)
-        cfg.pm1_heuristic = True
+        cfg.pm1_heuristic = True  # former opt-in flag: must have no effect
         r = PM1Evaluator(cfg).evaluate(_snv(), _ann("NOVCEP", 100))
-        assert not r.triggered and "hotspot cluster" in r.evidence
+        assert not r.triggered and "curated evidence only" in r.evidence
 
 
 class TestCuratedMultiGeneSpecs:

@@ -156,5 +156,6 @@ def test_ad_carrier_route_requires_vcep_applicable(tmp_path):
     ev = BS2Evaluator(cfg)
     assert not ev.evaluate(_snv(), _ann("ADLATE", ac=50, nhomalt=0)).triggered
     assert ev.evaluate(_snv(), _ann("ADOK", ac=50, nhomalt=0)).triggered
-    # recessive homozygote route is unaffected
-    assert ev.evaluate(_snv(), _ann("ARGENE", ac=50, nhomalt=2)).triggered
+    # genes without a VCEP BS2 decision get no gnomAD-based BS2 at all
+    # (homozygote route removed too; curated / expert-panel evidence only)
+    assert not ev.evaluate(_snv(), _ann("ARGENE", ac=50, nhomalt=2)).triggered

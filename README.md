@@ -109,7 +109,7 @@ on every run:
 | File | Used by |
 |------|---------|
 | `disease_prevalence.tsv` | per-gene VCEP rules for BA1/BS1/BS2, PM2/PM4/PM5, PP2, PVS1 applicability, PS1 splice, BP1/BP3, BP7, REVEL cutoffs |
-| `gene_inheritance.tsv` | inheritance-aware PM2 / BS1 / BS2 thresholds |
+| `gene_inheritance.tsv` | inheritance-aware PM2 / BS1 thresholds |
 | `pm1_hotspots.tsv` | PM1 hotspot residues / regions |
 | `pm4_regions.tsv` | per-gene PM4 region/strength rules (Strong residues, allow/deny regions, stop-loss strength, conservation / deletion-content gates, ABCA4 nucleotide-phyloP) |
 | `ps1_paralog_map.tsv` | PS1 cross-gene paralogue residue map (SCN1A/2A/3A/8A, KCNQ1↔KCNQ2) |
@@ -184,15 +184,15 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 - **Data provenance**: every run writes `<output>.provenance.json` with the
   release dates / versions of ClinVar, VEP, gnomAD, ClinGen and the bundled
   tables, plus the run options; `acmg-classify status` prints the same.
-- **Inheritance-aware PM2** (BS1/BS2 also) thresholds switch between dominant
+- **Inheritance-aware PM2** (BS1 also) thresholds switch between dominant
   and recessive frequencies using a per-gene inheritance table.
 - **Per-gene ClinGen VCEP rules** mined from the cspec specifications
   (`resources/shared/disease_prevalence.tsv`, `pm1_hotspots.tsv`): disease-
   specific BA1/BS1 cutoffs, PVS1 applicability (gain-of-function genes decline
   it) and the APC-specific PVS1 tree, PP2 applicability, PM5 Grantham-distance
-  gating, PM1 hotspot regions, inheritance-aware BS2 (the dominant
-  healthy-carrier rule only where the VCEP applies BS2 with population data; a
-  ≥3★ ClinVar fallback where it bars gnomAD), VCEP-classified PS1/PM5 comparators
+  gating, PM1 hotspot regions, BS2 from gnomAD only where the VCEP applies BS2
+  with population data (VCEP counts, genotypes and strength tiers; otherwise
+  curated evidence or a ≥3★ ClinVar expert-panel assertion), VCEP-classified PS1/PM5 comparators
   where the VCEP requires them, the PS1 splice extension
   (canonical vs non-canonical), BP1/BP3 applicability, per-gene BP7 phyloP /
   intronic-range policy, and PM2 subpopulation / homozygote-count rules. Only
@@ -638,7 +638,8 @@ chr17:43044295:G:A	PP1	Supporting	3 affected family members segregating variant
 > `data/shared/` in [Step 4](#quick-start)). It carries calls the tool cannot
 > derive automatically for variants in the eRepo: PS2, PS4, PM3, PM6, PP1, PP4,
 > BS3, BS4, BP2, BP5, and BS2 for genes whose VCEP does not allow population
-> (gnomAD) data for BS2 (internal-cohort / clinical BS2, e.g. TP53, CDH1, MECP2). Use it as-is —
+> (gnomAD) data for BS2 (internal-cohort / clinical BS2, e.g. TP53, CDH1, MECP2).
+> For genes without a VCEP specification, BS2 must be supplied by the user. Use it as-is —
 > match the file to your assembly:
 > ```bash
 > acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 \
@@ -758,7 +759,7 @@ For each of the 28 ACMG codes (`PVS1`…`BP7`) three columns are emitted:
 `<output>.provenance.json` records the data versions used (ClinVar VCF/XML
 release, VEP release and cache, gnomAD build, ClinGen downloads, bundled CSpec /
 eRepo / MANE snapshots, in-silico tools) and the run options
-(`exclude_self_expert_panel`, PM1/PP2 parameters). JSON output carries the same
+(`exclude_self_expert_panel`, PVS1/PS1/PM5/PP2 parameters). JSON output carries the same
 block under `metadata`.
 
 ### Skipped records (sidecar)
@@ -832,7 +833,7 @@ Limited or weaker are capped at VUS.
 | **PS1** | Same amino-acid change as an established P/LP ClinVar variant (review status ≥2 stars by default, `ACMG_PS1_MIN_STARS`). Strong if any comparator is Pathogenic; Moderate if all are only Likely pathogenic. | `ps1_splice` extends PS1 to splice-equivalent variants for genes whose VCEP allows it. Where the VCEP requires the comparator to be VCEP-classified (`vcep_comparator_rules.tsv`), only eRepo P/LP or ClinVar expert-panel comparators count, minus those the VCEP excludes (e.g. classified with PS1/PM5 or PVS1). |
 | **PS3** | Functional evidence, in priority order: curated supplement (any strength); PS3 as applied by a ClinGen expert panel to the variant in ClinVar (≥3★, panel's strength); text mining of other ClinVar submissions citing a damaging assay, counted by **distinct PMIDs** and **capped at Supporting** (assay validation per Brnich 2019 cannot be judged from text). | Text mining suppressed for genes whose VCEP has no PS3 or restricts it (PALB2, PDHA1, POLG, CAPN3, ANO5). **TP53** (opt-in `--with-tp53-functional`; the NCI TP53 Database terms prohibit monetization): PS3/BS3 for missense variants from the VCEP functional flowchart (`tp53_functional.tsv`, NCI TP53 Database R21: Kato 2003 transactivation class, with Giacomelli 2018, Kotler 2018 and Kawaguchi 2005 as the other assays; "majority" counts a non-functional/functional Kato result). PS3 Strong / Moderate / Supporting and BS3 Strong / Supporting as in the flowchart; not applied with a SpliceAI-based PP3, PS3 not applied with PVS1 and downgraded to Moderate with PVS1_Strong. When assay data exist, ClinVar text mining is not used. Agreement with the TP53 VCEP PS3/BS3 calls in the eRepo: 160/172 variants. |
 | **PS4** | **Curated evidence only**: curated supplement or PS4 applied by a ClinGen expert panel in ClinVar (≥3★). The number of ClinVar submissions reporting affected individuals is shown for information but not scored (individuals cannot be de-duplicated across submitters). Genes without a VCEP: not counted when PM3 is met. | — |
-| **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`; optional `alt_aa` restriction, e.g. IL2RG transmembrane residues; IL2RG PM1 also requires PM2 and no BA1/BS1/BS2). Genes without a VCEP definition: PM1 from curated evidence only. An opt-in ClinVar fallback (`ACMG_PM1_HEURISTIC=true`: ≥3 other P/LP **missense** changes, ClinVar ≥1★, the query variant excluded, within ±25 residues and no B/LB missense; `ACMG_PM1_WINDOW`, `ACMG_PM1_MIN_PATH_VARIANTS`) is off by default because it reproduced the VCEP-defined regions poorly (residue-level F1 ≈ 0.3). | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
+| **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`; optional `alt_aa` restriction, e.g. IL2RG transmembrane residues; IL2RG PM1 also requires PM2 and no BA1/BS1/BS2). Genes without a VCEP definition: PM1 from curated evidence only. <!-- Removed (Genome Medicine revision): An opt-in ClinVar fallback (`ACMG_PM1_HEURISTIC=true`: ≥3 other P/LP **missense** changes, ClinVar ≥1★, the query variant excluded, within ±25 residues and no B/LB missense; `ACMG_PM1_WINDOW`, `ACMG_PM1_MIN_PATH_VARIANTS`) is off by default because it reproduced the VCEP-defined regions poorly (residue-level F1 ≈ 0.3). --> | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
 | **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi); `pm2_subset=non_cancer` and `pm2_min_depth` (ENIGMA BRCA1/2). Gene-specific cSpec wording is hard-coded for a few genes (F8/F9 "absent in males", RYR1 "1 allele allowed", ATM "n=1 in a single subpopulation", PTEN single-vs-multi-allele subpop, RUNX1 GrpMax-FAF-then-all-subpop). |
 | **PM4** | Protein-length change from an in-frame indel or stop-loss (outside repeat regions). Not applied together with PVS1. | `pm4 = not_applicable` withholds PM4 for genes whose VCEP declined it. |
 | **PM5** | Different missense at a codon with an established P/LP missense in ClinVar (review status ≥2 stars by default, `ACMG_PM5_MIN_STARS`) — Moderate (Supporting if comparators are LP-only). | **Yes** — `pm5_grantham` (require ≥ comparator Grantham), `pm5_excludes` (not co-applied with PM1/PS1 for some genes), `pm5_max`, `pm5_lp`, `pm5_min_count` (ACVRL1/ENG require ≥2 distinct same-codon LP/P → Strong). VCEP-classified comparators required where the VCEP says so (as for PS1). |
@@ -846,7 +847,7 @@ Limited or weaker are capped at VUS.
 |-----------|--------------------------|-------------------------|
 | **BA1** | gnomAD FAF95_popmax ≥ cutoff (stand-alone). Default 5%; disease-specific `min(0.05, 10×maxAF)` where parameters exist. | **Yes** — `ba1_threshold` / `af_basis` (`males` = XY AF, `popmax` = point grpmax AF) / `ba1_hom_count` (homo/hemizygote-count rule) per gene; `ba1_exclude` bars VCEP-listed variants from BA1 (LGMD "BS1 exception" alleles: DYSF c.2697+1G>A [= NM_003494.3:c.2643+1G>A], ANO5 c.191dup, CAPN3 c.1746-20C>G and c.2120A>G). |
 | **BS1** | gnomAD FAF95_popmax above the disorder-specific expectation. | **Yes** — `bs1_threshold` / `bs1_strength`; `bs1_exclude` bars a specific recurrent disease allele from BS1 (e.g. MYOC p.Gln368Ter; the LGMD exception alleles above); entries are protein (`p.`) or MANE transcript (`c.`) changes. |
-| **BS2** | Observed in healthy adults in gnomAD, **inheritance-aware** (AR→homozygotes, XL→hemizygotes). For genes with a VCEP, the AD healthy-carrier route is used **only** when the VCEP applies BS2 with population data. For genes without a VCEP, the inheritance mode comes from `gene_inheritance.tsv`, and the AD carrier route (≥3 carriers) is used only in LoF-constrained genes (gnomAD LOEUF < 0.5), because carriers of adult-onset or incompletely penetrant dominant disorders are expected in gnomAD. | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
+| **BS2** | Observed in healthy adults in gnomAD, evaluated **only for genes whose VCEP applies BS2 with population data** (26 genes), with the VCEP counts, genotypes (AR→homozygotes, XL→hemizygotes, AD→carriers or homozygotes), sex restriction and strength tiers; when the VCEP states no count, ≥2 homozygotes / ≥2 hemizygotes / ≥3 carriers. Genes whose VCEP bars population data, and genes **without a VCEP specification**, get BS2 only from curated evidence (supplement) or a ≥3★ ClinVar expert-panel assertion, because penetrance and age of onset cannot be judged automatically and healthy carriers of adult-onset or incompletely penetrant disorders are expected in gnomAD. <!-- Removed (Genome Medicine revision): non-VCEP inheritance-aware route (gene_inheritance.tsv; AR homozygotes, XL hemizygotes, AD carriers only when LOEUF < 0.5, ACMG_BS2_AD_MAX_LOEUF). --> | **Yes** — `bs2` applicability (VCEPs barring population data → withheld), `bs2_count` threshold, `bs2_female_only`, `bs2_hom_only`; a ≥3-star ClinVar BS2 assertion can substitute where the VCEP bars gnomAD. |
 | **BP1** | Variant-type-vs-mechanism: applied only for genes whose VCEP names a target consequence. | **Yes (gate)** — `bp1` / `bp1_target` (`missense` for PALB2/APC/BRCA1/2; `truncating` for GoF RASopathy genes), `bp1_strength`, `bp1_exclude`, `bp1_no_splice`. No VCEP decision → not applied. |
 | **BP3** | In-frame indel in a repetitive region of unknown function. | **Yes** — VCEP-gated (`bp3`) + `bp3_regions`. |
 | **BP4** | Computational no-impact prediction (same tools as PP3), Bergquist 2024 tiers. | **Yes (REVEL)** — per-gene `revel_bp4_*` cutoffs. **Opt-in auxiliary rules** mirror PP3 (BayesDel for BRCA1/2 & TP53; REVEL∧CADD for CTLA4/PIK3CD/PIK3R1; all three of CADD/AlphaMissense/REVEL for BMPR2; CADD for ABCA4 synonymous/indel), licence-gated and authoritative when active. **Scope** (`bp4_scope`): not applicable for DCLRE1C/IL2RG/IL7R/JAK3/RAG1; splicing only (no missense) for CDH1/PALB2; missense only for HRAS/KRAS/SOS1; no synonymous for PAH. `bp4_missense_splice_max` (missense BP4 also needs SpliceAI ≤ value: GP9 0, RUNX1 0.20); `bp4_exclude_c` (PTEN intron 1 donor/acceptor region). For all genes, splice-prediction BP4 is not applied to introns 5' of the coding start (5'UTR introns, `c.-N+M` / `c.-N-M`). |
@@ -1125,15 +1126,15 @@ export ACMG_PS1_MIN_STARS=2        # min ClinVar review stars for a PS1 comparat
 export ACMG_PVS1_MIN_PLP=5            # PVS1 LoF mechanism: min ClinVar P/LP variants in the gene
 export ACMG_PVS1_MIN_NULL_FRACTION=0.2 # PVS1 LoF mechanism: min proportion of null variants among them
 export ACMG_PVS1_GDV_DOWNGRADE=true  # PVS1 two levels down unless ClinGen GDV Definitive/Strong (non-VCEP genes)
-export ACMG_BS2_MIN_HOMALT=2       # BS2 healthy-homozygote count (recessive)
-export ACMG_BS2_MIN_HEMI=2         # BS2 healthy-hemizygote count (X-linked)
-export ACMG_BS2_MIN_HET=3          # BS2 healthy-carrier count (dominant)
-export ACMG_BS2_AD_MAX_LOEUF=0.5   # non-VCEP genes: dominant carrier route only below this LOEUF
+export ACMG_BS2_MIN_HOMALT=2       # BS2 homozygote count (VCEP genes allowing gnomAD BS2 without a stated count)
+export ACMG_BS2_MIN_HEMI=2         # BS2 hemizygote count (idem)
+export ACMG_BS2_MIN_HET=3          # BS2 carrier count (idem)
+# (removed) export ACMG_BS2_AD_MAX_LOEUF=0.5   # non-VCEP genes no longer get gnomAD-based BS2
 export ACMG_POPMAX_AF_BASIS=true   # false → force every gene's BA1/BS1 onto FAF95
                                    # (ignore per-gene af_basis=popmax point estimate)
-export ACMG_PM1_HEURISTIC=false    # PM1 ClinVar fallback for non-VCEP genes (off by default)
-export ACMG_PM1_WINDOW=25          # PM1 fallback: ± residues
-export ACMG_PM1_MIN_PATH_VARIANTS=3
+# (removed) export ACMG_PM1_HEURISTIC=false    # PM1 ClinVar fallback for non-VCEP genes — no longer available
+# (removed) export ACMG_PM1_WINDOW=25          # PM1 fallback: ± residues
+# (removed) export ACMG_PM1_MIN_PATH_VARIANTS=3
 export ACMG_PP2_MIN_PATH=5         # PP2 fallback thresholds
 export ACMG_PP2_MAX_BENIGN_FRAC=0.05
 export ACMG_PP2_MIN_MIS_Z=3.09

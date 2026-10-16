@@ -44,12 +44,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **PS3** text mining counts distinct cited PMIDs and is capped at Supporting;
   **PS4** and **PP1** are applied only from curated sources (supplement or
   ClinVar expert-panel criteria); evidence text names the source.
-- **BS2**: the dominant healthy-carrier route requires a VCEP that applies BS2
-  with population data. Genes without a VCEP BS2 rule take their inheritance
-  mode from `gene_inheritance.tsv` (AR → homozygotes, XL → hemizygotes); the
-  dominant carrier route is used only in LoF-constrained genes (gnomAD LOEUF
-  < 0.5, `ACMG_BS2_AD_MAX_LOEUF`), as adult-onset or incompletely penetrant
-  dominant disorders are expected among gnomAD carriers.
+- **BS2**: gnomAD-based BS2 only for genes whose VCEP applies BS2 with
+  population data (VCEP counts, genotypes, sex restriction and strength tiers).
+  Genes without a VCEP specification no longer receive gnomAD-based BS2 by any
+  route (homozygotes, hemizygotes or carriers): penetrance and age of onset
+  cannot be judged automatically, and healthy carriers of adult-onset or
+  incompletely penetrant disorders are expected in gnomAD. For them, as for
+  genes whose VCEP bars population data, BS2 comes from curated evidence or a
+  ClinVar expert-panel (>=3-star) assertion. `ACMG_BS2_AD_MAX_LOEUF` (the
+  interim LOEUF gate) was removed and is ignored.
 - **Input variant types** (Reviewer 1): symbolic CNV/SV alleles, breakends and
   `*` are skipped with the reason in `<output>.not_annotated.tsv`; `explain`
   rejects them; indels > 50 bp are classified with a `LARGE_INDEL` warning.
@@ -84,9 +87,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   "not assessed", "insufficient to apply", …). The previous rule imported PS4/PP1
   that the VCEP had explicitly not applied. Requires rebuilding the ClinVar
   SQLite (`setup_data.py --only clinvar-sqlite`).
-- **PM1**: the ClinVar hotspot heuristic for genes without a VCEP definition is
-  now **off by default** (`ACMG_PM1_HEURISTIC=true` to enable); calibrated
-  against the VCEP-defined regions it reached a residue-level F1 of ~0.3.
+- **PM1**: the ClinVar hotspot heuristic for genes without a VCEP definition has
+  been **removed** (PM1 from curated evidence only); calibrated against the
+  VCEP-defined regions it reached a residue-level F1 of ~0.3.
+  `ACMG_PM1_HEURISTIC`, `ACMG_PM1_WINDOW` and `ACMG_PM1_MIN_PATH_VARIANTS` are
+  ignored, and the provenance no longer records them.
   IL2RG PM1 requires PM2 and no BA1/BS1/BS2 (`PM1_CO_REQUIREMENTS`).
 - **PM1**: VCEP definitions added for genes of multi-gene specifications that the
   CSpec miner skipped — Hearing Loss (PM1 only for the KCNQ4 pore region; the

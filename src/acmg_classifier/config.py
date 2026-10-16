@@ -58,15 +58,10 @@ class Config(BaseSettings):
     bs2_min_homalt: int = 2
     bs2_min_hemi: int = 2
     bs2_min_het: int = 3
-    # Genes without a VCEP BS2 rule: the inheritance mode comes from
-    # gene_inheritance.tsv (CGD). Healthy heterozygous carriers count against a
-    # dominant disorder only in LoF-constrained genes (gnomAD LOEUF below this
-    # value), where pathogenic alleles are expected to be removed by selection
-    # (early-onset, highly penetrant disease). Adult-onset or incompletely
-    # penetrant dominant disorders, whose carriers are expected in gnomAD, are
-    # thereby excluded (Genome Medicine revision, Reviewer 3; same approach as
-    # BIAS-2015). Override via ACMG_BS2_AD_MAX_LOEUF.
-    bs2_ad_max_loeuf: float = 0.5
+    # These defaults apply only to genes whose VCEP allows gnomAD-based BS2 but
+    # does not state a count. Genes without a VCEP specification get no
+    # gnomAD-based BS2 (curated / expert-panel evidence only); the former LOEUF
+    # gate for them (ACMG_BS2_AD_MAX_LOEUF) was removed and is ignored.
     # When True, genes whose VCEP defines the BA1/BS1 cutoff on the *point*
     # grpmax/popmax allele frequency (af_basis="popmax" in disease_prevalence.tsv
     # — e.g. RUNX1, GAA, MYOC) compare against the gnomAD popmax point estimate
@@ -117,16 +112,10 @@ class Config(BaseSettings):
     # "automated-only" evaluation against the eRepo does not read the reference
     # curation itself. Off for normal use. ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.
     exclude_self_expert_panel: bool = False
-    # PM1 fallback heuristic (genes without VCEP hotspot definitions): a region
-    # of +/- pm1_window residues holding >= pm1_min_path_variants other P/LP
-    # missense changes and no B/LB missense. ACMG_PM1_WINDOW / ACMG_PM1_MIN_PATH_VARIANTS.
-    pm1_window: int = 25
-    pm1_min_path_variants: int = 3
-    # The ClinVar hotspot heuristic is OFF by default: calibrated against the
-    # VCEP-defined PM1 regions it reached a residue-level F1 of only ~0.3 (Genome
-    # Medicine revision, Reviewer 3), so genes without a VCEP PM1 definition get
-    # PM1 only from curated evidence. ACMG_PM1_HEURISTIC=true re-enables it.
-    pm1_heuristic: bool = False
+    # PM1 for genes without a VCEP definition comes from curated evidence only.
+    # The former ClinVar hotspot heuristic (ACMG_PM1_HEURISTIC / ACMG_PM1_WINDOW /
+    # ACMG_PM1_MIN_PATH_VARIANTS) was removed in the Genome Medicine revision;
+    # those variables are now ignored.
     # TP53 VCEP PS3/BS3 from the NCI TP53 Database assay classes
     # (resources/shared/tp53_functional.tsv). OFF by default because the database
     # terms prohibit any use that results in direct or indirect monetization; the

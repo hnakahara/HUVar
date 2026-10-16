@@ -69,7 +69,7 @@ class PM1Evaluator(CriterionEvaluator):
 
         # 2. VCEP-curated hotspot regions are authoritative where defined: a hit
         #    awards PM1 at the VCEP strength; a miss withholds PM1 (do NOT fall
-        #    back to the statistical heuristic, which the VCEP regions supersede).
+        #    back to any statistical hotspot estimate).
         if self._hotspots.has_gene(gene) or self._hotspots.has_cys_creating(gene):
             strength = self._hotspots.lookup(
                 gene, pc.protein_position, _alt_aa(pc.amino_acids)
@@ -94,27 +94,14 @@ class PM1Evaluator(CriterionEvaluator):
                 ACMGCriterion.PM1, strength=strength, evidence=evidence,
             )
 
-        # 3. No curated VCEP data for the gene. The statistical hotspot heuristic
-        #    (nearby pathogenic ClinVar clustering) is opt-in (Config.pm1_heuristic);
-        #    by default PM1 is left to curated evidence for such genes.
-        if getattr(self._cfg, "pm1_heuristic", False) is not True:
-            return CriteriaResult.not_met(
-                ACMGCriterion.PM1,
-                f"{gene}: no VCEP PM1 definition; ClinVar hotspot heuristic disabled "
-                "(PM1 from curated evidence only; ACMG_PM1_HEURISTIC=true to enable)",
-            )
-        from acmg_classifier.local_db.clinvar_sqlite import query_hotspot_cluster
-        is_hotspot, evidence = query_hotspot_cluster(
-            self._cfg.clinvar_sqlite,
-            gene,
-            pc.protein_position,
-            window=_int(self._cfg, "pm1_window", 25),
-            min_path_variants=_int(self._cfg, "pm1_min_path_variants", 3),
-            chrom=variant.chrom, pos=variant.pos, ref=variant.ref, alt=variant.alt,
+        # 3. No curated VCEP data for the gene: PM1 only from curated evidence.
+        #    The ClinVar hotspot heuristic (nearby P/LP missense clustering) was
+        #    removed permanently: calibrated against the VCEP-defined regions it
+        #    reached a residue-level F1 of only ~0.3 (Genome Medicine revision).
+        return CriteriaResult.not_met(
+            ACMGCriterion.PM1,
+            f"{gene}: no VCEP PM1 definition (PM1 from curated evidence only)",
         )
-        if not is_hotspot:
-            return CriteriaResult.not_met(ACMGCriterion.PM1, f"Not in hotspot cluster: {evidence}")
-        return CriteriaResult.met(ACMGCriterion.PM1, evidence=evidence)
 
 
 def _alt_aa(amino_acids: str | None) -> str | None:
@@ -124,8 +111,3 @@ def _alt_aa(amino_acids: str | None) -> str | None:
         return None
     alt = amino_acids.partition("/")[2].strip()
     return alt if len(alt) == 1 else None
-
-
-def _int(cfg, name: str, default: int) -> int:
-    v = getattr(cfg, name, default)
-    return v if isinstance(v, int) and not isinstance(v, bool) else default

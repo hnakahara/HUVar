@@ -600,8 +600,10 @@ def query_hotspot_cluster(
     min_stars: int = 1,
 ) -> tuple[bool, str]:
     """
-    Return (is_hotspot, evidence) for the PM1 fallback heuristic (genes without
-    VCEP-curated hotspot definitions).
+    Return (is_hotspot, evidence) for the former PM1 ClinVar hotspot heuristic
+    (genes without VCEP-curated hotspot definitions). No longer used for
+    classification (PM1 for such genes comes from curated evidence only); kept
+    for the calibration analysis against the VCEP-defined PM1 regions.
 
     The region is a hotspot when it contains >= ``min_path_variants`` distinct
     P/LP *missense* changes (>= ``min_stars``) within +/- ``window`` amino acids

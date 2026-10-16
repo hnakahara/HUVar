@@ -191,7 +191,6 @@ def collect(cfg) -> dict[str, Any]:
         put("pp2_gene_stats", file=pp2.name, note=head or None)
     put("run_options",
         exclude_self_expert_panel=bool(getattr(cfg, "exclude_self_expert_panel", False) is True),
-        pm1_heuristic=bool(getattr(cfg, "pm1_heuristic", False) is True),
         tp53_functional=bool(getattr(cfg, "use_tp53_functional", False) is True),
         cspec_selection=(dict(getattr(cfg, "cspec_selection", None))
                          if isinstance(getattr(cfg, "cspec_selection", None), dict)
@@ -201,8 +200,6 @@ def collect(cfg) -> dict[str, Any]:
         pvs1_min_plp=getattr(cfg, "pvs1_min_plp", None),
         pvs1_min_null_fraction=getattr(cfg, "pvs1_min_null_fraction", None),
         pvs1_gdv_downgrade=bool(getattr(cfg, "pvs1_gdv_downgrade", True) is True),
-        pm1_window=getattr(cfg, "pm1_window", None),
-        pm1_min_path_variants=getattr(cfg, "pm1_min_path_variants", None),
         pp2_min_path=getattr(cfg, "pp2_min_path", None),
         pp2_max_benign_frac=getattr(cfg, "pp2_max_benign_frac", None))
     put("insilico", missense=getattr(cfg.insilico_tool, "value", str(cfg.insilico_tool)),

@@ -11,19 +11,15 @@ Whether BS2 may use general-population data at all is a per-gene VCEP decision
 (`bs2` column of ``disease_prevalence.tsv``): a VCEP that bars population data
 (e.g. RASopathy GN004) resolves to ``not_applicable`` and BS2 is withheld.
 
-Genes without a VCEP BS2 rule take their inheritance mode from
-``gene_inheritance.tsv`` (CGD):
-
-* AR → homozygotes >= ``bs2_min_homalt``
-* XL → hemizygotes >= ``bs2_min_hemi``
-* AD → heterozygous carriers >= ``bs2_min_het``, **only** in LoF-constrained
-  genes (gnomAD LOEUF < ``bs2_ad_max_loeuf``, default 0.5). Carriers of
-  adult-onset or incompletely penetrant dominant disorders are expected in
-  gnomAD, whereas LoF-constrained genes are depleted of pathogenic alleles.
-* unknown mode (or MT/YL) → homozygotes or hemizygotes (mode-agnostic).
+Genes without a VCEP specification: BS2 is NOT evaluated from gnomAD. Whether
+healthy adults in a population database argue against a disorder depends on its
+penetrance and age of onset, which HUVar cannot judge; healthy carriers of
+adult-onset or incompletely penetrant disorders are expected in gnomAD (Genome
+Medicine revision, Reviewer 3). For these genes BS2 comes only from curated
+evidence (the supplementary file) or an expert-panel (>=3-star) assertion in
+ClinVar, as for genes whose VCEP bars population data.
 """
 from __future__ import annotations
-from pathlib import Path
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.criteria.bs2_genes import APPLICABLE, BS2Applicability, NOT_APPLICABLE
@@ -64,7 +60,12 @@ class BS2Evaluator(CriterionEvaluator):
         # >=3-star reviews. This path does NOT require a gnomAD record (these
         # internal-cohort variants are often absent from gnomAD).
         if self._vcep.status(gene) == NOT_APPLICABLE:
-            return self._clinvar_fallback(variant, gene)
+            return self._clinvar_fallback(variant, gene, "VCEP bars gnomAD-based BS2")
+        # No VCEP specification for the gene: no gnomAD-based BS2 at all (curated
+        # evidence / expert-panel assertion only).
+        if self._vcep.status(gene) == "":
+            return self._clinvar_fallback(
+                variant, gene, "no VCEP specification; gnomAD-based BS2 not evaluated")
 
         gd = annotation.gnomad
         if gd is None or not gd.filter_pass:
@@ -97,11 +98,6 @@ class BS2Evaluator(CriterionEvaluator):
         # disease, so counting carriers (the AD default below) would FALSELY fire
         # BS2 on a pathogenic variant. The VCEP states "≥N homozygotes in gnomAD".
         hom_only = self._vcep.hom_only(gene)
-
-        # Genes without a VCEP BS2 rule: inheritance from gene_inheritance.tsv,
-        # dominant carriers only in LoF-constrained genes.
-        if self._vcep.status(gene) == "":
-            return self._non_vcep(gene, gd, nhomalt, nhemi, het_carriers)
 
         modes = self._vcep.modes(gene)
 
@@ -167,62 +163,18 @@ class BS2Evaluator(CriterionEvaluator):
                 return self._met(f"dominant: {who}={het_carriers} >= {het_thr}")
         return self._not_met(nhomalt, nhemi, het_carriers)
 
-    def _gene_modes(self, gene: str | None) -> tuple[frozenset[str], str]:
-        """Inheritance modes (subset of {AD, AR, XL}) and the raw CGD code for a
-        gene without VCEP data; empty when unknown or MT/YL."""
-        path = getattr(self._cfg, "gene_inheritance_tsv", None)
-        if not gene or not isinstance(path, Path):
-            return frozenset(), ""
-        from acmg_classifier.local_db.inheritance_db import load_inheritance_map
-        code = (load_inheritance_map(path).get(gene) or "").upper()
-        modes = {m for m in ("AD", "AR", "XL") if m in code}
-        return frozenset(modes), code
-
-    def _non_vcep(self, gene, gd, nhomalt: int, nhemi: int, het_carriers: int) -> CriteriaResult:
-        hom_thr = self._cfg.bs2_min_homalt
-        hemi_thr = self._cfg.bs2_min_hemi
-        het_thr = self._cfg.bs2_min_het
-        modes, code = self._gene_modes(gene)
-        if not modes:
-            if nhomalt >= hom_thr:
-                return self._met(f"nhomalt={nhomalt} >= {hom_thr} (inheritance unknown)")
-            if nhemi >= hemi_thr:
-                return self._met(f"nhemi={nhemi} >= {hemi_thr} (inheritance unknown)")
-            return self._not_met(nhomalt, nhemi, het_carriers)
-        if "AR" in modes and nhomalt >= hom_thr:
-            return self._met(f"recessive ({code}): nhomalt={nhomalt} >= {hom_thr}")
-        if "XL" in modes and nhemi >= hemi_thr:
-            return self._met(f"X-linked ({code}): nhemi={nhemi} >= {hemi_thr}")
-        if "AD" in modes:
-            max_loeuf = getattr(self._cfg, "bs2_ad_max_loeuf", 0.5)
-            if not isinstance(max_loeuf, (int, float)):
-                max_loeuf = 0.5
-            loeuf = gd.loeuf
-            if loeuf is None or loeuf >= max_loeuf:
-                lo = "unavailable" if loeuf is None else f"{loeuf:.3f}"
-                return CriteriaResult.not_met(
-                    ACMGCriterion.BS2,
-                    f"dominant ({code}): carrier route only for LoF-constrained genes "
-                    f"(LOEUF {lo}, required < {max_loeuf}); gnomAD nhomalt={nhomalt}, "
-                    f"nhemi={nhemi}, carriers={het_carriers}",
-                )
-            if het_carriers >= het_thr:
-                return self._met(
-                    f"dominant ({code}), LoF-constrained (LOEUF {loeuf:.3f} < {max_loeuf}): "
-                    f"healthy carriers={het_carriers} >= {het_thr}"
-                )
-        return self._not_met(nhomalt, nhemi, het_carriers)
-
     def _clinvar_fallback(
-        self, variant: VariantRecord, gene: str | None
+        self, variant: VariantRecord, gene: str | None,
+        reason: str = "VCEP bars gnomAD-based BS2",
     ) -> CriteriaResult:
-        """BS2 from an expert-panel (>=3-star) ClinVar review when the VCEP bars
-        the gnomAD-count path. The strength is the one the panel cited (a bare
-        "BS2" applies at its Strong default)."""
+        """BS2 from an expert-panel (>=3-star) ClinVar review when the gnomAD-count
+        path is not used (the VCEP bars population data, or the gene has no VCEP
+        specification). The strength is the one the panel cited (a bare "BS2"
+        applies at its Strong default)."""
         if getattr(self._cfg, "exclude_self_expert_panel", False) is True:
             return CriteriaResult.not_met(
                 ACMGCriterion.BS2,
-                f"{gene}: VCEP bars gnomAD-based BS2; expert-panel import disabled "
+                f"{gene}: {reason}; expert-panel import disabled "
                 "(exclude_self_expert_panel)",
             )
         from acmg_classifier.local_db.clinvar_sqlite import query_bs2_benign_evidence
@@ -234,8 +186,8 @@ class BS2Evaluator(CriterionEvaluator):
         if not has_bs2:
             return CriteriaResult.not_met(
                 ACMGCriterion.BS2,
-                f"{gene}: VCEP bars gnomAD-based BS2 and no ClinVar "
-                "expert-panel (>=3-star) BS2 found for this variant",
+                f"{gene}: {reason}; BS2 from curated evidence only "
+                "(no ClinVar expert-panel (>=3-star) BS2 for this variant)",
             )
         strength = _BS2_STRENGTH.get(strength_label or "Strong", CriterionStrength.STRONG)
         return CriteriaResult.met(
@@ -244,7 +196,7 @@ class BS2Evaluator(CriterionEvaluator):
             evidence=(
                 f"{gene}: ClinVar expert-panel (>=3-star) applied BS2"
                 f"{'_' + strength_label if strength_label and strength_label != 'Strong' else ''} "
-                "(VCEP internal-cohort evidence)"
+                "(expert-panel evidence)"
             ),
         )
 

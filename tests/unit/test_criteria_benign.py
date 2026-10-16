@@ -312,10 +312,11 @@ class TestBS2:
             kw["consequences"] = [_consequence(gene=gene)]
         return _annotation(**kw)
 
-    # --- mode-agnostic fallback (no VCEP row) ---
-    def test_homozygotes_fallback_triggers(self, tmp_path):
+    # --- no VCEP row: no gnomAD-based BS2 (curated / expert-panel only) ---
+    def test_no_vcep_no_gnomad_bs2(self, tmp_path):
         r = self._ev(self._cfg(tmp_path)).evaluate(_snv(), self._ann(nhomalt=10))
-        assert r.triggered
+        assert not r.triggered
+        assert "no VCEP specification" in r.evidence
 
     def test_low_nhomalt_not_met(self, tmp_path):
         r = self._ev(self._cfg(tmp_path)).evaluate(_snv(), self._ann(nhomalt=2))
