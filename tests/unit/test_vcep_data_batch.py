@@ -77,9 +77,12 @@ class TestVHLpm1:
         assert self._h().lookup("VHL", 167) == CriterionStrength.MODERATE   # R167 germline
         assert self._h().lookup("VHL", 65) == CriterionStrength.MODERATE    # bare germline pos
 
-    def test_somatic_residue_moderate(self):
-        assert self._h().lookup("VHL", 89) == CriterionStrength.MODERATE    # L89 somatic
-        assert self._h().lookup("VHL", 169) == CriterionStrength.MODERATE   # L169 somatic
+    def test_somatic_residue_supporting(self):
+        # Somatic hotspots: Moderate needs >=10 instances of the same change in
+        # cancerhotspots.org (none reaches 10) -> Supporting for observed changes.
+        assert self._h().lookup("VHL", 89, "H") == CriterionStrength.SUPPORTING   # L89H (9)
+        assert self._h().lookup("VHL", 169, "P") == CriterionStrength.SUPPORTING  # L169P (5)
+        assert self._h().lookup("VHL", 89, "R") is None                           # not observed
 
     def test_non_hotspot_none(self):
         assert self._h().lookup("VHL", 200) is None

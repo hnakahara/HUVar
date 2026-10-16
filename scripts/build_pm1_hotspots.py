@@ -147,8 +147,13 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
     #    regions.
     # The mined table merged these into a single (wrong) Moderate row, so RYR1 is
     # pinned exclusively (see _CURATED_EXCLUSIVE) to these two curated rows.
-    ("RYR1", "Moderate"): ([(4800, 4950)], []),
-    ("RYR1", "Supporting"): ([(1, 552), (2101, 2458), (4631, 4991)], []),
+    # GN012 (MHS VCEP) text: N-terminal 1-552 and central 2101-2458 are
+    # PM1_Moderate ("if PS1/PM5 applicable then PM1 should be used at
+    # supporting" — downgrade applied in the registry, PM1_DOWNGRADE_WITH);
+    # C-terminal 4631-4991 is PM1_Supporting. GN150/GN179 (Congenital
+    # Myopathies VCEP): 4800-4950 Moderate (highest strength wins).
+    ("RYR1", "Moderate"): ([(1, 552), (2101, 2458), (4800, 4950)], []),
+    ("RYR1", "Supporting"): ([(4631, 4991)], []),
     # OTC GN156 v1.0.0 — CP-binding, ornithine, catalytic + conserved residues
     # (the miner captured only Met-268). 21 critical residues.
     ("OTC", "Moderate"): ([], [
@@ -180,10 +185,12 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
     # PM1_Moderate for the curated hotspot residues. (The somatic <10-instances →
     # PM1_Supporting split needs per-residue cancerhotspots counts, not encoded.)
     ("VHL", "Moderate"): ([], [
-        # germline hotspots
-        65, 76, 78, 80, 86, 96, 98, 112, 117, 161, 162, 167, 170, 176, 178,
-        # somatic hotspots (cancerhotspots recurrent)
-        89, 111, 114, 115, 121, 135, 151, 158, 169,
+        # Germline hotspots, VCEP "Germline and Somatic Hotspots" table:
+        # Stebbins et al. (R167, C162, L178, Y98, N78, P86) and Chiorean et al.
+        # 2022 (65, 76, 78, 80, 86, 88, 96, 98, 112, 117, 161, 162, 167, 170,
+        # 176). The struck-through somatic entries (S65, N78, S80, P86, W88,
+        # Y112, W117, R161, C162) are used as germline hotspots.
+        65, 76, 78, 80, 86, 88, 96, 98, 112, 117, 161, 162, 167, 170, 176, 178,
     ]),
     # LDLR GN013 v1.2.0 — missense in exon 4 (MANE NM_000527.5 codons 105-232) OR
     # one of the 60 conserved disulfide-bond cysteine residues (Supp. Table S4 of
@@ -283,6 +290,51 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
     # α120P (HGVS numbering). The poly(A) signal is non-coding (not a missense
     # PM1 target).
     ("HBA2", "Moderate"): ([], [32, 104, 118, 120]),
+    # ---- Corrections after re-checking every PM1 rule against the CSpec text
+    # (2026-10, Genome Medicine revision). Positions are on the MANE Select
+    # transcript HUVar annotates; exon-defined regions were converted with the
+    # MANE v1.5 exon structure (resources/shared/mane_exons.tsv).
+    # MECP2 GN143 (Rett/AS VCEP) defines MBD aa 90-162 and TRD aa 302-306 on
+    # NM_004992.4 (e2, 486 aa); MANE Select is NM_001110792.2 (e1, 498 aa),
+    # +12 residues (offset confirmed on eRepo records) -> 102-174, 314-318.
+    ("MECP2", "Moderate"): ([(102, 174), (314, 318)], []),
+    # UBE3A GN144: "3' cysteine binding site aa 820" is the catalytic Cys in
+    # the 852-aa isoform (NM_130838; C843 in the 875-aa isoform). MANE
+    # NM_130839.5 (872 aa) is +20 (offset confirmed on eRepo records) -> 840.
+    ("UBE3A", "Moderate"): ([], [840]),
+    # GP1BB: the miner dropped the last residue of "93, 95, 118, 141, and 147".
+    ("GP1BB", "Moderate"): ([], [93, 95, 118, 141, 147]),
+    # F9 Moderate: "variant is within exons 3, 4 or 5" (NM_000133.4: p.85-174).
+    ("F9", "Moderate"): ([(85, 174)], []),
+    # HNF4A Supporting DNA binding is codons 37-113 ("amino acids 33-36 do not
+    # bind DNA"); the miner also kept 33-36 / 33-113.
+    ("HNF4A", "Supporting"): ([(37, 113), (180, 220), (300, 350)], []),
+    # TNNT2: codons 89-189 on NM_001276345.2 (= MANE); 79-179 is the same
+    # region on ENST00000367318 and must not be added on MANE coordinates.
+    ("TNNT2", "Supporting"): ([(89, 189)], []),
+    # ENG: individual residues only; "C350-C382 disulfide" is not a range.
+    ("ENG", "Moderate"): ([], [207, 278, 282, 350, 363, 382, 394, 412, 516, 549, 582]),
+    # RPE65: active-site His/Glu residues plus the Ala107-Gly125 range.
+    ("RPE65", "Moderate"): ([(107, 125)], [180, 182, 241, 313, 417, 527]),
+    # GUCY2D Supporting: other missense in the catalytic domain p.873-951.
+    ("GUCY2D", "Supporting"): ([(873, 951)], []),
+    # DICER1 Supporting: RNase IIIb domain p.Y1682-p.S1846 (range, not 2 residues).
+    ("DICER1", "Supporting"): ([(1682, 1846)], []),
+    # ACADVL GN021 "table PM1" (HGVS numbering; Moderate): p.1-40, 214-223,
+    # 249-251, R326, 381-382, R429, E441, R459, 481-516, 562.
+    ("ACADVL", "Moderate"): ([(1, 40), (214, 223), (249, 251), (381, 382), (481, 516)],
+                             [326, 429, 441, 459, 562]),
+    # PTPN11: AA 4 was dropped by the miner's residue>=5 filter.
+    ("PTPN11", "Moderate"): ([(7, 9), (58, 63), (69, 77), (278, 281)],
+                             [4, 247, 251, 255, 256, 258, 261, 265, 284]),
+    # F8 Moderate: FXa-binding Gly2267-Gly2304 "with the exception of Ser2283".
+    ("F8", "Moderate"): ([(2267, 2282), (2284, 2304)], [1332, 1667]),
+    # BRAF: exon 6 (p.238-287), exon 11 (p.439-478, incl. P-loop 459-474) and
+    # CR3 activation segment 594-627 (NM_004333.6).
+    ("BRAF", "Moderate"): ([(238, 287), (439, 478), (594, 627)], []),
+    # RAF1: CR2 251-266 (exon 7), exon 14 (p.473-512) and exon 17 (p.602-648)
+    # (NM_002880.4).
+    ("RAF1", "Moderate"): ([(251, 266), (473, 512), (602, 648)], []),
     # FBN1 Cys-creating variants: a missense introducing a new cysteine anywhere
     # in a disulfide-bonded domain (EGF-like / cbEGF / TB / hybrid) → PM1_Moderate
     # (handled by the evaluator as alt=Cys within these ranges). UniProt P35555
@@ -298,11 +350,67 @@ _CURATED: dict[tuple[str, str], tuple[list[tuple[int, int]], list[int]]] = {
 
 # Curated rows restricted to substitutions introducing particular residues
 # (written with an alt_aa column). gene -> (strength, regions, residues, alt_aa).
-_CURATED_ALT: dict[str, tuple[str, list[tuple[int, int]], list[int], str]] = {
+_CURATED_ALT: dict[str, list[tuple[str, list[tuple[int, int]], list[int], str]]] = {
     # IL2RG transmembrane domain: charged or polar residue introduced
     # (Asn, Asp, Arg, Cys, His, Glu, Gln, Lys, Ser, Thr, Tyr).
-    "IL2RG": ("Strong", [(263, 283)], [], "NDRCHEQKSTY"),
+    "IL2RG": [("Strong", [(263, 283)], [], "NDRCHEQKSTY")],
 }
+
+
+# TP53 (GN009): PM1_Moderate also "for germline missense variants seen in
+# cancerhotspots.org with >= 10 somatic occurrences for the same amino acid
+# change"; PM1_Supporting for 2-9 occurrences. Built from the cancerhotspots.org
+# single-residue export (resources/clingen/cancerhotspots_TP53.tsv) as one row
+# per residue and strength, restricted to the qualifying alternate residues.
+#
+# VHL (GN078): PM1_Moderate for somatic variants with >=10 instances of the same
+# amino-acid change in cancerhotspots.org, PM1_Supporting for <10 instances —
+# restricted to the somatic hotspot residues of the VCEP "Germline and Somatic
+# Hotspots" table that are not struck through (the struck ones are germline
+# hotspots, Moderate for any missense via _CURATED). In the cancerhotspots.org
+# export no VHL missense change reaches 10 samples, so these are Supporting for
+# the changes observed (>=1 sample).
+_CANCERHOTSPOTS = {
+    # gene: (export, min samples for Supporting, residues allowed or None)
+    "TP53": ("resources/clingen/cancerhotspots_TP53.tsv", 2, None),
+    "VHL": ("resources/clingen/cancerhotspots_VHL.tsv", 1,
+            {68, 74, 89, 111, 114, 115, 121, 135, 151, 158, 169}),
+}
+
+
+def cancerhotspot_rows(path: str, sup_min: int = 2,
+                       residues: set[int] | None = None,
+                       ) -> list[tuple[str, str, list, list, str]]:
+    """``(gene, strength, ranges, residues, alt_aa)`` rows from a cancerhotspots
+    export: per residue, the missense alternates with >=10 samples (Moderate)
+    and with ``sup_min``-9 samples (Supporting), optionally restricted to
+    ``residues``. Nonsense (*), splice (sp), synonymous and in-frame indel rows
+    are ignored."""
+    import os
+    if not os.path.exists(path):
+        return []
+    out = []
+    with open(path, encoding="utf-8") as fh:
+        for r in csv.DictReader(fh, delimiter="\t"):
+            if (r.get("Type") or "") != "single residue":
+                continue
+            m = re.fullmatch(r"([A-Z])(\d+)", (r.get("Residue") or "").strip())
+            if not m:
+                continue
+            ref, pos = m.group(1), int(m.group(2))
+            if residues is not None and pos not in residues:
+                continue
+            mod, sup = [], []
+            for tok in (r.get("Variants") or "").split("|"):
+                alt, _, n = tok.partition(":")
+                if len(alt) != 1 or alt not in _AA1 or alt == ref or not n.isdigit():
+                    continue
+                (mod if int(n) >= 10 else sup if int(n) >= sup_min else []).append(alt)
+            if mod:
+                out.append((r["Gene"], "Moderate", [], [pos], "".join(sorted(mod))))
+            if sup:
+                out.append((r["Gene"], "Supporting", [], [pos], "".join(sorted(sup))))
+    return out
 
 # Curated not-applicable genes from multi-gene specs (skipped by the miner):
 #  * Hearing Loss VCEP: PM1 applies only to the KCNQ4 pore-forming region
@@ -385,6 +493,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--summary", default="resources/clingen/cspec_json/cspec_summary.json")
     ap.add_argument("--out", default="resources/shared/pm1_hotspots.tsv")
+    ap.add_argument("--cancerhotspots", default=None,
+                    help="override the TP53 cancerhotspots.org export")
     args = ap.parse_args()
 
     table = build(args.summary)
@@ -397,7 +507,12 @@ def main() -> None:
             "residues": ",".join(str(r) for r in sorted(residues)),
             "alt_aa": "",
         })
-    for gene, (strength, ranges, residues, alt) in sorted(_CURATED_ALT.items()):
+    alt_rows = [(g, *t) for g, lst in _CURATED_ALT.items() for t in lst]
+    for gene, (path, sup_min, res) in _CANCERHOTSPOTS.items():
+        if gene == "TP53" and args.cancerhotspots:
+            path = args.cancerhotspots
+        alt_rows += cancerhotspot_rows(path, sup_min, res)
+    for gene, strength, ranges, residues, alt in sorted(alt_rows):
         rows.append({
             "gene_symbol": gene, "strength": strength,
             "regions": ";".join(f"{a}-{b}" for a, b in sorted(ranges)),

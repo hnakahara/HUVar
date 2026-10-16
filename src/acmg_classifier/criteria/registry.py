@@ -365,30 +365,70 @@ class CriteriaRegistry:
 
 
 def _apply_pm1_co_requirements(results: list[CriteriaResult], annotation: AnnotationData) -> None:
-    """Suppress PM1 when the gene's VCEP makes it conditional on other criteria
-    (``PM1_CO_REQUIREMENTS``): every required criterion must be triggered and
-    no excluded criterion may be triggered."""
-    from acmg_classifier.criteria.pm1_hotspots import PM1_CO_REQUIREMENTS
+    """Gene-specific PM1 conditions from the VCEP specifications.
+
+    * ``PM1_CO_REQUIREMENTS``: every required criterion must be triggered and no
+      excluded criterion may be triggered (``CODE:Strong`` = met at Strong or
+      above), otherwise PM1 is suppressed.
+    * ``PM1_DOWNGRADE_WITH``: PM1 is reduced to Supporting in the listed residue
+      ranges when one of the listed criteria is met (RYR1 with PS1/PM5).
+    * ``PM1_STRONG_EXCLUDES``: criteria suppressed when PM1 is met at Strong
+      (FBN1: PS1/PM5)."""
+    from acmg_classifier.criteria.pm1_hotspots import (
+        PM1_CO_REQUIREMENTS, PM1_DOWNGRADE_WITH, PM1_STRONG_EXCLUDES,
+    )
+    from acmg_classifier.models.enums import CriterionStrength
 
     pc = annotation.primary_consequence
-    rule = PM1_CO_REQUIREMENTS.get(pc.gene_symbol if pc else None)
-    if not rule:
-        return
-    required, excluded = rule
-    active = {r.criterion.value for r in results if r.triggered and not r.suppressed}
-    missing = [c for c in required if c not in active]
-    clash = [c for c in excluded if c in active]
-    if not missing and not clash:
-        return
-    why = []
-    if missing:
-        why.append("requires " + "+".join(missing))
-    if clash:
-        why.append("not with " + "/".join(clash))
-    for r in results:
-        if r.criterion == ACMGCriterion.PM1 and r.triggered and not r.suppressed:
-            r.suppressed = True
-            r.evidence = (r.evidence + f" [suppressed: PM1 {'; '.join(why)}]").strip()
+    gene = pc.gene_symbol if pc else None
+    strong = {CriterionStrength.STRONG, CriterionStrength.VERY_STRONG}
+
+    def _active(token: str) -> bool:
+        code, _, level = token.partition(":")
+        for r in results:
+            if r.criterion.value == code and r.triggered and not r.suppressed:
+                if not level or r.strength in strong:
+                    return True
+        return False
+
+    def _pm1() -> CriteriaResult | None:
+        return next((r for r in results if r.criterion == ACMGCriterion.PM1
+                     and r.triggered and not r.suppressed), None)
+
+    rule = PM1_CO_REQUIREMENTS.get(gene)
+    if rule:
+        required, excluded = rule
+        missing = [c for c in required if not _active(c)]
+        clash = [c.replace(":", "_") for c in excluded if _active(c)]
+        if missing or clash:
+            why = []
+            if missing:
+                why.append("requires " + "+".join(missing))
+            if clash:
+                why.append("not with " + "/".join(clash))
+            pm1 = _pm1()
+            if pm1 is not None:
+                pm1.suppressed = True
+                pm1.evidence = (pm1.evidence + f" [suppressed: PM1 {'; '.join(why)}]").strip()
+
+    down = PM1_DOWNGRADE_WITH.get(gene)
+    pm1 = _pm1()
+    if down and pm1 is not None and pm1.strength == CriterionStrength.MODERATE:
+        ranges, codes = down
+        pos = pc.protein_position if pc else None
+        hit = [c for c in codes if _active(c)]
+        if pos is not None and hit and any(a <= pos <= b for a, b in ranges):
+            pm1.strength = CriterionStrength.SUPPORTING
+            pm1.evidence = (pm1.evidence + f" [Moderate->Supporting: with {'/'.join(hit)}]").strip()
+
+    excl = PM1_STRONG_EXCLUDES.get(gene)
+    pm1 = _pm1()
+    if excl and pm1 is not None and pm1.strength in strong:
+        for r in results:
+            if r.criterion.value in excl and r.triggered and not r.suppressed:
+                r.suppressed = True
+                r.evidence = (r.evidence + f" [suppressed: {r.criterion.value} not with "
+                              "PM1_Strong]").strip()
 
 
 def _apply_tp53_functional_caveats(results: list[CriteriaResult], annotation: AnnotationData) -> None:

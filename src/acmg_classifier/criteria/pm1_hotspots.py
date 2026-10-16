@@ -31,8 +31,43 @@ _RANK = {
 # Gene-specific PM1 conditions: (criteria that must also be met, criteria that
 # must not be met). IL2RG (SCID VCEP): "Variant must also meet PM2" and "must
 # not meet BS1, BS2, or BA1". Enforced post-hoc in the criterion registry.
+# A token "CODE:Strong" matches only when CODE is met at Strong or above (PAH:
+# "Do not apply if PP3_Strong applies").
 PM1_CO_REQUIREMENTS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     "IL2RG": (("PM2",), ("BA1", "BS1", "BS2")),
+    # LDLR (GN013): "Caveat: variant must also meet PM2".
+    "LDLR": (("PM2",), ()),
+    # KCNQ1 (GN112): "The variant must be rare (meeting PM2_Supporting)".
+    "KCNQ1": (("PM2",), ()),
+    # RAG1 / RAG2 / IL7R (SCID VCEP): "variant must not meet BS1, BS2, or BA1".
+    "RAG1": ((), ("BA1", "BS1", "BS2")),
+    "RAG2": ((), ("BA1", "BS1", "BS2")),
+    "IL7R": ((), ("BA1", "BS1", "BS2")),
+    # PAH (GN006): "Do not apply if PP3_Strong applies".
+    "PAH": ((), ("PP3:Strong",)),
+}
+
+# PM1 downgraded to Supporting in these residue ranges when any of the listed
+# criteria is met. RYR1 (MHS VCEP, GN012): N-terminal 1-552 and central
+# 2101-2458 regions — "if PS1/PM5 applicable then PM1 should be used at
+# supporting".
+PM1_DOWNGRADE_WITH: dict[str, tuple[tuple[tuple[int, int], ...], tuple[str, ...]]] = {
+    "RYR1": (((1, 552), (2101, 2458)), ("PS1", "PM5")),
+}
+
+# Criteria not used together with PM1 at Strong. FBN1 (GN022): Cys in cbEGF
+# domains -> PM1_Strong; "PM5/PS1 should not be used when this argument applies".
+PM1_STRONG_EXCLUDES: dict[str, tuple[str, ...]] = {
+    "FBN1": ("PS1", "PM5"),
+}
+
+# Substitutions (ref, alt; 1-letter) for which PM1 is not applied. FBN1
+# (GN022): "N to S substitution in the second N of the consensus sequence and G
+# to A might be tolerated, PM1 should not be used in these cases". The residue
+# list does not distinguish the first from the second N of the cbEGF consensus,
+# so N>S is withheld at every listed Asn (conservative).
+PM1_TOLERATED_SUBSTITUTIONS: dict[str, frozenset[tuple[str, str]]] = {
+    "FBN1": frozenset({("N", "S"), ("G", "A")}),
 }
 
 

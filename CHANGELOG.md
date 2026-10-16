@@ -9,6 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PM1 regions re-checked against every VCEP CSpec text** (`pm1_hotspots.tsv`,
+  `scripts/build_pm1_hotspots.py` `_CURATED`). Fixed: MECP2 (VCEP numbering is
+  NM_004992 e2; MANE NM_001110792 e1 is +12 → MBD 102-174, TRD 314-318), UBE3A
+  (catalytic Cys820 of the 852-aa isoform = 840 on MANE NM_130839), F9 Moderate
+  (exons 3-5, p.85-174, was missing), BRAF (exon 6 p.238-287 and exon 11
+  p.439-478 added), RAF1 (exon 14 p.473-512 and exon 17 p.602-648 added),
+  DICER1 Supporting (RNase IIIb range 1682-1846, was two residues), GUCY2D
+  Supporting (p.873-951, was missing), ACADVL (VCEP table ranges 1-40, 214-223,
+  249-251, 381-382, 481-516 and p.562 added), RPE65 (Ala107-Gly125 range, was two
+  residues), ENG (spurious 350-382 range removed; C350/C363/C382 as residues),
+  HNF4A Supporting (37-113; 33-36 removed), TNNT2 (89-189 on MANE only), GP1BB
+  (Cys147 added), PTPN11 (AA 4 added), F8 Moderate (Ser2283 excluded), RYR1 (MHS
+  VCEP N-terminal 1-552 / central 2101-2458 Moderate, Supporting with PS1/PM5;
+  C-terminal 4631-4991 Supporting; pore 4800-4950 Moderate).
+- **PM1, VCEP external tables**: TP53 PM1 from cancerhotspots.org per amino-acid
+  change (≥10 samples → Moderate, 2-9 → Supporting; export in
+  `resources/clingen/cancerhotspots_TP53.tsv`, one `alt_aa`-restricted row per
+  residue) in addition to the six VCEP codons. VHL from the VCEP "Germline and
+  Somatic Hotspots" table: germline hotspots (Stebbins; Chiorean 2022; the
+  struck-through somatic residues S65/N78/S80/P86/W88/Y112/W117/R161/C162 used as
+  germline, W88 added) Moderate for any missense; the remaining somatic hotspots
+  (S68, V74, L89, S111, G114, H115, D121, L135, I151, L158, L169) by
+  cancerhotspots.org count of the same amino-acid change
+  (`resources/clingen/cancerhotspots_VHL.tsv`): ≥10 → Moderate (none reaches
+  10), observed <10 → Supporting, changes not observed → no PM1. SCN1A/2A/3A/8A (PM1 Table v2.20241205) and
+  AKT3/MTOR/PIK3CA/PIK3R2 (Brain Malformations Table 4) verified unchanged.
+- **PM1 VCEP caveats**: LDLR and KCNQ1 PM1 require PM2; RAG1/RAG2/IL7R PM1 not
+  with BA1/BS1/BS2; PAH PM1 not with PP3_Strong; RYR1 Moderate→Supporting with
+  PS1/PM5 (`PM1_DOWNGRADE_WITH`); FBN1 PM1_Strong suppresses PS1/PM5
+  (`PM1_STRONG_EXCLUDES`); FBN1 N>S and G>A substitutions do not receive PM1
+  (`PM1_TOLERATED_SUBSTITUTIONS`).
 - **PM5 for protein-truncating variants (PM5_PTC)** (`criteria/pm5_ptc.py`):
   nonsense/frameshift variants receive PM5 where the VCEP specifies it —
   RUNX1 (variant downstream of c.98 of NM_001754.4, SpliceAI ≤ 0.20, not with

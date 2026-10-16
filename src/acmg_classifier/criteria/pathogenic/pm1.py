@@ -2,7 +2,7 @@
 from __future__ import annotations
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
-from acmg_classifier.criteria.pm1_hotspots import PM1Hotspots
+from acmg_classifier.criteria.pm1_hotspots import PM1_TOLERATED_SUBSTITUTIONS, PM1Hotspots
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
@@ -90,6 +90,15 @@ class PM1Evaluator(CriterionEvaluator):
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM1, f"{gene}: not in a VCEP PM1 hotspot region"
                 )
+            # Substitutions the VCEP lists as tolerated at hotspot residues
+            # (FBN1: N>S, G>A) do not receive PM1.
+            sub = _ref_alt(pc.amino_acids) if pc.consequence == ConsequenceType.MISSENSE else None
+            if sub and sub in PM1_TOLERATED_SUBSTITUTIONS.get(gene, frozenset()):
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM1,
+                    f"{gene}: {sub[0]}>{sub[1]} at residue {pc.protein_position} "
+                    "may be tolerated (VCEP caveat) — PM1 not applied",
+                )
             return CriteriaResult.met(
                 ACMGCriterion.PM1, strength=strength, evidence=evidence,
             )
@@ -111,3 +120,12 @@ def _alt_aa(amino_acids: str | None) -> str | None:
         return None
     alt = amino_acids.partition("/")[2].strip()
     return alt if len(alt) == 1 else None
+
+
+def _ref_alt(amino_acids: str | None) -> tuple[str, str] | None:
+    """``(ref, alt)`` 1-letter residues from a VEP ``amino_acids`` "X/Y" field."""
+    if not amino_acids or "/" not in amino_acids:
+        return None
+    ref, _, alt = amino_acids.partition("/")
+    ref, alt = ref.strip().upper(), alt.strip().upper()
+    return (ref, alt) if len(ref) == 1 and len(alt) == 1 else None

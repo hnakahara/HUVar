@@ -1,0 +1,26 @@
+Gene	Residue	Type	Variants	Q-value	Samples	Tumor Type Composition	Found in
+VHL	S65	single residue	*:7|L:6|P:2|T:1|W:1	7.40697442383436e-13	17	kidney:15|bladder:1|pancreas:1	17
+VHL	X114	single residue	sp:16	4.1399817297452e-13	16	kidney:16	16
+VHL	L89	single residue	H:9|P:5|L:1	2.84655898510653e-10	15	kidney:13|bladder:1|lung:1	15
+VHL	X155	single residue	sp:14	7.83200669499252e-12	14	kidney:14	14
+VHL	S80	single residue	R:5|N:4|I:1|S:1	4.73394777910565e-08	11	kidney:10|pancreas:1	11
+VHL	R167	single residue	Q:4|W:4|G:3	0.0003850017619303	11	kidney:4|pancreas:2|adrenal_gland:1|prostate:1|soft_tissue:1|thyroid:1|uterus:1	11
+VHL	S111	single residue	N:6|R:2|P:1|S:1	1.145547139501e-06	10	kidney:10	10
+VHL	R161	single residue	*:7|Q:2|L:1	0.000554684648130705	10	kidney:7|adrenal_gland:1|breast:1|stomach:1	10
+VHL	N78	single residue	S:4|D:2|Y:2|K:1	3.06267165122873e-06	9	kidney:8|pancreas:1	9
+VHL	D121	single residue	Y:6|G:2|V:1	5.25111408060234e-05	9	kidney:9	9
+VHL	W88	single residue	*:5|L:2|R:2	5.74074593167752e-05	9	kidney:9	9
+VHL	L158	single residue	V:4|P:3|L:1|Q:1	8.08917220235343e-05	9	kidney:9	9
+VHL	P86	single residue	S:4|L:2|T:2|R:1	8.08917220235343e-05	9	kidney:9	9
+VHL	S68	single residue	*:7|P:1	7.74714398748904e-05	8	kidney:8	8
+VHL	C162	single residue	Y:3|R:2|*:1|F:1|W:1	0.00122944432376974	8	kidney:7|pancreas:1	8
+VHL	L188	single residue	P:4|Q:3|R:1	1.3599182926043002e-06	8	kidney:8	8
+VHL	V74	single residue	D:5|G:1|V:1	8.08917220235343e-05	7	kidney:7	7
+VHL	G114	single residue	A:4|R:2|C:1	0.00271531464293943	7	kidney:7	7
+VHL	H115	single residue	N:4|Y:2|Q:1	0.00743191624202421	7	kidney:7	7
+VHL	70-80	in-frame indel	F76del:4|E70_R79dup:1|I75_C77del:1|R79_S80del:1	0.0935986091028419	7	kidney:6|pancreas:1	7
+VHL	I151	single residue	N:2|T:2|F:1|S:1	0.000898333934521553	6	kidney:6	6
+VHL	W117	single residue	L:3|*:2|C:1	0.094271768237484	6	kidney:5|pancreas:1	6
+VHL	L169	single residue	P:5	0.0448753895749222	5	kidney:5	5
+VHL	Y112	single residue	*:2|C:1|D:1|Y:1	0.094271768237484	5	kidney:3|brain:1|pancreas:1	5
+VHL	L135	single residue	*:2|F:2	0.0482434197400611	4	kidney:4	4
