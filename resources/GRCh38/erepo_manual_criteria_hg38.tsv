@@ -392,8 +392,8 @@ chr1:94021238:A:T	PS4	Strong	eRepo
 chr1:94021330:AGGCT:A	PM3	Supporting	eRepo
 chr1:94021330:AGGCT:A	PP1	Moderate	eRepo
 chr1:94021362:A:AT	PM3	Supporting	eRepo
+chr1:94021387:CAG:CCC	PM3	Moderate	eRepo
 chr1:94021388:A:C	PM3	Moderate	eRepo
-chr1:94021388:AG:ACC	PM3	Moderate	eRepo
 chr1:94021405:C:T	PS4	Strong	eRepo
 chr1:94021899:C:A	PP4	Supporting	eRepo
 chr1:94021899:C:A	PS4	Strong	eRepo
@@ -2387,14 +2387,14 @@ chr7:44147737:G:A	PP4	Moderate	eRepo
 chr7:44147737:G:A	PS4	Strong	eRepo
 chr7:44147737:G:A	PP1	Strong	eRepo
 chr7:44147738:C:T	PP4	Moderate	eRepo
-chr7:44147738:C:A	PP4	Moderate	eRepo
 chr7:44147738:C:T	PS4	Strong	eRepo
-chr7:44147738:C:A	PS4	Strong	eRepo
 chr7:44147738:C:T	PP1	Strong	eRepo
 chr7:44147740:C:T	PP4	Moderate	eRepo
 chr7:44147740:C:T	PS4	Strong	eRepo
 chr7:44147740:C:T	PP1	Strong	eRepo
+chr7:44147741:C:A	PP4	Moderate	eRepo
 chr7:44147741:C:T	PP4	Moderate	eRepo
+chr7:44147741:C:A	PS4	Strong	eRepo
 chr7:44147741:C:T	PS4	Strong	eRepo
 chr7:44147741:C:T	PP1	Moderate	eRepo
 chr7:44147749:G:A	PM3	Supporting	eRepo
@@ -2474,11 +2474,11 @@ chr7:44149809:C:T	PS4	Moderate	eRepo
 chr7:44149809:C:T	PP1	Moderate	eRepo
 chr7:44149810:A:T	PM3	Supporting	eRepo
 chr7:44149810:A:T	PP4	Moderate	eRepo
+chr7:44149810:ATC:ACT	PP4	Supporting	eRepo
 chr7:44149810:A:G	PS4	Strong	eRepo
 chr7:44149810:A:G	PP1	Strong	eRepo
 chr7:44149810:A:T	PP1	Strong	eRepo
 chr7:44149811:T:C	PP4	Supporting	eRepo
-chr7:44149812:C:CT	PP4	Supporting	eRepo
 chr7:44149813:G:A	PM6	Moderate	eRepo
 chr7:44149813:G:A	PP4	Moderate	eRepo
 chr7:44149813:G:C	PP4	Moderate	eRepo
@@ -3113,10 +3113,10 @@ chr11:532696:C:T	BP5	Supporting	eRepo
 chr11:532698:T:A	BS4	Strong	eRepo
 chr11:533553:T:C	PS2	VeryStrong	eRepo
 chr11:533553:T:C	PS4	Moderate	eRepo
-chr11:533727:GT:GAA	PS4	Supporting	eRepo
 chr11:533799:T:G	BP5	Supporting	eRepo
 chr11:533879:GGC:GAG	PM6	Moderate	eRepo
 chr11:533879:GGC:GAG	PS4	Supporting	eRepo
+chr11:533879:GGC:GAA	PS4	Supporting	eRepo
 chr11:533881:C:T	PS4	Moderate	eRepo
 chr11:533881:C:T	PP1	Supporting	eRepo
 chr11:533883:G:A	PS2	Strong	eRepo
@@ -3145,7 +3145,7 @@ chr11:2585275:C:T	PS4	Strong	eRepo
 chr11:2588804:C:T	BS4	Supporting	eRepo
 chr11:2588804:C:G	BP5	Supporting	eRepo
 chr11:2588804:C:G	PP1	Supporting	eRepo
-chr11:2775999:CAGTAC:CGTTGAGA	PM3	Moderate	eRepo
+chr11:2775998:GCAGTAC:GGTTGAGA	PM3	Moderate	eRepo
 chr11:2778009:G:A	PM3	Supporting	eRepo
 chr11:2778009:G:A	PS4	Strong	eRepo
 chr11:5225487:T:C	PM3	VeryStrong	eRepo
@@ -3449,7 +3449,7 @@ chr11:108345804:T:G	PM3	Strong	eRepo
 chr11:108345818:C:T	PM3	Strong	eRepo
 chr11:108345844:G:C	PM3	Moderate	eRepo
 chr11:108345870:G:C	PM3	Moderate	eRepo
-chr11:108345888:GT:GAA	PM3	VeryStrong	eRepo
+chr11:108345888:GTG:GAA	PM3	VeryStrong	eRepo
 chr11:108347277:A:C	PM3	Strong	eRepo
 chr11:108347293:G:C	PM3	Supporting	eRepo
 chr11:108353772:C:A	PM3	Moderate	eRepo
@@ -6034,9 +6034,9 @@ chr15:42410926:G:A	PP4	Supporting	eRepo
 chr15:42410926:G:C	PP4	Supporting	eRepo
 chr15:42410926:G:A	PP1	Strong	eRepo
 chr15:42410981:TAG:TTCATCT	PM3	Strong	eRepo
-chr15:42410981:TAGGCTG:TCA	PM3	Supporting	eRepo
+chr15:42410981:TAG:TTCA	PM3	Supporting	eRepo
 chr15:42410981:TAG:TTCATCT	PP4	Strong	eRepo
-chr15:42410981:TAGGCTG:TCA	PP4	Supporting	eRepo
+chr15:42410981:TAG:TTCA	PP4	Supporting	eRepo
 chr15:42410981:TAG:TTCATCT	PP1	Supporting	eRepo
 chr15:42411299:C:A	PM3	VeryStrong	eRepo
 chr15:42411299:C:A	PP4	Strong	eRepo
@@ -6300,6 +6300,7 @@ chr16:68737416:A:G	PS4	Supporting	eRepo
 chr16:68737416:A:G	PP1	Supporting	eRepo
 chr16:68737417:T:G	PS4	Moderate	eRepo
 chr16:68737417:T:C	PS4	Moderate	eRepo
+chr16:68737417:T:A	PS4	Supporting	eRepo
 chr16:68737418:G:A	PS4	Strong	eRepo
 chr16:68737418:G:A	PP1	Moderate	eRepo
 chr16:68737419:G:A	BS2	Strong	eRepo
@@ -6493,7 +6494,6 @@ chr16:68819417:C:G	PS4	Moderate	eRepo
 chr16:68819424:TGGTAAG:T	PS4	Supporting	eRepo
 chr16:68819426:G:C	PS4	Moderate	eRepo
 chr16:68819430:G:A	PS4	Moderate	eRepo
-chr16:68821610:T:A	PS4	Supporting	eRepo
 chr16:68821999:A:C	BS2	Strong	eRepo
 chr16:68822021:A:AC	PS4	Supporting	eRepo
 chr16:68822063:G:GC	PS4	Supporting	eRepo
@@ -10442,8 +10442,8 @@ chr21:35048578:G:A	BP2	Supporting	eRepo
 chr21:35048739:T:C	BP2	Supporting	eRepo
 chr21:35048819:T:C	BP2	Supporting	eRepo
 chr21:35048901:G:A	BP2	Supporting	eRepo
-chr21:35048919:A:AC	BP2	Supporting	eRepo
 chr21:35049034:T:C	BP2	Supporting	eRepo
+chr21:35049130:A:AA	BP2	Supporting	eRepo
 chr22:19723890:T:C	PM3	Moderate	eRepo
 chr22:19723890:T:C	PP4	Supporting	eRepo
 chr22:19723890:T:C	PS4	Supporting	eRepo
@@ -10979,9 +10979,9 @@ chrX:71110964:C:T	PP4	Moderate	eRepo
 chrX:71110964:C:T	PS4	Strong	eRepo
 chrX:71110982:A:G	PP4	Moderate	eRepo
 chrX:71110982:A:G	PS4	Supporting	eRepo
+chrX:135985497:GG:G	BS2	Strong	eRepo
 chrX:135985578:C:G	BP5	Supporting	eRepo
 chrX:135985578:C:G	BS2	Strong	eRepo
-chrX:135985622:AG:A	BS2	Strong	eRepo
 chrX:135985639:G:A	PS2	Strong	eRepo
 chrX:135985639:G:A	BS4	Supporting	eRepo
 chrX:135998094:CTTTAT:C	PS2	Strong	eRepo
@@ -11411,6 +11411,8 @@ chrX:154030923:G:A	PM6	Strong	eRepo
 chrX:154030923:G:A	PP4	Supporting	eRepo
 chrX:154030923:G:A	PS4	Strong	eRepo
 chrX:154030927:G:C	PS2	Strong	eRepo
+chrX:154030948:G:A	PS2	VeryStrong	eRepo
+chrX:154030948:G:A	PS4	Strong	eRepo
 chrX:154030949:G:C	BP5	Supporting	eRepo
 chrX:154030949:G:C	BS2	Strong	eRepo
 chrX:154030969:C:G	BP2	Supporting	eRepo
