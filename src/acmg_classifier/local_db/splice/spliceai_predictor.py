@@ -18,7 +18,7 @@ class SpliceAIPredictor(SplicePredictor):
     Looks up precomputed SpliceAI scores from tabix-indexed VCF.
 
     Requires Illumina commercial license for the score file.
-    Walker 2023 thresholds: >=0.2 -> PP3 Moderate, <=0.1 -> BP4 Supporting.
+    Walker 2023 thresholds: >=0.2 -> PP3 Supporting, <=0.1 -> BP4 Supporting.
     Accepts separate SNV and indel VCF files; selects the appropriate file per variant.
     """
 

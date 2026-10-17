@@ -1,5 +1,7 @@
 """PM1 — located in mutational hotspot or critical functional domain."""
 from __future__ import annotations
+
+import re
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.criteria.pm1_hotspots import PM1_TOLERATED_SUBSTITUTIONS, PM1Hotspots
@@ -24,6 +26,30 @@ _RANK = {
 _PM1_INDEL_GENES = frozenset({"GAA", "IDUA", "CYP1B1"})
 
 
+
+# HNF1A (MDEP v3.1) PM1_Supporting also covers transcription-factor binding
+# sites of the promoter (c. positions upstream of the start codon, inclusive).
+_HNF1A_PROMOTER_SITES = (
+    (-195, -187, "AP1 binding site"),
+    (-227, -209, "overlapping HNF3 / NF-Y sites"),
+    (-259, -238, "HNF1A binding site"),
+    (-288, -276, "HNF4A binding site"),
+)
+_UPSTREAM_SNV = re.compile(r"c\.(-\d+)[ACGT]>[ACGT]$")
+
+
+def _hnf1a_promoter_site(pc) -> str | None:
+    if pc is None or pc.gene_symbol != "HNF1A" or not pc.hgvs_c:
+        return None
+    m = _UPSTREAM_SNV.search(pc.hgvs_c.split(":")[-1])
+    if not m:
+        return None
+    pos = int(m.group(1))
+    for lo, hi, name in _HNF1A_PROMOTER_SITES:
+        if lo <= pos <= hi:
+            return f"c.{pos} in the {name} (c.{lo} to c.{hi})"
+    return None
+
 class PM1Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
@@ -42,6 +68,12 @@ class PM1Evaluator(CriterionEvaluator):
         # variants (frameshift, stop_gain) are PVS1 territory, and silent
         # variants do not move an amino-acid position into a hotspot.
         pc = annotation.primary_consequence
+        prom = _hnf1a_promoter_site(pc)
+        if prom is not None:
+            return CriteriaResult.met(
+                ACMGCriterion.PM1, CriterionStrength.SUPPORTING,
+                f"HNF1A VCEP: promoter {prom} -> PM1_Supporting",
+            )
         if pc is None or pc.consequence not in (
             ConsequenceType.MISSENSE,
             ConsequenceType.INFRAME_INSERTION,

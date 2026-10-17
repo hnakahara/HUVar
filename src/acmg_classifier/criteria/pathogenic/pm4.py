@@ -41,6 +41,35 @@ def _load_pm4_columns(tsv_path) -> tuple[frozenset[str], dict[str, int]]:
     return frozenset(declined), max_aa
 
 
+
+# MYOC (Glaucoma VCEP v2.1): "In-frame del/ins, stop-loss variants and truncating
+# variants involving >10% of the protein and located within the conserved
+# olfactomedin domain (AA 246-502)" -> PM4 (Moderate); "<=10% of the protein"
+# -> PM4_Supporting. MYOC truncating variants are not PVS1 (LoF is not the
+# disease mechanism), so PM4 carries the length-change evidence.
+_MYOC_LEN = 504
+_MYOC_OLF = (246, 502)
+
+
+def _myoc_pm4(pc, variant) -> tuple[CriterionStrength, str] | None:
+    if pc.gene_symbol != "MYOC" or pc.protein_position is None:
+        return None
+    pos = pc.protein_position
+    if not (_MYOC_OLF[0] <= pos <= _MYOC_OLF[1]):
+        return None
+    if pc.consequence in (ConsequenceType.STOP_GAINED, ConsequenceType.FRAMESHIFT):
+        n = _MYOC_LEN - pos + 1
+        kind = "truncating"
+    elif pc.consequence in (ConsequenceType.INFRAME_INSERTION, ConsequenceType.INFRAME_DELETION):
+        n = max(1, max(len(variant.ref), len(variant.alt)) // 3)
+        kind = "in-frame"
+    else:
+        return None
+    frac = n / _MYOC_LEN
+    strength = CriterionStrength.MODERATE if frac > 0.10 else CriterionStrength.SUPPORTING
+    return strength, (f"MYOC VCEP: {kind} variant in the olfactomedin domain (p.{pos}) "
+                      f"involving {frac:.1%} of the protein -> PM4_{strength.value}")
+
 class PM4Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
@@ -97,6 +126,11 @@ class PM4Evaluator(CriterionEvaluator):
                     evidence=(f"{gene}: {pc.consequence.value} at conserved nucleotide "
                               f"(phyloP {best:.2f} >= {nt_cut:g}, {n_nt} nt)"),
                 )
+
+        myoc = _myoc_pm4(pc, variant)
+        if myoc is not None:
+            strength, ev = myoc
+            return CriteriaResult.met(ACMGCriterion.PM4, strength=strength, evidence=ev)
 
         if not (is_indel or is_stoploss):
             return CriteriaResult.not_met(ACMGCriterion.PM4, "Not an in-frame indel or stop-loss")

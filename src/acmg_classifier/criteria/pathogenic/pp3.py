@@ -95,28 +95,44 @@ def _squirls_pp3(score: float) -> CriterionStrength | None:
 #     return None
 
 
-def _spliceai_pp3(max_delta: float) -> CriterionStrength | None:
+def _spliceai_pp3(max_delta: float, cutoff: float = 0.20, strict: bool = False) -> CriterionStrength | None:
     """SpliceAI (Jaganathan 2019) PP3 cutoff.
 
-    Walker 2023 (ClinGen SVI splicing WG) recommends max_delta >= 0.20 as
-    Moderate for predicted splice impact. Stronger tiers require additional
-    RNA evidence and are intentionally not awarded by the predictor alone."""
-    if max_delta >= 0.20:
-        return CriterionStrength.MODERATE
-    return None
-
-
-def _openspliceai_pp3(max_delta: float) -> CriterionStrength | None:
-    """OpenSpliceAI (Chao 2025) PP3 cutoff.
-
-    OpenSpliceAI reimplements SpliceAI in PyTorch and emits delta scores on
-    the same 0–1 scale, so the same >= 0.20 trigger applies. But unlike
-    SpliceAI there is no Walker-style OddsPath calibration to the ACMG
-    Moderate tier yet, so we award only Supporting — the conservative tier
-    matching SQUIRLS' treatment."""
-    if max_delta >= 0.20:
+    Walker 2023 (ClinGen SVI Splicing Subgroup, PMID 37352859): a SpliceAI
+    max delta >= 0.20 supports PP3 at the *Supporting* level; stronger weight
+    requires RNA evidence (PVS1 / PS3), not the predictor alone. VCEPs may set a
+    gene-specific cutoff (``cutoff``; ``strict`` for a ">" rule)."""
+    if max_delta > cutoff if strict else max_delta >= cutoff:
         return CriterionStrength.SUPPORTING
     return None
+
+
+def _openspliceai_pp3(max_delta: float, cutoff: float = 0.20, strict: bool = False) -> CriterionStrength | None:
+    """OpenSpliceAI (Chao 2025) PP3 cutoff: same 0-1 delta scale as SpliceAI,
+    so the same (gene-specific) cutoff applies, at Supporting (Walker 2023)."""
+    return _spliceai_pp3(max_delta, cutoff, strict)
+
+
+# Gene-specific SpliceAI cutoffs for splice-based PP3 from the VCEP CSpec
+# texts (default 0.20, Walker 2023): (cutoff, strict ">" instead of ">=").
+_PP3_SPLICE_CUTOFF: dict[str, tuple[float, bool]] = {
+    **{g: (0.50, False) for g in (
+        "ABCD1", "ACADVL", "ACTA1", "ANO5", "CAPN3", "DNM2", "DYSF", "MTM1", "NEB",
+        "RYR1", "SGCA", "SGCB", "SGCD", "SGCG", "SERPINC1", "VWF", "GP1BA",
+        "GP1BB", "GP9")},
+    "GAA": (0.50, True), "PAH": (0.50, True),          # "> 0.5"
+    "RUNX1": (0.38, False),                              # ">= 0.38"
+    "HBB": (0.30, True), "HBA2": (0.30, True),           # "> 0.3"
+}
+
+
+def _splice_cutoff(gene: str | None) -> tuple[float, bool]:
+    return _PP3_SPLICE_CUTOFF.get(gene or "", (0.20, False))
+
+
+_RANK = {CriterionStrength.SUPPORTING: 1, CriterionStrength.MODERATE: 2,
+         CriterionStrength.THREE_POINT: 3, CriterionStrength.STRONG: 4,
+         CriterionStrength.VERY_STRONG: 5}
 
 
 class PP3Evaluator(CriterionEvaluator):
@@ -140,12 +156,38 @@ class PP3Evaluator(CriterionEvaluator):
         result = self._evaluate(variant, annotation, supplement)
         pc = annotation.primary_consequence
         if pc is not None and pc.consequence == ConsequenceType.MISSENSE:
+            result = self._with_missense_splice(pc, annotation, result)
+        if pc is not None and pc.consequence == ConsequenceType.MISSENSE:
             from acmg_classifier.criteria.insilico_genes import vcep_predictor_note
             note = vcep_predictor_note(pc.gene_symbol, self._cfg, self._insilico_spec,
                                        self._revel_spec, "PP3")
             if note:
                 result.evidence = f"{result.evidence} {note}".strip()
         return result
+
+    def _with_missense_splice(self, pc, annotation: AnnotationData,
+                              protein: CriteriaResult) -> CriteriaResult:
+        """A missense variant can also act through splicing (Walker 2023): PP3
+        is the stronger of the protein-level predictor and the splice
+        prediction (Supporting at the gene's SpliceAI cutoff). The splice route
+        no longer pre-empts a stronger protein-level call."""
+        sp = annotation.splice
+        if not (sp and sp.is_available and sp.max_delta is not None
+                and sp.tool in ("spliceai", "openspliceai")):
+            return protein
+        cut, strict = _splice_cutoff(pc.gene_symbol)
+        if _spliceai_pp3(sp.max_delta, cut, strict) is None:
+            return protein
+        if protein.triggered and _RANK.get(protein.strength, 0) >= _RANK[CriterionStrength.SUPPORTING]:
+            return protein
+        label = "SpliceAI" if sp.tool == "spliceai" else "OpenSpliceAI"
+        cut_note = (f" [{pc.gene_symbol} VCEP cutoff {'>' if strict else '>='}{cut:g}]"
+                    if pc.gene_symbol in _PP3_SPLICE_CUTOFF else "")
+        return CriteriaResult.met(
+            ACMGCriterion.PP3, CriterionStrength.SUPPORTING,
+            f"{label} max_delta={sp.max_delta:.3f}{cut_note} (Supporting) — missense "
+            f"with predicted splice impact; protein-level: {protein.evidence}",
+        )
 
     def _evaluate(
         self,
@@ -163,22 +205,6 @@ class PP3Evaluator(CriterionEvaluator):
         # mechanism (loss of normal protein via aberrant splicing) is
         # independent of the protein-level damage signal.
         if pc.consequence == ConsequenceType.MISSENSE:
-            sp = annotation.splice
-            # SpliceAI (Walker-calibrated, Moderate) and OpenSpliceAI (same
-            # scale, conservative Supporting) are used here; SQUIRLS is not,
-            # to avoid uncertain dual-counting.
-            if sp and sp.is_available and sp.tool == "spliceai" and sp.max_delta is not None:
-                if sp.max_delta >= 0.20:
-                    return CriteriaResult.met(
-                        ACMGCriterion.PP3, CriterionStrength.MODERATE,
-                        f"SpliceAI max_delta={sp.max_delta:.3f} (Moderate) — missense with predicted splice impact",
-                    )
-            if sp and sp.is_available and sp.tool == "openspliceai" and sp.max_delta is not None:
-                if sp.max_delta >= 0.20:
-                    return CriteriaResult.met(
-                        ACMGCriterion.PP3, CriterionStrength.SUPPORTING,
-                        f"OpenSpliceAI max_delta={sp.max_delta:.3f} (Supporting) — missense with predicted splice impact",
-                    )
             # Per-gene auxiliary rule (BayesDel / REVEL∧CADD / 2-of-3). When
             # active it is AUTHORITATIVE for the gene and replaces the single-tool
             # dispatch below — so e.g. CTLA4 cannot meet PP3 on REVEL alone when
@@ -272,12 +298,14 @@ class PP3Evaluator(CriterionEvaluator):
                 return CriteriaResult.not_met(
                     ACMGCriterion.PP3, "No splice prediction (splice evaluation disabled)",
                 )
+            cut, strict = _splice_cutoff(pc.gene_symbol)
+            cut_note = f" [{pc.gene_symbol} VCEP cutoff {'>' if strict else '>='}{cut:g}]" if pc.gene_symbol in _PP3_SPLICE_CUTOFF else ""
             if sp.tool == "spliceai" and sp.max_delta is not None:
-                strength = _spliceai_pp3(sp.max_delta)
-                score_str = f"SpliceAI max_delta={sp.max_delta:.3f}"
+                strength = _spliceai_pp3(sp.max_delta, cut, strict)
+                score_str = f"SpliceAI max_delta={sp.max_delta:.3f}{cut_note}"
             elif sp.tool == "openspliceai" and sp.max_delta is not None:
-                strength = _openspliceai_pp3(sp.max_delta)
-                score_str = f"OpenSpliceAI max_delta={sp.max_delta:.3f}"
+                strength = _openspliceai_pp3(sp.max_delta, cut, strict)
+                score_str = f"OpenSpliceAI max_delta={sp.max_delta:.3f}{cut_note}"
             elif sp.tool == "squirls" and sp.raw_score is not None:
                 strength = _squirls_pp3(sp.raw_score)
                 # Suffix the score string so reviewers see the calibration

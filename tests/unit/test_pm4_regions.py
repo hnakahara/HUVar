@@ -112,9 +112,10 @@ class TestEvaluator:
         r = self._ev(tmp_path).evaluate(_DEL_1AA, _ann("RUNX1", ConsequenceType.INFRAME_DELETION, 300))
         assert not r.triggered
 
-    def test_myoc_in_domain_moderate(self, tmp_path):
+    def test_myoc_in_domain_small_inframe_supporting(self, tmp_path):
+        # MYOC v2.1: in-frame change involving <=10% of the protein -> Supporting
         r = self._ev(tmp_path).evaluate(_DEL_2AA, _ann("MYOC", ConsequenceType.INFRAME_DELETION, 300))
-        assert r.triggered and r.strength == CriterionStrength.MODERATE
+        assert r.triggered and r.strength == CriterionStrength.SUPPORTING
 
     def test_myoc_outside_not_met(self, tmp_path):
         r = self._ev(tmp_path).evaluate(_DEL_2AA, _ann("MYOC", ConsequenceType.INFRAME_DELETION, 100))

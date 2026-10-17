@@ -29,6 +29,12 @@ class PM5Evaluator(CriterionEvaluator):
         self._cfg = cfg
         # Per-gene PM5 spec: Grantham gate, PM1/PS1 exclusions, strength ceiling.
         self._spec = PM5Spec(cfg.disease_prevalence_tsv)
+        # Comparator splice scores (precomputed SpliceAI only; lazily opened).
+        self._splice_lookup = None
+        self._splice_lookup_ready = False
+        # SCN paralogue alignment for the PM5_Supporting paralogue route.
+        from acmg_classifier.criteria.ps1_paralog import PS1ParalogMap
+        self._paralog_map = PS1ParalogMap(getattr(cfg, "ps1_paralog_map_tsv", None))
 
     def evaluate(
         self,
@@ -55,6 +61,30 @@ class PM5Evaluator(CriterionEvaluator):
         if pc is None or pc.consequence != ConsequenceType.MISSENSE:
             return CriteriaResult.not_met(ACMGCriterion.PM5, "Not a missense variant")
 
+        from acmg_classifier.criteria import pm5_conditions as cond
+        gene = pc.gene_symbol
+        # VCEP: PM5 is a protein-level argument -> the candidate must not be
+        # predicted to act through splicing (gene-specific SpliceAI cutoff).
+        sp = annotation.splice
+        cand_sp = (sp.max_delta if sp and sp.is_available and sp.max_delta is not None
+                   else None)
+        if cond.splice_ok(gene, cand_sp, "candidate") is False:
+            cut = cond.SPLICE[gene][0]
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM5,
+                f"{gene} VCEP: candidate predicted to affect splicing "
+                f"({sp.tool} max_delta={cand_sp:.2f}, cutoff {cut:g})",
+            )
+        # DYSF: "the REVEL score for the missense variant should be > 0.7".
+        if gene in cond.REVEL_MIN:
+            rv = annotation.revel.score if annotation.revel else None
+            if rv is None or rv <= cond.REVEL_MIN[gene]:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM5,
+                    f"{gene} VCEP: REVEL {'unavailable' if rv is None else f'{rv:.3f}'} "
+                    f"(> {cond.REVEL_MIN[gene]:g} required)",
+                )
+
         from acmg_classifier.local_db.clinvar_sqlite import (
             has_benign_at_codon,
             query_same_codon_different_aa,
@@ -77,11 +107,20 @@ class PM5Evaluator(CriterionEvaluator):
         hits, vcep_note = filter_comparators(
             pc.gene_symbol, "PM5", hits, variant.assembly.value,
         )
+        # Comparator splice condition (both-sided VCEPs): drop comparators
+        # predicted to act through splicing (precomputed SpliceAI lookup).
+        splice_note = ""
+        if hits and gene in cond.SPLICE and cond.SPLICE[gene][1] in ("both", "comparator"):
+            hits, splice_note = self._filter_comparator_splice(gene, hits, cand_sp)
         if not hits:
+            par = self._paralog_route(pc) if gene in cond.PARALOG_SUPPORTING else None
+            if par is not None:
+                return par
             return CriteriaResult.not_met(
                 ACMGCriterion.PM5,
                 f"No ClinVar >={self._cfg.pm5_min_stars} star same-codon different-AA hit"
-                + (f" [{vcep_note}]" if vcep_note else ""),
+                + (f" [{vcep_note}]" if vcep_note else "")
+                + (f" [{splice_note}]" if splice_note else ""),
             )
 
         # Do not apply at a codon where any benign variant is known (a VCEP
@@ -109,6 +148,15 @@ class PM5Evaluator(CriterionEvaluator):
                 )
             if not qualifying:
                 sym = {"ge": ">=", "gt": ">", "le": "<=", "lt": "<"}[op]
+                if gene in cond.GRANTHAM_SUPPORTING:
+                    # MDEP: a Pathogenic comparator with a GREATER Grantham
+                    # distance still gives PM5_Supporting.
+                    ids = ", ".join(h.variation_id or "" for h in hits[:3])
+                    return CriteriaResult.met(
+                        ACMGCriterion.PM5, strength=CriterionStrength.SUPPORTING,
+                        evidence=(f"ClinVar same codon, diff AA; comparator has a greater "
+                                  f"{engine} distance (MDEP: PM5_Supporting): {ids}"),
+                    )
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM5,
                     f"{engine} gate failed: candidate not {sym} comparator",
@@ -165,9 +213,15 @@ class PM5Evaluator(CriterionEvaluator):
         n_distinct_path = len({
             _comparator_change(h.hgvs_p) for h in pathogenic_hits if _comparator_change(h.hgvs_p)
         })
+        n_distinct_any = len({
+            _comparator_change(h.hgvs_p) for h in qualifying if _comparator_change(h.hgvs_p)
+        })
         if n_distinct_path >= 2:
             base = CriterionStrength.STRONG
         elif pathogenic_hits:
+            base = CriterionStrength.MODERATE
+        elif gene in cond.TWO_LP_MODERATE and n_distinct_any >= 2:
+            # F8 / F9: "1 pathogenic variant or 2 likely pathogenic variants"
             base = CriterionStrength.MODERATE
         else:
             base = CriterionStrength.SUPPORTING
@@ -175,8 +229,78 @@ class PM5Evaluator(CriterionEvaluator):
         strength = _min_strength(base, cap)
         ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
         return CriteriaResult.met(
-            ACMGCriterion.PM5, strength=strength, evidence=f"ClinVar {tag}: {ids}"
+            ACMGCriterion.PM5, strength=strength,
+            evidence=f"ClinVar {tag}: {ids}" + (f" [{splice_note}]" if splice_note else ""),
         )
+
+    # ------------------------------------------------------------------ helpers
+    def _comparator_splice(self, h: ClinVarRecord) -> float | None:
+        """Precomputed SpliceAI max delta of a ClinVar comparator, or None."""
+        if not self._splice_lookup_ready:
+            self._splice_lookup_ready = True
+            try:
+                from acmg_classifier.models.enums import SpliceTool
+                if getattr(self._cfg, "splice_tool", None) == SpliceTool.SPLICEAI:
+                    from acmg_classifier.local_db.splice.spliceai_predictor import SpliceAIPredictor
+                    pred = SpliceAIPredictor(self._cfg.spliceai_vcf, self._cfg.spliceai_indel_vcf)
+                    self._splice_lookup = pred if pred.is_available() else None
+            except Exception:  # noqa: BLE001 — optional resource
+                self._splice_lookup = None
+        if self._splice_lookup is None or not (h.chrom and h.pos and h.ref and h.alt):
+            return None
+        try:
+            from acmg_classifier.models.variant import VariantRecord as _VR
+            v = _VR(chrom=h.chrom, pos=int(h.pos), ref=h.ref, alt=h.alt,
+                    assembly=self._cfg.assembly)
+            sc = self._splice_lookup.predict(v)
+            return sc.max_delta if sc.is_available else None
+        except Exception:  # noqa: BLE001
+            return None
+
+    def _filter_comparator_splice(self, gene, hits, cand_sp):
+        from acmg_classifier.criteria import pm5_conditions as cond
+        kept, dropped, unknown = [], 0, 0
+        for h in hits:
+            comp = self._comparator_splice(h)
+            ok = cond.splice_ok(gene, comp, "comparator", cand_sp)
+            if ok is False:
+                dropped += 1
+                continue
+            if ok is None:
+                unknown += 1
+            kept.append(h)
+        parts = []
+        if dropped:
+            parts.append(f"{dropped} comparator(s) excluded: predicted splice effect")
+        if unknown:
+            parts.append(f"comparator splice not assessed for {unknown}")
+        return kept, "; ".join(parts)
+
+    def _paralog_route(self, pc) -> CriteriaResult | None:
+        """SCN1A/2A/3A/8A: PM5_Supporting when >1 non-identical amino-acid
+        change at the analogous residue of the paralogues is classified P/LP."""
+        if not self._paralog_map.has_gene(pc.gene_symbol) or not pc.amino_acids:
+            return None
+        parts = pc.amino_acids.split("/")
+        if len(parts) != 2:
+            return None
+        ref, alt = parts[0].strip(), parts[1].strip()
+        from acmg_classifier.local_db.clinvar_sqlite import query_paralog_codon
+        changes: dict[str, str] = {}
+        for sib, spos in self._paralog_map.analogs(pc.gene_symbol, pc.protein_position).items():
+            for h in query_paralog_codon(self._cfg.clinvar_sqlite, sib, ref, spos,
+                                         min_stars=self._cfg.pm5_min_stars):
+                aac = h.amino_acid_change or ""
+                if aac and not aac.endswith(alt):
+                    changes[f"{sib}:{aac}"] = h.variation_id or ""
+        if len(changes) > 1:
+            return CriteriaResult.met(
+                ACMGCriterion.PM5, strength=CriterionStrength.SUPPORTING,
+                evidence=(f"{len(changes)} non-identical P/LP changes at the analogous "
+                          f"paralogue residue (SCN VCEP PM5_Supporting): "
+                          f"{', '.join(list(changes)[:4])}"),
+            )
+        return None
 
     def _gate_filter(
         self, pc, hits: list[ClinVarRecord], matrix: str, op: str

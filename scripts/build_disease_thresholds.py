@@ -1703,6 +1703,13 @@ def _pm2_min_depth(rule_set: dict) -> str:
     return m.group(1) if m else ""
 
 
+# Mode of inheritance used for an MOI-split PM2 cutoff when the CSpec gene
+# record has none (Hearing Loss GN005: these genes are curated as autosomal
+# recessive in the eRepo; MYO6 / TECTA / KCNQ4 / COCH keep the dominant value).
+_PM2_MOI_FALLBACK = {"USH2A": "AR", "GJB2": "AR", "SLC26A4": "AR",
+                     "CDH23": "AR", "MYO7A": "AR"}
+
+
 def _pm2_threshold(rule_set: dict, moi: str) -> str:
     """PM2 allele-frequency cutoff for a gene with mode-of-inheritance *moi*.
 
@@ -1831,7 +1838,10 @@ def parse_spec(path: str) -> list[dict]:
             if not sym:
                 continue
             moi = _moi(gene)
-            pm2_threshold = _pm2_threshold(rs, moi)
+            # The multi-gene Hearing Loss spec (GN005) carries no per-gene MOI,
+            # so its MOI-split PM2 cutoff ("<=0.00007 recessive, <=0.00002
+            # dominant") fell back to the dominant value for recessive genes.
+            pm2_threshold = _pm2_threshold(rs, moi or _PM2_MOI_FALLBACK.get(sym, ""))
             rows.append({
                 "gene_symbol": sym,
                 "inheritance": moi,

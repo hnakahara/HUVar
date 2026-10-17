@@ -67,6 +67,28 @@ def _upper_af_95(ac: int | None, an: int | None) -> float | None:
     return lam_u / an
 
 
+
+# Monogenic Diabetes VCEP (GCK / HNF1A / HNF4A): PM2_Supporting is judged on the
+# GrpMax FAF (<= 3e-6). When gnomAD cannot compute the FAF (too few copies), the
+# MDEP applies PM2_Supporting if there are <= 2 copies in the European
+# (non-Finnish) group and <= 1 copy in any other group (eRepo MDEP curations,
+# specifications v1.3+). Approximated with the GrpMax allele count: met when the
+# GrpMax group carries <= 1 copy, or it is NFE with <= 2 copies and at most one
+# copy elsewhere.
+_PM2_MDEP_INCOMPUTABLE = frozenset({"GCK", "HNF1A", "HNF4A"})
+
+
+def _mdep_incomputable_faf(gd) -> tuple[bool, str]:
+    ac = gd.ac or 0
+    acg = gd.ac_grpmax
+    pop = (gd.popmax_pop or "").lower()
+    if acg is None:
+        ok = ac <= 1
+        return ok, f"FAF incomputable; AC={ac} (MDEP copy rule)"
+    ok = acg <= 1 or (pop == "nfe" and acg <= 2 and ac - acg <= 1)
+    return ok, (f"FAF incomputable; GrpMax {pop or '?'} AC={acg}, total AC={ac} "
+                f"(MDEP: <=2 copies in NFE, <=1 in any other group)")
+
 class PM2Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
@@ -253,6 +275,11 @@ class PM2Evaluator(CriterionEvaluator):
 
         # Gene-specific "absent" wording (named genes only, cSpec verbatim).
         gene_u = gene or ""
+        if (gene_u in _PM2_MDEP_INCOMPUTABLE and not absent and rule and rule.use_faf
+                and gd.faf95_popmax is None and (gd.ac or 0) > 0):
+            ok, detail = _mdep_incomputable_faf(gd)
+            if ok:
+                absent, absent_detail = True, detail
         if gene_u in _PM2_MALE_ABSENT and gd.nhemi is not None and gd.nhemi == 0:
             absent, absent_detail = True, "absent in males (nhemi=0)"
         elif gene_u in _PM2_ALLOW_ONE_ALLELE and (gd.ac or 0) <= 1:
@@ -265,6 +292,10 @@ class PM2Evaluator(CriterionEvaluator):
                 reason = zyg_block or depth_block
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM2, f"{reason}{filter_note}",
+                )
+            if absent_detail.startswith("FAF incomputable"):
+                return CriteriaResult.met(
+                    ACMGCriterion.PM2, strength, f"{absent_detail}{filter_note}",
                 )
             return CriteriaResult.met(
                 ACMGCriterion.PM2, strength,

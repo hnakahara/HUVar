@@ -20,6 +20,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   rule); GCK stop-loss variants → PVS1 (exon 10 critical, stop-loss reported in
   MODY); frameshifts reading through the stop codon → PVS1 for MECP2, TCF4, CDKL5
   and UBE3A, PVS1_Moderate for SLC9A6.
+- **PP3, splice predictions** (Walker 2023): SpliceAI / OpenSpliceAI >= cutoff now
+  gives PP3_Supporting (was Moderate for SpliceAI), with VCEP gene-specific cutoffs
+  (>= 0.5: ABCD1, ACADVL, ACTA1, ANO5, CAPN3, DNM2, DYSF, MTM1, NEB, RYR1, SGCA/B/D/G,
+  SERPINC1, VWF, GP1BA/GP1BB/GP9; > 0.5: GAA, PAH; >= 0.38: RUNX1; > 0.3: HBB, HBA2).
+  For missense variants PP3 is the stronger of the protein-level predictor and the
+  splice prediction (the splice route no longer pre-empts a stronger REVEL /
+  ESM1b / AlphaMissense call).
+- **PM2, Monogenic Diabetes VCEP (GCK / HNF1A / HNF4A)**: when gnomAD cannot compute
+  the GrpMax FAF (too few copies), PM2_Supporting follows the MDEP copy rule (<= 2
+  copies in NFE, <= 1 copy in any other group) instead of the point AF.
+- **PM2, Hearing Loss VCEP**: autosomal recessive genes (USH2A, GJB2, SLC26A4, CDH23,
+  MYO7A) use the recessive cutoff 0.00007 (the multi-gene spec has no per-gene MOI,
+  so the dominant 0.00002 was used).
+- **PM5, VCEP conditions** (`criteria/pm5_conditions.py`): splicing must be ruled out
+  for the candidate and/or the comparator (gene-specific SpliceAI cutoffs; GUCY2D
+  same score band; RPE65 within 0.1; comparator scores from the precomputed SpliceAI
+  files), PP3 required (MLH1, MSH2, MSH6, PMS2, RPGR, RS1), REVEL > 0.7 (DYSF), two
+  likely-pathogenic comparators = Moderate (F8, F9), MDEP Grantham downgrade to
+  PM5_Supporting (GCK, HNF1A, HNF4A), and the SCN1A/2A/3A/8A paralogue route
+  (PM5_Supporting for > 1 non-identical P/LP change at the analogous residue).
+- **PM5, CDH1 canonical splice variants**: PM5_Supporting when PVS1 is met at Strong
+  or higher (HDGC VCEP v3.1).
+- **PM4, MYOC** (Glaucoma VCEP v2.1): truncating variants in the olfactomedin domain
+  (p.246-502) get PM4 by the share of the protein involved (> 10% Moderate,
+  <= 10% Supporting); small in-frame changes there are PM4_Supporting.
+- **PM1, HNF1A promoter**: PM1_Supporting for the transcription-factor binding sites
+  c.-187 to -195, c.-209 to -227, c.-238 to -259 and c.-276 to -288 (MDEP v3.1).
 - **PVS1, VCEP "G to non-G at the last exon nucleotide" rules** (`pvs1/last_nt.py`),
   applied to exonic changes VEP calls missense / synonymous: ATM (HBOP v1.6; intron
   +1..+6 not `gtrrgt`) → the canonical donor weight one level down (PVS1_Strong;

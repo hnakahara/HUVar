@@ -5,7 +5,7 @@ from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
-from acmg_classifier.models.enums import ACMGCriterion
+from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
@@ -179,6 +179,7 @@ class CriteriaRegistry:
         # Gene-specific PM5 exclusions (RUNX1: not with PM1; DICER1: not with
         # PM1/PS1). Suppress PM5 when an excluded criterion fired for the gene.
         self._apply_pm5_exclusions(results, annotation)
+        _apply_pm5_requires_pp3(results, annotation)
         self._apply_pm5_ptc_requires_pvs1(results, annotation)
         self._apply_pm4_exclusions(results, annotation)
 
@@ -299,8 +300,25 @@ class CriteriaRegistry:
         """ENIGMA (BRCA1/BRCA2): PM5_PTC justifies additional weight only for PTC
         variants annotated as PVS1. Suppress a PTC-based PM5 when PVS1 is not met
         (at any strength) for the variant."""
-        from acmg_classifier.criteria.pm5_ptc import is_ptc_variant, requires_pvs1
+        from acmg_classifier.criteria.pm5_ptc import (
+            is_cdh1_canonical_splice, is_ptc_variant, requires_pvs1,
+        )
         pc = annotation.primary_consequence
+        # CDH1 canonical splice PM5_Supporting: only at sites where PVS1 is met
+        # at Strong or higher (the in-frame PVS1_Moderate sites do not get it).
+        if is_cdh1_canonical_splice(pc):
+            strong = any(
+                r.criterion == ACMGCriterion.PVS1 and r.triggered and not r.suppressed
+                and r.strength in (CriterionStrength.VERY_STRONG, CriterionStrength.STRONG)
+                for r in results)
+            if not strong:
+                for r in results:
+                    if (r.criterion == ACMGCriterion.PM5 and r.triggered and not r.suppressed
+                            and (r.evidence or "").startswith("PM5_PTC")):
+                        r.suppressed = True
+                        r.evidence = (r.evidence + " [suppressed: CDH1 splice PM5 "
+                                      "requires PVS1_Strong or higher]").strip()
+            return
         if pc is None or not requires_pvs1(pc.gene_symbol) or not is_ptc_variant(pc):
             return
         if any(r.criterion == ACMGCriterion.PVS1 and r.triggered and not r.suppressed
@@ -362,6 +380,24 @@ class CriteriaRegistry:
             if r.criterion == ACMGCriterion.PP2 and r.triggered and not r.suppressed:
                 r.suppressed = True
                 r.evidence = (r.evidence + f" [suppressed: PP2 requires {need}]").strip()
+
+
+def _apply_pm5_requires_pp3(results: list[CriteriaResult], annotation: AnnotationData) -> None:
+    """InSiGHT MMR genes ("Only use PM5 if PP3 is supporting for the missense
+    change") and RPGR / RS1 ("must meet PP3"): suppress a missense PM5 when PP3
+    is not met (PTC-based PM5 is not affected)."""
+    from acmg_classifier.criteria.pm5_conditions import REQUIRES_PP3
+    pc = annotation.primary_consequence
+    if pc is None or pc.gene_symbol not in REQUIRES_PP3:
+        return
+    if any(r.criterion == ACMGCriterion.PP3 and r.triggered for r in results):
+        return
+    for r in results:
+        if (r.criterion == ACMGCriterion.PM5 and r.triggered and not r.suppressed
+                and not (r.evidence or "").startswith("PM5_PTC")):
+            r.suppressed = True
+            r.evidence = (r.evidence + f" [suppressed: {pc.gene_symbol} VCEP requires "
+                          "PP3 for PM5]").strip()
 
 
 def _apply_pm1_co_requirements(results: list[CriteriaResult], annotation: AnnotationData) -> None:

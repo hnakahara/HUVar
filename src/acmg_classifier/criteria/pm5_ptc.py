@@ -114,6 +114,11 @@ def requires_pvs1(gene: Optional[str]) -> bool:
     return bool(gene) and gene in REQUIRES_PVS1
 
 
+def is_cdh1_canonical_splice(pc: Optional[ConsequenceInfo]) -> bool:
+    return (pc is not None and pc.gene_symbol == "CDH1" and pc.consequence in (
+        ConsequenceType.SPLICE_DONOR, ConsequenceType.SPLICE_ACCEPTOR))
+
+
 def is_ptc_variant(pc: Optional[ConsequenceInfo]) -> bool:
     return pc is not None and pc.consequence in PTC_CONSEQUENCES
 
@@ -148,11 +153,19 @@ def evaluate_pm5_ptc(
     its usual missense-only behaviour), otherwise ``(strength, evidence)`` with
     ``CriterionStrength.NOT_MET`` when the rule does not apply."""
     gene = pc.gene_symbol
-    if gene not in GENES or not is_ptc_variant(pc):
+    cdh1_splice = gene == "CDH1" and is_cdh1_canonical_splice(pc)
+    if gene not in GENES or not (is_ptc_variant(pc) or cdh1_splice):
         return None
     tx = _TRANSCRIPT[gene]
     if _base(pc.transcript_id) != tx:
         return _S.NOT_MET, f"PM5_PTC ({gene}): rule defined on {tx}, variant on {pc.transcript_id}"
+    if cdh1_splice:
+        # CDH1 v3.1: PM5_Supporting also for canonical splice variants (site-
+        # specific splicing table). In the eRepo it accompanies PVS1_Strong
+        # sites and is withheld at the in-frame PVS1_Moderate sites; the
+        # registry suppresses it unless PVS1 is met at Strong or higher.
+        return _S.SUPPORTING, ("PM5_PTC (CDH1, HDGC VCEP): canonical +/-1,2 splice "
+                               "variant predicted to truncate -> PM5_Supporting")
 
     from acmg_classifier.pvs1.nmd_predictor import nmd_status, ptc_codon
 
