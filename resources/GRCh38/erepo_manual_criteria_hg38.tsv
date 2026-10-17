@@ -7524,6 +7524,7 @@ chr17:44374738:A:T	PP4	Strong	eRepo
 chr17:44374761:C:G	PM3	Supporting	eRepo
 chr17:44374761:C:G	PVS1	Moderate	eRepo (PVS1 RNA)
 chr17:44375011:G:A	PP4	Moderate	eRepo
+chr17:44375011:G:A	PVS1	Moderate	eRepo (PVS1 RNA)
 chr17:44375017:C:T	PP4	Moderate	eRepo
 chr17:44375039:C:A	PM3	Moderate	eRepo
 chr17:44375039:C:A	PP4	Strong	eRepo
@@ -8329,6 +8330,7 @@ chr17:80105132:G:C	PVS1	Strong	eRepo (PVS1 RNA)
 chr17:80105133:G:T	PM3	Moderate	eRepo
 chr17:80105133:G:T	PP4	Moderate	eRepo
 chr17:80105137:G:A	PM3	Moderate	eRepo
+chr17:80105137:G:T	PVS1	Strong	eRepo (PVS1 RNA)
 chr17:80105775:C:A	PP4	Supporting	eRepo
 chr17:80105845:G:T	PM3	Supporting	eRepo
 chr17:80105857:G:A	PM3	Strong	eRepo
@@ -8421,6 +8423,7 @@ chr17:80108409:G:A	PP4	Moderate	eRepo
 chr17:80108409:G:A	PVS1	VeryStrong	eRepo (PVS1 RNA)
 chr17:80108467:T:G	PM3	VeryStrong	eRepo
 chr17:80108467:T:G	PP4	Moderate	eRepo
+chr17:80108467:T:G	PVS1	Strong	eRepo (PVS1 RNA)
 chr17:80108488:G:C	PM3	Moderate	eRepo
 chr17:80108488:G:C	PP4	Moderate	eRepo
 chr17:80108488:G:C	PVS1	VeryStrong	eRepo (PVS1 RNA)
@@ -8454,6 +8457,7 @@ chr17:80108610:G:C	PM3	Moderate	eRepo
 chr17:80108610:G:C	PP4	Moderate	eRepo
 chr17:80108612:G:A	PM3	Supporting	eRepo
 chr17:80108612:G:A	PP4	Moderate	eRepo
+chr17:80108612:G:A	PVS1	Strong	eRepo (PVS1 RNA)
 chr17:80108712:G:A	PM3	Strong	eRepo
 chr17:80108712:G:A	PP4	Moderate	eRepo
 chr17:80108713:A:G	PM3	Moderate	eRepo
@@ -8553,6 +8557,7 @@ chr17:80110967:CAG:C	PP4	Moderate	eRepo
 chr17:80110973:CTC:CGT	PM3	Strong	eRepo
 chr17:80110973:CTC:CGT	PP4	Moderate	eRepo
 chr17:80111015:C:G	PM3	Supporting	eRepo
+chr17:80111015:C:G	PVS1	Moderate	eRepo (PVS1 RNA)
 chr17:80111023:C:T	PM3	VeryStrong	eRepo
 chr17:80111023:C:T	PP4	Moderate	eRepo
 chr17:80111988:G:T	BS3	Supporting	eRepo
@@ -8675,6 +8680,7 @@ chr17:80113002:G:T	PP4	Moderate	eRepo
 chr17:80113002:G:A	PP4	Moderate	eRepo
 chr17:80113027:G:A	PM3	Supporting	eRepo
 chr17:80113027:G:A	PP4	Moderate	eRepo
+chr17:80113027:G:A	PVS1	Moderate	eRepo (PVS1 RNA)
 chr17:80113232:C:A	PM3	Moderate	eRepo
 chr17:80113232:C:A	PP4	Supporting	eRepo
 chr17:80113281:C:T	PM3	Strong	eRepo
@@ -8774,6 +8780,7 @@ chr17:80118359:T:G	PVS1	Moderate	eRepo (PVS1 RNA)
 chr17:80118359:T:A	PVS1	Moderate	eRepo (PVS1 RNA)
 chr17:80118633:T:G	PM3	Moderate	eRepo
 chr17:80118633:T:G	PP4	Moderate	eRepo
+chr17:80118633:T:G	PVS1	Moderate	eRepo (PVS1 RNA)
 chr17:80118660:TCG:T	PM3	Supporting	eRepo
 chr17:80118660:TCG:T	PP4	Moderate	eRepo
 chr17:80118668:G:T	PM3	Moderate	eRepo
@@ -10996,6 +11003,7 @@ chrX:38298953:T:C	PP4	Supporting	eRepo
 chrX:38298953:T:A	PP4	Supporting	eRepo
 chrX:38298953:T:C	PS4	Supporting	eRepo
 chrX:38298953:T:C	PP1	Strong	eRepo
+chrX:38298953:T:C	PVS1	VeryStrong	eRepo (PVS1 RNA)
 chrX:38298953:T:A	PVS1	VeryStrong	eRepo (PVS1 RNA)
 chrX:38298956:CCT:C	PP4	Supporting	eRepo
 chrX:38298956:CCT:C	PP1	Moderate	eRepo

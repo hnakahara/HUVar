@@ -29,6 +29,8 @@ modifiers, which require data not available at this layer.
 """
 from __future__ import annotations
 
+import re
+
 from dataclasses import dataclass
 
 from acmg_classifier.models.enums import ConsequenceType, CriterionStrength
@@ -111,6 +113,12 @@ class _GeneSpec:
     # beyond the original one or none in the transcript): MECP2, TCF4, CDKL5,
     # UBE3A -> PVS1; SLC9A6 -> PVS1_Moderate.
     readthrough_fs: CriterionStrength | None = None
+    # Per-splice-site strengths for canonical +/-1,2 variants, keyed by
+    # ("donor"|"acceptor", c. position of the exon boundary base): the donor of
+    # c.N+1/+2 is ("donor", N), the acceptor of c.N-1/-2 is ("acceptor", N).
+    # NOT_MET marks a VCEP N/A site. Sites not listed use ``splice``. (RUNX1
+    # "Summary of splicing effects" table.)
+    splice_sites: dict[tuple[str, int], CriterionStrength] | None = None
 
 
 _SPECS: dict[str, _GeneSpec] = {
@@ -388,10 +396,28 @@ _SPECS: dict[str, _GeneSpec] = {
     # variants NOT predicted to undergo NMD → PVS1_Strong. Canonical ±1,2 splice
     # → PVS1. Full gene deletion → PVS1 (exon 1-3 isoform-c-only deletions are
     # PVS1_Moderate but require exon-level CNV detail not modelled here).
+    # Canonical splice strengths follow the VCEP "Summary of splicing effects"
+    # table (per intron donor / acceptor): introns 2-3 (c.58 / c.59 / c.97 /
+    # c.98) only affect isoform c -> N/A (the c.98 acceptor is PVS1 only if exon-4
+    # skipping is also shown to truncate isoforms a/b, which is not modelled);
+    # c.351 / c.352 / c.508 (exon 4/5 skipping with frameshift) -> PVS1; c.509 /
+    # c.613 / c.614 / c.805 / c.806 / c.967 (in-frame skipping of exons 6-8 in the
+    # RHD / TAD) and c.968 (cryptic site, last exon = 33% of protein) ->
+    # PVS1_Strong.
     "RUNX1": _GeneSpec(
         gene="RUNX1", transcript="NM_001754.5", aa_len=480,
         trunc_nmd=(_S.VERY_STRONG, _S.STRONG),
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_sites={
+            ("donor", 58): _S.NOT_MET, ("acceptor", 59): _S.NOT_MET,
+            ("donor", 97): _S.NOT_MET, ("acceptor", 98): _S.NOT_MET,
+            ("donor", 351): _S.VERY_STRONG, ("acceptor", 352): _S.VERY_STRONG,
+            ("donor", 508): _S.VERY_STRONG,
+            ("acceptor", 509): _S.STRONG, ("donor", 613): _S.STRONG,
+            ("acceptor", 614): _S.STRONG, ("donor", 805): _S.STRONG,
+            ("acceptor", 806): _S.STRONG, ("donor", 967): _S.STRONG,
+            ("acceptor", 968): _S.STRONG,
+        },
     ),
     # CDKL5 (Rett/Angelman VCEP, major brain isoform NM_001323289.2). Null
     # variants up to p.R948 → PVS1; any truncating variant distal of p.R948 →
@@ -773,6 +799,22 @@ _SPECS: dict[str, _GeneSpec] = {
 }
 
 
+_SPLICE_SITE_RE = re.compile(r"c\.(\d+)([+-])([12])(?!\d)")
+
+
+def _canonical_splice_site(hgvs_c: str | None) -> tuple[str, int] | None:
+    """(``"donor"`` | ``"acceptor"``, exon-boundary c. position) of the first
+    canonical +/-1,2 position named in an HGVS c. string (``c.508+1G>A`` ->
+    ("donor", 508); ``c.509-2A>G`` -> ("acceptor", 509); ``c.967+2_967+5del`` ->
+    ("donor", 967)), or None."""
+    if not hgvs_c:
+        return None
+    m = _SPLICE_SITE_RE.search(hgvs_c)
+    if not m:
+        return None
+    return ("donor" if m.group(2) == "+" else "acceptor"), int(m.group(1))
+
+
 def _intron_number(intron: str | None) -> int | None:
     """Parse the intron index from VEP's ``n/N`` field (e.g. "8/19" -> 8)."""
     if not intron:
@@ -914,6 +956,21 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
                 return _S.NOT_MET, (
                     f"{spec.gene} VCEP: donor of intron {intron_no} excluded "
                     f"(GC donor / unclear impact) -> N/A"
+                )
+        # Per-site table (RUNX1 "Summary of splicing effects").
+        if spec.splice_sites:
+            site = _canonical_splice_site(pc.hgvs_c)
+            if site is not None and site in spec.splice_sites:
+                strength = spec.splice_sites[site]
+                kind, pos = site
+                if strength == _S.NOT_MET:
+                    return _S.NOT_MET, (
+                        f"{spec.gene} VCEP: {kind} site c.{pos} only affects a "
+                        f"non-relevant isoform (splicing-effects table) -> N/A"
+                    )
+                return strength, (
+                    f"{spec.gene} VCEP: canonical +/-1,2 {kind} site c.{pos} "
+                    f"(splicing-effects table) -> {_LABEL[strength]}"
                 )
         # Optional exon-aware refinement: if a reviewer supplied a strength for
         # the exon this variant skips, it overrides the flat default.

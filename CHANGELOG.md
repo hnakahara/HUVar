@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   rule); GCK stop-loss variants → PVS1 (exon 10 critical, stop-loss reported in
   MODY); frameshifts reading through the stop codon → PVS1 for MECP2, TCF4, CDKL5
   and UBE3A, PVS1_Moderate for SLC9A6.
+- **PVS1, RUNX1 canonical splice sites**: strength per intron donor/acceptor from the
+  Myeloid Malignancy VCEP "Summary of splicing effects" table (c.58/c.59/c.97/c.98
+  isoform-c-only sites → N/A; c.351/c.352/c.508 → PVS1; c.509, c.613, c.614, c.805,
+  c.806, c.967, c.968 → PVS1_Strong). Previously every canonical site was PVS1.
+- **eRepo manual-evidence supplement**: 8 more RNA-based PVS1 calls whose eRepo
+  summaries cite RT-PCR / exon-trapping data without a "PVS1 (RNA)" label (GAA ×6,
+  ITGA2B c.2828C>T, RPGR c.1245+3A>G); 157 PVS1 (RNA) rows per assembly.
 - **PM1 regions re-checked against every VCEP CSpec text** (`pm1_hotspots.tsv`,
   `scripts/build_pm1_hotspots.py` `_CURATED`). Fixed: MECP2 (VCEP numbering is
   NM_004992 e2; MANE NM_001110792 e1 is +12 → MBD 102-174, TRD 314-318), UBE3A
