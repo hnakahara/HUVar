@@ -61,8 +61,8 @@ def evaluate_pvs1(
     # decision tree. Established when (i) the VCEP explicitly applies PVS1
     # (lof_established=True), (ii) the gene has a ClinGen Dosage Sensitivity
     # haploinsufficiency score of 3, or (iii) null variants make up >= 20% of
-    # >= 5 ClinVar P/LP variants (was: >= 3 P/LP null
-    # variants. gnomAD LOEUF is reported for reference only. When none holds,
+    # >= 5 ClinVar P/LP variants (formerly >= 3 P/LP null variants). gnomAD
+    # LOEUF is reported for reference only. When none holds,
     # PVS1 is not applied.
     if lof_established:
         lof_mechanism, lof_note = True, "VCEP applies PVS1 (LoF established)"
@@ -143,13 +143,27 @@ def _nmd_branch(
         return CriterionStrength.STRONG, f"{cq}; {nmd_note}; alt transcript may rescue"
 
     # NMD escaped (PTC in the last exon or the 3'-most 50 nt of the penultimate
-    # exon): a truncated protein may be produced. PVS1 applies only when the
-    # truncation removes a critical region; annotated functional-domain overlap
-    # is used as the proxy (Strong); without it PVS1 is withheld. (The decision
-    # tree's protein-length (10%) branch is not implemented in this generic path.)
+    # exon): a truncated protein may be produced. ClinGen SVI tree: if the
+    # truncated/altered region is critical to protein function -> Strong
+    # (annotated functional-domain overlap is the proxy); otherwise ("role of
+    # region unknown") the protein-length branch applies: the variant removes
+    # >10% of the protein -> Strong, <=10% -> Moderate. The altered region is
+    # counted from the first changed residue (frameshifts alter everything
+    # downstream). Without a known protein length PVS1 is withheld.
     if pc.domains:
         return CriterionStrength.STRONG, f"{cq}; {nmd_note}; truncated region contains functional domain"
-    return CriterionStrength.NOT_MET, f"{cq}; {nmd_note}; no critical region removed (NMD escaped) — PVS1 N/A"
+    from acmg_classifier.pvs1.nmd_predictor import transcript_structure
+    st = transcript_structure(pc.transcript_id)
+    if st is None or pc.protein_position is None:
+        return CriterionStrength.NOT_MET, (
+            f"{cq}; {nmd_note}; protein length unknown — PVS1 N/A")
+    aa_len = (st.cds_end - st.cds_start + 1) // 3 - 1
+    removed = max(0, aa_len - pc.protein_position + 1)
+    frac = removed / aa_len if aa_len > 0 else 0.0
+    strength = CriterionStrength.STRONG if frac > 0.10 else CriterionStrength.MODERATE
+    return strength, (
+        f"{cq}; {nmd_note}; region role unknown, {removed}/{aa_len} aa "
+        f"({frac:.1%}) altered -> {'>' if frac > 0.10 else '<='}10% (SVI)")
 
 
 # ---------------------------------------------------------------------------

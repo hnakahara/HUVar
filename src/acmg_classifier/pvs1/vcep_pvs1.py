@@ -96,9 +96,49 @@ class _GeneSpec:
     trunc_nmd: tuple[CriterionStrength, CriterionStrength | None] | None = None
     splice_exclude_donor_introns: frozenset[int] = frozenset()
     trunc_exception_bands: tuple[tuple[int, int], ...] | None = None
+    # Truncation bands keyed on the PTC codon (new stop for frameshifts) instead
+    # of the first altered codon (ENIGMA BRCA1/BRCA2 Table 4: "weight determined
+    # by the exon where the termination codon occurs").
+    trunc_ptc: bool = False
+    # NMD-escape critical region (lo, hi): with ``trunc_nmd`` an escaping
+    # truncation whose first altered codon is <= hi alters the region -> Strong
+    # (ITGA2B transmembrane domain); otherwise the escape element / 10% rule.
+    escape_critical: tuple[int, int] | None = None
+    # Strength for stop-loss variants (GCK exon 10: stop-loss reported in MODY,
+    # exon 10 critical), or None to defer (PM4 handles stop-loss).
+    stop_lost: CriterionStrength | None = None
+    # Strength for a frameshift that reads through the stop codon (new stop
+    # beyond the original one or none in the transcript): MECP2, TCF4, CDKL5,
+    # UBE3A -> PVS1; SLC9A6 -> PVS1_Moderate.
+    readthrough_fs: CriterionStrength | None = None
 
 
 _SPECS: dict[str, _GeneSpec] = {
+    # BRCA1 / BRCA2 (ENIGMA VCEP, Specifications Table 4 V1.2). PVS1 for PTC
+    # variants by the exon holding the termination codon: BRCA1 exons 8(9) and
+    # 9(10) (c.548-670; PTC codons 184-224) are N/A (in-frame skipping of these
+    # exons is functional); last exon 23(24): PTC < p.I1855 PVS1, PTC > p.L1854
+    # N/A. BRCA2: last exon 27 PTC < p.T3310 PVS1, PTC > p.E3309 N/A; all other
+    # exons PVS1. Splice / start / deletion follow the generic tree.
+    "BRCA1": _GeneSpec(
+        gene="BRCA1", transcript="NM_007294.4", aa_len=1863,
+        trunc_bands=((1, 183, _S.VERY_STRONG), (184, 224, _S.NOT_MET),
+                     (225, 1854, _S.VERY_STRONG), (1855, 1863, _S.NOT_MET)),
+        trunc_ptc=True, start_lost=None, splice=None, deletion=None,
+    ),
+    "BRCA2": _GeneSpec(
+        gene="BRCA2", transcript="NM_000059.4", aa_len=3418,
+        trunc_bands=((1, 3309, _S.VERY_STRONG), (3310, 3418, _S.NOT_MET)),
+        trunc_ptc=True, start_lost=None, splice=None, deletion=None,
+    ),
+    # ITGA2B (Platelet Disorders VCEP): SVI tree with specified critical regions.
+    # The transmembrane domain (c.2980-3057, p.994-1019) is critical: an NMD-
+    # escaping truncation altering it -> PVS1_Strong; beyond it the 10% rule.
+    "ITGA2B": _GeneSpec(
+        gene="ITGA2B", transcript="NM_000419.5", aa_len=1039,
+        trunc_nmd=(_S.VERY_STRONG, None), escape_critical=(994, 1019),
+        start_lost=None, splice=None, deletion=None,
+    ),
     # RPE65 (Leber congenital amaurosis VCEP, Walker 2023-adapted tree).
     # All 14 exons critical; Met1 loss → Strong (2nd Met at 93, no alt start
     # evidence); nonsense/frameshift p.Ser2–p.Gly528 → PVS1, p.Leu529–p.Ser533
@@ -134,6 +174,9 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="GCK", transcript="NM_000162.5", aa_len=465,
         trunc_bands=((1, 465, _S.VERY_STRONG),),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        # Exon 10 is critical (alpha13 helix p.444-456); the VCEP cites MODY
+        # patients with stop-loss variants in exon 10 (exon 10 deletion -> PVS1).
+        stop_lost=_S.VERY_STRONG,
     ),
     # RAG1 (SCID VCEP). Single-exon gene → NMD never predicted, so PVS1 only for
     # full-gene deletion or removing/altering a critical domain. The critical
@@ -359,6 +402,7 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="CDKL5", transcript="NM_001323289.2", aa_len=960,
         trunc_bands=((1, 948, _S.VERY_STRONG), (949, 960, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        readthrough_fs=_S.VERY_STRONG,
     ),
     # RPGR (eyeGENE / LCA-RP VCEP). MANE Select is the retinal ORF15 isoform
     # NM_001034853.2 (1152 aa, 15 coding exons), which is the VCEP's default. Its
@@ -394,6 +438,7 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="MECP2", transcript="NM_001110792.2", aa_len=498,
         trunc_bands=((1, 484, _S.VERY_STRONG), (485, 498, _S.MODERATE)),
         start_lost=_S.NOT_MET, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        readthrough_fs=_S.VERY_STRONG,
     ),
     # F9 (Coagulation factor / Hemophilia B VCEP, X-linked). NMD-escape
     # truncations remain critical (many severe hemophilia B cases in the EAHAD
@@ -527,6 +572,7 @@ _SPECS: dict[str, _GeneSpec] = {
         trunc_bands=((1, 573, _S.VERY_STRONG), (574, 611, _S.STRONG),
                      (612, 679, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        readthrough_fs=_S.MODERATE,
     ),
     # TCF4 (Pitt-Hopkins VCEP): null variants up to p.E643 → PVS1; any truncating
     # variant distal of p.E643 → PVS1_Moderate. Initiation codon → Supporting.
@@ -534,6 +580,7 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="TCF4", transcript="NM_001083962.2", aa_len=671,
         trunc_bands=((1, 643, _S.VERY_STRONG), (644, 671, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        readthrough_fs=_S.VERY_STRONG,
     ),
     # UBE3A (Angelman VCEP, maternally expressed). The VCEP numbering (PVS1 up to
     # p.K841, p.A842-G850 → Strong, distal of p.G850 → Moderate) is in the 852-aa
@@ -544,6 +591,7 @@ _SPECS: dict[str, _GeneSpec] = {
         trunc_bands=((1, 861, _S.VERY_STRONG), (862, 870, _S.STRONG),
                      (871, 872, _S.MODERATE)),
         start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        readthrough_fs=_S.VERY_STRONG,
     ),
     # GUCY2D (LCA VCEP, Walker-adapted): all exons critical. Nonsense/frameshift
     # up to p.Pro1068 → PVS1; p.Pro1069-p.Ser1103 → PVS1_Strong. Canonical ±1,2
@@ -771,6 +819,18 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
                         f"{pc.protein_position} in PVS1-exception region "
                         f"{lo}-{hi} ({spec.transcript}) -> N/A"
                     )
+        # Frameshift reading through the stop codon (new stop beyond the
+        # original one, or no stop in the transcript: fsTer?).
+        if cq == ConsequenceType.FRAMESHIFT and spec.readthrough_fs is not None:
+            from acmg_classifier.pvs1.nmd_predictor import ptc_codon
+            ptc = ptc_codon(pc)
+            hp = (pc.hgvs_p or "")
+            no_stop = ptc is None and ("fsTer?" in hp or "fs*?" in hp or "fsX?" in hp)
+            if no_stop or (ptc is not None and ptc > spec.aa_len + 1):
+                return spec.readthrough_fs, (
+                    f"{spec.gene} VCEP: frameshift reading through the stop codon "
+                    f"-> {_LABEL[spec.readthrough_fs]}"
+                )
         # Genes with no per-gene truncation rule (only an exception carve-out)
         # defer the rest to the generic tree.
         if spec.trunc_nmd is None and spec.trunc_bands is None:
@@ -783,6 +843,11 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
             if nmd:
                 strength = spec.trunc_nmd[0]
                 note = "NMD predicted"
+            elif (spec.escape_critical is not None and pc.protein_position is not None
+                  and pc.protein_position <= spec.escape_critical[1]):
+                strength = _S.STRONG
+                lo, hi = spec.escape_critical
+                note = f"NMD escape, alters critical region p.{lo}-{hi}"
             elif spec.trunc_nmd[1] is not None:
                 strength = spec.trunc_nmd[1]
                 note = "NMD escape (critical C-terminus)"
@@ -794,6 +859,18 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
                 f"{spec.gene} VCEP: {cq.value}; {note} -> {_LABEL[strength]}"
             )
 
+        if spec.trunc_ptc:
+            from acmg_classifier.pvs1.nmd_predictor import ptc_codon
+            codon = ptc_codon(pc)
+            if codon is None:
+                return None  # no stop in the transcript → defer to generic tree
+            for lo, hi, strength in spec.trunc_bands or ():
+                if lo <= codon <= hi:
+                    return strength, (
+                        f"{spec.gene} VCEP: PTC at codon {codon} "
+                        f"({spec.transcript}) -> {_LABEL[strength]}"
+                    )
+            return _S.NOT_MET, f"{spec.gene} VCEP: PTC at codon {codon} outside PVS1 range -> N/A"
         codon = pc.protein_position
         if codon is None:
             return None  # cannot place the truncation → defer to generic tree
@@ -810,6 +887,13 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
         return _S.NOT_MET, (
             f"{spec.gene} VCEP: truncation at codon {codon} outside PVS1 "
             f"range -> N/A"
+        )
+
+    if cq == ConsequenceType.STOP_LOST:
+        if spec.stop_lost is None:
+            return None
+        return spec.stop_lost, (
+            f"{spec.gene} VCEP: stop-loss variant -> {_LABEL[spec.stop_lost]}"
         )
 
     if cq == ConsequenceType.START_LOST:

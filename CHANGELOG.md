@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PVS1, generic SVI tree — NMD escape**: when the truncated/altered region has no
+  annotated functional domain ("role of region unknown"), the SVI protein-length
+  branch now applies: >10% of the protein altered (counted from the first changed
+  residue) → PVS1_Strong, ≤10% → PVS1_Moderate. Previously PVS1 was withheld.
+- **PVS1, VCEP-specific rules**: ENIGMA BRCA1/BRCA2 Specifications Table 4 for PTC
+  variants (by the PTC codon: BRCA1 exons 8(9)–9(10) and PTC > p.L1854 N/A; BRCA2
+  PTC > p.E3309 N/A; otherwise PVS1); ITGA2B transmembrane domain (p.994–1019)
+  as the critical region for NMD-escaping truncations (Strong; beyond it the 10%
+  rule); GCK stop-loss variants → PVS1 (exon 10 critical, stop-loss reported in
+  MODY); frameshifts reading through the stop codon → PVS1 for MECP2, TCF4, CDKL5
+  and UBE3A, PVS1_Moderate for SLC9A6.
 - **PM1 regions re-checked against every VCEP CSpec text** (`pm1_hotspots.tsv`,
   `scripts/build_pm1_hotspots.py` `_CURATED`). Fixed: MECP2 (VCEP numbering is
   NM_004992 e2; MANE NM_001110792 e1 is +12 → MBD 102-174, TRD 314-318), UBE3A

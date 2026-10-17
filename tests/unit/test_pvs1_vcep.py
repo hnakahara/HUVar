@@ -89,7 +89,7 @@ class TestTruncationBands:
         assert evaluate_vcep_pvs1(_pc("RPE65", ConsequenceType.FRAMESHIFT, None)) is None
 
     def test_non_vcep_gene_defers(self):
-        assert evaluate_vcep_pvs1(_pc("BRCA1", ConsequenceType.STOP_GAINED, 100)) is None
+        assert evaluate_vcep_pvs1(_pc("MYH7", ConsequenceType.STOP_GAINED, 100)) is None
 
     # --- batch 2 genes ---------------------------------------------------
     def test_pah_upstream_c1285_very_strong(self):
