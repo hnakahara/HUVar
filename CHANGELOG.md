@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   rule); GCK stop-loss variants → PVS1 (exon 10 critical, stop-loss reported in
   MODY); frameshifts reading through the stop codon → PVS1 for MECP2, TCF4, CDKL5
   and UBE3A, PVS1_Moderate for SLC9A6.
+- **PVS1, VCEP "G to non-G at the last exon nucleotide" rules** (`pvs1/last_nt.py`),
+  applied to exonic changes VEP calls missense / synonymous: ATM (HBOP v1.6; intron
+  +1..+6 not `gtrrgt`) → the canonical donor weight one level down (PVS1_Strong;
+  PVS1_Moderate for in-frame HEAT-repeat exons); MLH1 (InSiGHT; intron not GTRRGT)
+  → PVS1_Strong; CDH1 (v3.1) → PVS1_Moderate. The intronic sequence is read from
+  the reference FASTA (`genome_fasta`); without it the rule applies and the
+  evidence notes that the intron was not checked.
 - **PVS1, RUNX1 canonical splice sites**: strength per intron donor/acceptor from the
   Myeloid Malignancy VCEP "Summary of splicing effects" table (c.58/c.59/c.97/c.98
   isoform-c-only sites → N/A; c.351/c.352/c.508 → PVS1; c.509, c.613, c.614, c.805,

@@ -36,6 +36,29 @@ class PVS1Evaluator(CriterionEvaluator):
             getattr(cfg, "vcep_pvs1_splice_exons_tsv", None)
         )
 
+    def _fetch_seq(self, chrom: str, start: int, end: int) -> str | None:
+        """Reference sequence (1-based inclusive, + strand) from the genome
+        FASTA, or None when it is unavailable."""
+        fa = getattr(self, "_fasta", False)
+        if fa is False:
+            fa = None
+            try:
+                path = Path(self._cfg.genome_fasta)
+                if path.exists():
+                    import pysam  # type: ignore
+                    fa = pysam.FastaFile(str(path))
+            except Exception:  # noqa: BLE001 — optional resource
+                fa = None
+            self._fasta = fa
+        if fa is None:
+            return None
+        try:
+            name = chrom if chrom in fa.references else (
+                chrom[3:] if chrom.startswith("chr") else f"chr{chrom}")
+            return fa.fetch(name, start - 1, end).upper()
+        except Exception:  # noqa: BLE001
+            return None
+
     def evaluate(
         self,
         variant: VariantRecord,
@@ -64,6 +87,16 @@ class PVS1Evaluator(CriterionEvaluator):
                 if strength == CriterionStrength.NOT_MET:
                     return CriteriaResult.not_met(ACMGCriterion.PVS1, evidence)
                 return CriteriaResult.met(ACMGCriterion.PVS1, strength, evidence)
+
+        # VCEP "G to non-G at the last exon nucleotide" rules (ATM / MLH1 /
+        # CDH1): exonic changes VEP calls missense / synonymous, so like APC this
+        # runs before the generic LoF-consequence gate.
+        from acmg_classifier.pvs1.last_nt import evaluate_last_nt
+        last_nt = evaluate_last_nt(pc, variant.chrom, variant.pos, variant.ref,
+                                   self._fetch_seq)
+        if last_nt is not None:
+            strength, evidence = last_nt
+            return CriteriaResult.met(ACMGCriterion.PVS1, strength, evidence)
 
         # Other VCEPs publish gene-specific PVS1 trees whose critical-region /
         # codon-range gates, initiation-codon strengths and canonical-splice /
