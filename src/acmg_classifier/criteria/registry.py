@@ -532,7 +532,9 @@ def apply_ps1_splice_table2(results: list[CriteriaResult]) -> None:
     * with PVS1_Strong / _Moderate / _Supporting: P → PS1, LP → not applicable;
     * a canonical variant without PVS1 does not get PS1.
 
-    Comparators elsewhere in the splice motif are not used by HUVar."""
+    Comparators elsewhere in the splice motif are not used by HUVar. Genes whose
+    VCEP specifies its own splice rule (``ps1.PS1_SPLICE_VCEP_RULE``) are left
+    as evaluated (same nucleotide; P -> PS1, LP -> PS1_Moderate)."""
     from acmg_classifier.criteria.pathogenic.ps1 import SPLICE_TAG
     from acmg_classifier.models.enums import CriterionStrength as S
 
@@ -542,6 +544,8 @@ def apply_ps1_splice_table2(results: list[CriteriaResult]) -> None:
         return
     tag = ps1.evidence.split(SPLICE_TAG, 1)[1].split("]", 1)[0]
     site, _, comp = tag.partition(":")
+    if site == "vcep":
+        return  # the VCEP's own splice rule (same nucleotide, comparator strength)
     pvs1 = next((r for r in results if r.criterion == ACMGCriterion.PVS1 and r.triggered
                  and not r.suppressed), None)
     pp3 = any(r.criterion == ACMGCriterion.PP3 and r.triggered for r in results)

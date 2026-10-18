@@ -69,6 +69,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   (`clinvar_sqlite.query_splice_dinucleotide_partner`); comparators elsewhere in the
   splice motif are not. Synonymous variants are evaluated for splice PS1 with
   comparators that have no protein change.
+- **PS1, BMPR2 splice-motif rule** (GN125 v2.0.0; `criteria/ps1_splice_motif.py`): a
+  variant outside ±1,2 in the same donor motif (last 3 exonic bases, +3..+6) or acceptor
+  motif (first exonic base, −20..−3) as a ClinVar P / LP variant → PS1_Moderate /
+  PS1_Supporting (no PP3 requirement; exonic variants and comparators only when
+  synonymous / without protein change; motif positions from the MANE exon structure;
+  `clinvar_sqlite.query_plp_window`).
+- **PS1 for splicing, VCEP-specific rules take precedence over Walker Table 2**: 29
+  genes whose VCEP specifies its own splice PS1 rule (ABCD1; SCID: ADA, DCLRE1C, IL7R,
+  JAK3, RAG1, RAG2; Hearing Loss: CDH23, COCH, GJB2, KCNQ4, MYO15A, MYO6, MYO7A, OTOF,
+  SLC26A4, TECTA, USH2A; ENIGMA BRCA1/2; HBOP ATM/PALB2; InSiGHT MMR; APC, PTEN, DICER1)
+  keep the same-nucleotide comparator at the comparator's strength (P → PS1, LP →
+  PS1_Moderate); Table 2 and the ±1,2-dinucleotide comparator apply to the 36 genes
+  whose specification cites Walker et al. 2023 (`ps1.PS1_SPLICE_VCEP_RULE`).
 - **PS1 splice extension removed for missense-only specifications**: FBN1, LDLR, PIK3CD
   and KCNQ1 mention splicing only as a caveat (`ps1_splice` blank;
   `build_disease_thresholds._PS1_CAVEAT_SENT`).

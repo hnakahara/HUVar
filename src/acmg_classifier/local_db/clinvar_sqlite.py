@@ -451,6 +451,52 @@ def query_splice_dinucleotide_partner(
     return out
 
 
+def query_plp_window(
+    db_path: Path,
+    gene_symbol: str,
+    chrom: str,
+    pos: int,
+    flank: int = 30,
+    min_stars: int = 1,
+) -> list[ClinVarRecord]:
+    """P/LP ClinVar variants of *gene_symbol* within ``pos ± flank`` (used for the
+    BMPR2 splice-motif PS1 rule, where the comparator may lie anywhere in the
+    same donor/acceptor motif)."""
+    if not db_path.exists() or pos is None:
+        return []
+    c1, c2 = chrom_candidates(chrom)
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT variation_id, clinical_significance, review_status, star_rating,
+                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
+            FROM variants
+            WHERE chrom IN (?, ?)
+              AND pos BETWEEN ? AND ?
+              AND gene_symbol = ?
+              AND star_rating >= ?
+              AND clinical_significance IN (
+                  'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
+              )
+            """,
+            (c1, c2, pos - flank, pos + flank, gene_symbol, min_stars),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="plp_window", error=str(exc))
+        return []
+    return [
+        ClinVarRecord(
+            variation_id=str(r[0]), clinical_significance=r[1], review_status=r[2],
+            star_rating=r[3], gene_symbol=r[4], hgvs_c=r[5], hgvs_p=r[6],
+            amino_acid_change=r[7],
+            chrom=strip_chr(str(r[8])) if r[8] is not None else None,
+            pos=r[9], ref=r[10], alt=r[11],
+        )
+        for r in rows
+    ]
+
+
 def has_benign_at_codon(
     db_path: Path,
     gene_symbol: str,

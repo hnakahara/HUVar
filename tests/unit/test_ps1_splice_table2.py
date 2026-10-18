@@ -187,3 +187,105 @@ def test_missense_only_ps1_genes():
     for g in ("LDLR", "FBN1", "PIK3CD", "KCNQ1"):
         assert spec.splice_mode(g) == "", g
     assert spec.splice_mode("HNF1A") == "canonical"
+
+
+class TestVcepOwnSpliceRule:
+    """Genes whose VCEP has its own splice PS1 rule (e.g. ABCD1: P -> Strong,
+    LP canonical splice comparator at the same position -> Moderate) are not
+    re-weighted by Walker Table 2 and do not use the dinucleotide comparator."""
+
+    def _cfg(self, db, tmp_path):
+        cfg = _cfg(db, tmp_path)
+        cfg.disease_prevalence_tsv.write_text(
+            "gene_symbol\tps1\tps1_splice\nABCD1\tapplicable\tcanonical\n", encoding="utf-8")
+        return cfg
+
+    def _ann(self, c):
+        return AnnotationData(gnomad=GnomADData(), consequences=[ConsequenceInfo(
+            transcript_id="NM_000033.4", gene_id="G", gene_symbol="ABCD1",
+            consequence=ConsequenceType.SPLICE_DONOR, biotype="protein_coding",
+            is_mane_select=True, hgvs_c=f"NM_000033.4:{c}")])
+
+    def test_abcd1_lp_same_position_moderate_kept_with_pvs1(self, tmp_path):
+        db = _db(tmp_path, [("1", "12", 100, "T", "A", "ABCD1", "c.900+2T>A", None,
+                             "Likely pathogenic", "x", 3)])
+        ps1 = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(
+            _v(100, "T", "C"), self._ann("c.900+2T>C"))
+        assert ps1.triggered and ps1.strength == S.MODERATE
+        assert f"{SPLICE_TAG}vcep:LP]" in ps1.evidence
+        res = [ps1, CriteriaResult.met(ACMGCriterion.PVS1, S.STRONG, "pvs1")]
+        apply_ps1_splice_table2(res)
+        assert not ps1.suppressed and ps1.strength == S.MODERATE
+
+    def test_abcd1_no_dinucleotide_partner(self, tmp_path):
+        db = _db(tmp_path, [("1", "12", 101, "T", "A", "ABCD1", "c.900+2T>A", None,
+                             "Pathogenic", "x", 3)])
+        ps1 = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(
+            _v(100, "G", "C"), self._ann("c.900+1G>C"))
+        assert not ps1.triggered
+
+
+class TestBmpr2SpliceMotif:
+    """BMPR2 VCEP: same donor (last 3 exonic bases, +3..+6) / acceptor (first exonic
+    base, -20..-3) motif as a P (PS1_Moderate) or LP (PS1_Supporting) variant."""
+
+    def _cfg(self, db, tmp_path):
+        cfg = _cfg(db, tmp_path)
+        cfg.disease_prevalence_tsv.write_text(
+            "gene_symbol\tps1\tps1_splice\nBMPR2\tapplicable\tnoncanonical\n", encoding="utf-8")
+        return cfg
+
+    def _ann(self, c, cq=ConsequenceType.SPLICE_REGION):
+        return AnnotationData(gnomad=GnomADData(), consequences=[ConsequenceInfo(
+            transcript_id="NM_001204.7", gene_id="G", gene_symbol="BMPR2", consequence=cq,
+            biotype="protein_coding", is_mane_select=True, hgvs_c=f"NM_001204.7:{c}")])
+
+    def _row(self, vid, pos, c, sig, p=None):
+        return (vid, "12", pos, "A", "G", "BMPR2", f"NM_001204.7:{c}", p, sig, "x", 2)
+
+    def test_same_donor_motif_p_moderate(self, tmp_path):
+        db = _db(tmp_path, [self._row("1", 102, "c.418+5G>A", "Pathogenic")])
+        r = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(_v(100, "A", "T"), self._ann("c.418+3A>T"))
+        assert r.triggered and r.strength == S.MODERATE and f"{SPLICE_TAG}vcep:P]" in r.evidence
+        res = [r]  # no PP3: the BMPR2 rule does not require it
+        apply_ps1_splice_table2(res)
+        assert not r.suppressed
+
+    def test_same_position_lp_supporting(self, tmp_path):
+        db = _db(tmp_path, [self._row("1", 100, "c.1276+3A>G", "Likely pathogenic")])
+        r = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(_v(100, "A", "T"), self._ann("c.1276+3A>T"))
+        assert r.triggered and r.strength == S.SUPPORTING
+
+    def test_acceptor_motif(self, tmp_path):
+        db = _db(tmp_path, [self._row("1", 98, "c.968-5A>G", "Pathogenic")])
+        r = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(_v(100, "C", "G"), self._ann("c.968-3C>G"))
+        assert r.triggered and r.strength == S.MODERATE
+
+    def test_canonical_comparator_not_in_motif(self, tmp_path):
+        db = _db(tmp_path, [self._row("1", 103, "c.418+1G>A", "Pathogenic")])
+        r = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(_v(100, "A", "T"), self._ann("c.418+3A>T"))
+        assert not r.triggered
+
+    def test_other_motif_not_used(self, tmp_path):
+        db = _db(tmp_path, [self._row("1", 110, "c.419-5A>G", "Pathogenic")])
+        r = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(_v(100, "A", "T"), self._ann("c.418+3A>T"))
+        assert not r.triggered
+
+    def test_deep_intronic_not_in_motif(self, tmp_path):
+        db = _db(tmp_path, [self._row("1", 101, "c.419-25A>G", "Pathogenic")])
+        r = PS1Evaluator(self._cfg(db, tmp_path)).evaluate(_v(100, "A", "T"), self._ann("c.419-24A>T", ConsequenceType.INTRON))
+        assert not r.triggered
+
+
+def test_bmpr2_motif_exonic_positions():
+    from acmg_classifier.criteria.ps1_splice_motif import motif_of
+    from acmg_classifier.pvs1.last_nt import _exon_bounds
+    b = _exon_bounds("NM_001204.7")
+    if not b:
+        pytest.skip("MANE exon structure not available")
+    end = b[0][1]
+    assert motif_of(f"c.{end}G>A", "NM_001204.7") == ("D", end)
+    assert motif_of(f"c.{end - 2}G>A", "NM_001204.7") == ("D", end)
+    assert motif_of(f"c.{end - 3}G>A", "NM_001204.7") is None
+    assert motif_of(f"c.{end + 1}G>A", "NM_001204.7") == ("A", end + 1)
+    assert motif_of(f"c.{end}+2T>C", "NM_001204.7") is None

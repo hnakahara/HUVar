@@ -11,6 +11,24 @@ from acmg_classifier.models.supplement import SupplementEntry
 
 
 SPLICE_TAG = "[PS1 splice T2:"
+
+# VCEP specifications with their own rule for PS1 at splice sites (CSpec text,
+# retrieved June 2026): a different change at the SAME nucleotide as a P/LP splice
+# variant, at the strength of the comparator (P -> PS1, LP -> PS1_Moderate where
+# the VCEP grants it), without reference to Walker et al. 2023 Table 2. For these
+# genes the Table 2 strengths and the ±1,2-dinucleotide comparator are not used.
+# The other genes with a splice extension (36) cite Walker et al. 2023 / Table 2.
+PS1_SPLICE_VCEP_RULE: frozenset[str] = frozenset({
+    "ABCD1",                                      # Peroxisomal VCEP
+    "ADA", "DCLRE1C", "IL7R", "JAK3", "RAG1", "RAG2",  # SCID VCEP
+    "CDH23", "COCH", "GJB2", "KCNQ4", "MYO15A", "MYO6", "MYO7A", "OTOF",
+    "SLC26A4", "TECTA", "USH2A",                  # Hearing Loss VCEP
+    "BRCA1", "BRCA2",                             # ENIGMA
+    "ATM", "PALB2",                               # HBOP VCEP (PS1 splicing tables)
+    "MLH1", "MSH2", "MSH6", "PMS2",               # InSiGHT (non-canonical only)
+    "APC", "PTEN", "DICER1",
+})
+_INTRONIC_C = re.compile(r"c\.[-*]?\d+[+-]\d+")
 _CANON_HGVS = re.compile(r"c\.[-*]?\d+([+-])([12])(?![0-9])[ACGT]?")
 
 
@@ -246,6 +264,10 @@ class PS1Evaluator(CriterionEvaluator):
                 "(canonical ±1/±2 is PVS1)",
             )
 
+        from acmg_classifier.criteria.ps1_splice_motif import MOTIF_GENES
+        if pc.gene_symbol in MOTIF_GENES:
+            return self._evaluate_splice_motif(variant, pc)
+
         # Comparators (ClinGen SVI splicing, Walker et al. 2023, Table 2):
         #  * a different nucleotide change at the SAME position as a P/LP variant;
         #  * for a variant at a canonical ±1,2 position, also a P/LP variant at the
@@ -269,7 +291,9 @@ class PS1Evaluator(CriterionEvaluator):
             # amino-acid change) predict the same splicing event.
             hits = [h for h in hits if _no_protein_change(h)]
         canon = canonical_offset(pc)
-        if canon is not None and len(variant.ref) == 1 and len(variant.alt) == 1:
+        vcep_rule = pc.gene_symbol in PS1_SPLICE_VCEP_RULE
+        if (not vcep_rule and canon is not None
+                and len(variant.ref) == 1 and len(variant.alt) == 1):
             seen = {h.variation_id for h in hits}
             hits += [h for h in query_splice_dinucleotide_partner(
                 self._cfg.clinvar_sqlite, pc.gene_symbol, variant.chrom, variant.pos,
@@ -289,13 +313,63 @@ class PS1Evaluator(CriterionEvaluator):
         comp = "P" if provisional == CriterionStrength.STRONG else "LP"
         is_canon = canon is not None or pc.consequence in (
             ConsequenceType.SPLICE_DONOR, ConsequenceType.SPLICE_ACCEPTOR)
-        site = "canonical" if is_canon else "noncanonical"
+        site = "vcep" if vcep_rule else ("canonical" if is_canon else "noncanonical")
         strength = _cap(provisional, self._spec.max_strength(pc.gene_symbol))
         evidence = (
             f"ClinVar same splice-site position (different nucleotide"
-            f"{'; same ±1,2 dinucleotide' if canon is not None else ''}), "
+            f"{'; same ±1,2 dinucleotide' if canon is not None and not vcep_rule else ''}"
+            f"{'; VCEP splice rule' if vcep_rule else ''}), "
             f"comparator {comp}: " + ", ".join(h.variation_id or "" for h in hits[:3])
             + f" {SPLICE_TAG}{site}:{comp}]"
             + (f" [{vcep_note}]" if vcep_note else "")
         )
         return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
+
+    def _evaluate_splice_motif(self, variant: VariantRecord, pc) -> CriteriaResult:
+        """BMPR2: PS1_Moderate (Pathogenic) / PS1_Supporting (Likely pathogenic)
+        for a variant in the same splice donor/acceptor motif as the comparator
+        (see :mod:`acmg_classifier.criteria.ps1_splice_motif`)."""
+        from acmg_classifier.criteria.ps1_splice_motif import motif_of, same_transcript
+        from acmg_classifier.local_db.clinvar_sqlite import query_plp_window
+        if pc.consequence == ConsequenceType.MISSENSE:
+            return CriteriaResult.not_met(ACMGCriterion.PS1, "Not a splice variant")
+        motif = motif_of(pc.hgvs_c, pc.transcript_id)
+        if motif is None:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PS1,
+                f"{pc.gene_symbol}: not in a splice donor (last 3 exonic bases, +3..+6) or "
+                "acceptor (first exonic base, -20..-3) motif",
+            )
+        hits = []
+        for h in query_plp_window(self._cfg.clinvar_sqlite, pc.gene_symbol, variant.chrom,
+                                  variant.pos, min_stars=self._min_stars):
+            if (str(h.pos), h.ref, h.alt) == (str(variant.pos), variant.ref, variant.alt):
+                continue
+            if not same_transcript(h.hgvs_c, pc.transcript_id):
+                continue
+            if motif_of(h.hgvs_c, pc.transcript_id) != motif:
+                continue
+            if not _INTRONIC_C.search((h.hgvs_c or "").split(":")[-1]) and not _no_protein_change(h):
+                continue  # exonic comparator acting through the protein
+            hits.append(h)
+        from acmg_classifier.criteria.vcep_comparators import filter_comparators
+        hits, vcep_note = filter_comparators(pc.gene_symbol, "PS1", hits, variant.assembly.value)
+        kind = "donor" if motif[0] == "D" else "acceptor"
+        if not hits:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PS1,
+                f"No ClinVar >={self._min_stars} star P/LP variant in the same splice {kind} motif"
+                + (f" [{vcep_note}]" if vcep_note else ""),
+            )
+        strength = (CriterionStrength.MODERATE
+                    if _ps1_strength(hits) == CriterionStrength.STRONG
+                    else CriterionStrength.SUPPORTING)
+        comp = "P" if strength == CriterionStrength.MODERATE else "LP"
+        return CriteriaResult.met(
+            ACMGCriterion.PS1, strength,
+            f"{pc.gene_symbol} VCEP: same splice {kind} motif as a ClinVar {comp} variant "
+            f"(P -> PS1_Moderate, LP -> PS1_Supporting): "
+            + ", ".join(f"{h.variation_id} {(h.hgvs_c or '').split(':')[-1]}" for h in hits[:3])
+            + f" {SPLICE_TAG}vcep:{comp}]",
+        )
+
