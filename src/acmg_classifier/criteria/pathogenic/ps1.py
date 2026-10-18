@@ -1,5 +1,6 @@
 """PS1 — same amino acid change as established pathogenic variant."""
 from __future__ import annotations
+import re
 from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
@@ -7,6 +8,24 @@ from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
+
+
+SPLICE_TAG = "[PS1 splice T2:"
+_CANON_HGVS = re.compile(r"c\.[-*]?\d+([+-])([12])(?![0-9])[ACGT]?")
+
+
+def canonical_offset(pc) -> tuple[str, int] | None:
+    """``(sign, offset)`` of a variant at a canonical ±1,2 splice position
+    (from the MANE HGVS c. name), or ``None``."""
+    m = _CANON_HGVS.search((pc.hgvs_c or "").split(":")[-1])
+    if m:
+        return m.group(1), int(m.group(2))
+    return None
+
+
+def _no_protein_change(h) -> bool:
+    p = (h.hgvs_p or "").split(":")[-1]
+    return not p or p.endswith("=") or p.endswith("=)")
 
 
 _RANK = {
@@ -99,6 +118,7 @@ class PS1Evaluator(CriterionEvaluator):
             ConsequenceType.SPLICE_DONOR,
             ConsequenceType.SPLICE_REGION,
             ConsequenceType.INTRON,
+            ConsequenceType.SYNONYMOUS,
         ):
             return self._evaluate_splice(variant, pc)
         return CriteriaResult.not_met(ACMGCriterion.PS1, "Not a missense or splice variant")
@@ -226,15 +246,35 @@ class PS1Evaluator(CriterionEvaluator):
                 "(canonical ±1/±2 is PVS1)",
             )
 
-        # A different nucleotide change at the SAME splice-site position as a
-        # known P/LP variant — the splicing counterpart of PS1.
-        from acmg_classifier.local_db.clinvar_sqlite import query_same_splice_site
+        # Comparators (ClinGen SVI splicing, Walker et al. 2023, Table 2):
+        #  * a different nucleotide change at the SAME position as a P/LP variant;
+        #  * for a variant at a canonical ±1,2 position, also a P/LP variant at the
+        #    other base of the same ±1,2 dinucleotide.
+        # Comparators elsewhere in the splice motif are not used. The strength
+        # depends on PVS1 / PP3 of the variant and is set by the registry
+        # (``apply_ps1_splice_table2``) once those are final; here a provisional
+        # Strong (Pathogenic comparator) / Moderate (LP only) is returned with a
+        # machine-readable tag.
+        from acmg_classifier.local_db.clinvar_sqlite import (
+            query_same_splice_site, query_splice_dinucleotide_partner,
+        )
         hits = query_same_splice_site(
             self._cfg.clinvar_sqlite,
             pc.gene_symbol,
             variant.chrom, variant.pos, variant.ref, variant.alt,
             min_stars=self._min_stars,
         )
+        if pc.consequence == ConsequenceType.SYNONYMOUS:
+            # Exonic variant: only comparators that act through splicing (no
+            # amino-acid change) predict the same splicing event.
+            hits = [h for h in hits if _no_protein_change(h)]
+        canon = canonical_offset(pc)
+        if canon is not None and len(variant.ref) == 1 and len(variant.alt) == 1:
+            seen = {h.variation_id for h in hits}
+            hits += [h for h in query_splice_dinucleotide_partner(
+                self._cfg.clinvar_sqlite, pc.gene_symbol, variant.chrom, variant.pos,
+                canon[0], canon[1], min_stars=self._min_stars,
+            ) if h.variation_id not in seen]
         from acmg_classifier.criteria.vcep_comparators import filter_comparators
         hits, vcep_note = filter_comparators(
             pc.gene_symbol, "PS1", hits, variant.assembly.value,
@@ -245,9 +285,17 @@ class PS1Evaluator(CriterionEvaluator):
                 f"No ClinVar >={self._min_stars} star same-splice-site P/LP hit"
                 + (f" [{vcep_note}]" if vcep_note else ""),
             )
-        strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
+        provisional = _ps1_strength(hits)
+        comp = "P" if provisional == CriterionStrength.STRONG else "LP"
+        is_canon = canon is not None or pc.consequence in (
+            ConsequenceType.SPLICE_DONOR, ConsequenceType.SPLICE_ACCEPTOR)
+        site = "canonical" if is_canon else "noncanonical"
+        strength = _cap(provisional, self._spec.max_strength(pc.gene_symbol))
         evidence = (
-            f"ClinVar same splice-site position (different nucleotide), comparator {strength.value}: "
-            + ", ".join(h.variation_id or "" for h in hits[:3])
+            f"ClinVar same splice-site position (different nucleotide"
+            f"{'; same ±1,2 dinucleotide' if canon is not None else ''}), "
+            f"comparator {comp}: " + ", ".join(h.variation_id or "" for h in hits[:3])
+            + f" {SPLICE_TAG}{site}:{comp}]"
+            + (f" [{vcep_note}]" if vcep_note else "")
         )
         return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)

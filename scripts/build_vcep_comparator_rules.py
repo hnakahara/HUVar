@@ -13,7 +13,8 @@ patterns below and should be reviewed manually after each CSpec update.
 
 Columns: gene, criterion (PS1/PM5), comparator (vcep), exclude_codes
 (comparators whose eRepo met codes include these are not used), protein_level
-(1 = exclude comparators classified via PVS1, i.e. splicing), source_text.
+(1 = exclude comparators classified via PVS1, i.e. splicing), pathogenic_only
+(1 = Likely pathogenic comparators are not accepted), source_text.
 """
 from __future__ import annotations
 
@@ -29,10 +30,30 @@ _VCEP_RE = re.compile(
     r"(classified|curated|established|determined)\s+(by|according to|using)\s+(the\s+)?"
     r"([A-Za-z0-9/\- ]{0,25})(VCEP|MDEP|EP)\b|"
     r"by this VCEP|by (ClinGen )?[A-Z]+ VCEP specifications|"
-    r"classified according to [A-Za-z ]+ VCEP specifications",
+    r"classified according to [A-Za-z ]+ VCEP specifications|"
+    # "classified pathogenic (by these guidelines)" (LDLR), "reaches a Pathogenic
+    # classification using this rule specification" (RPE65, GUCY2D, AIPL1),
+    # "classified using these specifications" (RS1, RPGR), "must reach a
+    # pathogenic classification using these rule specifications" (KCNQ1),
+    # "asserted/interpreted as pathogenic by the ClinGen DICER1 VCEP".
+    r"\(by these guidelines\)|"
+    r"(reach(es)?|reaching)[^.]{0,40}classification using (this|these) (rule )?specifications?|"
+    r"classified using these specifications|"
+    r"(evaluated|asserted|interpreted)[^.]{0,40}by the (ClinGen )?[A-Za-z0-9\- ]{0,30}VCEP",
     re.IGNORECASE,
 )
-_WITHOUT_RE = re.compile(r"without (?:using )?(PS1|PM5)\b", re.IGNORECASE)
+# Comparators must be classified Pathogenic (Likely pathogenic not accepted).
+_P_ONLY_RE = re.compile(
+    r"likely pathogenic changes do not apply|classified pathogenic \(by these guidelines\)",
+    re.IGNORECASE,
+)
+# "If the pathogenicity of [the comparator] is unknown, determine its pathogenicity
+# using these specifications" (GATM): the curator may classify the comparator, so
+# it is not restricted to VCEP classifications.
+_CURATOR_MAY_CLASSIFY_RE = re.compile(r"determine its pathogenicity using these specifications",
+                                      re.IGNORECASE)
+_WITHOUT_RE = re.compile(r"without (?:using |the use of )?(?:the )?(PS1|PM5)\b(?: code)?|"
+                         r"assessed independently of (PS1|PM5)", re.IGNORECASE)
 _PROTEIN_RE = re.compile(r"protein level|not due to aberrant splicing|not a predicted or confirmed splice",
                          re.IGNORECASE)
 
@@ -52,23 +73,27 @@ def main() -> None:
             if crit not in ("PS1", "PM5"):
                 continue
             t = (c.get("text") or "").replace("\n", " ")
-            if not _VCEP_RE.search(t):
+            if not _VCEP_RE.search(t) or _CURATOR_MAY_CLASSIFY_RE.search(t):
                 continue
-            excl = sorted({m.upper() for m in _WITHOUT_RE.findall(t)})
+            excl = sorted({(a or b).upper() for a, b in _WITHOUT_RE.findall(t)})
             prot = "1" if _PROTEIN_RE.search(t) else "0"
+            ponly = "1" if _P_ONLY_RE.search(t) else "0"
             for g in genes:
                 r = rows.setdefault((g, crit), dict(gene=g, criterion=crit, comparator="vcep",
                                                     exclude_codes=set(), protein_level="0",
-                                                    source_text=t[:160]))
+                                                    pathogenic_only="0", source_text=t[:160]))
                 r["exclude_codes"] |= set(excl)
                 if prot == "1":
                     r["protein_level"] = "1"
+                if ponly == "1":
+                    r["pathogenic_only"] = "1"
     with a.out.open("w", encoding="utf-8") as fh:
-        fh.write("gene\tcriterion\tcomparator\texclude_codes\tprotein_level\tsource_text\n")
+        fh.write("gene\tcriterion\tcomparator\texclude_codes\tprotein_level\tpathogenic_only\tsource_text\n")
         for (g, crit) in sorted(rows):
             r = rows[(g, crit)]
             fh.write("\t".join([g, crit, "vcep", ",".join(sorted(r["exclude_codes"])),
-                                r["protein_level"], r["source_text"].replace("\t", " ")]) + "\n")
+                                r["protein_level"], r["pathogenic_only"],
+                                r["source_text"].replace("\t", " ")]) + "\n")
     print(f"wrote {len(rows)} gene/criterion rules -> {a.out}")
 
 

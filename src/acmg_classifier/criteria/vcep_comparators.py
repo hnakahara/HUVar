@@ -11,7 +11,8 @@ comparator is accepted only when
 
 and, when the VCEP adds conditions, it was not itself classified using PS1/PM5
 (``exclude_codes``, checked on the eRepo met codes) and its pathogenicity is at
-the protein level, i.e. it was not classified through PVS1 (``protein_level``).
+the protein level, i.e. it was not classified through PVS1 (``protein_level``), and, for LDLR and DICER1, only Pathogenic (not Likely
+pathogenic) comparators are accepted (``pathogenic_only``).
 """
 from __future__ import annotations
 
@@ -30,6 +31,7 @@ _RULES = _REPO / "resources" / "shared" / "vcep_comparator_rules.tsv"
 class Rule(NamedTuple):
     exclude_codes: frozenset[str]
     protein_level: bool
+    pathogenic_only: bool = False
 
 
 def _strip_chr(c: str) -> str:
@@ -48,6 +50,7 @@ def load_rules(path: Path = _RULES) -> dict[tuple[str, str], Rule]:
             out[(r["gene"].strip(), r["criterion"].strip())] = Rule(
                 frozenset(c.strip() for c in (r.get("exclude_codes") or "").split(",") if c.strip()),
                 (r.get("protein_level") or "0").strip() == "1",
+                (r.get("pathogenic_only") or "0").strip() == "1",
             )
     return out
 
@@ -92,12 +95,16 @@ def filter_comparators(
             assertion, codes = rec
             if "Pathogenic" not in assertion:
                 continue  # VCEP did not classify it P/LP
+            if rule.pathogenic_only and assertion.strip().lower() != "pathogenic":
+                continue  # VCEP accepts Pathogenic comparators only (LDLR, DICER1)
             if rule.exclude_codes & codes:
                 continue  # classified using PS1/PM5 itself
             if rule.protein_level and "PVS1" in codes:
                 continue  # pathogenic through a splicing / null effect
             kept.append(h)
         elif (h.star_rating or 0) >= 3:
+            if rule.pathogenic_only and (h.clinical_significance or "").strip().lower() != "pathogenic":
+                continue
             kept.append(h)  # ClinVar expert-panel record not in the eRepo snapshot
     note = (f"{gene} VCEP requires a VCEP-classified comparator: "
             f"{len(kept)}/{len(hits)} ClinVar comparator(s) accepted")

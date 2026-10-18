@@ -58,6 +58,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Myeloid Malignancy VCEP "Summary of splicing effects" table (c.58/c.59/c.97/c.98
   isoform-c-only sites → N/A; c.351/c.352/c.508 → PVS1; c.509, c.613, c.614, c.805,
   c.806, c.967, c.968 → PVS1_Strong). Previously every canonical site was PVS1.
+- **PS1 for splicing = ClinGen SVI Walker et al. 2023 Table 2**: the strength now
+  depends on the variant position and its baseline code — outside ±1,2 (needs PP3):
+  same-nucleotide comparator P → PS1, LP → PS1_Moderate; at ±1,2 with PVS1: comparator
+  in the same ±1,2 dinucleotide P → PS1_Supporting, LP → not applicable; with
+  PVS1_Strong/Moderate/Supporting: P → PS1, LP → not applicable; canonical without PVS1
+  → not applicable (`registry.apply_ps1_splice_table2`). Previously every same-position
+  comparator gave PS1 (P) / PS1_Moderate (LP) regardless of PVS1/PP3. Comparators at the
+  other base of the same ±1,2 dinucleotide are now used
+  (`clinvar_sqlite.query_splice_dinucleotide_partner`); comparators elsewhere in the
+  splice motif are not. Synonymous variants are evaluated for splice PS1 with
+  comparators that have no protein change.
+- **PS1 splice extension removed for missense-only specifications**: FBN1, LDLR, PIK3CD
+  and KCNQ1 mention splicing only as a caveat (`ps1_splice` blank;
+  `build_disease_thresholds._PS1_CAVEAT_SENT`).
+- **VCEP-classified PS1/PM5 comparators** (`vcep_comparator_rules.tsv`, builder patterns
+  extended): LDLR, DICER1 (Pathogenic comparators only — new `pathogenic_only` column),
+  RPE65, GUCY2D, AIPL1, RPGR, RS1 (PM5: comparator assessed independently of PM5), KCNQ1
+  PS1 (comparator classified without PS1), GP1BA PS1, GP1BB/GP9 PM5. GATM is not
+  restricted ("determine its pathogenicity using these specifications").
+
 - **eRepo manual-evidence supplement**: 8 more RNA-based PVS1 calls whose eRepo
   summaries cite RT-PCR / exon-trapping data without a "PVS1 (RNA)" label (GAA ×6,
   ITGA2B c.2828C>T, RPGR c.1245+3A>G); 157 PVS1 (RNA) rows per assembly.

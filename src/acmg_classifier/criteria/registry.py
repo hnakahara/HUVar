@@ -182,6 +182,7 @@ class CriteriaRegistry:
         _apply_pm5_requires_pp3(results, annotation)
         self._apply_pm5_ptc_requires_pvs1(results, annotation)
         self._apply_pm4_exclusions(results, annotation)
+        apply_ps1_splice_table2(results)
 
         # BA1 / BS1 / PM2 are mutually exclusive frequency criteria — keep only
         # the highest-priority one (see _apply_af_mutual_exclusion).
@@ -517,3 +518,49 @@ def _apply_ps4_pm3_exclusion(results: list[CriteriaResult], annotation: Annotati
             r.evidence = ((r.evidence or "") + " [suppressed: PS4 not applied because PM3 is met "
                           "(in-trans evidence takes priority; avoids counting the same probands twice; "
                           "gene without a VCEP specification)]").strip()
+
+
+def apply_ps1_splice_table2(results: list[CriteriaResult]) -> None:
+    """PS1 for splicing (ClinGen SVI, Walker et al. 2023, Table 2).
+
+    The strength depends on where the variant lies and on its baseline code:
+
+    * outside the ±1,2 positions (baseline PP3): same-nucleotide comparator
+      P → PS1, LP → PS1_Moderate; PS1 is not applied without PP3;
+    * at ±1,2 (or another variant with PVS1) with PVS1 (Very Strong): comparator in
+      the same ±1,2 dinucleotide P → PS1_Supporting, LP → not applicable;
+    * with PVS1_Strong / _Moderate / _Supporting: P → PS1, LP → not applicable;
+    * a canonical variant without PVS1 does not get PS1.
+
+    Comparators elsewhere in the splice motif are not used by HUVar."""
+    from acmg_classifier.criteria.pathogenic.ps1 import SPLICE_TAG
+    from acmg_classifier.models.enums import CriterionStrength as S
+
+    ps1 = next((r for r in results if r.criterion == ACMGCriterion.PS1 and r.triggered
+                and not r.suppressed and SPLICE_TAG in (r.evidence or "")), None)
+    if ps1 is None:
+        return
+    tag = ps1.evidence.split(SPLICE_TAG, 1)[1].split("]", 1)[0]
+    site, _, comp = tag.partition(":")
+    pvs1 = next((r for r in results if r.criterion == ACMGCriterion.PVS1 and r.triggered
+                 and not r.suppressed), None)
+    pp3 = any(r.criterion == ACMGCriterion.PP3 and r.triggered for r in results)
+
+    def _drop(why: str) -> None:
+        ps1.suppressed = True
+        ps1.evidence = (ps1.evidence + f" [suppressed: Walker 2023 Table 2 — {why}]").strip()
+
+    if pvs1 is not None or site == "canonical":
+        if pvs1 is None:
+            _drop("canonical ±1,2 variant without PVS1")
+        elif comp != "P":
+            _drop("likely pathogenic comparator with PVS1: not applicable")
+        elif pvs1.strength == S.VERY_STRONG:
+            if ps1.strength != S.SUPPORTING:
+                ps1.strength = S.SUPPORTING
+                ps1.evidence += " [Walker 2023 Table 2: PS1_Supporting with PVS1]"
+        else:
+            ps1.evidence += f" [Walker 2023 Table 2: PS1 with PVS1_{pvs1.strength.value}]"
+        return
+    if not pp3:
+        _drop("PS1 for splicing outside ±1,2 requires PP3")

@@ -390,6 +390,67 @@ def query_same_splice_site(
     ]
 
 
+_CANON_OFFSET_RE = re.compile(r"c\.[-*]?\d+([+-])([12])(?![0-9])")
+
+
+def query_splice_dinucleotide_partner(
+    db_path: Path,
+    gene_symbol: str,
+    chrom: str,
+    pos: int,
+    sign: str,
+    offset: int,
+    min_stars: int = 1,
+) -> list[ClinVarRecord]:
+    """P/LP ClinVar variants at the OTHER position of the same canonical ±1,2
+    dinucleotide (ClinGen SVI splicing, Walker et al. 2023, Table 2: "within the
+    same splice donor/acceptor ±1,2 dinucleotide").
+
+    The variant under assessment sits at intronic offset ``sign``+``offset``
+    (e.g. ``+1``); the partner is the adjacent genomic base (pos−1 or pos+1,
+    depending on the strand) carrying the complementary offset (``+2``). A
+    record is accepted when it lies at pos±1 and its HGVS c. name has the
+    partner offset, which identifies the same dinucleotide without needing the
+    strand or the transcript numbering."""
+    if not db_path.exists() or pos is None or offset not in (1, 2) or sign not in "+-":
+        return []
+    partner = f"{sign}{3 - offset}"
+    c1, c2 = chrom_candidates(chrom)
+    try:
+        con = _get_conn(db_path)
+        rows = con.execute(
+            """
+            SELECT variation_id, clinical_significance, review_status, star_rating,
+                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
+            FROM variants
+            WHERE chrom IN (?, ?)
+              AND pos IN (?, ?)
+              AND gene_symbol = ?
+              AND star_rating >= ?
+              AND clinical_significance IN (
+                  'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
+              )
+            """,
+            (c1, c2, pos - 1, pos + 1, gene_symbol, min_stars),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="splice_dinucleotide", error=str(exc))
+        return []
+    out = []
+    for r in rows:
+        m = _CANON_OFFSET_RE.search(r[5] or "")
+        if not m or f"{m.group(1)}{m.group(2)}" != partner:
+            continue
+        out.append(ClinVarRecord(
+            variation_id=str(r[0]), clinical_significance=r[1], review_status=r[2],
+            star_rating=r[3], gene_symbol=r[4], hgvs_c=r[5], hgvs_p=r[6],
+            amino_acid_change=r[7],
+            chrom=strip_chr(str(r[8])) if r[8] is not None else None,
+            pos=r[9], ref=r[10], alt=r[11],
+        ))
+    return out
+
+
 def has_benign_at_codon(
     db_path: Path,
     gene_symbol: str,

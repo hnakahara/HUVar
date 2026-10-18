@@ -1022,7 +1022,12 @@ _PS1_CAVEAT_SENT = re.compile(
     r"[^.]*\b(?:beware|should be excluded|should not be used|should not be provided"
     r"|not a predicted or confirmed splice defect"
     r"|rather than (?:at )?the amino acid|truly is a splice defect"
-    r"|investigated[^.]*splic|predictions? \(by spliceai\)|spliceai scores? for both)"
+    r"|investigated[^.]*splic|predictions? \(by spliceai\)|spliceai scores? for both"
+    # missense-only specifications whose splicing sentences are caveats only
+    # (FBN1, LDLR, PIK3CD, KCNQ1)
+    r"|splicing predictions should remain the same|no in silico predicted splicing"
+    r"|neither change should be predicted to affect splicing"
+    r"|not causing a splicing defect)"
     r"[^.]*\.?",
     re.IGNORECASE,
 )
