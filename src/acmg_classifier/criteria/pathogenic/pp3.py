@@ -146,6 +146,9 @@ class PP3Evaluator(CriterionEvaluator):
         # VCEP's precomputed PP3/BP4 code table (aGVGD baked in).
         from acmg_classifier.criteria.insilico_genes import InSilicoGeneSpec, TP53Codes
         self._insilico_spec = InSilicoGeneSpec(TP53Codes(cfg.tp53_codes_tsv))
+        # Per-gene VCEP PP3 scope (pp3_scope in disease_prevalence.tsv).
+        from acmg_classifier.criteria.bp_genes import BPApplicability
+        self._scope_spec = BPApplicability(cfg.disease_prevalence_tsv)
 
     def evaluate(
         self,
@@ -153,8 +156,24 @@ class PP3Evaluator(CriterionEvaluator):
         annotation: AnnotationData,
         supplement: list[SupplementEntry] | None = None,
     ) -> CriteriaResult:
-        result = self._evaluate(variant, annotation, supplement)
         pc = annotation.primary_consequence
+        scope = self._scope_spec.pp3_scope(pc.gene_symbol) if pc is not None else ""
+        if scope == "not_applicable":
+            return CriteriaResult.not_met(
+                ACMGCriterion.PP3, f"{pc.gene_symbol}: PP3 not applicable per VCEP")
+        is_missense = pc is not None and pc.consequence == ConsequenceType.MISSENSE
+        if is_missense and scope == "no_missense":
+            return CriteriaResult.not_met(
+                ACMGCriterion.PP3,
+                f"{pc.gene_symbol}: PP3 not applied to missense variants per VCEP "
+                "(synonymous/intronic splice impact only)")
+        if is_missense and scope == "splice_only":
+            # Protein-level predictors are not used; only the splice route counts.
+            none = CriteriaResult.not_met(
+                ACMGCriterion.PP3,
+                f"{pc.gene_symbol}: protein-level predictors not used for PP3 per VCEP")
+            return self._with_missense_splice(pc, annotation, none)
+        result = self._evaluate(variant, annotation, supplement)
         if pc is not None and pc.consequence == ConsequenceType.MISSENSE:
             result = self._with_missense_splice(pc, annotation, result)
         if pc is not None and pc.consequence == ConsequenceType.MISSENSE:

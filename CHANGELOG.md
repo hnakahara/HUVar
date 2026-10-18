@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PP3 / BP4, VCEP scope** (`pp3_scope`, new column in `disease_prevalence.tsv`;
+  `bp4_scope` extended): the SCID VCEP genes (ADA, DCLRE1C, IL2RG, IL7R, JAK3, RAG1,
+  RAG2) no longer receive PP3 for missense variants ("Do not apply to missense
+  variants"; PP3 only for synonymous/intronic splice impact) and BP4 is not applied
+  for ADA and RAG2 (as already for the other SCID genes); APC, PALB2 and CDH1 no
+  longer use a protein-level predictor for missense PP3 (splice prediction only);
+  the PIK3/mTOR GOF panel (AKT3, MTOR, PIK3CA, PIK3R2) no longer receives PP3, and
+  APC and that panel no longer receive missense BP4. Previously these genes fell
+  back to the genome-wide REVEL/AlphaMissense calibration.
 - **PVS1, generic SVI tree — NMD escape**: when the truncated/altered region has no
   annotated functional domain ("role of region unknown"), the SVI protein-length
   branch now applies: >10% of the protein altered (counted from the first changed

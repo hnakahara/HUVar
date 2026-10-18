@@ -45,6 +45,7 @@ COLUMNS = [
     "bp1", "bp1_target", "bp1_exclude", "bp1_strength",
     "bp1_no_splice", "bp3", "bp3_regions", "bp7_phylop", "bp7_intronic",
     "bp4_splice_cutoff", "bp4_scope", "bp4_missense_splice_max", "bp4_exclude_c",
+    "pp3_scope",
     "bp7_splice_cutoff",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
     "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
@@ -720,6 +721,17 @@ _BA1_EXCLUDE_VARIANTS: dict[str, str] = {
 #                     the exonic bases c.77-c.82 flanking it
 #   bp4_splice_cutoff GP9 synonymous/intronic: SpliceAI score of zero
 _BP4_RULES: dict[str, dict[str, str]] = {
+    # SCID VCEP (GN114/GN116/GN119/GN121/GN123/GN124/GN129): BP4 "Not Applicable".
+    "ADA": {"bp4_scope": "not_applicable"},
+    "RAG2": {"bp4_scope": "not_applicable"},
+    # APC (GN089) "Missense variants: BP4 is not applicable" (splicing only);
+    # PIK3/mTOR panel (GN018: AKT3, MTOR, PIK3CA, PIK3R2) BP4 only for
+    # synonymous / intronic / UTR variants by splicing prediction.
+    "APC": {"bp4_scope": "splice_only"},
+    "AKT3": {"bp4_scope": "splice_only"},
+    "MTOR": {"bp4_scope": "splice_only"},
+    "PIK3CA": {"bp4_scope": "splice_only"},
+    "PIK3R2": {"bp4_scope": "splice_only"},
     "DCLRE1C": {"bp4_scope": "not_applicable"},
     "IL2RG": {"bp4_scope": "not_applicable"},
     "IL7R": {"bp4_scope": "not_applicable"},
@@ -734,6 +746,27 @@ _BP4_RULES: dict[str, dict[str, str]] = {
     "GP9": {"bp4_missense_splice_max": "0", "bp4_splice_cutoff": "0"},
     "RUNX1": {"bp4_missense_splice_max": "0.20"},
     "PTEN": {"bp4_exclude_c": "c.79+,c.80-,c.77_82"},
+}
+
+
+# Per-gene PP3 scope from the VCEP specifications (PP3 texts), curated because
+# the JSON-LD does not encode it:
+#   pp3_scope
+#     not_applicable  PP3 not applicable at all (PIK3/mTOR GOF panel GN018:
+#                     "traditional ... algorithms focus on LOF mechanisms")
+#     no_missense     PP3 "only applicable to synonymous or intronic variants
+#                     predicted to impact splicing"; "Do not apply to missense
+#                     variants" (SCID VCEP: ADA, DCLRE1C, IL2RG, IL7R, JAK3,
+#                     RAG1, RAG2)
+#     splice_only     protein-level predictors not used for missense; a missense
+#                     meets PP3 only through predicted splice impact (APC GN089,
+#                     PALB2 GN077 "Missense: Do not use", CDH1 GN007 splicing
+#                     predictors only)
+_PP3_RULES: dict[str, dict[str, str]] = {
+    **{g: {"pp3_scope": "not_applicable"} for g in ("AKT3", "MTOR", "PIK3CA", "PIK3R2")},
+    **{g: {"pp3_scope": "no_missense"} for g in (
+        "ADA", "DCLRE1C", "IL2RG", "IL7R", "JAK3", "RAG1", "RAG2")},
+    **{g: {"pp3_scope": "splice_only"} for g in ("APC", "PALB2", "CDH1")},
 }
 
 
@@ -1897,6 +1930,7 @@ def parse_spec(path: str) -> list[dict]:
                 "bp4_scope": "",
                 "bp4_missense_splice_max": "",
                 "bp4_exclude_c": "",
+                "pp3_scope": "",
                 "bp7_splice_cutoff": "",
                 "revel_pp3_supporting": "",
                 "revel_pp3_moderate": "",
@@ -2303,9 +2337,11 @@ def resolve_rows(files: list[str], released_only: bool = False) -> dict[str, dic
         # Curated variant-level BS1 exclusion (e.g. MYOC p.Gln368Ter).
         row["bs1_exclude"] = _BS1_EXCLUDE_VARIANTS.get(g, "")
         row["ba1_exclude"] = _BA1_EXCLUDE_VARIANTS.get(g, "")
-        for k in ("bp4_scope", "bp4_missense_splice_max", "bp4_exclude_c"):
+        for k in ("bp4_scope", "bp4_missense_splice_max", "bp4_exclude_c", "pp3_scope"):
             row[k] = ""
         for k, v in _BP4_RULES.get(g, {}).items():
+            row[k] = v
+        for k, v in _PP3_RULES.get(g, {}).items():
             row[k] = v
         rvc = revel_choice.get(g)
         rv_pp3 = rvc[1] if rvc else {}
@@ -2501,6 +2537,7 @@ _OVERRIDE_FIELDS = {
     "bp4_scope": "bp4_scope",
     "bp4_missense_splice_max": "bp4_missense_splice_max",
     "bp4_exclude_c": "bp4_exclude_c",
+    "pp3_scope": "pp3_scope",
     "bp7_splice_cutoff": "bp7_splice_cutoff",
     "revel_pp3_supporting": "revel_pp3_supporting",
     "revel_pp3_moderate": "revel_pp3_moderate",

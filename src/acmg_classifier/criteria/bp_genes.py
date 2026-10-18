@@ -16,6 +16,9 @@
 * ``bp7_intronic`` — the BP7 intronic applicability range. ``noncanonical`` (the
   RASopathy / PIK3 panels) admits any intronic position except the canonical
   +/-1,2 sites; blank keeps the Walker deep-intronic (+7/-21) default.
+* ``pp3_scope`` — the VCEP PP3 scope read by ``PP3Evaluator``: ``not_applicable``
+  (PIK3/mTOR GOF panel), ``no_missense`` (SCID genes: synonymous/intronic splice
+  impact only), ``splice_only`` (APC, PALB2, CDH1: no protein-level predictor).
 * ``bp4_splice_cutoff`` / ``bp7_splice_cutoff`` — the per-gene SpliceAI
   "no-impact" cutoff for the BP4 splice branch and the BP7 splice gate. A
   variant is splice-benign when ``SpliceAI <= cutoff``. Most VCEPs use the Walker
@@ -32,6 +35,8 @@ from pathlib import Path
 
 APPLICABLE = "applicable"
 BP4_SCOPES = ("not_applicable", "splice_only", "missense_only", "no_synonymous")
+# PP3 scope (pp3_scope): see PP3Evaluator.
+PP3_SCOPES = ("not_applicable", "no_missense", "splice_only")
 NOT_APPLICABLE = "not_applicable"
 
 
@@ -53,6 +58,7 @@ class BPApplicability:
         self._bp7_intronic_cutoffs: dict[str, tuple[int, int]] = {}
         self._bp4_splice_cutoff: dict[str, float] = {}
         self._bp4_scope: dict[str, str] = {}
+        self._pp3_scope: dict[str, str] = {}
         self._bp4_missense_splice_max: dict[str, float] = {}
         self._bp4_exclude_c: dict[str, list[tuple[str, int, int]]] = {}
         self._bp7_splice_cutoff: dict[str, float] = {}
@@ -107,6 +113,9 @@ class BPApplicability:
                 scope = (row.get("bp4_scope") or "").strip().lower()
                 if scope in BP4_SCOPES:
                     self._bp4_scope[gene] = scope
+                p3 = (row.get("pp3_scope") or "").strip().lower()
+                if p3 in PP3_SCOPES:
+                    self._pp3_scope[gene] = p3
                 excl_c = _parse_c_positions(row.get("bp4_exclude_c") or "")
                 if excl_c:
                     self._bp4_exclude_c[gene] = excl_c
@@ -136,6 +145,15 @@ class BPApplicability:
         if not gene:
             return ""
         return self._bp4_scope.get(gene, "")
+
+    def pp3_scope(self, gene: str | None) -> str:
+        """VCEP PP3 scope: ``not_applicable`` (PP3 never applied) /
+        ``no_missense`` (PP3 only for synonymous/intronic splice impact; never for
+        missense) / ``splice_only`` (no protein-level predictor; a missense meets
+        PP3 only through predicted splice impact) / "" (no restriction)."""
+        if not gene:
+            return ""
+        return self._pp3_scope.get(gene, "")
 
     def bp4_missense_splice_max(self, gene: str | None) -> float | None:
         """Maximum splice-predictor score allowed for a missense BP4 (GP9: 0;
