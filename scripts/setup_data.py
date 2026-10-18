@@ -651,13 +651,26 @@ def step_alphamissense(asm_dir: Path, assembly: str, urls: dict) -> bool:
     return True
 
 
+def _revel_has_transcripts(path: Path) -> bool:
+    """True when the bgzipped REVEL TSV is the 8-column layout (with aaref,
+    aaalt and transcript IDs); False for the legacy 5-column file."""
+    import gzip
+    try:
+        with gzip.open(path, "rt") as fh:
+            line = fh.readline()
+    except OSError:
+        return False
+    return len(line.rstrip("\n").split("\t")) >= 8
+
+
 def step_revel(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
     """Build the per-assembly REVEL TSV for PP3/BP4 (--insilico-tool revel).
 
     REVEL distributes one zip (`revel_with_transcript_ids`, a CSV carrying both
     hg19 and GRCh38 coordinates). We extract a clean, tab-separated, position-
-    sorted, bgzipped 5-column file (chrom, pos, ref, alt, REVEL) indexed on the
-    assembly's coordinate column, so the query side stays assembly-agnostic.
+    sorted, bgzipped 8-column file (chrom, pos, ref, alt, REVEL, aaref, aaalt,
+    Ensembl transcript IDs) indexed on the assembly's coordinate column, so the
+    query side stays assembly-agnostic and can pick the MANE transcript's row.
 
     OPT-IN (--with-revel): the source zip is ~600 MB and ESM1b is the default
     in-silico tool, so REVEL is only fetched when explicitly requested."""
@@ -665,8 +678,19 @@ def step_revel(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
     dest = asm_dir / "revel" / f"revel_{suffix}.tsv.gz"
     tbi = Path(str(dest) + ".tbi")
     if dest.exists() and tbi.exists():
-        print(f"  [SKIP] {dest.name}")
-        return True
+        if _revel_has_transcripts(dest):
+            print(f"  [SKIP] {dest.name}")
+            return True
+        if not enabled:
+            print(f"  [WARN] {dest.name} is the legacy 5-column REVEL file (no "
+                  "aaref/aaalt/transcripts): the MANE row cannot be selected. "
+                  "Re-run with --with-revel to rebuild it.")
+            return True
+        # Legacy 5-column file: keep it as a backup and rebuild the 8-column one.
+        for p in (dest, tbi):
+            bak = Path(str(p).replace(".tsv.gz", ".5col.tsv.gz"))
+            p.replace(bak)
+            print(f"  Legacy REVEL file kept as {bak.name}")
     if not enabled:
         print("  [SKIP] REVEL not requested (pass --with-revel to enable "
               "--insilico-tool revel; ~600 MB zip)")
@@ -682,13 +706,16 @@ def step_revel(asm_dir: Path, assembly: str, urls: dict, enabled: bool) -> bool:
     if not dest.exists():
         # CSV columns: chr,hg19_pos,grch38_pos,ref,alt,aaref,aaalt,REVEL,txids.
         # GRCh38 reads the grch38_pos column (3) and drops un-lifted rows ('.');
-        # GRCh37 reads hg19_pos (2). REVEL is column 8.
+        # GRCh37 reads hg19_pos (2). REVEL is column 8. aaref/aaalt and the
+        # Ensembl transcript IDs are kept (columns 6-8 of the output) because
+        # one SNV can carry several per-transcript REVEL rows with different
+        # scores; revel_db selects the MANE row from them.
         pos_col = "$3" if assembly == "GRCh38" else "$2"
         guard = '$3!="" && $3!="."' if assembly == "GRCh38" else '$2!="" && $2!="."'
         print("  Converting REVEL CSV to sorted TSV + bgzip...")
         awk = (
             f"BEGIN{{OFS=\"\\t\"}} NR>1 && {guard} "
-            f"{{print $1, {pos_col}, $4, $5, $8}}"
+            f"{{print $1, {pos_col}, $4, $5, $8, $6, $7, $9}}"
         )
         cmd = (
             f"unzip -p {shlex.quote(str(zip_path))} | "
@@ -1190,8 +1217,7 @@ def step_clingen(data_dir: Path, force: bool = False) -> bool:
             print(f"  [SKIP] {dest.name}")
             continue
         _download(CLINGEN_URLS[key], dest, f"ClinGen {key}")
-        name = "clingen_gene_validity" if key == "validity" else f"clingen_{key}"
-        _record_manifest(data_dir, name, source=CLINGEN_URLS[key], path=dest)
+        _record_manifest(data_dir, f"clingen_{key}", source=CLINGEN_URLS[key], path=dest)
     return True
 
 

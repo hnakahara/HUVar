@@ -104,6 +104,10 @@ class RevelData(BaseModel):
     missense variant. Higher score ⇒ more pathogenic (0–1 scale)."""
 
     score: Optional[float] = None
+    # How the row was chosen among REVEL's per-transcript rows: "transcript"
+    # (MANE ENST), "amino_acid" (MANE amino-acid change), "max" (no MANE match,
+    # highest of several), "single" (one row) or "legacy" (5-column file).
+    match: Optional[str] = None
 
 
 class BayesDelData(BaseModel):

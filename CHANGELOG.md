@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **REVEL, MANE row selection**: REVEL v1.3 lists one row per transcript-specific
+  amino-acid change, and the same SNV can score very differently across
+  transcripts (IDUA c.530T>G: F>C 0.961 on MANE vs S>A 0.400; FBN1 c.7016G>A:
+  C>Y 0.973 vs A>T 0.209). `scripts/setup_data.py` now keeps aaref, aaalt and the
+  Ensembl transcript IDs (8-column REVEL file), and `revel_db` picks the row of the
+  MANE Select ENST, else the row matching the MANE amino-acid change, else the
+  highest score. Previously the transcript columns were dropped and the first
+  matching row was used. **The REVEL file must be rebuilt** (`setup_data.py
+  --with-revel`; an existing 5-column file is renamed `*.5col.tsv.gz` and rebuilt);
+  a legacy file still works with the old first-row behaviour.
 - **PP3 / BP4, VCEP scope** (`pp3_scope`, new column in `disease_prevalence.tsv`;
   `bp4_scope` extended): the SCID VCEP genes (ADA, DCLRE1C, IL2RG, IL7R, JAK3, RAG1,
   RAG2) no longer receive PP3 for missense variants ("Do not apply to missense

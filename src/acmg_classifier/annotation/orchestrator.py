@@ -48,6 +48,34 @@ def _resolve_uniprot_id(primary, consequences):
     return None
 
 
+def _revel_keys(primary, consequences, mane_map):
+    """(amino-acid change, MANE ENST bases) used to choose the MANE row among
+    REVEL's per-transcript rows for one SNV.
+
+    The amino-acid pair comes from the primary (MANE-first) consequence when it
+    is a missense ("F/C" -> ("F", "C")). The transcript set holds the gene's
+    MANE Select ENST from the MANE map, any Ensembl consequence VEP flags as
+    MANE Select, and the primary itself when it is an ENST."""
+    if primary is None:
+        return None, None
+    aa = None
+    if primary.consequence == ConsequenceType.MISSENSE and primary.amino_acids:
+        parts = primary.amino_acids.split("/")
+        if len(parts) == 2 and len(parts[0]) == 1 and len(parts[1]) == 1:
+            aa = (parts[0], parts[1])
+    tx: set[str] = set()
+    mane = (mane_map or {}).get(primary.gene_symbol)
+    if mane and mane[1]:
+        tx.add(mane[1])
+    for c in consequences or ():
+        tid = c.transcript_id or ""
+        if tid.startswith("ENST") and c.is_mane_select and c.gene_symbol == primary.gene_symbol:
+            tx.add(tid.split(".")[0])
+    if (primary.transcript_id or "").startswith("ENST"):
+        tx.add(primary.transcript_id.split(".")[0])
+    return aa, (tx or None)
+
+
 class AnnotationOrchestrator:
     """Coordinates all local database queries for a batch of variants."""
 
@@ -89,6 +117,10 @@ class AnnotationOrchestrator:
         self._clinvar_reader = TabixReader(cfg.clinvar_vcf)
         self._am_reader = TabixReader(cfg.alphamissense_tsv)
         self._revel_reader = TabixReader(cfg.revel_tsv)
+        # MANE Select ENST per gene, to pick the MANE row among REVEL's
+        # per-transcript rows (also covers GRCh37, where VEP has no MANE flag).
+        from acmg_classifier.local_db.mane_db import load_mane_map
+        self._mane_map = load_mane_map(cfg.mane_select_tsv)
         self._repeat_reader = TabixReader(cfg.repeatmasker_bed)
         self._bayesdel_reader = TabixReader(cfg.bayesdel_tsv) if self._use_bayesdel else None
         self._cadd_reader = TabixReader(cfg.cadd_tsv) if self._use_cadd else None
@@ -246,9 +278,11 @@ class AnnotationOrchestrator:
             variant.chrom, variant.pos, variant.ref, variant.alt,
         )
         esm1b = self._lookup_esm1b(primary, consequences)
+        revel_aa, revel_tx = _revel_keys(primary, consequences, self._mane_map)
         revel = query_revel_reader(
             self._revel_reader,
             variant.chrom, variant.pos, variant.ref, variant.alt,
+            aa=revel_aa, transcripts=revel_tx,
         )
 
         # Auxiliary predictors only when licence-gated ON (REVEL/AlphaMissense +
