@@ -96,6 +96,18 @@ class BA1Evaluator(CriterionEvaluator):
             faf = gd.popmax_af
             metric = "gnomAD popmax AF (point)"
 
+        # No FAF95 (gnomAD computes it only when the grpmax group has more than one
+        # observation): the ClinGen/VCEP frequency rules are defined on FAF95 in
+        # populations with >1 observation, so a single-observation point AF must
+        # not establish BA1. Only the explicit point-AF / male-AF bases above
+        # replace FAF95.
+        if metric.startswith("gnomAD popmax AF (FAF95 unavailable)"):
+            return CriteriaResult.not_met(
+                ACMGCriterion.BA1,
+                f"gnomAD FAF95 unavailable (single observation; popmax AF={faf:.3g}); "
+                f"BA1 not applied",
+            )
+
         # 3 significant figures rather than 4 fixed decimals — disease-specific
         # BA1 cutoffs can be ~1e-3/1e-5, which ".4f" rounds misleadingly. The
         # comparison uses full float precision regardless of this display.

@@ -93,3 +93,13 @@ def test_pm2_not_applicable_rule(tmp_path):
     r = ev.evaluate(VariantRecord(chrom="chr19", pos=1, ref="A", alt="G",
                                   assembly=Assembly.GRCH38), ann)
     assert not r.triggered and "not applicable" in r.evidence
+
+
+def test_congenital_myopathy_exclusion_variants():
+    import csv
+    root = Path(__file__).resolve().parents[2] / "resources" / "shared"
+    rows = {(r["gene_symbol"], r["cspec_id"]): r for r in csv.DictReader(
+        (root / "disease_prevalence_multispec.tsv").open(encoding="utf-8"), delimiter="\t")}
+    assert "c.14524G>A" in rows[("RYR1", "congenital_myopathy_ad")]["bs1_exclude"]
+    assert "c.10348-6C>G" in rows[("RYR1", "congenital_myopathy_ar")]["ba1_exclude"]
+    assert "c.541del" in rows[("ACTA1", "congenital_myopathy_ar")]["ba1_exclude"]

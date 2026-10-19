@@ -700,6 +700,9 @@ _BA1_EXCLUDE_VARIANTS: dict[str, str] = {
     "DYSF": "c.2697+1G>A",
     "ANO5": "c.191dup",
     "CAPN3": "c.1746-20C>G,c.2120A>G",
+    # ACTA1 (GN169, AR; the merged ACTA1 row uses the AR thresholds): BA1
+    # exclusion variants.
+    "ACTA1": "c.541del,c.121C>T",
 }
 
 # Per-gene BP4 scope / gating from the VCEP specifications (PP3/BP4 texts),
@@ -2376,12 +2379,16 @@ _MULTISPEC_CSPECS: dict[str, list[tuple[str, str, str, dict]]] = {
         # PM2 to none of its eRepo RYR1 variants).
         ("GN012", "malignant_hyperthermia", "悪性高熱症感受性",
          {"af_basis": "popmax", "pm2_threshold": "not_applicable"}),
-        ("GN150", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {}),
-        ("GN179", "congenital_myopathy_ar", "先天性ミオパチー (AR)", {}),
+        # BA1/BS1 exclusion variants listed in the BS1/BA1 texts of GN150 / GN179.
+        ("GN150", "congenital_myopathy_ad", "先天性ミオパチー (AD)",
+         {"bs1_exclude": "c.14524G>A,c.325C>T", "ba1_exclude": "c.14524G>A,c.325C>T"}),
+        ("GN179", "congenital_myopathy_ar", "先天性ミオパチー (AR)",
+         {"bs1_exclude": "c.6721C>T,c.10348-6C>G", "ba1_exclude": "c.6721C>T,c.10348-6C>G"}),
     ],
     "ACTA1": [
         ("GN147", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {}),
-        ("GN169", "congenital_myopathy_ar", "先天性ミオパチー (AR)", {}),
+        ("GN169", "congenital_myopathy_ar", "先天性ミオパチー (AR)",
+         {"ba1_exclude": "c.541del,c.121C>T"}),
     ],
     "VWF": [
         ("GN081", "vwd_ad", "フォン・ヴィレブランド病 (AD・1/2型)", {}),

@@ -93,13 +93,15 @@ class TestBS1:
         r = self.evaluator.evaluate(_snv(), ann)
         assert not r.triggered
 
-    def test_bs1_faf95_missing_falls_back_to_popmax(self):
-        """When FAF95 is genuinely absent (None), fall back to raw AF — same
-        None-aware behaviour as BA1, so very-rare records still get evaluated."""
+    def test_bs1_faf95_missing_not_applied(self):
+        """When FAF95 is absent (single observation in the grpmax group), BS1 is
+        not established from the point popmax AF (VCEP rules use FAF95 with >1
+        observation; Genome Medicine revision)."""
         gd = GnomADData(faf95_popmax=None, popmax_af=0.01, filter_pass=True)
         ann = _annotation(gnomad=gd, consequences=[_consequence()])
         r = self.evaluator.evaluate(_snv(), ann)
-        assert r.triggered
+        assert not r.triggered
+        assert "FAF95 unavailable" in r.evidence
 
     def test_bs1_no_gnomad(self):
         ann = _annotation(consequences=[_consequence()])
@@ -535,3 +537,16 @@ class TestBP7:
         ann = _annotation(consequences=[_consequence(ConsequenceType.MISSENSE)])
         r = self.evaluator.evaluate(_snv(), ann)
         assert not r.triggered
+
+
+def test_ba1_faf95_missing_not_applied():
+    from unittest.mock import MagicMock
+    from pathlib import Path
+    from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+    cfg = MagicMock()
+    cfg.disease_prevalence_tsv = Path("/nonexistent.tsv")
+    cfg.popmax_af_basis = True
+    ev = BA1Evaluator(cfg)
+    gd = GnomADData(faf95_popmax=None, popmax_af=0.2, filter_pass=True)
+    r = ev.evaluate(_snv(), _annotation(gnomad=gd, consequences=[_consequence()]))
+    assert not r.triggered and "FAF95 unavailable" in r.evidence

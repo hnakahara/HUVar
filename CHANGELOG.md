@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **BA1/BS1 without FAF95**: when gnomAD provides no FAF95 (a single observation in
+  the grpmax group), BA1 and BS1 are no longer established from the point popmax AF
+  (unless the VCEP defines the cutoff on the point AF or the male AF). The VCEP
+  frequency rules are stated on FAF95 in populations with more than one
+  observation; the fallback had produced 11 BA1/BS1 calls in the eRepo benchmark,
+  none applied by the VCEP.
+- **BA1/BS1 exclusion variants** for the Congenital Myopathies specifications:
+  RYR1 AD (c.14524G>A, c.325C>T), RYR1 AR (c.6721C>T, c.10348-6C>G) and ACTA1 AR
+  BA1 (c.541del, c.121C>T; also in the merged ACTA1 row).
 - **PM2, Malignant Hyperthermia Susceptibility specification (RYR1, `--cspec
   RYR1=malignant_hyperthermia`)**: PM2 is no longer applied ("Not Applicable: PM2 is
   not used alone", GN012; the VCEP applied PM2 to none of its eRepo variants).
