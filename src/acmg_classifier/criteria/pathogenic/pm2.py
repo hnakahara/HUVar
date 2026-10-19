@@ -190,6 +190,9 @@ class PM2Evaluator(CriterionEvaluator):
         pc = annotation.primary_consequence
         gene = pc.gene_symbol if pc else None
         rule = self._spec.get(gene)
+        if rule is not None and rule.not_applicable:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM2, f"{gene}: PM2 not applicable per VCEP specification")
         # Strength is Supporting by default (SVI); a few VCEPs set PM2 Moderate.
         strength = rule.strength if rule else CriterionStrength.SUPPORTING
 

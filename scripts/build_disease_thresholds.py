@@ -2372,7 +2372,10 @@ def resolve_rows(files: list[str], released_only: bool = False) -> dict[str, dic
 # ACTA1/VWF spec BS1/BA1 are likewise FAF-based, so they stay empty.
 _MULTISPEC_CSPECS: dict[str, list[tuple[str, str, str, dict]]] = {
     "RYR1": [
-        ("GN012", "malignant_hyperthermia", "悪性高熱症感受性", {"af_basis": "popmax"}),
+        # GN012 PM2: "Not Applicable: PM2 is not used alone" (the MHS VCEP applied
+        # PM2 to none of its eRepo RYR1 variants).
+        ("GN012", "malignant_hyperthermia", "悪性高熱症感受性",
+         {"af_basis": "popmax", "pm2_threshold": "not_applicable"}),
         ("GN150", "congenital_myopathy_ad", "先天性ミオパチー (AD)", {}),
         ("GN179", "congenital_myopathy_ar", "先天性ミオパチー (AR)", {}),
     ],

@@ -64,3 +64,32 @@ def test_cli_option_listed():
     from acmg_classifier.cli import cli
     for cmd in ("classify", "explain"):
         assert "--cspec" in CliRunner().invoke(cli, [cmd, "--help"]).output
+
+
+def test_mhs_specification_pm2_not_applicable():
+    """GN012 (MHS): PM2 is not used; the multispec row carries not_applicable."""
+    import csv
+    from acmg_classifier.criteria.pm2_genes import PM2Spec
+    root = Path(__file__).resolve().parents[2] / "resources" / "shared"
+    rows = {r["cspec_id"]: r for r in csv.DictReader(
+        (root / "disease_prevalence_multispec.tsv").open(encoding="utf-8"), delimiter="\t")}
+    assert rows["malignant_hyperthermia"]["pm2_threshold"] == "not_applicable"
+    assert rows["congenital_myopathy_ar"]["pm2_threshold"] not in ("", "not_applicable")
+
+
+def test_pm2_not_applicable_rule(tmp_path):
+    from unittest.mock import MagicMock
+    from acmg_classifier.criteria.pathogenic.pm2 import PM2Evaluator
+    from acmg_classifier.models.annotation import AnnotationData, ConsequenceInfo
+    from acmg_classifier.models.enums import Assembly, ConsequenceType
+    from acmg_classifier.models.variant import VariantRecord
+    t = tmp_path / "dp.tsv"
+    t.write_text("gene_symbol\tpm2_threshold\nRYR1\tnot_applicable\n", encoding="utf-8")
+    cfg = MagicMock(); cfg.disease_prevalence_tsv = t
+    ev = PM2Evaluator(cfg)
+    ann = AnnotationData(gnomad=None, consequences=[ConsequenceInfo(
+        transcript_id="NM_x", gene_id="E", gene_symbol="RYR1",
+        consequence=ConsequenceType.MISSENSE, biotype="protein_coding")])
+    r = ev.evaluate(VariantRecord(chrom="chr19", pos=1, ref="A", alt="G",
+                                  assembly=Assembly.GRCH38), ann)
+    assert not r.triggered and "not applicable" in r.evidence

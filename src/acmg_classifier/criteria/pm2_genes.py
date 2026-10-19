@@ -3,6 +3,9 @@
 * ``pm2_threshold`` — the VCEP's allele-frequency cutoff for the gene. ``"0"``
   means the variant must be ABSENT (only a truly absent / AC=0 variant
   qualifies). Blank → no VCEP cutoff; the evaluator keeps its global default.
+  ``"not_applicable"`` → the VCEP does not use PM2 at all (Malignant
+  Hyperthermia Susceptibility VCEP, GN012: "PM2 is not used alone"; the VCEP
+  applied PM2 to none of its 329 eRepo RYR1 variants).
 * ``pm2_strength``  — ``Moderate`` for the handful of VCEPs that set PM2 at
   Moderate (GAA, LDLR, ETHE1, PDHA1, POLG, SLC19A3, ITGA2B, ITGB3); blank →
   the SVI default of Supporting.
@@ -40,6 +43,8 @@ class PM2Rule:
                                     # absence on the gnomAD non-cancer subset)
     min_depth: Optional[float] = None  # ENIGMA BRCA1/2: the region must have a
                                     # gnomAD mean read depth >= this for PM2
+    not_applicable: bool = False    # the VCEP does not use PM2 (pm2_threshold
+                                    # = "not_applicable")
 
 
 class PM2Spec:
@@ -63,6 +68,10 @@ class PM2Spec:
                     continue
                 raw = (row.get("pm2_threshold") or "").strip()
                 threshold: Optional[float] = None
+                if raw.lower() in ("not_applicable", "na"):
+                    self._by_gene[gene] = PM2Rule(
+                        None, CriterionStrength.SUPPORTING, False, not_applicable=True)
+                    continue
                 if raw:
                     try:
                         threshold = float(raw)

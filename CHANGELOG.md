@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PM2, Malignant Hyperthermia Susceptibility specification (RYR1, `--cspec
+  RYR1=malignant_hyperthermia`)**: PM2 is no longer applied ("Not Applicable: PM2 is
+  not used alone", GN012; the VCEP applied PM2 to none of its eRepo variants).
+  `pm2_threshold = not_applicable` is now supported in `disease_prevalence*.tsv`.
 - **REVEL, MANE row selection**: REVEL v1.3 lists one row per transcript-specific
   amino-acid change, and the same SNV can score very differently across
   transcripts (IDUA c.530T>G: F>C 0.961 on MANE vs S>A 0.400; FBN1 c.7016G>A:
