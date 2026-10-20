@@ -296,7 +296,15 @@ class PP3Evaluator(CriterionEvaluator):
         # Splice-impacting non-missense classes: synonymous, intronic, and
         # the soft "splice_region" zone are evaluated by the splice
         # predictor alone — there is no protein change to score otherwise.
-        if pc.consequence in (
+        # A "splice_donor/acceptor_variant" whose HGVS (3') change does not touch
+        # +/-1,2 (left-aligned indel in a repeat) is not a canonical splice
+        # variant: PVS1 does not apply, and its splicing effect is scored here.
+        from acmg_classifier.pvs1.decision_tree import intronic_beyond_canonical
+        noncanonical_splice = (
+            pc.consequence in (ConsequenceType.SPLICE_DONOR, ConsequenceType.SPLICE_ACCEPTOR)
+            and intronic_beyond_canonical(pc.hgvs_c)
+        )
+        if noncanonical_splice or pc.consequence in (
             ConsequenceType.SPLICE_REGION,
             ConsequenceType.INTRON,
             ConsequenceType.SYNONYMOUS,

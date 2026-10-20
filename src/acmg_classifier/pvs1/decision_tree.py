@@ -12,6 +12,8 @@ Consequences handled:
 """
 from __future__ import annotations
 
+import re
+
 from acmg_classifier.config import Config
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.enums import ConsequenceType, CriterionStrength
@@ -170,6 +172,35 @@ def _nmd_branch(
 # Splice branch
 # ---------------------------------------------------------------------------
 
+
+_HGVS_END = re.compile(r"([-*]?\d+)(?:([+-])(\d+))?$")
+
+
+def intronic_beyond_canonical(hgvs_c: str | None) -> bool:
+    """True when the HGVS c. change (3'-normalised by VEP) lies wholly in an
+    intron and affects neither the +/-1 nor the +/-2 position, although VEP
+    called it splice_donor/acceptor_variant (VEP decides on the left-aligned
+    VCF allele, e.g. a deletion in a repeat). Such variants are not canonical
+    splice variants for PVS1; their splicing effect is evaluated under PP3."""
+    if not hgvs_c:
+        return False
+    m = re.match(r"c\.([-*]?\d+(?:[+-]\d+)?)(?:_([-*]?\d+(?:[+-]\d+)?))?",
+                 hgvs_c.split(":")[-1])
+    if not m:
+        return False
+    ends = []
+    for g in m.groups():
+        if g is None:
+            continue
+        mm = _HGVS_END.match(g)
+        ends.append((mm.group(1), mm.group(2) or "", int(mm.group(3) or 0)))
+    if len(ends) == 1:
+        _, sign, off = ends[0]
+        return bool(sign) and off > 2
+    (b1, s1, o1), (b2, s2, o2) = ends
+    return b1 == b2 and bool(s1) and s1 == s2 and min(o1, o2) > 2
+
+
 def _splice_branch(
     variant: VariantRecord,
     annotation: AnnotationData,
@@ -189,6 +220,11 @@ def _splice_branch(
     OpenSpliceAI default model affected about a third of canonical sites.)"""
     if not lof_mechanism:
         return CriterionStrength.NOT_MET, "Gene LoF mechanism not established for splice variant"
+    if intronic_beyond_canonical(pc.hgvs_c):
+        return (CriterionStrength.NOT_MET,
+                f"{pc.consequence.value} by VEP, but {pc.hgvs_c} does not affect the +/-1,2 "
+                "positions (HGVS 3' rule); not a canonical splice variant, splicing is "
+                "evaluated under PP3")
 
     sp = annotation.splice
     splice_lof_predicted = False

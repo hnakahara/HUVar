@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PVS1/PP3, splice annotations that are not canonical**: VEP calls a variant
+  splice_donor/acceptor_variant from the left-aligned VCF allele, so a deletion in
+  a repeat can be annotated as canonical although its HGVS (3') change lies beyond
+  +/-2 (e.g. LZTR1 c.651+10_651+46del, APC c.531+5_531+8del). Such purely intronic
+  variants no longer receive PVS1; their splicing effect is evaluated under PP3.
 - **PVS1, canonical splice sites**: for canonical +/-1,2 splice donor/acceptor
   variants, splicing disruption is now presumed, as in the ClinGen SVI PVS1
   decision tree, and the splice-predictor score is reported for reference only.
