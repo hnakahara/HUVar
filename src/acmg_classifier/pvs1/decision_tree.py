@@ -180,12 +180,13 @@ def _splice_branch(
 ) -> tuple[CriterionStrength, str]:
     """ClinGen 2019 PVS1 sub-tree for canonical-splice variants.
 
-    The variant is in a splice donor/acceptor by VEP consequence. We use
-    a splice predictor score to decide whether the LoF interpretation is
-    supported. When no predictor is available we still award a reduced
-    strength because the canonical splice site itself is strong prior
-    evidence of LoF — but we cap at Moderate to reflect the missing
-    confirmation."""
+    The variant is in a canonical splice donor/acceptor (+/-1,2) by VEP
+    consequence. Following the ClinGen SVI PVS1 decision tree (Abou Tayoun
+    2018), disruption of splicing is presumed for these positions; a splice
+    predictor is not required to confirm it. The predictor score is reported
+    in the evidence text for reference only. (Previously a score below 0.20
+    down-graded PVS1 to Strong/Moderate, which with the short-context
+    OpenSpliceAI default model affected about a third of canonical sites.)"""
     if not lof_mechanism:
         return CriterionStrength.NOT_MET, "Gene LoF mechanism not established for splice variant"
 
@@ -214,6 +215,11 @@ def _splice_branch(
         #     # |delta_logit_psi| >= 2 → strong predicted splice effect (MMSplice 2019).
         #     splice_lof_predicted = abs(sp.raw_score) >= 2.0
         #     splice_tool_note = f"MMSplice delta_logit_psi={sp.raw_score:.3f}"
+
+    # SVI: canonical +/-1,2 variants are presumed to disrupt splicing; the
+    # predictor score is informational only.
+    splice_tool_note = f"canonical splice site, splicing disruption presumed; {splice_tool_note}"
+    splice_lof_predicted = True
 
     if splice_lof_predicted:
         if not alt_rescue:

@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PVS1, canonical splice sites**: for canonical +/-1,2 splice donor/acceptor
+  variants, splicing disruption is now presumed, as in the ClinGen SVI PVS1
+  decision tree, and the splice-predictor score is reported for reference only.
+  Previously a score below 0.20 down-graded PVS1 to Strong/Moderate; with the
+  default 80-nt OpenSpliceAI model this affected about a third of canonical sites
+  in the eRepo benchmark (e.g. RB1 c.381-1G>A, OpenSpliceAI 0.06 -> PVS1_Moderate;
+  SpliceAI 1.00). VCEP-specific PVS1 splice rules still take precedence.
 - **PVS1, PALB2 C-terminal truncations**: the PALB2 VCEP boundary is now judged by
   the position of the (new) stop codon rather than the first residue a frameshift
   alters. A PTC upstream of His1184 remains PVS1; a PTC after Tyr1183, including
