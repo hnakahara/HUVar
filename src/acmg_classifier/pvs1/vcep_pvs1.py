@@ -289,11 +289,16 @@ _SPECS: dict[str, _GeneSpec] = {
     # last residues — Y1183/H1184/Y1185/S1186 form the "molecular Velcro" that
     # seals the toroid) and the coiled-coil are indispensable, so even NMD-escape
     # truncations that adversely affect WD40 are PVS1 (not the Strong baseline).
-    # Because WD40 reaches the C-terminus, any truncation → PVS1. Canonical
-    # splice → PVS1.
+    # The boundary is set by the position of the (new) stop codon, not the first
+    # residue a frameshift alters: a PTC upstream of His1184 (p.Tyr1183* is the
+    # most C-terminal pathogenic truncation) → PVS1; a PTC after Tyr1183,
+    # including frameshifts that read through the native stop into a C-terminal
+    # extension, → PVS1_Strong (VCEP pilot c.3543del p.Phe1181LeufsTer10, new
+    # stop at codon 1190). Canonical splice → PVS1.
     "PALB2": _GeneSpec(
         gene="PALB2", transcript="NM_024675.4", aa_len=1186,
-        trunc_bands=((1, 1186, _S.VERY_STRONG),),
+        trunc_bands=((1, 1183, _S.VERY_STRONG), (1184, 1187, _S.STRONG)),
+        trunc_ptc=True, readthrough_fs=_S.STRONG,
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
     # FBN1 (Marfan VCEP). NMD-based: nonsense/frameshift predicted to undergo NMD

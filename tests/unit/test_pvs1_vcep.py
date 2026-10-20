@@ -127,6 +127,23 @@ class TestTruncationBands:
     def test_palb2_all_truncations_very_strong(self):
         assert evaluate_vcep_pvs1(_pc("PALB2", ConsequenceType.STOP_GAINED, 1183))[0] == S.VERY_STRONG
 
+    def test_palb2_ptc_after_tyr1183_strong(self):
+        pc = _pc("PALB2", ConsequenceType.STOP_GAINED, 1184)
+        pc.hgvs_p = "p.His1184Ter"
+        assert evaluate_vcep_pvs1(pc)[0] == S.STRONG
+
+    def test_palb2_frameshift_judged_by_new_stop(self):
+        # VCEP pilot: c.3543del p.Phe1181LeufsTer10 (stop at 1190, C-terminal
+        # extension) -> PVS1_Strong, although the frameshift starts at 1181.
+        for hp, pos in (("p.Phe1181LeufsTer10", 1181), ("p.Leu1171CysfsTer20", 1171)):
+            pc = _pc("PALB2", ConsequenceType.FRAMESHIFT, pos)
+            pc.hgvs_p = hp
+            assert evaluate_vcep_pvs1(pc)[0] == S.STRONG
+        # A frameshift whose new stop is upstream of His1184 stays PVS1.
+        pc = _pc("PALB2", ConsequenceType.FRAMESHIFT, 1121)
+        pc.hgvs_p = "p.Gly1121ValfsTer3"
+        assert evaluate_vcep_pvs1(pc)[0] == S.VERY_STRONG
+
     def test_fbn1_nmd_based(self):
         # Mid-gene exon → NMD predicted → Very Strong.
         assert evaluate_vcep_pvs1(_pc("FBN1", ConsequenceType.STOP_GAINED, 1000, exon="30/66"))[0] == S.VERY_STRONG

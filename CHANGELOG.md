@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PVS1, PALB2 C-terminal truncations**: the PALB2 VCEP boundary is now judged by
+  the position of the (new) stop codon rather than the first residue a frameshift
+  alters. A PTC upstream of His1184 remains PVS1; a PTC after Tyr1183, including
+  frameshifts reading through the native stop (C-terminal extension), is
+  PVS1_Strong, as in the VCEP pilot c.3543del (p.Phe1181LeufsTer10). In the eRepo
+  benchmark this changes c.3543del and c.3510del (both VCEP PVS1_Strong, VUS).
 - **PVS1, alternative-transcript rescue**: only MANE/canonical protein-coding
   transcripts of the gene under evaluation are considered. VEP also reports
   transcripts of neighbouring genes within 5 kb (upstream/downstream_gene_variant,
