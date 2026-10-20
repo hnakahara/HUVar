@@ -5,7 +5,8 @@ from acmg_classifier.models.annotation import AnnotationData, ConsequenceInfo
 
 def has_alternative_transcript_rescue(annotation: AnnotationData) -> bool:
     """
-    Return True if an alternative MANE/canonical transcript does NOT carry the LoF consequence.
+    Return True if an alternative MANE/canonical protein-coding transcript of the
+    same gene does NOT carry the LoF consequence.
 
     When a variant causes LoF on one transcript but is tolerated on another clinically
     relevant transcript, PVS1 strength is reduced (e.g., VeryStrong -> Strong).
@@ -26,14 +27,21 @@ def has_alternative_transcript_rescue(annotation: AnnotationData) -> bool:
 
     # A "rescue" exists only when BOTH conditions hold: at least one transcript
     # carries the LoF, AND at least one clinically-relevant (MANE/canonical)
-    # transcript carries a non-LoF consequence. Minor isoforms are ignored.
+    # protein-coding transcript carries a non-LoF consequence. Minor isoforms
+    # are ignored. Only transcripts of the SAME gene as the primary consequence
+    # count: VEP also reports transcripts of neighbouring genes within 5 kb
+    # (upstream/downstream_gene_variant, e.g. RB1-DT next to RB1), which cannot
+    # rescue a loss of function of the gene under evaluation.
+    gene = primary.gene_symbol
     lof_transcripts = 0
     non_lof_mane_canonical = 0
 
     for c in annotation.consequences:
+        if c.gene_symbol != gene:
+            continue
         if c.consequence in lof_consequences:
             lof_transcripts += 1
-        elif c.is_mane_select or c.is_canonical:
+        elif (c.is_mane_select or c.is_canonical) and c.biotype == "protein_coding":
             non_lof_mane_canonical += 1
 
     return non_lof_mane_canonical > 0 and lof_transcripts > 0

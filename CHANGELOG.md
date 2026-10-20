@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed (Genome Medicine revision)
 
+- **PVS1, alternative-transcript rescue**: only MANE/canonical protein-coding
+  transcripts of the gene under evaluation are considered. VEP also reports
+  transcripts of neighbouring genes within 5 kb (upstream/downstream_gene_variant,
+  e.g. RB1-DT and LPAR6 for RB1), which had been counted as rescuing transcripts
+  and down-graded PVS1 from Very Strong to Strong for NMD-predicted null variants
+  (85 eRepo variants, e.g. ITGB3, CAPN3, LDLR; RB1, STK11, MEN1 in the CGP cohort).
 - **BA1/BS1 without FAF95**: when gnomAD provides no FAF95 (a single observation in
   the grpmax group), BA1 and BS1 are no longer established from the point popmax AF
   (unless the VCEP defines the cutoff on the point AF or the male AF). The VCEP
