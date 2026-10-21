@@ -272,9 +272,29 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 |-----------|---------|-------|
 | Linux / WSL2 | — | Tested on Rocky Linux 9.6; Windows native is **not** supported (uses bash & POSIX tools) |
 | Python | ≥ 3.11 | 3.12 recommended |
-| Disk | ~ 1.5 TB free during setup | gnomAD VCFs dominate (v4.1 joint on GRCh38; exomes + genomes on GRCh37). The raw VCFs are deletable after the DuckDB build — see [Reclaiming disk space](#reclaiming-disk-space-after-setup) — leaving a much smaller steady-state footprint |
-| RAM | ≥ 16 GB | DuckDB build of gnomAD spikes briefly to ~10 GB |
-| CPU | ≥ 4 cores | `--workers` defaults to 4 |
+| Disk | ~ 500 GB after setup; ~ 3 TB free during setup | The raw gnomAD VCFs (~ 1.0 TB for the v4.1 joint release on GRCh38) and intermediate files dominate during setup; they are deletable after the 85 GB DuckDB build — see [Reclaiming disk space](#reclaiming-disk-space-after-setup). The gnomAD build takes ~ 2–4 days, mostly download time |
+| RAM | ≥ 8 GB (16 GB recommended) | See [Measured resource usage](#measured-resource-usage) |
+| CPU | ≥ 2 cores (4–8 recommended) | `--workers` defaults to 4; little gain beyond 8 workers because VEP annotation dominates the run time |
+
+### Measured resource usage
+
+Classification of the 11,545 ClinGen eRepo variants (GRCh38; `--insilico-tool revel --splice-tool spliceai --with-bayesdel --with-cadd --with-tp53-functional` with the eRepo supplement) on a Linux server, measured with GNU `time`. Memory limits were imposed with `systemd-run --scope -p MemoryMax=…`.
+
+| `--workers` | Wall time (no limit / 16 GB / 8 GB) | CPU used (no limit) |
+|---|---|---|
+| 1 | 12:38 / 12:31 / 12:49 | 1.2 cores |
+| 2 | 8:05 / 8:04 / 8:23 | 1.9 cores |
+| 4 | 5:51 / 5:52 / 6:01 | 2.7 cores |
+| 8 | 4:41 / 4:39 / 4:53 | 3.4 cores |
+| 16 | 4:17 / 4:13 / 4:35 | 3.9 cores |
+
+| Memory limit | Peak resident memory (max RSS) | Major page faults | Effect on run time |
+|---|---|---|---|
+| None | 40.5 GB | 0 | — |
+| 16 GB | 15.5 GB | 0 | none |
+| 8 GB | 8.0 GB | 14,000–45,000 | ≤ 7% slower |
+
+Peak RSS was nearly identical for 1–16 workers. Most of it consists of file-backed pages of the memory-mapped local databases, which the kernel caches when memory is available and evicts under a limit; the RSS therefore grows to the available memory rather than reflecting a hard requirement. With 16 GB no data had to be re-read from disk, and with 8 GB re-reading slowed the run only slightly. About 35 s of each run is classification; the rest is Ensembl VEP annotation.
 
 ### External binaries (must be in `PATH`)
 
