@@ -31,7 +31,7 @@ set -euo pipefail
 DATA=${DATA:?set DATA to the HUVar data directory (python scripts/setup_data.py --data-dir ...)}
 SPLICEAI_DIR=${SPLICEAI_DIR:?set SPLICEAI_DIR to the directory with the precomputed SpliceAI scores}
 REPO=$(cd "$(dirname "$0")/../.." && pwd)   # HUVar repository root
-IN=${IN:-$REPO/data}   # erepo_hg38.vcf / erepo_hg19.vcf
+IN=${IN:-$REPO/inputs}   # erepo_hg38_may_2026.vcf / erepo_hg19_may_2026.vcf
 OUT=${OUT:-$PWD/erepo_results}
 WORKERS=${WORKERS:-36}
 FORCE=${FORCE:-0}
@@ -70,7 +70,7 @@ run() {  # run <hg> <asm> <cfg> <manual:0|1>
   rm -f "$tmp" "$tmp.provenance.json"
   echo "[$(date '+%F %T')] start: $name"
   # shellcheck disable=SC2086
-  acmg-classify classify "$IN/erepo_${hg}.vcf" -o "$tmp" \
+  acmg-classify classify "$IN/erepo_${hg}_may_2026.vcf" -o "$tmp" \
     --data-dir "$DATA" --workers "$WORKERS" --assembly "$asm" --no-progress \
     $tools $extra
   [ -e "$tmp.provenance.json" ] && mv -f "$tmp.provenance.json" "$OUT/$name.provenance.json"

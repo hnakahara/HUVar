@@ -18,13 +18,13 @@ set -euo pipefail
 DATA=${DATA:?set DATA to the HUVar data directory (python scripts/setup_data.py --data-dir ...)}
 SPLICEAI_DIR=${SPLICEAI_DIR:?set SPLICEAI_DIR to the directory with the precomputed SpliceAI scores}
 REPO=$(cd "$(dirname "$0")/../.." && pwd)   # HUVar repository root
-IN=${IN:-$REPO/data}   # erepo_hg38.vcf / erepo_hg19.vcf
+IN=${IN:-$REPO/inputs}   # erepo_hg38_may_2026.vcf / erepo_hg19_may_2026.vcf
 OUT=${OUT:-$PWD/erepo_cspec_results}
 WORKERS=${WORKERS:-16}
 FORCE=${FORCE:-0}
 mkdir -p "$OUT"
 VCF="$OUT/erepo_hg38_multispec_genes.vcf"
-{ grep '^#' "$IN/erepo_hg38.vcf"; grep -v '^#' "$IN/erepo_hg38.vcf" | awk -F'\t' '$3 ~ /^(RYR1|ACTA1|VWF):/'; } > "$VCF"
+{ grep '^#' "$IN/erepo_hg38_may_2026.vcf"; grep -v '^#' "$IN/erepo_hg38_may_2026.vcf" | awk -F'\t' '$3 ~ /^(RYR1|ACTA1|VWF):/'; } > "$VCF"
 echo "variants: $(grep -vc '^#' "$VCF")  commit: $(git -C "${HUVAR_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}" rev-parse --short HEAD 2>/dev/null)"
 
 declare -A RUNS=(

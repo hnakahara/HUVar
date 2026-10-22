@@ -143,6 +143,3 @@ concordance_*.txt
 *.pdf
 *.xlsx
 
-# ----- Benchmark input VCFs (ClinGen eRepo variants; published with the manuscript) -----
-!data/erepo_hg38.vcf
-!data/erepo_hg19.vcf

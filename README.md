@@ -1122,7 +1122,8 @@ HUVar/
 │   ├── unit/                        # pytest unit tests
 │   ├── integration/                 # end-to-end pipeline tests (require data/)
 │   └── fixtures/                    # sample.vcf, sample_supplement.tsv
-├── data/                            # annotation databases (NOT versioned) + erepo_hg38.vcf / erepo_hg19.vcf (benchmark input VCFs)
+├── inputs/                          # benchmark input VCFs (erepo_hg38_may_2026.vcf / erepo_hg19_may_2026.vcf)
+├── data/                            # annotation databases (NOT versioned)
 ├── pyproject.toml
 ├── LICENSE
 ├── NOTICE

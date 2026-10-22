@@ -5,12 +5,12 @@ the ClinGen Evidence Repository (eRepo) benchmark, the agreement analyses with t
 classifications, the rule calibrations (LoF mechanism for PVS1, PM1, PP2), the comparison
 of disease-specific VCEP specifications, the resource measurements and the figures.
 
-The input VCFs of the eRepo benchmark are distributed in [`data/`](../data):
+The input VCFs of the eRepo benchmark are distributed in [`inputs/`](../inputs):
 
 | File | Variants | Description |
 |---|---|---|
-| `data/erepo_hg38.vcf` | 11,545 records | eRepo variants (snapshot of 28 May 2026) converted to GRCh38 with TransVar; `ID`/`INFO NAME` = `GENE:HGVSc` |
-| `data/erepo_hg19.vcf` | 11,574 records | the same on GRCh37 |
+| `inputs/erepo_hg38_may_2026.vcf` | 11,545 records | eRepo variants (snapshot of 28 May 2026) converted to GRCh38 with TransVar; `ID`/`INFO NAME` = `GENE:HGVSc` |
+| `inputs/erepo_hg19_may_2026.vcf` | 11,574 records | the same on GRCh37 |
 
 Records that TransVar converted incorrectly were corrected from the genomic HGVS expression
 of the ClinGen Allele Registry provided with each eRepo record (`prepare/vcffix_hg38.tsv`,

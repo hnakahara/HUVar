@@ -91,7 +91,7 @@ def chrom_key(vid):
 
 # ---- read and match ----
 orig = pd.read_csv(f"{UP}/erepo-original.csv")
-vcf  = pd.read_csv(f"{UP}/erepo_hg19.vcf", sep='\t', comment='#', header=None,
+vcf  = pd.read_csv(f"{UP}/erepo_hg19_may_2026.vcf", sep='\t', comment='#', header=None,
                    names=['CHROM','POS','ID','REF','ALT','QUAL','FILTER','INFO'], dtype=str)
 
 orig['key'] = orig['Gene'].map(norm).str.upper() + '|' + orig['HGVSc'].map(norm)

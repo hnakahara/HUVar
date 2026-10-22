@@ -12,7 +12,7 @@ set -euo pipefail
 DATA=${DATA:?set DATA to the HUVar data directory (python scripts/setup_data.py --data-dir ...)}
 SPLICEAI_DIR=${SPLICEAI_DIR:?set SPLICEAI_DIR to the directory with the precomputed SpliceAI scores}
 REPO=$(cd "$(dirname "$0")/../.." && pwd)   # HUVar repository root
-IN=${IN:-$REPO/data}   # erepo_hg38.vcf / erepo_hg19.vcf
+IN=${IN:-$REPO/inputs}   # erepo_hg38_may_2026.vcf
 OUT=${OUT:-$PWD/erepo_stars2_$(date +%Y%m%d)}
 WORKERS=${WORKERS:-36}
 MODE=${MODE:-manual}
@@ -35,7 +35,7 @@ for cfg in default revel; do
   if [ "$FORCE" != 1 ] && [ -s "$OUT/$name" ]; then echo "skip (exists): $name"; continue; fi
   echo "[$(date '+%F %T')] start: $name"
   # shellcheck disable=SC2086
-  acmg-classify classify "$IN/erepo_hg38.vcf" -o "$OUT/$name" \
+  acmg-classify classify "$IN/erepo_hg38_may_2026.vcf" -o "$OUT/$name" \
     --data-dir "$DATA" --workers "$WORKERS" --assembly GRCh38 --no-progress \
     $extra $tools
   echo "[$(date '+%F %T')] done:  $name"

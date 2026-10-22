@@ -11,7 +11,7 @@ set -uo pipefail
 REPO=$(cd "$(dirname "$0")/../.." && pwd)   # HUVar repository root
 DATA=${DATA:?set DATA to the HUVar data directory (python scripts/setup_data.py --data-dir ...)}
 SPLICEAI_DIR=${SPLICEAI_DIR:?set SPLICEAI_DIR to the directory with the precomputed SpliceAI scores}
-IN=${IN:-$REPO/data}
+IN=${IN:-$REPO/inputs}
 OUT=${OUT:-$PWD/resource_measurement}
 WORKER_LIST=${WORKER_LIST:-"1 2 4 8 16"}
 LIMITS=${LIMITS:-"none 16G 8G"}
@@ -23,7 +23,7 @@ for lim in $LIMITS; do
     pre=()
     [ "$lim" != none ] && pre=(systemd-run --user --scope --quiet -p "MemoryMax=$lim" -p MemorySwapMax=0)
     echo "== workers=$w memory=$lim"
-    "${pre[@]}" /usr/bin/time -v acmg-classify classify "$IN/erepo_hg38.vcf" \
+    "${pre[@]}" /usr/bin/time -v acmg-classify classify "$IN/erepo_hg38_may_2026.vcf" \
         -o "$OUT/erepo_hg38_w${w}_${lim}.tsv" --data-dir "$DATA" --workers "$w" --assembly GRCh38 \
         --insilico-tool revel --splice-tool spliceai --spliceai-dir "$SPLICEAI_DIR" \
         --supplement "$DATA/shared/erepo_manual_criteria_hg38.tsv" \

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - `benchmark/`: scripts used for the analyses in the manuscript (eRepo benchmark,
   agreement with the eRepo classifications, rule calibrations, resource measurements,
-  figures), and the benchmark input VCFs `data/erepo_hg38.vcf` / `data/erepo_hg19.vcf`.
+  figures), and the benchmark input VCFs `inputs/erepo_hg38_may_2026.vcf` / `inputs/erepo_hg19_may_2026.vcf`.
 
 ### Changed (Genome Medicine revision)
 

@@ -19,7 +19,7 @@ Line endings (CRLF / LF) are preserved.
 
 Usage (GRCh38):
   python fix_vcf_from_erepo_hgvs.py --assembly 38 \
-      --vcf inputs/erepo_hg38.vcf --fasta /path/GRCh38.fa \
+      --vcf inputs/erepo_hg38_may_2026.vcf --fasta /path/GRCh38.fa \
       --tabbed /path/erepo-tabbed.tsv --original inputs/erepo-original.csv \
       --remap <HUVar>/resources/GRCh38/erepo_classifications_hg38.tsv \
               <HUVar>/resources/GRCh38/erepo_manual_criteria_hg38.tsv \
