@@ -117,6 +117,13 @@ class Config(BaseSettings):
     # "automated-only" evaluation against the eRepo does not read the reference
     # curation itself. Off for normal use. ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.
     exclude_self_expert_panel: bool = False
+    # Criteria applied by a ClinGen expert panel to the variant itself in ClinVar
+    # (>=3-star record; PS3/PS4/PP1/BS2) are curated evidence. They are imported
+    # only when curated evidence is in use for the run, i.e. a supplement file
+    # (classify --supplement) or manual evidence (explain --evidence/--supplement)
+    # is supplied; set automatically by the pipeline. Without curated evidence
+    # the classification is purely automated. ACMG_CURATED_EVIDENCE=true forces it.
+    curated_evidence: bool = False
     # PM1 for genes without a VCEP definition comes from curated evidence only.
     # The former ClinVar hotspot heuristic (ACMG_PM1_HEURISTIC / ACMG_PM1_WINDOW /
     # ACMG_PM1_MIN_PATH_VARIANTS) was removed in the Genome Medicine revision;

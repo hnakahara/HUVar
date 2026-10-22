@@ -1,0 +1,158 @@
+gene	hgvs_c	strength	eRepo_code	basis	erepo_url
+TP53	c.-21-1G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/b8bc495e-5c4e-42b1-89c3-4e8dbb41b60b
+BRCA2	c.632-3C>G	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a1d2a9d9-1471-4b81-90ac-a0c1e0672210
+ITGB3	c.1815C>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/71ee3265-b0c8-43f5-b06c-7809951acb96
+ATM	c.3576G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/13cd2f77-0719-42e0-8f30-1b421f7e69fa
+ATM	c.5763-1050A>G	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/b257c0e3-7ed5-432e-b2bc-7441d8c0b1dc
+DYSF	c.951+1del	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/893c0a55-bb7e-44b1-98d2-d451b50068dc
+BRCA1	c.442-22_442-13del	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/476a47b3-617d-44fa-a8d1-155d588f2b48
+RPE65	c.1101A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/120fa1fa-db34-4def-8b2e-7c52451328b2
+ATM	c.6976-2A>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/b1e30296-5bb3-4da2-b606-eff8628b5902
+MSH2	c.211G>C	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/37d6267b-b7c7-4b94-b086-40428da17513
+TP53	c.802+1G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/e5597807-7124-425a-b33a-5c6af85c5edc
+BRCA2	c.8023A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a635e51b-a3d1-4c44-b83f-c8e9bad4ccaf
+ITGA2B	c.1753-1G>A	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/1c74ac97-1747-4813-b418-f5e4beeb8a1a
+CDH1	c.1137+1del	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/aba22350-eead-47f1-98cf-0044d77a26d6
+PMS2	c.989-2A>G	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/71e03c69-957f-4ab5-b5e3-096244624d40
+BRCA1	c.212+3A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/b2402846-e923-4f48-9ac2-a6a097c7e175
+BMPR2	c.968-5A>G	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/cc7890de-9825-43e3-9d6e-06fe2b6a8c9d
+RPE65	c.675C>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/25ee2b58-e849-4f8c-a9f1-ba8af7ae35ee
+RPE65	c.246-11A>G	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/f0a503e4-30b5-4f03-a716-0cd9d3e93b56
+FBN1	c.989-1G>C	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/80898e5d-210e-4079-a00b-1c94b048453c
+CAPN3	c.2242C>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/d6fb54e2-b3a3-46d1-bf4d-0bf57f2e3a7d
+DYSF	c.2865-2A>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/64dfdeb5-7855-4694-ada1-d6de69c4b845
+DYSF	c.2697+1G>A	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/f62f2ccc-f972-4206-91e8-dcfee3ed434a
+PAH	c.1066-11G>A	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/2470a255-3083-4956-9ff7-176203d54920
+FBN1	c.5065+2dup	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/18e91fec-6e37-487f-9c0c-58d232ba202f
+SLC6A8	c.1362+24_1363-30del	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/859fd587-83d6-4e9d-bb32-f46e1baf4756
+BRCA2	c.7977-1G>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/9c75627c-0e4b-4cd2-8dd4-37371b31c1bc
+BRCA2	c.9117G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/7f116122-06ef-40a9-934f-9c6654fe75f9
+BRCA1	c.135-1G>T	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/9ce06200-8cef-417f-a140-13599174fb72
+RPE65	c.1338G>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/79b802a8-f024-4536-a8a2-3e73fddaa67c
+SLC6A8	c.1465+5G>C	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/72ecf37d-5ed2-46da-9ed3-ba7e856e60bb
+IDUA	c.928C>T	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/e13bf9ee-635b-49c8-8cd5-32fc2ae949ef
+DYSF	c.5174+5G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/93d77c11-55f1-4b4a-9c99-55d5e2700559
+CAPN3	c.1194-9A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/178af75f-ca6b-4d4f-bfd7-f21d8dce3f5d
+ITGA2B	c.2842-1G>C	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/6169fea9-aeb2-40c5-9d98-6ff56d60a6b0
+DYSF	c.1149+1G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/2e9ec51a-a8fa-415e-a12f-e6732251b591
+APC	c.220+1G>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/b4c3c9f6-68c8-4734-96de-778a1063f875
+APC	c.933G>C	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/25c5fc2f-b417-4d43-a9cb-4a31806c7e0c
+BRCA1	c.5407-10G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/4d9ec722-990e-4186-984d-7c97c7e83195
+DYSF	c.2811-20T>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/8d7894ce-cfcd-447f-9aa0-c719d2b87404
+TP53	c.993+1delG	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a608c703-2232-4c79-86dd-00844776434d
+DYSF	c.5620A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/65a2ca65-4ef0-494e-9e88-b0ee9df56c8d
+DYSF	c.5785-824C>T	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/352f8225-bc9b-43b5-bc69-da1964eb2eeb
+ANO5	c.1898+1G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/897fc845-4569-4556-b8c8-2e61424ef5bd
+DYSF	c.5546G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/f4e1e7c7-ac36-4a6c-8c73-4af7963c2f7c
+DYSF	c.5785-7G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/0c9cb973-7620-4ebc-a9a9-38af3b2e819e
+DYSF	c.5174+5G>T	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/efa1c95a-ec13-43f5-8601-db0230e212d8
+DYSF	c.3031G>C	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/c3a6675d-60b5-47c8-9a29-98000a3aa6c2
+RPGR	c.619+2T>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/96dbb8b9-f00f-4c63-8306-e9aabd8139f3
+ATM	c.5236G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/4f737153-e8dd-4e1e-9a3f-07bad4253908
+PALB2	c.3113G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/213dcc73-14c2-426c-a6e0-46d72f288c00
+PALB2	c.3350G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/0c9dcd4f-ddc9-466a-8f90-103c078d7193
+DYSF	c.3702+905_3843+151del	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/ac62818c-1c80-4404-8712-693769b83325
+ATM	c.2639-22_2639-20del	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/4441876c-02d1-4fe4-a822-bacc76a4a694
+APC	c.645+1G>A	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/aa0fcded-1b23-4052-9aff-49c0d734f829
+GAA	c.1076-1G>C	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/464b2cea-7029-4784-8a74-4a99dadaffe9
+ITGB3	c.1924G>T	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/0f7b571b-c808-4fac-a319-7b5206f29a55
+GAA	c.2331+2T>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/7cfcb213-612a-4c23-982e-bfa9e6d58385
+DYSF	c.2697+5G>A	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/0142142d-d6e8-4df0-b154-17696bf21a26
+DYSF	c.237-159_342+1237del	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/735f6622-9a68-41a3-bf8d-e6f9652bbf13
+DYSF	c.5003+1249G>T	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/29e5fb14-c3da-4b11-a5cd-6aeddbad610d
+IDUA	c.590-7G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/b97d1371-e9cc-45bc-9b2b-fb9084c93edc
+BRCA1	c.5152+6T>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/626ebdc5-310f-45de-8bbc-09402b1e60b1
+BRCA1	c.5332G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/ab4f1d19-32e9-44f3-82e3-9884b6135478
+DYSF	c.5546+1G>T	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/e51e59b7-b569-429b-b3c8-a9ddcab9f709
+ATM	c.6807G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/3c258d22-e521-4dfc-87a5-9bba7aaf7206
+PALB2	c.3350+4A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/5d950d2e-2b79-4881-98cf-c7e7b0ae3a3e
+RPGR	c.1572+3A>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/b171639b-dd3c-44e4-8878-a6a62d7d458a
+RPGR	c.154+3_154+6del	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/ca293352-29e5-46ca-83fc-bc1e4587e86e
+APC	c.1626G>C	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/2f983945-ecba-4893-851f-7c47a672f57c
+DYSF	c.5643-7T>G	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/12f1024e-24c4-49c0-8ffd-fd01626b7086
+DYSF	c.1149+5G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/e161a8ee-e6ae-4635-93a6-52fdb2f985fd
+CAPN3	c.1115+5G>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/512b7650-8fed-496d-9558-a71fb2650d98
+DYSF	c.1276+5G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/99807697-0026-407a-9fd6-32ba4873559f
+RPGR	c.1753G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/75684f8c-dabc-479d-9d21-5091cea42680
+DYSF	c.1609G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/dbb35ddb-8856-4df2-858e-dccca22b80b5
+RPGR	c.247+5G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a69d2373-2f9a-467d-b720-3ba5724be3c7
+RPGR	c.779-5T>G	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/7acacb7f-f3dc-4b3d-b0d3-3edfe597cd1a
+AIPL1	c.784G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/3679547b-ff9b-4e55-bf9a-16eb85954742
+USH2A	c.12295-3T>A	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/b99c4bbd-e16a-4f93-a065-1e6c947c7475
+ITGB3	c.161_165+1delinsCTGATT	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/64b6d595-b658-42c6-88ef-f8c6f9f6e8f4
+ITGA2B	c.1599_1600del	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/ce7639f4-a59e-43df-b54d-a340158cfaeb
+GATM	c.484+1G>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/bb81130f-06d5-4290-b2e0-da5368f79924
+RPE65	c.1243+2T>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/7b9b2164-6e95-42a7-a8ac-1b3acfc7a82a
+DYSF	c.2864+1G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a94dcf02-2341-4790-a70b-81313dbbd387
+CAPN3	c.1187A>G	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/5a841beb-d449-4064-89b8-0d234a741690
+IDUA	c.300-3C>G	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/ff706fd6-7a8f-4363-9f62-177e4ef29003
+DYSF	c.89-1496_236+950del	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/01a54cc1-c028-4c12-a888-30df64b802b1
+BRCA2	c.631+4A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/c606ba33-bde7-4122-bd73-7cd241b13573
+DYSF	c.5885-1G>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/47a2dee6-9c56-49c6-b921-4bf01bfb9de3
+DYSF	c.1003-3C>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/25e1f6c4-6a31-4a35-b5c4-15a726e8de8d
+RPGR	c.310+3A>G	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/ba1eb28a-8f66-4c53-aa90-072987b4a249
+RPGR	c.1573-12A>G	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/0cb4a974-d230-492d-95de-d847635ceb75
+TP53	c.375+5G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/9f4d2b30-c424-4a1b-b116-f50eb532e233
+GAA	c.2646+2T>G	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/8a2fc67d-038c-4fde-8382-634184f975c7
+BRCA2	c.67G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/acb51610-4f1c-44e1-a593-129bd48b0e1e
+BMPR2	c.418+5G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/92ab8523-2436-4a49-928a-684621a9e241
+BMPR2	c.418+3A>T	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/bff7cafe-cb93-4f75-a8d9-3d879a92fa2d
+ABCA4	c.5461-10T>C	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/64d8e05f-18c1-4092-9ce7-8880f952e96e
+DCLRE1C	c.109+1G>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/fb1197f0-344f-42fe-a26d-aeccfa44b7d2
+DYSF	c.1693-6T>A	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/fec62d47-11cc-44fb-81da-ac35d620bc6a
+BRCA1	c.81-6T>A	Supporting	PVS1_Supporting	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/75bb3eb6-2762-4f33-9059-4847780f2799
+IDUA	c.590G>A	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/fa1dcac4-03bb-478f-abc1-32be14c13626
+BRCA1	c.5152+3A>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/3ff58966-bd79-4035-9ae1-5526b148513a
+TP53	c.559+5G>A	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/bdd477f7-d608-49a9-b461-7036f0a2efe6
+DYSF	c.460+2T>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/afafa63e-e697-4dae-a0a4-c1046a637424
+ANO5	c.1295C>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/5f8f545e-ffe9-4fce-bb11-c491e1dcf329
+ATM	c.496+5G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/bcf46302-3f77-4ad7-b51c-247cada44fbd
+BMPR2	c.247+2del	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/d38b386c-73a2-4970-b3e4-063f9fa11106
+BMPR2	c.247+6T>G	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/8cf2c7bf-8a31-4e5b-bef3-b433ca853382
+BMPR2	c.247+5G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/d2a9cd9c-b01a-4f67-bc0e-646733090c22
+GAA	c.1326+1G>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/80a3c16d-9b7a-4a55-98de-bbb6d5a6dbcb
+ACADVL	c.1182+1G>A	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/01f2435d-feb0-42c9-80e9-c7af63f2e7f6
+GAA	c.2646+2T>A	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/3d13b22b-83b1-4c4e-a592-c6c26397aa0a
+GAA	c.692+1G>C	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/724fa6c4-95ec-40e6-b860-148666c37a86
+APC	c.220+2T>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/82e95160-be25-4a02-ae6e-b7ac8f7ebab3
+GAA	c.546G>C	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/24df13f8-4c0e-4017-86a3-4fe9fe56fff6
+RPGR	c.1245+3A>T	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/4a548701-15cc-4953-a78f-2492964f54f7
+RPGR	c.1754-3C>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a66ea001-253b-4df2-934b-b95f1aa1894f
+DYSF	c.3085+2T>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/3ab21351-9e54-47f3-a8eb-614abd757f5f
+DYSF	c.1481-1G>A	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/e1a0a19f-ca4c-481d-b449-e73b2c04fef2
+BRCA2	c.7805+3A>C	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/6d965a38-858f-499a-ae39-bc0521500627
+PALB2	c.2559C>T	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/f11ca490-40a5-4cbc-bd48-5e9869d438f1
+DYSF	c.2217-2A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/b7a4dd48-d261-484d-bf69-a26b3ff12a3f
+ATM	c.2466+5G>C	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/c2ef3c61-314a-4836-82e0-845942bb6204
+CAPN3	c.1746-20C>G	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a1ce02f1-f49e-4baf-aea0-8c98459736de
+PALB2	c.1684+1G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/cd7eff7f-6a51-419b-99ed-c2ddb418f78a
+ADA	c.845G>A	Strong	PVS1_Strong	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/c2cf447a-486b-46db-9aec-0c3e8f56633d
+CAPN3	c.1782G>A	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/ff9e7a2b-a9b2-4b24-9710-692ab7a1823e
+SGCA	c.37+6T>C	Moderate	PVS1_Moderate	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/e79733a4-e6ed-4858-ace3-45c65283a72e
+DYSF	c.5768-51_5946+50del	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/0ef13915-c103-4088-8901-c33657076ca8
+TP53	c.318C>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/609e5cb1-d182-4f30-aff2-e2d2430efe55
+BRCA1	c.80+4A>T	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/4d3e12ea-f24b-44fe-9769-5b139434744b
+BRCA1	c.442-1G>T	Supporting	PVS1_Supporting	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/6c49b308-3c3f-45b7-965c-d96bed67512b
+ATM	c.8045C>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/cf42b25c-cac5-48e0-b3ca-83407767b8bb
+DYSF	c.759+1G>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/a541e9f9-dd10-4065-8de7-05119295f13e
+BMPR2	c.1277-9A>G	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/bd24bcd2-c2d0-4803-b776-28a371963ce6
+F9	c.138G>C	VeryStrong	PVS1	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/491bbc8e-a398-41a7-8fa1-5ab562f996c1
+CTLA4	c.457G>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/d8e5dbe0-16a7-4c78-9e02-3bdc8c821832
+F9	c.138G>T	Strong	PVS1_Strong	labelled PVS1 (RNA) in the eRepo	https://erepo.genome.network/evrepo/ui/classification/fdd14f97-72d4-4ac1-8185-451ffa807d96
+IL7R	c.379G>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1	https://erepo.genome.network/evrepo/ui/classification/577ca02a-d27e-42e8-86e0-4f997bb220da
+BMPR2	c.1276+4A>G	VeryStrong	PVS1	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/0e88338c-6f77-4186-8f0e-0e9635aeb1ea
+GAA	c.-32-13T>G	Strong	PVS1_Strong	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/a7e79754-98a1-4349-ad1a-8750336207bf
+GAA	c.-32-3C>A	Strong	PVS1_Strong	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/d7050ce4-1aa4-4158-9721-09823c6c79f9
+GAA	c.546G>A	Strong	PVS1_Strong	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/a8d1b99b-8750-4d08-89b5-084549b4637f
+GAA	c.1075G>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/cd6b9616-4345-457b-bf52-3f2a5c8cd704
+IDUA	c.1727+4C>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/8ac23351-483a-4b4a-a880-702c55d174da
+ITGB3	c.1431C>T	VeryStrong	PVS1	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/a2929ac5-f1b2-4d44-b7e0-4fafba423cc6
+MSH2	c.1276G>A	VeryStrong	PVS1	RNA study cited as the basis of PVS1 (manually reviewed)	https://erepo.genome.network/evrepo/ui/classification/e66339ca-8203-4b20-b52b-88e0f1339735
+GAA	c.546+5G>T	Strong	PVS1_Strong	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/4b3a2c5d-4eb5-4cb8-885a-fdc9ee0ee377
+GAA	c.1076-22T>G	Strong	PVS1_Strong	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/6c34d3ac-52aa-4054-b9e3-ab95609f4ebe
+GAA	c.1194+5G>A	Strong	PVS1_Strong	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/0ce78452-c1d2-4b0c-b6d1-9e0dd377afe3
+GAA	c.1626C>G	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/783e5337-87d6-4332-9cc6-e5f88f18df24
+GAA	c.2040G>A	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/79cd37cc-4450-4d1c-a569-1b774f68b80e
+GAA	c.2647-20T>G	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/d59a5718-400d-429b-b0c7-76d9575f14e6
+ITGA2B	c.2828C>T	Moderate	PVS1_Moderate	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/ce86ee19-e837-476c-a8d2-a2a161f0de9a
+RPGR	c.1245+3A>G	VeryStrong	PVS1	RNA study cited as the basis of PVS1 (manually reviewed; added)	https://erepo.genome.network/evrepo/ui/classification/b1d43c35-e33b-4495-95aa-da1342c081f2

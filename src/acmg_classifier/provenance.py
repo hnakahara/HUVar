@@ -191,6 +191,7 @@ def collect(cfg) -> dict[str, Any]:
         put("pp2_gene_stats", file=pp2.name, note=head or None)
     put("run_options",
         exclude_self_expert_panel=bool(getattr(cfg, "exclude_self_expert_panel", False) is True),
+        curated_evidence=bool(getattr(cfg, "curated_evidence", False) is True),
         tp53_functional=bool(getattr(cfg, "use_tp53_functional", False) is True),
         cspec_selection=(dict(getattr(cfg, "cspec_selection", None))
                          if isinstance(getattr(cfg, "cspec_selection", None), dict)

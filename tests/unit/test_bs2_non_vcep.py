@@ -20,6 +20,7 @@ def _cfg(tmp_path: Path) -> MagicMock:
     cfg.disease_prevalence_tsv = dp
     cfg.bs2_min_homalt, cfg.bs2_min_hemi, cfg.bs2_min_het = 2, 2, 3
     cfg.exclude_self_expert_panel = False
+    cfg.curated_evidence = True
     cfg.clinvar_sqlite = tmp_path / "absent.sqlite"
     return cfg
 

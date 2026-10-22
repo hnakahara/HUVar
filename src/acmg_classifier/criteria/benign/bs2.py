@@ -173,11 +173,15 @@ class BS2Evaluator(CriterionEvaluator):
         path is not used (the VCEP bars population data, or the gene has no VCEP
         specification). The strength is the one the panel cited (a bare "BS2"
         applies at its Strong default)."""
-        if getattr(self._cfg, "exclude_self_expert_panel", False) is True:
+        from acmg_classifier.criteria.curated_sources import expert_panel_enabled
+        if not expert_panel_enabled(self._cfg):
+            why = ("exclude_self_expert_panel"
+                   if getattr(self._cfg, "exclude_self_expert_panel", False) is True
+                   else "no curated evidence supplied")
             return CriteriaResult.not_met(
                 ACMGCriterion.BS2,
-                f"{gene}: {reason}; expert-panel import disabled "
-                "(exclude_self_expert_panel)",
+                f"{gene}: {reason}; BS2 from curated evidence only "
+                f"(expert-panel import disabled: {why})",
             )
         from acmg_classifier.local_db.clinvar_sqlite import query_bs2_benign_evidence
 

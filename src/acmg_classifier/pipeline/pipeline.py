@@ -57,6 +57,9 @@ def run_pipeline(
     supplement = {}
     if supplement_path:
         supplement = read_supplement(supplement_path)
+        # Curated evidence is in use: also import the criteria a ClinGen expert
+        # panel applied to the variant in ClinVar (>=3 stars).
+        cfg = cfg.model_copy(update={"curated_evidence": True})
 
     orchestrator = AnnotationOrchestrator(cfg)
     registry = CriteriaRegistry(cfg)
@@ -329,6 +332,9 @@ def run_single(
     combined with the automated calls per ``cfg.supplement_mode``."""
     from acmg_classifier.io.report_writer import print_report
 
+    if supplement:
+        # Manual evidence supplied: expert-panel criteria in ClinVar are used too.
+        cfg = cfg.model_copy(update={"curated_evidence": True})
     variant, ann = annotate_one(chrom, pos, ref, alt, cfg)
     result = classify_annotated(variant, ann, cfg, supplement)
     print_report(result, variant, ann)

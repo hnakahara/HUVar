@@ -72,6 +72,7 @@ def _bs2_row(strength: str | None = "Strong", stars: int = 3, **over) -> dict:
 
 def _cfg(tmp_path: Path, db: Path) -> MagicMock:
     cfg = MagicMock()
+    cfg.curated_evidence = True  # expert-panel import requires curated evidence
     tsv = tmp_path / "disease_prevalence.tsv"
     tsv.write_text(_TSV, encoding="utf-8")
     cfg.disease_prevalence_tsv = tsv

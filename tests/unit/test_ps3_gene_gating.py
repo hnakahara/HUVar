@@ -102,6 +102,7 @@ class TestUncappedGene:
                             lambda *a, **k: {"PS3": "Moderate"})
         cfg = _cfg(tmp_path)
         cfg.exclude_self_expert_panel = False
+        cfg.curated_evidence = True
         r = PS3Evaluator(cfg).evaluate(_var(), _ann("GAA"))
         assert r.triggered and r.strength == CriterionStrength.MODERATE
         assert "[ClinVar expert panel]" in r.evidence

@@ -7,8 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added (Genome Medicine revision)
+
+- `benchmark/`: scripts used for the analyses in the manuscript (eRepo benchmark,
+  agreement with the eRepo classifications, rule calibrations, resource measurements,
+  figures), and the benchmark input VCFs `data/erepo_hg38.vcf` / `data/erepo_hg19.vcf`.
+
 ### Changed (Genome Medicine revision)
 
+- **Expert-panel criteria only with curated evidence**: PS3, PS4, PP1 and BS2 applied
+  by a ClinGen expert panel to the variant itself in ClinVar (>=3 stars) are curated
+  evidence and are now imported only when curated evidence is in use for the run
+  (`classify --supplement`, `explain --evidence`/`--supplement`; new
+  `Config.curated_evidence`, set automatically and recorded in the provenance).
+  Without curated evidence the classification is purely automated (previously the
+  expert-panel record was read unless `--exclude-self-expert-panel` was given).
+  The benchmark and CGP results are unchanged: their automated-only runs already
+  used `--exclude-self-expert-panel`, and all runs with curated evidence used
+  `--supplement`.
 - **PVS1/PP3, splice annotations that are not canonical**: VEP calls a variant
   splice_donor/acceptor_variant from the left-aligned VCF allele, so a deletion in
   a repeat can be annotated as canonical although its HGVS (3') change lies beyond

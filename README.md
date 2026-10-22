@@ -159,6 +159,9 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
     only from curated sources — the [manual supplement](#manual-evidence-supplement)
     (your own curation or the bundled ClinGen eRepo supplement) or the criterion
     as applied by a ClinGen expert panel (ClinVar ≥3★) to the same variant.
+    Expert-panel criteria (PS3/PS4/PP1/BS2) are imported **only when curated
+    evidence is in use** (`classify --supplement`, or `explain --evidence` /
+    `--supplement`); without it the classification is purely automated.
     ClinVar case/segregation counts are shown for information but never scored.
   - **Manual only**: PS2, PM3, PM6, PP4, BS3 (except TP53), BS4, BP2, BP5. PP5/BP6 are disabled
     per ClinGen SVI.
@@ -557,7 +560,7 @@ Full option list:
 | `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
 | `--with-tp53-functional` | flag | off | TP53 PS3/BS3 from the VCEP functional flowchart on the bundled NCI TP53 Database assay classes (`resources/shared/tp53_functional.tsv`). Off by default because the database terms prohibit any use that results in direct or indirect monetization; turn it on for non-commercial use. Env: `ACMG_USE_TP53_FUNCTIONAL=true`. Recorded in the provenance sidecar. |
 | `--cspec GENE=CSPEC_ID` | repeatable | — | Evaluate a gene with several released ClinGen specifications for clinically distinct diseases under the chosen one (as in HUVar_app): RYR1 `malignant_hyperthermia` / `congenital_myopathy_ad` / `congenital_myopathy_ar`; ACTA1 `congenital_myopathy_ad` / `congenital_myopathy_ar`; VWF `vwd_ad` / `vwd_ar` (`resources/shared/disease_prevalence_multispec.tsv`). Without it, the conservative merged specification is used. Also for `explain`. Shown in the warnings column (`CSPEC:`) and recorded in the provenance. |
-| `--exclude-self-expert-panel` | flag | off | Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar expert-panel (≥3★) record of the variant itself, so an evaluation against the eRepo does not read the reference curation. Recorded in the provenance sidecar. |
+| `--exclude-self-expert-panel` | flag | off | Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar expert-panel (≥3★) record of the variant itself, so an evaluation against the eRepo does not read the reference curation. Expert-panel criteria are in any case imported only when `--supplement` is given; this flag also turns them off in that case. Recorded in the provenance sidecar (with `curated_evidence`). |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
 > ⚠️ **BayesDel / CADD are opt-in at classification time too.** `--with-bayesdel`
@@ -1114,11 +1117,12 @@ HUVar/
 │   └── clingen/                     #   VCEP cspec exports + derived tables
 │       ├── disease_prevalence.tsv   #     per-gene VCEP rules
 │       └── pm1_hotspots.tsv         #     per-gene PM1 hotspots
+├── benchmark/                       # scripts for the analyses in the manuscript (see benchmark/README.md)
 ├── tests/
 │   ├── unit/                        # pytest unit tests
 │   ├── integration/                 # end-to-end pipeline tests (require data/)
 │   └── fixtures/                    # sample.vcf, sample_supplement.tsv
-├── data/                            # (NOT versioned) annotation databases
+├── data/                            # annotation databases (NOT versioned) + erepo_hg38.vcf / erepo_hg19.vcf (benchmark input VCFs)
 ├── pyproject.toml
 ├── LICENSE
 ├── NOTICE
@@ -1161,6 +1165,7 @@ export ACMG_PP2_MAX_BENIGN_FRAC=0.05
 export ACMG_PP2_MIN_MIS_Z=3.09
 export ACMG_PP2_Z_MAX_BENIGN_FRAC=0.30
 export ACMG_EXCLUDE_SELF_EXPERT_PANEL=false  # true = benchmark mode (see classify)
+export ACMG_CURATED_EVIDENCE=false  # set automatically when --supplement / --evidence is given; enables ClinVar expert-panel criteria
 ```
 
 CLI flags take precedence over environment variables.

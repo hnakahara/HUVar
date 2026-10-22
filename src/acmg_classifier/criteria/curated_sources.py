@@ -36,8 +36,16 @@ def from_supplement(criterion: ACMGCriterion,
     return None
 
 
+def expert_panel_enabled(cfg) -> bool:
+    """Expert-panel (>=3-star) criteria are imported only when curated evidence
+    is in use for the run (``cfg.curated_evidence``) and the benchmark switch
+    ``exclude_self_expert_panel`` is off."""
+    return (getattr(cfg, "curated_evidence", False) is True
+            and getattr(cfg, "exclude_self_expert_panel", False) is not True)
+
+
 def from_expert_panel(criterion: ACMGCriterion, cfg, variant) -> Optional[CriteriaResult]:
-    if getattr(cfg, "exclude_self_expert_panel", False) is True:
+    if not expert_panel_enabled(cfg):
         return None
     from acmg_classifier.local_db.clinvar_sqlite import query_expert_panel_criteria
     ep = query_expert_panel_criteria(cfg.clinvar_sqlite, variant.chrom, variant.pos,

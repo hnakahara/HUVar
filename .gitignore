@@ -6,16 +6,16 @@
 # Reference genomes, VEP cache, gnomAD, ClinVar, AlphaMissense, SpliceAI,
 # RepeatMasker, etc. are several hundred GB in total and must be obtained
 # from upstream sources via `python scripts/setup_data.py`.
-data/
+data/*
 !data/.gitkeep
 !data/shared/gene_inheritance.tsv
 
 # Sample input/output VCFs and result files placed at repo root during dev
-*.vcf
-*.vcf.gz
-*.vcf.gz.tbi
-*.vcf.bgz
-*.vcf.bgz.tbi
+#*.vcf
+#*.vcf.gz
+#*.vcf.gz.tbi
+#*.vcf.bgz
+#*.vcf.bgz.tbi
 *.bed
 *.bed.gz
 *.fa
@@ -142,3 +142,7 @@ concordance_*.txt
 *.docx
 *.pdf
 *.xlsx
+
+# ----- Benchmark input VCFs (ClinGen eRepo variants; published with the manuscript) -----
+!data/erepo_hg38.vcf
+!data/erepo_hg19.vcf

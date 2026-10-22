@@ -15,6 +15,7 @@ def _cfg(tmp_path):
     cfg = MagicMock()
     cfg.clinvar_sqlite = tmp_path / "none.sqlite"
     cfg.exclude_self_expert_panel = False
+    cfg.curated_evidence = True
     return cfg
 
 
