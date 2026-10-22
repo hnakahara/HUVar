@@ -217,7 +217,7 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   subset inline. The read-depth gate comes from the optional gnomAD coverage
   build (see [Data setup](#data-setup)).
 - **In silico prediction**: **ESM1b** (default; Brandes 2023, MIT-licensed,
-  commercial-use ready), **AlphaMissense** (non-commercial), or **REVEL**
+  commercial-use ready), **AlphaMissense** (predictions CC BY 4.0), or **REVEL**
   (Ioannidis 2016; free for non-commercial use, commercial use needs a separate
   licence) for missense. Splice prediction defaults to **OpenSpliceAI** (Chao
   2025, GPL-3.0; runtime inference via the `openspliceai` CLI); **SpliceAI**

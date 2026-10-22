@@ -12,41 +12,102 @@ You may obtain a copy of the License at
     http://www.apache.org/licenses/LICENSE-2.0
 
 ------------------------------------------------------------------------------
-Third-party data and tools used at runtime (not redistributed by this project):
+Third-party software invoked at runtime (not redistributed by this project):
 ------------------------------------------------------------------------------
 
 * Ensembl VEP (Variant Effect Predictor)
     Apache License 2.0 — https://github.com/Ensembl/ensembl-vep
 
-* gnomAD (Genome Aggregation Database)
-    Data made freely available under the terms described at
-    https://gnomad.broadinstitute.org/terms
+* OpenSpliceAI (default splice predictor)
+    GPL-3.0 — https://github.com/Kuanhao-Chao/OpenSpliceAI
+    Installed as a separate package and run as an independent program through
+    its `openspliceai` command-line interface; no OpenSpliceAI code is included
+    in or linked into HUVar. The OSAI-MANE models are downloaded by
+    scripts/setup_data.py from the OpenSpliceAI distribution.
+
+* SQUIRLS (optional; disabled by default)
+    The Jackson Laboratory Software License Agreement for Non-Commercial Use —
+    https://github.com/TheJacksonLaboratory/Squirls
+
+* MMSplice (optional; disabled by default)
+    MIT License — https://github.com/gagneurlab/MMSplice_MTSplice
+
+------------------------------------------------------------------------------
+Third-party data downloaded at runtime (not redistributed by this project):
+------------------------------------------------------------------------------
 
 * ClinVar (NCBI)
     Public domain — https://www.ncbi.nlm.nih.gov/clinvar/intro/
 
-* AlphaMissense (DeepMind / Google)
-    CC BY-NC-SA 4.0 — https://github.com/google-deepmind/alphamissense
-    NOTE: AlphaMissense scores are distributed under a non-commercial license.
-          Users intending commercial use must comply with the upstream license.
+* gnomAD (Genome Aggregation Database)
+    Released without restriction on use — https://gnomad.broadinstitute.org/terms
 
-* SQUIRLS
-    BSD-3-Clause — https://github.com/TheJacksonLaboratory/Squirls
+* ClinGen Dosage Sensitivity and Gene-Disease Validity curations
+    CC0 1.0 — https://clinicalgenome.org/docs/terms-of-use/
+    ClinGen requests attribution and the date accessed.
 
-* SpliceAI (Illumina)
-    Free for academic/non-commercial research. Commercial use requires a
-    separate license from Illumina. Pre-computed score files are an
-    *optional* annotation source in this project.
+* NIH Clinical Genomic Database (CGD)
+    https://research.nih.gov/cgd/
 
 * Ensembl reference genome / transcript annotation
     https://www.ensembl.org/info/about/legal/index.html
 
-* RepeatMasker (UCSC tracks distributed under the Dfam/UCSC terms)
-    https://www.repeatmasker.org/
+* UCSC phyloP100way and RepeatMasker tracks
+    https://genome.ucsc.edu/conditions.html (credit the data contributors)
+
+* ESM1b precomputed variant-effect scores (default missense predictor)
+    Brandes N et al., Nat Genet 2023;55:1512-1522.
+    MIT License — https://github.com/ntranoslab/esm-variants
+
+* AlphaMissense (optional)
+    Predictions: CC BY 4.0; code: Apache License 2.0 —
+    https://github.com/google-deepmind/alphamissense
+
+* REVEL (optional)
+    Free for non-commercial use; commercial use requires a separate licence —
+    https://sites.google.com/site/revelgenomics/
+
+* CADD (optional)
+    Free for non-commercial use; commercial use requires a licence from the
+    University of Washington (UW CoMotion) — https://cadd.bihealth.org/
+
+* BayesDel (optional)
+    https://fenglab.chpc.utah.edu/BayesDel/BayesDel.html
+    No licence is stated by the provider; treated as non-commercial by HUVar.
+
+* SpliceAI precomputed scores (optional)
+    Free for academic/non-commercial research. Commercial use requires a
+    separate license from Illumina.
+
+REVEL, CADD, BayesDel and SpliceAI are never read in the default configuration
+(ESM1b + OpenSpliceAI); users who enable them must obtain the data themselves
+and comply with the upstream terms.
 
 ------------------------------------------------------------------------------
 Third-party data redistributed in resources/ (derived tables):
 ------------------------------------------------------------------------------
+
+* ClinGen Criteria Specification Registry (CSpec) and Evidence Repository (eRepo)
+    resources/clingen/cspec_json/, resources/clingen/CSpecList.tsv,
+    resources/<assembly>/erepo_*.tsv and the tables in resources/shared/ that
+    are mined from the VCEP specifications (disease_prevalence*.tsv,
+    pm1_hotspots.tsv, pm4_regions.tsv, vcep_comparator_rules.tsv,
+    vcep_pvs1_*exons.tsv, ps1_paralog_map.tsv [SCN VCEP paralogue table],
+    tp53_pp3_bp4_codes.tsv [ClinGen TP53 VCEP PP3/BP4 code table]).
+    CC0 1.0 — https://clinicalgenome.org/docs/terms-of-use/
+    Snapshot dates are listed in resources/shared/bundled_data_versions.tsv.
+
+* NCBI RefSeq / MANE annotation
+    resources/gff/ and resources/shared/mane_*.tsv are derived from the NCBI
+    GRCh37 RefSeq GFF and MANE Release v1.5 (https://ftp.ncbi.nlm.nih.gov/refseq/MANE/).
+    NCBI data are in the public domain (https://www.ncbi.nlm.nih.gov/home/about/policies/).
+
+* Cancer Hotspots (https://www.cancerhotspots.org/#/home)
+    resources/clingen/cancerhotspots_TP53.tsv and cancerhotspots_VHL.tsv are
+    exports used to build the TP53/VHL PM1 rows of pm1_hotspots.tsv, as specified
+    by the respective VCEPs.
+    Cite: Chang MT et al., Cancer Discov 2018;8:174-183; Chang MT et al.,
+    Nat Biotechnol 2016;34:155-163.
 
 * NCI TP53 Database, release R21 (Jan 2025) — https://tp53.cancer.gov
     resources/shared/tp53_functional.tsv is derived from MutationView_r21.csv,
