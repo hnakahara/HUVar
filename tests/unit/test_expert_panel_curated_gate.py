@@ -1,7 +1,6 @@
 """Expert-panel (>=3-star) ClinVar criteria (PS3/PS4/PP1/BS2) are curated
 evidence: they are imported only when curated evidence is in use for the run
 (``cfg.curated_evidence``, set by the pipeline when a supplement is supplied)."""
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest

@@ -1,9 +1,7 @@
 """ClinGen SVI PVS1 recommendation (Abou Tayoun 2018): PM4 never with PVS1, and
 PVS1 two levels down for genes without a Definitive/Strong gene-disease
 relationship (no VCEP)."""
-from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
 
 import pytest
 
@@ -26,7 +24,8 @@ def _ev(tmp_path, on=True):
     from acmg_classifier.classification.gene_validity import _vcep_genes
     from acmg_classifier.local_db.clingen_gene_db import load_gene_validity
     from acmg_classifier.criteria.pathogenic.pvs1 import PVS1Evaluator
-    _vcep_genes.cache_clear(); load_gene_validity.cache_clear()
+    _vcep_genes.cache_clear()
+    load_gene_validity.cache_clear()
     p, dp = _gdv(tmp_path)
     ev = PVS1Evaluator.__new__(PVS1Evaluator)
     ev._cfg = SimpleNamespace(clingen_gene_validity_csv=p, disease_prevalence_tsv=dp,

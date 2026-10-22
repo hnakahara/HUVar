@@ -24,6 +24,9 @@ from pathlib import Path
 from typing import Any, Optional
 
 MANIFEST_NAME = "data_manifest.json"
+# Manifest keys written by scripts/setup_data.py under another name than the
+# provenance record uses (setup_data records "clingen_<key>" from CLINGEN_URLS).
+MANIFEST_ALIASES: dict[str, tuple[str, ...]] = {"clingen_gene_validity": ("clingen_validity",)}
 # ClinVar older than this (days, relative to today) triggers a warning.
 CLINVAR_MAX_AGE_DAYS = 90
 
@@ -97,9 +100,17 @@ def _clinvar_xml_date(path: Path) -> Optional[str]:
         return None
 
 
-def _vep_info(cache_dir: Path) -> dict[str, str]:
+def _vep_info(cache_dir: Path, assembly: Optional[str] = None) -> dict[str, str]:
+    """VEP cache metadata from ``<cache>/<species>/<release>_<assembly>/info.txt``.
+
+    When ``assembly`` is given, the cache directory of that assembly is preferred,
+    so a run on GRCh38 does not report a GRCh37 cache installed alongside it.
+    """
     out: dict[str, str] = {}
     infos = sorted(cache_dir.glob("*/*/info.txt")) if cache_dir.exists() else []
+    if assembly:
+        own = [i for i in infos if i.parent.name.endswith(f"_{assembly}")]
+        infos = own or infos
     for info in infos:
         try:
             for line in info.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -109,6 +120,9 @@ def _vep_info(cache_dir: Path) -> dict[str, str]:
                 ):
                     out[parts[0]] = parts[1].strip()
             out["cache"] = f"{info.parent.parent.name}/{info.parent.name}"
+            rel = info.parent.name.split("_", 1)[0]
+            if rel.isdigit():
+                out["release"] = rel
             break
         except Exception:  # noqa: BLE001
             continue
@@ -158,7 +172,9 @@ def collect(cfg) -> dict[str, Any]:
     used: set[str] = set()
 
     def put(name: str, **kv) -> None:
-        key = f"{name}_{asm}" if f"{name}_{asm}" in man else name
+        cands = [f"{name}_{asm}", name] + list(MANIFEST_ALIASES.get(name, ()))
+        key = next((c for c in cands if c in man), name)
+        used.update(c for c in cands if c in man)
         used.add(key)
         entry = dict(man.get(key, {}))
         entry.update({k: v for k, v in kv.items() if v is not None})
@@ -169,7 +185,9 @@ def collect(cfg) -> dict[str, Any]:
     xml = cfg.assembly_dir / "clinvar" / "ClinVarRCVRelease.xml.gz"
     put("clinvar_vcf", release=vcf_date, file=Path(cfg.clinvar_vcf).name)
     put("clinvar_rcv_xml", release=_clinvar_xml_date(xml) if xml.exists() else None)
-    put("vep", release=str(getattr(cfg, "ensembl_release", "")) or None, **_vep_info(cfg.vep_cache_dir))
+    vep = _vep_info(cfg.vep_cache_dir, asm)
+    vep["release"] = str(getattr(cfg, "ensembl_release", "") or "") or vep.get("release")
+    put("vep", **vep)
     put("gnomad", build=Path(cfg.gnomad_duckdb).name)
     nc = getattr(cfg, "gnomad_noncancer_duckdb", None)
     if nc is not None and Path(nc).exists():

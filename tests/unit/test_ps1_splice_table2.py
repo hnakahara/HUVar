@@ -27,7 +27,8 @@ def _db(tmp_path, rows):
     con.executemany(
         "INSERT INTO variants (variation_id, chrom, pos, ref, alt, gene_symbol, hgvs_c, hgvs_p,"
         " clinical_significance, review_status, star_rating) VALUES (?,?,?,?,?,?,?,?,?,?,?)", rows)
-    con.commit(); con.close()
+    con.commit()
+    con.close()
     return p
 
 

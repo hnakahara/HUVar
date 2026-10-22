@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from acmg_classifier.criteria.tp53_functional import (
-    SRC_TP53_FUNCTIONAL, TP53Assays, TP53Functional,
+    SRC_TP53_FUNCTIONAL, TP53Functional,
 )
 from acmg_classifier.models.annotation import AnnotationData, ConsequenceInfo
 from acmg_classifier.models.criteria import CriteriaResult

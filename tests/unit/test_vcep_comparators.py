@@ -11,7 +11,7 @@ def _rec(chrom, pos, ref, alt, stars=1, sig="Pathogenic"):
 
 
 def test_rules_loaded():
-    rules = load_rules()
+    assert load_rules()
     assert requires_vcep_comparator("MLH1", "PS1").protein_level
     assert "PS1" in requires_vcep_comparator("CTLA4", "PS1").exclude_codes
     assert requires_vcep_comparator("BRCA1", "PS1") is None

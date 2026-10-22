@@ -158,7 +158,7 @@ class PVS1Evaluator(CriterionEvaluator):
         Moderate, Strong -> Supporting; Moderate / Supporting -> not applied).
         The one-level option of Table 1 needs a null mouse model, which HUVar
         does not evaluate. Genes with a VCEP specification follow the VCEP."""
-        if not getattr(self._cfg, "pvs1_gdv_downgrade", True) is True or not gene:
+        if getattr(self._cfg, "pvs1_gdv_downgrade", True) is not True or not gene:
             return strength, evidence
         from acmg_classifier.classification.gene_validity import _vcep_genes
         if gene in _vcep_genes(getattr(self._cfg, "disease_prevalence_tsv", None)):

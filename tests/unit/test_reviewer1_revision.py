@@ -70,7 +70,8 @@ def _dp(tmp_path):
 def test_gdv_cap_exempts_vcep_genes(tmp_path):
     from acmg_classifier.classification.gene_validity import apply_gene_validity, _vcep_genes
     from acmg_classifier.local_db.clingen_gene_db import load_gene_validity
-    load_gene_validity.cache_clear(); _vcep_genes.cache_clear()
+    load_gene_validity.cache_clear()
+    _vcep_genes.cache_clear()
     cfg = SimpleNamespace(clingen_gene_validity_csv=_gdv(tmp_path), disease_prevalence_tsv=_dp(tmp_path))
     a, b, w = apply_gene_validity("VCEPGENE", Pathogenicity.PATHOGENIC, Pathogenicity.LIKELY_PATHOGENIC, cfg)
     assert a == Pathogenicity.PATHOGENIC and b == Pathogenicity.LIKELY_PATHOGENIC

@@ -69,7 +69,6 @@ def test_cli_option_listed():
 def test_mhs_specification_pm2_not_applicable():
     """GN012 (MHS): PM2 is not used; the multispec row carries not_applicable."""
     import csv
-    from acmg_classifier.criteria.pm2_genes import PM2Spec
     root = Path(__file__).resolve().parents[2] / "resources" / "shared"
     rows = {r["cspec_id"]: r for r in csv.DictReader(
         (root / "disease_prevalence_multispec.tsv").open(encoding="utf-8"), delimiter="\t")}
@@ -85,7 +84,8 @@ def test_pm2_not_applicable_rule(tmp_path):
     from acmg_classifier.models.variant import VariantRecord
     t = tmp_path / "dp.tsv"
     t.write_text("gene_symbol\tpm2_threshold\nRYR1\tnot_applicable\n", encoding="utf-8")
-    cfg = MagicMock(); cfg.disease_prevalence_tsv = t
+    cfg = MagicMock()
+    cfg.disease_prevalence_tsv = t
     ev = PM2Evaluator(cfg)
     ann = AnnotationData(gnomad=None, consequences=[ConsequenceInfo(
         transcript_id="NM_x", gene_id="E", gene_symbol="RYR1",

@@ -1,7 +1,5 @@
 """Tests for the Genome Medicine revision: PTC-based NMD, ClinGen HI/GDV, null counting."""
-from pathlib import Path
 
-import pytest
 
 from acmg_classifier.models.annotation import ConsequenceInfo
 from acmg_classifier.models.enums import ConsequenceType, Pathogenicity

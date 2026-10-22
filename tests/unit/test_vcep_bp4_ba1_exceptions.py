@@ -153,9 +153,12 @@ def test_bp4_pten_intron1(hgvs_c, blocked):
 
 def test_bmpr2_bp4_requires_all_three():
     spec = InSilicoGeneSpec()
-    sc = lambda **k: InSilicoScores(consequence=ConsequenceType.MISSENSE, protein_position=None,
-                                    revel=k.get("revel"), alphamissense=k.get("am"), cadd=k.get("cadd"),
-                                    bayesdel=None, splice_max=0.0)
+
+    def sc(**k):
+        return InSilicoScores(consequence=ConsequenceType.MISSENSE, protein_position=None,
+                              revel=k.get("revel"), alphamissense=k.get("am"), cadd=k.get("cadd"),
+                              bayesdel=None, splice_max=0.0)
+
     assert spec.bp4("BMPR2", sc(cadd=15.6, am=0.07, revel=0.27))[0] == CriterionStrength.SUPPORTING
     assert spec.bp4("BMPR2", sc(cadd=22.1, am=0.087, revel=0.788))[0] is None
     assert spec.bp4("BMPR2", sc(cadd=21.0, am=0.11))[0] is None
