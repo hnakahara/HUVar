@@ -1262,8 +1262,13 @@ contributions will be licensed under Apache-2.0, per the [NOTICE](NOTICE) file.
 [Apache License 2.0](LICENSE) © 2026 Department of Clinical and Molecular
 Genetics, Hiroshima University Hospital.
 
-Third-party data sources accessed by `scripts/setup_data.py` are governed by
-their own terms — see [NOTICE](NOTICE) for attribution and links.
+The Apache License applies to the program code. Third-party data sources accessed
+by `scripts/setup_data.py` and the third-party data bundled in `resources/` are
+governed by their own terms — see [NOTICE](NOTICE) for attribution and links. In
+particular, the Cancer Hotspots exports in `resources/clingen/` and the TP53/VHL
+rows of `resources/shared/pm1_hotspots.tsv` derived from them are made available
+under the ODC Open Database License (ODbL) v1.0
+([resources/clingen/LICENSE-CancerHotspots.md](resources/clingen/LICENSE-CancerHotspots.md)).
 
 ---
 

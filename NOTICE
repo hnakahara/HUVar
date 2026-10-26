@@ -102,10 +102,14 @@ Third-party data redistributed in resources/ (derived tables):
     GRCh37 RefSeq GFF and MANE Release v1.5 (https://ftp.ncbi.nlm.nih.gov/refseq/MANE/).
     NCBI data are in the public domain (https://www.ncbi.nlm.nih.gov/home/about/policies/).
 
-* Cancer Hotspots (https://www.cancerhotspots.org/#/home)
+* Cancer Hotspots, Memorial Sloan Kettering Cancer Center
+  (https://www.cancerhotspots.org/#/home)
+    ODC Open Database License (ODbL) v1.0 — https://opendatacommons.org/licenses/odbl/1-0/
     resources/clingen/cancerhotspots_TP53.tsv and cancerhotspots_VHL.tsv are
-    exports used to build the TP53/VHL PM1 rows of pm1_hotspots.tsv, as specified
-    by the respective VCEPs.
+    unmodified exports (retrieved 2026-10-17). The TP53 and VHL rows of
+    resources/shared/pm1_hotspots.tsv are derived from them as specified by the
+    respective VCEPs and are likewise made available under the ODbL.
+    See resources/clingen/LICENSE-CancerHotspots.md.
     Cite: Chang MT et al., Cancer Discov 2018;8:174-183; Chang MT et al.,
     Nat Biotechnol 2016;34:155-163.
 
