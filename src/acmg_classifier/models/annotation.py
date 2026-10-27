@@ -15,6 +15,11 @@ class ConsequenceInfo(BaseModel):
     biotype: str
     is_canonical: bool = False
     is_mane_select: bool = False
+    # MANE Plus Clinical: an additional transcript MANE designates for clinical
+    # reporting of variants not captured by MANE Select (e.g. KRAS exon 4a,
+    # MECP2 e2). Reported alongside the MANE Select evaluation; criteria are
+    # still evaluated on ``primary_consequence``.
+    is_mane_plus_clinical: bool = False
 
     hgvs_c: Optional[str] = None
     hgvs_p: Optional[str] = None
@@ -34,6 +39,21 @@ class ConsequenceInfo(BaseModel):
 
     # Splice distance for BP7
     intron_distance_from_splice: Optional[int] = None
+
+
+class ManePlusClinicalInfo(BaseModel):
+    """Supplementary MANE Plus Clinical description of a variant.
+
+    Reporting only: criteria are evaluated on the MANE Select (primary)
+    transcript. ``consequence_differs`` flags variants whose consequence on the
+    Plus Clinical transcript differs from the evaluated one (e.g. intronic on
+    MANE Select but missense on the Plus Clinical exon)."""
+
+    transcript_id: str
+    hgvs_c: Optional[str] = None
+    hgvs_p: Optional[str] = None
+    consequence: str = ""
+    consequence_differs: bool = False
 
 
 class GnomADData(BaseModel):
@@ -228,3 +248,35 @@ class AnnotationData(BaseModel):
                 return c
         # Last resort: take whatever VEP returned first (preserves VEP's own ordering).
         return self.consequences[0] if self.consequences else None
+
+    @property
+    def mane_plus_clinical_consequences(self) -> list[ConsequenceInfo]:
+        """MANE Plus Clinical consequences of the primary consequence's gene.
+
+        VEP ``--merged`` reports each MANE transcript twice (RefSeq NM_ and
+        Ensembl ENST). One entry per transcript is returned, RefSeq preferred:
+        an ENST row is kept only when no NM_ Plus Clinical row exists for the
+        gene. GNAS has two Plus Clinical transcripts, hence a list.
+        """
+        pc = self.primary_consequence
+        if pc is None:
+            return []
+        same_gene = [c for c in self.consequences
+                     if c.is_mane_plus_clinical and c.gene_symbol == pc.gene_symbol
+                     and c.transcript_id != pc.transcript_id]
+        refseq = [c for c in same_gene if c.transcript_id.startswith("NM_")]
+        return refseq or same_gene
+
+    def mane_plus_clinical_summary(self) -> list[ManePlusClinicalInfo]:
+        """Reporting view of :attr:`mane_plus_clinical_consequences`."""
+        pc = self.primary_consequence
+        out = []
+        for c in self.mane_plus_clinical_consequences:
+            out.append(ManePlusClinicalInfo(
+                transcript_id=c.transcript_id,
+                hgvs_c=c.hgvs_c,
+                hgvs_p=c.hgvs_p,
+                consequence=c.consequence.value,
+                consequence_differs=bool(pc and c.consequence != pc.consequence),
+            ))
+        return out

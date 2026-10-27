@@ -415,6 +415,13 @@ class Config(BaseSettings):
         return self.data_dir / "shared" / "mane_select.tsv"
 
     @property
+    def mane_exons_tsv(self) -> Path:
+        """MANE Select + MANE Plus Clinical transcript table (mane_tag column);
+        used to recover the Plus Clinical flag on GRCh37. Loader falls back to
+        the packaged resources copy when absent."""
+        return self.data_dir / "shared" / "mane_exons.tsv"
+
+    @property
     def tp53_codes_tsv(self) -> Path:
         """ClinGen TP53 VCEP precomputed per-missense PP3/BP4 codes (built from the
         VCEP supplementary table by scripts/build_tp53_codes.py). Carries the

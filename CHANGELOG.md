@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **MANE Plus Clinical (reporting)**: VEP now runs with `--mane`, and each
+  consequence carries `is_mane_plus_clinical` (recovered by accession from
+  `mane_exons.tsv` on GRCh37). The TSV gains `mane_plus_clinical_transcript`,
+  `_hgvs_c`, `_hgvs_p`, `_consequence` and `_consequence_differs` after `hgvs_p`,
+  the JSON a `mane_plus_clinical` list, and the console report a Plus Clinical
+  line. Criteria are still evaluated on MANE Select only (phase 1); evaluation
+  on the Plus Clinical transcript is planned separately because several VCEP
+  tables (PM1/PM4 hotspots, DYSF comparator rules, REVEL row choice) are keyed
+  to MANE Select numbering.
+- `setup_data.py` step `mane-summary` (`--force-mane-summary`): downloads the NCBI
+  MANE v1.5 summary into `data/shared/` (assembly-independent), validated for the
+  `symbol` / `RefSeq_nuc` / `MANE_status` columns and recorded in the data manifest.
+  HUVar_app's TransVar service reads it from there.
+
 ### Added (Genome Medicine revision)
 
 - `benchmark/`: scripts used for the analyses in the manuscript (eRepo benchmark,

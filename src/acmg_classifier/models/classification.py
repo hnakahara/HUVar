@@ -4,6 +4,7 @@ from pydantic import BaseModel, computed_field
 
 from acmg_classifier.models.enums import ACMGCriterion, Pathogenicity
 from acmg_classifier.models.criteria import CriteriaResult
+from acmg_classifier.models.annotation import ManePlusClinicalInfo
 
 
 class ClassificationResult(BaseModel):
@@ -21,6 +22,9 @@ class ClassificationResult(BaseModel):
     gene_symbol: Optional[str] = None
     hgvs_c: Optional[str] = None
     hgvs_p: Optional[str] = None
+    # MANE Plus Clinical transcript(s) of the same gene, reported alongside the
+    # MANE Select evaluation (supplementary; not used by any criterion).
+    mane_plus_clinical: list[ManePlusClinicalInfo] = []
 
     annotation: Optional[object] = None  # AnnotationData (avoid circular import at runtime)
 

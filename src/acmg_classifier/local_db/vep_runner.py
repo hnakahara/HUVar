@@ -82,6 +82,22 @@ def _parse_intron_distance(hgvs_c: str | None) -> int | None:
     return None
 
 
+def _is_mane_plus_clinical(tc: dict[str, Any]) -> bool:
+    """True when VEP (``--mane``) flags the transcript as MANE Plus Clinical.
+
+    VEP's JSON carries the Plus Clinical accession in ``mane_plus_clinical``;
+    some releases also list the MANE status in a ``mane`` array
+    (e.g. ``["MANE_Plus_Clinical"]``). Both forms are accepted."""
+    if tc.get("mane_plus_clinical"):
+        return True
+    mane = tc.get("mane")
+    if isinstance(mane, str):
+        mane = [mane]
+    if isinstance(mane, (list, tuple)):
+        return any("plus" in str(m).lower() and "clinical" in str(m).lower() for m in mane)
+    return False
+
+
 def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
     terms = tc.get("consequence_terms", [])
     gene_id = tc.get("gene_id", "")
@@ -94,6 +110,7 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
     consequence = _most_severe(terms)
     is_canonical = bool(tc.get("canonical"))
     is_mane = bool(tc.get("mane_select"))
+    is_mane_pc = _is_mane_plus_clinical(tc)
 
     hgvs_c = tc.get("hgvsc")
     hgvs_p = tc.get("hgvsp")
@@ -146,6 +163,7 @@ def _parse_transcript(tc: dict[str, Any]) -> ConsequenceInfo | None:
         biotype=biotype,
         is_canonical=is_canonical,
         is_mane_select=is_mane,
+        is_mane_plus_clinical=is_mane_pc,
         hgvs_c=hgvs_c,
         hgvs_p=hgvs_p,
         exon=exon,
@@ -182,9 +200,32 @@ def _apply_mane_fallback(
             c.is_mane_select = True
 
 
+def _apply_mane_plus_clinical_fallback(
+    consequences: list[ConsequenceInfo],
+    pc_map: dict[str, list[tuple[str, str]]] | None,
+) -> None:
+    """Recover the MANE Plus Clinical flag when VEP provides none (GRCh37).
+
+    Same idea as :func:`_apply_mane_fallback`: match the version-stripped
+    RefSeq/Ensembl accession against the gene's Plus Clinical transcripts
+    (a gene can have more than one, e.g. GNAS). No-op when VEP already flagged
+    a Plus Clinical transcript, or when the map is empty."""
+    if not pc_map or any(c.is_mane_plus_clinical for c in consequences):
+        return
+    for c in consequences:
+        tx_base = c.transcript_id.split(".", 1)[0]
+        if not tx_base:
+            continue
+        for refseq_base, ensembl_base in pc_map.get(c.gene_symbol, ()):
+            if tx_base == refseq_base or tx_base == ensembl_base:
+                c.is_mane_plus_clinical = True
+                break
+
+
 def _parse_vep_record(
     record: dict[str, Any],
     mane_map: dict[str, tuple[str, str]] | None = None,
+    pc_map: dict[str, list[tuple[str, str]]] | None = None,
 ) -> tuple[str, list[ConsequenceInfo]]:
     """Translate one VEP JSON line into (variant_key, [consequences]).
 
@@ -227,6 +268,7 @@ def _parse_vep_record(
 
     # GRCh37 has no VEP mane_select flag — recover it by accession before sorting.
     _apply_mane_fallback(consequences, mane_map)
+    _apply_mane_plus_clinical_fallback(consequences, pc_map)
 
     # Per-gene most-severe consequence rank. This is the TOP sort key so the gene
     # whose transcript actually overlaps the variant wins across genes, BEFORE the
@@ -269,6 +311,7 @@ class LocalVEPRunner:
         assembly: str,
         workers: int = 4,
         mane_map: dict[str, tuple[str, str]] | None = None,
+        mane_plus_clinical_map: dict[str, list[tuple[str, str]]] | None = None,
     ) -> None:
         self._vep_cmd = vep_cmd
         self._cache_dir = cache_dir
@@ -278,6 +321,9 @@ class LocalVEPRunner:
         # gene -> (refseq_base, ensembl_base) for recovering the MANE flag on
         # caches that don't provide it (GRCh37). None disables the fallback.
         self._mane_map = mane_map
+        # gene -> [(refseq_base, ensembl_base)] of MANE Plus Clinical
+        # transcripts, for the same GRCh37 fallback.
+        self._pc_map = mane_plus_clinical_map
 
     def annotate_batch(
         self,
@@ -359,7 +405,8 @@ class LocalVEPRunner:
             "--assembly", self._assembly,
             "--merged",
             "--fasta", str(self._fasta),
-            "--hgvs", "--hgvsg", "--canonical", "--mane_select",
+            # --mane adds the MANE Plus Clinical flag on top of MANE Select.
+            "--hgvs", "--hgvsg", "--canonical", "--mane_select", "--mane",
             "--numbers", "--domains", "--symbol", "--biotype",
             "--uniprot",
             "--no_progress",
@@ -389,6 +436,6 @@ class LocalVEPRunner:
                     record = json.loads(line)
                 except json.JSONDecodeError:
                     continue
-                key, consequences = _parse_vep_record(record, self._mane_map)
+                key, consequences = _parse_vep_record(record, self._mane_map, self._pc_map)
                 results[key] = consequences
         return results

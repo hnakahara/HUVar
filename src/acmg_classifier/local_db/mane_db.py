@@ -61,3 +61,45 @@ def load_mane_map(tsv_path: Path) -> dict[str, tuple[str, str]]:
 
     log.info("mane_map_loaded", genes=len(result), path=str(path))
     return result
+
+
+# MANE Plus Clinical accessions come from the MANE transcript-structure table
+# (built from the same MANE GFF by scripts/build_mane_exons.py), which already
+# lists every MANE Select and MANE Plus Clinical transcript with its tag.
+_PACKAGED_EXONS_TSV = (Path(__file__).resolve().parents[3]
+                       / "resources" / "shared" / "mane_exons.tsv")
+_PLUS_CLINICAL_TAG = "MANE Plus Clinical"
+
+
+@lru_cache(maxsize=8)
+def load_mane_plus_clinical_map(tsv_path: Path = _PACKAGED_EXONS_TSV
+                                ) -> dict[str, list[tuple[str, str]]]:
+    """Return ``{gene_symbol: [(refseq_base, ensembl_base), ...]}`` for MANE
+    Plus Clinical transcripts (a gene may have several, e.g. GNAS).
+
+    Reads ``tsv_path`` when present, otherwise the packaged ``mane_exons.tsv``.
+    Empty dict if neither exists.
+    """
+    path = tsv_path if tsv_path.exists() else _PACKAGED_EXONS_TSV
+    if not path.exists():
+        log.warning("mane_plus_clinical_map_missing", path=str(tsv_path))
+        return {}
+    result: dict[str, list[tuple[str, str]]] = {}
+    try:
+        with path.open(encoding="utf-8") as fh:
+            reader = csv.DictReader(
+                (line for line in fh if not line.lstrip().startswith("#")),
+                delimiter="\t",
+            )
+            for row in reader:
+                if (row.get("mane_tag") or "").strip() != _PLUS_CLINICAL_TAG:
+                    continue
+                gene = (row.get("gene") or "").strip()
+                if gene:
+                    result.setdefault(gene, []).append(
+                        (_base(row.get("refseq")), _base(row.get("ensembl"))))
+    except Exception as exc:  # noqa: BLE001
+        log.error("mane_plus_clinical_map_error", error=str(exc))
+        return {}
+    log.info("mane_plus_clinical_map_loaded", genes=len(result), path=str(path))
+    return result

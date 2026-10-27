@@ -416,6 +416,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data --only 
 | `--workers N` | Build parallelism for the ClinVar (XML parse, max 24) and gnomAD (DuckDB) steps (default = CPU - 1) |
 | `--force-clinvar` | Force a fresh ClinVar download/rebuild even when local files exist (ClinVar is a rolling weekly release at a fixed URL). Re-acquires the VCF, the source RCV XML, and the PS1/PM5 SQLite. Combine with `--only clinvar-vcf clinvar-sqlite` to refresh ClinVar alone. |
 | `--force-clingen` | Re-download the ClinGen Dosage Sensitivity (`ClinGen_gene_curation_list_GRCh38.tsv`) and Gene-Disease Validity (`clingen_gene_disease_validity.csv`) tables into `data/shared/`. Downloaded once by default. Combine with `--only clingen`. |
+| `--force-mane-summary` | Re-download the MANE v1.5 summary (`MANE.GRCh38.v1.5.summary.txt.gz`, MANE Select + MANE Plus Clinical) into `data/shared/`. Downloaded once by default. Combine with `--only mane-summary`. |
 | `--only STEP ...` | Run only the named steps (e.g. `clingen`, `clinvar-vcf clinvar-sqlite`). Always pass `--data-dir` as well. |
 | `--skip-gnomad` | Skip gnomAD download (~ 1.5 TB) |
 | `--skip-gnomad-coverage` | Skip the gnomAD exomes coverage summary download + DuckDB build (per-locus mean read depth; used by the PM2 read-depth gate for ENIGMA BRCA1/2). Downloaded by default. |
@@ -453,7 +454,8 @@ data/
 │   ├── vcep_pvs1_splice_exons.tsv   #   per-skipped-exon PVS1 splice strengths
 │   ├── tp53_pp3_bp4_codes.tsv       #   ClinGen TP53 VCEP per-missense PP3/BP4 codes (aGVGD+BayesDel)
 │   ├── ClinGen_gene_curation_list_GRCh38.tsv  # ClinGen Dosage Sensitivity (PVS1 LoF mechanism)
-│   └── clingen_gene_disease_validity.csv      # ClinGen Gene-Disease Validity (VUS cap)
+│   ├── clingen_gene_disease_validity.csv      # ClinGen Gene-Disease Validity (VUS cap)
+│   └── MANE.GRCh38.v1.5.summary.txt.gz        # MANE summary (Select + Plus Clinical; read by HUVar_app's TransVar service)
 ├── data_manifest.json               # source / release recorded by setup_data.py
 ├── vep_cache/                       # VEP indexed cache, both assemblies
 ├── esm1b/                           # (optional) protein-coordinate, shared across assemblies
@@ -718,6 +720,22 @@ The result TSV has the following columns (one row per variant):
 
 `variant_id`, `chrom`, `pos`, `ref`, `alt`, `filter`,
 `transcript`, `gene`, `hgvs_c`, `hgvs_p`
+
+`transcript` is the transcript every criterion is evaluated on (RefSeq MANE Select
+first, then Ensembl MANE Select, then canonical). When the gene also has a **MANE Plus
+Clinical** transcript, it is described in five supplementary columns; they are
+empty otherwise and never change the classification:
+
+| Column | Meaning |
+|--------|---------|
+| `mane_plus_clinical_transcript` | Plus Clinical RefSeq accession (Ensembl when no RefSeq row); several (GNAS) joined with `;` |
+| `mane_plus_clinical_hgvs_c` / `mane_plus_clinical_hgvs_p` | HGVS on the Plus Clinical transcript |
+| `mane_plus_clinical_consequence` | VEP consequence on the Plus Clinical transcript |
+| `mane_plus_clinical_consequence_differs` | `1` when it differs from the consequence on the evaluated transcript (e.g. intronic on MANE Select, missense on a Plus Clinical-only exon) — review such variants manually |
+
+The JSON output carries the same information in `mane_plus_clinical`. On
+GRCh37, where VEP has no MANE flags, Plus Clinical transcripts are recovered by
+accession from `resources/shared/mane_exons.tsv`.
 
 ### Classifications (both frameworks in parallel)
 

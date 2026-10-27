@@ -64,6 +64,12 @@ def print_report(
             cseq_table.add_row("HGVS c.", pc.hgvs_c)
         if pc.hgvs_p:
             cseq_table.add_row("HGVS p.", pc.hgvs_p)
+        # Supplementary MANE Plus Clinical description (criteria stay on MANE Select).
+        for mpc in annotation.mane_plus_clinical_summary():
+            label = mpc.transcript_id + " [MANE Plus Clinical]"
+            detail = " ".join(x for x in (mpc.hgvs_c, mpc.hgvs_p) if x) or "-"
+            note = "  (consequence differs: " + mpc.consequence + ")" if mpc.consequence_differs else ""
+            cseq_table.add_row("Plus Clinical", label + "  " + detail + note)
         console.print(cseq_table)
 
     console.print("[bold]Criteria[/bold]")

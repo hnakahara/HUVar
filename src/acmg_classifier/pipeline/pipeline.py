@@ -155,6 +155,7 @@ def run_pipeline(
             gene_symbol=pc.gene_symbol if pc else None,
             hgvs_c=pc.hgvs_c if pc else None,
             hgvs_p=pc.hgvs_p if pc else None,
+            mane_plus_clinical=ann.mane_plus_clinical_summary(),
             annotation=ann,
             criteria_results=criteria_results,
             classification_2015=classification_2015,
@@ -289,6 +290,7 @@ def classify_annotated(
 
     return ClassificationResult(
         variant_id=variant.key,
+        mane_plus_clinical=ann.mane_plus_clinical_summary() if ann is not None else [],
         criteria_results=criteria_results,
         classification_2015=classification_2015,
         classification_2015_rules=rules,

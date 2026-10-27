@@ -31,10 +31,21 @@ _ANNOTATION_HEADER = [
     "in_repeat", "repeat_class",
 ]
 
+# Supplementary MANE Plus Clinical description (the row is still evaluated on
+# MANE Select). Several Plus Clinical transcripts (GNAS) are joined with ";".
+_MANE_PC_HEADER = [
+    "mane_plus_clinical_transcript", "mane_plus_clinical_hgvs_c",
+    "mane_plus_clinical_hgvs_p", "mane_plus_clinical_consequence",
+    "mane_plus_clinical_consequence_differs",
+]
+
 _HEADER = (
     [
         "variant_id", "chrom", "pos", "ref", "alt", "filter",
         "transcript", "gene", "hgvs_c", "hgvs_p",
+    ]
+    + _MANE_PC_HEADER
+    + [
         "classification_2015", "rules_2015", "bayesian_score", "classification_bayesian",
     ]
     + _ANNOTATION_HEADER
@@ -189,6 +200,19 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
             + bayesdel_cols + cadd_cols + squirls_cols + splice_cols + repeat_cols)
 
 
+def _build_mane_pc_row(result: ClassificationResult) -> list[str]:
+    pcs = result.mane_plus_clinical or []
+    if not pcs:
+        return ["", "", "", "", ""]
+    return [
+        ";".join(p.transcript_id for p in pcs),
+        ";".join(_strip_transcript_prefix(p.hgvs_c) for p in pcs),
+        ";".join(_strip_transcript_prefix(p.hgvs_p) for p in pcs),
+        ";".join(p.consequence for p in pcs),
+        "1" if any(p.consequence_differs for p in pcs) else "0",
+    ]
+
+
 def _build_row(result: ClassificationResult) -> list[str]:
     by_criterion = {r.criterion: r for r in result.criteria_results}
 
@@ -217,6 +241,9 @@ def _build_row(result: ClassificationResult) -> list[str]:
             result.gene_symbol or "",
             _strip_transcript_prefix(result.hgvs_c),
             _strip_transcript_prefix(result.hgvs_p),
+        ]
+        + _build_mane_pc_row(result)
+        + [
             result.classification_2015.value,
             result.classification_2015_rules,
             str(result.bayesian_score),

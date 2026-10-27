@@ -1221,6 +1221,60 @@ def step_clingen(data_dir: Path, force: bool = False) -> bool:
     return True
 
 
+# MANE summary (NCBI; assembly-independent gene/RefSeq/MANE-status table, stored in
+# data/shared). The HUVar_app TransVar service reads it to restrict cDNA/protein
+# conversion to MANE Select and MANE Plus Clinical transcripts. The release matches
+# the committed MANE GFF (resources/gff, v1.5) used by the engine.
+MANE_RELEASE = "1.5"
+MANE_SUMMARY_URL = ("https://ftp.ncbi.nlm.nih.gov/refseq/MANE/MANE_human/"
+                    f"release_{MANE_RELEASE}/MANE.GRCh38.v{MANE_RELEASE}.summary.txt.gz")
+MANE_SUMMARY_NAME = f"MANE.GRCh38.v{MANE_RELEASE}.summary.txt.gz"
+
+
+def _mane_summary_counts(path: Path) -> dict[str, int]:
+    """MANE_status counts of a summary file; raises ValueError if malformed."""
+    import csv
+    import gzip
+    from collections import Counter
+    with gzip.open(path, "rt", encoding="utf-8", newline="") as fh:
+        reader = csv.DictReader(fh, delimiter="\t")
+        missing = {"symbol", "RefSeq_nuc", "MANE_status"} - set(reader.fieldnames or [])
+        if missing:
+            raise ValueError(f"missing columns {sorted(missing)}")
+        counts = Counter(row.get("MANE_status", "") for row in reader)
+    if counts.get("MANE Select", 0) < 15000:
+        raise ValueError(f"too few MANE Select rows: {dict(counts)}")
+    return dict(counts)
+
+
+def step_mane_summary(data_dir: Path, force: bool = False) -> bool:
+    """Download the MANE summary (MANE Select + MANE Plus Clinical) into data/shared."""
+    shared = data_dir / "shared"
+    shared.mkdir(parents=True, exist_ok=True)
+    dest = shared / MANE_SUMMARY_NAME
+    if dest.exists() and not force:
+        try:
+            _mane_summary_counts(dest)
+            print(f"  [SKIP] {dest.name}")
+            return True
+        except Exception as exc:  # corrupt/partial file -> fetch again
+            print(f"  [WARN] {dest.name} is unreadable ({exc}); re-downloading")
+    tmp = dest.with_name(dest.name + ".part")
+    if tmp.exists():
+        tmp.unlink()
+    _download(MANE_SUMMARY_URL, tmp, f"MANE v{MANE_RELEASE} summary")
+    try:
+        counts = _mane_summary_counts(tmp)
+    except Exception as exc:
+        print(f"  [ERROR] downloaded MANE summary is invalid: {exc}")
+        return False
+    tmp.replace(dest)
+    print("  " + ", ".join(f"{k}: {v}" for k, v in sorted(counts.items())))
+    _record_manifest(data_dir, "mane_summary", source=MANE_SUMMARY_URL, path=dest,
+                     release=MANE_RELEASE)
+    return True
+
+
 def _clinvar_release(vcf: Path) -> str | None:
     try:
         from acmg_classifier.provenance import _clinvar_vcf_date
@@ -1372,12 +1426,16 @@ def main() -> None:
     parser.add_argument("--force-clingen", action="store_true",
                         help="Re-download the ClinGen Dosage Sensitivity and Gene-Disease "
                              "Validity tables even when present (they are updated continuously).")
+    parser.add_argument("--force-mane-summary", action="store_true",
+                        help=f"Re-download the MANE v{MANE_RELEASE} summary into data/shared "
+                             "even when present.")
     parser.add_argument("--only", nargs="+", default=None, metavar="STEP",
                         help="Run only the named step(s) and skip the rest. Step "
                              "keys: genome, vep, clinvar-vcf, clinvar-sqlite, "
                              "alphamissense, esm1b, revel, cadd, bayesdel, "
                              "openspliceai, gnomad-constraint, gnomad-coverage, "
-                             "gnomad, gnomad-noncancer, repeatmasker, phylop, clingen. "
+                             "gnomad, gnomad-noncancer, repeatmasker, phylop, clingen, "
+                             "mane-summary. "
                              "Each step is idempotent: it checks for existing "
                              "files and downloads only what is missing. Example: "
                              "--only openspliceai")
@@ -1424,6 +1482,7 @@ def main() -> None:
         ("repeatmasker",      "RepeatMasker",      lambda: step_repeatmasker(asm_dir, assembly, urls)),
         ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
         ("clingen",           "ClinGen dosage / gene validity", lambda: step_clingen(data_dir, args.force_clingen)),
+        ("mane-summary",      "MANE summary",      lambda: step_mane_summary(data_dir, args.force_mane_summary)),
     ]
 
     if args.only:
