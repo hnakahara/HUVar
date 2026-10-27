@@ -128,9 +128,19 @@ class CriteriaRegistry:
         """
         results: list[CriteriaResult] = []
         rule_annotation = annotation.rule_view()
+        # Evaluated on a non-default transcript: say which numbering a met
+        # rule-numbered criterion (PM1/PS1/PM5) refers to, e.g. "residue 168".
+        rc = annotation.rule_consequence
+        rule_tag = (f" [{rc.transcript_id} (MANE Select) numbering]"
+                    if rule_annotation is not annotation and rc is not None
+                    and rc is not annotation.primary_consequence else "")
         for evaluator in self._evaluators:
             ann = rule_annotation if evaluator.rule_numbered else annotation
             result = evaluator.evaluate(variant, ann, supplement)
+            if rule_tag and evaluator.rule_numbered:
+                for r in (result if isinstance(result, list) else [result]):
+                    if r.triggered:
+                        r.evidence = (r.evidence or "") + rule_tag
             # ManualPathogenicEvaluator / ManualBenignEvaluator may emit
             # multiple results (one per supplement row), so accept either a
             # single CriteriaResult or a list.

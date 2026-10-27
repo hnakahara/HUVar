@@ -167,3 +167,18 @@ def test_orchestrator_records_isoform_scores():
     assert calls[0] == (("R", "C"), {"ENST00000303391"})
     # No Plus Clinical transcript -> nothing extra
     assert orch._plus_clinical_insilico(_V, cons[0], cons[:2], None, None, fake_revel) == {}
+
+
+def test_met_rule_numbered_criteria_name_the_numbering():
+    class _Met(CriterionEvaluator):
+        rule_numbered = True
+
+        def evaluate(self, variant, annotation, supplement=None):
+            return CriteriaResult.met(ACMGCriterion.PM1, S.MODERATE, "residue 110")
+
+    reg = CriteriaRegistry(Config(data_dir=Path("./data")))
+    reg._evaluators = [_Met()]
+    (r,) = [x for x in reg.evaluate_all(_V, _ann().for_transcript(PC)) if x.criterion == ACMGCriterion.PM1]
+    assert r.evidence == f"residue 110 [{SEL} (MANE Select) numbering]"
+    (r,) = [x for x in reg.evaluate_all(_V, _ann()) if x.criterion == ACMGCriterion.PM1]
+    assert r.evidence == "residue 110"
