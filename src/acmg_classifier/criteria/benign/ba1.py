@@ -39,7 +39,9 @@ class BA1Evaluator(CriterionEvaluator):
         # Variant-level BA1 exclusion: VCEP "BS1 exception" variants (LGMD
         # common pathogenic / hypomorphic / founder alleles) are barred from
         # BA1 as well as BS1, whatever their population frequency.
-        hit = variant_listed(gt.ba1_exclude, pc.hgvs_c if pc else None, pc.hgvs_p if pc else None)
+        # The VCEP lists are written in MANE Select numbering (rule_consequence).
+        rc = annotation.rule_consequence
+        hit = variant_listed(gt.ba1_exclude, rc.hgvs_c if rc else None, rc.hgvs_p if rc else None)
         if hit:
             return CriteriaResult.not_met(
                 ACMGCriterion.BA1,

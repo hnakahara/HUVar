@@ -51,6 +51,8 @@ def _hnf1a_promoter_site(pc) -> str | None:
     return None
 
 class PM1Evaluator(CriterionEvaluator):
+    rule_numbered = True  # VCEP / ClinVar positions on MANE Select (see base)
+
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
         # Per-gene VCEP hotspot definitions (residue ranges / residues / strength)

@@ -18,6 +18,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   on the Plus Clinical transcript is planned separately because several VCEP
   tables (PM1/PM4 hotspots, DYSF comparator rules, REVEL row choice) are keyed
   to MANE Select numbering.
+- **MANE Plus Clinical (evaluation)**: each variant in a gene with a Plus Clinical
+  transcript is also classified with the criteria evaluated on that transcript
+  (`AnnotationData.for_transcript`); the TSV gains
+  `mane_plus_clinical_{classification_2015,rules_2015,bayesian_score,classification_bayesian,criteria_changes}`
+  and `explain` a `--transcript` option. Consequence, the generic PVS1 tree and the
+  isoform ESM1b/REVEL scores (looked up by the orchestrator) follow the evaluated
+  transcript; VCEP position rules and ClinVar codon comparisons keep MANE Select
+  numbering through `AnnotationData.rule_consequence` (PM1/PS1/PM5 via
+  `rule_view()`; position parts of BA1/BS1/BP1/BP3/BP4/PM4/PP3 and the
+  gene-specific PVS1 trees). Off with `ACMG_EVALUATE_PLUS_CLINICAL=false`. The
+  MANE Select classification is unchanged.
 - `setup_data.py` step `mane-summary` (`--force-mane-summary`): downloads the NCBI
   MANE v1.5 summary into `data/shared/` (assembly-independent), validated for the
   `symbol` / `RefSeq_nuc` / `MANE_status` columns and recorded in the data manifest.

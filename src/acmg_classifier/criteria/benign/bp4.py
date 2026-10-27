@@ -161,10 +161,11 @@ class BP4Evaluator(CriterionEvaluator):
         scope = self._bp_spec.bp4_scope(gene)
         if scope == "not_applicable":
             return CriteriaResult.not_met(ACMGCriterion.BP4, f"{gene}: BP4 not applicable per VCEP")
-        if self._bp_spec.bp4_excluded_position(gene, pc.hgvs_c):
+        rc = annotation.rule_consequence or pc  # VCEP c. list: MANE Select numbering
+        if self._bp_spec.bp4_excluded_position(gene, rc.hgvs_c):
             return CriteriaResult.not_met(
                 ACMGCriterion.BP4,
-                f"{gene}: BP4 not applied at {pc.hgvs_c} per VCEP (may impact a splice site the VCEP excludes)",
+                f"{gene}: BP4 not applied at {rc.hgvs_c} per VCEP (may impact a splice site the VCEP excludes)",
             )
 
         if pc.consequence == ConsequenceType.MISSENSE:

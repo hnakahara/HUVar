@@ -58,18 +58,35 @@ def print_report(
         cseq_table.add_column("Field", style="dim")
         cseq_table.add_column("Value")
         cseq_table.add_row("Gene", pc.gene_symbol)
-        cseq_table.add_row("Transcript", pc.transcript_id + (" [MANE Select]" if pc.is_mane_select else ""))
+        tag = (" [MANE Select]" if pc.is_mane_select
+               else " [MANE Plus Clinical]" if pc.is_mane_plus_clinical else "")
+        cseq_table.add_row("Transcript", pc.transcript_id + tag)
         cseq_table.add_row("Consequence", pc.consequence.value)
         if pc.hgvs_c:
             cseq_table.add_row("HGVS c.", pc.hgvs_c)
         if pc.hgvs_p:
             cseq_table.add_row("HGVS p.", pc.hgvs_p)
         # Supplementary MANE Plus Clinical description (criteria stay on MANE Select).
+        evaluated = {m.transcript_id: m for m in (result.mane_plus_clinical or [])}
         for mpc in annotation.mane_plus_clinical_summary():
+            if mpc.transcript_id == pc.transcript_id:
+                continue  # this report is the Plus Clinical evaluation itself
             label = mpc.transcript_id + " [MANE Plus Clinical]"
             detail = " ".join(x for x in (mpc.hgvs_c, mpc.hgvs_p) if x) or "-"
             note = "  (consequence differs: " + mpc.consequence + ")" if mpc.consequence_differs else ""
             cseq_table.add_row("Plus Clinical", label + "  " + detail + note)
+            ev = evaluated.get(mpc.transcript_id)
+            if ev is not None and ev.classification_2015:
+                cseq_table.add_row(
+                    "  evaluated",
+                    f"ACMG 2015 {ev.classification_2015}  /  Bayesian "
+                    f"{ev.classification_bayesian} (score={ev.bayesian_score})"
+                    + (f"  (changes: {ev.criteria_changes})" if ev.criteria_changes else ""),
+                )
+        if annotation.evaluation_transcript and annotation.rule_consequence is not pc:
+            rc = annotation.rule_consequence
+            cseq_table.add_row("Rule numbering", f"{rc.transcript_id} [MANE Select]  "
+                               + (rc.hgvs_c or "-") + (f" {rc.hgvs_p}" if rc.hgvs_p else ""))
         console.print(cseq_table)
 
     console.print("[bold]Criteria[/bold]")

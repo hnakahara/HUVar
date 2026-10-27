@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import structlog
 
 from acmg_classifier.config import Config
-from acmg_classifier.models.annotation import AnnotationData
+from acmg_classifier.models.annotation import AnnotationData, TranscriptInSilico
 from acmg_classifier.models.enums import ConsequenceType, InSilicoTool, SpliceTool
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.utils.progress import progress_bar
@@ -311,7 +311,14 @@ class AnnotationOrchestrator:
 
         repeat = query_repeat_reader(self._repeat_reader, variant.chrom, variant.pos)
 
+        # Isoform-specific in-silico scores for evaluating on a MANE Plus
+        # Clinical transcript (AnnotationData.for_transcript). Only genes with a
+        # Plus Clinical transcript pay for the extra lookups.
+        transcript_insilico = self._plus_clinical_insilico(
+            variant, primary, consequences, esm1b, revel, query_revel_reader)
+
         return AnnotationData(
+            transcript_insilico=transcript_insilico,
             consequences=consequences,
             gnomad=gnomad,
             alphamissense=alphamissense,
@@ -327,6 +334,41 @@ class AnnotationOrchestrator:
             clinvar_vcf=clinvar_vcf_recs,
             repeat=repeat,
         )
+
+    def _plus_clinical_insilico(self, variant, primary, consequences, esm1b, revel,
+                                query_revel_reader) -> dict:
+        """{transcript base: TranscriptInSilico} for the default transcript and
+        each MANE Plus Clinical transcript of its gene; empty when the gene has
+        no Plus Clinical transcript."""
+        if primary is None:
+            return {}
+        gene = primary.gene_symbol
+        pcs = [c for c in consequences or ()
+               if c.is_mane_plus_clinical and c.gene_symbol == gene]
+        if not pcs:
+            return {}
+        out = {primary.transcript_id.split(".")[0]: TranscriptInSilico(esm1b=esm1b, revel=revel)}
+        # The Plus Clinical isoform's own rows: its Ensembl twin (same residue and
+        # amino-acid change) gives the UniProt isoform and the REVEL transcript.
+        pc_first = sorted(consequences, key=lambda c: not c.is_mane_plus_clinical)
+        for c in pcs:
+            base = c.transcript_id.split(".")[0]
+            if base in out:
+                continue
+            twins = {x.transcript_id.split(".")[0] for x in pcs
+                     if x.transcript_id.startswith("ENST")
+                     and x.protein_position == c.protein_position
+                     and x.amino_acids == c.amino_acids}
+            if c.transcript_id.startswith("ENST"):
+                twins.add(base)
+            esm = self._lookup_esm1b(c, pc_first)
+            aa, _tx = _revel_keys(c, consequences, None)
+            rv = query_revel_reader(
+                self._revel_reader, variant.chrom, variant.pos, variant.ref, variant.alt,
+                aa=aa, transcripts=twins or None,
+            )
+            out[base] = TranscriptInSilico(esm1b=esm, revel=rv)
+        return out
 
     def _lookup_esm1b(self, primary, consequences):
         """Lookup ESM1b LLR using UniProt accession + protein position + alt AA.

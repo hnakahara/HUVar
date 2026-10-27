@@ -25,6 +25,8 @@ _PATHOGENIC = {"Pathogenic", "Pathogenic/Likely pathogenic"}
 
 
 class PM5Evaluator(CriterionEvaluator):
+    rule_numbered = True  # VCEP / ClinVar positions on MANE Select (see base)
+
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
         # Per-gene PM5 spec: Grantham gate, PM1/PS1 exclusions, strength ceiling.

@@ -45,13 +45,14 @@ class BP3Evaluator(CriterionEvaluator):
         # the VCEP enumerates the repetitive regions itself, so being inside one
         # IS the "repetitive region" — award BP3 directly (no Dfam needed); a
         # variant outside them is not BP3.
-        in_region = self._vcep.bp3_in_region(pc.gene_symbol, pc.protein_position)
+        rc = annotation.rule_consequence or pc  # VCEP regions: MANE Select numbering
+        in_region = self._vcep.bp3_in_region(pc.gene_symbol, rc.protein_position)
         if in_region is not None:
             if in_region:
                 return CriteriaResult.met(
                     ACMGCriterion.BP3,
                     evidence=f"{pc.gene_symbol}: in VCEP BP3 repetitive region "
-                    f"(residue {pc.protein_position})",
+                    f"(residue {rc.protein_position})",
                 )
             return CriteriaResult.not_met(
                 ACMGCriterion.BP3, f"{pc.gene_symbol}: outside the VCEP BP3 region"

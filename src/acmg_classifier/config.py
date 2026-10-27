@@ -51,6 +51,12 @@ class Config(BaseSettings):
     # (per-exon strength, ENIGMA Specifications Table 4; only with PVS1).
     # Env: ACMG_PM5_PTC=false to restrict PM5 to missense variants.
     pm5_ptc: bool = True
+    # MANE Plus Clinical: also classify each variant with the criteria evaluated
+    # on its gene's Plus Clinical transcript(s) and report the result next to
+    # the MANE Select classification (TSV mane_plus_clinical_* columns / JSON).
+    # The MANE Select classification is unchanged. Env:
+    # ACMG_EVALUATE_PLUS_CLINICAL=false to report the Plus Clinical notation only.
+    evaluate_plus_clinical: bool = True
     # BS2 (observed in a healthy individual) gnomAD count thresholds, by the
     # gene's inheritance mode. Recessive counts homozygotes, X-linked counts
     # hemizygotes, dominant counts heterozygous carriers (AC - nhomalt). Defaults

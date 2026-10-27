@@ -562,6 +562,7 @@ Full option list:
 | `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
 | `--with-tp53-functional` | flag | off | TP53 PS3/BS3 from the VCEP functional flowchart on the bundled NCI TP53 Database assay classes (`resources/shared/tp53_functional.tsv`). Off by default because the database terms prohibit any use that results in direct or indirect monetization; turn it on for non-commercial use. Env: `ACMG_USE_TP53_FUNCTIONAL=true`. Recorded in the provenance sidecar. |
 | `--cspec GENE=CSPEC_ID` | repeatable | — | Evaluate a gene with several released ClinGen specifications for clinically distinct diseases under the chosen one (as in HUVar_app): RYR1 `malignant_hyperthermia` / `congenital_myopathy_ad` / `congenital_myopathy_ar`; ACTA1 `congenital_myopathy_ad` / `congenital_myopathy_ar`; VWF `vwd_ad` / `vwd_ar` (`resources/shared/disease_prevalence_multispec.tsv`). Without it, the conservative merged specification is used. Also for `explain`. Shown in the warnings column (`CSPEC:`) and recorded in the provenance. |
+| `--transcript ACCESSION` | str | — | `explain` only. Evaluate the criteria on this transcript instead of MANE Select, e.g. the gene's MANE Plus Clinical (`--transcript NM_033360.4`). VCEP position rules and ClinVar codon comparisons keep MANE Select numbering (see *Output format*); the report shows the numbering used and a `TRANSCRIPT:` warning. |
 | `--exclude-self-expert-panel` | flag | off | Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar expert-panel (≥3★) record of the variant itself, so an evaluation against the eRepo does not read the reference curation. Expert-panel criteria are in any case imported only when `--supplement` is given; this flag also turns them off in that case. Recorded in the provenance sidecar (with `curated_evidence`). |
 | `--workers N` | int | `4` | Parallel workers for annotation |
 
@@ -723,15 +724,32 @@ The result TSV has the following columns (one row per variant):
 
 `transcript` is the transcript every criterion is evaluated on (RefSeq MANE Select
 first, then Ensembl MANE Select, then canonical). When the gene also has a **MANE Plus
-Clinical** transcript, it is described in five supplementary columns; they are
-empty otherwise and never change the classification:
+Clinical** transcript, supplementary columns describe it and give the
+classification with the criteria evaluated on it; they are empty otherwise and
+never change the row's (MANE Select) classification:
 
 | Column | Meaning |
 |--------|---------|
 | `mane_plus_clinical_transcript` | Plus Clinical RefSeq accession (Ensembl when no RefSeq row); several (GNAS) joined with `;` |
 | `mane_plus_clinical_hgvs_c` / `mane_plus_clinical_hgvs_p` | HGVS on the Plus Clinical transcript |
 | `mane_plus_clinical_consequence` | VEP consequence on the Plus Clinical transcript |
-| `mane_plus_clinical_consequence_differs` | `1` when it differs from the consequence on the evaluated transcript (e.g. intronic on MANE Select, missense on a Plus Clinical-only exon) — review such variants manually |
+| `mane_plus_clinical_consequence_differs` | `1` when it differs from the consequence on the evaluated transcript (e.g. intronic on MANE Select, missense on a Plus Clinical-only exon) |
+| `mane_plus_clinical_classification_2015` / `_rules_2015` / `_bayesian_score` / `_classification_bayesian` | Classification with the criteria evaluated on the Plus Clinical transcript |
+| `mane_plus_clinical_criteria_changes` | Criteria whose outcome differs from the MANE Select evaluation, e.g. `PP3:NotMet->Supporting; BP4:Supporting->NotMet` |
+
+**How a Plus Clinical evaluation works.** The consequence type, the generic PVS1
+tree (exon structure / NMD of that transcript) and the in-silico scores (ESM1b
+isoform, REVEL transcript row) come from the Plus Clinical transcript. VCEP
+position rules and ClinVar codon comparisons are numbered on MANE Select and are
+read in MANE Select numbering for the same genomic residue: PM1, PS1 and PM5 as a
+whole, and the position parts of BA1/BS1 (variant lists), BP1/BP3 (regions), BP4
+(c. list), PM4 (regions), PP3/BP4 (domains / code tables) and the gene-specific
+PVS1 trees (VCEP bands, APC, last-nucleotide rules). A variant in a region that
+exists only on the Plus Clinical transcript has no MANE Select position, so those
+rules are not met; the warning `TRANSCRIPT: …` says so. Disable the extra
+evaluation with `ACMG_EVALUATE_PLUS_CLINICAL=false` (the notation columns stay).
+`explain --transcript NM_…` prints the full report evaluated on a Plus Clinical
+transcript.
 
 The JSON output carries the same information in `mane_plus_clinical`. On
 GRCh37, where VEP has no MANE flags, Plus Clinical transcripts are recovered by

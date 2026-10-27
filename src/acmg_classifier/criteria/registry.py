@@ -127,8 +127,10 @@ class CriteriaRegistry:
         evaluator would need to inspect every other evaluator's output.
         """
         results: list[CriteriaResult] = []
+        rule_annotation = annotation.rule_view()
         for evaluator in self._evaluators:
-            result = evaluator.evaluate(variant, annotation, supplement)
+            ann = rule_annotation if evaluator.rule_numbered else annotation
+            result = evaluator.evaluate(variant, ann, supplement)
             # ManualPathogenicEvaluator / ManualBenignEvaluator may emit
             # multiple results (one per supplement row), so accept either a
             # single CriteriaResult or a list.
@@ -416,7 +418,8 @@ def _apply_pm1_co_requirements(results: list[CriteriaResult], annotation: Annota
     )
     from acmg_classifier.models.enums import CriterionStrength
 
-    pc = annotation.primary_consequence
+    # PM1 regions are numbered on MANE Select (see AnnotationData.rule_consequence).
+    pc = annotation.rule_consequence
     gene = pc.gene_symbol if pc else None
     strong = {CriterionStrength.STRONG, CriterionStrength.VERY_STRONG}
 

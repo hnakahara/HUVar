@@ -89,6 +89,8 @@ def _aa_ref_alt(amino_acids: str | None) -> tuple[str, str] | None:
 
 
 class PS1Evaluator(CriterionEvaluator):
+    rule_numbered = True  # VCEP / ClinVar positions on MANE Select (see base)
+
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
         # Per-gene PS1 spec: some VCEPs restrict the splice extension to

@@ -70,7 +70,9 @@ class BS1Evaluator(CriterionEvaluator):
         # whose ~2.6% allelic contribution is disease-driven, not benign).
         # Entries may be protein ("p.") or MANE transcript ("c.") changes — the
         # LGMD VCEP "BS1 exception" variants include intronic changes.
-        hit = variant_listed(gt.bs1_exclude, pc.hgvs_c if pc else None, pc.hgvs_p if pc else None)
+        # The VCEP lists are written in MANE Select numbering (rule_consequence).
+        rc = annotation.rule_consequence
+        hit = variant_listed(gt.bs1_exclude, rc.hgvs_c if rc else None, rc.hgvs_p if rc else None)
         if hit:
             return CriteriaResult.not_met(
                 ACMGCriterion.BS1,

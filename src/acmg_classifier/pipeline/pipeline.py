@@ -131,6 +131,16 @@ def run_pipeline(
         classification_2015, rules = clf_2015.classify(criteria_results)
         score, classification_bay = clf_bay.classify(criteria_results)
 
+        def _evaluate_on(ann_tx, _variant=variant, _sup=sup_entries):
+            crit = registry.evaluate_all(_variant, ann_tx, _sup)
+            c2015, r2015 = clf_2015.classify(crit)
+            sc, cbay = clf_bay.classify(crit)
+            from acmg_classifier.classification.gene_validity import apply_gene_validity
+            tpc = ann_tx.primary_consequence
+            c2015, cbay, _w = apply_gene_validity(
+                tpc.gene_symbol if tpc else None, c2015, cbay, cfg)
+            return crit, c2015, r2015, sc, cbay
+
         pc = ann.primary_consequence
         from acmg_classifier.classification.gene_validity import apply_gene_validity
         classification_2015, classification_bay, gdv_warn = apply_gene_validity(
@@ -155,7 +165,7 @@ def run_pipeline(
             gene_symbol=pc.gene_symbol if pc else None,
             hgvs_c=pc.hgvs_c if pc else None,
             hgvs_p=pc.hgvs_p if pc else None,
-            mane_plus_clinical=ann.mane_plus_clinical_summary(),
+            mane_plus_clinical=plus_clinical_evaluations(ann, cfg, criteria_results, _evaluate_on),
             annotation=ann,
             criteria_results=criteria_results,
             classification_2015=classification_2015,
@@ -280,25 +290,109 @@ def classify_annotated(
     from acmg_classifier.classification.gene_validity import apply_gene_validity
 
     registry = CriteriaRegistry(cfg)
-    criteria_results = registry.evaluate_all(variant, ann, supplement)
-    classification_2015, rules = Classifier2015().classify(criteria_results)
-    score, classification_bay = ClassifierBayesian().classify(criteria_results)
+    clf_2015, clf_bay = Classifier2015(), ClassifierBayesian()
+
+    def _evaluate_on(ann_tx):
+        crit = registry.evaluate_all(variant, ann_tx, supplement)
+        c2015, r2015 = clf_2015.classify(crit)
+        sc, cbay = clf_bay.classify(crit)
+        tpc = ann_tx.primary_consequence if ann_tx is not None else None
+        c2015, cbay, warn = apply_gene_validity(
+            tpc.gene_symbol if tpc else None, c2015, cbay, cfg)
+        return crit, c2015, r2015, sc, cbay, warn
+
+    criteria_results, classification_2015, rules, score, classification_bay, gdv_warn = (
+        _evaluate_on(ann))
     pc = ann.primary_consequence if ann is not None else None
-    classification_2015, classification_bay, gdv_warn = apply_gene_validity(
-        pc.gene_symbol if pc else None, classification_2015, classification_bay, cfg,
-    )
+
+    # Plus Clinical evaluations are reported next to the default (MANE Select)
+    # evaluation only; a result that is itself evaluated on a Plus Clinical
+    # transcript just lists the Plus Clinical notation.
+    if ann is not None and not ann.evaluation_transcript:
+        pcs = plus_clinical_evaluations(
+            ann, cfg, criteria_results, lambda a: _evaluate_on(a)[:5])
+    else:
+        pcs = ann.mane_plus_clinical_summary() if ann is not None else []
 
     return ClassificationResult(
         variant_id=variant.key,
-        mane_plus_clinical=ann.mane_plus_clinical_summary() if ann is not None else [],
+        mane_plus_clinical=pcs,
         criteria_results=criteria_results,
         classification_2015=classification_2015,
         classification_2015_rules=rules,
         bayesian_score=score,
         classification_bayesian=classification_bay,
         warnings=gdv_warn + _large_indel(variant) + _vcep_warning(cfg, variant)
-        + _cspec_note(cfg, pc),
+        + _cspec_note(cfg, pc) + transcript_note(ann),
     )
+
+
+def _criterion_state(r) -> str:
+    return r.strength.value if (r.triggered and not r.suppressed) else "NotMet"
+
+
+def criteria_changes(base, other) -> str:
+    """Criteria whose outcome differs between two evaluations, e.g.
+    ``"PP3:NotMet->Moderate; PM1:Moderate->NotMet"`` (order of ``base``)."""
+    b = {r.criterion: _criterion_state(r) for r in base}
+    o = {r.criterion: _criterion_state(r) for r in other}
+    order = [r.criterion for r in base] + [c for c in o if c not in b]
+    seen, out = set(), []
+    for c in order:
+        if c in seen:
+            continue
+        seen.add(c)
+        x, y = b.get(c, "NotMet"), o.get(c, "NotMet")
+        if x != y:
+            out.append(f"{c.value}:{x}->{y}")
+    return "; ".join(out)
+
+
+def plus_clinical_evaluations(ann, cfg: Config, base_criteria, evaluate) -> list:
+    """MANE Plus Clinical summary of ``ann``, each entry classified with the
+    criteria evaluated on that transcript (``evaluate(ann_tx)`` returns
+    ``(criteria, classification_2015, rules, score, classification_bayesian)``).
+
+    Skipped (notation only) when ``cfg.evaluate_plus_clinical`` is False."""
+    summary = ann.mane_plus_clinical_summary() if ann is not None else []
+    if not summary or getattr(cfg, "evaluate_plus_clinical", True) is not True:
+        return summary
+    for info in summary:
+        try:
+            crit, c2015, rules, score, cbay = evaluate(ann.for_transcript(info.transcript_id))
+        except Exception as exc:  # never fail the MANE Select result
+            log.warning("plus_clinical_eval_failed", transcript=info.transcript_id,
+                        error=str(exc))
+            continue
+        info.classification_2015 = c2015.value
+        info.rules_2015 = rules
+        info.bayesian_score = score
+        info.classification_bayesian = cbay.value
+        info.criteria_changes = criteria_changes(base_criteria, crit)
+    return summary
+
+
+def transcript_note(ann) -> list[str]:
+    """Warning for a result evaluated on a non-default transcript: which
+    numbering the VCEP position rules / ClinVar codon comparisons used."""
+    if ann is None or not getattr(ann, "evaluation_transcript", None):
+        return []
+    pc, rc = ann.primary_consequence, ann.rule_consequence
+    if pc is None:
+        return []
+    if pc.transcript_id.split(".")[0] != ann.evaluation_transcript.split(".")[0]:
+        return [f"TRANSCRIPT: {ann.evaluation_transcript} has no VEP consequence for this "
+                f"variant; evaluated on {pc.transcript_id}"]
+    if rc is None or rc is pc:
+        return [f"TRANSCRIPT: evaluated on {pc.transcript_id}"]
+    note = (f"TRANSCRIPT: evaluated on {pc.transcript_id} (MANE Plus Clinical); VCEP "
+            "position rules and ClinVar codon comparisons (PM1, PS1, PM5, BA1/BS1/BP4 "
+            f"variant lists, VCEP PVS1 bands, PP3/BP4 domains) use MANE Select "
+            f"{rc.transcript_id} ({(rc.hgvs_c or '').split(':')[-1] or rc.consequence.value})")
+    if pc.protein_position is not None and rc.protein_position is None:
+        note += ("; this residue has no MANE Select position, so those rules cannot be "
+                 "met — review against the Plus Clinical isoform manually")
+    return [note]
 
 
 def _cspec_note(cfg: Config, pc) -> list[str]:
@@ -326,8 +420,12 @@ def run_single(
     alt: str,
     cfg: Config,
     supplement: Optional[list[SupplementEntry]] = None,
+    transcript: Optional[str] = None,
 ) -> ClassificationResult:
     """Classify a single variant and print a rich report to the terminal.
+
+    ``transcript`` evaluates the criteria on that transcript (e.g. the gene's
+    MANE Plus Clinical) instead of the default MANE Select.
 
     ``supplement`` is an optional list of manual curator evidence entries for
     this variant (from ``explain --evidence`` / ``--supplement``); they are
@@ -338,6 +436,8 @@ def run_single(
         # Manual evidence supplied: expert-panel criteria in ClinVar are used too.
         cfg = cfg.model_copy(update={"curated_evidence": True})
     variant, ann = annotate_one(chrom, pos, ref, alt, cfg)
+    if transcript:
+        ann = ann.for_transcript(transcript)
     result = classify_annotated(variant, ann, cfg, supplement)
     print_report(result, variant, ann)
     return result

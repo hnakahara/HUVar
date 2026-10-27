@@ -41,6 +41,11 @@ class ConsequenceInfo(BaseModel):
     intron_distance_from_splice: Optional[int] = None
 
 
+def _base_acc(acc: Optional[str]) -> str:
+    """Version-stripped accession (NM_033360.4 -> NM_033360)."""
+    return (acc or "").split(".")[0]
+
+
 class ManePlusClinicalInfo(BaseModel):
     """Supplementary MANE Plus Clinical description of a variant.
 
@@ -54,6 +59,15 @@ class ManePlusClinicalInfo(BaseModel):
     hgvs_p: Optional[str] = None
     consequence: str = ""
     consequence_differs: bool = False
+    # Classification with the criteria evaluated on this transcript (filled by
+    # the pipeline; None when the Plus Clinical evaluation was not run).
+    classification_2015: Optional[str] = None
+    rules_2015: Optional[str] = None
+    bayesian_score: Optional[int] = None
+    classification_bayesian: Optional[str] = None
+    # Criteria whose outcome differs from the MANE Select evaluation,
+    # e.g. "PP3:NotMet->Moderate; PM1:Moderate->NotMet".
+    criteria_changes: str = ""
 
 
 class GnomADData(BaseModel):
@@ -197,6 +211,13 @@ class RepeatMaskerRegion(BaseModel):
     repeat_name: Optional[str] = None
 
 
+class TranscriptInSilico(BaseModel):
+    """In-silico scores tied to one transcript/isoform (see AnnotationData.for_transcript)."""
+
+    esm1b: Optional[ESM1bData] = None
+    revel: Optional[RevelData] = None
+
+
 class AnnotationData(BaseModel):
     """Aggregated annotation for a single variant from all local data sources."""
 
@@ -221,9 +242,18 @@ class AnnotationData(BaseModel):
     clinvar_sqlite: list[ClinVarRecord] = []   # for PS1 / PM5 (same-AA or same-codon)
     repeat: Optional[RepeatMaskerRegion] = None
 
-    @property
-    def primary_consequence(self) -> Optional[ConsequenceInfo]:
-        """Pick the single transcript that ACMG criteria will be evaluated against.
+    # Transcript the criteria are evaluated on. None = the default pick
+    # (MANE Select first; see _default_primary). Set through for_transcript()
+    # to evaluate on a MANE Plus Clinical transcript.
+    evaluation_transcript: Optional[str] = None
+    # Transcript-specific in-silico scores (ESM1b isoform / REVEL transcript row),
+    # keyed by version-stripped accession. Filled by the annotation orchestrator
+    # for the default transcript and each MANE Plus Clinical transcript so that
+    # for_transcript() can swap in the scores of the evaluated isoform.
+    transcript_insilico: dict[str, TranscriptInSilico] = {}
+
+    def _default_primary(self) -> Optional[ConsequenceInfo]:
+        """Default evaluation transcript.
 
         Priority order is RefSeq MANE Select > Ensembl MANE Select >
         RefSeq canonical > Ensembl canonical > first available. RefSeq (NM_)
@@ -249,16 +279,82 @@ class AnnotationData(BaseModel):
         # Last resort: take whatever VEP returned first (preserves VEP's own ordering).
         return self.consequences[0] if self.consequences else None
 
+    def _find_transcript(self, tx: str) -> Optional[ConsequenceInfo]:
+        """Consequence on ``tx`` (exact id first, then version-stripped; RefSeq
+        preferred among base matches)."""
+        for c in self.consequences:
+            if c.transcript_id == tx:
+                return c
+        base = _base_acc(tx)
+        hits = [c for c in self.consequences if _base_acc(c.transcript_id) == base]
+        hits.sort(key=lambda c: not c.transcript_id.startswith("NM_"))
+        return hits[0] if hits else None
+
+    @property
+    def primary_consequence(self) -> Optional[ConsequenceInfo]:
+        """The single transcript that ACMG criteria are evaluated against:
+        :attr:`evaluation_transcript` when set and present, otherwise the
+        default pick (MANE Select first; see :meth:`_default_primary`)."""
+        if self.evaluation_transcript:
+            c = self._find_transcript(self.evaluation_transcript)
+            if c is not None:
+                return c
+        return self._default_primary()
+
+    @property
+    def rule_consequence(self) -> Optional[ConsequenceInfo]:
+        """Consequence whose numbering VCEP position rules and ClinVar codon
+        comparisons are read in.
+
+        VCEP tables (PM1 hotspots, PM4 regions, BA1/BS1/BP4 variant lists,
+        PVS1 exon/codon bands, PP3/BP4 domains) and ClinVar same-codon records
+        are numbered on MANE Select. When the criteria are evaluated on another
+        transcript (MANE Plus Clinical), those lookups still use the MANE Select
+        consequence of the same gene — the same genomic residue — so a variant
+        in a region shared by both transcripts gets the same rule; a variant in
+        a Plus Clinical-only region has no MANE Select position and the rule is
+        not met. Without an evaluation transcript this is the primary itself.
+        """
+        pc = self.primary_consequence
+        if not self.evaluation_transcript:
+            return pc
+        d = self._default_primary()
+        if d is not None and pc is not None and d.gene_symbol == pc.gene_symbol:
+            return d
+        return pc
+
+    def for_transcript(self, transcript: Optional[str]) -> "AnnotationData":
+        """Copy evaluated on ``transcript`` (None restores the default pick).
+
+        In-silico scores are swapped for the isoform-specific ones recorded in
+        :attr:`transcript_insilico` when available."""
+        update: dict = {"evaluation_transcript": transcript or None}
+        key = _base_acc(transcript) if transcript else _base_acc(
+            getattr(self._default_primary(), "transcript_id", None))
+        scores = self.transcript_insilico.get(key) if key else None
+        if scores is not None:
+            update["esm1b"] = scores.esm1b
+            update["revel"] = scores.revel
+        return self.model_copy(update=update)
+
+    def rule_view(self) -> "AnnotationData":
+        """Copy whose primary consequence is :attr:`rule_consequence` — for
+        criteria that are entirely ClinVar-codon / VCEP-position based (PM1,
+        PS1, PM5)."""
+        if not self.evaluation_transcript:
+            return self
+        return self.for_transcript(None)
+
     @property
     def mane_plus_clinical_consequences(self) -> list[ConsequenceInfo]:
-        """MANE Plus Clinical consequences of the primary consequence's gene.
+        """MANE Plus Clinical consequences of the default transcript's gene.
 
         VEP ``--merged`` reports each MANE transcript twice (RefSeq NM_ and
         Ensembl ENST). One entry per transcript is returned, RefSeq preferred:
         an ENST row is kept only when no NM_ Plus Clinical row exists for the
         gene. GNAS has two Plus Clinical transcripts, hence a list.
         """
-        pc = self.primary_consequence
+        pc = self._default_primary()
         if pc is None:
             return []
         same_gene = [c for c in self.consequences
@@ -269,7 +365,7 @@ class AnnotationData(BaseModel):
 
     def mane_plus_clinical_summary(self) -> list[ManePlusClinicalInfo]:
         """Reporting view of :attr:`mane_plus_clinical_consequences`."""
-        pc = self.primary_consequence
+        pc = self._default_primary()
         out = []
         for c in self.mane_plus_clinical_consequences:
             out.append(ManePlusClinicalInfo(

@@ -421,16 +421,19 @@ def build_scores(annotation, pc) -> InSilicoScores:
     and its primary ConsequenceInfo."""
     sp = annotation.splice
     splice_max = sp.max_delta if (sp and sp.is_available and sp.max_delta is not None) else None
+    # Domain ranges and per-variant code tables are numbered on MANE Select; when
+    # evaluating on another transcript they are read through rule_consequence.
+    rc = getattr(annotation, "rule_consequence", None) or pc
     return InSilicoScores(
         consequence=pc.consequence,
-        protein_position=pc.protein_position,
+        protein_position=rc.protein_position,
         revel=annotation.revel.score if annotation.revel else None,
         alphamissense=annotation.alphamissense.score if annotation.alphamissense else None,
         cadd=annotation.cadd.phred if annotation.cadd else None,
         bayesdel=annotation.bayesdel.score if annotation.bayesdel else None,
         splice_max=splice_max,
-        hgvs_c=pc.hgvs_c,
-        hgvs_p=pc.hgvs_p,
+        hgvs_c=rc.hgvs_c,
+        hgvs_p=rc.hgvs_p,
     )
 
 

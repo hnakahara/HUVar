@@ -79,9 +79,14 @@ class PVS1Evaluator(CriterionEvaluator):
         # can fire on exonic changes VEP calls missense/synonymous, so the APC
         # handler runs BEFORE the generic LoF-consequence gate. It returns None
         # for variants its special rules don't cover (then fall back to generic).
+        # Gene-specific VCEP trees (APC, last-nucleotide rules, VCEP PVS1 specs)
+        # are written in MANE Select numbering — read them through
+        # rule_consequence; the generic SVI tree below runs on the evaluated
+        # transcript (its own exon structure / NMD prediction).
+        rc = annotation.rule_consequence or pc
         if pc.gene_symbol == "APC":
             from acmg_classifier.pvs1.apc import evaluate_apc_pvs1
-            apc = evaluate_apc_pvs1(pc)
+            apc = evaluate_apc_pvs1(rc)
             if apc is not None:
                 strength, evidence = apc
                 if strength == CriterionStrength.NOT_MET:
@@ -92,7 +97,7 @@ class PVS1Evaluator(CriterionEvaluator):
         # CDH1): exonic changes VEP calls missense / synonymous, so like APC this
         # runs before the generic LoF-consequence gate.
         from acmg_classifier.pvs1.last_nt import evaluate_last_nt
-        last_nt = evaluate_last_nt(pc, variant.chrom, variant.pos, variant.ref,
+        last_nt = evaluate_last_nt(rc, variant.chrom, variant.pos, variant.ref,
                                    self._fetch_seq)
         if last_nt is not None:
             strength, evidence = last_nt
@@ -107,7 +112,7 @@ class PVS1Evaluator(CriterionEvaluator):
         # BEFORE the generic LoF gate and the ClinVar-count strength caps. It
         # returns None for consequences the gene's VCEP does not special-case.
         from acmg_classifier.pvs1.vcep_pvs1 import evaluate_vcep_pvs1
-        vcep = evaluate_vcep_pvs1(pc, self._splice_overrides)
+        vcep = evaluate_vcep_pvs1(rc, self._splice_overrides)
         if vcep is not None:
             strength, evidence = vcep
             if strength == CriterionStrength.NOT_MET:

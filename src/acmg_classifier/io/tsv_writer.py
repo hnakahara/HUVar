@@ -31,12 +31,18 @@ _ANNOTATION_HEADER = [
     "in_repeat", "repeat_class",
 ]
 
-# Supplementary MANE Plus Clinical description (the row is still evaluated on
-# MANE Select). Several Plus Clinical transcripts (GNAS) are joined with ";".
+# Supplementary MANE Plus Clinical columns. The row's main classification is the
+# MANE Select evaluation; the *_classification* / *_criteria_changes columns give
+# the classification with the criteria evaluated on the Plus Clinical transcript
+# (Config.evaluate_plus_clinical). Several Plus Clinical transcripts (GNAS) are
+# joined with ";" in the same order.
 _MANE_PC_HEADER = [
     "mane_plus_clinical_transcript", "mane_plus_clinical_hgvs_c",
     "mane_plus_clinical_hgvs_p", "mane_plus_clinical_consequence",
     "mane_plus_clinical_consequence_differs",
+    "mane_plus_clinical_classification_2015", "mane_plus_clinical_rules_2015",
+    "mane_plus_clinical_bayesian_score", "mane_plus_clinical_classification_bayesian",
+    "mane_plus_clinical_criteria_changes",
 ]
 
 _HEADER = (
@@ -203,13 +209,23 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
 def _build_mane_pc_row(result: ClassificationResult) -> list[str]:
     pcs = result.mane_plus_clinical or []
     if not pcs:
-        return ["", "", "", "", ""]
+        return [""] * len(_MANE_PC_HEADER)
+
+    def _j(values) -> str:
+        vals = ["" if v is None else str(v) for v in values]
+        return ";".join(vals) if any(vals) else ""
+
     return [
         ";".join(p.transcript_id for p in pcs),
         ";".join(_strip_transcript_prefix(p.hgvs_c) for p in pcs),
         ";".join(_strip_transcript_prefix(p.hgvs_p) for p in pcs),
         ";".join(p.consequence for p in pcs),
         "1" if any(p.consequence_differs for p in pcs) else "0",
+        _j(p.classification_2015 for p in pcs),
+        _j(p.rules_2015 for p in pcs),
+        _j(p.bayesian_score for p in pcs),
+        _j(p.classification_bayesian for p in pcs),
+        " | ".join(p.criteria_changes for p in pcs) if any(p.criteria_changes for p in pcs) else "",
     ]
 
 

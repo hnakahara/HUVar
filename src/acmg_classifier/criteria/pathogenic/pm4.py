@@ -204,7 +204,8 @@ class PM4Evaluator(CriterionEvaluator):
                     ACMGCriterion.PM4,
                     f"{gene}: deleted region contains no ClinVar P/LP or VUS variant",
                 )
-            rstr = self._regions.indel_strength(gene, pc.protein_position)
+            rc = annotation.rule_consequence or pc  # VCEP regions: MANE Select numbering
+            rstr = self._regions.indel_strength(gene, rc.protein_position)
             if rstr == "not_met":
                 # A small indel still earns Supporting even where Moderate is
                 # withheld (the size-Supporting tier is region-independent).

@@ -116,7 +116,7 @@ def test_tsv_columns():
     row = _build_mane_pc_row(res)
     assert row[0] == _PC and row[1] == "c.451G>A" and row[4] == "1"
     empty = res.model_copy(update={"mane_plus_clinical": []})
-    assert _build_mane_pc_row(empty) == ["", "", "", "", ""]
+    assert _build_mane_pc_row(empty) == [""] * 10
 
 
 def test_packaged_map_contains_known_plus_clinical_transcripts():

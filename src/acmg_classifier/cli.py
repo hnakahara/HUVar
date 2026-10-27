@@ -267,6 +267,11 @@ def classify(
                    "expert-panel (>=3-star) record of the variant being classified, so the "
                    "evaluation does not read the reference curation itself. "
                    "Env: ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.")
+@click.option("--transcript", default=None, metavar="ACCESSION",
+              help="Evaluate the criteria on this transcript instead of MANE Select, "
+                   "e.g. the gene's MANE Plus Clinical (--transcript NM_033360.4). VCEP "
+                   "position rules and ClinVar codon comparisons still use MANE Select "
+                   "numbering (reported in the warnings).")
 @click.pass_context
 def explain(
     ctx: click.Context,
@@ -289,6 +294,7 @@ def explain(
     with_tp53_functional: bool,
     cspec: tuple[str, ...],
     exclude_self_expert_panel: bool,
+    transcript: Optional[str],
 ) -> None:
     """Show detailed classification for a single variant (CHROM POS REF ALT).
 
@@ -327,7 +333,7 @@ def explain(
     if evidence:
         entries.extend(parse_inline_evidence(list(evidence), variant_key))
 
-    run_single(chrom, pos, ref, alt, cfg, supplement=entries or None)
+    run_single(chrom, pos, ref, alt, cfg, supplement=entries or None, transcript=transcript)
 
 
 # ---------------------------------------------------------------------------

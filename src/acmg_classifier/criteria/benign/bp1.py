@@ -84,7 +84,8 @@ class BP1Evaluator(CriterionEvaluator):
 
         # 2. Region exclusion: BP1 does not apply inside the APC β-catenin repeat
         #    or a BRCA1/2 clinically-important functional domain.
-        if self._vcep.bp1_excluded(gene, pc.protein_position):
+        rc = annotation.rule_consequence  # VCEP regions: MANE Select numbering
+        if self._vcep.bp1_excluded(gene, rc.protein_position if rc else None):
             return CriteriaResult.not_met(
                 ACMGCriterion.BP1,
                 f"{gene}: in an excluded region / functional domain",
