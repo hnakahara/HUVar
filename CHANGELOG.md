@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **Somatic oncogenicity (experimental)**: `acmg-classify somatic` / `somatic-explain`
+  implement the ClinGen/CGC/VICC oncogenicity SOP (Horak et al. 2022) with
+  licence-free data only — NCG 7.1 canonical gene roles plus curated overrides
+  (`somatic_gene_roles.tsv`), cancerhotspots.org v2 counts (`cancer_hotspots_v2.tsv`,
+  ODbL), ClinVar P/LP comparators (OS1/OM4), gnomAD (OP4/SBS1/SBVS1), HUVar
+  PP3/BP4/BP7/PM1 and calibrated functional data (OS2/SBS2). OP2 and any override via
+  manual evidence. Builder `scripts/build_somatic_resources.py`. AMP/ASCO/CAP tiers
+  are not assigned.
 - **PS3/BS3 from calibrated functional assays** (`criteria/functional_assays.py`):
   ENIGMA BRCA1/2 Specifications Table 9 V1.2 (variant-level codes) and MaveDB score
   sets with clinical calibrations (dump 2026-06-24, CC0; primary calibration by

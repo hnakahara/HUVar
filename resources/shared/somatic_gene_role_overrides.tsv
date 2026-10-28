@@ -1,0 +1,12 @@
+# Curated corrections to the NCG-derived cancer gene roles (somatic_gene_roles.tsv).
+# Applied by scripts/build_somatic_resources.py after the NCG majority-vote role.
+# role: TSG | oncogene | dual  (dual = OVS1 not applied; OM2 still applies)
+# Edit this file (then rebuild) to adapt the roles to your laboratory's practice.
+gene	role	rationale
+NOTCH1	dual	PEST-domain truncating variants are activating (T-ALL, CLL); loss of function in squamous cancers
+NOTCH2	dual	PEST-domain truncating variants are activating (splenic marginal zone lymphoma); loss of function elsewhere
+GATA3	dual	Truncating variants in breast cancer act as neomorphic / gain-of-function alleles
+WT1	dual	Loss of function in Wilms tumour; oncogenic overexpression in acute leukaemia
+DNMT3A	TSG	Truncating (loss-of-function) variants are drivers in myeloid neoplasms; NCG has no majority role (CGC TSG vs Vogelstein oncogene, R882 dominant-negative hotspot)
+BMPR1A	TSG	Loss-of-function tumour suppressor (juvenile polyposis); NCG has no majority role
+CDKN1A	TSG	Loss-of-function tumour suppressor; NCG has no majority role

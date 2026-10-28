@@ -38,6 +38,7 @@ final classification under both frameworks side-by-side.
   - [explain — single-variant detail](#explain--single-variant-detail)
   - [validate / status / setup](#validate--status--setup)
   - [Manual evidence supplement](#manual-evidence-supplement)
+- [Somatic oncogenicity (experimental)](#somatic-oncogenicity-experimental)
 - [Output format](#output-format)
 - [Classification model](#classification-model)
 - [Commercial use](#commercial-use)
@@ -750,6 +751,45 @@ Refresh the MaveDB table from a newer dump with
 `--mavedb-dump PATH` uses a local file). Calibrations use ClinVar P/LP and B/LB
 variants as controls, so benchmarks against ClinVar/eRepo classifications partly
 re-use those variants.
+
+## Somatic oncogenicity (experimental)
+
+`acmg-classify somatic VCF -o out.tsv` and `acmg-classify somatic-explain CHROM POS
+REF ALT` classify the **oncogenicity** of somatic variants with the points-based
+ClinGen/CGC/VICC SOP (Horak et al., Genet Med 2022;24:986-998 and its erratum):
+Oncogenic ≥ 10, Likely oncogenic 6–9, VUS 0–5, Likely benign −1 to −6, Benign ≤ −7.
+Clinical-significance tiers (AMP/ASCO/CAP 2017, Tier I–IV) are **not** assigned.
+Only licence-free data are used (no OncoKB / COSMIC / CKB):
+
+| Code | Points | Automated rule (data) |
+|---|---|---|
+| OVS1 | +8 | Null variant in a tumour suppressor: NCG canonical driver whose majority role is TSG only (`somatic_gene_roles.tsv`); stop/frameshift must be NMD-predicted or remove > 10% of the protein |
+| OS1 | +4 | Same amino-acid change as a ClinVar P/LP variant (≥ 2 stars), different nucleotide change |
+| OS2 | +4 | Calibrated assay (MaveDB / ENIGMA Table 9 / TP53 VCEP data) at PS3_Strong or above, tumour suppressors only |
+| OS3 | +4 | cancerhotspots.org v2 residue with ≥ 50 samples, ≥ 10 with this change |
+| OM1 | +2 | HUVar PM1 (VCEP hotspot/domain tables or ClinVar P/LP cluster without benign variation); not with OS1/OS3 |
+| OM2 | +2 | In-frame indel in an oncogene/TSG, or stop-loss in a TSG; not with OVS1 |
+| OM3 | +2 | Hotspot residue with < 50 samples, ≥ 10 with this change; not with OM1/OM4 |
+| OM4 | +2 | Different missense at a residue with a ClinVar P/LP missense (≥ 2 stars), Grantham ≥ 0.9 × the comparator's; not with OS1/OS3/OM1 |
+| OP1 | +1 | HUVar PP3 (not counted with OVS1) |
+| OP2 | +1 | Manual only (needs the tumour type) |
+| OP3 | +1 | Hotspot residue / in-frame indel region, this change in < 10 samples |
+| OP4 | +1 | Absent from gnomAD or grpmax AF ≤ 1e-5 (`ACMG_SOMATIC_OP4_MAX_AF`) |
+| SBVS1 / SBS1 | −8 / −4 | gnomAD grpmax AF > 5% / > 1% |
+| SBS2 | −4 | Calibrated assay at BS3_Strong or above, tumour suppressors only |
+| SBP1 / SBP2 | −1 / −1 | HUVar BP4 / synonymous with HUVar BP7 |
+
+With OS1 met, the hotspot criteria (amino-acid level counts) are not counted. Dual-role
+genes (NOTCH1/2, GATA3, WT1, …) and canonical genes without an NCG majority role get no
+OVS1/OS2; edit `resources/shared/somatic_gene_role_overrides.tsv` and rebuild with
+`scripts/build_somatic_resources.py` to change roles. Manual evidence sets or
+overrides any criterion: `--evidence OP2:retinoblastoma`, `--evidence OP4:not_met:CH`
+(`somatic-explain`), or `--supplement` TSV with `variant_id`, `criterion`, `evidence`
+and optional `met` (yes/no). The output TSV has one column per criterion (`+4`,
+`suppressed` or empty) and its evidence. Limitations: VAF, germline/somatic origin and
+the tumour type are not used; frequency evidence does not account for clonal
+haematopoiesis in gnomAD (a warning is added); cancerhotspots counts are on that
+resource's canonical isoforms (a reference-residue mismatch disables the hotspot).
 
 ## Output format
 

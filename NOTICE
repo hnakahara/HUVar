@@ -138,6 +138,22 @@ Third-party data redistributed in resources/ (derived tables):
     table (scripts/build_enigma_table9.py). https://cspec.genome.network/cspec/ui/svi/doc/GN092
     Cite: Parsons MT et al., Am J Hum Genet 2024;111:2044-2058.
 
+* Network of Cancer Genes (NCG 7.1), http://network-cancer-genes.org/
+    Freely available; no licence required. resources/shared/somatic_gene_roles.tsv
+    is derived from NCG_cancerdrivers_annotation_supporting_evidence.tsv (canonical
+    drivers and their majority-vote role; scripts/build_somatic_resources.py) with
+    curated corrections in somatic_gene_role_overrides.tsv.
+    Cite: Dressler L et al., Genome Biol 2022;23:35.
+
+* cancerhotspots.org v2 (Memorial Sloan Kettering Cancer Center)
+    Open Database License (ODbL) 1.0 — http://opendatacommons.org/licenses/odbl/1.0/
+    resources/shared/cancer_hotspots_v2.tsv is a derived database (residue and
+    in-frame indel hotspots with sample counts, from hotspots_v2.xls of
+    https://github.com/cBioPortal/cancerhotspots) and is made available under the
+    same ODbL 1.0 licence; it is not covered by the Apache License of this project.
+    Cite: Chang MT et al., Cancer Discov 2018;8:174-183; Chang MT et al.,
+    Nat Biotechnol 2016;34:155-163.
+
 This NOTICE file does not modify the License; it provides attribution
 to upstream data sources whose terms may apply when end-users download
 data via `scripts/setup_data.py`.

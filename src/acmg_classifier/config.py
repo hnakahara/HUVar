@@ -151,6 +151,15 @@ class Config(BaseSettings):
     # its clinical calibrations; disagreeing calibrations -> no call).
     # Env: ACMG_MAVEDB_CALIBRATION.
     mavedb_calibration: str = "primary"
+    # Somatic oncogenicity (ClinGen/CGC/VICC SOP, Horak et al. 2022; acmg-classify
+    # somatic). OP4 "absent from controls or at an extremely low frequency": met
+    # when the variant is absent from gnomAD or its grpmax (popmax) allele frequency
+    # is <= this value. Env: ACMG_SOMATIC_OP4_MAX_AF.
+    somatic_op4_max_af: float = 1e-5
+    # Minimum ClinVar star rating of the pathogenic / likely pathogenic record used
+    # as the "previously established" variant for OS1 (same amino-acid change) and
+    # OM4 (different missense at the same residue). Env: ACMG_SOMATIC_CLINVAR_MIN_STARS.
+    somatic_clinvar_min_stars: int = 2
 
     @field_validator("mavedb_calibration")
     @classmethod
@@ -480,6 +489,19 @@ class Config(BaseSettings):
     @property
     def functional_rules_tsv(self) -> Path:
         return self.data_dir / "shared" / "functional_evidence_rules.tsv"
+
+    @property
+    def somatic_gene_roles_tsv(self) -> Path:
+        """Cancer gene roles (NCG canonical drivers + curated overrides) for the
+        somatic OVS1 / OM2 criteria (scripts/build_somatic_resources.py). Falls
+        back to the packaged resources copy."""
+        return self.data_dir / "shared" / "somatic_gene_roles.tsv"
+
+    @property
+    def cancer_hotspots_tsv(self) -> Path:
+        """cancerhotspots.org v2 residue / indel hotspots with sample counts, for
+        the somatic OS3 / OM3 / OP3 criteria. Falls back to the packaged copy."""
+        return self.data_dir / "shared" / "cancer_hotspots_v2.tsv"
 
     @property
     def pm1_hotspots_tsv(self) -> Path:

@@ -337,6 +337,113 @@ def explain(
 
 
 # ---------------------------------------------------------------------------
+# somatic (oncogenicity, ClinGen/CGC/VICC SOP)
+# ---------------------------------------------------------------------------
+
+def _somatic_options(f):
+    """Annotation options shared by `somatic` and `somatic-explain`."""
+    opts = [
+        click.option("--data-dir", type=click.Path(path_type=Path), default=Path("./data"),
+                     show_default=True),
+        click.option("--insilico-tool", type=click.Choice([t.value for t in InSilicoTool]),
+                     default=InSilicoTool.ESM1B.value, show_default=True,
+                     help="Predictor behind OP1 / SBP1 (HUVar PP3 / BP4)."),
+        click.option("--splice-tool",
+                     type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
+                     default=SpliceTool.OPENSPLICEAI.value, show_default=True),
+        click.option("--openspliceai-model-dir", type=click.Path(path_type=Path), default=None),
+        click.option("--openspliceai-flanking-size", type=int, default=80, show_default=True),
+        click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None),
+        click.option("--with-tp53-functional", is_flag=True, default=False,
+                     help="Use the NCI TP53 Database assay classes for OS2/SBS2 in TP53 "
+                          "(non-commercial use only; default: calibrated MaveDB data)."),
+    ]
+    for o in reversed(opts):
+        f = o(f)
+    return f
+
+
+def _somatic_config(data_dir, assembly, insilico_tool, splice_tool, openspliceai_model_dir,
+                    openspliceai_flanking_size, spliceai_dir, with_tp53_functional, **extra):
+    from acmg_classifier.config import Config
+    return Config(
+        data_dir=data_dir,
+        assembly=Assembly(assembly) if assembly else Assembly.GRCH38,
+        insilico_tool=InSilicoTool(insilico_tool),
+        splice_tool=SpliceTool(splice_tool),
+        openspliceai_model_dir=openspliceai_model_dir,
+        openspliceai_flanking_size=openspliceai_flanking_size,
+        spliceai_dir=spliceai_dir,
+        **({"use_tp53_functional": True} if with_tp53_functional else {}),
+        **extra,
+    )
+
+
+@cli.command()
+@click.argument("vcf", type=click.Path(exists=True, path_type=Path))
+@click.option("-o", "--output", type=click.Path(path_type=Path), default=None,
+              help="Output TSV path (default: stdout)")
+@click.option("--assembly", type=click.Choice([a.value for a in Assembly]), default=None,
+              help="Override assembly detection from VCF header")
+@_somatic_options
+@click.option("--supplement", type=click.Path(exists=True, path_type=Path), default=None,
+              help="Manual somatic evidence TSV: variant_id, criterion (OVS1..SBP2), "
+                   "evidence[, met=yes/no]. Sets or overrides a criterion (e.g. OP2, OS2).")
+@click.option("--workers", type=int, default=4, show_default=True)
+@click.option("--no-progress", is_flag=True, default=False)
+def somatic(vcf, output, assembly, supplement, workers, no_progress, **opts) -> None:
+    """Classify the oncogenicity of somatic variants in VCF (Horak et al. 2022).
+
+    Points-based ClinGen/CGC/VICC SOP: Oncogenic / Likely oncogenic / VUS /
+    Likely benign / Benign. Clinical-significance tiers (AMP/ASCO/CAP 2017) are
+    not assigned. Uses only licence-free data (NCG gene roles, cancerhotspots.org,
+    ClinVar, gnomAD, in-silico predictors, MaveDB)."""
+    from acmg_classifier.somatic.pipeline import run_somatic_pipeline
+    from acmg_classifier.utils import progress
+
+    if no_progress:
+        progress.set_enabled(False)
+    cfg = _somatic_config(assembly=assembly, workers=workers, **opts)
+    run_somatic_pipeline(vcf, cfg, output_path=output, supplement_path=supplement)
+
+
+@cli.command("somatic-explain")
+@click.argument("chrom")
+@click.argument("pos", type=int)
+@click.argument("ref")
+@click.argument("alt")
+@click.option("--assembly", type=click.Choice([a.value for a in Assembly]),
+              default=Assembly.GRCH38.value, show_default=True)
+@_somatic_options
+@click.option("--evidence", "evidence", multiple=True, metavar="CRITERION[:not_met][:NOTE]",
+              help="Manual somatic evidence (repeatable), e.g. --evidence OP2:retinoblastoma "
+                   "--evidence OS2:'PMID 12345' --evidence OM1:not_met.")
+@click.option("--supplement", type=click.Path(exists=True, path_type=Path), default=None,
+              help="Manual somatic evidence TSV (rows for this variant are applied).")
+@click.option("--transcript", default=None, metavar="ACCESSION",
+              help="Evaluate on this transcript (e.g. MANE Plus Clinical) instead of MANE Select.")
+def somatic_explain(chrom, pos, ref, alt, assembly, evidence, supplement, transcript,
+                    **opts) -> None:
+    """Show the somatic oncogenicity evaluation of one variant (CHROM POS REF ALT)."""
+    from acmg_classifier.models.variant import VariantRecord
+    from acmg_classifier.somatic.pipeline import (
+        parse_inline_evidence, read_somatic_supplement, run_somatic_single,
+    )
+
+    cfg = _somatic_config(assembly=assembly, **opts)
+    key = VariantRecord(chrom=chrom, pos=pos, ref=ref, alt=alt, assembly=cfg.assembly).key
+    manual = []
+    if supplement:
+        manual.extend(read_somatic_supplement(supplement).get(key, []))
+    if evidence:
+        try:
+            manual.extend(parse_inline_evidence(list(evidence), key))
+        except ValueError as exc:
+            raise click.BadParameter(str(exc), param_hint="--evidence")
+    run_somatic_single(chrom, pos, ref, alt, cfg, manual=manual or None, transcript=transcript)
+
+
+# ---------------------------------------------------------------------------
 # validate
 # ---------------------------------------------------------------------------
 

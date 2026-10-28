@@ -1,0 +1,564 @@
+# Cancer gene roles for somatic oncogenicity (OVS1 / OM2). Source: Network of Cancer Genes 7.1 (Dressler et al. 2022, canonical drivers; role = NCG majority vote of CGC / Vogelstein 2013 / Saito 2020), corrected by somatic_gene_role_overrides.tsv.
+gene	role	source	cgc	vogelstein	saito	note
+A1CF	oncogene	NCG	oncogene			
+ABI1	TSG	NCG	TSG, fusion			
+ABL1	oncogene	NCG	oncogene, fusion	Oncogene		
+ABL2	oncogene	NCG	oncogene, fusion			
+ACKR3	oncogene	NCG	oncogene, fusion			
+ACVR1	oncogene	NCG	oncogene			
+ACVR1B	TSG	NCG		TSG		
+ACVR2A	TSG	NCG	TSG			
+AFDN	oncogene	NCG	oncogene, fusion			
+AFF3	oncogene	NCG	oncogene, fusion			
+AFF4	oncogene	NCG	oncogene, fusion			
+AKT1	oncogene	NCG	oncogene	Oncogene	Oncogene	
+AKT2	oncogene	NCG	oncogene		Oncogene	
+AKT3	oncogene	NCG	oncogene		Oncogene	
+ALK	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+AMER1	TSG	NCG	TSG	TSG		
+APC	TSG	NCG	TSG	TSG	TSG	
+APOBEC3B	unresolved	NCG	oncogene, TSG			
+AR	oncogene	NCG	oncogene	Oncogene	Oncogene	
+ARAF	oncogene	NCG	oncogene		Oncogene	
+ARHGAP26	TSG	NCG	TSG, fusion			
+ARHGAP5	oncogene	NCG	oncogene			
+ARHGEF10	TSG	NCG	TSG			
+ARHGEF10L	TSG	NCG	TSG			
+ARHGEF12	TSG	NCG	TSG, fusion			
+ARID1A	TSG	NCG	TSG, fusion	TSG	TSG	
+ARID1B	TSG	NCG	TSG	TSG		
+ARID2	TSG	NCG	TSG	TSG	TSG	
+ARNT	unresolved	NCG	oncogene, TSG, fusion			
+ASXL1	TSG	NCG	TSG	TSG		
+ASXL2	TSG	NCG	TSG			
+ATF1	oncogene	NCG	oncogene, fusion			
+ATM	TSG	NCG	TSG	TSG	TSG	
+ATP1A1	unresolved	NCG	oncogene, TSG			
+ATP2B3	TSG	NCG	TSG			
+ATR	TSG	NCG	TSG			
+ATRX	TSG	NCG	TSG	TSG	TSG	
+AXIN1	TSG	NCG	TSG	TSG	TSG	
+AXIN2	TSG	NCG	TSG			
+B2M	TSG	NCG	TSG	TSG		
+BAP1	TSG	NCG	TSG	TSG	TSG	
+BARD1	TSG	NCG	TSG			
+BAX	TSG	NCG	TSG			
+BAZ1A	TSG	NCG	TSG			
+BCL10	TSG	NCG	TSG, fusion			
+BCL11A	oncogene	NCG	oncogene, fusion			
+BCL11B	unresolved	NCG	oncogene, TSG, fusion			
+BCL2	oncogene	NCG	oncogene, fusion	Oncogene		
+BCL2L12	oncogene	NCG	oncogene			
+BCL3	oncogene	NCG	oncogene, fusion			
+BCL6	oncogene	NCG	oncogene, fusion			
+BCL9	oncogene	NCG	oncogene, fusion			
+BCL9L	unresolved	NCG	oncogene, TSG			
+BCOR	TSG	NCG	TSG, fusion	TSG	TSG	
+BCORL1	unresolved	NCG	oncogene, TSG			
+BIRC3	unresolved	NCG	oncogene, TSG, fusion			
+BIRC6	oncogene	NCG	oncogene, fusion			
+BLM	TSG	NCG	TSG			
+BMPR1A	TSG	override	oncogene, TSG			Loss-of-function tumour suppressor (juvenile polyposis); NCG has no majority role
+BRAF	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+BRCA1	TSG	NCG	TSG	TSG	TSG	
+BRCA2	TSG	NCG	TSG	TSG		
+BRD3	oncogene	NCG	oncogene, fusion			
+BRD4	oncogene	NCG	oncogene, fusion			
+BRIP1	TSG	NCG	TSG			
+BTG1	TSG	NCG	TSG, fusion			
+BTK	unresolved	NCG	oncogene, TSG			
+BUB1B	TSG	NCG	TSG			
+CACNA1D	oncogene	NCG	oncogene			
+CALR	oncogene	NCG	oncogene			
+CAMTA1	TSG	NCG	TSG, fusion			
+CARD11	oncogene	NCG	oncogene	Oncogene		
+CARS1	TSG	NCG	TSG, fusion			
+CASP3	TSG	NCG	TSG			
+CASP8	TSG	NCG	TSG	TSG	TSG	
+CASP9	TSG	NCG	TSG			
+CBFA2T3	TSG	NCG	TSG, fusion			
+CBFB	TSG	NCG	TSG, fusion			
+CBL	oncogene	NCG	oncogene, TSG, fusion	Oncogene		CGC also lists a TSG role
+CBLB	TSG	NCG	TSG			
+CBLC	unresolved	NCG	oncogene, TSG			
+CCDC6	TSG	NCG	TSG, fusion			
+CCNB1IP1	TSG	NCG	TSG, fusion			
+CCNC	TSG	NCG	TSG			
+CCND1	oncogene	NCG	oncogene, fusion		Oncogene	
+CCND2	oncogene	NCG	oncogene, fusion			
+CCND3	oncogene	NCG	oncogene, fusion			
+CCNE1	oncogene	NCG	oncogene			
+CCR4	oncogene	NCG	oncogene			
+CCR7	oncogene	NCG	oncogene			
+CD274	TSG	NCG	TSG, fusion			
+CD28	oncogene	NCG	oncogene			
+CD74	oncogene	NCG	oncogene, fusion			
+CD79A	oncogene	NCG	oncogene			
+CD79B	oncogene	NCG	oncogene			
+CDC73	TSG	NCG	TSG	TSG		
+CDH1	TSG	NCG	TSG	TSG	TSG	
+CDH10	TSG	NCG	TSG			
+CDH11	TSG	NCG	TSG, fusion			
+CDH17	oncogene	NCG	oncogene			
+CDK12	TSG	NCG	TSG			
+CDK4	oncogene	NCG	oncogene		Oncogene	
+CDK6	oncogene	NCG	oncogene, fusion		Oncogene	
+CDKN1A	TSG	override	oncogene, TSG			Loss-of-function tumour suppressor; NCG has no majority role
+CDKN1B	TSG	NCG	TSG			
+CDKN2A	TSG	NCG	TSG	TSG	TSG	
+CDKN2C	TSG	NCG	TSG			
+CDX2	TSG	NCG	TSG, fusion			
+CEBPA	TSG	NCG	TSG	TSG		
+CHD2	TSG	NCG	TSG			
+CHD4	oncogene	NCG	oncogene			
+CHEK2	TSG	NCG	TSG			
+CHST11	oncogene	NCG	oncogene, fusion			
+CIC	TSG	NCG	oncogene, TSG, fusion	TSG		CGC also lists an oncogene role
+CIITA	TSG	NCG	TSG, fusion			
+CLTC	TSG	NCG	TSG, fusion			
+CLTCL1	TSG	NCG	TSG, fusion			
+CNBP	TSG	NCG	TSG, fusion			
+CNOT3	TSG	NCG	TSG			
+COL2A1	unresolved	NCG	fusion			
+CPEB3	TSG	NCG	TSG			
+CREB1	oncogene	NCG	oncogene, fusion			
+CREB3L1	TSG	NCG	TSG, fusion			
+CREB3L2	oncogene	NCG	oncogene, fusion			
+CREBBP	TSG	NCG	oncogene, TSG, fusion	TSG	TSG	CGC also lists an oncogene role
+CRLF2	oncogene	NCG	oncogene, fusion	Oncogene		
+CRTC1	oncogene	NCG	oncogene, fusion			
+CSF1R	oncogene	NCG	oncogene	Oncogene		
+CSF3R	oncogene	NCG	oncogene			
+CTCF	TSG	NCG	TSG			
+CTNNA2	oncogene	NCG	oncogene			
+CTNNB1	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+CTNND2	oncogene	NCG	oncogene			
+CUL3	TSG	NCG	TSG			
+CUX1	unresolved	NCG	oncogene, TSG			
+CXCR4	oncogene	NCG	oncogene			
+CYLD	TSG	NCG	TSG	TSG		
+CYSLTR2	oncogene	NCG	oncogene			
+DAXX	TSG	NCG	oncogene, TSG	TSG		CGC also lists an oncogene role
+DDB2	unresolved	NCG	oncogene, TSG			
+DDIT3	oncogene	NCG	oncogene, fusion			
+DDR2	oncogene	NCG	oncogene		Oncogene	
+DDX10	TSG	NCG	TSG, fusion			
+DDX3X	TSG	NCG	TSG			
+DDX5	oncogene	NCG	oncogene, fusion			
+DDX6	oncogene	NCG	oncogene, fusion			
+DEK	oncogene	NCG	oncogene, fusion			
+DGCR8	oncogene	NCG	oncogene			
+DICER1	TSG	NCG	TSG			
+DNM2	TSG	NCG	TSG			
+DNMT1	oncogene	NCG		Oncogene		
+DNMT3A	TSG	override	TSG	Oncogene		Truncating (loss-of-function) variants are drivers in myeloid neoplasms; NCG has no majority role (CGC TSG vs Vogelstein oncogene, R882 dominant-negative hotspot)
+DROSHA	TSG	NCG	TSG			
+EBF1	TSG	NCG	TSG, fusion			
+EED	TSG	NCG	TSG			
+EGFR	oncogene	NCG	oncogene	Oncogene	Oncogene	
+EIF1AX	oncogene	NCG			Oncogene	
+EIF3E	TSG	NCG	TSG, fusion			
+ELF3	TSG	NCG	TSG			
+ELF4	unresolved	NCG	oncogene, TSG, fusion			
+ELK4	oncogene	NCG	oncogene, fusion			
+ELL	TSG	NCG	TSG, fusion			
+EP300	TSG	NCG	TSG, fusion	TSG	TSG	
+EPAS1	unresolved	NCG	oncogene, TSG			
+EPS15	TSG	NCG	TSG, fusion			
+ERBB2	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+ERBB3	oncogene	NCG	oncogene		Oncogene	
+ERBB4	oncogene	NCG	oncogene, TSG		Oncogene	CGC also lists a TSG role
+ERCC2	TSG	NCG	TSG			
+ERCC3	TSG	NCG	TSG			
+ERCC4	TSG	NCG	TSG			
+ERCC5	TSG	NCG	TSG			
+ERG	oncogene	NCG	oncogene, fusion			
+ESR1	oncogene	NCG	oncogene, TSG, fusion		Oncogene	CGC also lists a TSG role
+ETNK1	TSG	NCG	TSG			
+ETV1	oncogene	NCG	oncogene, fusion			
+ETV4	oncogene	NCG	oncogene, fusion			
+ETV5	oncogene	NCG	oncogene, fusion			
+ETV6	TSG	NCG	TSG, fusion			
+EWSR1	oncogene	NCG	oncogene, fusion			
+EXT1	TSG	NCG	TSG, fusion			
+EXT2	TSG	NCG	TSG			
+EZH2	oncogene	NCG	oncogene, TSG	Oncogene		CGC also lists a TSG role
+FANCA	TSG	NCG	TSG			
+FANCC	TSG	NCG	TSG			
+FANCD2	TSG	NCG	TSG			
+FANCE	TSG	NCG	TSG			
+FANCF	TSG	NCG	TSG			
+FANCG	TSG	NCG	TSG			
+FAS	TSG	NCG	TSG			
+FAT1	TSG	NCG	TSG			
+FAT4	TSG	NCG	TSG			
+FBLN2	TSG	NCG	TSG			
+FBXO11	TSG	NCG	TSG			
+FBXW7	TSG	NCG	TSG	TSG	TSG	
+FCGR2B	oncogene	NCG	oncogene, fusion			
+FCRL4	oncogene	NCG	oncogene, fusion			
+FEN1	TSG	NCG	TSG			
+FES	unresolved	NCG	oncogene, TSG			
+FEV	oncogene	NCG	oncogene, fusion			
+FGFR1	oncogene	NCG	oncogene, fusion		Oncogene	
+FGFR2	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+FGFR3	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+FGFR4	oncogene	NCG	oncogene		Oncogene	
+FH	TSG	NCG	TSG			
+FHIT	TSG	NCG	TSG, fusion			
+FLCN	TSG	NCG	TSG			
+FLI1	oncogene	NCG	oncogene, fusion			
+FLT3	oncogene	NCG	oncogene	Oncogene		
+FLT4	oncogene	NCG	oncogene			
+FOXA1	oncogene	NCG	oncogene		Oncogene	
+FOXL2	oncogene	NCG	oncogene, TSG	Oncogene		CGC also lists a TSG role
+FOXO1	unresolved	NCG	oncogene, TSG, fusion			
+FOXO3	unresolved	NCG	oncogene, TSG, fusion			
+FOXO4	unresolved	NCG	oncogene, TSG, fusion			
+FOXP1	oncogene	NCG	oncogene, fusion			
+FOXR1	oncogene	NCG	oncogene, fusion			
+FSTL3	oncogene	NCG	oncogene, fusion			
+FUBP1	TSG	NCG	oncogene	TSG	TSG	CGC also lists an oncogene role
+FUS	TSG	NCG	TSG, fusion			
+GATA1	TSG	NCG	oncogene, TSG	TSG		CGC also lists an oncogene role
+GATA2	oncogene	NCG	oncogene	Oncogene		
+GATA3	dual	override	oncogene, TSG	TSG		Truncating variants in breast cancer act as neomorphic / gain-of-function alleles
+GLI1	oncogene	NCG	oncogene, fusion			
+GNA11	oncogene	NCG	oncogene	Oncogene	Oncogene	
+GNAQ	oncogene	NCG	oncogene	Oncogene	Oncogene	
+GNAS	oncogene	NCG	oncogene	Oncogene	Oncogene	
+GPC3	unresolved	NCG	oncogene, TSG			
+GPC5	TSG	NCG	TSG			
+GRIN2A	TSG	NCG	TSG			
+GRM3	oncogene	NCG	oncogene			
+H3-3A	oncogene	NCG	oncogene	Oncogene		
+H3-3B	oncogene	NCG	oncogene			
+H3C2	oncogene	NCG	oncogene	Oncogene		
+HEY1	oncogene	NCG	oncogene, fusion			
+HIF1A	oncogene	NCG	oncogene			
+HIP1	oncogene	NCG	oncogene, fusion			
+HLF	oncogene	NCG	oncogene, fusion			
+HMGA1	oncogene	NCG	oncogene, fusion			
+HMGA2	oncogene	NCG	oncogene, fusion			
+HNF1A	TSG	NCG	TSG	TSG		
+HNRNPA2B1	oncogene	NCG	oncogene, fusion			
+HOXA11	unresolved	NCG	oncogene, TSG, fusion			
+HOXA13	oncogene	NCG	oncogene, fusion			
+HOXA9	unresolved	NCG	oncogene, TSG, fusion			
+HOXC11	oncogene	NCG	oncogene, fusion			
+HOXC13	oncogene	NCG	oncogene, fusion			
+HOXD11	oncogene	NCG	oncogene, fusion			
+HOXD13	oncogene	NCG	oncogene, fusion			
+HRAS	oncogene	NCG	oncogene	Oncogene	Oncogene	
+ID3	TSG	NCG	TSG			
+IDH1	oncogene	NCG	oncogene	Oncogene	Oncogene	
+IDH2	oncogene	NCG	oncogene	Oncogene	Oncogene	
+IGF2BP2	TSG	NCG	TSG			
+IKBKB	oncogene	NCG	oncogene			
+IKZF1	TSG	NCG	TSG, fusion			
+IL6ST	oncogene	NCG	oncogene			
+IL7R	oncogene	NCG	oncogene			
+IRF4	unresolved	NCG	oncogene, TSG, fusion			
+IRS4	unresolved	NCG	oncogene, TSG			
+JAK1	oncogene	NCG	oncogene, TSG	Oncogene		CGC also lists a TSG role
+JAK2	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+JAK3	oncogene	NCG	oncogene	Oncogene		
+JUN	oncogene	NCG	oncogene			
+KAT6A	oncogene	NCG	oncogene, fusion			
+KAT6B	TSG	NCG	TSG, fusion			
+KAT7	oncogene	NCG	oncogene			
+KCNJ5	oncogene	NCG	oncogene			
+KDM5A	oncogene	NCG	oncogene, fusion			
+KDM5C	TSG	NCG	TSG	TSG		
+KDM6A	TSG	NCG	oncogene, TSG	TSG	TSG	CGC also lists an oncogene role
+KDR	oncogene	NCG	oncogene			
+KEAP1	TSG	NCG	TSG			
+KIT	oncogene	NCG	oncogene	Oncogene	Oncogene	
+KLF4	oncogene	NCG	oncogene, TSG	Oncogene		CGC also lists a TSG role
+KLF6	TSG	NCG	TSG			
+KMT2A	oncogene	NCG	oncogene, fusion			
+KMT2C	TSG	NCG	TSG	TSG		
+KMT2D	TSG	NCG	oncogene, TSG	TSG		CGC also lists an oncogene role
+KNL1	TSG	NCG	TSG, fusion			
+KNSTRN	oncogene	NCG	oncogene			
+KRAS	oncogene	NCG	oncogene	Oncogene	Oncogene	
+LARP4B	TSG	NCG	TSG			
+LATS1	TSG	NCG	TSG			
+LATS2	TSG	NCG	TSG			
+LCK	oncogene	NCG	oncogene, fusion			
+LEF1	unresolved	NCG	oncogene, TSG			
+LEPROTL1	TSG	NCG	TSG			
+LMO1	oncogene	NCG	oncogene, fusion			
+LMO2	oncogene	NCG	oncogene, fusion			
+LPP	oncogene	NCG	oncogene, fusion			
+LRIG3	TSG	NCG	TSG, fusion			
+LRP1B	TSG	NCG	TSG			
+LYL1	oncogene	NCG	oncogene, fusion			
+LZTR1	TSG	NCG	TSG			
+MACC1	oncogene	NCG	oncogene			
+MAF	oncogene	NCG	oncogene, fusion			
+MAFB	oncogene	NCG	oncogene, fusion			
+MALT1	oncogene	NCG	oncogene, fusion			
+MAML2	oncogene	NCG	oncogene, fusion			
+MAP2K1	oncogene	NCG	oncogene	Oncogene	Oncogene	
+MAP2K2	oncogene	NCG	oncogene		Oncogene	
+MAP2K4	unresolved	NCG	oncogene, TSG			
+MAP3K1	TSG	NCG	oncogene, TSG	TSG	TSG	CGC also lists an oncogene role
+MAP3K13	unresolved	NCG	oncogene, TSG			
+MAPK1	oncogene	NCG	oncogene		Oncogene	
+MAX	TSG	NCG	TSG			
+MDM2	oncogene	NCG	oncogene			
+MDM4	oncogene	NCG	oncogene			
+MECOM	oncogene	NCG	oncogene, fusion			
+MED12	unresolved	NCG	TSG	Oncogene		
+MEN1	TSG	NCG	TSG	TSG		
+MET	oncogene	NCG	oncogene	Oncogene	Oncogene	
+MGMT	TSG	NCG	TSG			
+MITF	oncogene	NCG	oncogene			
+MLF1	TSG	NCG	TSG, fusion			
+MLH1	TSG	NCG	TSG	TSG		
+MLLT10	oncogene	NCG	oncogene, fusion			
+MN1	oncogene	NCG	oncogene, fusion			
+MPL	oncogene	NCG	oncogene	Oncogene		
+MRTFA	unresolved	NCG	oncogene, TSG, fusion			
+MSH2	TSG	NCG	TSG	TSG		
+MSH6	TSG	NCG	TSG	TSG		
+MSI2	oncogene	NCG	oncogene, fusion			
+MTCP1	oncogene	NCG	oncogene, fusion			
+MTOR	oncogene	NCG	oncogene		Oncogene	
+MUTYH	TSG	NCG	TSG			
+MYB	oncogene	NCG	oncogene, fusion			
+MYC	oncogene	NCG	oncogene, fusion			
+MYCL	oncogene	NCG	oncogene			
+MYCN	oncogene	NCG	oncogene		Oncogene	
+MYD88	oncogene	NCG	oncogene	Oncogene		
+MYH9	TSG	NCG	TSG, fusion			
+MYOD1	oncogene	NCG	oncogene			
+N4BP2	TSG	NCG	TSG			
+NAB2	TSG	NCG	TSG, fusion			
+NBN	TSG	NCG	TSG			
+NCOA2	oncogene	NCG	oncogene, fusion			
+NCOA4	TSG	NCG	TSG, fusion			
+NCOR1	TSG	NCG	TSG	TSG	TSG	
+NCOR2	TSG	NCG	TSG			
+NDRG1	TSG	NCG	TSG, fusion			
+NF1	TSG	NCG	TSG, fusion	TSG	TSG	
+NF2	TSG	NCG	TSG	TSG	TSG	
+NFATC2	oncogene	NCG	oncogene, fusion		NFG	
+NFE2L2	oncogene	NCG	oncogene, TSG	Oncogene		CGC also lists a TSG role
+NFKB2	unresolved	NCG	oncogene, TSG, fusion			
+NFKBIE	TSG	NCG	TSG			
+NKX2-1	unresolved	NCG	oncogene, TSG			
+NOTCH1	dual	override	oncogene, TSG, fusion	TSG	TSG	PEST-domain truncating variants are activating (T-ALL, CLL); loss of function in squamous cancers
+NOTCH2	dual	override	oncogene, TSG	TSG		PEST-domain truncating variants are activating (splenic marginal zone lymphoma); loss of function elsewhere
+NPM1	unresolved	NCG	oncogene, fusion	TSG		
+NR4A3	oncogene	NCG	oncogene, fusion			
+NRAS	oncogene	NCG	oncogene	Oncogene	Oncogene	
+NRG1	TSG	NCG	TSG, fusion			
+NSD2	oncogene	NCG	oncogene, fusion			
+NSD3	oncogene	NCG	oncogene, fusion			
+NT5C2	oncogene	NCG	oncogene			
+NTHL1	TSG	NCG	TSG			
+NTRK1	oncogene	NCG	oncogene, TSG, fusion		Oncogene	CGC also lists a TSG role
+NTRK3	oncogene	NCG	oncogene, fusion		Oncogene	
+NUP98	oncogene	NCG	oncogene, fusion			
+NUTM1	oncogene	NCG	oncogene, fusion			
+OLIG2	oncogene	NCG	oncogene, fusion			
+P2RY8	oncogene	NCG	oncogene, fusion			
+PABPC1	unresolved	NCG	oncogene, TSG			
+PALB2	TSG	NCG	TSG			
+PATZ1	TSG	NCG	TSG, fusion			
+PAX3	oncogene	NCG	oncogene, fusion			
+PAX5	TSG	NCG	oncogene, TSG, fusion	TSG		CGC also lists an oncogene role
+PBRM1	TSG	NCG	TSG	TSG	TSG	
+PBX1	oncogene	NCG	oncogene, fusion			
+PDCD1LG2	oncogene	NCG	oncogene, fusion			
+PDGFB	oncogene	NCG	oncogene, fusion			
+PDGFRA	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+PDGFRB	oncogene	NCG	oncogene, fusion			
+PER1	TSG	NCG	TSG, fusion			
+PHF6	TSG	NCG	TSG	TSG		
+PHOX2B	TSG	NCG	TSG			
+PIK3CA	oncogene	NCG	oncogene	Oncogene	Oncogene	
+PIK3CB	oncogene	NCG	oncogene		Oncogene	
+PIK3R1	TSG	NCG	TSG	TSG	TSG	
+PIK3R2	oncogene	NCG			Oncogene	
+PIM1	oncogene	NCG	oncogene, fusion			
+PLAG1	oncogene	NCG	oncogene, fusion			
+PLCG1	oncogene	NCG	oncogene, fusion			
+PML	TSG	NCG	TSG, fusion			
+PMS2	TSG	NCG	TSG			
+POLD1	TSG	NCG	TSG			
+POLE	TSG	NCG	TSG			
+POLG	TSG	NCG	TSG			
+POLQ	unresolved	NCG	oncogene, TSG			
+POT1	TSG	NCG	TSG			
+POU2AF1	oncogene	NCG	oncogene, fusion			
+POU5F1	oncogene	NCG	oncogene, fusion			
+PPARG	TSG	NCG	TSG, fusion			
+PPM1D	oncogene	NCG	oncogene			
+PPP2R1A	oncogene	NCG	TSG	Oncogene	Oncogene	CGC also lists a TSG role
+PPP6C	TSG	NCG	TSG			
+PRDM1	TSG	NCG	TSG	TSG		
+PRDM16	oncogene	NCG	oncogene, fusion			
+PRDM2	TSG	NCG	TSG			
+PREX2	oncogene	NCG	oncogene			
+PRF1	TSG	NCG	TSG			
+PRKACA	oncogene	NCG	oncogene			
+PRKAR1A	unresolved	NCG	oncogene, TSG, fusion			
+PSIP1	oncogene	NCG	oncogene, fusion			
+PTCH1	TSG	NCG	TSG	TSG		
+PTEN	TSG	NCG	TSG	TSG	TSG	
+PTK6	unresolved	NCG	oncogene, TSG			
+PTPN11	oncogene	NCG	oncogene	Oncogene	Oncogene	
+PTPN13	TSG	NCG	TSG			
+PTPN6	TSG	NCG	TSG			
+PTPRB	TSG	NCG	TSG			
+PTPRC	TSG	NCG	TSG			
+PTPRD	TSG	NCG	TSG			
+PTPRK	TSG	NCG	TSG, fusion			
+PTPRT	TSG	NCG	TSG			
+QKI	unresolved	NCG	oncogene, TSG			
+RAC1	oncogene	NCG	oncogene		Oncogene	
+RAD17	TSG	NCG	TSG			
+RAD21	unresolved	NCG	oncogene, TSG			
+RAD51B	TSG	NCG	TSG, fusion			
+RAF1	oncogene	NCG	oncogene, fusion		Oncogene	
+RANBP2	TSG	NCG	TSG, fusion			
+RAP1GDS1	oncogene	NCG	oncogene, fusion			
+RARA	oncogene	NCG	oncogene, fusion			
+RB1	TSG	NCG	TSG	TSG	TSG	
+RBM10	TSG	NCG	TSG			
+RECQL4	unresolved	NCG	oncogene, TSG			
+REL	oncogene	NCG	oncogene			
+RET	oncogene	NCG	oncogene, fusion	Oncogene	Oncogene	
+RFWD3	TSG	NCG	TSG			
+RHOA	oncogene	NCG	oncogene, TSG		Oncogene	CGC also lists a TSG role
+RHOH	TSG	NCG	TSG, fusion			
+RIT1	oncogene	NCG			Oncogene	
+RMI2	TSG	NCG	TSG, fusion			
+RNF43	TSG	NCG	TSG	TSG	TSG	
+ROBO2	TSG	NCG	TSG			
+ROS1	oncogene	NCG	oncogene, fusion		Oncogene	
+RPL10	TSG	NCG	TSG			
+RPL22	TSG	NCG	TSG, fusion			
+RPL5	TSG	NCG	TSG			
+RSPO2	TSG	NCG	TSG, fusion			
+RSPO3	oncogene	NCG	oncogene, fusion			
+RUNX1	TSG	NCG	oncogene, TSG, fusion	TSG	TSG	CGC also lists an oncogene role
+RUNX1T1	unresolved	NCG	oncogene, TSG, fusion			
+S100A7	unresolved	NCG	fusion			
+SALL4	oncogene	NCG	oncogene			
+SBDS	TSG	NCG	TSG			
+SDHA	TSG	NCG	TSG			
+SDHAF2	TSG	NCG	TSG			
+SDHB	TSG	NCG	TSG			
+SDHC	TSG	NCG	TSG			
+SDHD	TSG	NCG	TSG			
+SET	oncogene	NCG	oncogene, fusion			
+SETBP1	oncogene	NCG	oncogene, fusion	Oncogene		
+SETD1B	TSG	NCG	TSG			
+SETD2	TSG	NCG	TSG	TSG	TSG	
+SETDB1	oncogene	NCG	oncogene			
+SF3B1	oncogene	NCG	oncogene	Oncogene	Oncogene	
+SFPQ	TSG	NCG	TSG, fusion			
+SFRP4	TSG	NCG	TSG			
+SGK1	oncogene	NCG	oncogene			
+SH2B3	TSG	NCG	TSG			
+SH3GL1	oncogene	NCG	oncogene, fusion			
+SIRPA	TSG	NCG	TSG			
+SIX1	oncogene	NCG	oncogene			
+SIX2	oncogene	NCG	oncogene			
+SKI	oncogene	NCG	oncogene			
+SLC34A2	TSG	NCG	TSG, fusion			
+SMAD2	TSG	NCG	TSG	TSG		
+SMAD3	TSG	NCG	TSG			
+SMAD4	TSG	NCG	TSG	TSG	TSG	
+SMARCA4	TSG	NCG	TSG	TSG		
+SMARCB1	TSG	NCG	TSG	TSG		
+SMARCD1	TSG	NCG	TSG			
+SMARCE1	TSG	NCG	TSG			
+SMC1A	TSG	NCG	TSG			
+SMO	oncogene	NCG	oncogene	Oncogene	Oncogene	
+SND1	oncogene	NCG	oncogene, fusion			
+SOCS1	TSG	NCG	TSG	TSG		
+SOX2	oncogene	NCG	oncogene			
+SOX21	TSG	NCG	TSG			
+SOX9	TSG	NCG		TSG		
+SPEN	TSG	NCG	TSG			
+SPOP	oncogene	NCG	TSG	Oncogene	Oncogene	CGC also lists a TSG role
+SRC	oncogene	NCG	oncogene		Oncogene	
+SRSF2	oncogene	NCG	oncogene	Oncogene		
+SRSF3	oncogene	NCG	oncogene, fusion			
+SSX1	oncogene	NCG	oncogene, fusion			
+SSX2	oncogene	NCG	oncogene, fusion			
+SSX4	oncogene	NCG	oncogene, fusion			
+STAG1	TSG	NCG	TSG			
+STAG2	TSG	NCG	TSG	TSG	TSG	
+STAT3	oncogene	NCG	oncogene			
+STAT5B	unresolved	NCG	oncogene, TSG, fusion			
+STAT6	oncogene	NCG	oncogene, fusion			
+STIL	oncogene	NCG	oncogene, fusion			
+STK11	TSG	NCG	TSG	TSG	TSG	
+SUFU	TSG	NCG	TSG			
+SUZ12	unresolved	NCG	oncogene, TSG, fusion			
+SYK	oncogene	NCG	oncogene, fusion			
+TAF15	oncogene	NCG	oncogene, fusion			
+TAL1	oncogene	NCG	oncogene, fusion			
+TAL2	oncogene	NCG	oncogene, fusion			
+TBL1XR1	unresolved	NCG	oncogene, TSG, fusion			
+TBX3	unresolved	NCG	oncogene, TSG			
+TCF3	unresolved	NCG	oncogene, TSG, fusion			
+TCF7L2	oncogene	NCG	oncogene, fusion			
+TCL1A	oncogene	NCG	oncogene, fusion			
+TEC	oncogene	NCG	oncogene, fusion			
+TENT5C	TSG	NCG	TSG			
+TERT	oncogene	NCG	oncogene, TSG		Oncogene	CGC also lists a TSG role
+TET1	unresolved	NCG	oncogene, TSG, fusion			
+TET2	TSG	NCG	TSG	TSG		
+TFE3	oncogene	NCG	oncogene, fusion			
+TFEB	oncogene	NCG	oncogene, fusion			
+TGFBR2	TSG	NCG	TSG			
+TLX1	oncogene	NCG	oncogene, fusion			
+TLX3	oncogene	NCG	oncogene, fusion			
+TMEM127	TSG	NCG	TSG			
+TNC	oncogene	NCG	oncogene			
+TNFAIP3	TSG	NCG	TSG	TSG		
+TNFRSF14	TSG	NCG	TSG			
+TNFRSF17	oncogene	NCG	oncogene, fusion			
+TP53	TSG	NCG	oncogene, TSG, fusion	TSG	TSG	CGC also lists an oncogene role
+TP63	unresolved	NCG	oncogene, TSG			
+TPM3	TSG	NCG	TSG, fusion			
+TRAF7	TSG	NCG	TSG	TSG		
+TRIM24	unresolved	NCG	oncogene, TSG, fusion			
+TRIM27	oncogene	NCG	oncogene, fusion			
+TRIM33	TSG	NCG	TSG, fusion			
+TRRAP	oncogene	NCG	oncogene			
+TSC1	TSG	NCG	TSG	TSG	TSG	
+TSC2	TSG	NCG	TSG			
+TSHR	oncogene	NCG	oncogene	Oncogene		
+U2AF1	oncogene	NCG	oncogene	Oncogene	Oncogene	
+UBR5	oncogene	NCG	oncogene			
+USP44	TSG	NCG	TSG			
+USP6	oncogene	NCG	oncogene, fusion			
+USP8	oncogene	NCG	oncogene			
+VAV1	unresolved	NCG	fusion			
+VHL	TSG	NCG	TSG	TSG	TSG	
+WAS	oncogene	NCG	oncogene			
+WIF1	TSG	NCG	TSG, fusion			
+WNK2	TSG	NCG	TSG			
+WRN	TSG	NCG	TSG			
+WT1	dual	override	oncogene, TSG, fusion	TSG		Loss of function in Wilms tumour; oncogenic overexpression in acute leukaemia
+WWTR1	oncogene	NCG	oncogene, fusion			
+XPA	TSG	NCG	TSG			
+XPC	TSG	NCG	TSG			
+XPO1	oncogene	NCG	oncogene		Oncogene	
+YWHAE	TSG	NCG	TSG, fusion			
+ZBTB16	TSG	NCG	TSG, fusion			
+ZEB1	oncogene	NCG	oncogene			
+ZFHX3	TSG	NCG	TSG			
+ZMYM3	TSG	NCG	TSG			
+ZNF331	TSG	NCG	TSG, fusion			
+ZNF521	oncogene	NCG	oncogene, fusion			
+ZNRF3	TSG	NCG	TSG			
+ZRSR2	TSG	NCG	TSG			
