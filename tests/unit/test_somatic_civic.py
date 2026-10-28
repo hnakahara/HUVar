@@ -148,3 +148,10 @@ def test_conflict_with_calibrated_assay(tmp_path):
 def test_table_not_installed_note(tmp_path):
     by, _ = _run(Config(data_dir=tmp_path), _ann(*_BRAF))
     assert not by[C.OS2].met and "CIViC table not installed" in by[C.OS2].evidence
+
+
+def test_hgvs_numbering_preferred_over_legacy_name(tmp_path):
+    from acmg_classifier.somatic.civic import _protein_keys
+    assert _protein_keys("K27M", "NM_002107.7:c.83A>T,NP_002098.1:p.Lys28Met") == ["K28M", "K27M"]
+    assert _protein_keys("V600E", "NP_004324.2:p.Val600Glu") == ["V600E"]
+    assert _protein_keys("EXON 19 DELETION", "") == []

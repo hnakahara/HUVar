@@ -27,6 +27,8 @@ Automated criteria and their data (no licensed resources):
   SBS1   gnomAD grpmax AF > 1 %
   SBS2   calibrated functional assay showing normal function at Strong or above, or
          CIViC Unaltered Function evidence (same thresholds) / assertion coded SBS2
+         (OS2 / SBS2 also from the laboratory-curated table, approved rows only;
+         an approved row overrides a conflicting automated call)
   SBP1   in-silico evidence for no effect (HUVar BP4)
   SBP2   synonymous, no predicted splicing effect, not highly conserved (HUVar BP7)
 
@@ -78,6 +80,9 @@ class SomaticEvaluator:
         self._civic_path = getattr(cfg, "civic_somatic_tsv", None)
         self._civic_db = (load_civic(self._civic_path)
                           if getattr(cfg, "somatic_civic", True) and self._civic_path else {})
+        from acmg_classifier.somatic.lab_curated import load_curated
+        self._lab_db = load_curated(resolve(getattr(cfg, "somatic_functional_curated_tsv", None),
+                                            "somatic_functional_curated.tsv"))
 
     # ------------------------------------------------------------------ helpers
     def gene_role(self, gene: Optional[str]) -> Optional[GeneRole]:
@@ -190,7 +195,9 @@ class SomaticEvaluator:
 
         # OS2 / SBS2 (calibrated functional data) ----------------------------
         self._functional(g, role, role_txt, res)
-        self._civic(ann, role, res)
+        fn_state: dict = {}
+        self._civic(ann, role, res, fn_state)
+        self._lab_curated(ann, res, fn_state)
 
         # OP1 / SBP1 / SBP2 (in silico) --------------------------------------
         pp3, bp4, bp7 = g.get(ACMGCriterion.PP3), g.get(ACMGCriterion.BP4), g.get(ACMGCriterion.BP7)
@@ -380,7 +387,51 @@ class SomaticEvaluator:
             res[onc].met = True
             res[onc].evidence = f"Calibrated assay, {label} ({crit.value}_{r.strength.value}): {r.evidence}"
 
-    def _civic(self, ann: AnnotationData, role: Optional[GeneRole], res) -> None:
+    @staticmethod
+    def _protein_key(ann: AnnotationData) -> Optional[str]:
+        pc = ann.primary_consequence
+        if pc is None:
+            return None
+        if pc.consequence == CT.MISSENSE and pc.protein_position and pc.amino_acids:
+            ref, _, alt = pc.amino_acids.partition("/")
+            return f"{ref}{pc.protein_position}{alt}" if ref and alt else None
+        if pc.consequence in _INFRAME:
+            return short_protein_change(pc.hgvs_p)
+        return None
+
+    @staticmethod
+    def _merge_functional(res, crit_name: str, text: str, label: str, state: dict,
+                          authoritative: bool = False) -> None:
+        """Fold one source's OS2 / SBS2 call into ``res``. Opposite calls from two
+        automated sources cancel; an authoritative (lab-approved) call wins."""
+        crit = C.OS2 if crit_name == "OS2" else C.SBS2
+        other = C.SBS2 if crit == C.OS2 else C.OS2
+        if authoritative:
+            if res[other].met:
+                res[other].met = False
+                res[other].evidence += f" - overridden by the {label}"
+            state["conflict"] = False
+            if res[crit].met:
+                res[crit].evidence = f"{text}; also {res[crit].evidence}"
+            else:
+                res[crit].met, res[crit].evidence = True, text
+            return
+        if state.get("conflict"):
+            res[crit].evidence += f"; {text} (conflicting sources, not counted)"
+            return
+        if res[other].met:
+            res[other].met = False
+            res[other].evidence += f" - conflicts with {text}; neither counted"
+            res[crit].evidence = f"{text} - conflicts with another source; not counted"
+            state["conflict"] = True
+            return
+        if res[crit].met:
+            res[crit].evidence += f"; also {text}"
+        else:
+            res[crit].met, res[crit].evidence = True, text
+        res[other].evidence += f"; {label} supports {crit.value} instead"
+
+    def _civic(self, ann: AnnotationData, role: Optional[GeneRole], res, state: dict) -> None:
         """OS2 / SBS2 from CIViC (functional evidence items, SOP-based oncogenic
         assertions), combined with the calibrated-assay result above."""
         if not getattr(self._cfg, "somatic_civic", True):
@@ -392,15 +443,8 @@ class SomaticEvaluator:
                                         if self._civic_path and not self._civic_path.exists() else "")
             return
         pc = ann.primary_consequence
-        if pc is None:
-            return
-        key = None
-        if pc.consequence == CT.MISSENSE and pc.protein_position and pc.amino_acids:
-            ref, _, alt = pc.amino_acids.partition("/")
-            key = f"{ref}{pc.protein_position}{alt}" if ref and alt else None
-        elif pc.consequence in _INFRAME:
-            key = short_protein_change(pc.hgvs_p)
-        if not key:
+        key = self._protein_key(ann)
+        if pc is None or not key:
             return
         from acmg_classifier.somatic.civic import civic_call
         call = civic_call(self._civic_db.get((pc.gene_symbol, key), []),
@@ -417,18 +461,23 @@ class SomaticEvaluator:
                 if not res[c].met:
                     res[c].evidence += f"; {call.evidence}"
             return
-        crit = C.OS2 if call.criterion == "OS2" else C.SBS2
-        other = C.SBS2 if crit == C.OS2 else C.OS2
-        if res[other].met:  # calibrated assay says the opposite
-            res[other].met = False
-            res[other].evidence += f" - conflicts with {call.evidence}; neither counted"
-            res[crit].evidence = f"{call.evidence} - conflicts with the calibrated assay; not counted"
+        self._merge_functional(res, call.criterion, call.evidence, "CIViC", state)
+
+    def _lab_curated(self, ann: AnnotationData, res, state: dict) -> None:
+        """OS2 / SBS2 from the laboratory-curated table (approved rows only)."""
+        if not getattr(self._cfg, "somatic_lab_functional", True) or not self._lab_db:
             return
-        if res[crit].met:
-            res[crit].evidence += f"; also {call.evidence}"
-        else:
-            res[crit].met, res[crit].evidence = True, call.evidence
-        res[other].evidence += f"; CIViC supports {crit.value} instead"
+        pc = ann.primary_consequence
+        from acmg_classifier.somatic.lab_curated import lookup
+        row = lookup(self._lab_db, pc.gene_symbol if pc else None, self._protein_key(ann))
+        if row is None:
+            return
+        if not row.approved:
+            res[C.OS2 if row.criterion == "OS2" else C.SBS2].evidence += (
+                f"; {row.describe()} - not counted until status=approved")
+            return
+        self._merge_functional(res, row.criterion, row.describe(), "lab-curated table", state,
+                               authoritative=True)
 
     def _frequency(self, ann: AnnotationData, res, known_self: bool = False) -> None:
         gd = ann.gnomad

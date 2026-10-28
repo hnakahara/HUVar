@@ -42,18 +42,23 @@ HEADER = ["gene", "protein_change", "record", "record_id", "variant_id", "molecu
           "citation_id", "disease", "variant_origin"]
 
 
-def _protein_key(variant_name: str, hgvs: str) -> Optional[str]:
-    name = (variant_name or "").strip()
-    if _SHORT_P.match(name):
-        return name
+def _protein_keys(variant_name: str, hgvs: str) -> list[str]:
+    """Short protein changes for a CIViC variant: the HGVS p. change (HGVS numbering,
+    e.g. H3-3A p.Lys28Met) first, then the CIViC name when it differs (legacy
+    numbering such as K27M)."""
     from acmg_classifier.somatic.resources import short_protein_change
+    keys: list[str] = []
     for h in (hgvs or "").split(","):
         m = _HGVS_P.search(h)
         if m:
             key = short_protein_change("p." + m.group(1))
             if key and _SHORT_P.match(key):
-                return key
-    return None
+                keys.append(key)
+                break
+    name = (variant_name or "").strip()
+    if _SHORT_P.match(name) and name not in keys:
+        keys.append(name)
+    return keys
 
 
 def _rows(path: Path):
@@ -64,15 +69,16 @@ def _rows(path: Path):
 def build_civic_table(evidence_tsv: Path, variants_tsv: Path, assertions_tsv: Optional[Path],
                       out: Path, release: str = "") -> dict:
     """Compact table of the CIViC records usable for OS2 / SBS2 (see module doc)."""
-    mp_variant: dict[str, tuple[str, str, str]] = {}   # single-variant MP id -> (gene, key, vid)
+    # single-variant MP id -> [(gene, protein change, variant id)]
+    mp_variant: dict[str, list[tuple[str, str, str]]] = {}
     for r in _rows(variants_tsv):
         if (r.get("feature_type") or "Gene") not in ("Gene", ""):
             continue
         mp = (r.get("single_variant_molecular_profile_id") or "").strip()
-        key = _protein_key(r.get("variant", ""), r.get("hgvs_descriptions", ""))
+        keys = _protein_keys(r.get("variant", ""), r.get("hgvs_descriptions", ""))
         gene = (r.get("gene") or r.get("feature_name") or "").strip()
-        if mp and key and gene:
-            mp_variant[mp] = (gene, key, r.get("variant_id", ""))
+        if mp and keys and gene:
+            mp_variant[mp] = [(gene, k, r.get("variant_id", "")) for k in keys]
     out_rows = []
     n_ev = n_as = 0
     for r in _rows(evidence_tsv):
@@ -81,29 +87,30 @@ def build_civic_table(evidence_tsv: Path, variants_tsv: Path, assertions_tsv: Op
                 or (r.get("evidence_status") or "accepted") != "accepted"
                 or r.get("variant_origin") == "Common Germline"):
             continue
-        hit = mp_variant.get((r.get("molecular_profile_id") or "").strip())
-        if hit is None:
+        hits = mp_variant.get((r.get("molecular_profile_id") or "").strip())
+        if not hits:
             continue
-        gene, key, vid = hit
-        out_rows.append([gene, key, "evidence", r.get("evidence_id", ""), vid,
-                         r.get("molecular_profile_id", ""), "Functional", r["significance"],
-                         r.get("evidence_direction", ""), r.get("evidence_level", ""),
-                         r.get("rating", ""), "", r.get("citation_id", ""),
-                         r.get("disease", ""), r.get("variant_origin", "")])
+        for gene, key, vid in hits:
+            out_rows.append([gene, key, "evidence", r.get("evidence_id", ""), vid,
+                             r.get("molecular_profile_id", ""), "Functional", r["significance"],
+                             r.get("evidence_direction", ""), r.get("evidence_level", ""),
+                             r.get("rating", ""), "", r.get("citation_id", ""),
+                             r.get("disease", ""), r.get("variant_origin", "")])
         n_ev += 1
     if assertions_tsv is not None and assertions_tsv.exists():
         for r in _rows(assertions_tsv):
             codes = (r.get("clingen_codes") or "").replace(" ", "")
             if r.get("assertion_type") != "Oncogenic" or not re.search(r"\b(OS2|SBS2)\b", codes):
                 continue
-            hit = mp_variant.get((r.get("molecular_profile_id") or "").strip())
-            if hit is None:
+            hits = mp_variant.get((r.get("molecular_profile_id") or "").strip())
+            if not hits:
                 continue
-            gene, key, vid = hit
-            out_rows.append([gene, key, "assertion", r.get("assertion_id", ""), vid,
-                             r.get("molecular_profile_id", ""), "Oncogenic",
-                             r.get("significance", ""), r.get("assertion_direction", ""),
-                             r.get("amp_category", ""), "", codes, "", r.get("disease", ""), ""])
+            for gene, key, vid in hits:
+                out_rows.append([gene, key, "assertion", r.get("assertion_id", ""), vid,
+                                 r.get("molecular_profile_id", ""), "Oncogenic",
+                                 r.get("significance", ""), r.get("assertion_direction", ""),
+                                 r.get("amp_category", ""), "", codes, "", r.get("disease", ""),
+                                 ""])
             n_as += 1
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", encoding="utf-8", newline="") as fh:

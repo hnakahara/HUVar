@@ -45,7 +45,12 @@ CREATE TABLE IF NOT EXISTS variants (
     ep_criteria TEXT,
     oncogenicity TEXT,
     onc_review_status TEXT,
-    onc_stars INTEGER DEFAULT 0
+    onc_stars INTEGER DEFAULT 0,
+    sci TEXT,
+    sci_review_status TEXT,
+    sci_stars INTEGER DEFAULT 0,
+    sci_type TEXT,
+    conditions TEXT
 );
 """
 
@@ -390,6 +395,40 @@ def _rcv_oncogenicity(ref_assert: ET.Element) -> tuple[str, str, int]:
     return "", "", 0
 
 
+def _rcv_somatic_impact(ref_assert: ET.Element) -> tuple[str, str, int, str]:
+    """(classification, review_status, stars, assertion type / clinical significance)
+    of the RCV's ``Classifications/SomaticClinicalImpact`` (e.g. "Tier I - Strong");
+    empty when the RCV has none."""
+    from acmg_classifier.local_db.clinvar_vcf import onc_star_rating
+    for cls in ref_assert.iter("Classifications"):
+        for child in cls:
+            if child.tag.lower() != "somaticclinicalimpact":
+                continue
+            desc = child.find("Description")
+            rev = child.find("ReviewStatus")
+            text = (desc.text or "").strip() if desc is not None else ""
+            rs = (rev.text or "").strip() if rev is not None else ""
+            attrs = []
+            for el in (child, desc):
+                if el is None:
+                    continue
+                for k, v in el.attrib.items():
+                    if "clinicalimpact" in k.lower() and v:
+                        attrs.append(v)
+            return text, rs, onc_star_rating(rs) if text else 0, "; ".join(dict.fromkeys(attrs))
+    return "", "", 0, ""
+
+
+def _rcv_conditions(ref_assert: ET.Element) -> str:
+    """Preferred names of the RCV's conditions ("; "-joined)."""
+    names = []
+    for tr in ref_assert.findall(".//TraitSet/Trait"):
+        ev = tr.find("./Name/ElementValue[@Type='Preferred']")
+        if ev is not None and ev.text:
+            names.append(ev.text.strip())
+    return "; ".join(dict.fromkeys(names))
+
+
 def _scv_significance(scv: ET.Element) -> str:
     """Lower-cased SCV germline significance, both schemas.
 
@@ -586,7 +625,7 @@ def build_clinvar_sqlite(
     con.executescript(_CREATE_TABLE)  # table only; indexes are built after the load
 
     insert_sql = ("INSERT INTO variants VALUES "
-                  "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+                  "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
     n_rows = 0
     n_seen = 0
     # Default to 4 parse processes; cap at 24 so the main process (gzip
@@ -753,10 +792,13 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
             ep_criteria = _mine_ep_criteria(ep_text)
 
         onc, onc_rs, onc_stars = _rcv_oncogenicity(ref_assert)
+        sci, sci_rs, sci_stars, sci_type = _rcv_somatic_impact(ref_assert)
+        conditions = _rcv_conditions(ref_assert) if (onc or sci) else ""
         return (var_id, chrom, pos, ref, alt, gene, hgvs_c, hgvs_p,
                 aa_change, codon_pos, clinsig, rev_status, stars, last_eval,
                 affected, functional, segregation, bs2_evidence, bs2_strength,
                 ",".join(sorted(functional_pmids)) or None, ep_criteria,
-                onc or None, onc_rs or None, onc_stars)
+                onc or None, onc_rs or None, onc_stars,
+                sci or None, sci_rs or None, sci_stars, sci_type or None, conditions or None)
     except Exception:
         return None

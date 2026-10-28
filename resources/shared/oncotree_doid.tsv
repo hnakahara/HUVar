@@ -1,0 +1,900 @@
+# OncoTree (oncotree_2025_10_03.json; CC BY 4.0) -> Disease Ontology (releases/2026-09-30/doid.obo; CC0)
+oncotree_code	name	main_type	parent	doids	doid_names	method
+AA	Aggressive Angiomyxoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+ABC	Activated B-cell Type	Mature B-Cell Neoplasms	DLBCLNOS	DOID:707	B-cell lymphoma	parent:MBN
+ABL	Acute Basophilic Leukemia	Leukemia	AMLNOS	DOID:0080795	acute basophilic leukemia	nci
+ACA	Adrenocortical Adenoma	Adrenocortical Adenoma	ADRENAL_GLAND	DOID:0050891	adrenal cortical adenoma	name
+ACBC	Adenoid Cystic Breast Cancer	Breast Cancer	BRCA	DOID:4877	breast adenoid cystic carcinoma	nci
+ACC	Adrenocortical Carcinoma	Adrenocortical Carcinoma	ADRENAL_GLAND	DOID:3948	adrenocortical carcinoma	nci
+ACCC	Acinic Cell Carcinoma	Salivary Gland Cancer	SACA	DOID:3025	acinar cell carcinoma	nci
+ACLG	Adenoid Cystic Carcinoma of the Lacrimal Gland	Lacrimal Gland Tumor	LGT	DOID:2174	ocular cancer	parent:EYE
+ACML	Atypical Chronic Myeloid Leukemia, BCR-ABL1-	Myelodysplastic/Myeloproliferative Neoplasms	MDS/MPN	DOID:0060597	atypical chronic myeloid leukemia, BCR-ABL1 negative	nci
+ACN	Acinar Cell Carcinoma, NOS	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+ACPG	Craniopharyngioma, Adamantinomatous Type	Sellar Tumor	SELT	DOID:3643	sella turcica neoplasm	parent:SELT
+ACPP	Atypical Choroid Plexus Papilloma	Choroid Plexus Tumor	CPT	DOID:3544	atypical choroid plexus papilloma	nci
+ACRM	Acral Melanoma	Melanoma	MEL	DOID:1909	melanoma	parent:MEL
+ACYC	Adenoid Cystic Carcinoma	Salivary Gland Cancer	SACA	DOID:0080202,DOID:4866	adenoid cystic carcinoma; salivary gland adenoid cystic carcinoma	nci
+ADIFG	Adult-Type Diffuse Glioma	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	DIFG	DOID:3620	central nervous system cancer	parent:BRAIN
+ADMA	Adamantinoma	Bone Cancer	BONE	DOID:2776	adamantinoma	name
+ADNOS	Adenocarcinoma, NOS	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+ADPA	Aggressive Digital Papillary Adenocarcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:5590	aggressive digital papillary adenocarcinoma	name
+ADRENAL_GLAND	Adrenal Gland	Adrenal Gland Cancer	TISSUE	DOID:3953	adrenal gland cancer	curated
+AECA	Sweat Gland Carcinoma/Apocrine Eccrine Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:5667	sweat gland carcinoma	nci
+AFH	Angiomatoid Fibrous Histiocytoma	Angiomatoid Fibrous Histiocytoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+AFX	Atypical Fibroxanthoma	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+AGA	Anal Gland Adenocarcinoma	Anal Cancer	BOWEL	DOID:7531	anal gland adenocarcinoma	nci
+AGNG	Anaplastic Ganglioglioma	Glioma	ENCG	DOID:3620	central nervous system cancer	parent:BRAIN
+AHCD	Alpha Heavy-Chain Disease	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+AIS	Adenocarcinoma In Situ	Adenocarcinoma In Situ	OTHER	DOID:4943	adenocarcinoma in situ	nci
+AITL	Angioimmunoblastic T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0111147	angioimmunoblastic T-cell lymphoma	nci
+ALAL	Acute Leukemias of Ambiguous Lineage	Leukemia	MNM	DOID:0070004	myeloid neoplasm	parent:MNM
+ALCL	Anaplastic Large Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0050744	anaplastic large cell lymphoma	nci
+ALCLALKN	Anaplastic Large-Cell Lymphoma ALK Negative	Mature T and NK Neoplasms	ALCL	DOID:0050744	anaplastic large cell lymphoma	parent:ALCL
+ALCLALKP	Anaplastic Large-Cell Lymphoma ALK Positive	Mature T and NK Neoplasms	ALCL	DOID:0050744	anaplastic large cell lymphoma	parent:ALCL
+ALKLBCL	ALK Positive Large B-Cell Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+ALT	Atypical Lipomatous Tumor	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:5690	well-differentiated liposarcoma	name
+ALUCA	Atypical Lung Carcinoid	Non-Small Cell Lung Cancer	LNET	DOID:5410	pulmonary neuroendocrine tumor	parent:LNET
+AM	AML with Maturation	Leukemia	AMLNOS	DOID:0081087	acute myeloid leukemia with maturation	nci
+AMBL	Large Cell/Anaplastic Medulloblastoma	Embryonal Tumor	EMBT	DOID:3857	large cell medulloblastoma	nci
+AMBLNOS	Anaplastic Medulloblastoma, NOS	Large Cell/Anaplastic Medulloblastoma	AMBL	DOID:3857	large cell medulloblastoma	parent:AMBL
+AMBLNWS	Anaplastic Medulloblastoma, Non-WNT, Non-SHH	Large Cell/Anaplastic Medulloblastoma	AMBL	DOID:3857	large cell medulloblastoma	parent:AMBL
+AMBLNWSG3	Anaplastic Medulloblastoma, Group 3	Large Cell/Anaplastic Medulloblastoma	AMBLNWS	DOID:3857	large cell medulloblastoma	parent:AMBL
+AMBLNWSG4	Anaplastic Medulloblastoma, Group 4	Large Cell/Anaplastic Medulloblastoma	AMBLNWS	DOID:3857	large cell medulloblastoma	parent:AMBL
+AMBLSHH	Anaplastic Medulloblastoma, SHH Subtype	Large Cell/Anaplastic Medulloblastoma	AMBL	DOID:3857	large cell medulloblastoma	parent:AMBL
+AMKL	Acute Megakaryoblastic Leukemia	Leukemia	AMLNOS	DOID:8761	acute megakaryocytic leukemia	nci
+AML	Acute Myeloid Leukemia	Leukemia	MNM	DOID:9119	acute myeloid leukemia	nci
+AMLBCRABL1	AML with BCR-ABL1	Leukemia	AMLRGA	DOID:0080976	acute myeloid leukemia with BCR-ABL1	nci
+AMLCBFBMYH11	AML with inv(16)(p13.1q22) or t(16;16)(p13.1;q22);CBFB-MYH11	Leukemia	AMLRGA	DOID:9119	acute myeloid leukemia	parent:AML
+AMLCEBPA	AML with Biallelic Mutations of CEBPA	Leukemia	AMLRGA	DOID:0081090	acute myeloid leukemia with biallelic mutation of CEBPA	nci
+AMLDEKNUP214	AML with t(6;9)(p23;q34.1);DEK-NUP214	Leukemia	AMLRGA	DOID:0081080	acute myeloid leukemia with t(6;9) (p23;q34.1)	umls
+AMLGATA2MECOM	AML with inv(3)(q21.3q26.2) or t(3;3)(q21.3;q26.2); GATA2, MECOM	Leukemia	AMLRGA	DOID:0081083	acute myeloid leukemia with inv(3) (q21.3;q26.2) or t(3;3) (q21.3;q26.2)	nci
+AMLMD	AML with Minimal Differentiation	Leukemia	AMLNOS	DOID:0081085	acute myeloid leukemia with minimal differentiation	nci
+AMLMLLT3KMT2A	AML with t(9;11)(p21.3;q23.3);MLLT3-KMT2A	Leukemia	AMLRGA	DOID:9119	acute myeloid leukemia	parent:AML
+AMLMRC	AML with Myelodysplasia-Related Changes	Leukemia	AML	DOID:0081092	acute myeloid leukemia with myelodysplasia-related changes	nci
+AMLNOS	AML, NOS	Leukemia	AML	DOID:9119	acute myeloid leukemia	umls
+AMLNPM1	AML with Mutated NPM1	Leukemia	AMLRGA	DOID:0081089	acute myeloid leukemia with mutated NPM1	nci
+AMLRARA	AML with Variant RARA translocation	Leukemia	AMLRGA	DOID:9119	acute myeloid leukemia	parent:AML
+AMLRBM15MKL1	AML (megakaryoblastic) with t(1;22)(p13.3;q13.3);RBM15-MKL1	Leukemia	AMLRGA	DOID:0081096	acute myeloid leukemia with t(1;22)(p13;q13)	nci
+AMLRGA	AML with Recurrent Genetic Abnormalities	Leukemia	AML	DOID:9119	acute myeloid leukemia	parent:AML
+AMLRUNX1	AML with Mutated RUNX1	Leukemia	AMLRGA	DOID:0081091	acute myeloid leukemia with mutated RUNX1	nci
+AMLRUNX1RUNX1T1	AML with t(8;21)(q22;q22.1);RUNX1-RUNX1T1	Leukemia	AMLRGA	DOID:0081093	acute myeloid leukemia with t(8;21); (q22; q22.1)	nci
+AMML	Acute Myelomonocytic Leukemia	Leukemia	AMLNOS	DOID:0081082	acute myelomonocytic leukemia	nci
+AMOL	Acute Monoblastic/Monocytic Leukemia	Leukemia	AMLNOS	DOID:8864	acute monocytic leukemia	nci
+AMPCA	Ampullary Carcinoma	Ampullary Cancer	AMPULLA_OF_VATER	DOID:4932	ampulla of Vater carcinoma	nci
+AMPULLA_OF_VATER	Ampulla of Vater	Ampullary Carcinoma	TISSUE	DOID:10020	ampulla of Vater cancer	curated
+AN	Atypical Nevus	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+ANGL	Angiocentric Glioma	Miscellaneous Neuroepithelial Tumor	PDIFLG	DOID:0081261	angiocentric glioma	nci
+ANGS	Angiosarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:0001816	angiosarcoma	nci
+ANKL	Aggressive NK-Cell Leukemia	Mature T and NK Neoplasms	MTNN	DOID:1035	aggressive NK-cell leukemia	nci
+ANM	Anaplastic Meningioma	CNS Cancer	MNGT	DOID:3620	central nervous system cancer	parent:BRAIN
+ANSC	Anal Squamous Cell Carcinoma	Anal Cancer	BOWEL	DOID:5525	anal squamous cell carcinoma	nci
+APAD	Appendiceal Adenocarcinoma	Appendiceal Cancer	BOWEL	DOID:3608	appendix adenocarcinoma	nci
+APE	Anaplastic Ependymoma	CNS Cancer	EPMT	DOID:5889	anaplastic ependymoma	name
+APLPMLRARA	APL with PML-RARA	Leukemia	AMLRGA	DOID:9119	acute myeloid leukemia	parent:AML
+APMF	Acute Panmyelosis with Myelofibrosis	Leukemia	AMLNOS	DOID:9119	acute myeloid leukemia	parent:AMLNOS
+APTAD	Atypical Pituitary Adenoma	Sellar Tumor	SELT	DOID:3643	sella turcica neoplasm	parent:SELT
+APXA	Anaplastic Pleomorphic Xanthoastrocytoma	Glioma	ENCG	DOID:0080854	anaplastic pleomorphic xanthoastrocytoma	name
+ARCH	Adenocarcinoma in Retrorectal Cystic Hamartoma	Adenocarcinoma in Retrorectal Cystic Hamartoma	OTHER	DOID:162	cancer	parent:OTHER
+ARMM	Anorectal Mucosal Melanoma	Melanoma	BOWEL	DOID:14145	malignant anus melanoma	nci
+ARMS	Alveolar Rhabdomyosarcoma	Soft Tissue Sarcoma	RMS	DOID:4051	alveolar rhabdomyosarcoma	nci
+ASCT	Adenosquamous Carcinoma of the Tongue	Head and Neck Cancer	OHNCA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+ASM	Aggressive Systemic Mastocytosis	Mastocytosis	SM	DOID:4798	aggressive systemic mastocytosis	nci
+ASPS	Alveolar Soft Part Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:4239	alveolar soft part sarcoma	nci
+ASTB	Astroblastoma	Miscellaneous Neuroepithelial Tumor	MNET	DOID:7305	astroblastoma	nci
+ASTR	Astrocytoma, IDH-Mutant	Glioma	ADIFG	DOID:3069	malignant astrocytoma	nci
+ASTR2	Astrocytoma, IDH-Mutant, Grade 2	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	ASTR	DOID:0081256	astrocytoma, IDH-mutant, grade 2	name
+ASTR3	Astrocytoma, IDH-Mutant, Grade 3	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	ASTR	DOID:0081257	astrocytoma, IDH-mutant, grade 3	name
+ASTR4	Astrocytoma, IDH-Mutant, Grade 4	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	ASTR	DOID:0080877	astrocytoma, IDH-mutant, grade 4	name
+ATLL	Adult T-Cell Leukemia/Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0050523	adult T-cell leukemia/lymphoma	nci
+ATM	Atypical Meningioma	CNS Cancer	MNGT	DOID:3620	central nervous system cancer	parent:BRAIN
+ATRT	Atypical Teratoid/Rhabdoid Tumor	Embryonal Tumor	EMBT	DOID:2129	atypical teratoid rhabdoid tumor	nci
+AUL	Acute Undifferentiated Leukemia	Leukemia	ALAL	DOID:0070004	myeloid neoplasm	parent:MNM
+AWDNET	Well-Differentiated Neuroendocrine Tumor of the Appendix	Gastrointestinal Neuroendocrine Tumor	GINET	DOID:10155	intestinal cancer	parent:BOWEL
+AWM	AML without Maturation	Leukemia	AMLNOS	DOID:0081086	acute myeloid leukemia without maturation	nci
+BA	Breast Angiosarcoma	Breast Sarcoma	PBS	DOID:4511	breast angiosarcoma	nci
+BCAC	Basal Cell Adenocarcinoma	Salivary Gland Cancer	SACA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+BCC	Basal Cell Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:2513	basal cell carcinoma	umls
+BCCA	Choriocarcinoma	Germ Cell Tumor	BGCT	DOID:3594	choriocarcinoma	nci
+BCCP	Basal Cell Carcinoma of Prostate	Prostate Cancer	PROSTATE	DOID:10283	prostate cancer	parent:PROSTATE
+BCLU	B-Cell Lymphoma, Unclassifiable, with Features Intermediate between DLBCL and Classical Hodgkin lymphoma	Mature B-Cell Neoplasms	MBN	DOID:5822	gray zone lymphoma	umls
+BEC	Embryonal Carcinoma	Germ Cell Tumor	BGCT	DOID:7232	central nervous system embryonal carcinoma	nci
+BFN	Breast Fibroepithelial Neoplasms	Breast Sarcoma	BREAST	DOID:1612	breast cancer	parent:BREAST
+BGCT	Germ Cell Tumor, Brain	Germ Cell Tumor	BRAIN	DOID:3620	central nervous system cancer	parent:BRAIN
+BIALCL	Breast Implant-Associated Anaplastic Large-Cell Lymphoma	Mature T and NK Neoplasms	ALCL	DOID:0050744	anaplastic large cell lymphoma	parent:ALCL
+BILIARY_TRACT	Biliary Tract	Biliary Tract Cancer	TISSUE	DOID:4607	biliary tract cancer	curated
+BIMT	Immature Teratoma	Germ Cell Tumor	BGCT	DOID:6019	central nervous system immature teratoma	nci
+BL	Burkitt Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:8584	Burkitt lymphoma	nci
+BLAD	Bladder Adenocarcinoma	Bladder Cancer	BLADDER	DOID:3711	bladder adenocarcinoma	nci
+BLADDER	Bladder/Urinary Tract	Bladder/Urinary Tract Cancer	TISSUE	DOID:3996	urinary system cancer	curated
+BLCA	Bladder Urothelial Carcinoma	Bladder Cancer	BLADDER	DOID:4006	bladder urothelial carcinoma	nci
+BLCLC	Basaloid Large Cell Carcinoma of the Lung	Non-Small Cell Lung Cancer	LCLC	DOID:7045	basaloid lung carcinoma	nci
+BLL	B-Lymphoblastic Leukemia/Lymphoma	B-Lymphoblastic Leukemia/Lymphoma	LNM	DOID:0080630	B-lymphoblastic leukemia/lymphoma	nci
+BLL11Q	Burkitt-Like Lymphoma with 11q Aberration	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+BLLBCRABL1	B-Lymphoblastic Leukemia/Lymphoma with t(9;22)(q34.1;q11.2);BCR-ABL1	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080643	B-lymphoblastic leukemia/lymphoma with BCR-ABL1	nci
+BLLBCRABL1L	B-Lymphoblastic Leukemia/Lymphoma, BCR-ABL1 Like	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080630	B-lymphoblastic leukemia/lymphoma	parent:BLL
+BLLETV6RUNX1	B-Lymphoblastic Leukemia/Lymphoma with t(12;21)(p13.2;q22.1); ETV6-RUNX1	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080645	B-lymphoblastic leukemia/lymphoma with ETV6-RUNX1	name
+BLLHYPER	B-Lymphoblastic Leukemia/Lymphoma with Hyperdiploidy	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080646	B-lymphoblastic leukemia/lymphoma with hyperdiploidy	nci
+BLLHYPO	B-Lymphoblastic Leukemia/Lymphoma with Hypodiploidy	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080647	B-lymphoblastic leukemia/lymphoma with hypodiploidy	nci
+BLLIAMP21	B-Lymphoblastic Leukemia/Lymphoma with iAMP21	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080651	B-lymphoblastic leukemia/lymphoma with iAMP21	nci
+BLLIL3IGH	B-Lymphoblastic Leukemia/Lymphoma with t(5;14)(q31.1;q32.3) IL3-IGH	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080648	B-lymphoblastic leukemia/lymphoma with IGH::IL3 fusion	name
+BLLKMT2A	B-Lymphoblastic Leukemia/Lymphoma with t(v;11q23.3);KMT2A Rearranged	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080644	B-lymphoblastic leukemia/lymphoma MLL rearranged	name
+BLLNOS	B-Lymphoblastic Leukemia/Lymphoma, NOS	B-Lymphoblastic Leukemia/Lymphoma	BLL	DOID:0080630	B-lymphoblastic leukemia/lymphoma	parent:BLL
+BLLRGA	B-Lymphoblastic Leukemia/Lymphoma with Recurrent Genetic Abnormalities	B-Lymphoblastic Leukemia/Lymphoma	BLL	DOID:0080630	B-lymphoblastic leukemia/lymphoma	parent:BLL
+BLLTCF3PBX1	B-Lymphoblastic Leukemia/Lymphoma with t(1;19)(q23;p13.3);TCF3-PBX1	B-Lymphoblastic Leukemia/Lymphoma	BLLRGA	DOID:0080649	B-lymphoblastic leukemia/lymphoma with TCF3-PBX1	name
+BLPT	Borderline Phyllodes Tumor of the Breast	Breast Sarcoma	PT	DOID:3016	breast malignant phyllodes tumor	parent:PT
+BLSC	Bladder Squamous Cell Carcinoma	Bladder Cancer	BLADDER	DOID:3742	bladder squamous cell carcinoma	nci
+BMGCT	Mixed Germ Cell Tumor	Germ Cell Tumor	BGCT	DOID:3306	mixed germ cell cancer	nci
+BMGT	Malignant Teratoma	Germ Cell Tumor	BGCT	DOID:5563	malignant teratoma	name
+BMT	Mature Teratoma	Germ Cell Tumor	BGCT	DOID:6017	central nervous system mature teratoma	nci
+BNNOS	Breast Neoplasm, NOS	Breast Cancer	BREAST	DOID:1612	breast cancer	parent:BREAST
+BONE	Bone	Bone Cancer	TISSUE	DOID:184	bone cancer	curated
+BOWEL	Bowel	Bowel Cancer	TISSUE	DOID:10155	intestinal cancer	curated
+BPDCN	Blastic Plasmacytoid Dendritic Cell Neoplasm	Blastic Plasmacytoid Dendritic Cell Neoplasm	MNM	DOID:0081076	blastic plasmacytoid dendritic cell neoplasm	nci
+BPLL	B-Cell Prolymphocytic Leukemia	Mature B-Cell Neoplasms	MBN	DOID:0081041	B-cell prolymphocytic leukemia	nci
+BPSCC	Basaloid Penile Squamous Cell Carcinoma	Penile Cancer	PSCC	DOID:7047	penis basaloid carcinoma	nci
+BPT	Benign Phyllodes Tumor of the Breast	Breast Sarcoma	PT	DOID:1631	benign breast phyllodes tumor	nci
+BRAIN	CNS/Brain	CNS/Brain Cancer	TISSUE	DOID:3620	central nervous system cancer	curated
+BRAME	Adenomyoepithelioma of the Breast	Breast Cancer	BREAST	DOID:1642	breast adenomyoepithelioma	nci
+BRCA	Invasive Breast Carcinoma	Breast Cancer	BREAST	DOID:1612	breast cancer	parent:BREAST
+BRCANOS	Breast Invasive Cancer, NOS	Breast Cancer	BRCA	DOID:1612	breast cancer	parent:BREAST
+BRCNOS	Breast Invasive Carcinoma, NOS	Breast Cancer	BRCA	DOID:1612	breast cancer	parent:BREAST
+BREAST	Breast	Breast Cancer	TISSUE	DOID:1612	breast cancer	curated
+BRSRCC	Breast Carcinoma with Signet Ring	Breast Cancer	BRCA	DOID:3503	breast signet ring cell adenocarcinoma	nci
+BTBEOV	Brenner Tumor, Benign	Ovarian Cancer	BTOV	DOID:2636	ovarian Brenner tumor	parent:BTOV
+BTBOV	Brenner Tumor, Borderline	Ovarian Cancer	BTOV	DOID:2636	ovarian Brenner tumor	parent:BTOV
+BTMOV	Brenner Tumor, Malignant	Ovarian Cancer	BTOV	DOID:2636	ovarian Brenner tumor	parent:BTOV
+BTOV	Brenner Tumor	Ovarian Cancer	OVT	DOID:2636	ovarian Brenner tumor	nci
+BYST	Yolk Sac Tumor	Germ Cell Tumor	BGCT	DOID:1911	endodermal sinus tumor	name
+CABC	Cervical Adenoid Basal Carcinoma	Cervical Cancer	CERVIX	DOID:6428	cervical adenoid basal carcinoma	nci
+CACC	Cervical Adenoid Cystic Carcinoma	Cervical Cancer	CERVIX	DOID:4867	cervical adenoid cystic carcinoma	nci
+CAEXPA	Carcinoma ex Pleomorphic Adenoma	Salivary Gland Cancer	SACA	DOID:297	pleomorphic adenoma carcinoma	name
+CAIS	Colon Adenocarcinoma In Situ	Colorectal Cancer	COADREAD	DOID:0050861	colorectal adenocarcinoma	parent:COADREAD
+CCBOV	Clear Cell Borderline Ovarian Tumor	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+CCE	Clear Cell Ependymoma	CNS Cancer	EPMT	DOID:5507	clear cell ependymoma	name
+CCHDM	Conventional Type Chordoma	Bone Cancer	CHDM	DOID:3302	chordoma	parent:CHDM
+CCHM	Carcinoma with Chondroid Metaplasia	Breast Cancer	MMBC	DOID:7541	mixed epithelial/mesenchymal metaplastic breast carcinoma	parent:MMBC
+CCLC	Clear Cell Carcinoma of the Lung	Non-Small Cell Lung Cancer	LCLC	DOID:7267	lung clear cell carcinoma	name
+CCM	Clear cell Meningioma	CNS Cancer	MNGT	DOID:4210	clear cell meningioma	nci
+CCOC	Clear Cell Odontogenic Carcinoma	Head and Neck Cancer	ODGC	DOID:0051105	clear cell odontogenic carcinoma	nci
+CCOV	Clear Cell Ovarian Cancer	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+CCPRC	Clear Cell Papillary Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4450	renal cell carcinoma	parent:RCC
+CCRCC	Renal Clear Cell Carcinoma	Renal Cell Carcinoma	RCC	DOID:4467	clear cell renal cell carcinoma	nci
+CCS	Clear Cell Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:4233	clear cell sarcoma	nci
+CCSK	Clear Cell Sarcoma of Kidney	Clear Cell Sarcoma of Kidney	KIDNEY	DOID:4880	kidney clear cell sarcoma	name
+CDRCC	Collecting Duct Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4464	collecting duct carcinoma	nci
+CEAD	Cervical Adenocarcinoma	Cervical Cancer	CERVIX	DOID:3702	cervical adenocarcinoma	nci
+CEAIS	Cervical Adenocarcinoma In Situ	Cervical Cancer	CERVIX	DOID:4362	cervical cancer	parent:CERVIX
+CEAS	Cervical Adenosquamous Carcinoma	Cervical Cancer	CERVIX	DOID:5636	cervical adenosquamous carcinoma	nci
+CECC	Cervical Clear Cell Carcinoma	Cervical Cancer	CEAD	DOID:5303	cervical clear cell adenocarcinoma	nci
+CEEN	Cervical Endometrioid Carcinoma	Cervical Cancer	CEAD	DOID:2871	endometrial carcinoma	umls
+CEGCC	Glassy Cell Carcinoma of the Cervix	Cervical Cancer	CERVIX	DOID:8361	glassy cell variant cervical adenosquamous carcinoma	nci
+CELI	Cervical Leiomyosarcoma	Cervical Cancer	CERVIX	DOID:4362	cervical cancer	parent:CERVIX
+CELNOS	Chronic Eosinophilic Leukemia, NOS	Myeloproliferative Neoplasms	MPN	DOID:0080367	chronic eosinophilic leukemia	nci
+CEMN	Mesonephric Carcinoma	Cervical Cancer	CEAD	DOID:3702	cervical adenocarcinoma	parent:CEAD
+CEMU	Mucinous Carcinoma	Cervical Cancer	CEAD	DOID:3030	mucinous adenocarcinoma	nci
+CENE	Cervical Neuroendocrine Tumor	Cervical Cancer	CERVIX	DOID:6659	cervical large cell neuroendocrine carcinoma	nci
+CERMS	Cervical Rhabdomyosarcoma	Cervical Cancer	CERVIX	DOID:4362	cervical cancer	parent:CERVIX
+CERVIX	Cervix	Cervical Cancer	TISSUE	DOID:4362	cervical cancer	curated
+CESC	Cervical Squamous Cell Carcinoma	Cervical Cancer	CERVIX	DOID:3744	cervical squamous cell carcinoma	nci
+CESE	Cervical Serous Carcinoma	Cervical Cancer	CEAD	DOID:3702	cervical adenocarcinoma	parent:CEAD
+CEVG	Villoglandular Carcinoma	Cervical Cancer	CEAD	DOID:8338	villoglandular variant cervical mucinous adenocarcinoma	nci
+CHBL	Chondroblastoma	Bone Cancer	BONE	DOID:2649	chondroblastoma	nci
+CHDM	Chordoma	Bone Cancer	BONE	DOID:3302	chordoma	nci
+CHGL	Chordoid Glioma of the Third Ventricle	Miscellaneous Neuroepithelial Tumor	MNET	DOID:3774	chordoid glioma	nci
+CHL	Classical Hodgkin Lymphoma	Hodgkin Lymphoma	HL	DOID:8567,DOID:8642	Hodgkin's lymphoma; Hodgkin's paragranuloma	parent:HL
+CHLPTLD	Classical Hodgkin Lymphoma PTLD	Posttransplant Lymphoproliferative Disorders	PTLD	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+CHM	Complete Hydatidiform Mole	Gestational Trophoblastic Disease	MP	DOID:3590	gestational trophoblastic neoplasm	parent:MP
+CHOL	Cholangiocarcinoma	Hepatobiliary Cancer	IPN	DOID:4947	cholangiocarcinoma	nci
+CHOM	Chordoid Meningioma	CNS Cancer	MNGT	DOID:8368	chordoid meningioma	nci
+CHOS	Chondroblastic Osteosarcoma	Bone Cancer	OS	DOID:3372	chondroblastic osteosarcoma	nci
+CHRCC	Chromophobe Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4471	chromophobe renal cell carcinoma	nci
+CHS	Chondrosarcoma	Bone Cancer	BONE	DOID:3371	chondrosarcoma	nci
+CLLSLL	Chronic Lymphocytic Leukemia/Small Lymphocytic Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:6354	chronic lymphocytic leukemia/small lymphocytic lymphoma	name
+CLNC	Cerebellar Liponeurocytoma	Miscellaneous Neuroepithelial Tumor	MNET	DOID:6458	cerebellar liponeurocytoma	nci
+CLPDNK	Chronic Lymphoproliferative Disorder of NK Cells	Mature T and NK Neoplasms	MTNN	DOID:7465	chronic NK-cell lymphocytosis	nci
+CM	Conjunctival Melanoma	Melanoma	OM	DOID:1751	malignant conjunctival melanoma	nci
+CMC	Medullary Carcinoma of the Colon	Colorectal Cancer	BOWEL	DOID:10155	intestinal cancer	parent:BOWEL
+CMCD	Cutaneous Mastocytosis	Mastocytosis	MCD	DOID:3663	cutaneous mastocytosis	nci
+CML	Chronic Myelogenous Leukemia	Myeloproliferative Neoplasms	MPN	DOID:8692	myeloid leukemia	nci
+CMLBCRABL1	Chronic Myeloid Leukemia, BCR-ABL1+	Myeloproliferative Neoplasms	CML	DOID:8692	myeloid leukemia	parent:CML
+CMML	Chronic Myelomonocytic Leukemia	Myelodysplastic/Myeloproliferative Neoplasms	MDS/MPN	DOID:0080188	chronic myelomonocytic leukemia	nci
+CMML0	Chronic Myelomonocytic Leukemia-0	Myelodysplastic/Myeloproliferative Neoplasms	CMML	DOID:0080188	chronic myelomonocytic leukemia	parent:CMML
+CMML1	Chronic Myelomonocytic Leukemia-1	Myelodysplastic/Myeloproliferative Neoplasms	CMML	DOID:0080188	chronic myelomonocytic leukemia	parent:CMML
+CMML2	Chronic Myelomonocytic Leukemia-2	Myelodysplastic/Myeloproliferative Neoplasms	CMML	DOID:0080188	chronic myelomonocytic leukemia	parent:CMML
+CMPT	Ciliated Muconodular Papillary Tumor of the Lung	Non-Small Cell Lung Cancer	NSCLC	DOID:3908	lung non-small cell carcinoma	parent:NSCLC
+CNC	Central Neurocytoma	Miscellaneous Neuroepithelial Tumor	MNET	DOID:14174	central neurocytoma	nci
+CNL	Chronic Neutrophilic Leukemia	Myeloproliferative Neoplasms	MPN	DOID:0080187	chronic neutrophilic leukemia	nci
+COAD	Colon Adenocarcinoma	Colorectal Cancer	COADREAD	DOID:234	colon adenocarcinoma	nci
+COADREAD	Colorectal Adenocarcinoma	Colorectal Cancer	BOWEL	DOID:0050861	colorectal adenocarcinoma	nci
+COM	Carcinoma with Osseous Metaplasia	Breast Cancer	MMBC	DOID:7541	mixed epithelial/mesenchymal metaplastic breast carcinoma	parent:MMBC
+CPC	Choroid Plexus Carcinoma	Choroid Plexus Tumor	CPT	DOID:5648	choroid plexus carcinoma	nci
+CPP	Choroid Plexus Papilloma	Choroid Plexus Tumor	CPT	DOID:2626	choroid plexus papilloma	nci
+CPT	Choroid Plexus Tumor	Choroid Plexus Tumor	BRAIN	DOID:3540	choroid plexus cancer	nci
+CSCC	Cutaneous Squamous Cell Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:3151	skin squamous cell carcinoma	nci
+CSCHW	Cellular Schwannoma	Nerve Sheath Tumor	SCHW	DOID:3196	cellular schwannoma	nci
+CSCLC	Combined Small Cell Lung Carcinoma	Small Cell Lung Cancer	LUNG	DOID:5421	lung combined type small cell carcinoma	nci
+CSNOS	Breast Invasive Carcinosarcoma, NOS	Breast Cancer	BRCA	DOID:1612	breast cancer	parent:BREAST
+CTAAP	Colonic Type Adenocarcinoma of the Appendix	Appendiceal Cancer	APAD	DOID:3608	appendix adenocarcinoma	parent:APAD
+CUP	Cancer of Unknown Primary	Cancer of Unknown Primary	OTHER	DOID:162	cancer	parent:OTHER
+CUPNOS	Cancer of Unknown Primary, NOS	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+DA	Duodenal Adenocarcinoma	Small Bowel Cancer	SBC	DOID:10816	duodenum adenocarcinoma	nci
+DASTR	Diffuse Astrocytoma, MYB- or MYBL1-Altered	Glioma	PDIFLG	DOID:4857	diffuse astrocytoma	nci
+DCIS	Breast Ductal Carcinoma In Situ	Breast Cancer	BREAST	DOID:1612	breast cancer	parent:BREAST
+DCS	Dendritic Cell Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:5621	histiocytic and dendritic cell cancer	nci
+DDCHDM	Dedifferentiated Chordoma	Bone Cancer	CHDM	DOID:3302	chordoma	parent:CHDM
+DDCHS	Dedifferentiated Chondrosarcoma	Bone Cancer	CHS	DOID:0081247	dedifferentiated chondrosarcoma	nci
+DDLS	Dedifferentiated Liposarcoma	Soft Tissue Sarcoma	LIPO	DOID:0080531	dedifferentiated liposarcoma	nci
+DES	Desmoid/Aggressive Fibromatosis	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+DESM	Desmoplastic Melanoma	Melanoma	MEL	DOID:1909	melanoma	parent:MEL
+DF	Dermatofibroma	Skin Cancer, Non-Melanoma	SKIN	DOID:4418	cutaneous fibrous histiocytoma	nci
+DFL	Duodenal-Type Follicular Lymphoma	Mature B-Cell Neoplasms	FL	DOID:0050873	follicular lymphoma	parent:FL
+DFSP	Dermatofibrosarcoma Protuberans	Skin Cancer, Non-Melanoma	SKIN	DOID:3507	dermatofibrosarcoma protuberans	name
+DHG	Diffuse Hemispheric Glioma, H3 G34-Mutant	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	PDIFHG	DOID:3620	central nervous system cancer	parent:BRAIN
+DIA	Desmoplastic Infantile Astrocytoma	Miscellaneous Neuroepithelial Tumor	MNET	DOID:0081259	desmoplastic infantile ganglioglioma / desmoplastic infantile astrocytoma	nci
+DIFG	Diffuse Glioma	Glioma	BRAIN	DOID:3620	central nervous system cancer	parent:BRAIN
+DIG	Desmoplastic Infantile Ganglioglioma	Miscellaneous Neuroepithelial Tumor	MNET	DOID:0081259	desmoplastic infantile ganglioglioma / desmoplastic infantile astrocytoma	nci
+DLBCLCI	DLBCL Associated with Chronic Inflammation	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+DLBCLNOS	Diffuse Large B-Cell Lymphoma, NOS	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+DLGGMAPK	Diffuse Low-Grade Glioma, MAPK Pathway-Altered	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	PDIFLG	DOID:3620	central nervous system cancer	parent:BRAIN
+DMBL	Desmoplastic/Nodular Medulloblastoma	Embryonal Tumor	EMBT	DOID:3873	desmoplastic/nodular medulloblastoma	name
+DMBLNOS	Desmoplastic/Nodular Medulloblastoma, NOS	Desmoplastic/Nodular Medulloblastoma	DMBL	DOID:3873	desmoplastic/nodular medulloblastoma	parent:DMBL
+DMBLSHH	Desmoplastic/Nodular Medulloblastoma, SHH Subtype	Desmoplastic/Nodular Medulloblastoma	DMBL	DOID:3873	desmoplastic/nodular medulloblastoma	parent:DMBL
+DMG	Diffuse Midline Glioma, H3 K27-Altered	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	PDIFHG	DOID:0080684	diffuse midline glioma, H3 K27-altered	name
+DNT	Dysembryoplastic Neuroepithelial Tumor	Glioma	ENCG	DOID:2679	dysembryoplastic neuroepithelial tumor	nci
+DPHGG	Diffuse Pediatric-Type High-Grade Glioma, H3-Wildtype and IDH-Wildtype	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	PDIFHG	DOID:0081277	diffuse pediatric-type high-grade glioma, H3-wildtype and IDH-wildtype	name
+DSRCT	Desmoplastic Small-Round-Cell Tumor	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:6785	desmoplastic small round cell tumor	nci
+DSTAD	Diffuse Type Stomach Adenocarcinoma	Esophagogastric Cancer	STAD	DOID:6217	gastric diffuse adenocarcinoma	nci
+DTE	Desmoplastic Trichoepithelioma	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+EATL	Enteropathy-Associated T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+EBOV	Endometrioid Borderlin Ovarian Tumor	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+EBVDLBCLNOS	EBV Positive DLBCL, NOS	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+EBVMCU	EBV Positive Mucocutaneous Ulcer	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+ECAD	Endocervical Adenocarcinoma	Cervical Cancer	CEAD	DOID:7519	endocervical carcinoma	umls
+ECD	Erdheim-Chester Disease	Histiocytosis	HDCN	DOID:4329	Erdheim-Chester disease	nci
+EGC	Esophagogastric Adenocarcinoma	Esophagogastric Cancer	STOMACH	DOID:4944	gastroesophageal junction adenocarcinoma	nci
+EGCT	Extra Gonadal Germ Cell Tumor	Germ Cell Tumor	OTHER	DOID:162	cancer	parent:OTHER
+EHAE	Epithelioid Hemangioendothelioma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:0080190	malignant epithelioid hemangioendothelioma	nci
+EHCH	Extrahepatic Cholangiocarcinoma	Hepatobiliary Cancer	CHOL	DOID:4947	cholangiocarcinoma	parent:CHOL
+EMALT	Extranodal Marginal Zone Lymphoma of Mucosa-Associated Lymphoid Tissue (MALT lymphoma)	Mature B-Cell Neoplasms	MZL	DOID:0050909	extranodal marginal zone lymphoma of mucosa-associated lymphoid tissue	nci
+EMBC	Epithelial Type Metaplastic Breast Cancer	Breast Cancer	MBC	DOID:4680	breast metaplastic carcinoma	parent:MBC
+EMBCA	Embryonal Carcinoma	Germ Cell Tumor	NSGCT	DOID:5680	embryonal testis carcinoma	nci
+EMBT	Embryonal Tumor	Embryonal Tumor	BRAIN	DOID:688	embryonal cancer	nci
+EMCHS	Extraskeletal Myxoid Chondrosarcoma	Bone Cancer	CHS	DOID:4549	extraskeletal myxoid chondrosarcoma	nci
+EMPD	Extramammary Paget Disease	Skin Cancer, Non-Melanoma	SKIN	DOID:3450	cutaneous Paget's disease	nci
+EMPSGC	Endocrine Mucin Producing Sweat Gland Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+EMYOCA	Epithelial-Myoepithelial Carcinoma	Head and Neck Cancer	OHNCA	DOID:5309	epithelial-myoepithelial carcinoma	nci
+ENCG	Encapsulated Glioma	Glioma	BRAIN	DOID:3620	central nervous system cancer	parent:BRAIN
+ENKL	Extranodal NK-/T-Cell Lymphoma, Nasal Type	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+EOV	Endometrioid Ovarian Cancer	Ovarian Cancer	OVT	DOID:5828	endometrioid ovary carcinoma	nci
+EP	Extraosseous Plasmacytoma	Mature B-Cell Neoplasms	MBN	DOID:3720	extramedullary plasmacytoma	nci
+EPDCA	Esophageal Poorly Differentiated Carcinoma	Esophagogastric Cancer	STOMACH	DOID:10534,DOID:5041	stomach cancer; esophageal cancer	parent:STOMACH
+EPIS	Epithelioid Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:6193	epithelioid sarcoma	nci
+EPM	Ependymoma	Glioma	EPMT	DOID:4844	benign ependymoma	nci
+EPMT	Ependymomal Tumor	CNS Cancer	BRAIN	DOID:5074	high grade ependymoma	nci
+ERMS	Embryonal Rhabdomyosarcoma	Soft Tissue Sarcoma	RMS	DOID:3246	embryonal rhabdomyosarcoma	nci
+ES	Ewing Sarcoma	Bone Cancer	BONE	DOID:3369	Ewing sarcoma	nci
+ESCA	Esophageal Adenocarcinoma	Esophagogastric Cancer	EGC	DOID:4914	esophagus adenocarcinoma	nci
+ESCC	Esophageal Squamous Cell Carcinoma	Esophagogastric Cancer	STOMACH	DOID:3748	esophagus squamous cell carcinoma	nci
+ESMM	Mucosal Melanoma of the Esophagus	Melanoma	STOMACH	DOID:1108	esophagus melanoma	nci
+ESS	Endometrial Stromal Sarcoma	Uterine Sarcoma	USARC	DOID:4226	endometrial stromal sarcoma	nci
+ESST	Ewing Sarcoma of Soft Tissue	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+ET	Essential Thrombocythemia	Myeloproliferative Neoplasms	MPN	DOID:2224	essential thrombocythemia	nci
+ETANTR	Embryonal Tumor with Abundant Neuropil and True Rosettes	Embryonal Tumor	EMBT	DOID:0080903	embryonal tumor with multilayered rosettes, C19MC-altered	nci
+ETMF	Essential Thrombocythemia Myelofibrosis	Myeloproliferative Neoplasms	ET	DOID:2224	essential thrombocythemia	parent:ET
+ETPLL	Early T-Cell Precursor Lymphoblastic Leukemia	T-Lymphoblastic Leukemia/Lymphoma	TLL	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+ETT	Epithelioid Trophoblastic Tumor	Gestational Trophoblastic Disease	GTD	DOID:3593	epithelioid trophoblastic tumor	nci
+EVN	Extraventricular Neurocytoma	Miscellaneous Neuroepithelial Tumor	MNET	DOID:0081314	extraventricular neurocytoma	nci
+EYE	Eye	Eye Cancer	TISSUE	DOID:2174	ocular cancer	curated
+FA	Fibroadenoma	Breast Sarcoma	BFN	DOID:1618	breast fibroadenoma	nci
+FDCS	Follicular Dendritic Cell Sarcoma	Soft Tissue Sarcoma	HDCN	DOID:6262	follicular dendritic cell sarcoma	nci
+FHPTLD	Florid Follicular Hyperplasia PTLD	Posttransplant Lymphoproliferative Disorders	PTLD	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+FHRCC	FH-Deficient Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4450	renal cell carcinoma	parent:RCC
+FIBS	Fibrosarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:3355	fibrosarcoma	nci
+FIOS	Fibroblastic Osteosarcoma	Bone Cancer	OS	DOID:7603	fibrosarcomatous osteosarcoma	nci
+FL	Follicular Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:0050873	follicular lymphoma	name
+FLC	Fibrolamellar Carcinoma	Hepatobiliary Cancer	LIVER	DOID:5015	fibrolamellar carcinoma	nci
+FRCT	Fibroblastic Reticular Cell Tumor	Histiocytosis	HDCN	DOID:3405	histiocytosis	parent:HDCN
+FT	Fibrothecoma	Sex Cord Stromal Tumor	SCST	DOID:0080369	ovarian sex-cord stromal tumor	parent:SCST
+FTCL	Follicular T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+GB	Glioblastoma, IDH-Wildtype	Glioma	ADIFG	DOID:3068	glioblastoma	umls
+GBAD	Gallbladder Adenocarcinoma, NOS	Hepatobiliary Cancer	GBC	DOID:4948	gallbladder carcinoma	parent:GBC
+GBASC	Adenosquamous Carcinoma of the Gallbladder	Hepatobiliary Cancer	GBC	DOID:5627	adenosquamous gallbladder carcinoma	name
+GBC	Gallbladder Cancer	Hepatobiliary Cancer	ICPN	DOID:4948	gallbladder carcinoma	nci
+GCB	Germinal Center B-Cell Type	Mature B-Cell Neoplasms	DLBCLNOS	DOID:0080997	diffuse large B-cell lymphoma germinal center B-cell type	nci
+GCCAP	Goblet Cell Adenocarcinoma of the Appendix	Appendiceal Cancer	APAD	DOID:3608	appendix adenocarcinoma	parent:APAD
+GCEMU	Gastric Type Mucinous Carcinoma	Cervical Cancer	CEMU	DOID:3030	mucinous adenocarcinoma	parent:CEMU
+GCLC	Giant Cell Carcinoma of the Lung	Non-Small Cell Lung Cancer	LCLC	DOID:5583	lung giant cell carcinoma	nci
+GCT	Granular Cell Tumor	Sellar Tumor	SELT	DOID:2411	granular cell tumor	nci
+GCTB	Giant Cell Tumor of Bone	Bone Cancer	BONE	DOID:4305	bone giant cell tumor	nci
+GCTSTM	Germ Cell Tumor with Somatic-Type Malignancy	Germ Cell Tumor	NSGCT	DOID:2998	testicular cancer	parent:TESTIS
+GEJ	Adenocarcinoma of the Gastroesophageal Junction	Esophagogastric Cancer	EGC	DOID:4944	gastroesophageal junction adenocarcinoma	nci
+GHCD	Gamma Heavy-Chain Disease	Mature B-Cell Neoplasms	MBN	DOID:0060125	heavy chain disease	nci
+GINET	Gastrointestinal Neuroendocrine Tumors	Gastrointestinal Neuroendocrine Tumor	BOWEL	DOID:10155	intestinal cancer	parent:BOWEL
+GINETES	Gastrointestinal Neuroendocrine Tumors of the Esophagus/Stomach	Esophagogastric Cancer	STOMACH	DOID:10534,DOID:5041	stomach cancer; esophageal cancer	parent:STOMACH
+GIST	Gastrointestinal Stromal Tumor	Gastrointestinal Stromal Tumor	SOFT_TISSUE	DOID:9253	gastrointestinal stromal tumor	nci
+GMN	Germinoma	Germ Cell Tumor	BGCT	DOID:3304	germinoma	umls
+GN	Ganglioneuroma	Peripheral Nervous System	PNS	DOID:4817	ganglioneuroma	name
+GNBL	Ganglioneuroblastoma	Peripheral Nervous System	PNS	DOID:4163	ganglioneuroblastoma	nci
+GNC	Gangliocytoma	Glioma	ENCG	DOID:2426	gangliocytoma	nci
+GNG	Ganglioglioma	Glioma	ENCG	DOID:5078	ganglioglioma	nci
+GNOS	Glioma, NOS	Glioma	DIFG	DOID:3620	central nervous system cancer	parent:BRAIN
+GRC	Gastric Remnant Adenocarcinoma	Esophagogastric Cancer	EGC	DOID:4944	gastroesophageal junction adenocarcinoma	parent:EGC
+GRCT	Granulosa Cell Tumor	Sex Cord Stromal Tumor	SCST	DOID:2999	granulosa cell tumor	nci
+GS	Glomangiosarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:5233	glomangiosarcoma	nci
+GSARC	Gliosarcoma	Glioma	GB	DOID:3071	gliosarcoma	nci
+GTD	Gestational Trophoblastic Disease	Gestational Trophoblastic Disease	UTERUS	DOID:3590	gestational trophoblastic neoplasm	nci
+HCC	Hepatocellular Carcinoma	Hepatobiliary Cancer	LIVER	DOID:684	hepatocellular carcinoma	nci
+HCCIHCH	Hepatocellular Carcinoma plus Intrahepatic Cholangiocarcinoma	Hepatobiliary Cancer	LIVER	DOID:3571	liver cancer	parent:LIVER
+HCL	Hairy Cell Leukemia	Mature B-Cell Neoplasms	MBN	DOID:285	hairy cell leukemia	nci
+HCL-V	Hairy Cell Leukemia-Variant	Mature B-Cell Neoplasms	SBLU	DOID:713	HCL-V	nci
+HDCN	Histiocytic and Dendritic Cell Neoplasms	Histiocytosis	MNM	DOID:3405	histiocytosis	nci
+HDCS	Histiocytic Dendritic Cell Sarcoma	Soft Tissue Sarcoma	DCS	DOID:0080915	histiocytic sarcoma	nci
+HEAD_NECK	Head and Neck	Head and Neck Cancer	TISSUE	DOID:11934	head and neck cancer	curated
+HEMA	Hemangioma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:255	hemangioma	nci
+HGBCL	High-Grade B-Cell Lymphoma, NOS	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+HGBCLMYCBCL2	High-Grade B-Cell Lymphoma, with MYC and BCL2 and/or BCL6 Rearrangements	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+HGESS	High-Grade Endometrial Stromal Sarcoma	Uterine Sarcoma	ESS	DOID:4226	endometrial stromal sarcoma	parent:ESS
+HGGNOS	High-Grade Glioma, NOS	Glioma	DIFG	DOID:3620	central nervous system cancer	parent:BRAIN
+HGNEC	High-Grade Neuroendocrine Carcinoma of the Colon and Rectum	Gastrointestinal Neuroendocrine Tumor	GINET	DOID:10155	intestinal cancer	parent:BOWEL
+HGNEE	High-Grade Neuroendocrine Carcinoma of the Esophagus	Gastrointestinal Neuroendocrine Tumors of the Esophagus/Stomach	GINETES	DOID:10534,DOID:5041	stomach cancer; esophageal cancer	parent:STOMACH
+HGNES	High-Grade Neuroendocrine Carcinoma of the Stomach	Gastrointestinal Neuroendocrine Tumors of the Esophagus/Stomach	GINETES	DOID:10534,DOID:5041	stomach cancer; esophageal cancer	parent:STOMACH
+HGNET	High-Grade Neuroepithelial Tumor	Miscellaneous Brain Tumor	MBT	DOID:3620	central nervous system cancer	parent:BRAIN
+HGONEC	High-Grade Neuroendocrine Carcinoma of the Ovary	Ovarian Cancer	OOVC	DOID:2394	ovarian cancer	parent:OVARY
+HGSFT	High-Grade Serous Fallopian Tube Cancer	Ovarian Cancer	OOVC	DOID:2394	ovarian cancer	parent:OVARY
+HGSOC	High-Grade Serous Ovarian Cancer	Ovarian Cancer	SOC	DOID:5744	ovary serous adenocarcinoma	parent:SOC
+HGSOS	High-Grade Surface Osteosarcoma	Bone Cancer	OS	DOID:3347	osteosarcoma	parent:OS
+HHV8DLBCL	HHV8 Positive DLBCL, NOS	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+HL	Hodgkin Lymphoma	Hodgkin Lymphoma	LNM	DOID:8567,DOID:8642	Hodgkin's lymphoma; Hodgkin's paragranuloma	nci
+HMBL	Hemangioblastoma	Miscellaneous Brain Tumor	MBT	DOID:5241	hemangioblastoma	nci
+HNMASC	Mammary Analogue Secretory Carcinoma of Salivary Gland Origin	Salivary Gland Cancer	SACA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+HNMUCM	Head and Neck Mucosal Melanoma	Melanoma	HEAD_NECK	DOID:11934	head and neck cancer	parent:HEAD_NECK
+HNNE	Head and Neck Neuroendocrine Carcinoma	Head and Neck Cancer	OHNCA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+HNSC	Head and Neck Squamous Cell Carcinoma	Head and Neck Cancer	HEAD_NECK	DOID:5520	head and neck squamous cell carcinoma	nci
+HNSCUP	Head and Neck Squamous Cell Carcinoma of Unknown Primary	Head and Neck Cancer	HNSC	DOID:5520	head and neck squamous cell carcinoma	parent:HNSC
+HPCCNS	Hemangiopericytoma of the Central Nervous System	CNS Cancer	MNGT	DOID:4957	meninges hemangiopericytoma	nci
+HPHSC	Hypopharynx Squamous Cell Carcinoma	Head and Neck Cancer	HNSC	DOID:5520	head and neck squamous cell carcinoma	parent:HNSC
+HS	Histiocytic Sarcoma	Histiocytosis	HDCN	DOID:0080915	histiocytic sarcoma	name
+HSTCL	Hepatosplenic T-cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0081049	hepatosplenic T-cell lymphoma	nci
+HTAT	Hyalinizing Trabecular Adenoma of the Thyroid	Thyroid Cancer	THYROID	DOID:6203	thyroid hyalinizing trabecular adenoma	nci
+HVLL	Hydroa Vacciniforme Like Lymphoproliferative Disorder	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+IAMPCA	Intestinal Ampullary Carcinoma	Ampullary Cancer	AMPCA	DOID:4932	ampulla of Vater carcinoma	parent:AMPCA
+IBC	Inflammatory Breast Cancer	Breast Cancer	BREAST	DOID:6263	inflammatory breast carcinoma	nci
+ICEMU	Intestinal Type Mucinous Carcinoma	Cervical Cancer	CEMU	DOID:8339	intestinal variant cervical mucinous adenocarcinoma	nci
+ICPN	Intracholecystic Papillary Neoplasm	Hepatobiliary Cancer	BILIARY_TRACT	DOID:4607	biliary tract cancer	parent:BILIARY_TRACT
+IDC	Breast Invasive Ductal Carcinoma	Breast Cancer	BRCA	DOID:1612	breast cancer	parent:BREAST
+IDCS	Interdigitating Dendritic Cell Sarcoma	Soft Tissue Sarcoma	HDCN	DOID:7848	interdigitating dendritic cell sarcoma	nci
+IDCT	Indeterminate Dendritic Cell Tumor	Histiocytosis	HDCN	DOID:3405	histiocytosis	parent:HDCN
+IFS	Infantile Fibrosarcoma	Infantile Fibrosarcoma	SOFT_TISSUE	DOID:8418	congenital fibrosarcoma	name
+IHCH	Intrahepatic Cholangiocarcinoma	Hepatobiliary Cancer	CHOL	DOID:4928	intrahepatic cholangiocarcinoma	nci
+IHG	Infant-Type Hemispheric Glioma	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	PDIFHG	DOID:0081278	infant-type hemispheric glioma	name
+IHM	Invasive Hydatidiform Mole	Gestational Trophoblastic Disease	MP	DOID:3590	gestational trophoblastic neoplasm	parent:MP
+ILC	Breast Invasive Lobular Carcinoma	Breast Cancer	BRCA	DOID:1612	breast cancer	parent:BREAST
+IMMC	Breast Invasive Mixed Mucinous Carcinoma	Breast Cancer	BRCA	DOID:3610	breast mucinous carcinoma	nci
+IMPTLD	Infectious Mononucleosis PTLD	Posttransplant Lymphoproliferative Disorders	PTLD	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+IMS	Myofibromatosis	Myofibromatosis	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+IMT	Inflammatory Myofibroblastic Tumor	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:0050905	inflammatory myofibroblastic tumor	name
+IMTB	Inflammatory Myofibroblastic Bladder Tumor	Bladder Cancer	BLADDER	DOID:3996	urinary system cancer	parent:BLADDER
+IMTL	Inflammatory Myofibroblastic Lung Tumor	Non-Small Cell Lung Cancer	LUNG	DOID:1324	lung cancer	parent:LUNG
+INTS	Intimal Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+IOPN	Intraductal Oncocytic Papillary Neoplasm	Pancreatic Cancer	PACT	DOID:7235	pancreatic mucinous cystadenoma	parent:PACT
+IPMN	Intraductal Papillary Mucinous Neoplasm	Pancreatic Cancer	PACT	DOID:7235	pancreatic mucinous cystadenoma	parent:PACT
+IPN	Intraductal Papillary Neoplasm of the Bile Duct	Hepatobiliary Cancer	BILIARY_TRACT	DOID:4607	biliary tract cancer	parent:BILIARY_TRACT
+ISFN	In Situ Follicular Neoplasia	Mature B-Cell Neoplasms	FL	DOID:0050873	follicular lymphoma	parent:FL
+ISM	Indolent Systemic Mastocytosis	Mastocytosis	SM	DOID:4660	indolent systemic mastocytosis	nci
+ISMCL	In Situ Mantle Cell Neoplasia	Mature B-Cell Neoplasms	MCL	DOID:0050746	mantle cell lymphoma	parent:MCL
+ISTAD	Intestinal Type Stomach Adenocarcinoma	Esophagogastric Cancer	STAD	DOID:3717	gastric adenocarcinoma	parent:STAD
+ITLPDGI	Indolent T-Cell Lymphoproliferative Disorder of the GI Tract	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+ITPN	Intraductal Tubulopapillary Neoplasm	Pancreatic Cancer	PACT	DOID:7235	pancreatic mucinous cystadenoma	parent:PACT
+IUP	Inverted Urothelial Papilloma	Bladder Cancer	BLADDER	DOID:3996	urinary system cancer	parent:BLADDER
+IVBCL	Intravascular Large B-Cell Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:0081311	intravascular large B-cell lymphoma	nci
+JMML	Juvenile Myelomonocytic Leukemia	Myelodysplastic/Myeloproliferative Neoplasms	MDS/MPN	DOID:0050458	juvenile myelomonocytic leukemia	nci
+JSCB	Juvenile Secretory Carcinoma of the Breast	Breast Cancer	BREAST	DOID:1612	breast cancer	parent:BREAST
+JXG	Disseminated Juvenile Xanthogranuloma	Histiocytosis	XGA	DOID:3405	histiocytosis	parent:HDCN
+KIDNEY	Kidney	Kidney Cancer	TISSUE	DOID:263	kidney cancer	curated
+LAIS	Lung Adenocarcinoma In Situ	Non-Small Cell Lung Cancer	LUNG	DOID:1324	lung cancer	parent:LUNG
+LAM	Pulmonary Lymphangiomyomatosis	Non-Small Cell Lung Cancer	LUNG	DOID:3319	lymphangioleiomyomatosis	nci
+LAMN	Low-grade Appendiceal Mucinous Neoplasm	Appendiceal Cancer	BOWEL	DOID:10155	intestinal cancer	parent:BOWEL
+LATL	Lymphoid Atypical	Lymphatic Cancer, NOS	LYMPH	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+LBGN	Lymphoid Benign	Lymphatic Cancer, NOS	LYMPH	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+LBLIRF4	Large B-Cell Lymphoma with IRF4 Rearrangement	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+LCH	Langerhans Cell Histiocytosis	Histiocytosis	HDCN	DOID:2571	Langerhans-cell histiocytosis	nci
+LCIS	Breast Lobular Carcinoma In Situ	Breast Cancer	BREAST	DOID:1612	breast cancer	parent:BREAST
+LCLC	Large Cell Lung Carcinoma	Non-Small Cell Lung Cancer	NSCLC	DOID:4556	lung large cell carcinoma	nci
+LCS	Langerhans Cell Sarcoma	Histiocytosis	HDCN	DOID:7146	Langerhans cell sarcoma	name
+LDCHL	Lymphocyte-Depleted Classical Hodgkin Lymphoma	Hodgkin Lymphoma	CHL	DOID:8628	Hodgkin's lymphoma, lymphocytic depletion	name
+LDD	Dysplastic Gangliocytoma of the Cerebellum/Lhermitte-Duclos Disease	Miscellaneous Neuroepithelial Tumor	MNET	DOID:0050657	Cowden syndrome 1	nci
+LECLC	Lymphoepithelioma-like Carcinoma of the Lung	Non-Small Cell Lung Cancer	LCLC	DOID:4556	lung large cell carcinoma	parent:LCLC
+LGCOS	Low-Grade Central Osteosarcoma	Bone Cancer	OS	DOID:3347	osteosarcoma	parent:OS
+LGESS	Low-Grade Endometrial Stromal Sarcoma	Uterine Sarcoma	ESS	DOID:4226	endometrial stromal sarcoma	parent:ESS
+LGFMS	Low-Grade Fibromyxoid Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+LGGNOS	Low-Grade Glioma, NOS	Glioma	ENCG	DOID:3620	central nervous system cancer	parent:BRAIN
+LGNET	Polymorphous Low-Grade Neuroepithelial Tumor of the Young	Miscellaneous Brain Tumor	PDIFLG	DOID:3620	central nervous system cancer	parent:BRAIN
+LGSOC	Low-Grade Serous Ovarian Cancer	Ovarian Cancer	SOC	DOID:5744	ovary serous adenocarcinoma	parent:SOC
+LGT	Lacrimal Gland Tumor	Lacrimal Gland Tumor	EYE	DOID:2174	ocular cancer	parent:EYE
+LIAD	Hepatocellular Adenoma	Hepatobiliary Cancer	LIVER	DOID:0050868	hepatocellular adenoma	name
+LIAS	Liver Angiosarcoma	Hepatobiliary Cancer	LIVER	DOID:268	liver angiosarcoma	nci
+LIHB	Hepatoblastoma	Hepatobiliary Cancer	LIVER	DOID:687	hepatoblastoma	nci
+LIMNET	Malignant Nonepithelial Tumor of the Liver	Hepatobiliary Cancer	LIVER	DOID:3571	liver cancer	parent:LIVER
+LIPO	Liposarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:3382	liposarcoma	nci
+LIVER	Liver	Liver Cancer	TISSUE	DOID:3571	liver cancer	curated
+LM	Leiomyoma	Soft Tissue Cancer	SOFT_TISSUE	DOID:127	leiomyoma	name
+LMS	Leiomyosarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1967	leiomyosarcoma	nci
+LNET	Lung Neuroendocrine Tumor	Non-Small Cell Lung Cancer	LUNG	DOID:5410	pulmonary neuroendocrine tumor	nci
+LNM	Lymphoid Neoplasm	Lymphatic Cancer, NOS	LYMPH	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+LPL	Lymphoplasmacytic Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:0060901	lymphoplasmacytic lymphoma	name
+LRCHL	Lymphocyte-Rich Classical Hodgkin Lymphoma	Hodgkin Lymphoma	CHL	DOID:8567,DOID:8642	Hodgkin's lymphoma; Hodgkin's paragranuloma	parent:HL
+LUACC	Adenoid Cystic Carcinoma of the Lung	Non-Small Cell Lung Cancer	SGTTL	DOID:4872	lung adenoid cystic carcinoma	nci
+LUAD	Lung Adenocarcinoma	Non-Small Cell Lung Cancer	NSCLC	DOID:3910	lung adenocarcinoma	nci
+LUAS	Lung Adenosquamous Carcinoma	Non-Small Cell Lung Cancer	NSCLC	DOID:4829	adenosquamous lung carcinoma	nci
+LUCA	Lung Carcinoid	Non-Small Cell Lung Cancer	LNET	DOID:5410	pulmonary neuroendocrine tumor	parent:LNET
+LUMEC	Mucoepidermoid Carcinoma of the Lung	Non-Small Cell Lung Cancer	SGTTL	DOID:3908	lung non-small cell carcinoma	parent:NSCLC
+LUNE	Large Cell Neuroendocrine Carcinoma	Non-Small Cell Lung Cancer	LNET	DOID:6658	pulmonary large cell neuroendocrine carcinoma	nci
+LUNG	Lung	Lung Cancer	TISSUE	DOID:1324	lung cancer	curated
+LUPC	Pleomorphic Carcinoma of the Lung	Non-Small Cell Lung Cancer	NSCLC	DOID:0080899	lung pleomorphic carcinoma	nci
+LUSC	Lung Squamous Cell Carcinoma	Non-Small Cell Lung Cancer	NSCLC	DOID:3907	lung squamous cell carcinoma	nci
+LXSC	Larynx Squamous Cell Carcinoma	Head and Neck Cancer	HNSC	DOID:2876	laryngeal squamous cell carcinoma	nci
+LYG	Lymphomatoid Granulomatosis	Mature B-Cell Neoplasms	MBN	DOID:0081307	lymphomatoid granulomatosis	nci
+LYMPH	Lymphoid	Lymphatic Cancer	TISSUE	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	curated
+LYP	Lymphomatoid Papulosis	Mature T and NK Neoplasms	PCLPD	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+MAAP	Mucinous Adenocarcinoma of the Appendix	Appendiceal Cancer	APAD	DOID:3608	appendix adenocarcinoma	parent:APAD
+MAC	Microcystic Adnexal Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:5569	malignant syringoma	name
+MACR	Mucinous Adenocarcinoma of the Colon and Rectum	Colorectal Cancer	COADREAD	DOID:0050861	colorectal adenocarcinoma	parent:COADREAD
+MAMPCA	Mixed Ampullary Carcinoma	Ampullary Cancer	AMPCA	DOID:4932	ampulla of Vater carcinoma	parent:AMPCA
+MASC	Metaplastic Adenosquamous Carcinoma	Breast Cancer	EMBC	DOID:5623	adenosquamous breast carcinoma	nci
+MASCC	Metaplastic Adenocarcinoma with Spindle Cell Differentiation	Breast Cancer	EMBC	DOID:7460	spindle cell variant squamous cell breast carcinoma	nci
+MATPL	Myeloid Atypical	Blood Cancer, NOS	MYELOID	DOID:0070004	myeloid neoplasm	parent:MYELOID
+MBC	Metaplastic Breast Cancer	Breast Cancer	BREAST	DOID:4680	breast metaplastic carcinoma	nci
+MBEN	Medulloblastoma with Extensive Nodularity	Embryonal Tumor	EMBT	DOID:3873	desmoplastic/nodular medulloblastoma	nci
+MBENNOS	Medulloblastoma with Extensive Nodularity, NOS	Medulloblastoma with Extensive Nodularity	MBEN	DOID:3873	desmoplastic/nodular medulloblastoma	parent:MBEN
+MBENSHH	Medulloblastoma with Extensive Nodularity, SHH Subtype	Medulloblastoma with Extensive Nodularity	MBEN	DOID:3873	desmoplastic/nodular medulloblastoma	parent:MBEN
+MBGN	Myeloid Benign	Blood Cancer, NOS	MYELOID	DOID:0070004	myeloid neoplasm	parent:MYELOID
+MBL	Medulloblastoma	Embryonal Tumor	EMBT	DOID:0050902	medulloblastoma	nci
+MBLG3	Medulloblastoma, Group 3	Medulloblastoma	MBLNWS	DOID:0050902	medulloblastoma	parent:MBL
+MBLG4	Medulloblastoma, Group 4	Medulloblastoma	MBLNWS	DOID:0050902	medulloblastoma	parent:MBL
+MBLNOS	Medulloblastoma, NOS	Medulloblastoma	MBL	DOID:0050902	medulloblastoma	parent:MBL
+MBLNWS	Medulloblastoma, Non-WNT, Non-SHH	Medulloblastoma	MBL	DOID:0050902	medulloblastoma	parent:MBL
+MBLSHH	Medulloblastoma, SHH Subtype	Medulloblastoma	MBL	DOID:0050902	medulloblastoma	parent:MBL
+MBLWNT	Medulloblastoma, WNT Subtype	Medulloblastoma	MBL	DOID:0050902	medulloblastoma	parent:MBL
+MBN	Mature B-Cell Neoplasms	Mature B-Cell Neoplasms	NHL	DOID:707	B-cell lymphoma	nci
+MBOV	Mucinous Borderline Ovarian Tumor	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+MBT	Miscellaneous Brain Tumor	Miscellaneous Brain Tumor	BRAIN	DOID:3620	central nervous system cancer	parent:BRAIN
+MCBCL	Monoclonal B-Cell Lymphocytosis	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+MCC	Merkel Cell Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:3965	Merkel cell carcinoma	name
+MCCE	Mixed Cervical Carcinoma	Cervical Cancer	CERVIX	DOID:4362	cervical cancer	parent:CERVIX
+MCCHL	Mixed Cellularity Classical Hodgkin Lymphoma	Hodgkin Lymphoma	CHL	DOID:8567,DOID:8642	Hodgkin's lymphoma; Hodgkin's paragranuloma	parent:HL
+MCD	Mastocytosis	Mastocytosis	MNM	DOID:350	mastocytosis	nci
+MCHS	Mesenchymal Chondrosarcoma	Bone Cancer	CHS	DOID:4545	mesenchymal chondrosarcoma	name
+MCHSCNS	Mesenchymal Chondrosarcoma of the CNS	Miscellaneous Brain Tumor	MBT	DOID:4545	mesenchymal chondrosarcoma	nci
+MCL	Mantle Cell Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:0050746	mantle cell lymphoma	name
+MCN	Mucinous Cystic Neoplasm	Pancreatic Cancer	PACT	DOID:7235	pancreatic mucinous cystadenoma	nci
+MCS	Metaplastic Carcinosarcoma	Breast Cancer	MMBC	DOID:7541	mixed epithelial/mesenchymal metaplastic breast carcinoma	parent:MMBC
+MCSL	Mast Cell Sarcoma	Mastocytosis	MCD	DOID:355	mast-cell sarcoma	nci
+MDEP	Medulloepithelioma	Embryonal Tumor	EMBT	DOID:4790	medulloepithelioma	umls
+MDLC	Breast Mixed Ductal and Lobular Carcinoma	Breast Cancer	BRCA	DOID:1612	breast cancer	parent:BREAST
+MDS	Myelodysplastic Syndromes	Myelodysplastic Syndromes	MNM	DOID:0070004	myeloid neoplasm	parent:MNM
+MDS/MPN	Myelodysplastic/Myeloproliferative Neoplasms	Myelodysplastic/Myeloproliferative Neoplasms	MNM	DOID:4972	myelodysplastic/myeloproliferative neoplasm	nci
+MDSEB	MDS with Excess Blasts	Myelodysplastic Syndromes	MDS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSEB1	MDS with excess blasts-1	Myelodysplastic Syndromes	MDSEB	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSEB2	MDS with excess blasts-2	Myelodysplastic Syndromes	MDSEB	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSID5Q	MDS with Isolated Del(5q)	Myelodysplastic Syndromes	MDS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSMD	MDS with Multilineage Dysplasia	Myelodysplastic Syndromes	MDS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSMPNRST	MDS/MPN with Ring Sideroblasts and Thrombocytosis	Myelodysplastic/Myeloproliferative Neoplasms	MDS/MPN	DOID:4972	myelodysplastic/myeloproliferative neoplasm	parent:MDS/MPN
+MDSMPNU	MDS/MPN, Unclassifiable	Myelodysplastic/Myeloproliferative Neoplasms	MDS/MPN	DOID:4972	myelodysplastic/myeloproliferative neoplasm	parent:MDS/MPN
+MDSRS	MDS with Ring Sideroblasts	Myelodysplastic Syndromes	MDS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSRSMD	MDS with Ring Sideroblasts and Multilineage Dysplasia	Myelodysplastic Syndromes	MDSRS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSRSSLD	MDS with Ring Sideroblasts and Single Lineage Dysplasia	Myelodysplastic Syndromes	MDSRS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSSLD	MDS with Single Lineage Dysplasia	Myelodysplastic Syndromes	MDS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSU	MDS, Unclassifiable	Myelodysplastic Syndromes	MDS	DOID:0070004	myeloid neoplasm	parent:MNM
+MDSWP	Myelodysplastic Workup	Myelodysplastic Workup	MNM	DOID:0070004	myeloid neoplasm	parent:MNM
+MEITL	Monomorphic Epitheliotropic Intestinal T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+MEL	Melanoma	Melanoma	SKIN	DOID:1909	melanoma	nci
+MELC	Melanocytoma	Melanocytoma	PCNSMT	DOID:3620	central nervous system cancer	parent:BRAIN
+MF	Myofibroma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:4386	myofibroma	nci
+MFH	Undifferentiated Pleomorphic Sarcoma/Malignant Fibrous Histiocytoma/High-Grade Spindle Cell Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1907	malignant fibrous histiocytoma	nci
+MFS	Myxofibrosarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:0080534	myxofibrosarcoma	nci
+MGCT	Mixed Germ Cell Tumor	Germ Cell Tumor	NSGCT	DOID:4743	mixed testicular germ cell tumor	nci
+MGST	Malignant Glomus Tumor	Malignant Glomus Tumor	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+MGUS	Monoclonal Gammopathy of Undetermined Significance	Mature B-Cell Neoplasms	MBN	DOID:7442	monoclonal gammopathy of uncertain significance	name
+MGUSIGA	IgA	Mature B-Cell Neoplasms	MGUS	DOID:7442	monoclonal gammopathy of uncertain significance	parent:MGUS
+MGUSIGG	IgG	Mature B-Cell Neoplasms	MGUS	DOID:7442	monoclonal gammopathy of uncertain significance	parent:MGUS
+MGUSIGM	IgM	Mature B-Cell Neoplasms	MGUS	DOID:7442	monoclonal gammopathy of uncertain significance	parent:MGUS
+MHCD	Mu Heavy-Chain Disease	Mature B-Cell Neoplasms	MBN	DOID:0060125	heavy chain disease	nci
+MIDD	Monoclonal Immunoglobulin Deposition Diseases	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+MIDDA	Amyloidosis	Mature B-Cell Neoplasms	MIDD	DOID:9120	amyloidosis	nci
+MIDDO	Monoclonal Immunoglobulin Deposition Diseases, Other	Mature B-Cell Neoplasms	MIDD	DOID:707	B-cell lymphoma	parent:MBN
+MIXED	Mixed Cancer Types	Cancer of Unknown Primary	OTHER	DOID:162	cancer	parent:OTHER
+MLADS	Myeloid Leukemia Associated with Down Syndrome	Leukemia	MPRDS	DOID:0080798	myeloid leukemia associated with Down Syndrome	nci
+MLNER	Myeloid/Lymphoid Neoplasms with Eosinophilia and Rearrangement of  PDGFRA/PDGFRB or FGFR1 or with PCM1-JAK2	Leukemia	MNM	DOID:0080164	myeloid and lymphoid neoplasms with eosinophilia and abnormalities of PDGFRA, PDGFRB, and FGFR1	nci
+MLNFGFR1	Myeloid/Lymphoid Neoplasms with FGFR1 Rearrangement	Leukemia	MLNER	DOID:0080167	myeloid and lymphoid neoplasms associated with FGFR1 abnormalities	nci
+MLNPCM1JAK2	Myeloid/Lymphoid Neoplasms with PCM1-JAK2	Leukemia	MLNER	DOID:0080164	myeloid and lymphoid neoplasms with eosinophilia and abnormalities of PDGFRA, PDGFRB, and FGFR1	parent:MLNER
+MLNPDGFRA	Myeloid/Lymphoid Neoplasms with PDGFRA Rearrangement	Leukemia	MLNER	DOID:0080165	myeloid and lymphoid neoplasms associated with PDGFRA rearrangement	nci
+MLNPDGFRB	Myeloid/Lymphoid Neoplasms with PDGFRB Rearrangement	Leukemia	MLNER	DOID:0080166	myeloid and lymphoid neoplasms associated with PDGFRB rearrangement	nci
+MLYM	Malignant Lymphoma	Miscellaneous Brain Tumor	MBT	DOID:0060058	lymphoma	nci
+MMB	Medullomyoblastoma	Embryonal Tumor	EMBT	DOID:3861	medullomyoblastoma	nci
+MMBC	Mixed Type Metaplastic Breast Cancer	Breast Cancer	MBC	DOID:7541	mixed epithelial/mesenchymal metaplastic breast carcinoma	nci
+MMBL	Melanotic Medulloblastoma	Embryonal Tumor	EMBT	DOID:3868	melanotic medulloblastoma	nci
+MNET	Miscellaneous Neuroepithelial Tumor	Miscellaneous Neuroepithelial Tumor	BRAIN	DOID:3620	central nervous system cancer	parent:BRAIN
+MNG	Meningioma	CNS Cancer	MNGT	DOID:3565	meningioma	nci
+MNGLP	Myeloid Neoplasms with Germ Line Predisposition	Myeloid Neoplasms with Germ Line Predisposition	MNM	DOID:0070004	myeloid neoplasm	parent:MNM
+MNGT	Meningothelial Tumor	CNS Cancer	BRAIN	DOID:3620	central nervous system cancer	parent:BRAIN
+MNM	Myeloid Neoplasm	Blood Cancer, NOS	MYELOID	DOID:0070004	myeloid neoplasm	name
+MOV	Mucinous Ovarian Cancer	Ovarian Cancer	OVT	DOID:6067	ovarian mucinous neoplasm	nci
+MP	Molar Pregnancy	Gestational Trophoblastic Disease	GTD	DOID:3590	gestational trophoblastic neoplasm	nci
+MPALBCRABL1	Mixed Phenotype Acute Leukemia with t(9;22)(q34.1;q11.2); BCR-ABL1	Leukemia	ALAL	DOID:0081036	mixed phenotype acute leukemia with BCR-ABL1	nci
+MPALBNOS	Mixed Phenotype Acute Leukemia, B/Myeloid, NOS	Leukemia	ALAL	DOID:0081038	mixed phenotype acute leukemia, B/myeloid	nci
+MPALKMT2A	Mixed Phenotype Acute Leukemia with t(v;11q23.3); KMT2A Rearranged	Leukemia	ALAL	DOID:0081037	mixed phenotype acute leukemia with MLL rearranged	nci
+MPALTNOS	Mixed Phenotype Acute Leukemia, T/Myeloid, NOS	Leukemia	ALAL	DOID:0070004	myeloid neoplasm	parent:MNM
+MPC	Myopericytoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+MPE	Myxopapillary Ependymoma	CNS Cancer	EPMT	DOID:5075	myxopapillary ependymoma	nci
+MPN	Myeloproliferative Neoplasms	Myeloproliferative Neoplasms	MNM	DOID:2226	myeloproliferative neoplasm	nci
+MPNST	Malignant Peripheral Nerve Sheath Tumor	Nerve Sheath Tumor	NST	DOID:5940	malignant peripheral nerve sheath tumor	nci
+MPNU	Myeloproliferative Neoplasms, Unclassifiable	Myeloproliferative Neoplasms	MPN	DOID:2226	myeloproliferative neoplasm	parent:MPN
+MPNWP	Myeloproliferative Workup	Myeloproliferative Workup	MNM	DOID:0070004	myeloid neoplasm	parent:MNM
+MPRDS	Myeloid Proliferations Related to Down Syndrome	Leukemia	AML	DOID:9119	acute myeloid leukemia	parent:AML
+MPT	Malignant Phyllodes Tumor of the Breast	Breast Sarcoma	PT	DOID:3016	breast malignant phyllodes tumor	nci
+MPTLD	Monomorphic PTLD (B- and T-/NK-cell types)	Posttransplant Lymphoproliferative Disorders	PTLD	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+MRC	Renal Medullary Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:0070475	SMARCB1-deficient renal medullary carcinoma	name
+MRLS	Myxoid/Round-Cell Liposarcoma	Soft Tissue Sarcoma	LIPO	DOID:5363	myxoid liposarcoma	umls
+MRT	Rhabdoid Cancer	Rhabdoid Cancer	KIDNEY	DOID:3672	rhabdoid cancer	nci
+MRTL	Malignant Rhabdoid Tumor of the Liver	Malignant Rhabdoid Tumor of the Liver	LIVER	DOID:3571	liver cancer	parent:LIVER
+MS	Myeloid Sarcoma	Leukemia	AML	DOID:8683	myeloid sarcoma	name
+MSCC	Metaplastic Squamous Cell Carcinoma	Breast Cancer	EMBC	DOID:5514	breast squamous cell carcinoma	nci
+MSCHW	Melanotic Schwannoma	Nerve Sheath Tumor	SCHW	DOID:3205	melanotic neurilemmoma	nci
+MSTAD	Mucinous Stomach Adenocarcinoma	Esophagogastric Cancer	STAD	DOID:3716	mucinous stomach adenocarcinoma	nci
+MT	Malignant Tumor	Miscellaneous Brain Tumor	MBT	DOID:162	cancer	nci
+MTNN	Mature T and NK Neoplasms	Mature T and NK Neoplasms	NHL	DOID:0081312	T-cell non-Hodgkin lymphoma	nci
+MTSCC	Renal Mucinous Tubular Spindle Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4472	mucinous tubular and spindle renal cell carcinoma	nci
+MUCC	Mucoepidermoid Carcinoma	Salivary Gland Cancer	SACA	DOID:4531	mucoepidermoid carcinoma	nci
+MUP	Melanoma of Unknown Primary	Melanoma	MEL	DOID:1909	melanoma	parent:MEL
+MXOV	Mixed Ovarian Carcinoma	Ovarian Cancer	OVT	DOID:6898	ovarian seromucinous carcinoma	nci
+MYCF	Mycosis Fungoides	Mature T and NK Neoplasms	MTNN	DOID:8691	mycosis fungoides	nci
+MYCHS	Myxoid Chondrosarcoma	Bone Cancer	CHS	DOID:5861	myxoid chondrosarcoma	umls
+MYEC	Myoepithelial Carcinoma	Salivary Gland Cancer	SACA	DOID:4838	myoepithelial carcinoma	name
+MYELOID	Myeloid	Blood Cancer	TISSUE	DOID:0070004	myeloid neoplasm	curated
+MYXO	Myxoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+MZL	Marginal Zone Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:0050748	marginal zone lymphoma	name
+NBL	Neuroblastoma	Peripheral Nervous System	PNS	DOID:769	neuroblastoma	nci
+NCCRCC	Renal Non-Clear Cell Carcinoma	Renal Cell Carcinoma	RCC	DOID:4450	renal cell carcinoma	parent:RCC
+NECNOS	Neuroendocrine Carcinoma, NOS	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+NETNOS	Neuroendocrine Tumor, NOS	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+NFIB	Neurofibroma	Nerve Sheath Tumor	NST	DOID:962	neurofibroma	nci
+NHL	Non-Hodgkin Lymphoma	Non-Hodgkin Lymphoma	LNM	DOID:0060060	non-Hodgkin lymphoma	nci
+NKCLL	Natural Killer (NK) Cell Lymphoblastic Leukemia/Lymphoma	T-Lymphoblastic Leukemia/Lymphoma	TLL	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+NLPHL	Nodular Lymphocyte-Predominant Hodgkin Lymphoma	Hodgkin Lymphoma	HL	DOID:8567,DOID:8642	Hodgkin's lymphoma; Hodgkin's paragranuloma	parent:HL
+NMCHN	NUT Midline Carcinoma of the Head and Neck	Head and Neck Cancer	OHNCA	DOID:0060463	NUT midline carcinoma	nci
+NMZL	Nodal Marginal Zone Lymphoma	Mature B-Cell Neoplasms	MZL	DOID:0080211	nodal marginal zone lymphoma	nci
+NPC	Nasopharyngeal Carcinoma	Head and Neck Cancer	HEAD_NECK	DOID:9261	nasopharynx carcinoma	name
+NPTLTFH	Nodal Peripheral T-Cell Lymphoma with TFH Phenotype	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+NRCC	NUTM1 Renal Cell Carcinoma	Renal Cell Carcinoma	RCC	DOID:4450	renal cell carcinoma	parent:RCC
+NSCHL	Nodular Sclerosis Classical Hodgkin Lymphoma	Hodgkin Lymphoma	CHL	DOID:8567,DOID:8642	Hodgkin's lymphoma; Hodgkin's paragranuloma	parent:HL
+NSCLC	Non-Small Cell Lung Cancer	Non-Small Cell Lung Cancer	LUNG	DOID:3908	lung non-small cell carcinoma	nci
+NSCLCPD	Poorly Differentiated Non-Small Cell Lung Cancer	Non-Small Cell Lung Cancer	NSCLC	DOID:3908	lung non-small cell carcinoma	parent:NSCLC
+NSGCT	Non-Seminomatous Germ Cell Tumor	Germ Cell Tumor	TESTIS	DOID:2998	testicular cancer	parent:TESTIS
+NST	Nerve Sheath Tumor	Nerve Sheath Tumor	PNS	DOID:1192	peripheral nervous system neoplasm	nci
+NUTCL	NUT Carcinoma of the Lung	Non-Small Cell Lung Cancer	NSCLC	DOID:3908	lung non-small cell carcinoma	parent:NSCLC
+NVRINT	Neoplastic Vs Reactive	Neoplastic Vs Reactive	MNM	DOID:0070004	myeloid neoplasm	parent:MNM
+OAT	Oncocytic Adenoma of the Thyroid	Thyroid Cancer	THYROID	DOID:1781	thyroid cancer	parent:THYROID
+OCNOS	Ovarian Choriocarcinoma, NOS	Ovarian Cancer	OOVC	DOID:2394	ovarian cancer	parent:OVARY
+OCS	Ovarian Carcinosarcoma/Malignant Mixed Mesodermal Tumor	Ovarian Cancer	OVT	DOID:6170	ovarian carcinosarcoma	nci
+OCSC	Oral Cavity Squamous Cell Carcinoma	Head and Neck Cancer	HNSC	DOID:5520	head and neck squamous cell carcinoma	parent:HNSC
+ODG	Oligodendroglioma, IDH-mutant, and 1p/19q-Codeleted	Glioma	ADIFG	DOID:3181	oligodendroglioma	nci
+ODG2	Oligodendroglioma, IDH-mutant, and 1p/19q-Codeleted, Grade 2	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	ODG	DOID:3181	oligodendroglioma	parent:ODG
+ODG3	Oligodendroglioma, IDH-mutant, and 1p/19q-Codeleted, Grade 3	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	ODG	DOID:3181	oligodendroglioma	parent:ODG
+ODGC	Odontogenic Carcinoma	Head and Neck Cancer	OHNCA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+ODYS	Dysgerminoma	Germ Cell Tumor	OGCT	DOID:5511	dysgerminoma of ovary	nci
+OEC	Embryonal Carcinoma	Germ Cell Tumor	OGCT	DOID:5681	ovarian embryonal carcinoma	nci
+OFMT	Ossifying Fibromyxoid Tumor	Soft Tissue Sarcoma	MYXO	DOID:2685	ossifying fibromyxoid tumor	nci
+OGBL	Gonadoblastoma	Sex Cord Stromal Tumor	SCST	DOID:3578	ovarian gonadoblastoma	nci
+OGCT	Ovarian Germ Cell Tumor	Germ Cell Tumor	OVARY	DOID:2156	ovarian germ cell cancer	nci
+OHNCA	Head and Neck Carcinoma, Other	Head and Neck Cancer	HEAD_NECK	DOID:11934	head and neck cancer	parent:HEAD_NECK
+OIMT	Immature Teratoma	Germ Cell Tumor	OGCT	DOID:6331	immature teratoma of ovary	nci
+OM	Ocular Melanoma	Melanoma	EYE	DOID:1752	ocular melanoma	name
+OMGCT	Mixed Germ Cell Tumor	Germ Cell Tumor	OGCT	DOID:5936	ovarian mixed germ cell neoplasm	nci
+OMT	Mature Teratoma	Germ Cell Tumor	OGCT	DOID:6231	mature teratoma of the ovary	nci
+ONBL	Olfactory Neuroblastoma	Embryonal Tumor	EMBT	DOID:369	olfactory neuroblastoma	nci
+OOVC	Ovarian Cancer, Other	Ovarian Cancer	OVARY	DOID:2394	ovarian cancer	parent:OVARY
+OPE	Polyembryoma	Germ Cell Tumor	OGCT	DOID:6774	polyembryoma of the ovary	nci
+OPHSC	Oropharynx Squamous Cell Carcinoma	Head and Neck Cancer	HNSC	DOID:0070664	oropharyngeal squamous cell carcinoma	umls
+OS	Osteosarcoma	Bone Cancer	BONE	DOID:3347	osteosarcoma	nci
+OSACA	Salivary Carcinoma, Other	Salivary Gland Cancer	SACA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+OSGCT	Osteoclastic Giant Cell Tumor	Pancreatic Cancer	UCP	DOID:1793	pancreatic cancer	parent:PANCREAS
+OSMAD	Ovarian Seromucinous Adenoma	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+OSMBT	Ovarian Seromucinous Borderline Tumor	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+OSMCA	Ovarian Seromucinous Carcinoma	Ovarian Cancer	OVT	DOID:6898	ovarian seromucinous carcinoma	nci
+OSOS	Osteoblastic Osteosarcoma	Bone Cancer	OS	DOID:3347	osteosarcoma	parent:OS
+OTHER	Other	Other Cancer	TISSUE	DOID:162	cancer	curated
+OUSARC	Uterine Sarcoma, Other	Uterine Sarcoma	USARC	DOID:5165	uterine corpus sarcoma	parent:USARC
+OUTT	Other Uterine Tumor	Endometrial Cancer	UTERUS	DOID:363	uterine cancer	parent:UTERUS
+OVARY	Ovary/Fallopian Tube	Ovarian/Fallopian Tube Cancer	TISSUE	DOID:2394	ovarian cancer	curated
+OVT	Ovarian Epithelial Tumor	Ovarian Cancer	OVARY	DOID:2152	ovary epithelial cancer	nci
+OYST	Yolk Sac Tumor	Germ Cell Tumor	OGCT	DOID:5350	ovarian endodermal sinus tumor	nci
+PAAC	Acinar Cell Carcinoma of the Pancreas	Pancreatic Cancer	PANCREAS	DOID:5742	pancreatic acinar cell adenocarcinoma	nci
+PAAD	Pancreatic Adenocarcinoma	Pancreatic Cancer	PANCREAS	DOID:4074	pancreatic adenocarcinoma	nci
+PAASC	Adenosquamous Carcinoma of the Pancreas	Pancreatic Cancer	PANCREAS	DOID:5637	pancreatic adenosquamous carcinoma	nci
+PAC	Polymorphous Adenocarcinoma	Salivary Gland Cancer	SACA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+PACT	Cystic Tumor of the Pancreas	Pancreatic Cancer	PANCREAS	DOID:7235	pancreatic mucinous cystadenoma	nci
+PADA	Pleomorphic Adenoma	Salivary Gland Cancer	SACA	DOID:452	pleomorphic adenoma	name
+PAMPCA	Pancreatobiliary Ampullary Carcinoma	Ampullary Cancer	AMPCA	DOID:4932	ampulla of Vater carcinoma	parent:AMPCA
+PANCREAS	Pancreas	Pancreatic Cancer	TISSUE	DOID:1793	pancreatic cancer	curated
+PANEC	Pancreatic Neuroendocrine Carcinoma	Pancreatic Cancer	PANCREAS	DOID:1798	pancreatic endocrine carcinoma	name
+PANET	Pancreatic Neuroendocrine Tumor	Pancreatic Cancer	PANCREAS	DOID:1793	pancreatic cancer	parent:PANCREAS
+PAOS	Parosteal Osteosarcoma	Bone Cancer	OS	DOID:3373	parosteal osteosarcoma	nci
+PAST	Pilocytic Astrocytoma	Glioma	ENCG	DOID:4851	pilocytic astrocytoma	nci
+PB	Pancreatoblastoma	Pancreatic Cancer	PANCREAS	DOID:6823	pancreatoblastoma	nci
+PBL	Pineoblastoma	Pineal Tumor	PINT	DOID:1664	pineoblastoma	nci
+PBS	Breast Sarcoma	Breast Sarcoma	BREAST	DOID:3017	breast sarcoma	nci
+PBT	Primary Brain Tumor	Miscellaneous Brain Tumor	MBT	DOID:1319	brain cancer	umls
+PCAECTCL	Primary Cutaneous CD8 Positive Aggressive Epidermotropic Cytotoxic T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+PCALCL	Primary Cutaneous Anaplastic Large Cell Lymphoma	Mature T and NK Neoplasms	PCLPD	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+PCATCL	Primary Cutaneous Acral CD8 Positive T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+PCFCL	Primary Cutaneous Follicle Center Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+PCGDTCL	Primary Cutaneous Gamma Delta T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0081050	primary cutaneous gamma-delta T-cell lymphoma	nci
+PCGP	Craniopharyngioma, Papillary Type	Sellar Tumor	SELT	DOID:3643	sella turcica neoplasm	parent:SELT
+PCLBCLLT	Primary Cutaneous DLBCL, Leg Type	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+PCLPD	Primary Cutaneous CD30 Positive T-Cell Lymphoproliferative Disorders	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+PCM	Plasma Cell Myeloma	Mature B-Cell Neoplasms	MBN	DOID:9538	multiple myeloma	nci
+PCNSL	Primary DLBCL of the central nervous system	Mature B-Cell Neoplasms	MBN	DOID:3234	central nervous system lymphoma	nci
+PCNSM	Primary CNS Melanoma	Melanoma	PCNSMT	DOID:3620	central nervous system cancer	parent:BRAIN
+PCNSMT	Primary CNS Melanocytic Tumors	Primary CNS Melanocytic Tumors	BRAIN	DOID:3620	central nervous system cancer	parent:BRAIN
+PCSMTPLD	Primary Cutaneous CD4 Positive Small/Medium T-Cell Lymphoproliferative Disorder	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+PD	Paget Disease of the Nipple	Breast Cancer	DCIS	DOID:1612	breast cancer	parent:BREAST
+PDC	Poorly Differentiated Carcinoma, NOS	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+PDIFHG	Pediatric-Type Diffuse High-Grade Glioma	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	DIFG	DOID:3620	central nervous system cancer	parent:BRAIN
+PDIFLG	Pediatric-Type Diffuse Low-Grade Glioma	Gliomas, Glioneuronal Tumors, and Neuronal Tumors	DIFG	DOID:3620	central nervous system cancer	parent:BRAIN
+PECOMA	Perivascular Epithelioid Cell Tumor	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:2643	perivascular epithelioid cell tumor	nci
+PEL	Primary Effusion Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+PEMESO	Peritoneal Mesothelioma	Mesothelioma	PERITONEUM	DOID:1789	benign peritoneal mesothelioma	nci
+PENIS	Penis	Penile Cancer	TISSUE	DOID:11615	penile cancer	curated
+PEOS	Periosteal Osteosarcoma	Bone Cancer	OS	DOID:6489	periosteal osteogenic sarcoma	nci
+PERITONEUM	Peritoneum	Peritoneal Cancer	TISSUE	DOID:1725	peritoneum cancer	curated
+PERL	Pure Erythroid Leukemia	Leukemia	AMLNOS	DOID:9119	acute myeloid leukemia	parent:AMLNOS
+PGNG	Paraganglioma	Miscellaneous Neuroepithelial Tumor	SOFT_TISSUE	DOID:0050773	paraganglioma	nci
+PGNT	Papillary Glioneuronal Tumor	Miscellaneous Neuroepithelial Tumor	MNET	DOID:0081283	papillary glioneuronal tumor	nci
+PHC	Pheochromocytoma	Pheochromocytoma	ADRENAL_GLAND	DOID:0050771	pheochromocytoma	name
+PHCH	Perihilar Cholangiocarcinoma	Hepatobiliary Cancer	CHOL	DOID:4947	cholangiocarcinoma	parent:CHOL
+PHM	Partial Hydatidiform Mole	Gestational Trophoblastic Disease	MP	DOID:3590	gestational trophoblastic neoplasm	parent:MP
+PHPTLD	Plasmacytic Hyperplasia PTLD	Posttransplant Lymphoproliferative Disorders	PTLD	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+PINC	Pineocytoma	Pineal Tumor	PINT	DOID:0081248	pineocytoma	nci
+PINT	Pineal Tumor	Pineal Tumor	BRAIN	DOID:5032	pineal gland cancer	nci
+PLBL	Plasmablastic Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:0080779	plasmablastic lymphoma	nci
+PLBMESO	Pleural Mesothelioma, Biphasic Type	Mesothelioma	PLMESO	DOID:5157	benign pleural mesothelioma	parent:PLMESO
+PLEMESO	Pleural Mesothelioma, Epithelioid Type	Mesothelioma	PLMESO	DOID:5157	benign pleural mesothelioma	parent:PLMESO
+PLEURA	Pleura	Pleural Cancer	TISSUE	DOID:5158	pleural cancer	curated
+PLLS	Pleomorphic Liposarcoma	Soft Tissue Sarcoma	LIPO	DOID:5702	pleomorphic liposarcoma	nci
+PLMESO	Pleural Mesothelioma	Mesothelioma	PLEURA	DOID:5157	benign pleural mesothelioma	umls
+PLRMS	Pleomorphic Rhabdomyosarcoma	Soft Tissue Sarcoma	RMS	DOID:3250	pleomorphic rhabdomyosarcoma	nci
+PLSMESO	Pleural Mesothelioma, Sarcomatoid Type	Mesothelioma	PLMESO	DOID:5157	benign pleural mesothelioma	parent:PLMESO
+PMA	Pilomyxoid Astrocytoma	Glioma	ENCG	DOID:4845	pilomyxoid astrocytoma	nci
+PMBL	Primary Mediastinal (Thymic) Large B-Cell Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+PMF	Primary Myelofibrosis	Myeloproliferative Neoplasms	MPN	DOID:4971	myelofibrosis	nci
+PMFOFS	Primary Myelofibrosis,Overt Fibrotic Stage	Myeloproliferative Neoplasms	PMF	DOID:4971	myelofibrosis	parent:PMF
+PMFPES	Primary Myelofibrosis, Prefibrotic/Early Stage	Myeloproliferative Neoplasms	PMF	DOID:8106	cellular phase chronic idiopathic myelofibrosis	nci
+PMHE	Pseudomyogenic Hemangioendothelioma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+PNET	Primitive Neuroectodermal Tumor	Embryonal Tumor	EMBT	DOID:0050902	medulloblastoma	nci
+PNS	Peripheral Nervous System	Peripheral Nervous System Cancer	TISSUE	DOID:1192	peripheral nervous system neoplasm	curated
+POCA	Porocarcinoma/Spiroadenocarcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:7566	eccrine porocarcinoma	nci
+PORO	Poroma/Acrospiroma	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+PPB	Pleuropulmonary Blastoma	Non-Small Cell Lung Cancer	LUNG	DOID:4769	pleuropulmonary blastoma	nci
+PPCT	Proliferating Pilar Cystic Tumor	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+PPM	Papillary Meningioma	CNS Cancer	MNGT	DOID:5058	rhabdoid meningioma	name
+PPTID	Pineal Parenchymal Tumor of Intermediate Differentiation	Pineal Tumor	PINT	DOID:5030	pineal parenchymal tumor of intermediate differentiation	nci
+PPTLD	Polymorphic PTLD	Posttransplant Lymphoproliferative Disorders	PTLD	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+PRAD	Prostate Adenocarcinoma	Prostate Cancer	PROSTATE	DOID:2526	prostate adenocarcinoma	nci
+PRCC	Papillary Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4465	papillary renal cell carcinoma	nci
+PRNE	Prostate Neuroendocrine Carcinoma	Prostate Cancer	PROSTATE	DOID:2992	prostate neuroendocrine neoplasm	nci
+PRNET	Primary Neuroepithelial Tumor	Miscellaneous Brain Tumor	MBT	DOID:3620	central nervous system cancer	parent:BRAIN
+PROSTATE	Prostate	Prostate Cancer	TISSUE	DOID:10283	prostate cancer	curated
+PRSC	Prostate Squamous Cell Carcinoma	Prostate Cancer	PROSTATE	DOID:10287	prostate squamous cell carcinoma	nci
+PRSCC	Prostate Small Cell Carcinoma	Prostate Cancer	PROSTATE	DOID:7141	prostate small cell carcinoma	umls
+PSC	Serous Cystadenoma of the Pancreas	Pancreatic Cancer	PACT	DOID:3917	pancreatic serous cystadenoma	nci
+PSCC	Penile Squamous Cell Carcinoma	Penile Cancer	PENIS	DOID:5518	penis squamous cell carcinoma	nci
+PSEC	Peritoneal Serous Carcinoma	Peritoneal Cancer, NOS	PERITONEUM	DOID:1725	peritoneum cancer	parent:PERITONEUM
+PSTAD	Papillary Stomach Adenocarcinoma	Esophagogastric Cancer	STAD	DOID:5593	gastric papillary adenocarcinoma	nci
+PSTT	Placental Site Trophoblastic Tumor	Gestational Trophoblastic Disease	GTD	DOID:3596	placental site trophoblastic tumor	nci
+PT	Phyllodes Tumor of the Breast	Breast Sarcoma	BFN	DOID:3016	breast malignant phyllodes tumor	nci
+PTAD	Pituitary Adenoma	Sellar Tumor	SELT	DOID:3829	pituitary adenoma	nci
+PTCA	Pituitary Carcinoma	Sellar Tumor	SELT	DOID:4916	pituitary carcinoma	nci
+PTCL	Peripheral T-Cell lymphoma, NOS	Mature T and NK Neoplasms	MTNN	DOID:0081312	T-cell non-Hodgkin lymphoma	parent:MTNN
+PTCY	Pituicytoma	Sellar Tumor	SELT	DOID:0081280	pituicytoma	nci
+PTES	Proximal-Type Epithelioid Sarcoma	Soft Tissue Sarcoma	EPIS	DOID:7492	central epithelioid sarcoma	nci
+PTFL	Pediatric-Type Follicular Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+PTH	Parathyroid Cancer	Parathyroid Cancer	HEAD_NECK	DOID:11934	head and neck cancer	parent:HEAD_NECK
+PTHC	Parathyroid Carcinoma	Parathyroid Cancer	PTH	DOID:1540	parathyroid carcinoma	name
+PTLD	Posttransplant Lymphoproliferative Disorders	Posttransplant Lymphoproliferative Disorders	LNM	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+PTPR	Papillary Tumor of the Pineal Region	Pineal Tumor	PINT	DOID:0081251	papillary tumor of the pineal region	nci
+PV	Polycythemia Vera	Myeloproliferative Neoplasms	MPN	DOID:8997	polycythemia vera	nci
+PVMF	Polycythaemia Vera Myelofibrosis	Myeloproliferative Neoplasms	PV	DOID:8997	polycythemia vera	parent:PV
+PXA	Pleomorphic Xanthoastrocytoma	Glioma	ENCG	DOID:4852	pleomorphic xanthoastrocytoma	nci
+RAML	Renal Angiomyolipoma	Renal Cell Carcinoma	NCCRCC	DOID:8411	kidney angiomyolipoma	nci
+RAS	Radiation-Associated Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+RBL	Retinoblastoma	Retinoblastoma	EYE	DOID:768	retinoblastoma	nci
+RCC	Renal Cell Carcinoma	Renal Cell Carcinoma	KIDNEY	DOID:4450	renal cell carcinoma	nci
+RCSNOS	Round Cell Sarcoma, NOS	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+RCYC	Refractory Cytopenia of Childhood	Myelodysplastic Syndromes	MDS	DOID:0070004	myeloid neoplasm	parent:MNM
+RDD	Rosai-Dorfman Disease	Histiocytosis	HDCN	DOID:0111278	histiocytosis-lymphadenopathy plus syndrome	nci
+READ	Rectal Adenocarcinoma	Colorectal Cancer	COADREAD	DOID:1996	rectum adenocarcinoma	nci
+RGNT	Rosette-forming Glioneuronal Tumor of the Fourth Ventricle	Miscellaneous Neuroepithelial Tumor	MNET	DOID:3620	central nervous system cancer	parent:BRAIN
+RHM	Rhabdoid Meningioma	CNS Cancer	MNGT	DOID:5058	rhabdoid meningioma	nci
+RLCLC	Large Cell Lung Carcinoma With Rhabdoid Phenotype	Non-Small Cell Lung Cancer	LCLC	DOID:7480	large cell carcinoma with rhabdoid phenotype	nci
+RMS	Rhabdomyosarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:3247	rhabdomyosarcoma	nci
+RNET	Renal Neuroendocrine Tumor	Renal Neuroendocrine Tumor	KIDNEY	DOID:263	kidney cancer	parent:KIDNEY
+ROCY	Renal Oncocytoma	Renal Cell Carcinoma	NCCRCC	DOID:6245	renal oncocytoma	nci
+RSCC	Renal Small Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4450	renal cell carcinoma	parent:RCC
+RWDNET	Well-Differentiated Neuroendocrine Tumor of the Rectum	Gastrointestinal Neuroendocrine Tumor	GINET	DOID:10155	intestinal cancer	parent:BOWEL
+SAAD	Salivary Adenocarcinoma	Salivary Gland Cancer	SACA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+SACA	Salivary Carcinoma	Salivary Gland Cancer	HEAD_NECK	DOID:11934	head and neck cancer	parent:HEAD_NECK
+SARCL	Sarcomatoid Carcinoma of the Lung	Non-Small Cell Lung Cancer	LUNG	DOID:0080777	lung sarcomatoid carcinoma	nci
+SARCNOS	Sarcoma, NOS	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:1115	sarcoma	parent:SOFT_TISSUE
+SBC	Small Bowel Cancer	Small Bowel Cancer	BOWEL	DOID:4907	small intestine carcinoma	nci
+SBL	Sialoblastoma	Sialoblastoma	HEAD_NECK	DOID:11934	head and neck cancer	parent:HEAD_NECK
+SBLU	Splenic B-Cell Lymphoma/Leukemia, Unclassifiable	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+SBMOV	Serous Borderline Ovarian Tumor, Micropapillary	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+SBOV	Serous Borderline Ovarian Tumor	Ovarian Cancer	OVT	DOID:2152	ovary epithelial cancer	parent:OVT
+SBWDNET	Small Bowel Well-Differentiated Neuroendocrine Tumor	Gastrointestinal Neuroendocrine Tumor	GINET	DOID:7132	urinary bladder small cell neuroendocrine carcinoma	nci
+SCB	Sarcomatoid Carcinoma of the Urinary Bladder	Bladder Cancer	BLADDER	DOID:7553	infiltrating bladder urothelial carcinoma sarcomatoid variant	nci
+SCBC	Small Cell Bladder Cancer	Bladder Cancer	BLADDER	DOID:7132	urinary bladder small cell neuroendocrine carcinoma	nci
+SCCE	Small Cell Carcinoma of the Cervix	Cervical Cancer	CERVIX	DOID:6740	cervix small cell carcinoma	nci
+SCCNOS	Squamous Cell Carcinoma, NOS	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+SCCO	Small Cell Carcinoma of the Ovary	Ovarian Cancer	OVT	DOID:6179	ovarian small cell carcinoma	nci
+SCCRCC	Renal Clear Cell Carcinoma with Sarcomatoid Features	Renal Cell Carcinoma	CCRCC	DOID:4467	clear cell renal cell carcinoma	parent:CCRCC
+SCEMU	Signet Ring Mucinous Carcinoma	Cervical Cancer	CEMU	DOID:6101	signet ring cell variant cervical mucinous adenocarcinoma	nci
+SCGBC	Small Cell Gallbladder Carcinoma	Hepatobiliary Cancer	GBC	DOID:4948	gallbladder carcinoma	parent:GBC
+SCGBM	Small Cell Glioblastoma	Glioma	GB	DOID:3068	glioblastoma	parent:GB
+SCHW	Schwannoma	Nerve Sheath Tumor	NST	DOID:3192	neurilemmoma	nci
+SCLC	Small Cell Lung Cancer	Small Cell Lung Cancer	LNET	DOID:5409	lung small cell carcinoma	nci
+SCLG	Squamous Cell Carcinoma of the Lacrimal Gland	Lacrimal Gland Tumor	LGT	DOID:2174	ocular cancer	parent:EYE
+SCOAH	Spindle Cell Oncocytoma of the Adenohypophysis	Sellar Tumor	SELT	DOID:0081306	spindle cell oncocytoma	nci
+SCOS	Small Cell Osteosarcoma	Bone Cancer	OS	DOID:3377	small cell osteogenic sarcoma	nci
+SCRMS	Spindle Cell Rhabdomyosarcoma	Soft Tissue Sarcoma	RMS	DOID:3260	spindle cell rhabdomyosarcoma	nci
+SCSRMS	Spindle Cell/Sclerosing Rhabdomyosarcoma	Soft Tissue Sarcoma	RMS	DOID:3260	spindle cell rhabdomyosarcoma	name
+SCST	Sex Cord Stromal Tumor	Sex Cord Stromal Tumor	OVARY	DOID:0080369	ovarian sex-cord stromal tumor	nci
+SCT	Steroid Cell Tumor, NOS	Sex Cord Stromal Tumor	SCST	DOID:0080369	ovarian sex-cord stromal tumor	parent:SCST
+SCUP	Small Cell Carcinoma of Unknown Primary	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+SDCA	Salivary Duct Carcinoma	Salivary Gland Cancer	SACA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+SDRPL	Splenic Diffuse Red Pulp Small B-Cell Lymphoma	Mature B-Cell Neoplasms	SBLU	DOID:707	B-cell lymphoma	parent:MBN
+SEBA	Sebaceous Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:4839	sebaceous adenocarcinoma	nci
+SEBVTLC	Systemic EBV Positive T-Cell Lymphoma of Childhood	Mature T and NK Neoplasms	MTNN	DOID:0070324	systemic Epstein-Barr virus positive T-cell lymphoma of childhood	umls
+SECOS	Secondary Osteosarcoma	Bone Cancer	OS	DOID:3347	osteosarcoma	parent:OS
+SEF	Sclerosing Epithelioid Fibrosarcoma	Soft Tissue Sarcoma	FIBS	DOID:3355	fibrosarcoma	parent:FIBS
+SELT	Sellar Tumor	Sellar Tumor	BRAIN	DOID:3643	sella turcica neoplasm	nci
+SEM	Seminoma	Germ Cell Tumor	TESTIS	DOID:4440,DOID:5842	seminoma; testis seminoma	nci
+SFT	Solitary Fibrous Tumor/Hemangiopericytoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:0080897	solitary fibrous tumor/hemangiopericytoma	name
+SFTCNS	Solitary Fibrous Tumor of the Central Nervous System	CNS Cancer	MNGT	DOID:3620	central nervous system cancer	parent:BRAIN
+SGAD	Sweat Gland Adenocarcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+SGO	Salivary Gland Oncocytoma	Salivary Gland Cancer	SACA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+SGTTL	Salivary Gland-Type Tumor of the Lung	Non-Small Cell Lung Cancer	NSCLC	DOID:3908	lung non-small cell carcinoma	parent:NSCLC
+SIC	Small Intestinal Carcinoma	Small Bowel Cancer	BOWEL	DOID:4907	small intestine carcinoma	nci
+SKAC	Skin Adnexal Carcinoma	Skin Cancer, Non-Melanoma	SKIN	DOID:4159	skin cancer	parent:SKIN
+SKCM	Cutaneous Melanoma	Melanoma	MEL	DOID:8923	skin melanoma	nci
+SKCN	Congenital Nevus	Melanoma	MEL	DOID:0111359	large congenital melanocytic nevus	nci
+SKIN	Skin	Skin Cancer	TISSUE	DOID:4159	skin cancer	curated
+SKLMM	Lentigo Maligna Melanoma	Melanoma	MEL	DOID:1909	melanoma	parent:MEL
+SLCT	Sertoli-Leydig Cell Tumor	Sex Cord Stromal Tumor	SCST	DOID:2997	Sertoli-Leydig cell tumor	name
+SM	Systemic Mastocytosis	Mastocytosis	MCD	DOID:349	systemic mastocytosis	nci
+SMAHN	Systemic Mastocytosis with an Associated Hematological Neoplasm	Mastocytosis	SM	DOID:4797	SM-AHNMD	umls
+SMMCL	Mast Cell Leukemia	Mastocytosis	SM	DOID:9254	mast-cell leukemia	nci
+SMN	Smooth Muscle Neoplasm, NOS	Esophagogastric Cancer	STOMACH	DOID:10534,DOID:5041	stomach cancer; esophageal cancer	parent:STOMACH
+SMZL	Splenic Marginal Zone Lymphoma	Mature B-Cell Neoplasms	MZL	DOID:0050750	splenic marginal zone lymphoma	nci
+SNA	Sinonasal Adenocarcinoma	Head and Neck Cancer	OHNCA	DOID:11934	head and neck cancer	parent:HEAD_NECK
+SNSC	Sinonasal Squamous Cell Carcinoma	Head and Neck Cancer	HNSC	DOID:4003	Schneiderian carcinoma	nci
+SNUC	Sinonasal Undifferentiated Carcinoma	Head and Neck Cancer	OHNCA	DOID:0080799	sinonasal undifferentiated carcinoma	nci
+SOC	Serous Ovarian Cancer	Ovarian Cancer	OVT	DOID:5744	ovary serous adenocarcinoma	nci
+SOFT_TISSUE	Soft Tissue	Soft Tissue Cancer	TISSUE	DOID:1115	sarcoma	curated
+SPB	Solitary Plasmacytoma of Bone	Mature B-Cell Neoplasms	MBN	DOID:3722	solitary osseous plasmacytoma	nci
+SPC	Solid Papillary Carcinoma of the Breast	Breast Cancer	BRCA	DOID:5592	breast papillary carcinoma	nci
+SPCC	Spindle Cell Carcinoma of the Lung	Non-Small Cell Lung Cancer	NSCLC	DOID:3908	lung non-small cell carcinoma	parent:NSCLC
+SPDAC	Poorly Differentiated Carcinoma of the Stomach	Esophagogastric Cancer	USTAD	DOID:4944	gastroesophageal junction adenocarcinoma	parent:EGC
+SPIR	Spiroma/Spiradenoma	Skin Cancer, Non-Melanoma	SKIN	DOID:5444	spiradenoma	nci
+SPN	Solid Pseudopapillary Neoplasm of the Pancreas	Pancreatic Cancer	PANCREAS	DOID:1793	pancreatic cancer	parent:PANCREAS
+SPTCL	Subcutaneous Panniculitis-Like T-Cell Lymphoma	Mature T and NK Neoplasms	MTNN	DOID:0070662	subcutaneous panniculitis-like T-cell lymphoma	nci
+SPZM	Spitzoid Melanoma	Melanoma	MEL	DOID:0070326	spitzoid melanoma	name
+SRAP	Signet Ring Cell Type of the Appendix	Appendiceal Cancer	APAD	DOID:3608	appendix adenocarcinoma	parent:APAD
+SRCBC	Plasmacytoid/Signet Ring Cell Bladder Carcinoma	Bladder Cancer	BLADDER	DOID:7968	plasmacytoid variant infiltrating bladder urothelial carcinoma	nci
+SRCC	Sarcomatoid Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4473	sarcomatoid renal cell carcinoma	nci
+SRCCR	Signet Ring Cell Adenocarcinoma of the Colon and Rectum	Colorectal Cancer	COADREAD	DOID:3033,DOID:7707	colon signet ring adenocarcinoma; rectum signet ring adenocarcinoma	nci
+SS	Sezary Syndrome	Mature T and NK Neoplasms	MTNN	DOID:8541	Sezary's disease	nci
+SSM	Smoldering Systemic Mastocytosis	Mastocytosis	SM	DOID:349	systemic mastocytosis	parent:SM
+SSRCC	Signet Ring Cell Carcinoma of the Stomach	Esophagogastric Cancer	USTAD	DOID:8025	gastric signet ring cell adenocarcinoma	nci
+STAD	Stomach Adenocarcinoma	Esophagogastric Cancer	EGC	DOID:3717	gastric adenocarcinoma	nci
+STAS	Adenosquamous Carcinoma of the Stomach	Esophagogastric Cancer	EGC	DOID:5635	gastric adenosquamous carcinoma	nci
+STMYEC	Soft Tissue Myoepithelial Carcinoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:4838	myoepithelial carcinoma	nci
+STOMACH	Esophagus/Stomach	Esophageal/Stomach Cancer	TISSUE	DOID:10534,DOID:5041	stomach cancer; esophageal cancer	curated
+STSC	Small Cell Carcinoma of the Stomach	Esophagogastric Cancer	EGC	DOID:6552	gastric small cell carcinoma	nci
+SUBE	Subependymoma	CNS Cancer	EPMT	DOID:4843	subependymal glioma	nci
+SWDNET	Well-Differentiated Neuroendocrine Tumors of the Stomach	Gastrointestinal Neuroendocrine Tumor	GINETES	DOID:10534,DOID:5041	stomach cancer; esophageal cancer	parent:STOMACH
+SYNS	Synovial Sarcoma	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:5485	synovial sarcoma	nci
+TAC	Tubular Adenoma of the Colon	Tubular Adenoma of the Colon	BOWEL	DOID:10155	intestinal cancer	parent:BOWEL
+TAM	Transient Abnormal Myelopoiesis	Leukemia	MPRDS	DOID:0060888	transient myeloproliferative syndrome	name
+TAML	Therapy-Related Acute Myeloid Leukemia	Leukemia	TMN	DOID:9119	acute myeloid leukemia	parent:AML
+TCCA	Choriocarcinoma	Germ Cell Tumor	NSGCT	DOID:5551	choriocarcinoma of the testis	nci
+TEOS	Telangiectatic Osteosarcoma	Bone Cancer	OS	DOID:6951	telangiectatic osteogenic sarcoma	nci
+TESTIS	Testis	Testicular Cancer	TISSUE	DOID:2998	testicular cancer	curated
+TET	Thymic Epithelial Tumor	Thymic Tumor	THYMUS	DOID:3277	thymus cancer	parent:THYMUS
+TGCT	Tenosynovial Giant Cell Tumor Diffuse Type	Soft Tissue Sarcoma	SOFT_TISSUE	DOID:2702	pigmented villonodular synovitis	nci
+THAP	Anaplastic Thyroid Cancer	Thyroid Cancer	THYROID	DOID:0080522	anaplastic thyroid carcinoma	nci
+THFO	Follicular Thyroid Cancer	Thyroid Cancer	WDTC	DOID:3962	follicular thyroid carcinoma	nci
+THHC	Hurthle Cell Thyroid Cancer	Thyroid Cancer	THYROID	DOID:8161	oncocytic carcinoma of the thyroid	nci
+THME	Medullary Thyroid Cancer	Thyroid Cancer	THYROID	DOID:3973	medullary thyroid carcinoma	nci
+THPA	Papillary Thyroid Cancer	Thyroid Cancer	WDTC	DOID:3969	papillary thyroid carcinoma	nci
+THPD	Poorly Differentiated Thyroid Cancer	Thyroid Cancer	THYROID	DOID:3972	poorly differentiated thyroid carcinoma	nci
+THRLBCL	T-Cell/Histiocyte-Rich Large B-Cell Lymphoma	Mature B-Cell Neoplasms	MBN	DOID:707	B-cell lymphoma	parent:MBN
+THYC	Thymic Carcinoma	Thymic Tumor	TET	DOID:3284	thymic carcinoma	nci
+THYM	Thymoma	Thymic Tumor	TET	DOID:3275	thymoma	nci
+THYMUS	Thymus	Thymic Cancer	TISSUE	DOID:3277	thymus cancer	curated
+THYROID	Thyroid	Thyroid Cancer	TISSUE	DOID:1781	thyroid cancer	curated
+TISSUE	Tissue			DOID:162	cancer	curated
+TLGL	T-Cell Large Granular Lymphocytic Leukemia	Mature T and NK Neoplasms	MTNN	DOID:0050751	T-cell large granular lymphocyte leukemia	nci
+TLL	T-Lymphoblastic Leukemia/Lymphoma	T-Lymphoblastic Leukemia/Lymphoma	LNM	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia	parent:LYMPH
+TLYM	Testicular Lymphoma	Non-Hodgkin Lymphoma	TESTIS	DOID:12253	testicular lymphoma	nci
+TMDS	Therapy-Related Myelodysplastic Syndrome	Leukemia	TMN	DOID:9119	acute myeloid leukemia	parent:AML
+TMESO	Testicular Mesothelioma	Mesothelioma	TESTIS	DOID:2998	testicular cancer	parent:TESTIS
+TMN	Therapy-Related Myeloid Neoplasms	Leukemia	AML	DOID:9119	acute myeloid leukemia	parent:AML
+TNET	Thymic Neuroendocrine Tumor	Thymic Tumor	THYMUS	DOID:3277	thymus cancer	parent:THYMUS
+TPLL	T-Cell Prolymphocytic Leukemia	Mature T and NK Neoplasms	MTNN	DOID:0081042	T-cell prolymphocytic leukemia	nci
+TRCC	Translocation-Associated Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:0081415	TFE3-rearranged renal cell carcinoma	nci
+TSCST	Sex Cord Stromal Tumor	Sex Cord Stromal Tumor	TESTIS	DOID:2998	testicular cancer	parent:TESTIS
+TSTAD	Tubular Stomach Adenocarcinoma	Esophagogastric Cancer	STAD	DOID:6595	gastric tubular adenocarcinoma	nci
+TT	Teratoma	Germ Cell Tumor	NSGCT	DOID:3307	teratoma	name
+TYST	Yolk Sac Tumor	Germ Cell Tumor	NSGCT	DOID:5344	testicular yolk sac tumor	nci
+UA	Urachal Adenocarcinoma	Bladder Cancer	URCA	DOID:7694	bladder urachal adenocarcinoma	nci
+UAD	Urethral Adenocarcinoma	Bladder Cancer	UCA	DOID:4910	urethra adenocarcinoma	nci
+UAS	Uterine Adenosarcoma	Uterine Sarcoma	USARC	DOID:4113	uterine corpus adenosarcoma	nci
+UASC	Uterine Adenosquamous Carcinoma	Endometrial Cancer	UCEC	DOID:5636	cervical adenosquamous carcinoma	nci
+UCA	Urethral Cancer	Bladder Cancer	BLADDER	DOID:734	urethra cancer	nci
+UCCA	Choriocarcinoma	Gestational Trophoblastic Disease	GTD	DOID:8188	uterine corpus choriocarcinoma	nci
+UCCC	Uterine Clear Cell Carcinoma	Endometrial Cancer	UCEC	DOID:5303	cervical clear cell adenocarcinoma	nci
+UCEC	Endometrial Carcinoma	Endometrial Cancer	UTERUS	DOID:2871	endometrial carcinoma	nci
+UCP	Undifferentiated Carcinoma of the Pancreas	Pancreatic Cancer	PANCREAS	DOID:1793	pancreatic cancer	parent:PANCREAS
+UCS	Uterine Carcinosarcoma/Uterine Malignant Mixed Mullerian Tumor	Endometrial Cancer	UCEC	DOID:6171	uterine carcinosarcoma	nci
+UCU	Urethral Urothelial Carcinoma	Bladder Cancer	UCA	DOID:734	urethra cancer	parent:UCA
+UDDC	Uterine Dedifferentiated Carcinoma	Endometrial Cancer	UCEC	DOID:2871	endometrial carcinoma	parent:UCEC
+UDMN	Undifferentiated Malignant Neoplasm	Cancer of Unknown Primary	CUP	DOID:162	cancer	parent:OTHER
+UEC	Uterine Endometrioid Carcinoma	Endometrial Cancer	UCEC	DOID:2870	endometrial adenocarcinoma	nci
+UELMS	Uterine Epithelioid Leiomyosarcoma	Uterine Sarcoma	USMT	DOID:6139	uterine corpus epithelioid leiomyosarcoma	nci
+UESL	Undifferentiated Embryonal Sarcoma of the Liver	Undifferentiated Embryonal Sarcoma of the Liver	LIVER	DOID:3571	liver cancer	parent:LIVER
+ULM	Uterine Leiomyoma	Uterine Sarcoma	USMT	DOID:13223	uterine fibroid	nci
+ULMS	Uterine Leiomyosarcoma	Uterine Sarcoma	USMT	DOID:5289	uterus leiomyosarcoma	nci
+UM	Uveal Melanoma	Melanoma	OM	DOID:6039	uveal melanoma	nci
+UMC	Uterine Mucinous Carcinoma	Endometrial Cancer	UCEC	DOID:3707	endometrial mucinous adenocarcinoma	nci
+UMEC	Uterine Mixed Endometrial Carcinoma	Endometrial Cancer	UCEC	DOID:2871	endometrial carcinoma	parent:UCEC
+UMLMS	Uterine Myxoid Leiomyosarcoma	Uterine Sarcoma	USMT	DOID:6567	uterine corpus myxoid leiomyosarcoma	nci
+UMNC	Uterine Mesonephric Carcinoma	Endometrial Cancer	UCEC	DOID:2871	endometrial carcinoma	parent:UCEC
+UNEC	Uterine Neuroendocrine Carcinoma	Endometrial Cancer	UCEC	DOID:2871	endometrial carcinoma	parent:UCEC
+UPA	Urothelial Papilloma	Bladder Cancer	BLADDER	DOID:6933	bladder transitional cell papilloma	name
+UPDC	Poorly Differentiated Carcinoma of the Uterus	Endometrial Cancer	UCEC	DOID:2871	endometrial carcinoma	parent:UCEC
+UPECOMA	Uterine Perivascular Epithelioid Cell Tumor	Uterine Sarcoma	USARC	DOID:7437	uterus perivascular epithelioid cell tumor	nci
+URCA	Urachal Carcinoma	Bladder Cancer	BLADDER	DOID:5958	bladder urachal carcinoma	nci
+URCC	Unclassified Renal Cell Carcinoma	Renal Cell Carcinoma	NCCRCC	DOID:4450	renal cell carcinoma	parent:RCC
+URMM	Mucosal Melanoma of the Urethra	Melanoma	BLADDER	DOID:3996	urinary system cancer	parent:BLADDER
+USARC	Uterine Sarcoma/Mesenchymal	Uterine Sarcoma	UTERUS	DOID:5165	uterine corpus sarcoma	nci
+USC	Uterine Serous Carcinoma/Uterine Papillary Serous Carcinoma	Endometrial Cancer	UCEC	DOID:5750	endometrial serous adenocarcinoma	nci
+USCC	Urethral Squamous Cell Carcinoma	Bladder Cancer	UCA	DOID:3750	urethra squamous cell carcinoma	nci
+USMT	Uterine Smooth Muscle Tumor	Uterine Sarcoma	USARC	DOID:5165	uterine corpus sarcoma	parent:USARC
+USTAD	Undifferentiated Stomach Adenocarcinoma	Esophagogastric Cancer	EGC	DOID:4944	gastroesophageal junction adenocarcinoma	parent:EGC
+USTUMP	Uterine Smooth Muscle Tumor of Uncertain Malignant Potential	Uterine Sarcoma	USMT	DOID:5165	uterine corpus sarcoma	parent:USARC
+UTERUS	Uterus	Uterine Cancer	TISSUE	DOID:363	uterine cancer	curated
+UTUC	Upper Tract Urothelial Carcinoma	Bladder Cancer	BLADDER	DOID:3996	urinary system cancer	parent:BLADDER
+UUC	Uterine Undifferentiated Carcinoma	Endometrial Cancer	UCEC	DOID:2871	endometrial carcinoma	parent:UCEC
+UUS	Undifferentiated Uterine Sarcoma	Uterine Sarcoma	USARC	DOID:5165	uterine corpus sarcoma	parent:USARC
+VA	Vaginal Adenocarcinoma	Vaginal Cancer	VULVA	DOID:119,DOID:1245	vaginal cancer; vulva cancer	parent:VULVA
+VDYS	Dysgerminoma	Germ Cell Tumor	VGCT	DOID:5511	dysgerminoma of ovary	nci
+VGCE	Villoglandular Adenocarcinoma of the Cervix	Cervical Cancer	CERVIX	DOID:8338	villoglandular variant cervical mucinous adenocarcinoma	nci
+VGCT	Germ Cell Tumor of the Vulva	Germ Cell Tumor	VULVA	DOID:119,DOID:1245	vaginal cancer; vulva cancer	parent:VULVA
+VIMT	Immature Teratoma	Germ Cell Tumor	VGCT	DOID:5563	malignant teratoma	nci
+VMA	Mucinous Adenocarcinoma of the Vulva/Vagina	Vulvar Carcinoma	VULVA	DOID:119,DOID:1245	vaginal cancer; vulva cancer	parent:VULVA
+VMGCT	Mixed Germ Cell Tumor	Germ Cell Tumor	VGCT	DOID:3306	mixed germ cell cancer	nci
+VMM	Mucosal Melanoma of the Vulva/Vagina	Melanoma	VULVA	DOID:119,DOID:1245	vaginal cancer; vulva cancer	parent:VULVA
+VMT	Mature Teratoma	Germ Cell Tumor	VGCT	DOID:5566	mature teratoma	nci
+VOEC	Embryonal Carcinoma	Germ Cell Tumor	VGCT	DOID:3308	embryonal carcinoma	name
+VPDC	Poorly Differentiated Vaginal Carcinoma	Vaginal Cancer	VULVA	DOID:119,DOID:1245	vaginal cancer; vulva cancer	parent:VULVA
+VPE	Polyembryoma	Germ Cell Tumor	VGCT	DOID:119,DOID:1245	vaginal cancer; vulva cancer	parent:VULVA
+VPSCC	Verrucous Penile Squamous Cell Carcinoma	Penile Cancer	PSCC	DOID:5908	penis verrucous carcinoma	nci
+VSC	Squamous Cell Carcinoma of the Vulva/Vagina	Vaginal Cancer	VULVA	DOID:119,DOID:1245	vaginal cancer; vulva cancer	parent:VULVA
+VULVA	Vulva/Vagina	Vulvar/Vaginal Cancer	TISSUE	DOID:119,DOID:1245	vaginal cancer; vulva cancer	curated
+VYST	Yolk Sac Tumor	Germ Cell Tumor	VGCT	DOID:1910	vaginal yolk sac tumor	nci
+WDLS	Well-Differentiated Liposarcoma	Soft Tissue Sarcoma	LIPO	DOID:5690	well-differentiated liposarcoma	umls
+WDTC	Well-Differentiated Thyroid Cancer	Thyroid Cancer	THYROID	DOID:0080525	differentiated high-grade thyroid carcinoma	nci
+WM	Waldenstrom Macroglobulinemia	Mature B-Cell Neoplasms	LPL	DOID:0060901	lymphoplasmacytic lymphoma	nci
+WPSCC	Warty Penile Squamous Cell Carcinoma	Penile Cancer	PSCC	DOID:5518	penis squamous cell carcinoma	parent:PSCC
+WT	Wilms' Tumor	Wilms Tumor	KIDNEY	DOID:263	kidney cancer	parent:KIDNEY
+XGA	Xanthogranuloma	Histiocytosis	HDCN	DOID:3405	histiocytosis	parent:HDCN

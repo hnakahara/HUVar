@@ -1138,3 +1138,29 @@ def query_oncogenic_at_codon(
         if k not in best or d["stars"] > best[k]["stars"]:
             best[k] = d
     return list(best.values())
+
+
+def query_somatic_impact(db_path: Path, chrom: str, pos: int, ref: str, alt: str
+                         ) -> Optional[list[dict]]:
+    """ClinVar Somatic Clinical Impact records (one per RCV) of this allele: dicts
+    with variation_id, sci, sci_review_status, sci_stars, sci_type, conditions.
+    ``None`` when the DB predates these columns."""
+    if not db_path.exists():
+        return None
+    try:
+        con = _get_conn(db_path)
+        cols = {r[1] for r in con.execute("PRAGMA table_info(variants)")}
+        if "sci" not in cols:
+            return None
+        rows = con.execute(
+            "SELECT variation_id, sci, sci_review_status, sci_stars, sci_type, conditions "
+            "FROM variants WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ? "
+            "AND sci IS NOT NULL",
+            (strip_chr(chrom), "chr" + strip_chr(chrom), pos, ref, alt),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="somatic_impact", error=str(exc))
+        return None
+    return [{"variation_id": str(r[0]), "sci": r[1], "sci_review_status": r[2] or "",
+             "sci_stars": int(r[3] or 0), "sci_type": r[4] or "", "conditions": r[5] or ""}
+            for r in rows]

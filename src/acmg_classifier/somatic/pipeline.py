@@ -64,12 +64,67 @@ class SomaticClassifier:
     """Germline HUVar criteria (reused for in silico / PM1 / functional data) plus
     the somatic oncogenicity criteria for one variant at a time."""
 
-    def __init__(self, cfg: Config) -> None:
+    def __init__(self, cfg: Config, tumor_type: Optional[str] = None) -> None:
         from acmg_classifier.criteria.registry import CriteriaRegistry
+        from acmg_classifier.somatic.civic_clinical import load_clinical
         from acmg_classifier.somatic.evaluator import SomaticEvaluator
+        from acmg_classifier.somatic.tumor import disease_ontology
+        from acmg_classifier.somatic.tumor import tumor_type as _tumor
         self._cfg = cfg
         self._registry = CriteriaRegistry(cfg)
         self._eval = SomaticEvaluator(cfg)
+        self._tumor = _tumor(tumor_type, cfg)          # ValueError for an unknown code
+        self._do = disease_ontology(cfg)
+        path = getattr(cfg, "civic_clinical_tsv", None)
+        self._civic_path = path
+        self._civic_clinical = load_clinical(path) if path is not None else {}
+
+    def _amp(self, variant: VariantRecord, ann, crit, classification):
+        from acmg_classifier.local_db.clinvar_sqlite import query_somatic_impact
+        from acmg_classifier.somatic.amp import assign, civic_calls, clinvar_calls
+        from acmg_classifier.somatic.civic_clinical import VariantFacts, match_records
+        from acmg_classifier.somatic.evaluator import _NULL
+        from acmg_classifier.somatic.models import OncCriterion, Oncogenicity
+        from acmg_classifier.somatic.resources import short_protein_change
+
+        pc = ann.primary_consequence
+        notes = []
+        calls = []
+        if pc is not None:
+            ref, _, alt = (pc.amino_acids or "/").partition("/")
+            if pc.consequence.value == "missense_variant" and ref and alt and pc.protein_position:
+                change = f"{ref}{pc.protein_position}{alt}"
+            else:
+                change = short_protein_change(pc.hgvs_p)
+
+            def _num(x):
+                try:
+                    return int(str(x).split("/")[0])
+                except (TypeError, ValueError):
+                    return None
+            facts = VariantFacts(
+                gene=pc.gene_symbol, protein_change=change, ref_aa=ref or None,
+                position=pc.protein_position, consequence=pc.consequence.value,
+                exon=_num(pc.exon), intron=_num(pc.intron), is_null=pc.consequence in _NULL,
+                oncogenic=classification in (Oncogenicity.ONCOGENIC, Oncogenicity.LIKELY_ONCOGENIC))
+            if self._civic_clinical:
+                calls += civic_calls(match_records(self._civic_clinical, facts), self._tumor, self._do)
+            else:
+                notes.append("CIViC clinical table not installed (setup_data.py --only civic)")
+        sci = query_somatic_impact(self._cfg.clinvar_sqlite, variant.chrom, variant.pos,
+                                   variant.ref, variant.alt)
+        if sci is None:
+            notes.append("ClinVar DB without somatic clinical impact (rebuild with "
+                         "--only clinvar-sqlite --force-clinvar)")
+        else:
+            calls += clinvar_calls(sci, self._tumor, self._do)
+        by = {r.criterion: r for r in crit}
+        common = any(by[c].active for c in (OncCriterion.SBVS1, OncCriterion.SBS1))
+        benign = classification in (Oncogenicity.BENIGN, Oncogenicity.LIKELY_BENIGN)
+        res = assign(calls, self._tumor, self._do, benign, common)
+        if notes:
+            res.note = "; ".join([res.note] + notes if res.note else notes)
+        return res
 
     def classify(self, variant: VariantRecord, ann, manual=None,
                  warnings: Optional[list[str]] = None) -> OncogenicityResult:
@@ -88,7 +143,11 @@ class SomaticClassifier:
         if ann.gnomad is not None and (ann.gnomad.ac or 0) > 0:
             warn.append("POPULATION: present in gnomAD; for haematological genes consider clonal "
                         "haematopoiesis in the controls before relying on frequency evidence")
+        classification = classify_points(score)
+        amp = self._amp(variant, ann, crit, classification)
         return OncogenicityResult(
+            tumor_type=amp.tumor, amp_tier=amp.tier, amp_level=amp.level,
+            amp_evidence=amp.evidence_text(), amp_note=amp.note, amp_candidates=amp.candidates,
             variant_id=variant.key, chrom=variant.chrom, pos=variant.pos, ref=variant.ref,
             alt=variant.alt, filter=variant.filter,
             transcript_id=pc.transcript_id if pc else None,
@@ -99,13 +158,14 @@ class SomaticClassifier:
             gene_role_source=role.source if role else "",
             gene_role_note=role.note if role else "",
             hotspot=ctx["hotspot"],
-            criteria=crit, score=score, classification=classify_points(score),
+            criteria=crit, score=score, classification=classification,
             annotation=ann, warnings=warn,
         )
 
 
 def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path] = None,
-                         supplement_path: Optional[Path] = None) -> list[OncogenicityResult]:
+                         supplement_path: Optional[Path] = None,
+                         tumor_type: Optional[str] = None) -> list[OncogenicityResult]:
     from acmg_classifier.annotation.orchestrator import AnnotationOrchestrator
     from acmg_classifier.io.vcf_reader import detect_assembly_from_header, read_vcf
     from acmg_classifier.models.annotation import AnnotationData
@@ -125,7 +185,7 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
         log.warning("somatic_skipped_records", count=skipped,
                     reason="no ALT / symbolic / breakend alleles are not classified")
     annotations = AnnotationOrchestrator(cfg).annotate_batch(variants)
-    clf = SomaticClassifier(cfg)
+    clf = SomaticClassifier(cfg, tumor_type)
     results = []
     for v in track(variants, "Classifying (somatic)", total=len(variants)):
         ann = annotations.get(v.key)
@@ -143,14 +203,16 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
 
 def run_somatic_single(chrom: str, pos: int, ref: str, alt: str, cfg: Config,
                        manual=None, transcript: Optional[str] = None,
-                       print_result: bool = True) -> OncogenicityResult:
+                       print_result: bool = True,
+                       tumor_type: Optional[str] = None) -> OncogenicityResult:
     from acmg_classifier.pipeline.pipeline import annotate_one
     from acmg_classifier.somatic.report import print_somatic_report
 
+    clf = SomaticClassifier(cfg, tumor_type)   # validates the tumour type before annotating
     variant, ann = annotate_one(chrom, pos, ref, alt, cfg)
     if transcript:
         ann = ann.for_transcript(transcript)
-    result = SomaticClassifier(cfg).classify(variant, ann, manual)
+    result = clf.classify(variant, ann, manual)
     if print_result:
         print_somatic_report(result)
     return result

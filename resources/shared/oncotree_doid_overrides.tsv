@@ -1,0 +1,38 @@
+# Curated OncoTree -> Disease Ontology mappings, applied before the automatic mapping
+# (NCIt / UMLS cross-references, exact names, then the parent node) by
+# scripts/build_tumor_ontology.py. Mainly the OncoTree tissue roots, which have no
+# cancer DOID of their own. doids: comma-separated. Edit and rebuild to adapt.
+oncotree_code	doids	note
+TISSUE	DOID:162	cancer
+OTHER	DOID:162	cancer
+OVARY	DOID:2394	ovarian cancer
+LYMPH	DOID:0060058,DOID:1037	lymphoma; lymphoid leukemia
+SOFT_TISSUE	DOID:1115	sarcoma
+THYROID	DOID:1781	thyroid cancer
+PLEURA	DOID:5158	pleural cancer
+PANCREAS	DOID:1793	pancreatic cancer
+BILIARY_TRACT	DOID:4607	biliary tract cancer
+BREAST	DOID:1612	breast cancer
+HEAD_NECK	DOID:11934	head and neck cancer
+EYE	DOID:2174	ocular cancer
+AMPULLA_OF_VATER	DOID:10020	ampulla of Vater cancer
+THYMUS	DOID:3277	thymus cancer
+CERVIX	DOID:4362	cervical cancer
+PNS	DOID:1192	peripheral nervous system neoplasm
+BOWEL	DOID:10155	intestinal cancer
+BONE	DOID:184	bone cancer
+SKIN	DOID:4159	skin cancer
+BLADDER	DOID:3996	urinary system cancer
+BRAIN	DOID:3620	central nervous system cancer
+ADRENAL_GLAND	DOID:3953	adrenal gland cancer
+PROSTATE	DOID:10283	prostate cancer
+LUNG	DOID:1324	lung cancer
+PENIS	DOID:11615	penile cancer
+UTERUS	DOID:363	uterine cancer
+TESTIS	DOID:2998	testicular cancer
+LIVER	DOID:3571	liver cancer
+PERITONEUM	DOID:1725	peritoneum cancer
+MYELOID	DOID:0070004	myeloid neoplasm
+VULVA	DOID:1245,DOID:119	vulva cancer; vaginal cancer
+KIDNEY	DOID:263	kidney cancer
+STOMACH	DOID:5041,DOID:10534	esophageal cancer; stomach cancer

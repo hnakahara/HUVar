@@ -9,12 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **AMP/ASCO/CAP 2017 tiers (somatic)**: `--tumor-type ONCOTREE_CODE` on `somatic` /
+  `somatic-explain` assigns Tier I-IV (Li et al. 2017) from CIViC predictive / diagnostic /
+  prognostic evidence and assertions (`civic_clinical.tsv`, built by `--only civic`) and
+  ClinVar Somatic Clinical Impact (new SQLite columns; rebuild ClinVar). OncoTree -> Disease
+  Ontology mapping bundled (`oncotree_doid.tsv`, `doid_hierarchy.tsv`,
+  `scripts/build_tumor_ontology.py`).
 - **Somatic oncogenicity (experimental)**: `acmg-classify somatic` / `somatic-explain`
   implement the ClinGen/CGC/VICC oncogenicity SOP (Horak et al. 2022) with
   licence-free data only — NCG 7.1 canonical gene roles plus curated overrides
   (`somatic_gene_roles.tsv`), cancerhotspots.org v2 counts (`cancer_hotspots_v2.tsv`,
   ODbL), CIViC functional evidence / OS2-coded oncogenic assertions for OS2/SBS2
-  (CC0, new `setup_data.py` step `civic`), ClinVar somatic-oncogenicity comparators with a different nucleotide change (OS1: ≥ 1 star; OM4: ≥ 2 stars; germline P/LP not used; new ClinVar SQLite columns `oncogenicity` / `onc_review_status` / `onc_stars` — rebuild with `--only clinvar-sqlite --force-clinvar`), gnomAD (OP4/SBS1/SBVS1), HUVar
+  (CC0, new `setup_data.py` step `civic`), a laboratory-curated OS2/SBS2 table
+  (`somatic_functional_curated.tsv`, draft rows for common oncogene hotspots; approved rows
+  only), ClinVar somatic-oncogenicity comparators with a different nucleotide change (OS1: ≥ 1 star; OM4: ≥ 2 stars; germline P/LP not used; new ClinVar SQLite columns `oncogenicity` / `onc_review_status` / `onc_stars` — rebuild with `--only clinvar-sqlite --force-clinvar`), gnomAD (OP4/SBS1/SBVS1), HUVar
   PP3/BP4/BP7/PM1 and calibrated functional data (OS2/SBS2). OP2 and any override via
   manual evidence. Builder `scripts/build_somatic_resources.py`. AMP/ASCO/CAP tiers
   are not assigned.

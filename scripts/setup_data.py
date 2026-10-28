@@ -1322,11 +1322,13 @@ def _civic_release_candidates(release: str | None) -> list[str]:
 
 def step_civic(data_dir: Path, release: str | None = None, civic_dir: Path | None = None,
                force: bool = False) -> bool:
-    """Download the CIViC TSVs and build data/shared/civic_somatic.tsv."""
+    """Download the CIViC TSVs and build data/shared/civic_somatic.tsv (OS2/SBS2)
+    and data/shared/civic_clinical.tsv (AMP/ASCO/CAP tiers)."""
     shared = data_dir / "shared"
     out = shared / "civic_somatic.tsv"
-    if out.exists() and not force and civic_dir is None:
-        print(f"  [SKIP] {out.name} (rebuild with --force-civic or --civic-dir)")
+    out_clinical = shared / "civic_clinical.tsv"
+    if out.exists() and out_clinical.exists() and not force and civic_dir is None:
+        print(f"  [SKIP] {out.name}, {out_clinical.name} (rebuild with --force-civic or --civic-dir)")
         return True
     files: dict[str, Path] = {}
     used = release or ""
@@ -1368,6 +1370,12 @@ def step_civic(data_dir: Path, release: str | None = None, civic_dir: Path | Non
                              files.get("AcceptedAssertionSummaries.tsv"), out, release=used)
     print(f"  CIViC {used}: {info['evidence_items']} functional evidence items, "
           f"{info['assertions']} oncogenic assertions with OS2/SBS2")
+    from acmg_classifier.somatic.civic_clinical import build_civic_clinical  # type: ignore
+    ci = build_civic_clinical(files["AcceptedClinicalEvidenceSummaries.tsv"],
+                              files["VariantSummaries.tsv"],
+                              files.get("AcceptedAssertionSummaries.tsv"), out_clinical, release=used)
+    print(f"  CIViC {used}: {ci['evidence_items']} predictive/diagnostic/prognostic evidence "
+          f"rows, {ci['assertions']} assertion rows (AMP tiers)")
     _record_manifest(data_dir, "civic", source=f"{CIVIC_BASE}/{used}", path=out, release=used)
     return True
 

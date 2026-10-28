@@ -177,6 +177,10 @@ class Config(BaseSettings):
     somatic_civic: bool = True
     somatic_civic_min_rating: int = 3
     somatic_civic_min_sources: int = 2
+    # OS2 / SBS2 from the laboratory-curated functional table
+    # (somatic_functional_curated.tsv; rows with status=approved only).
+    # Env: ACMG_SOMATIC_LAB_FUNCTIONAL=false.
+    somatic_lab_functional: bool = True
 
     @field_validator("mavedb_calibration")
     @classmethod
@@ -513,6 +517,28 @@ class Config(BaseSettings):
         somatic OVS1 / OM2 criteria (scripts/build_somatic_resources.py). Falls
         back to the packaged resources copy."""
         return self.data_dir / "shared" / "somatic_gene_roles.tsv"
+
+    @property
+    def somatic_functional_curated_tsv(self) -> Path:
+        """Laboratory-curated OS2 / SBS2 evidence; a copy in data/shared overrides the
+        packaged resources/shared/somatic_functional_curated.tsv."""
+        return self.data_dir / "shared" / "somatic_functional_curated.tsv"
+
+    @property
+    def civic_clinical_tsv(self) -> Path:
+        """CIViC predictive / diagnostic / prognostic evidence and assertions for the
+        AMP/ASCO/CAP tiers (setup_data.py --only civic). Not bundled."""
+        return self.data_dir / "shared" / "civic_clinical.tsv"
+
+    @property
+    def oncotree_doid_tsv(self) -> Path:
+        """OncoTree code -> Disease Ontology (scripts/build_tumor_ontology.py); a copy in
+        data/shared overrides the packaged one."""
+        return self.data_dir / "shared" / "oncotree_doid.tsv"
+
+    @property
+    def doid_hierarchy_tsv(self) -> Path:
+        return self.data_dir / "shared" / "doid_hierarchy.tsv"
 
     @property
     def civic_somatic_tsv(self) -> Path:

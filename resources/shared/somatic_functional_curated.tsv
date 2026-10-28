@@ -1,0 +1,78 @@
+# Laboratory-curated functional evidence for the somatic OS2 / SBS2 criteria (Horak et al. 2022).
+# One row per protein change (HGVS on the MANE Select transcript, short form: V600E,
+# E746_A750del, Y772_A775dup). Only rows with status=approved are applied; draft rows are
+# shown in the OS2/SBS2 evidence text as "lab table (draft)" and not counted.
+# verification: pmid+variant = PMID and the variant's study in that paper confirmed
+#   (CIViC citation / Reactome reference / title); pmid = PMID confirmed, coverage of this
+#   exact variant still to be checked against the paper.
+# Initial draft 2026-10-28 (HUVar); review every row before setting status=approved.
+gene	protein_change	criterion	pmids	evidence	verification	status	curator	reviewed	note
+BRAF	V600E	OS2	12068308,15035987	Elevated kinase activity, constitutive ERK activation and NIH3T3 transformation (Davies 2002); high-activity mutant (Wan 2004)	pmid	draft			
+BRAF	V600K	OS2	15035987	High-activity mutant in kinase assays (Wan 2004)	pmid	draft			
+BRAF	V600D	OS2	15035987	High-activity mutant in kinase assays (Wan 2004)	pmid	draft			
+BRAF	V600R	OS2	15035987	High-activity mutant in kinase assays (Wan 2004)	pmid	draft			
+BRAF	K601E	OS2	26343582	Class 2: RAS-independent active dimer (Yao 2015)	pmid	draft			
+BRAF	L597R	OS2	26343582	Class 2: RAS-independent active dimer (Yao 2015)	pmid	draft			
+BRAF	L597V	OS2	26343582	Class 2 (Yao 2015)	pmid	draft			
+BRAF	G469A	OS2	26343582	Class 2: RAS-independent active dimer (Yao 2015)	pmid	draft			
+BRAF	G469V	OS2	26343582	Class 2 (Yao 2015)	pmid	draft			
+BRAF	G464V	OS2	26343582	Class 2 (Yao 2015)	pmid	draft			
+BRAF	G463E	OS2	15035987	Elevated kinase activity (Wan 2004; CIViC EID9527)	pmid+variant	draft			
+BRAF	A728V	OS2	15035987	Gain of function (Wan 2004; CIViC EID7614)	pmid+variant	draft			
+BRAF	D594G	OS2	28783719	Class 3: kinase-impaired, RAS-dependent ERK activation through CRAF (Yao 2017)	pmid+variant	draft			Kinase-dead allele that activates signalling (RAS-dependent)
+BRAF	D594N	OS2	28783719	Class 3 (Yao 2017)	pmid	draft			Kinase-dead allele that activates signalling (RAS-dependent)
+BRAF	G466V	OS2	28783719	Class 3 (Yao 2017)	pmid+variant	draft			Kinase-dead allele that activates signalling (RAS-dependent)
+BRAF	G466E	OS2	28783719	Class 3 (Yao 2017)	pmid	draft			
+BRAF	N581S	OS2	28783719	Class 3 (Yao 2017)	pmid	draft			
+BRAF	G596R	OS2	28783719	Class 3 (Yao 2017)	pmid	draft			
+KRAS	G12D	OS2	26037647	Impaired intrinsic / GAP-stimulated GTP hydrolysis, increased RAF binding (Hunter 2015)	pmid	draft			
+KRAS	G12V	OS2	26037647	Impaired GTP hydrolysis (Hunter 2015)	pmid	draft			
+KRAS	G12C	OS2	26037647	Impaired GTP hydrolysis (Hunter 2015)	pmid	draft			
+KRAS	G12A	OS2	26037647	Impaired GTP hydrolysis (Hunter 2015)	pmid	draft			
+KRAS	G12R	OS2	26037647	Impaired GTP hydrolysis (Hunter 2015)	pmid+variant	draft			Reactome R-HSA-9649090 cites Hunter 2015 for KRAS G12R
+KRAS	G13D	OS2	26037647	Impaired GAP-stimulated GTP hydrolysis (Hunter 2015)	pmid	draft			
+KRAS	Q61H	OS2	26037647,20147967	Impaired GTP hydrolysis (Hunter 2015); oncogenic in CIViC EID7936 (Smith 2010)	pmid+variant	draft			
+KRAS	Q61L	OS2	26037647	Impaired GTP hydrolysis (Hunter 2015)	pmid	draft			
+KRAS	A146T	OS2	20570890	Transforming exon 4 mutation, increased GTP loading (Janakiraman 2010; CIViC EID12947)	pmid+variant	draft			
+KRAS	K117N	OS2	20570890	Transforming exon 4 mutation (Janakiraman 2010)	pmid	draft			
+NRAS	Q61R	OS2	25252692	Melanoma-initiating in vivo; mutation-specific oncogenicity (Burd 2014)	pmid	draft			
+NRAS	Q61K	OS2	25252692	Melanoma-initiating in vivo (Burd 2014)	pmid	draft			
+NRAS	Q61L	OS2	25252692	Oncogenic in vivo (Burd 2014)	pmid	draft			
+NRAS	Q61H	OS2	25252692	Oncogenic in vivo (Burd 2014)	pmid	draft			
+EGFR	L858R	OS2	16187797,15118073	Ligand-independent transformation of NIH3T3 / Ba/F3 (Greulich 2005); enhanced ligand-dependent activation (Lynch 2004)	pmid+variant	draft			
+EGFR	E746_A750del	OS2	16187797,15118073	Exon 19 deletion: transformation (Greulich 2005), enhanced activation (Lynch 2004)	pmid	draft			
+EGFR	G719S	OS2	16187797,15118125	Transforming (Greulich 2005); TKI-sensitive activating mutation (Paez 2004)	pmid+variant	draft			
+EGFR	A767_V769dup	OS2	24353160	Exon 20 insertion, constitutively active in Ba/F3 (Yasuda 2013)	pmid+variant	draft			CIViC name A767_V769dupASV
+EGFR	D770_N771insNPG	OS2	24353160	Exon 20 insertion, constitutively active (Yasuda 2013)	pmid+variant	draft			
+EGFR	D770_N771insSVD	OS2	24353160	Exon 20 insertion, constitutively active (Yasuda 2013)	pmid+variant	draft			
+ERBB2	S310F	OS2	22908275	Extracellular-domain mutation, transforming, increased phosphorylation (Greulich 2012)	pmid+variant	draft			Reactome R-HSA-9665350
+ERBB2	L755S	OS2	23220880	Activating kinase-domain mutation (Bose 2013)	pmid+variant	draft			
+ERBB2	V777L	OS2	23220880	Activating kinase-domain mutation (Bose 2013)	pmid+variant	draft			Also CIViC assertion AID278 (OS2)
+ERBB2	D769H	OS2	23220880	Activating kinase-domain mutation (Bose 2013)	pmid+variant	draft			
+ERBB2	V842I	OS2	23220880	Activating kinase-domain mutation (Bose 2013)	pmid+variant	draft			
+ERBB2	G309A	OS2	23220880	Activating extracellular-domain mutation (Bose 2013)	pmid+variant	draft			
+ERBB2	Y772_A775dup	OS2	16843263	Exon 20 YVMA insertion: increased kinase activity, transformation (Wang 2006)	pmid+variant	draft			
+PIK3CA	E542K	OS2	15647370,15950905	Gain of lipid kinase activity, transformation of chicken embryo fibroblasts (Kang 2005); growth and invasion (Samuels 2005)	pmid+variant	draft			
+PIK3CA	E545K	OS2	15647370,15950905,16432179	Gain of function, transforming; oncogenic in vivo (Bader 2006)	pmid	draft			
+PIK3CA	H1047R	OS2	15647370,15950905,16432179	Gain of function, transforming; oncogenic in vivo (Bader 2006)	pmid	draft			
+IDH1	R132H	OS2	19935646	Neomorphic production of 2-hydroxyglutarate (Dang 2009)	pmid	draft			Neomorphic
+IDH1	R132C	OS2	20171147	Neomorphic 2-HG production (Ward 2010)	pmid	draft			Neomorphic
+IDH2	R140Q	OS2	20171147	Neomorphic 2-HG production (Ward 2010)	pmid	draft			Neomorphic
+IDH2	R172K	OS2	20171147	Neomorphic 2-HG production (Ward 2010)	pmid	draft			Neomorphic
+JAK2	V617F	OS2	15793561,15837627	Constitutive kinase activity, cytokine-independent growth (James 2005; Levine 2005)	pmid+variant	draft			
+JAK2	K539L	OS2	17267906	Exon 12 mutation, cytokine-independent proliferation (Scott 2007)	pmid	draft			
+FGFR3	R248C	OS2	8640234	Ligand-independent activation (Naski 1996; CIViC EID8946)	pmid+variant	draft			
+FGFR3	K650E	OS2	8640234	Strong constitutive activation, thanatophoric dysplasia II mutation (Naski 1996)	pmid	draft			
+FGFR3	G380R	OS2	9136983,8640234	Ligand-independent activation via the transmembrane domain (Li 1997; CIViC EID10368)	pmid+variant	draft			
+FGFR3	S249C	OS2	16338952	Oncogenic in NIH3T3 transformation / xenografts (Bernard-Pierrot 2006; CIViC EID8853)	pmid+variant	draft			Also CIViC assertion AID55 (OS2)
+FGFR3	Y373C	OS2	16338952	Oncogenic (Bernard-Pierrot 2006; CIViC EID8881)	pmid+variant	draft			
+FGFR2	N549K	OS2	17525745,18552176	Activating mutation in endometrial carcinoma (Pollock 2007); transforming, drug-sensitive (Dutt 2008)	pmid+variant	draft			Reactome R-HSA-1637910
+FGFR2	K659E	OS2	17525745,18552176	Activating mutation (Pollock 2007; Dutt 2008)	pmid	draft			
+FGFR2	S252W	OS2	17525745	Activating mutation (Pollock 2007)	pmid	draft			
+CTNNB1	S33Y	OS2	9065402	Stabilised beta-catenin, constitutive Tcf transactivation (Morin 1997)	pmid	draft			
+CTNNB1	S45del	OS2	9065402	Stabilised beta-catenin, constitutive Tcf transactivation (Morin 1997)	pmid	draft			
+CTNNB1	S37F	OS2	9065403	Stabilised beta-catenin in melanoma cell lines (Rubinfeld 1997)	pmid	draft			
+GNAS	R201C	OS2	2549426	GTPase-inhibiting Gs-alpha mutation, constitutive adenylyl cyclase activation (Landis 1989)	pmid	draft			
+GNAS	R201H	OS2	2549426	GTPase-inhibiting mutation (Landis 1989)	pmid	draft			
+GNAS	Q227R	OS2	2549426	GTPase-inhibiting mutation (Landis 1989)	pmid	draft			
+GNAS	Q227L	OS2	2549426	GTPase-inhibiting mutation (Landis 1989)	pmid	draft			

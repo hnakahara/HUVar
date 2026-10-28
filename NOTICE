@@ -159,6 +159,17 @@ Third-party data redistributed in resources/ (derived tables):
     Cite: Chang MT et al., Cancer Discov 2018;8:174-183; Chang MT et al.,
     Nat Biotechnol 2016;34:155-163.
 
+* OncoTree (Memorial Sloan Kettering Cancer Center), release 2025-10-03
+    Creative Commons Attribution 4.0 — https://github.com/cBioPortal/oncotree
+    resources/shared/oncotree_doid.tsv is derived from it (codes, names, parents; mapped
+    to Disease Ontology by scripts/build_tumor_ontology.py).
+    Cite: Kundra R et al., JCO Clin Cancer Inform 2021;5:221-230.
+
+* Human Disease Ontology, release 2026-09-30
+    CC0 1.0 — https://github.com/DiseaseOntology/HumanDiseaseOntology
+    resources/shared/doid_hierarchy.tsv (terms and is_a parents) is derived from doid.obo.
+    Cite: Baron JA et al., Nucleic Acids Res 2024;52:D1305-D1314.
+
 This NOTICE file does not modify the License; it provides attribution
 to upstream data sources whose terms may apply when end-users download
 data via `scripts/setup_data.py`.

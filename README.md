@@ -765,7 +765,7 @@ Only licence-free data are used (no OncoKB / COSMIC / CKB):
 |---|---|---|
 | OVS1 | +8 | Null variant in a tumour suppressor: NCG canonical driver whose majority role is TSG only (`somatic_gene_roles.tsv`); stop/frameshift must be NMD-predicted or remove > 10% of the protein |
 | OS1 | +4 | Same amino-acid change, **different nucleotide change**, as a ClinVar somatic-oncogenicity Oncogenic / Likely oncogenic variant (≥ 1 star, `ACMG_SOMATIC_OS1_ONC_MIN_STARS`); germline P/LP classifications are not used. The variant's own ClinVar oncogenicity is shown in the evidence but not counted (as PS1) |
-| OS2 | +4 | Calibrated assay (MaveDB / ENIGMA Table 9 / TP53 VCEP data) at PS3_Strong or above, tumour suppressors only; or **CIViC**: an accepted Oncogenic assertion coded OS2, or accepted Functional evidence items supporting Gain of Function / Neomorphic (oncogenes) or Loss of Function / Dominant Negative (TSGs), rating ≥ 3 from ≥ 2 publications (`ACMG_SOMATIC_CIVIC_MIN_RATING`, `_MIN_SOURCES`) |
+| OS2 | +4 | Calibrated assay (MaveDB / ENIGMA Table 9 / TP53 VCEP data) at PS3_Strong or above, tumour suppressors only; or **CIViC**: an accepted Oncogenic assertion coded OS2, or accepted Functional evidence items supporting Gain of Function / Neomorphic (oncogenes) or Loss of Function / Dominant Negative (TSGs), rating ≥ 3 from ≥ 2 publications (`ACMG_SOMATIC_CIVIC_MIN_RATING`, `_MIN_SOURCES`); or the **laboratory-curated table** `somatic_functional_curated.tsv` (rows with `status=approved`; an approved row overrides a conflicting automated call) |
 | OS3 | +4 | cancerhotspots.org v2 residue with ≥ 50 samples, ≥ 10 with this change |
 | OM1 | +2 | HUVar PM1 (VCEP hotspot/domain tables or ClinVar P/LP cluster without benign variation); not with OS1/OS3 |
 | OM2 | +2 | In-frame indel in an oncogene/TSG, or stop-loss in a TSG; not with OVS1 |
@@ -783,7 +783,7 @@ The CIViC table (`data/shared/civic_somatic.tsv`, CC0) is built at setup with
 `python scripts/setup_data.py --data-dir <data> --only civic` (this month's CIViC release,
 else last month's; `--civic-release 01-Oct-2026` / `nightly`, `--civic-dir DIR` for
 downloaded TSVs, `--force-civic` to refresh); CIViC records are matched by gene and protein
-change (single-variant molecular profiles). OS1 and OS3 may both count (SOP Table 2). ClinVar oncogenicity classifications are read
+change (single-variant molecular profiles). `resources/shared/somatic_functional_curated.tsv` ships as a **draft** of well-established functional studies for common oncogene hotspots (BRAF, KRAS/NRAS, EGFR, ERBB2, PIK3CA, IDH1/2, JAK2, FGFR2/3, CTNNB1, GNAS) with PubMed IDs; every row is `status=draft` and is shown but not counted until the laboratory reviews it and sets `approved` (with `curator` and `reviewed`). Put a reviewed copy in `<data>/shared/` to keep local edits outside the repository. OS1 and OS3 may both count (SOP Table 2). ClinVar oncogenicity classifications are read
 from the ClinVar SQLite (`oncogenicity`, `onc_review_status`, `onc_stars` columns, from
 the RCV `OncogenicityClassification`); a database built before this version lacks them —
 rebuild it with `python scripts/setup_data.py --data-dir <data> --only clinvar-sqlite
@@ -800,6 +800,41 @@ and optional `met` (yes/no). The output TSV has one column per criterion (`+4`,
 the tumour type are not used; frequency evidence does not account for clonal
 haematopoiesis in gnomAD (a warning is added); cancerhotspots counts are on that
 resource's canonical isoforms (a reference-residue mismatch disables the hotspot).
+
+### AMP/ASCO/CAP 2017 tiers (`--tumor-type`)
+
+`somatic` / `somatic-explain` also assign the clinical-significance tier of Li et al.
+(J Mol Diagn 2017) when the tumour type is given as an **OncoTree code**
+(`--tumor-type SKCM`, `LUAD`, `COADREAD`, ...). The code is mapped to Disease Ontology
+(`resources/shared/oncotree_doid.tsv`, built by `scripts/build_tumor_ontology.py` from
+OncoTree 2025-10-03 and DO 2026-09-30: NCIt / UMLS cross-references, names, then the
+nearest mapped parent; tissue roots in `oncotree_doid_overrides.tsv`). Evidence:
+
+- **CIViC** accepted Predictive / Diagnostic / Prognostic evidence items and assertions
+  (`data/shared/civic_clinical.tsv`, built by `setup_data.py --only civic`), matched by
+  exact protein change, residue (`V600`, `G12/G13`), exon event (`Exon 19 Deletion`,
+  `Exon 14 Skipping Mutation`) or gene level (`Mutation`, `Loss-of-function`). Exon- and
+  gene-level "mutation" evidence applies only to variants classified Oncogenic / Likely
+  oncogenic; "loss-of-function" only to null variants. Germline-origin records are skipped.
+- **ClinVar Somatic Clinical Impact** of the variant itself (new ClinVar SQLite columns
+  `sci`, `sci_review_status`, `sci_stars`, `sci_type`, `conditions`; rebuild with
+  `--only clinvar-sqlite --force-clinvar`), the condition matched to DO by name.
+
+| CIViC level | Same tumour type (or a more general disease, e.g. *cancer*) | Other tumour type |
+|---|---|---|
+| A | Tier I, level A | Tier II, level C |
+| B | Tier I, level B | Tier II, level C |
+| C | Tier II, level C | Tier II, level D |
+| D, E | Tier II, level D | Tier II, level D |
+
+CIViC assertions keep their AMP category for the same tumour type and are capped at
+Tier II level C otherwise; ClinVar "Tier I - Strong" counts as Tier I for a matching
+condition, else Tier II. Evidence in a subtype of the tumour type counts as the same
+type and is flagged. Only "Supports" records count. Without Tier I/II evidence the
+variant is Tier IV when benign / likely benign or common in gnomAD (SBVS1/SBS1), else
+Tier III. Without `--tumor-type` no tier is assigned and the strongest evidence in any
+tumour type is listed (`amp_candidates`). The TSV gains `tumor_type`, `amp_tier`,
+`amp_level`, `amp_evidence`, `amp_note`, `amp_candidates`.
 
 ## Output format
 

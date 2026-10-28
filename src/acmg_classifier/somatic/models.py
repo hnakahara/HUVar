@@ -112,6 +112,13 @@ class OncogenicityResult(BaseModel):
     criteria: list[OncCriterionResult]
     score: int
     classification: Oncogenicity
+    # AMP/ASCO/CAP 2017 tier (empty without --tumor-type)
+    tumor_type: str = ""
+    amp_tier: str = ""
+    amp_level: str = ""
+    amp_evidence: str = ""
+    amp_note: str = ""
+    amp_candidates: list[str] = []
     annotation: Optional[object] = None
     warnings: list[str] = []
 

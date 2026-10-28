@@ -389,9 +389,13 @@ def _somatic_config(data_dir, assembly, insilico_tool, splice_tool, openspliceai
 @click.option("--supplement", type=click.Path(exists=True, path_type=Path), default=None,
               help="Manual somatic evidence TSV: variant_id, criterion (OVS1..SBP2), "
                    "evidence[, met=yes/no]. Sets or overrides a criterion (e.g. OP2, OS2).")
+@click.option("--tumor-type", default=None, metavar="ONCOTREE_CODE",
+              help="Tumour type (OncoTree code, e.g. SKCM, LUAD, COADREAD) for the AMP/ASCO/CAP "
+                   "2017 tiers. Without it no tier is assigned and evidence in other tumour "
+                   "types is listed for reference.")
 @click.option("--workers", type=int, default=4, show_default=True)
 @click.option("--no-progress", is_flag=True, default=False)
-def somatic(vcf, output, assembly, supplement, workers, no_progress, **opts) -> None:
+def somatic(vcf, output, assembly, supplement, tumor_type, workers, no_progress, **opts) -> None:
     """Classify the oncogenicity of somatic variants in VCF (Horak et al. 2022).
 
     Points-based ClinGen/CGC/VICC SOP: Oncogenic / Likely oncogenic / VUS /
@@ -404,7 +408,19 @@ def somatic(vcf, output, assembly, supplement, workers, no_progress, **opts) -> 
     if no_progress:
         progress.set_enabled(False)
     cfg = _somatic_config(assembly=assembly, workers=workers, **opts)
-    run_somatic_pipeline(vcf, cfg, output_path=output, supplement_path=supplement)
+    _check_tumor_type(cfg, tumor_type)
+    run_somatic_pipeline(vcf, cfg, output_path=output, supplement_path=supplement,
+                         tumor_type=tumor_type)
+
+
+def _check_tumor_type(cfg, code):
+    if not code:
+        return
+    from acmg_classifier.somatic.tumor import tumor_type
+    try:
+        tumor_type(code, cfg)
+    except ValueError as exc:
+        raise click.BadParameter(str(exc), param_hint="--tumor-type")
 
 
 @cli.command("somatic-explain")
@@ -422,8 +438,10 @@ def somatic(vcf, output, assembly, supplement, workers, no_progress, **opts) -> 
               help="Manual somatic evidence TSV (rows for this variant are applied).")
 @click.option("--transcript", default=None, metavar="ACCESSION",
               help="Evaluate on this transcript (e.g. MANE Plus Clinical) instead of MANE Select.")
+@click.option("--tumor-type", default=None, metavar="ONCOTREE_CODE",
+              help="Tumour type (OncoTree code, e.g. SKCM) for the AMP/ASCO/CAP 2017 tier.")
 def somatic_explain(chrom, pos, ref, alt, assembly, evidence, supplement, transcript,
-                    **opts) -> None:
+                    tumor_type, **opts) -> None:
     """Show the somatic oncogenicity evaluation of one variant (CHROM POS REF ALT)."""
     from acmg_classifier.models.variant import VariantRecord
     from acmg_classifier.somatic.pipeline import (
@@ -440,7 +458,9 @@ def somatic_explain(chrom, pos, ref, alt, assembly, evidence, supplement, transc
             manual.extend(parse_inline_evidence(list(evidence), key))
         except ValueError as exc:
             raise click.BadParameter(str(exc), param_hint="--evidence")
-    run_somatic_single(chrom, pos, ref, alt, cfg, manual=manual or None, transcript=transcript)
+    _check_tumor_type(cfg, tumor_type)
+    run_somatic_single(chrom, pos, ref, alt, cfg, manual=manual or None, transcript=transcript,
+                       tumor_type=tumor_type)
 
 
 # ---------------------------------------------------------------------------
