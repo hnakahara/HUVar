@@ -125,6 +125,19 @@ Third-party data redistributed in resources/ (derived tables):
     Cite: The TP53 Database (R21, Jan 2025): https://tp53.cancer.gov;
     de Andrade KC et al., Cell Death Differ 2022;29:1071-1073.
 
+* MaveDB (https://www.mavedb.org) bulk dump 2026-06-24 (Zenodo record 20840937)
+    CC0 1.0 Universal — the dump contains only published, CC0-licensed data.
+    resources/shared/mavedb_functional.tsv.gz and mavedb_scoresets.tsv are derived
+    from it (score sets with clinical score calibrations; scripts/build_mavedb_functional.py).
+    Cite: Rubin AF et al., Genome Biol 2025 (MaveDB 2024); the publication of each
+    score set (listed in mavedb_scoresets.tsv); calibrations by the IGVF Coding
+    Variant Focus Group and the score-set investigators.
+
+* ClinGen ENIGMA BRCA1 and BRCA2 VCEP Specifications, Table 9 V1.2 (2024-11-18)
+    resources/shared/enigma_brca12_table9.tsv is a tab-separated transcription of the
+    table (scripts/build_enigma_table9.py). https://cspec.genome.network/cspec/ui/svi/doc/GN092
+    Cite: Parsons MT et al., Am J Hum Genet 2024;111:2044-2058.
+
 This NOTICE file does not modify the License; it provides attribution
 to upstream data sources whose terms may apply when end-users download
 data via `scripts/setup_data.py`.

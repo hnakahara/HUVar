@@ -487,13 +487,15 @@ def _apply_tp53_functional_caveats(results: list[CriteriaResult], annotation: An
     strength and is downgraded to Moderate with PVS1_Strong. Only results from the
     systematic TP53 functional data are touched (curated entries are left as given)."""
     from acmg_classifier.criteria.tp53_functional import SRC_TP53_FUNCTIONAL
+    from acmg_classifier.criteria.functional_assays import SRC_MAVEDB
     from acmg_classifier.models.enums import CriterionStrength
 
     pc = annotation.primary_consequence
     if pc is None or pc.gene_symbol != "TP53":
         return
     func = [r for r in results if r.criterion in (ACMGCriterion.PS3, ACMGCriterion.BS3)
-            and r.triggered and not r.suppressed and (r.evidence or "").startswith(SRC_TP53_FUNCTIONAL)]
+            and r.triggered and not r.suppressed
+            and (r.evidence or "").startswith((SRC_TP53_FUNCTIONAL, SRC_MAVEDB))]
     if not func:
         return
     splice_pp3 = any(r.criterion == ACMGCriterion.PP3 and r.triggered

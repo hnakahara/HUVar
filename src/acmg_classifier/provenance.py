@@ -211,6 +211,8 @@ def collect(cfg) -> dict[str, Any]:
         exclude_self_expert_panel=bool(getattr(cfg, "exclude_self_expert_panel", False) is True),
         curated_evidence=bool(getattr(cfg, "curated_evidence", False) is True),
         tp53_functional=bool(getattr(cfg, "use_tp53_functional", False) is True),
+        functional_assays=bool(getattr(cfg, "functional_assays", True) is True),
+        mavedb_calibration=getattr(cfg, "mavedb_calibration", None),
         cspec_selection=(dict(getattr(cfg, "cspec_selection", None))
                          if isinstance(getattr(cfg, "cspec_selection", None), dict)
                          and getattr(cfg, "cspec_selection") else None),

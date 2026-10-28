@@ -29,6 +29,8 @@ class ManualBenignEvaluator(CriterionEvaluator):
         # Opt-in (non-commercial data terms): Config.use_tp53_functional.
         self._tp53 = TP53Functional(
             cfg.tp53_functional_tsv if getattr(cfg, "use_tp53_functional", False) is True else None)
+        from acmg_classifier.criteria.functional_assays import FunctionalAssays
+        self._functional = FunctionalAssays(cfg)
 
     def evaluate(
         self,
@@ -49,6 +51,12 @@ class ManualBenignEvaluator(CriterionEvaluator):
             elif criterion == ACMGCriterion.BS3 and self._tp53_bs3(annotation) is not None:
                 # TP53: BS3 from the VCEP functional flowchart on systematic assay data.
                 results.append(self._tp53_bs3(annotation))
+            elif criterion == ACMGCriterion.BS3 and (fa := self._functional.call(variant, annotation)):
+                # Calibrated functional assays (ENIGMA Table 9 / MaveDB).
+                if fa.criterion == ACMGCriterion.BS3:
+                    results.append(CriteriaResult.met(criterion, fa.strength, fa.evidence))
+                else:
+                    results.append(CriteriaResult.not_met(criterion, fa.evidence))
             else:
                 results.append(CriteriaResult.not_met(criterion, "No manual evidence provided"))
         return results

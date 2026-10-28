@@ -1,0 +1,22 @@
+# Per-gene rules for PS3/BS3 from calibrated functional assays (MaveDB / ENIGMA Table 9).
+# policy: enigma_table9 = variant-level codes of the ENIGMA BRCA1/2 VCEP Table 9 only;
+#         oddspath      = MaveDB clinical calibrations, strength from the range OddsPath with
+#                         the Brnich et al. 2019 thresholds (PS3 >2.1/>4.3/>18.7/>350,
+#                         BS3 <0.48/<0.23/<0.053), capped at ps3_max / bs3_max ("none" = not applied);
+#         not_applicable = the VCEP restricts PS3/BS3 to an approved assay list / decision tree
+#                         that does not include multiplexed assays — MaveDB not used.
+# Genes not listed: genes with a VCEP specification (disease_prevalence.tsv) -> not_applicable;
+# other genes -> oddspath with ps3_max=Strong, bs3_max=Strong.
+gene	policy	ps3_max	bs3_max	spec	note
+BRCA1	enigma_table9	Strong	Strong	GN092 v1.2.0	Specifications Table 9 v1.2 (2024-11-18); variants not in the table get no functional code
+BRCA2	enigma_table9	Strong	Strong	GN097 v1.2.0	Specifications Table 9 v1.2 (2024-11-18); variants not in the table get no functional code
+TP53	oddspath	Strong	Strong	GN009 v2.4.0	The VCEP flowchart needs the Kato et al. classes (NCI TP53 Database, opt-in); without them the calibrated MaveDB TP53 data are used
+PTEN	oddspath	Supporting	none	GN003 v3.2.0	PS3_Supporting for an abnormal in vitro cellular assay not meeting PS3_Moderate (Mighell phosphatase <= -1.11); BS3 only from Mighell phosphatase activity
+MYOC	oddspath	Strong	Moderate	GN019 v2.1.0	Assays with OddsPath per the SVI recommendations (BS3 up to Moderate)
+CYP1B1	oddspath	Strong	none	GN104 v1.0.0	Assays with OddsPath per the SVI recommendations (no OddsPath-based BS3)
+MLH1	oddspath	Strong	Strong	GN115 v2.0.0	InSiGHT: calibrated functional assays by OddsPath
+MSH2	oddspath	Strong	Strong	GN137 v2.0.0	InSiGHT: calibrated functional assays by OddsPath
+MSH6	oddspath	Strong	Strong	GN138 v2.0.0	InSiGHT: calibrated functional assays by OddsPath
+PMS2	oddspath	Strong	Strong	GN139 v2.0.0	InSiGHT: calibrated functional assays by OddsPath
+GCK	not_applicable	none	none	GN086 v3.1.0	PS3/BS3 decision tree requires purified-enzyme kinetics (RAI / RSI, GKRP/GKA interaction)
+KCNQ4	not_applicable	none	none	GN005 v2.0.0	Hearing Loss VCEP: predefined list of validated assays

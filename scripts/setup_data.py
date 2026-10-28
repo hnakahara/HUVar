@@ -1275,6 +1275,34 @@ def step_mane_summary(data_dir: Path, force: bool = False) -> bool:
     return True
 
 
+# MaveDB bulk dump (Zenodo; published CC0 data only). The functional-evidence table
+# for PS3/BS3 is built from it into data/shared (a copy built from the dump below is
+# packaged in resources/shared). Use --mavedb-dump to build from a local file.
+MAVEDB_DUMP_URL = ("https://zenodo.org/records/20840937/files/"
+                   "mavedb-dump.2026062418131.tar.gz?download=1")
+
+
+def step_mavedb(data_dir: Path, dump: Path | None = None, force: bool = False) -> bool:
+    """Build data/shared/mavedb_functional.tsv.gz (+ mavedb_scoresets.tsv) from a
+    MaveDB dump: score sets with clinical (non research-use-only) calibrations."""
+    shared = data_dir / "shared"
+    out = shared / "mavedb_functional.tsv.gz"
+    if out.exists() and not force and dump is None:
+        print(f"  [SKIP] {out.name} (rebuild with --force-mavedb or --mavedb-dump)")
+        return True
+    if dump is None:
+        dump = data_dir / "mavedb" / MAVEDB_DUMP_URL.split("/")[-1].split("?")[0]
+        if not dump.exists() or force:
+            _download(MAVEDB_DUMP_URL, dump, "MaveDB dump (~1.9 GB)")
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from build_mavedb_functional import build
+    info = build(Path(dump), shared)
+    print(f"  MaveDB {info['asOf']}: {info['score_sets']} score sets, {info['rows']} rows")
+    _record_manifest(data_dir, "mavedb", source=str(dump) if dump else MAVEDB_DUMP_URL,
+                     path=out, release=info["asOf"])
+    return True
+
+
 def _clinvar_release(vcf: Path) -> str | None:
     try:
         from acmg_classifier.provenance import _clinvar_vcf_date
@@ -1429,13 +1457,18 @@ def main() -> None:
     parser.add_argument("--force-mane-summary", action="store_true",
                         help=f"Re-download the MANE v{MANE_RELEASE} summary into data/shared "
                              "even when present.")
+    parser.add_argument("--mavedb-dump", type=Path, default=None, metavar="PATH",
+                        help="Build the MaveDB functional table from this local dump "
+                             "(.tar.gz or extracted directory) instead of downloading.")
+    parser.add_argument("--force-mavedb", action="store_true",
+                        help="Re-download the MaveDB dump and rebuild the functional table.")
     parser.add_argument("--only", nargs="+", default=None, metavar="STEP",
                         help="Run only the named step(s) and skip the rest. Step "
                              "keys: genome, vep, clinvar-vcf, clinvar-sqlite, "
                              "alphamissense, esm1b, revel, cadd, bayesdel, "
                              "openspliceai, gnomad-constraint, gnomad-coverage, "
                              "gnomad, gnomad-noncancer, repeatmasker, phylop, clingen, "
-                             "mane-summary. "
+                             "mane-summary, mavedb. "
                              "Each step is idempotent: it checks for existing "
                              "files and downloads only what is missing. Example: "
                              "--only openspliceai")
@@ -1483,6 +1516,7 @@ def main() -> None:
         ("phylop",            "phyloP (BP7)",      lambda: step_phylop(asm_dir, assembly, urls, args.skip_phylop)),
         ("clingen",           "ClinGen dosage / gene validity", lambda: step_clingen(data_dir, args.force_clingen)),
         ("mane-summary",      "MANE summary",      lambda: step_mane_summary(data_dir, args.force_mane_summary)),
+        ("mavedb",            "MaveDB functional", lambda: step_mavedb(data_dir, args.mavedb_dump, args.force_mavedb)),
     ]
 
     if args.only:

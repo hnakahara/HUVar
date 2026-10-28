@@ -140,6 +140,25 @@ class Config(BaseSettings):
     # defaults stay commercial-use ready. --with-tp53-functional /
     # ACMG_USE_TP53_FUNCTIONAL=true turns it on (non-commercial use).
     use_tp53_functional: bool = False
+    # PS3/BS3 from calibrated functional assays (criteria/functional_assays.py):
+    # ENIGMA BRCA1/2 Table 9 and MaveDB score sets with a clinical (non
+    # research-use-only) calibration, strength by the Brnich et al. 2019 OddsPath
+    # table within the per-gene rules (resources/shared/functional_evidence_rules.tsv).
+    # Env: ACMG_FUNCTIONAL_ASSAYS=false to switch off.
+    functional_assays: bool = True
+    # Which MaveDB calibration of a score set to use: "primary" (the calibration the
+    # score-set team designates as primary) or "conservative" (the weakest call among
+    # its clinical calibrations; disagreeing calibrations -> no call).
+    # Env: ACMG_MAVEDB_CALIBRATION.
+    mavedb_calibration: str = "primary"
+
+    @field_validator("mavedb_calibration")
+    @classmethod
+    def _check_mavedb_calibration(cls, v: str) -> str:
+        v = (v or "primary").strip().lower()
+        if v not in ("primary", "conservative"):
+            raise ValueError("mavedb_calibration must be 'primary' or 'conservative'")
+        return v
     # PP2 fallback heuristic (genes without a VCEP PP2 decision). A gene
     # qualifies with >= pp2_min_path P/LP missense and a benign-missense fraction
     # <= pp2_max_benign_frac, or (missense Z >= pp2_min_mis_z and fraction <=
@@ -442,6 +461,25 @@ class Config(BaseSettings):
         Kawaguchi) from the NCI TP53 Database, for the TP53 PS3/BS3 rules (built by
         scripts/build_tp53_functional.py). Falls back to the packaged resources copy."""
         return self.data_dir / "shared" / "tp53_functional.tsv"
+
+    @property
+    def mavedb_functional_tsv(self) -> Path:
+        """MaveDB functional-evidence rows (scripts/build_mavedb_functional.py via
+        setup_data.py --only mavedb). Falls back to the packaged resources copy."""
+        return self.data_dir / "shared" / "mavedb_functional.tsv.gz"
+
+    @property
+    def mavedb_scoresets_tsv(self) -> Path:
+        return self.data_dir / "shared" / "mavedb_scoresets.tsv"
+
+    @property
+    def enigma_table9_tsv(self) -> Path:
+        """ENIGMA BRCA1/2 VCEP Specifications Table 9 (scripts/build_enigma_table9.py)."""
+        return self.data_dir / "shared" / "enigma_brca12_table9.tsv"
+
+    @property
+    def functional_rules_tsv(self) -> Path:
+        return self.data_dir / "shared" / "functional_evidence_rules.tsv"
 
     @property
     def pm1_hotspots_tsv(self) -> Path:

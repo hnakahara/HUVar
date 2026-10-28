@@ -9,6 +9,10 @@ Evidence sources (in priority order):
    are non-commercial): the TP53 VCEP functional flowchart on systematic assay data
    (Kato / Giacomelli / Kotler / Kawaguchi; criteria/tp53_functional.py). When such
    data exist for the variant, text mining is not used.
+2c. Calibrated functional assays (criteria/functional_assays.py): ENIGMA Table 9 for
+   BRCA1/2, otherwise MaveDB clinical calibrations (Brnich 2019 OddsPath strengths,
+   per-gene VCEP rules). Used for TP53 when the NCI data are off or lack the variant.
+   When the variant was assessed (PS3, BS3 or indeterminate), text mining is not used.
 3. Text mining of other (non-expert-panel) ClinVar submissions describing a
    damaging wet-lab assay. Evidence is counted by DISTINCT cited PMIDs (so several
    submissions citing the same study count once) and is capped at Supporting:
@@ -74,6 +78,8 @@ class PS3Evaluator(CriterionEvaluator):
         # Opt-in (non-commercial data terms): Config.use_tp53_functional.
         self._tp53 = TP53Functional(
             cfg.tp53_functional_tsv if getattr(cfg, "use_tp53_functional", False) is True else None)
+        from acmg_classifier.criteria.functional_assays import FunctionalAssays
+        self._functional = FunctionalAssays(cfg)
 
     def evaluate(
         self,
@@ -99,6 +105,15 @@ class PS3Evaluator(CriterionEvaluator):
             r = tp53_functional_result(self._tp53, pc, ACMGCriterion.PS3)
             if r is not None:
                 return r
+        fa = self._functional.call(variant, annotation)
+        if fa is not None:
+            if fa.criterion == ACMGCriterion.PS3 and gene not in _PS3_NOT_APPLICABLE:
+                st = fa.strength
+                if gene in _PS3_MAX_SUPPORTING and st != CriterionStrength.SUPPORTING:
+                    st = CriterionStrength.SUPPORTING
+                    fa.evidence += f" (capped at Supporting: {gene} VCEP)"
+                return CriteriaResult.met(ACMGCriterion.PS3, st, fa.evidence)
+            return CriteriaResult.not_met(ACMGCriterion.PS3, fa.evidence)
         if gene in _PS3_NOT_APPLICABLE:
             return CriteriaResult.not_met(
                 ACMGCriterion.PS3,

@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **PS3/BS3 from calibrated functional assays** (`criteria/functional_assays.py`):
+  ENIGMA BRCA1/2 Specifications Table 9 V1.2 (variant-level codes) and MaveDB score
+  sets with clinical calibrations (dump 2026-06-24, CC0; primary calibration by
+  default, `ACMG_MAVEDB_CALIBRATION=conservative`), strength from the range OddsPath
+  per Brnich et al. 2019, per-gene VCEP rules in `functional_evidence_rules.tsv`
+  (VCEPs with assay lists / decision trees excluded, e.g. GCK). TP53 uses MaveDB when
+  the NCI TP53 Database flowchart is off or lacks the variant. BS3 is now automated
+  for these sources. New `setup_data.py` step `mavedb`; builders
+  `scripts/build_mavedb_functional.py`, `scripts/build_enigma_table9.py`.
+  `ACMG_FUNCTIONAL_ASSAYS=false` restores the previous behaviour.
 - **MANE Plus Clinical (reporting)**: VEP now runs with `--mane`, and each
   consequence carries `is_mane_plus_clinical` (recovered by accession from
   `mane_exons.tsv` on GRCh37). The TSV gains `mane_plus_clinical_transcript`,

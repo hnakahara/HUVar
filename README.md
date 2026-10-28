@@ -416,6 +416,7 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data --only 
 | `--workers N` | Build parallelism for the ClinVar (XML parse, max 24) and gnomAD (DuckDB) steps (default = CPU - 1) |
 | `--force-clinvar` | Force a fresh ClinVar download/rebuild even when local files exist (ClinVar is a rolling weekly release at a fixed URL). Re-acquires the VCF, the source RCV XML, and the PS1/PM5 SQLite. Combine with `--only clinvar-vcf clinvar-sqlite` to refresh ClinVar alone. |
 | `--force-clingen` | Re-download the ClinGen Dosage Sensitivity (`ClinGen_gene_curation_list_GRCh38.tsv`) and Gene-Disease Validity (`clingen_gene_disease_validity.csv`) tables into `data/shared/`. Downloaded once by default. Combine with `--only clingen`. |
+| `--mavedb-dump PATH` / `--force-mavedb` | `--only mavedb`: build `data/shared/mavedb_functional.tsv.gz` from a local MaveDB dump, or re-download the dump (~1.9 GB) and rebuild. Without a data copy the packaged table is used. |
 | `--force-mane-summary` | Re-download the MANE v1.5 summary (`MANE.GRCh38.v1.5.summary.txt.gz`, MANE Select + MANE Plus Clinical) into `data/shared/`. Downloaded once by default. Combine with `--only mane-summary`. |
 | `--only STEP ...` | Run only the named steps (e.g. `clingen`, `clinvar-vcf clinvar-sqlite`). Always pass `--data-dir` as well. |
 | `--skip-gnomad` | Skip gnomAD download (~ 1.5 TB) |
@@ -713,6 +714,43 @@ A reference example lives at `tests/fixtures/sample_supplement.tsv`.
 
 ---
 
+## Functional assays (PS3/BS3)
+
+PS3 and BS3 are also taken from calibrated functional assays
+(`criteria/functional_assays.py`; off with `ACMG_FUNCTIONAL_ASSAYS=false`), after the
+curated supplement and ClinGen expert-panel calls and before ClinVar text mining:
+
+- **BRCA1 / BRCA2** — the ENIGMA VCEP Specifications Table 9 V1.2
+  (`resources/shared/enigma_brca12_table9.tsv`, 4,731 variants): the listed PS3/BS3
+  code and strength, matched by c. on the MANE Select transcript. Variants coded
+  `None`, or not in the table, get no functional code from assays.
+- **Other genes** — MaveDB score sets with a *clinical* calibration (not
+  research-use-only; ExCALIBR is excluded): `resources/shared/mavedb_functional.tsv.gz`,
+  built from the MaveDB dump of 2026-06-24 (CC0). Genomic (SGE) data are matched by
+  GRCh38 coordinate, protein-level data by the NP_ accession + p. change of any of
+  the gene's transcripts. Per score set the MaveDB **primary** calibration is used
+  (`ACMG_MAVEDB_CALIBRATION=conservative` takes the weakest of its clinical
+  calibrations instead); the strength is re-derived from the range's OddsPath with
+  Brnich et al. 2019 Table 3 (PS3 >2.1 / >4.3 / >18.7 / >350; BS3 <0.48 / <0.23 /
+  <0.053) and capped at Strong unless a gene rule says otherwise. Several score sets
+  are not stacked: the strongest call is used, and PS3 vs BS3 of equal strength
+  cancel. Null consequences are skipped (PVS1), and BS3 from protein-level assays
+  is withheld when the splice predictor gives ≥ 0.2 or no prediction.
+- **Per-gene rules** (`resources/shared/functional_evidence_rules.tsv`): genes with a
+  VCEP specification use MaveDB only where the VCEP accepts OddsPath-calibrated
+  assays (MYOC, CYP1B1, InSiGHT MMR genes; PTEN capped at PS3_Supporting with no
+  BS3). VCEPs with an approved-assay list or decision tree (e.g. GCK kinetics,
+  Hearing Loss) and every other VCEP gene get nothing from MaveDB. **TP53**: the NCI
+  TP53 Database flowchart when `--with-tp53-functional` is on and the variant is in
+  it; otherwise the calibrated MaveDB TP53 data (TP53 VCEP caveats with PVS1 and
+  splice-based PP3 apply to both).
+
+Refresh the MaveDB table from a newer dump with
+`python scripts/setup_data.py --data-dir <data> --only mavedb` (downloads ~1.9 GB;
+`--mavedb-dump PATH` uses a local file). Calibrations use ClinVar P/LP and B/LB
+variants as controls, so benchmarks against ClinVar/eRepo classifications partly
+re-use those variants.
+
 ## Output format
 
 The result TSV has the following columns (one row per variant):
@@ -890,7 +928,7 @@ Limited or weaker are capped at VUS.
 |-----------|--------------------------|-------------------------|
 | **PVS1** | LoF consequence (nonsense/frameshift/canonical-splice/start-loss/whole-gene-deletion) in a gene where LoF is an established mechanism (VCEP, ClinGen HI score 3, or null variants ≥20% of the gene's ≥5 ClinVar P/LP variants; LOEUF shown for reference only); outside VCEP genes, two levels down unless the ClinGen gene-disease validity is Definitive/Strong, run through the Abou Tayoun 2018 tree (PTC-based NMD 50-nt rule, last-exon, rescue transcript, single-exon; NMD escape without an annotated domain → >10% of the protein altered = Strong, ≤10% = Moderate). See [PVS1 decision tree](#pvs1-decision-tree). | **Extensive.** `pvs1` applicability gate (LoF-not-the-mechanism genes withhold PVS1) + gene-specific trees for ~60 genes (`pvs1/vcep_pvs1.py`, APC in `pvs1/apc.py`): codon-range / critical-domain / NMD-boundary gates, per-gene initiation-codon and canonical-splice strengths, an optional per-skipped-exon splice table, PTC-codon bands (ENIGMA BRCA1/BRCA2 Table 4), NMD-escape critical regions (ITGA2B transmembrane domain), stop-loss (GCK) and stop-codon read-through frameshift (MECP2/TCF4/CDKL5/UBE3A/SLC9A6) rules. |
 | **PS1** | Same amino-acid change as an established P/LP ClinVar variant (review status ≥2 stars by default, `ACMG_PS1_MIN_STARS`). Strong if any comparator is Pathogenic; Moderate if all are only Likely pathogenic. | `ps1_splice` extends PS1 to splice-equivalent variants for genes whose VCEP allows it. Where the VCEP requires the comparator to be VCEP-classified (`vcep_comparator_rules.tsv`), only eRepo P/LP or ClinVar expert-panel comparators count, minus those the VCEP excludes (e.g. classified with PS1/PM5 or PVS1). |
-| **PS3** | Functional evidence, in priority order: curated supplement (any strength); PS3 as applied by a ClinGen expert panel to the variant in ClinVar (≥3★, panel's strength); text mining of other ClinVar submissions citing a damaging assay, counted by **distinct PMIDs** and **capped at Supporting** (assay validation per Brnich 2019 cannot be judged from text). | Text mining suppressed for genes whose VCEP has no PS3 or restricts it (PALB2, PDHA1, POLG, CAPN3, ANO5). **TP53** (opt-in `--with-tp53-functional`; the NCI TP53 Database terms prohibit monetization): PS3/BS3 for missense variants from the VCEP functional flowchart (`tp53_functional.tsv`, NCI TP53 Database R21: Kato 2003 transactivation class, with Giacomelli 2018, Kotler 2018 and Kawaguchi 2005 as the other assays; "majority" counts a non-functional/functional Kato result). PS3 Strong / Moderate / Supporting and BS3 Strong / Supporting as in the flowchart; not applied with a SpliceAI-based PP3, PS3 not applied with PVS1 and downgraded to Moderate with PVS1_Strong. When assay data exist, ClinVar text mining is not used. Agreement with the TP53 VCEP PS3/BS3 calls in the eRepo: 160/172 variants. |
+| **PS3** | Functional evidence, in priority order: curated supplement (any strength); PS3 as applied by a ClinGen expert panel to the variant in ClinVar (≥3★, panel's strength); **calibrated functional assays** (ENIGMA Table 9 for BRCA1/2, MaveDB clinical calibrations otherwise — see [Functional assays](#functional-assays-ps3bs3); also gives BS3); text mining of other ClinVar submissions citing a damaging assay, counted by **distinct PMIDs** and **capped at Supporting** (assay validation per Brnich 2019 cannot be judged from text). | Text mining suppressed for genes whose VCEP has no PS3 or restricts it (PALB2, PDHA1, POLG, CAPN3, ANO5). **TP53** (opt-in `--with-tp53-functional`; the NCI TP53 Database terms prohibit monetization): PS3/BS3 for missense variants from the VCEP functional flowchart (`tp53_functional.tsv`, NCI TP53 Database R21: Kato 2003 transactivation class, with Giacomelli 2018, Kotler 2018 and Kawaguchi 2005 as the other assays; "majority" counts a non-functional/functional Kato result). PS3 Strong / Moderate / Supporting and BS3 Strong / Supporting as in the flowchart; not applied with a SpliceAI-based PP3, PS3 not applied with PVS1 and downgraded to Moderate with PVS1_Strong. When assay data exist, ClinVar text mining is not used. Agreement with the TP53 VCEP PS3/BS3 calls in the eRepo: 160/172 variants. |
 | **PS4** | **Curated evidence only**: curated supplement or PS4 applied by a ClinGen expert panel in ClinVar (≥3★). The number of ClinVar submissions reporting affected individuals is shown for information but not scored (individuals cannot be de-duplicated across submitters). Genes without a VCEP: not counted when PM3 is met. | — |
 | **PM1** | Mutational hotspot / critical domain from the per-gene cspec table (`pm1_hotspots.tsv`; optional `alt_aa` restriction, e.g. IL2RG transmembrane residues; IL2RG PM1 also requires PM2 and no BA1/BS1/BS2; LDLR/KCNQ1 require PM2; RAG1/RAG2/IL7R not with BA1/BS1/BS2; PAH not with PP3_Strong; RYR1 N-terminal/central regions Supporting with PS1/PM5; FBN1 PM1_Strong excludes PS1/PM5 and N>S / G>A substitutions are not given PM1). TP53 also from cancerhotspots.org per amino-acid change (≥10 → Moderate, 2-9 → Supporting; `resources/clingen/cancerhotspots_TP53.tsv`). Regions are on the MANE Select transcript (VCEP numbering on other transcripts converted, e.g. MECP2 +12, UBE3A +20). Genes without a VCEP definition: PM1 from curated evidence only. <!-- Removed (Genome Medicine revision): An opt-in ClinVar fallback (`ACMG_PM1_HEURISTIC=true`: ≥3 other P/LP **missense** changes, ClinVar ≥1★, the query variant excluded, within ±25 residues and no B/LB missense; `ACMG_PM1_WINDOW`, `ACMG_PM1_MIN_PATH_VARIANTS`) is off by default because it reproduced the VCEP-defined regions poorly (residue-level F1 ≈ 0.3). --> | **Yes** — VCEP hotspot residue ranges/residues + strength are authoritative. |
 | **PM2** | Rarity on the **raw** gnomAD grpmax AF: dominant < 0.0001, recessive/X-linked < 0.005 → Supporting (SVI default). | **Yes** — `pm2_threshold` / `pm2_strength` / `pm2_basis`; `pm2_subpop` (`point` = also cap GrpMax point AF, `ci95` = upper-95%-CI rule); `pm2_zygosity` homo/hemizygote ceiling (e.g. SLC6A8 0, OTC ≤1, ABCD1 0 hemi); `pm2_subset=non_cancer` and `pm2_min_depth` (ENIGMA BRCA1/2). Gene-specific cSpec wording is hard-coded for a few genes (F8/F9 "absent in males", RYR1 "1 allele allowed", ATM "n=1 in a single subpopulation", PTEN single-vs-multi-allele subpop, RUNX1 GrpMax-FAF-then-all-subpop). |
