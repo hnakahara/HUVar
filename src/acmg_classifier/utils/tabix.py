@@ -5,11 +5,31 @@ from pathlib import Path
 from typing import Generator, Iterator
 import pysam  # type: ignore
 
+# Reference files are UTF-8: recent ClinVar releases carry non-ASCII disease
+# names in INFO (e.g. "Muir-Torré_syndrome"). pysam decodes lines as ASCII by
+# default, and the resulting UnicodeDecodeError (a ValueError subclass) used to
+# be swallowed by the contig fallback below, silently dropping every record at
+# any position overlapped by such a line.
+_ENCODING = "utf-8"
+
+
+def _open(path) -> pysam.TabixFile:
+    return pysam.TabixFile(str(path), encoding=_ENCODING)
+
+
+def _resolve_contig(tf: pysam.TabixFile, chrom: str) -> str | None:
+    """The contig name as indexed (tries the chr-prefixed/unprefixed form)."""
+    contigs = tf.contigs
+    if chrom in contigs:
+        return chrom
+    alt_chrom = chrom[3:] if chrom.startswith("chr") else f"chr{chrom}"
+    return alt_chrom if alt_chrom in contigs else None
+
 
 @contextmanager
 def open_tabix(path: Path) -> Generator[pysam.TabixFile, None, None]:
     """Context manager for a pysam tabix file."""
-    tf = pysam.TabixFile(str(path))
+    tf = _open(path)
     try:
         yield tf
     finally:
@@ -26,15 +46,12 @@ def fetch_region(
     Yield raw tab-separated lines overlapping [start, end] (1-based, inclusive).
     Silently skips if contig not in index.
     """
-    try:
-        yield from tf.fetch(chrom, start - 1, end)
-    except ValueError:
-        # Contig not found in tabix index — try without 'chr' prefix or vice versa
-        alt_chrom = chrom[3:] if chrom.startswith("chr") else f"chr{chrom}"
-        try:
-            yield from tf.fetch(alt_chrom, start - 1, end)
-        except ValueError:
-            return
+    contig = _resolve_contig(tf, chrom)
+    if contig is None:
+        return
+    # Decoding or I/O errors propagate to the caller (which logs them) instead
+    # of being mistaken for a missing contig.
+    yield from tf.fetch(contig, start - 1, end)
 
 
 class TabixReader:
@@ -73,7 +90,7 @@ class TabixReader:
     def _handle(self) -> pysam.TabixFile:
         tf = getattr(self._local, "tf", None)
         if tf is None:
-            tf = pysam.TabixFile(str(self._path))
+            tf = _open(self._path)
             self._local.tf = tf
         return tf
 
@@ -82,11 +99,7 @@ class TabixReader:
         thread-local handle, with the identical chr-prefix fallback as
         ``fetch_region``."""
         tf = self._handle()
-        try:
-            yield from tf.fetch(chrom, start - 1, end)
-        except ValueError:
-            alt_chrom = chrom[3:] if chrom.startswith("chr") else f"chr{chrom}"
-            try:
-                yield from tf.fetch(alt_chrom, start - 1, end)
-            except ValueError:
-                return
+        contig = _resolve_contig(tf, chrom)
+        if contig is None:
+            return
+        yield from tf.fetch(contig, start - 1, end)

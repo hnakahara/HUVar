@@ -10,7 +10,9 @@
   Moderate (GAA, LDLR, ETHE1, PDHA1, POLG, SLC19A3, ITGA2B, ITGB3); blank →
   the SVI default of Supporting.
 * ``pm2_basis``     — ``faf`` when the VCEP states the cutoff on the GrpMax
-  Filtering Allele Frequency (FAF95); blank → the raw popmax allele frequency.
+  Filtering Allele Frequency (FAF95); ``global`` when it states the cutoff on
+  the overall gnomAD allele frequency (InSiGHT MMR genes); blank → the raw
+  popmax allele frequency.
 * ``pm2_subpop``    — highest-subpopulation metric mode that corrects the
   deflated low-AC FAF95: ``point`` (RUNX1 — also require the GrpMax POINT AF
   <= threshold) or ``ci95`` (Cardiomyopathy/HCM — require the UPPER bound of the
@@ -45,6 +47,10 @@ class PM2Rule:
                                     # gnomAD mean read depth >= this for PM2
     not_applicable: bool = False    # the VCEP does not use PM2 (pm2_threshold
                                     # = "not_applicable")
+    use_global: bool = False        # compare the overall (global) AF — the VCEP
+                                    # states the cutoff on the gnomAD allele
+                                    # frequency without a GrpMax/FAF qualifier
+                                    # (InSiGHT MMR genes)
 
 
 class PM2Spec:
@@ -82,7 +88,9 @@ class PM2Spec:
                     if (row.get("pm2_strength") or "").strip().lower() == "moderate"
                     else CriterionStrength.SUPPORTING
                 )
-                use_faf = (row.get("pm2_basis") or "").strip().lower() == "faf"
+                basis = (row.get("pm2_basis") or "").strip().lower()
+                use_faf = basis == "faf"
+                use_global = basis == "global"
                 subpop_mode = (row.get("pm2_subpop") or "").strip().lower()
                 if subpop_mode not in ("point", "ci95"):
                     subpop_mode = ""
@@ -107,11 +115,11 @@ class PM2Spec:
                         min_depth = None
                 # Only record a rule when the gene carries at least one PM2
                 # specialisation; otherwise leave it to the global default.
-                if (raw or strength == CriterionStrength.MODERATE or use_faf
+                if (raw or strength == CriterionStrength.MODERATE or use_faf or use_global
                         or subpop_mode or zyg_scope or subset or min_depth is not None):
                     self._by_gene[gene] = PM2Rule(
                         threshold, strength, use_faf, subpop_mode, zyg_scope,
-                        zyg_max, subset, min_depth,
+                        zyg_max, subset, min_depth, use_global=use_global,
                     )
 
     def get(self, gene: Optional[str]) -> Optional[PM2Rule]:

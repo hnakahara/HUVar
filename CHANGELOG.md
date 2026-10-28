@@ -44,6 +44,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `symbol` / `RefSeq_nuc` / `MANE_status` columns and recorded in the data manifest.
   HUVar_app's TransVar service reads it from there.
 
+### Fixed
+
+- **ClinVar (and other tabix) lookups dropped records next to non-ASCII lines.**
+  Recent ClinVar releases contain UTF-8 disease names (e.g. "Muir-Torré_syndrome");
+  pysam decoded lines as ASCII and the `UnicodeDecodeError` was swallowed by the
+  chr-prefix fallback, so every record at a position overlapped by such a line was
+  lost (e.g. MLH1 c.2059C>T, ClinVar 90014). Tabix files are now read as UTF-8, and
+  the contig is resolved from the index instead of by catching `ValueError`.
+
+### Changed
+
+- **PM2 for the InSiGHT MMR genes (MLH1, MSH2, MSH6, PMS2) uses the overall gnomAD
+  allele frequency** (`pm2_basis=global`), as worded in GN115/GN137/GN138/GN139
+  ("allele frequency <0.00002 ... in gnomAD v4 dataset"), instead of the GrpMax
+  point AF. Agreement with the eRepo PM2 calls for these genes rises from 34/37 to
+  36/37 with no additional PM2 assignments. `build_disease_thresholds.py` emits
+  `global` for this wording.
+
 ### Added (Genome Medicine revision)
 
 - `benchmark/`: scripts used for the analyses in the manuscript (eRepo benchmark,

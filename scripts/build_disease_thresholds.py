@@ -1620,14 +1620,28 @@ def _pm2_strength(rule_set: dict) -> str:
     return "Moderate" if max(ranks) >= _STRENGTH_RANK["Moderate"] else "Supporting"
 
 
+# InSiGHT MMR wording: "Absent/extremely rare allele frequency <0.00002 (<1 in
+# 50,000 alleles) in gnomAD v4 dataset" — the overall AF, with no GrpMax,
+# sub-population or FAF qualifier.
+_PM2_GLOBAL = re.compile(r"\ballele frequency\s*<\s*[0-9.]+[^.]{0,80}?\bin gnomAD v4 dataset", re.IGNORECASE)
+_PM2_SUBPOP_WORDS = re.compile(r"grpmax|popmax|sub-?population|filtering allele", re.IGNORECASE)
+
+
 def _pm2_basis(rule_set: dict) -> str:
     """"faf" when the VCEP states the PM2 cutoff on the GrpMax Filtering Allele
-    Frequency (HNF1A/HNF4A/GCK/SLC6A8/FBN1/LDLR…); else "" (raw popmax AF)."""
+    Frequency (HNF1A/HNF4A/GCK/SLC6A8/FBN1/LDLR…); "global" when it states the
+    cutoff on the overall gnomAD allele frequency (InSiGHT MLH1/MSH2/MSH6/PMS2);
+    else "" (raw popmax AF)."""
     code = _pm2_code(rule_set)
     if code is None:
         return ""
     desc = " ".join(es.get("description", "") or "" for es in _applicable_strengths(code))
-    return "faf" if _PM2_FAF.search(desc) else ""
+    if _PM2_FAF.search(desc):
+        return "faf"
+    plain = desc.replace("\\", "")
+    if _PM2_GLOBAL.search(plain) and not _PM2_SUBPOP_WORDS.search(plain):
+        return "global"
+    return ""
 
 
 # PM2 subpopulation metric mode — the FAF95 (95% CI LOWER bound) is deflated for

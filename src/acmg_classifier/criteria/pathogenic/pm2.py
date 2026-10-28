@@ -231,6 +231,11 @@ class PM2Evaluator(CriterionEvaluator):
             if value is None:
                 value = gd.popmax_af if gd.popmax_af is not None else (gd.af or 0.0)
             metric = "FAF95"
+        elif rule and getattr(rule, "use_global", False):
+            # InSiGHT MMR genes: "allele frequency <0.00002 ... in gnomAD v4
+            # dataset" — the overall AF, with no GrpMax/FAF qualifier.
+            value = gd.af if gd.af is not None else 0.0
+            metric = "global AF"
         else:
             value = gd.popmax_af
             if value is None:
