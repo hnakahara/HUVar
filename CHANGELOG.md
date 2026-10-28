@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   implement the ClinGen/CGC/VICC oncogenicity SOP (Horak et al. 2022) with
   licence-free data only — NCG 7.1 canonical gene roles plus curated overrides
   (`somatic_gene_roles.tsv`), cancerhotspots.org v2 counts (`cancer_hotspots_v2.tsv`,
-  ODbL), ClinVar P/LP comparators (OS1/OM4), gnomAD (OP4/SBS1/SBVS1), HUVar
+  ODbL), CIViC functional evidence / OS2-coded oncogenic assertions for OS2/SBS2
+  (CC0, new `setup_data.py` step `civic`), ClinVar somatic-oncogenicity comparators with a different nucleotide change (OS1: ≥ 1 star; OM4: ≥ 2 stars; germline P/LP not used; new ClinVar SQLite columns `oncogenicity` / `onc_review_status` / `onc_stars` — rebuild with `--only clinvar-sqlite --force-clinvar`), gnomAD (OP4/SBS1/SBVS1), HUVar
   PP3/BP4/BP7/PM1 and calibrated functional data (OS2/SBS2). OP2 and any override via
   manual evidence. Builder `scripts/build_somatic_resources.py`. AMP/ASCO/CAP tiers
   are not assigned.

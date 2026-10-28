@@ -1060,3 +1060,81 @@ def query_pathogenic_missense_count(
         log.error("clinvar_sqlite_error", op="pvs1_miss", error=str(exc))
         return 0
     return sum(1 for (hp,) in rows if _is_missense_p(hp))
+
+
+def query_aa_change_at(
+    db_path: Path, chrom: str, pos: int, ref: str, alt: str,
+) -> Optional[tuple[str, Optional[str], Optional[str]]]:
+    """(gene_symbol, amino_acid_change, hgvs_p) of the ClinVar record at this
+    allele, whatever its germline classification, or None."""
+    if not db_path.exists():
+        return None
+    try:
+        con = _get_conn(db_path)
+        row = con.execute(
+            "SELECT gene_symbol, amino_acid_change, hgvs_p FROM variants "
+            "WHERE chrom IN (?, ?) AND pos = ? AND ref = ? AND alt = ? LIMIT 1",
+            (strip_chr(chrom), "chr" + strip_chr(chrom), pos, ref, alt),
+        ).fetchone()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="aa_change_at", error=str(exc))
+        return None
+    return tuple(row) if row else None
+
+
+def has_oncogenicity(db_path: Path) -> bool:
+    """True when the ClinVar DB was built with the somatic oncogenicity columns."""
+    if not db_path.exists():
+        return False
+    try:
+        cols = {r[1] for r in _get_conn(db_path).execute("PRAGMA table_info(variants)")}
+    except Exception:
+        return False
+    return "oncogenicity" in cols
+
+
+def query_oncogenic_at_codon(
+    db_path: Path,
+    gene_symbol: str,
+    codon_position: Optional[int],
+    chrom: Optional[str] = None,
+    pos: Optional[int] = None,
+    codon_window: int = 2,
+) -> Optional[list[dict]]:
+    """ClinVar records classified Oncogenic / Likely oncogenic (somatic
+    oncogenicity) at ``codon_position`` of ``gene_symbol``: dicts with
+    variation_id, chrom, pos, ref, alt, hgvs_p, aa (e.g. 'V600E'),
+    oncogenicity, review_status, stars (best RCV per allele). ``None`` when the
+    DB predates the oncogenicity columns. Rows more than ``codon_window`` bp
+    from ``pos`` are dropped (transcript-numbering collisions, as for PM5)."""
+    if not has_oncogenicity(db_path) or codon_position is None:
+        return None
+    try:
+        rows = _get_conn(db_path).execute(
+            """
+            SELECT variation_id, chrom, pos, ref, alt, hgvs_p, amino_acid_change,
+                   oncogenicity, onc_review_status, onc_stars
+            FROM variants
+            WHERE gene_symbol = ? AND codon_position = ?
+              AND lower(oncogenicity) IN ('oncogenic', 'likely oncogenic',
+                                          'oncogenic/likely oncogenic')
+            """,
+            (gene_symbol, codon_position),
+        ).fetchall()
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="oncogenic_at_codon", error=str(exc))
+        return None
+    q_chrom = strip_chr(chrom) if chrom else None
+    best: dict[tuple, dict] = {}
+    for r in rows:
+        c = strip_chr(str(r[1])) if r[1] is not None else None
+        if (q_chrom is not None and pos is not None and r[2] is not None
+                and (c != q_chrom or abs(r[2] - pos) > codon_window)):
+            continue
+        d = {"variation_id": str(r[0]), "chrom": c, "pos": r[2], "ref": r[3], "alt": r[4],
+             "hgvs_p": r[5], "aa": r[6], "oncogenicity": r[7], "review_status": r[8] or "",
+             "stars": int(r[9] or 0)}
+        k = (c, r[2], r[3], r[4])
+        if k not in best or d["stars"] > best[k]["stars"]:
+            best[k] = d
+    return list(best.values())

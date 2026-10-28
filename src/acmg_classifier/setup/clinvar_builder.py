@@ -42,7 +42,10 @@ CREATE TABLE IF NOT EXISTS variants (
     bs2_evidence INTEGER DEFAULT 0,
     bs2_strength TEXT,
     functional_pmids TEXT,
-    ep_criteria TEXT
+    ep_criteria TEXT,
+    oncogenicity TEXT,
+    onc_review_status TEXT,
+    onc_stars INTEGER DEFAULT 0
 );
 """
 
@@ -370,6 +373,23 @@ def _rcv_classification(ref_assert: ET.Element) -> tuple[str, str, str]:
     return "", "", ""
 
 
+def _rcv_oncogenicity(ref_assert: ET.Element) -> tuple[str, str, int]:
+    """(oncogenicity, review_status, stars) of the RCV's somatic oncogenicity
+    classification (``Classifications/OncogenicityClassification``, ClinVar's 2024
+    germline/somatic data model); empty when the RCV has none."""
+    from acmg_classifier.local_db.clinvar_vcf import onc_star_rating
+    for cls in ref_assert.iter("Classifications"):
+        for child in cls:
+            if child.tag.lower() != "oncogenicityclassification":
+                continue
+            desc = child.find("Description")
+            rev = child.find("ReviewStatus")
+            onc = (desc.text or "").strip() if desc is not None else ""
+            rs = (rev.text or "").strip() if rev is not None else ""
+            return onc, rs, onc_star_rating(rs) if onc else 0
+    return "", "", 0
+
+
 def _scv_significance(scv: ET.Element) -> str:
     """Lower-cased SCV germline significance, both schemas.
 
@@ -565,7 +585,8 @@ def build_clinvar_sqlite(
     con.execute("PRAGMA cache_size = -262144")  # ~256 MB page cache
     con.executescript(_CREATE_TABLE)  # table only; indexes are built after the load
 
-    insert_sql = "INSERT INTO variants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    insert_sql = ("INSERT INTO variants VALUES "
+                  "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
     n_rows = 0
     n_seen = 0
     # Default to 4 parse processes; cap at 24 so the main process (gzip
@@ -731,9 +752,11 @@ def _parse_clinvarset(elem: ET.Element, assembly: str):
             bs2_evidence, bs2_strength = _mine_bs2(ep_text)
             ep_criteria = _mine_ep_criteria(ep_text)
 
+        onc, onc_rs, onc_stars = _rcv_oncogenicity(ref_assert)
         return (var_id, chrom, pos, ref, alt, gene, hgvs_c, hgvs_p,
                 aa_change, codon_pos, clinsig, rev_status, stars, last_eval,
                 affected, functional, segregation, bs2_evidence, bs2_strength,
-                ",".join(sorted(functional_pmids)) or None, ep_criteria)
+                ",".join(sorted(functional_pmids)) or None, ep_criteria,
+                onc or None, onc_rs or None, onc_stars)
     except Exception:
         return None

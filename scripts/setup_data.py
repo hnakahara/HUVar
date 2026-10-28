@@ -1303,6 +1303,75 @@ def step_mavedb(data_dir: Path, dump: Path | None = None, force: bool = False) -
     return True
 
 
+# CIViC (CC0) monthly TSV release (https://civicdb.org/releases); used for the somatic
+# OS2 / SBS2 criteria. --civic-release DD-Mon-YYYY picks a release, "nightly" the
+# nightly dump; --civic-dir builds from already downloaded files.
+CIVIC_BASE = "https://civicdb.org/downloads"
+CIVIC_FILES = ("AcceptedClinicalEvidenceSummaries.tsv", "VariantSummaries.tsv",
+               "AcceptedAssertionSummaries.tsv")
+
+
+def _civic_release_candidates(release: str | None) -> list[str]:
+    if release:
+        return [release]
+    import datetime as _dt
+    first = _dt.date.today().replace(day=1)
+    prev = (first - _dt.timedelta(days=1)).replace(day=1)
+    return [d.strftime("%d-%b-%Y") for d in (first, prev)]
+
+
+def step_civic(data_dir: Path, release: str | None = None, civic_dir: Path | None = None,
+               force: bool = False) -> bool:
+    """Download the CIViC TSVs and build data/shared/civic_somatic.tsv."""
+    shared = data_dir / "shared"
+    out = shared / "civic_somatic.tsv"
+    if out.exists() and not force and civic_dir is None:
+        print(f"  [SKIP] {out.name} (rebuild with --force-civic or --civic-dir)")
+        return True
+    files: dict[str, Path] = {}
+    used = release or ""
+    if civic_dir is not None:
+        for name in CIVIC_FILES:
+            hits = sorted(Path(civic_dir).glob(f"*{name}"))
+            if hits:
+                files[name] = hits[-1]
+        used = used or "local"
+    else:
+        for rel in _civic_release_candidates(release):
+            dest_dir = data_dir / "civic" / rel
+            try:
+                for name in CIVIC_FILES:
+                    dest = dest_dir / f"{rel}-{name}"
+                    if not dest.exists() or dest.stat().st_size == 0 or force:
+                        _download(f"{CIVIC_BASE}/{rel}/{rel}-{name}", dest, f"CIViC {rel} {name}")
+                    with dest.open(encoding="utf-8", errors="replace") as fh:
+                        head = fh.readline()
+                    # A missing release returns an HTML error page (curl without --fail).
+                    if "\t" not in head or head.lstrip().startswith("<"):
+                        dest.unlink(missing_ok=True)
+                        raise ValueError(f"{dest.name} is not a CIViC TSV")
+                    files[name] = dest
+                used = rel
+                break
+            except (subprocess.CalledProcessError, OSError, ValueError) as exc:
+                # release not published yet -> try the previous month
+                print(f"  [WARN] CIViC release {rel} not available ({exc})")
+                files = {}
+    missing = [n for n in CIVIC_FILES[:2] if n not in files]
+    if missing:
+        print(f"  [ERROR] CIViC files missing: {', '.join(missing)}")
+        return False
+    _add_src_to_path()
+    from acmg_classifier.somatic.civic import build_civic_table  # type: ignore
+    info = build_civic_table(files["AcceptedClinicalEvidenceSummaries.tsv"],
+                             files["VariantSummaries.tsv"],
+                             files.get("AcceptedAssertionSummaries.tsv"), out, release=used)
+    print(f"  CIViC {used}: {info['evidence_items']} functional evidence items, "
+          f"{info['assertions']} oncogenic assertions with OS2/SBS2")
+    _record_manifest(data_dir, "civic", source=f"{CIVIC_BASE}/{used}", path=out, release=used)
+    return True
+
+
 def _clinvar_release(vcf: Path) -> str | None:
     try:
         from acmg_classifier.provenance import _clinvar_vcf_date
@@ -1462,13 +1531,20 @@ def main() -> None:
                              "(.tar.gz or extracted directory) instead of downloading.")
     parser.add_argument("--force-mavedb", action="store_true",
                         help="Re-download the MaveDB dump and rebuild the functional table.")
+    parser.add_argument("--civic-release", default=None, metavar="DD-Mon-YYYY",
+                        help="CIViC monthly release to download (e.g. 01-Oct-2026, or "
+                             "'nightly'); default: this month's, else last month's.")
+    parser.add_argument("--civic-dir", type=Path, default=None, metavar="DIR",
+                        help="Build the CIViC table from TSVs already downloaded to DIR.")
+    parser.add_argument("--force-civic", action="store_true",
+                        help="Re-download the CIViC TSVs and rebuild civic_somatic.tsv.")
     parser.add_argument("--only", nargs="+", default=None, metavar="STEP",
                         help="Run only the named step(s) and skip the rest. Step "
                              "keys: genome, vep, clinvar-vcf, clinvar-sqlite, "
                              "alphamissense, esm1b, revel, cadd, bayesdel, "
                              "openspliceai, gnomad-constraint, gnomad-coverage, "
                              "gnomad, gnomad-noncancer, repeatmasker, phylop, clingen, "
-                             "mane-summary, mavedb. "
+                             "mane-summary, mavedb, civic. "
                              "Each step is idempotent: it checks for existing "
                              "files and downloads only what is missing. Example: "
                              "--only openspliceai")
@@ -1517,6 +1593,7 @@ def main() -> None:
         ("clingen",           "ClinGen dosage / gene validity", lambda: step_clingen(data_dir, args.force_clingen)),
         ("mane-summary",      "MANE summary",      lambda: step_mane_summary(data_dir, args.force_mane_summary)),
         ("mavedb",            "MaveDB functional", lambda: step_mavedb(data_dir, args.mavedb_dump, args.force_mavedb)),
+        ("civic",             "CIViC functional",  lambda: step_civic(data_dir, args.civic_release, args.civic_dir, args.force_civic)),
     ]
 
     if args.only:

@@ -132,3 +132,55 @@ def query_clinvar_vcf_reader(
     except Exception as exc:
         log.error("clinvar_vcf_error", error=str(exc))
     return []
+
+
+# ClinVar somatic oncogenicity classifications (VCF INFO ONC / ONCREVSTAT, added
+# to the ClinVar VCF with the 2024 germline/somatic data model). Review-status
+# wording differs from the germline one ("criteria provided, multiple
+# submitters" without "no conflicts"), hence a separate star map (checked in order).
+_ONC_STARS = (
+    ("practice guideline", 4),
+    ("reviewed by expert panel", 3),
+    ("conflicting", 1),
+    ("multiple submitters", 2),
+    ("single submitter", 1),
+)
+ONCOGENIC_LABELS = {"oncogenic", "likely oncogenic", "oncogenic/likely oncogenic"}
+
+
+def onc_star_rating(review_status: str) -> int:
+    rs = (review_status or "").lower()
+    for pattern, stars in _ONC_STARS:
+        if pattern in rs:
+            return stars
+    return 0
+
+
+def query_clinvar_oncogenicity(
+    vcf_gz_path: Path, chrom: str, start: int, end: int,
+) -> list[dict]:
+    """ClinVar records in [start, end] that carry an oncogenicity classification:
+    dicts with chrom, pos, ref, alt, variation_id, oncogenicity, review_status,
+    stars. Empty when the VCF is missing or predates the ONC fields."""
+    if not vcf_gz_path.exists():
+        return []
+    out: list[dict] = []
+    try:
+        with open_tabix(vcf_gz_path) as tf:
+            for line in fetch_region(tf, chrom, start, end):
+                f = line.split("\t")
+                if len(f) < 8:
+                    continue
+                info = _parse_info(f[7])
+                onc = info.get("ONC", "").replace("_", " ").strip()
+                if not onc:
+                    continue
+                rev = info.get("ONCREVSTAT", "").replace("_", " ")
+                out.append({
+                    "chrom": f[0], "pos": int(f[1]), "ref": f[3], "alt": f[4],
+                    "variation_id": f[2] if f[2] != "." else None,
+                    "oncogenicity": onc, "review_status": rev, "stars": onc_star_rating(rev),
+                })
+    except Exception as exc:
+        log.error("clinvar_vcf_onc_error", error=str(exc))
+    return out

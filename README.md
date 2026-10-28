@@ -764,22 +764,32 @@ Only licence-free data are used (no OncoKB / COSMIC / CKB):
 | Code | Points | Automated rule (data) |
 |---|---|---|
 | OVS1 | +8 | Null variant in a tumour suppressor: NCG canonical driver whose majority role is TSG only (`somatic_gene_roles.tsv`); stop/frameshift must be NMD-predicted or remove > 10% of the protein |
-| OS1 | +4 | Same amino-acid change as a ClinVar P/LP variant (≥ 2 stars), different nucleotide change |
-| OS2 | +4 | Calibrated assay (MaveDB / ENIGMA Table 9 / TP53 VCEP data) at PS3_Strong or above, tumour suppressors only |
+| OS1 | +4 | Same amino-acid change, **different nucleotide change**, as a ClinVar somatic-oncogenicity Oncogenic / Likely oncogenic variant (≥ 1 star, `ACMG_SOMATIC_OS1_ONC_MIN_STARS`); germline P/LP classifications are not used. The variant's own ClinVar oncogenicity is shown in the evidence but not counted (as PS1) |
+| OS2 | +4 | Calibrated assay (MaveDB / ENIGMA Table 9 / TP53 VCEP data) at PS3_Strong or above, tumour suppressors only; or **CIViC**: an accepted Oncogenic assertion coded OS2, or accepted Functional evidence items supporting Gain of Function / Neomorphic (oncogenes) or Loss of Function / Dominant Negative (TSGs), rating ≥ 3 from ≥ 2 publications (`ACMG_SOMATIC_CIVIC_MIN_RATING`, `_MIN_SOURCES`) |
 | OS3 | +4 | cancerhotspots.org v2 residue with ≥ 50 samples, ≥ 10 with this change |
 | OM1 | +2 | HUVar PM1 (VCEP hotspot/domain tables or ClinVar P/LP cluster without benign variation); not with OS1/OS3 |
 | OM2 | +2 | In-frame indel in an oncogene/TSG, or stop-loss in a TSG; not with OVS1 |
 | OM3 | +2 | Hotspot residue with < 50 samples, ≥ 10 with this change; not with OM1/OM4 |
-| OM4 | +2 | Different missense at a residue with a ClinVar P/LP missense (≥ 2 stars), Grantham ≥ 0.9 × the comparator's; not with OS1/OS3/OM1 |
+| OM4 | +2 | Different missense at a residue with a ClinVar oncogenic / likely oncogenic missense (≥ 2 stars, `ACMG_SOMATIC_CLINVAR_MIN_STARS`; germline P/LP not used), Grantham ≥ 0.9 × the comparator's; not with OS1/OS3/OM1 |
 | OP1 | +1 | HUVar PP3 (not counted with OVS1) |
 | OP2 | +1 | Manual only (needs the tumour type) |
 | OP3 | +1 | Hotspot residue / in-frame indel region, this change in < 10 samples |
-| OP4 | +1 | Absent from gnomAD or grpmax AF ≤ 1e-5 (`ACMG_SOMATIC_OP4_MAX_AF`) |
+| OP4 | +1 | Absent from gnomAD or grpmax AF ≤ 0.01% (`ACMG_SOMATIC_OP4_MAX_AF`); ≤ 0.05% for known oncogenic variants (OS1/OS3/OM3 met; clonal haematopoiesis / mosaic outliers, `ACMG_SOMATIC_OP4_OUTLIER_MAX_AF`) |
 | SBVS1 / SBS1 | −8 / −4 | gnomAD grpmax AF > 5% / > 1% |
-| SBS2 | −4 | Calibrated assay at BS3_Strong or above, tumour suppressors only |
+| SBS2 | −4 | Calibrated assay at BS3_Strong or above, tumour suppressors only; or CIViC Unaltered Function evidence (same thresholds) / an assertion coded SBS2. Opposite calls from the two sources cancel |
 | SBP1 / SBP2 | −1 / −1 | HUVar BP4 / synonymous with HUVar BP7 |
 
-With OS1 met, the hotspot criteria (amino-acid level counts) are not counted. Dual-role
+The CIViC table (`data/shared/civic_somatic.tsv`, CC0) is built at setup with
+`python scripts/setup_data.py --data-dir <data> --only civic` (this month's CIViC release,
+else last month's; `--civic-release 01-Oct-2026` / `nightly`, `--civic-dir DIR` for
+downloaded TSVs, `--force-civic` to refresh); CIViC records are matched by gene and protein
+change (single-variant molecular profiles). OS1 and OS3 may both count (SOP Table 2). ClinVar oncogenicity classifications are read
+from the ClinVar SQLite (`oncogenicity`, `onc_review_status`, `onc_stars` columns, from
+the RCV `OncogenicityClassification`); a database built before this version lacks them —
+rebuild it with `python scripts/setup_data.py --data-dir <data> --only clinvar-sqlite
+--force-clinvar` (re-downloads the RCV XML; or delete `clinvar_ps1_pm5_<asm>.sqlite` and
+run `--only clinvar-sqlite` to reuse a kept XML). Without the columns the ClinVar VCF
+`ONC` field is used when the VCF is present. Dual-role
 genes (NOTCH1/2, GATA3, WT1, …) and canonical genes without an NCG majority role get no
 OVS1/OS2; edit `resources/shared/somatic_gene_role_overrides.tsv` and rebuild with
 `scripts/build_somatic_resources.py` to change roles. Manual evidence sets or

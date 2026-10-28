@@ -172,15 +172,16 @@ def test_supplement_tsv(tmp_path):
     assert [(x.criterion, x.met) for x in e] == [(C.OS2, True), (C.OP4, False)]
 
 
-def test_combination_os1_suppresses_hotspot_and_om4():
+def test_combination_rules_follow_sop_table2():
     ev = SomaticEvaluator(_cfg())
     from acmg_classifier.somatic.models import OncCriterionResult
     res = {c: OncCriterionResult(criterion=c) for c in C}
     for c in (C.OS1, C.OS3, C.OM4, C.OM1):
         res[c].met = True
     ev._combination_rules(res)
-    assert res[C.OS3].suppressed and res[C.OM4].suppressed and res[C.OM1].suppressed
-    assert res[C.OS1].active
+    # OS1 and OS3 both count (SOP); OM1 / OM4 are not used with them.
+    assert res[C.OS1].active and res[C.OS3].active
+    assert res[C.OM4].suppressed and res[C.OM1].suppressed
 
 
 def test_classifier_end_to_end_and_tsv_row():
@@ -220,3 +221,144 @@ def test_ovs1_nmd_escape_by_truncated_fraction():
                 tx="NM_000038.6", exon="16/16")
     by, _, _ = _run(late, variant=_v("chr5"))
     assert not by[C.OVS1].met and "review manually" in by[C.OVS1].evidence
+
+
+# --- ClinVar somatic oncogenicity comparators ------------------------------------
+
+_V600E = ("13961", "7", 140753336, "A", "T", "BRAF", "NP_004324.2:p.Val600Glu", "V600E", 600)
+_V600L = ("1964069", "7", 140753335, "C", "A", "BRAF", "NP_004324.2:p.Val600Leu", "V600L", 600)
+_MULTI = "criteria provided, multiple submitters"
+_SINGLE = "criteria provided, single submitter"
+
+
+def _clinvar_data(tmp_path, sqlite_rows=(), vcf_rows=(), old_schema=False):
+    """ClinVar SQLite (rows: base tuple + (oncogenicity, review status, stars)) and,
+    optionally, a tabix ClinVar VCF with ONC fields, under a data dir."""
+    import sqlite3
+
+    import pysam
+
+    from acmg_classifier.local_db.clinvar_vcf import onc_star_rating
+    from acmg_classifier.setup.clinvar_builder import _CREATE_TABLE
+
+    cfg = Config(data_dir=tmp_path)
+    cfg.clinvar_sqlite.parent.mkdir(parents=True, exist_ok=True)
+    con = sqlite3.connect(cfg.clinvar_sqlite)
+    ddl = _CREATE_TABLE
+    if old_schema:
+        ddl = ddl.replace(",\n    oncogenicity TEXT,\n    onc_review_status TEXT,\n"
+                          "    onc_stars INTEGER DEFAULT 0", "")
+    con.executescript(ddl)
+    for base, onc, rs in sqlite_rows:
+        cols = ("variation_id, chrom, pos, ref, alt, gene_symbol, hgvs_p, amino_acid_change, "
+                "codon_position, clinical_significance, review_status, star_rating")
+        vals = list(base) + ["", "", 0]
+        if not old_schema:
+            cols += ", oncogenicity, onc_review_status, onc_stars"
+            vals += [onc, rs, onc_star_rating(rs)]
+        con.execute(f"INSERT INTO variants ({cols}) VALUES ({','.join('?' * len(vals))})", vals)
+    con.commit()
+    con.close()
+    if vcf_rows:
+        plain = cfg.clinvar_vcf.with_suffix("")
+        lines = ["##fileformat=VCFv4.1", "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"]
+        lines += ["\t".join(map(str, r)) for r in sorted(vcf_rows, key=lambda r: r[1])]
+        plain.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        pysam.tabix_compress(str(plain), str(cfg.clinvar_vcf), force=True)
+        pysam.tabix_index(str(cfg.clinvar_vcf), preset="vcf", force=True)
+    return cfg
+
+
+def _braf(cfg, germ=()):
+    ann = _ann("BRAF", CT.MISSENSE, 600, "V/E", "NP_004324.2:p.Val600Glu",
+               gnomad=GnomADData(af=1.24e-6, ac=2, an=1600000, popmax_af=1.1e-5, popmax_pop="sas"))
+    crit, _ = SomaticEvaluator(cfg).evaluate(_v(), ann, _germ(*germ))
+    return {r.criterion: r for r in crit}, sum(r.points for r in crit)
+
+
+def test_own_clinvar_oncogenicity_is_shown_but_not_counted(tmp_path):
+    cfg = _clinvar_data(tmp_path, [(_V600E, "Oncogenic", _MULTI)])
+    by, score = _braf(cfg, [(A.PP3, S.STRONG, "ESM1b")])
+    assert not by[C.OS1].met
+    assert "this variant is ClinVar Oncogenic" in by[C.OS1].evidence and "not counted" in by[C.OS1].evidence
+    assert by[C.OS3].active
+    assert by[C.OP4].active and "outlier" in by[C.OP4].evidence      # known oncogenic itself
+    assert score == 6 and classify_points(score) == Oncogenicity.LIKELY_ONCOGENIC
+
+
+def test_os1_from_a_different_nucleotide_change(tmp_path):
+    # Same amino-acid change V600E from c.1799_1800delinsAA (another allele).
+    other = ("376069", "7", 140753335, "CA", "TT", "BRAF", "NP_004324.2:p.Val600Glu", "V600E", 600)
+    cfg = _clinvar_data(tmp_path, [(_V600E, "Oncogenic", _MULTI), (other, "Oncogenic", _MULTI)])
+    by, score = _braf(cfg)
+    assert by[C.OS1].active and "VCV 376069" in by[C.OS1].evidence
+    assert by[C.OS3].active                                        # OS1 and OS3 both count
+
+
+def test_onc_below_threshold_and_om4(tmp_path):
+    cfg = _clinvar_data(tmp_path, [(_V600L, "Likely oncogenic", _MULTI),
+                                   (("9", "7", 140753334, "A", "G", "BRAF", "NP_004324.2:p.Val600Ala",
+                                     "V600A", 600), "Oncogenic", _SINGLE)])
+    by, _ = _braf(cfg)
+    assert by[C.OM4].met and "p.Val600Leu" in by[C.OM4].evidence
+    assert by[C.OM4].suppressed                                    # OS3 (BRAF V600 hotspot) met
+    assert not by[C.OS1].met
+    # V600A has a single-submitter record only: listed under OM4 as below the threshold
+    # only when OM4 is not met (here V600L meets it).
+
+
+def test_vcf_fallback_for_old_clinvar_db(tmp_path):
+    cfg = _clinvar_data(tmp_path, [(_V600L, None, "")], old_schema=True,
+                        vcf_rows=[("7", 140753335, "1964069", "C", "A", ".", ".",
+                                   "ONC=Oncogenic;ONCREVSTAT=criteria_provided,_multiple_submitters"),
+                                  ("7", 140753336, "13961", "A", "T", ".", ".",
+                                   "ONC=Oncogenic;ONCREVSTAT=criteria_provided,_multiple_submitters")])
+    by, _ = _braf(cfg)
+    assert by[C.OM4].met and "VCV 1964069" in by[C.OM4].evidence
+    assert not by[C.OS1].met and "this variant is ClinVar Oncogenic" in by[C.OS1].evidence
+
+
+def test_builder_reads_rcv_oncogenicity():
+    import xml.etree.ElementTree as ET
+
+    from acmg_classifier.setup.clinvar_builder import _rcv_oncogenicity
+    rcv = ET.fromstring(
+        "<ReferenceClinVarAssertion><Classifications><OncogenicityClassification>"
+        "<ReviewStatus>criteria provided, multiple submitters</ReviewStatus>"
+        "<Description>Oncogenic</Description></OncogenicityClassification>"
+        "</Classifications></ReferenceClinVarAssertion>")
+    assert _rcv_oncogenicity(rcv) == ("Oncogenic", "criteria provided, multiple submitters", 2)
+    assert _rcv_oncogenicity(ET.fromstring("<ReferenceClinVarAssertion/>")) == ("", "", 0)
+
+
+@pytest.mark.parametrize("review,met", [(_SINGLE, True), ("no assertion criteria provided", False)])
+def test_os1_onc_one_star_is_enough(tmp_path, review, met):
+    other = ("376069", "7", 140753335, "CA", "TT", "BRAF", "NP_004324.2:p.Val600Glu", "V600E", 600)
+    cfg = _clinvar_data(tmp_path, [(other, "Oncogenic", review)])
+    by, _ = _braf(cfg)
+    assert by[C.OS1].met is met
+    if not met:
+        assert "below the star threshold" in by[C.OS1].evidence
+
+
+def test_om4_onc_still_needs_two_stars(tmp_path):
+    cfg = _clinvar_data(tmp_path, [(_V600L, "Oncogenic", _SINGLE)])
+    by, _ = _braf(cfg)
+    assert not by[C.OM4].met and "below the star threshold" in by[C.OM4].evidence
+
+
+def test_germline_plp_not_used_for_os1_om4(tmp_path):
+    import sqlite3
+    cfg = _clinvar_data(tmp_path)
+    con = sqlite3.connect(cfg.clinvar_sqlite)
+    for vid, pos, ref, alt, hp, aa in (("1", 140753335, "CA", "TT", "p.Val600Glu", "V600E"),
+                                       ("2", 140753335, "C", "A", "p.Val600Leu", "V600L")):
+        con.execute("INSERT INTO variants (variation_id, chrom, pos, ref, alt, gene_symbol, hgvs_p, "
+                    "amino_acid_change, codon_position, clinical_significance, review_status, "
+                    "star_rating) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (vid, "7", pos, ref, alt, "BRAF", "NP_004324.2:" + hp, aa, 600, "Pathogenic",
+                     "reviewed by expert panel", 3))
+    con.commit()
+    con.close()
+    by, _ = _braf(cfg)
+    assert not by[C.OS1].met and not by[C.OM4].met

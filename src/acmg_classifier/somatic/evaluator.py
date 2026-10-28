@@ -4,23 +4,29 @@ Automated criteria and their data (no licensed resources):
 
   OVS1   null variant in a bona fide tumour suppressor (NCG canonical TSG-only
          role, curated overrides; NMD / 3'-end check)
-  OS1    same amino-acid change as a ClinVar P/LP variant (>= 2 stars), different
-         nucleotide change
+  OS1    same amino-acid change, different nucleotide change, as a ClinVar
+         oncogenic / likely oncogenic variant (somatic oncogenicity, >= 1 star);
+         the variant's own ClinVar classification is shown but not counted
   OS2    calibrated functional assay (MaveDB / ENIGMA Table 9 / TP53 VCEP data)
-         showing loss of function at Strong or above, tumour suppressors only
+         showing loss of function at Strong or above, tumour suppressors only; or
+         CIViC: an Oncogenic assertion coded OS2, or Functional evidence items
+         (Gain of Function / Neomorphic in oncogenes, Loss of Function / Dominant
+         Negative in TSGs) rated >= 3 from >= 2 publications
   OS3    cancerhotspots.org residue with >= 50 samples and >= 10 with this change
   OM1    critical region without benign variation (HUVar PM1: VCEP hotspot /
          domain tables or the ClinVar P/LP cluster)
   OM2    in-frame indel in an oncogene / TSG, or stop-loss in a TSG
   OM3    cancerhotspots.org residue with < 50 samples and >= 10 with this change
-  OM4    different missense at a residue with a ClinVar P/LP missense (>= 2 stars),
+  OM4    different missense at a residue with a ClinVar oncogenic missense (>= 2 stars),
          Grantham distance at least ~ that of the comparator
   OP1    in-silico evidence for an effect (HUVar PP3)
   OP3    cancerhotspots.org residue / indel region, this change in < 10 samples
-  OP4    absent from gnomAD or grpmax AF <= somatic_op4_max_af
+  OP4    absent from gnomAD or grpmax AF <= somatic_op4_max_af (1e-4; 5e-4 for known
+         oncogenic variants: ClinVar oncogenic itself, or OS1 / OS3 / OM3 met)
   SBVS1  gnomAD grpmax AF > 5 %
   SBS1   gnomAD grpmax AF > 1 %
-  SBS2   calibrated functional assay showing normal function at Strong or above
+  SBS2   calibrated functional assay showing normal function at Strong or above, or
+         CIViC Unaltered Function evidence (same thresholds) / assertion coded SBS2
   SBP1   in-silico evidence for no effect (HUVar BP4)
   SBP2   synonymous, no predicted splicing effect, not highly conserved (HUVar BP7)
 
@@ -68,6 +74,10 @@ class SomaticEvaluator:
         self._cfg = cfg
         self._roles = load_gene_roles(resolve(cfg.somatic_gene_roles_tsv, "somatic_gene_roles.tsv"))
         self._hotspots = load_hotspots(resolve(cfg.cancer_hotspots_tsv, "cancer_hotspots_v2.tsv"))
+        from acmg_classifier.somatic.civic import load_civic
+        self._civic_path = getattr(cfg, "civic_somatic_tsv", None)
+        self._civic_db = (load_civic(self._civic_path)
+                          if getattr(cfg, "somatic_civic", True) and self._civic_path else {})
 
     # ------------------------------------------------------------------ helpers
     def gene_role(self, gene: Optional[str]) -> Optional[GeneRole]:
@@ -152,7 +162,7 @@ class SomaticEvaluator:
             note(C.OM2, "Not an in-frame indel or stop-loss")
 
         # OS1 / OM4 (ClinVar comparators) ------------------------------------
-        self._clinvar_comparators(variant, ann, res)
+        known_self = self._clinvar_comparators(variant, ann, res)
 
         # Hotspots OS3 / OM3 / OP3 ------------------------------------------
         site, change, hs_note = self.hotspot(ann)
@@ -180,6 +190,7 @@ class SomaticEvaluator:
 
         # OS2 / SBS2 (calibrated functional data) ----------------------------
         self._functional(g, role, role_txt, res)
+        self._civic(ann, role, res)
 
         # OP1 / SBP1 / SBP2 (in silico) --------------------------------------
         pp3, bp4, bp7 = g.get(ACMGCriterion.PP3), g.get(ACMGCriterion.BP4), g.get(ACMGCriterion.BP7)
@@ -198,7 +209,7 @@ class SomaticEvaluator:
                  ((bp7.evidence if bp7 else "") or "HUVar BP7 not met"))
 
         # Population frequency OP4 / SBS1 / SBVS1 ---------------------------
-        self._frequency(ann, res)
+        self._frequency(ann, res, known_self)
 
         # OP2 / manual ---------------------------------------------------------
         note(C.OP2, "Needs the tumour type (malignancy with a single genetic aetiology) - "
@@ -229,63 +240,122 @@ class SomaticEvaluator:
                                f"protein (residue {codon}/{aa_len}) - review manually")
         return False, f"{why}; protein length unknown - review manually"
 
-    def _clinvar_comparators(self, variant: VariantRecord, ann: AnnotationData, res) -> None:
+    def _clinvar_comparators(self, variant: VariantRecord, ann: AnnotationData, res) -> bool:
+        """OS1 / OM4 from previously established variants in ClinVar: somatic
+        oncogenicity classifications (Oncogenic / Likely oncogenic) only, always a
+        different nucleotide change than the variant. Germline P/LP is not used."""
         pc = ann.rule_consequence or ann.primary_consequence
         if pc is None or pc.consequence != CT.MISSENSE:
             res[C.OS1].evidence = "Not a missense variant"
             res[C.OM4].evidence = "Not a missense variant"
-            return
+            return False
         sp = ann.splice
         if sp is not None and sp.is_available and (sp.max_delta or 0) >= _SPLICE_CAUTION:
             msg = (f"Predicted to affect splicing ({sp.tool} {sp.max_delta:.2f}) - amino-acid "
                    "comparison not used")
             res[C.OS1].evidence = res[C.OM4].evidence = msg
-            return
-        db = self._cfg.clinvar_sqlite
-        stars = int(getattr(self._cfg, "somatic_clinvar_min_stars", 2))
-        from acmg_classifier.local_db.clinvar_sqlite import (
-            query_same_aa_change, query_same_codon_different_aa,
-        )
-        same = query_same_aa_change(db, pc.gene_symbol, pc.hgvs_p, variant.chrom, variant.pos,
-                                    variant.ref, variant.alt, min_stars=stars)
-        if same:
-            r = same[0]
-            res[C.OS1].met = True
-            res[C.OS1].evidence = (f"Same amino-acid change as ClinVar {r.clinical_significance} "
-                                   f"{r.hgvs_c or ''} (VCV {r.variation_id}, {r.star_rating} stars)")
-        else:
-            res[C.OS1].evidence = (f"No ClinVar P/LP (>= {stars} stars) variant with the same "
-                                   "amino-acid change")
-        others = query_same_codon_different_aa(db, pc.gene_symbol, pc.protein_position, pc.hgvs_p,
-                                               min_stars=stars, query_chrom=variant.chrom,
-                                               query_pos=variant.pos)
-        if not others:
-            res[C.OM4].evidence = (f"No ClinVar P/LP (>= {stars} stars) missense at residue "
-                                   f"{pc.protein_position}")
-            return
-        from acmg_classifier.criteria.grantham import grantham_distance
+            return False
         import re
+        from acmg_classifier.criteria.grantham import grantham_distance
+        from acmg_classifier.local_db.clinvar_sqlite import _aa_change_key
+
+        stars = int(getattr(self._cfg, "somatic_clinvar_min_stars", 2))
+        os1_onc = int(getattr(self._cfg, "somatic_os1_onc_min_stars", 1))
+        key = _aa_change_key(pc.hgvs_p)
+        comps, _, self_note = self._comparators(variant, pc, key, stars)
+
+        def ok(c, need):
+            return c["onc_stars"] >= need
+
+        same_all = [c for c in comps if c["aa"] == key]
+        same = [c for c in same_all if ok(c, os1_onc)]
+        if same:
+            c = same[0]
+            res[C.OS1].met = True
+            res[C.OS1].evidence = f"Same amino-acid change as {c['text']}"
+        else:
+            res[C.OS1].evidence = (f"No other ClinVar oncogenic / likely oncogenic variant "
+                                   f"(>= {os1_onc} star) with the same amino-acid change")
         ref, _, alt = (pc.amino_acids or "/").partition("/")
         cand = grantham_distance(ref, alt)
+        pos_txt = str(pc.protein_position)
+        at_residue = [c for c in comps if c["aa"] and c["aa"] != key and c["aa"][-1] != "*"
+                      and re.sub(r"\D", "", c["aa"]) == pos_txt]
+        others = [c for c in at_residue if ok(c, stars)]
         best, seen = None, []
-        for r in others:
-            m = re.search(r"p\.\(?([A-Z][a-z]{2})\d+([A-Z][a-z]{2})", r.hgvs_p or "")
-            d = grantham_distance(m.group(1), m.group(2)) if m else None
+        for c in others:
+            d = grantham_distance(c["aa"][0], c["aa"][-1])
             seen.append(d)
             if cand is None or d is None or cand >= 0.9 * d:
-                best = (r, d)
+                best = (c, d)
                 break
-        if best is None:
-            res[C.OM4].evidence = (f"ClinVar P/LP missense at residue {pc.protein_position} have a "
+        if best is not None:
+            c, d = best
+            res[C.OM4].met = True
+            res[C.OM4].evidence = (f"Different missense at residue {pos_txt}: {c['text']}; "
+                                   f"Grantham {cand} vs {d}")
+        elif others:
+            res[C.OM4].evidence = (f"ClinVar established missense at residue {pos_txt} have a "
                                    f"larger amino-acid difference (Grantham {cand} vs "
                                    f"{', '.join(str(x) for x in seen[:5])})")
-            return
-        r, d = best
-        res[C.OM4].met = True
-        res[C.OM4].evidence = (f"Different missense at residue {pc.protein_position}: ClinVar "
-                               f"{r.clinical_significance} {(r.hgvs_p or '').split(':')[-1]} "
-                               f"(VCV {r.variation_id}, {r.star_rating} stars); Grantham {cand} "
-                               f"vs {d}")
+        else:
+            res[C.OM4].evidence = (f"No ClinVar oncogenic / likely oncogenic missense "
+                                   f"(>= {stars} stars) at residue {pos_txt}")
+        weak = {C.OS1: [c["text"] for c in same_all if not ok(c, os1_onc)],
+                C.OM4: [c["text"] for c in at_residue if not ok(c, stars)]}
+        for crit, texts in weak.items():
+            if texts and not res[crit].met:
+                res[crit].evidence += f" (below the star threshold: {'; '.join(texts[:3])})"
+        if self_note:
+            res[C.OS1].evidence += f"; {self_note}"
+        return bool(self_note)
+
+    def _comparators(self, variant, pc, key, stars) -> tuple[list[dict], list[str], str]:
+        """Previously established variants in the codon: [{aa, text}], notes on
+        ClinVar oncogenic records below the star threshold, and a note on the
+        variant's own ClinVar oncogenicity (reported, never counted: OS1 needs a
+        different nucleotide change, as PS1)."""
+        from acmg_classifier.local_db.clinvar_sqlite import (
+            query_aa_change_at, query_oncogenic_at_codon,
+        )
+        from acmg_classifier.local_db.clinvar_vcf import ONCOGENIC_LABELS, query_clinvar_oncogenicity
+        from acmg_classifier.utils.chrom import strip_chr
+
+        db = self._cfg.clinvar_sqlite
+        comps: list[dict] = []
+        weak: list[str] = []
+        self_note = ""
+
+        def is_self(r) -> bool:
+            return (strip_chr(str(r["chrom"])) == strip_chr(variant.chrom) and r["pos"] == variant.pos
+                    and r["ref"] == variant.ref and r["alt"] == variant.alt)
+
+        onc = query_oncogenic_at_codon(db, pc.gene_symbol, pc.protein_position,
+                                       variant.chrom, variant.pos)
+        if onc is None:  # DB predates the oncogenicity columns: ClinVar VCF if present
+            onc = []
+            for r in query_clinvar_oncogenicity(self._cfg.clinvar_vcf, variant.chrom,
+                                                variant.pos - 2, variant.pos + 2):
+                if r["oncogenicity"].lower() not in ONCOGENIC_LABELS:
+                    continue
+                if is_self(r):
+                    r["aa"], r["hgvs_p"] = key, pc.hgvs_p
+                else:
+                    hit = query_aa_change_at(db, r["chrom"], r["pos"], r["ref"], r["alt"])
+                    if hit is None or hit[0] != pc.gene_symbol or not hit[1]:
+                        continue
+                    r["aa"], r["hgvs_p"] = hit[1], hit[2]
+                onc.append(r)
+        for r in onc:
+            label = (r.get("hgvs_p") or "").split(":")[-1] or r.get("aa") or ""
+            text = (f"ClinVar {r['oncogenicity']} (oncogenicity) {label} (VCV {r['variation_id']}, "
+                    f"{r['stars']} stars: {r['review_status']})")
+            if is_self(r):
+                self_note = (f"this variant is {text.replace(' ' + label, '', 1)} - not counted "
+                             "(OS1 needs a different nucleotide change)")
+                continue
+            comps.append({"aa": r.get("aa"), "text": text, "onc_stars": r["stars"]})
+        return comps, weak, self_note
 
     @staticmethod
     def _functional(g, role, role_txt, res) -> None:
@@ -310,7 +380,57 @@ class SomaticEvaluator:
             res[onc].met = True
             res[onc].evidence = f"Calibrated assay, {label} ({crit.value}_{r.strength.value}): {r.evidence}"
 
-    def _frequency(self, ann: AnnotationData, res) -> None:
+    def _civic(self, ann: AnnotationData, role: Optional[GeneRole], res) -> None:
+        """OS2 / SBS2 from CIViC (functional evidence items, SOP-based oncogenic
+        assertions), combined with the calibrated-assay result above."""
+        if not getattr(self._cfg, "somatic_civic", True):
+            return
+        if not self._civic_db:
+            for c in (C.OS2, C.SBS2):
+                if not res[c].met:
+                    res[c].evidence += ("; CIViC table not installed (setup_data.py --only civic)"
+                                        if self._civic_path and not self._civic_path.exists() else "")
+            return
+        pc = ann.primary_consequence
+        if pc is None:
+            return
+        key = None
+        if pc.consequence == CT.MISSENSE and pc.protein_position and pc.amino_acids:
+            ref, _, alt = pc.amino_acids.partition("/")
+            key = f"{ref}{pc.protein_position}{alt}" if ref and alt else None
+        elif pc.consequence in _INFRAME:
+            key = short_protein_change(pc.hgvs_p)
+        if not key:
+            return
+        from acmg_classifier.somatic.civic import civic_call
+        call = civic_call(self._civic_db.get((pc.gene_symbol, key), []),
+                          role.role if role else None,
+                          int(getattr(self._cfg, "somatic_civic_min_rating", 3)),
+                          int(getattr(self._cfg, "somatic_civic_min_sources", 2)))
+        if call is None:
+            for c in (C.OS2, C.SBS2):
+                if not res[c].met:
+                    res[c].evidence += f"; no CIViC functional evidence for {pc.gene_symbol} {key}"
+            return
+        if call.criterion is None:
+            for c in (C.OS2, C.SBS2):
+                if not res[c].met:
+                    res[c].evidence += f"; {call.evidence}"
+            return
+        crit = C.OS2 if call.criterion == "OS2" else C.SBS2
+        other = C.SBS2 if crit == C.OS2 else C.OS2
+        if res[other].met:  # calibrated assay says the opposite
+            res[other].met = False
+            res[other].evidence += f" - conflicts with {call.evidence}; neither counted"
+            res[crit].evidence = f"{call.evidence} - conflicts with the calibrated assay; not counted"
+            return
+        if res[crit].met:
+            res[crit].evidence += f"; also {call.evidence}"
+        else:
+            res[crit].met, res[crit].evidence = True, call.evidence
+        res[other].evidence += f"; CIViC supports {crit.value} instead"
+
+    def _frequency(self, ann: AnnotationData, res, known_self: bool = False) -> None:
         gd = ann.gnomad
         if gd is None:
             for c in (C.OP4, C.SBS1, C.SBVS1):
@@ -318,7 +438,13 @@ class SomaticEvaluator:
             return
         af = gd.popmax_af if gd.popmax_af is not None else gd.af
         absent = (gd.ac or 0) == 0 and not af
-        cut = float(getattr(self._cfg, "somatic_op4_max_af", 1e-5))
+        cut = float(getattr(self._cfg, "somatic_op4_max_af", 1e-4))
+        # Known oncogenic variants (ClinVar-established or cancerhotspots >= 10
+        # samples) are seen at low frequency in gnomAD through clonal haematopoiesis
+        # / mosaicism; they get the higher "pathogenic outlier" ceiling.
+        outlier = known_self or res[C.OS1].met or res[C.OS3].met or res[C.OM3].met
+        if outlier:
+            cut = max(cut, float(getattr(self._cfg, "somatic_op4_outlier_max_af", 5e-4)))
         detail = (f"gnomAD grpmax AF {_fmt_af(gd.popmax_af)} ({gd.popmax_pop or '-'}), "
                   f"AF {_fmt_af(gd.af)}, AC {gd.ac}")
         if af is not None and af > 0.05:
@@ -330,7 +456,9 @@ class SomaticEvaluator:
         if absent:
             res[C.OP4].met, res[C.OP4].evidence = True, "Absent from gnomAD"
         elif af is not None and af <= cut:
-            res[C.OP4].met, res[C.OP4].evidence = True, f"{detail} <= {cut:g} (extremely low)"
+            res[C.OP4].met, res[C.OP4].evidence = True, (
+                f"{detail} <= {cut:g} (extremely low"
+                + ("; known oncogenic variant, outlier threshold" if outlier else "") + ")")
         else:
             res[C.OP4].evidence = f"{detail} > {cut:g}"
         if not gd.filter_pass:
@@ -358,11 +486,6 @@ class SomaticEvaluator:
                 res[c].suppressed = True
                 res[c].evidence += f" [not counted: {why}]"
 
-        # Hotspot counts are amino-acid level: with OS1 (same amino-acid change
-        # already established) they would count the same observation twice.
-        if active(C.OS1):
-            for c in (C.OS3, C.OM3, C.OP3):
-                suppress(c, "OS1 met (same amino-acid change)")
         if active(C.OS1) or active(C.OS3):
             suppress(C.OM1, "OS1/OS3 met")
         if active(C.OS1) or active(C.OS3) or active(C.OM1):

@@ -155,11 +155,28 @@ class Config(BaseSettings):
     # somatic). OP4 "absent from controls or at an extremely low frequency": met
     # when the variant is absent from gnomAD or its grpmax (popmax) allele frequency
     # is <= this value. Env: ACMG_SOMATIC_OP4_MAX_AF.
-    somatic_op4_max_af: float = 1e-5
-    # Minimum ClinVar star rating of the pathogenic / likely pathogenic record used
-    # as the "previously established" variant for OS1 (same amino-acid change) and
-    # OM4 (different missense at the same residue). Env: ACMG_SOMATIC_CLINVAR_MIN_STARS.
+    somatic_op4_max_af: float = 1e-4
+    # OP4 ceiling for known oncogenic variants (OS1 / OS3 / OM3 met), which occur in
+    # gnomAD at low frequency through clonal haematopoiesis or mosaicism ("frequent
+    # pathogenic outliers"). Env: ACMG_SOMATIC_OP4_OUTLIER_MAX_AF.
+    somatic_op4_outlier_max_af: float = 5e-4
+    # Minimum star rating of the ClinVar somatic oncogenicity (Oncogenic / Likely
+    # oncogenic) record used as the "previously established" missense for OM4
+    # (different missense at the same residue). Germline P/LP is not used. Env: ACMG_SOMATIC_CLINVAR_MIN_STARS.
     somatic_clinvar_min_stars: int = 2
+    # OS1 only: minimum star rating of a ClinVar somatic oncogenicity (Oncogenic /
+    # Likely oncogenic) record with the same amino-acid change. 1 = criteria
+    # provided by a single submitter. Env: ACMG_SOMATIC_OS1_ONC_MIN_STARS.
+    somatic_os1_onc_min_stars: int = 1
+    # OS2 / SBS2 from CIViC (CC0; data/shared/civic_somatic.tsv built by
+    # setup_data.py --only civic): Functional evidence items count when rated >=
+    # somatic_civic_min_rating (1-5) from >= somatic_civic_min_sources distinct
+    # publications in the same direction; Oncogenic assertions coded OS2/SBS2 count
+    # directly. Env: ACMG_SOMATIC_CIVIC=false, ACMG_SOMATIC_CIVIC_MIN_RATING,
+    # ACMG_SOMATIC_CIVIC_MIN_SOURCES.
+    somatic_civic: bool = True
+    somatic_civic_min_rating: int = 3
+    somatic_civic_min_sources: int = 2
 
     @field_validator("mavedb_calibration")
     @classmethod
@@ -496,6 +513,12 @@ class Config(BaseSettings):
         somatic OVS1 / OM2 criteria (scripts/build_somatic_resources.py). Falls
         back to the packaged resources copy."""
         return self.data_dir / "shared" / "somatic_gene_roles.tsv"
+
+    @property
+    def civic_somatic_tsv(self) -> Path:
+        """CIViC functional evidence / oncogenic assertions for OS2 / SBS2
+        (setup_data.py --only civic). Not bundled."""
+        return self.data_dir / "shared" / "civic_somatic.tsv"
 
     @property
     def cancer_hotspots_tsv(self) -> Path:
