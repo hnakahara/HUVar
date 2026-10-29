@@ -79,6 +79,7 @@ _COLORS = {
 def print_somatic_report(r: OncogenicityResult) -> None:
     from rich import box
     from rich.console import Console
+    from rich.markup import escape
     from rich.panel import Panel
     from rich.table import Table
 
@@ -98,27 +99,27 @@ def print_somatic_report(r: OncogenicityResult) -> None:
     t.add_row("Oncogenicity", f"[{col}]{r.classification.value}[/{col}]  (score {r.score:+d})")
     t.add_row("Criteria", r.summary() or "none")
     if r.hotspot:
-        t.add_row("Hotspot", r.hotspot)
+        t.add_row("Hotspot", escape(r.hotspot))
     if r.amp_tier:
-        t.add_row("Tumour type", r.tumor_type)
+        t.add_row("Tumour type", escape(r.tumor_type))
         lvl = f", level {r.amp_level}" if r.amp_level else ""
         t.add_row("AMP/ASCO/CAP", f"[bold]{r.amp_tier}{lvl}[/bold]"
-                  + (f"  ({r.amp_note})" if r.amp_note else ""))
+                  + (f"  ({escape(r.amp_note)})" if r.amp_note else ""))
     else:
-        t.add_row("AMP/ASCO/CAP", r.amp_note or "not assigned")
+        t.add_row("AMP/ASCO/CAP", escape(r.amp_note or "not assigned"))
     con.print(t)
     if r.amp_evidence:
         et = Table(title="AMP/ASCO/CAP evidence (strongest first)", box=box.SIMPLE_HEAD)
         et.add_column("Evidence")
         for e in r.amp_evidence.split(" | "):
-            et.add_row(e)
+            et.add_row(escape(e))
         con.print(et)
     if r.amp_candidates:
         ct0 = Table(title="Evidence in other tumour types (reference; give --tumor-type)",
                     box=box.SIMPLE_HEAD)
         ct0.add_column("Evidence")
         for e in r.amp_candidates:
-            ct0.add_row(e)
+            ct0.add_row(escape(e))
         con.print(ct0)
 
     ct = Table(title="Criteria", box=box.SIMPLE_HEAD)
@@ -132,10 +133,10 @@ def print_somatic_report(r: OncogenicityResult) -> None:
             pts = "[dim]suppr.[/dim]"
         else:
             pts = "[dim]-[/dim]"
-        ct.add_row(c.criterion.value, pts, c.evidence or "")
+        ct.add_row(c.criterion.value, pts, escape(c.evidence or ""))
     con.print(ct)
     for w in r.warnings:
-        con.print(f"[yellow]! {w}[/yellow]")
+        con.print(f"[yellow]! {escape(w)}[/yellow]")
     con.print("[dim]Points: Oncogenic >= 10, Likely oncogenic 6-9, VUS 0-5, Likely benign "
               "-1 to -6, Benign <= -7 (Horak et al. 2022). Tiers: AMP/ASCO/CAP 2017 (Li et al.) "
               "from CIViC and ClinVar somatic clinical impact.[/dim]")

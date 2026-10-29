@@ -162,3 +162,15 @@ def test_builder_reads_somatic_clinical_impact():
 def test_packaged_tables_present():
     root = Path(__file__).resolve().parents[2] / "resources" / "shared"
     assert (root / "oncotree_doid.tsv").exists() and (root / "doid_hierarchy.tsv").exists()
+
+
+def test_report_keeps_bracketed_text_and_orders_evidence(tmp_path, capsys, monkeypatch):
+    monkeypatch.setenv("COLUMNS", "400")
+    from acmg_classifier.somatic.report import print_somatic_report
+    cfg = _write(tmp_path, [_ev("codon", "V600", "B", "1909", "Melanoma", "2", rating="5"),
+                            _ev("exact", "V600E", "A", "1909", "Melanoma", "1", rating="3")])
+    r = SomaticClassifier(cfg, "SKCM").classify(_V, _ann())
+    assert r.amp_evidence.index("EID1 ") < r.amp_evidence.index("EID2 ")   # level A first
+    print_somatic_report(r)
+    out = capsys.readouterr().out
+    assert "[residue V600]" in out and "[exact]" in out

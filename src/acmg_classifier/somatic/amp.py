@@ -37,10 +37,19 @@ class TierCall:
     category: str                     # therapeutic / diagnostic / prognostic
     text: str
     source: str                       # CIViC / ClinVar
+    evidence_level: str = ""          # CIViC evidence level A-E; "assertion"; "" (ClinVar)
+    rating: int = 0
 
     @property
     def rank(self) -> int:
         return _RANK.get((self.tier, self.level), 0)
+
+    @property
+    def sort_key(self) -> tuple:
+        """Strongest first: tier/level, then assertions, CIViC level, rating, CIViC
+        before ClinVar."""
+        lvl = {"assertion": 0, "A": 1, "B": 2, "C": 3, "D": 4, "E": 5}.get(self.evidence_level, 6)
+        return (-self.rank, lvl, -self.rating, self.source != "CIViC")
 
     @property
     def label(self) -> str:
@@ -56,8 +65,13 @@ class AmpResult:
     candidates: list[str] = field(default_factory=list)   # no tumour type: reference list
     note: str = ""
 
-    def evidence_text(self, n: int = 5) -> str:
-        return " | ".join(f"{c.label} ({c.category}, {c.source}): {c.text}" for c in self.calls[:n])
+    def evidence_text(self, n: int = 6) -> str:
+        shown = list(self.calls[:n])
+        # Always show the strongest ClinVar call when CIViC fills the list.
+        cv = next((c for c in self.calls if c.source == "ClinVar"), None)
+        if cv is not None and cv not in shown:
+            shown.append(cv)
+        return " | ".join(f"{c.label} ({c.category}, {c.source}): {c.text}" for c in shown)
 
 
 def _grade(level: str, rel: str) -> tuple[str, str]:
@@ -103,8 +117,14 @@ def civic_calls(records: list[tuple[dict, str]], tt: Optional[TumorType],
             text = (f"CIViC {ref} level {r.get('level') or '?'} {r['significance']}{drugs} in "
                     f"{disease} (PMID {r.get('citation_id') or '-'}, rating "
                     f"{r.get('rating') or '-'}) [{how}]{sub}")
+        try:
+            rating = int(float(r.get("rating") or 0))
+        except ValueError:
+            rating = 0
         calls.append(TierCall(tier, lvl, _CATEGORY.get(r["evidence_type"], r["evidence_type"]),
-                              text, "CIViC"))
+                              text, "CIViC",
+                              "assertion" if r["record"] == "assertion" else
+                              (r.get("level") or "").upper(), rating))
     return calls
 
 
@@ -139,7 +159,7 @@ def clinvar_calls(records: list[dict], tt: Optional[TumorType], do: DiseaseOntol
 
 def assign(calls: list[TierCall], tt: Optional[TumorType], do: DiseaseOntology,
            benign: bool, common: bool) -> AmpResult:
-    calls = sorted(calls, key=lambda c: -c.rank)
+    calls = sorted(calls, key=lambda c: c.sort_key)
     if tt is None:
         cand = [f"({c.category}) {c.text}" for c in calls if c.rank >= _RANK[("II", "C")]][:8]
         return AmpResult(candidates=cand, note="no tumour type given (--tumor-type): tier not "
