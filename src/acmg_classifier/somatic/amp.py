@@ -132,7 +132,7 @@ def clinvar_calls(records: list[dict], tt: Optional[TumorType], do: DiseaseOntol
         calls.append(TierCall(
             tier, lvl, category,
             f"ClinVar somatic clinical impact '{sci}' ({r.get('sci_type') or '-'}) in "
-            f"{r.get('conditions') or '?'} (VCV {r.get('variation_id')}, {r.get('sci_stars', 0)} "
+            f"{r.get('conditions') or '?'} (ClinVar record {r.get('variation_id')}, {r.get('sci_stars', 0)} "
             f"stars: {r.get('sci_review_status') or '-'})", "ClinVar"))
     return calls
 

@@ -291,7 +291,7 @@ def test_os1_from_a_different_nucleotide_change(tmp_path):
     other = ("376069", "7", 140753335, "CA", "TT", "BRAF", "NP_004324.2:p.Val600Glu", "V600E", 600)
     cfg = _clinvar_data(tmp_path, [(_V600E, "Oncogenic", _MULTI), (other, "Oncogenic", _MULTI)])
     by, score = _braf(cfg)
-    assert by[C.OS1].active and "VCV 376069" in by[C.OS1].evidence
+    assert by[C.OS1].active and "ClinVar record 376069" in by[C.OS1].evidence
     assert by[C.OS3].active                                        # OS1 and OS3 both count
 
 
@@ -314,7 +314,7 @@ def test_vcf_fallback_for_old_clinvar_db(tmp_path):
                                   ("7", 140753336, "13961", "A", "T", ".", ".",
                                    "ONC=Oncogenic;ONCREVSTAT=criteria_provided,_multiple_submitters")])
     by, _ = _braf(cfg)
-    assert by[C.OM4].met and "VCV 1964069" in by[C.OM4].evidence
+    assert by[C.OM4].met and "ClinVar record 1964069" in by[C.OM4].evidence
     assert not by[C.OS1].met and "this variant is ClinVar Oncogenic" in by[C.OS1].evidence
 
 

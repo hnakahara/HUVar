@@ -355,7 +355,7 @@ class SomaticEvaluator:
                 onc.append(r)
         for r in onc:
             label = (r.get("hgvs_p") or "").split(":")[-1] or r.get("aa") or ""
-            text = (f"ClinVar {r['oncogenicity']} (oncogenicity) {label} (VCV {r['variation_id']}, "
+            text = (f"ClinVar {r['oncogenicity']} (oncogenicity) {label} (ClinVar record {r['variation_id']}, "
                     f"{r['stars']} stars: {r['review_status']})")
             if is_self(r):
                 self_note = (f"this variant is {text.replace(' ' + label, '', 1)} - not counted "
