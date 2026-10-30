@@ -82,6 +82,12 @@ class InSilicoTool(str, Enum):
     # 2024 Table 2 calibration (same source as AlphaMissense/ESM1b); VCEPs that
     # state a gene-specific REVEL cutoff override it (revel_genes.py).
     REVEL = "revel"
+    # FuncVEP-CTI (Kayaalp et al., Nat Genet 2026): precomputed scores for all
+    # possible missense variants, calibrated to the ACMG point system in the
+    # paper's supplementary table. PolyForm Strict 1.0.0 — NON-COMMERCIAL use
+    # only, so it is never the default; select it explicitly with
+    # --insilico-tool funcvep (ACMG_INSILICO_TOOL=funcvep).
+    FUNCVEP = "funcvep"
 
 
 class SpliceTool(str, Enum):

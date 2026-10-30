@@ -83,15 +83,16 @@ def _with_cspec(cfg, cspec):
               default=None, help="Override assembly detection from VCF header")
 @click.option("--insilico-tool",
               type=click.Choice([t.value for t in InSilicoTool]),
-              default=InSilicoTool.ESM1B.value, show_default=True)
+              default=InSilicoTool.ESM1B.value, show_default=True,
+              help="Missense predictor used for PP3/BP4 (exactly one, to avoid combining tools that share training data). 'esm1b' (default) is the only commercial-use-safe option; 'revel', 'alphamissense' and 'funcvep' (FuncVEP-CTI, PolyForm Strict) are restricted to non-commercial use and must be selected explicitly. 'funcvep' additionally needs the scores staged via setup_data.py --with-funcvep.")
 @click.option("--with-bayesdel", is_flag=True, default=False,
               help="Consult the opt-in BayesDel scores (must be staged via "
                    "setup_data.py --with-bayesdel). Licence-gated: applied only when "
-                   "--insilico-tool is revel or alphamissense; ignored under esm1b.")
+                   "--insilico-tool is revel or alphamissense; ignored under esm1b/funcvep.")
 @click.option("--with-cadd", is_flag=True, default=False,
               help="Consult the opt-in CADD scores (must be staged via "
                    "setup_data.py --with-cadd). Licence-gated: applied only when "
-                   "--insilico-tool is revel or alphamissense; ignored under esm1b.")
+                   "--insilico-tool is revel or alphamissense; ignored under esm1b/funcvep.")
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
@@ -213,14 +214,15 @@ def classify(
               default=Assembly.GRCH38.value, show_default=True)
 @click.option("--insilico-tool",
               type=click.Choice([t.value for t in InSilicoTool]),
-              default=InSilicoTool.ESM1B.value, show_default=True)
+              default=InSilicoTool.ESM1B.value, show_default=True,
+              help="Missense predictor used for PP3/BP4 (exactly one, to avoid combining tools that share training data). 'esm1b' (default) is the only commercial-use-safe option; 'revel', 'alphamissense' and 'funcvep' (FuncVEP-CTI, PolyForm Strict) are restricted to non-commercial use and must be selected explicitly. 'funcvep' additionally needs the scores staged via setup_data.py --with-funcvep.")
 @click.option("--with-bayesdel", is_flag=True, default=False,
               help="Consult the opt-in BayesDel scores (staged via setup_data.py "
                    "--with-bayesdel). Applied only under --insilico-tool revel/alphamissense; "
-                   "ignored under esm1b.")
+                   "ignored under esm1b/funcvep.")
 @click.option("--with-cadd", is_flag=True, default=False,
               help="Consult the opt-in CADD scores (staged via setup_data.py --with-cadd). "
-                   "Applied only under --insilico-tool revel/alphamissense; ignored under esm1b.")
+                   "Applied only under --insilico-tool revel/alphamissense; ignored under esm1b/funcvep.")
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
@@ -347,7 +349,9 @@ def _somatic_options(f):
                      show_default=True),
         click.option("--insilico-tool", type=click.Choice([t.value for t in InSilicoTool]),
                      default=InSilicoTool.ESM1B.value, show_default=True,
-                     help="Predictor behind OP1 / SBP1 (HUVar PP3 / BP4)."),
+                     help="Predictor behind OP1 / SBP1 (HUVar PP3 / BP4). 'esm1b' "
+                          "(default) is the only commercial-use-safe option; 'funcvep' "
+                          "(FuncVEP-CTI), 'revel' and 'alphamissense' are non-commercial."),
         click.option("--splice-tool",
                      type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
                      default=SpliceTool.OPENSPLICEAI.value, show_default=True),

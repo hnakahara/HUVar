@@ -72,6 +72,13 @@ Third-party data downloaded at runtime (not redistributed by this project):
     Free for non-commercial use; commercial use requires a separate licence —
     https://sites.google.com/site/revelgenomics/
 
+* FuncVEP-CTI precomputed scores (optional)
+    Kayaalp E et al., Nat Genet 2026. Zenodo 10.5281/zenodo.18432730.
+    PolyForm Strict License 1.0.0 — NON-COMMERCIAL use only, and the data may
+    not be redistributed. HUVar neither bundles nor downloads it by default:
+    stage it locally with `setup_data.py --with-funcvep` and select it with
+    `--insilico-tool funcvep`.
+
 * CADD (optional)
     Free for non-commercial use; commercial use requires a licence from the
     University of Washington (UW CoMotion) — https://cadd.bihealth.org/
@@ -84,7 +91,7 @@ Third-party data downloaded at runtime (not redistributed by this project):
     Free for academic/non-commercial research. Commercial use requires a
     separate license from Illumina.
 
-REVEL, CADD, BayesDel and SpliceAI are never read in the default configuration
+REVEL, FuncVEP, CADD, BayesDel and SpliceAI are never read in the default configuration
 (ESM1b + OpenSpliceAI); users who enable them must obtain the data themselves
 and comply with the upstream terms.
 

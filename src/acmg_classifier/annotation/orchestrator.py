@@ -94,6 +94,10 @@ class AnnotationOrchestrator:
         self._revel_path = cfg.revel_tsv
         self._bayesdel_path = cfg.bayesdel_tsv
         self._cadd_path = cfg.cadd_tsv
+        # FuncVEP-CTI is PolyForm Strict (non-commercial), so its precomputed
+        # scores are read ONLY when the user explicitly selects the tool.
+        self._use_funcvep = cfg.insilico_tool == InSilicoTool.FUNCVEP
+        self._funcvep_path = cfg.funcvep_scores
         # BayesDel / CADD are academic / non-commercial-licensed, so they are
         # consulted ONLY alongside the already licence-encumbered missense path
         # (REVEL or AlphaMissense) and NEVER under ESM1B (the commercial-safe
@@ -101,13 +105,14 @@ class AnnotationOrchestrator:
         licence_ok = cfg.insilico_tool in (InSilicoTool.REVEL, InSilicoTool.ALPHAMISSENSE)
         self._use_bayesdel = cfg.use_bayesdel and licence_ok
         self._use_cadd = cfg.use_cadd and licence_ok
-        if cfg.insilico_tool == InSilicoTool.ESM1B and (cfg.use_bayesdel or cfg.use_cadd):
+        if not licence_ok and (cfg.use_bayesdel or cfg.use_cadd):
             requested = [n for n, on in (("bayesdel", cfg.use_bayesdel),
                                          ("cadd", cfg.use_cadd)) if on]
-            log.warning("auxiliary_predictor_skipped_under_esm1b",
+            log.warning("auxiliary_predictor_skipped",
+                        tool=getattr(cfg.insilico_tool, "value", str(cfg.insilico_tool)),
                         requested=requested,
                         reason="BayesDel/CADD are licence-gated to REVEL/AlphaMissense; "
-                               "not run under the commercial-safe ESM1B path")
+                               "not run under the ESM1B / FuncVEP paths")
         self._repeat_path = cfg.repeatmasker_bed
         # Persistent thread-local tabix handles reused across the whole batch,
         # replacing the pysam.TabixFile open (per variant, per file) that
@@ -122,6 +127,7 @@ class AnnotationOrchestrator:
         from acmg_classifier.local_db.mane_db import load_mane_map
         self._mane_map = load_mane_map(cfg.mane_select_tsv)
         self._repeat_reader = TabixReader(cfg.repeatmasker_bed)
+        self._funcvep_reader = TabixReader(cfg.funcvep_scores) if self._use_funcvep else None
         self._bayesdel_reader = TabixReader(cfg.bayesdel_tsv) if self._use_bayesdel else None
         self._cadd_reader = TabixReader(cfg.cadd_tsv) if self._use_cadd else None
         self._splice = self._init_splice()
@@ -286,6 +292,17 @@ class AnnotationOrchestrator:
             aa=revel_aa, transcripts=revel_tx,
         )
 
+        # FuncVEP-CTI only when it is the selected tool (non-commercial licence),
+        # keyed by gene because FuncVEP scores a variant once per gene.
+        funcvep = None
+        if self._use_funcvep:
+            from acmg_classifier.local_db.funcvep_db import query_funcvep_reader
+            funcvep = query_funcvep_reader(
+                self._funcvep_reader,
+                variant.chrom, variant.pos, variant.ref, variant.alt,
+                gene=primary.gene_symbol if primary else None,
+            )
+
         # Auxiliary predictors only when licence-gated ON (REVEL/AlphaMissense +
         # explicit opt-in). Under ESM1B these stay None so no non-commercial data
         # is ever read or written into the output.
@@ -324,6 +341,7 @@ class AnnotationOrchestrator:
             alphamissense=alphamissense,
             esm1b=esm1b,
             revel=revel,
+            funcvep=funcvep,
             bayesdel=bayesdel,
             cadd=cadd,
             # Dropping the splice record entirely when the predictor was

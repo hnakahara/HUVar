@@ -1,7 +1,7 @@
 """Unit tests for benign criteria evaluators using mock annotations."""
 from acmg_classifier.models.annotation import (
     AnnotationData, GnomADData, RepeatMaskerRegion,
-    ConsequenceInfo, SpliceScore, AlphaMissenseData, ESM1bData,
+    ConsequenceInfo, SpliceScore, AlphaMissenseData, ESM1bData, FuncVEPData,
 )
 from acmg_classifier.models.enums import (
     Assembly, ACMGCriterion, ConsequenceType, CriterionStrength, InSilicoTool,
@@ -458,6 +458,63 @@ class TestBP4ESM1b:
     def test_pathogenic_range_not_triggered(self):
         r = self.evaluator.evaluate(_snv(), self._ann(-15.0))
         assert not r.triggered
+
+
+class TestBP4FuncVEP:
+    """FuncVEP-CTI BP4 tiers — Kayaalp 2026 supplementary calibration table."""
+
+    def setup_method(self):
+        from unittest.mock import MagicMock
+        cfg = MagicMock()
+        cfg.insilico_tool = InSilicoTool.FUNCVEP
+        from acmg_classifier.criteria.benign.bp4 import BP4Evaluator
+        self.evaluator = BP4Evaluator(cfg)
+
+    def _ann(self, score=None, match=None):
+        return _annotation(
+            funcvep=FuncVEPData(score=score, gene="BRCA1", match=match or "gene"),
+            consequences=[_consequence(ConsequenceType.MISSENSE)],
+        )
+
+    def test_strong_at_0_0174(self):
+        # FuncVEP does reach Strong (-4) on the benign side.
+        r = self.evaluator.evaluate(_snv(), self._ann(0.0174))
+        assert r.triggered
+        assert r.strength == CriterionStrength.STRONG
+
+    def test_three_point_at_0_0262(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.0262))
+        assert r.triggered
+        assert r.strength == CriterionStrength.THREE_POINT
+
+    def test_moderate_at_0_0643(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.0643))
+        assert r.triggered
+        assert r.strength == CriterionStrength.MODERATE
+
+    def test_supporting_at_0_1352(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.1352))
+        assert r.triggered
+        assert r.strength == CriterionStrength.SUPPORTING
+
+    def test_indeterminate_just_above_supporting(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.1353))
+        assert not r.triggered
+
+    def test_pathogenic_range_not_triggered(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.95))
+        assert not r.triggered
+
+    def test_no_score(self):
+        ann = _annotation(consequences=[_consequence(ConsequenceType.MISSENSE)])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+        assert "No in-silico score" in r.evidence
+
+    def test_ambiguous_overlapping_genes(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(None, match="ambiguous"))
+        assert not r.triggered
+        assert "conflicting" in r.evidence
 
 
 class TestBP7:

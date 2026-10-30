@@ -79,6 +79,10 @@ class Config(BaseSettings):
     # rather than the more conservative FAF95. Set ACMG_POPMAX_AF_BASIS=false to
     # force every gene back to FAF95 (the universally conservative metric).
     popmax_af_basis: bool = True
+    # ESM1b is the default because it is the only fully open-source, commercial-
+    # use-safe missense predictor of the four. REVEL (academic licence),
+    # AlphaMissense (CC BY-NC-SA) and FuncVEP (PolyForm Strict) all restrict
+    # commercial use, so none of them is ever selected implicitly.
     insilico_tool: InSilicoTool = InSilicoTool.ESM1B
     # Opt-in auxiliary missense predictors (BayesDel, CADD) consulted only by the
     # VCEPs that name them (e.g. ENIGMA BRCA1/2 / TP53 BayesDel; CADD in 2-of-3
@@ -90,6 +94,12 @@ class Config(BaseSettings):
     # setup_data.py flag (--with-bayesdel / --with-cadd).
     use_bayesdel: bool = False
     use_cadd: bool = False
+    # Explicit paths to the FuncVEP-CTI score files (TSV or VCF, bgzip+tabix),
+    # for reusing a copy staged outside data_dir — e.g. the VCF another tool
+    # already feeds to VEP --custom. Env: ACMG_FUNCVEP_GRCH38 / ACMG_FUNCVEP_GRCH37.
+    # Unset (default) → data_dir/<assembly>/funcvep/funcvep_cti_<asm>.{tsv,vcf}.gz.
+    funcvep_grch38: Optional[Path] = None
+    funcvep_grch37: Optional[Path] = None
     splice_tool: SpliceTool = SpliceTool.OPENSPLICEAI
     supplement_mode: SupplementMode = SupplementMode.MERGE
     spliceai_dir: Optional[Path] = None
@@ -335,6 +345,39 @@ class Config(BaseSettings):
             Assembly.GRCH37: "cadd_grch37.tsv.gz",
         }
         return self.assembly_dir / "cadd" / names[self.assembly]
+
+    @property
+    def funcvep_scores(self) -> Path:
+        """FuncVEP-CTI precomputed scores (tabix-indexed), for --insilico-tool funcvep.
+
+        Two layouts are read, chosen by file extension:
+
+        * ``funcvep_cti_<asm>.tsv.gz`` — the 6-column TSV
+          (chrom, pos, ref, alt, FuncVEP_CTI, gene) built by
+          ``scripts/setup_data.py --with-funcvep``;
+        * ``funcvep_cti_<asm>.vcf.gz`` — a VCF whose INFO carries ``CTI=`` and
+          ``GENE=``, i.e. the file VEP ``--custom`` consumes. Pointing HUVar at an
+          existing VCF avoids keeping a second multi-GB copy of the same scores.
+
+        ``ACMG_FUNCVEP_GRCH38`` / ``ACMG_FUNCVEP_GRCH37`` override the path
+        entirely (either layout), so a file staged elsewhere — e.g. a sibling
+        tool's ``/tools/funcvep/FuncVEP_CTI_hg38.vcf.gz`` — can be reused as is.
+
+        Opt-in and read ONLY under insilico_tool FUNCVEP: FuncVEP is PolyForm
+        Strict 1.0.0 (non-commercial), so it is never consulted on the
+        commercial-use-safe default path.
+        """
+        override = (self.funcvep_grch38 if self.assembly == Assembly.GRCH38
+                    else self.funcvep_grch37)
+        if override is not None:
+            return Path(override)
+        suffix = "grch38" if self.assembly == Assembly.GRCH38 else "grch37"
+        base = self.assembly_dir / "funcvep"
+        default = base / f"funcvep_cti_{suffix}.tsv.gz"
+        for name in (default, base / f"funcvep_cti_{suffix}.vcf.gz"):
+            if name.exists():
+                return name
+        return default
 
     @property
     def esm1b_sqlite(self) -> Path:

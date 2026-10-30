@@ -1,7 +1,8 @@
 """Unit tests for pathogenic criteria evaluators."""
 from unittest.mock import MagicMock
 from acmg_classifier.models.annotation import (
-    AnnotationData, GnomADData, AlphaMissenseData, ESM1bData, ClinVarRecord, ConsequenceInfo
+    AnnotationData, GnomADData, AlphaMissenseData, ESM1bData, FuncVEPData,
+    ClinVarRecord, ConsequenceInfo,
 )
 from acmg_classifier.models.enums import (
     Assembly, ConsequenceType, CriterionStrength, InSilicoTool,
@@ -199,6 +200,70 @@ class TestPP3ESM1b:
     def test_pp3_falls_through_when_no_esm1b(self):
         # Tool is ESM1B but score missing → "No in-silico score available"
         ann = AnnotationData(
+            consequences=[_consequence(ConsequenceType.MISSENSE)],
+        )
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+
+
+class TestPP3FuncVEP:
+    """FuncVEP-CTI PP3 tiers — Kayaalp 2026 supplementary calibration table."""
+
+    def setup_method(self):
+        cfg = MagicMock()
+        cfg.insilico_tool = InSilicoTool.FUNCVEP
+        from acmg_classifier.criteria.pathogenic.pp3 import PP3Evaluator
+        self.evaluator = PP3Evaluator(cfg)
+
+    def _ann(self, score=None, match=None):
+        return AnnotationData(
+            funcvep=FuncVEPData(score=score, gene="BRCA1", match=match or "gene"),
+            consequences=[_consequence(ConsequenceType.MISSENSE)],
+        )
+
+    def test_pp3_strong_at_0_9109(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.9109))
+        assert r.triggered
+        assert r.strength == CriterionStrength.STRONG
+
+    def test_pp3_three_point_at_0_8583(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.8583))
+        assert r.triggered
+        assert r.strength == CriterionStrength.THREE_POINT
+
+    def test_pp3_moderate_at_0_8023(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.8023))
+        assert r.triggered
+        assert r.strength == CriterionStrength.MODERATE
+
+    def test_pp3_supporting_at_0_6903(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.6903))
+        assert r.triggered
+        assert r.strength == CriterionStrength.SUPPORTING
+
+    def test_pp3_indeterminate_just_below_supporting(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.6902))
+        assert not r.triggered
+
+    def test_pp3_benign_range_not_triggered(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(0.01))
+        assert not r.triggered
+
+    def test_pp3_no_score(self):
+        ann = AnnotationData(consequences=[_consequence(ConsequenceType.MISSENSE)])
+        r = self.evaluator.evaluate(_snv(), ann)
+        assert not r.triggered
+        assert "No in-silico score" in r.evidence
+
+    def test_pp3_ambiguous_overlapping_genes(self):
+        r = self.evaluator.evaluate(_snv(), self._ann(None, match="ambiguous"))
+        assert not r.triggered
+        assert "conflicting" in r.evidence
+
+    def test_esm1b_score_ignored_under_funcvep(self):
+        # One tool only: an ESM1b score must not be used when funcvep is selected.
+        ann = AnnotationData(
+            esm1b=ESM1bData(llr=-30.0),
             consequences=[_consequence(ConsequenceType.MISSENSE)],
         )
         r = self.evaluator.evaluate(_snv(), ann)

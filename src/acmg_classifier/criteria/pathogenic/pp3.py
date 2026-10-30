@@ -71,6 +71,33 @@ def _esm1b_pp3(llr: float) -> CriterionStrength | None:
     return None
 
 
+# FuncVEP-CTI PP3 thresholds — Kayaalp et al. (Nat Genet 2026) supplementary
+# calibration table, which gives the CTI cutoff for each ACMG point on both
+# sides (+1..+4 for PP3, -1..-4 for BP4; see bp4.py). Higher CTI ⇒ more
+# pathogenic. The same table's single Damaging/Neutral cutoff (0.4196,
+# FUNCVEP_CTI_BINARY) is reported for reference only and awards no evidence.
+FUNCVEP_CTI_BINARY = 0.419606448
+
+_FUNCVEP_PP3: dict[CriterionStrength, float] = {
+    CriterionStrength.STRONG: 0.9109,        # +4
+    CriterionStrength.THREE_POINT: 0.8583,   # +3
+    CriterionStrength.MODERATE: 0.8023,      # +2
+    CriterionStrength.SUPPORTING: 0.6903,    # +1
+}
+
+
+def _funcvep_pp3(score: float) -> CriterionStrength | None:
+    """Highest PP3 strength whose ``FuncVEP-CTI >= cutoff`` holds.
+
+    FuncVEP has no Very Strong tier; the strongest PP3 it reaches is Strong
+    (+4) at CTI >= 0.9109. Below the Supporting cutoff we return None so the
+    caller can distinguish "no evidence" from benign-leaning (BP4's side)."""
+    for strength, cutoff in sorted(_FUNCVEP_PP3.items(), key=lambda kv: kv[1], reverse=True):
+        if score >= cutoff:
+            return strength
+    return None
+
+
 def _squirls_pp3(score: float) -> CriterionStrength | None:
     """SQUIRLS (Danis 2021) splice-pathogenicity threshold.
 
@@ -276,6 +303,27 @@ class PP3Evaluator(CriterionEvaluator):
                     return CriteriaResult.not_met(
                         ACMGCriterion.PP3,
                         f"ESM1b LLR={es.llr:.3f} (indeterminate or benign)",
+                    )
+                return CriteriaResult.not_met(ACMGCriterion.PP3, "No in-silico score available")
+
+            if self._cfg.insilico_tool == InSilicoTool.FUNCVEP:
+                fv = annotation.funcvep
+                if fv and fv.score is not None:
+                    strength = _funcvep_pp3(fv.score)
+                    if strength:
+                        return CriteriaResult.met(
+                            ACMGCriterion.PP3, strength,
+                            f"FuncVEP-CTI={fv.score:.4f} ({strength.value})",
+                        )
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.PP3,
+                        f"FuncVEP-CTI={fv.score:.4f} (indeterminate or benign)",
+                    )
+                if fv and fv.match == "ambiguous":
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.PP3,
+                        "FuncVEP-CTI: conflicting scores for overlapping genes at this "
+                        "position and none matches the evaluated gene",
                     )
                 return CriteriaResult.not_met(ACMGCriterion.PP3, "No in-silico score available")
 

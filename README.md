@@ -218,9 +218,10 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
   subset inline. The read-depth gate comes from the optional gnomAD coverage
   build (see [Data setup](#data-setup)).
 - **In silico prediction**: **ESM1b** (default; Brandes 2023, MIT-licensed,
-  commercial-use ready), **AlphaMissense** (predictions CC BY 4.0), or **REVEL**
+  commercial-use ready), **AlphaMissense** (predictions CC BY 4.0), **REVEL**
   (Ioannidis 2016; free for non-commercial use, commercial use needs a separate
-  licence) for missense. Splice prediction defaults to **OpenSpliceAI** (Chao
+  licence), or **FuncVEP-CTI** (Kayaalp 2026; PolyForm Strict, non-commercial)
+  for missense. Splice prediction defaults to **OpenSpliceAI** (Chao
   2025, GPL-3.0; runtime inference via the `openspliceai` CLI); **SpliceAI**
   (Illumina-licensed) is an opt-in alternative. The splice predictor overrides
   the missense call — including on missense variants — when its score crosses
@@ -430,6 +431,8 @@ python scripts/setup_data.py --data-dir /path/to/download/directory/data --only 
 | `--skip-esm1b` | Skip ESM1b LLR archive download / SQLite build (~ 1.34 GB) |
 | `--skip-openspliceai` | Skip the OSAI_MANE model download (all 4 flanking sizes). Default tool, so skip only when supplying models another way. The `openspliceai` CLI itself ships as a package dependency. |
 | `--with-revel` | Download REVEL (~ 600 MB zip) and build the per-assembly TSV for `--insilico-tool revel` (opt-in; ESM1b is the default tool) |
+| `--with-funcvep` | Stage the FuncVEP precomputed scores (Zenodo 18432730) and build the per-assembly FuncVEP-CTI TSV for `--insilico-tool funcvep`. Opt-in: PolyForm Strict 1.0.0, non-commercial use only, not redistributable |
+| `--funcvep-raw PATH` | Use a local FuncVEP source instead of downloading. Three layouts are auto-detected: the Zenodo zip / its TSV, a VCF with `CTI=`/`GENE=` in INFO (the layout VEP `--custom` reads — e.g. a GRCh38 build or its liftover to GRCh37), or an already-normalised 6-column TSV (`chrom pos ref alt CTI gene`) |
 | `--with-cadd` | Build the per-assembly CADD TSV (opt-in auxiliary PP3/BP4 predictor for CTLA4/PIK3CD/PIK3R1/BMPR2/ABCA4). Downloads the CADD whole-genome SNV file (**GRCh38 v1.7 ~80 GB**) and normalises it. Consulted only under `--insilico-tool revel/alphamissense`. |
 | `--cadd-raw PATH` | Use an already-downloaded CADD `whole_genome_SNVs.tsv.gz` (`Chrom Pos Ref Alt RawScore PHRED`) instead of downloading. |
 | `--with-bayesdel` | Build the per-assembly BayesDel TSV (opt-in auxiliary PP3/BP4 predictor for ENIGMA BRCA1/2). Requires `--bayesdel-raw`. Consulted only under `--insilico-tool revel/alphamissense`. _(TP53 uses the shipped VCEP code table and only needs this flag toggled on at classification time — see below.)_ |
@@ -553,7 +556,7 @@ Full option list:
 | `-o, --output PATH` | path | stdout | Output TSV path |
 | `--data-dir PATH` | path | `./data` | Data root |
 | `--assembly {GRCh37,GRCh38}` | str | auto-detect from VCF header → fallback `GRCh38` | Force a specific assembly |
-| `--insilico-tool {esm1b,alphamissense,revel}` | str | `esm1b` | Missense predictor used for PP3/BP4 (`revel` needs `setup_data.py --with-revel`) |
+| `--insilico-tool {esm1b,alphamissense,revel,funcvep}` | str | `esm1b` | Missense predictor used for PP3/BP4 (`revel` needs `setup_data.py --with-revel`; `funcvep` needs `--with-funcvep` and is non-commercial) |
 | `--with-bayesdel` | flag | off | **Required at classification time** to consult BayesDel for the VCEPs that define PP3/BP4 on it (ENIGMA BRCA1/2, TP53). Without it these genes fall through to the single-tool path and BayesDel is **never queried**. Applied only under `--insilico-tool revel/alphamissense`; the data must also be staged with `setup_data.py --with-bayesdel`. |
 | `--with-cadd` | flag | off | **Required at classification time** to consult CADD for the VCEPs that define PP3/BP4 on it (CTLA4/PIK3CD/PIK3R1/BMPR2/ABCA4). Without it CADD is **never queried**. Applied only under `--insilico-tool revel/alphamissense`; the data must also be staged with `setup_data.py --with-cadd`. |
 | `--splice-tool {openspliceai,spliceai}` | str | `openspliceai` | Splice predictor used for PP3/BP4/PVS1. `openspliceai` (default, GPL-3.0) runs OSAI_MANE at inference time; `spliceai` (Illumina-licensed) uses precomputed VCFs. The splice call takes precedence over the missense call — including on missense variants — when its score ≥ 0.20. |
@@ -911,10 +914,12 @@ Benign.
 `clinvar_variation_id`, `clinvar_significance`, `clinvar_stars`,
 `alphamissense_score`, `alphamissense_classification`,
 `esm1b_llr`,
+`funcvep_cti`,
 `revel_score`,
 `splice_tool`, `splice_score`,
 `in_repeat`, `repeat_class`
 
+`funcvep_cti` is populated only when `--insilico-tool funcvep`.
 `esm1b_llr` is populated when `--insilico-tool esm1b` (default);
 `alphamissense_*` when `--insilico-tool alphamissense`; `revel_score` when REVEL
 data is present. All three score columns are emitted for review whenever the
@@ -1188,6 +1193,22 @@ Strengths are calibrated to Bergquist et al. *Genet Med* 2024 Table 2.
   Moderate / Supporting for PP3 (`≥0.990 / ≥0.972 / ≥0.906 / ≥0.792`);
   ThreePoint / Moderate / Supporting for BP4 (`≤0.070 / ≤0.099 / ≤0.169`). No
   Strong BP4 category. Scores are CC BY-NC-SA 4.0 (non-commercial).
+- **FuncVEP-CTI** (`--insilico-tool funcvep`): Strong / ThreePoint / Moderate /
+  Supporting for PP3 (CTI `≥0.9109 / ≥0.8583 / ≥0.8023 / ≥0.6903`); Strong /
+  ThreePoint / Moderate / Supporting for BP4 (`≤0.0174 / ≤0.0262 / ≤0.0643 /
+  ≤0.1352`). Higher CTI ⇒ more pathogenic; thresholds are the per-point
+  calibration of the FuncVEP paper's supplementary table (Kayaalp et al., Nat
+  Genet 2026), which also gives a single Damaging/Neutral cutoff (0.4196) that
+  HUVar reports but does not use to award evidence. FuncVEP rows are per gene,
+  so at a locus shared by overlapping genes the row matching the evaluated gene
+  is used; if none matches and the scores disagree, PP3/BP4 abstain. Scores are
+  PolyForm Strict 1.0.0 (**non-commercial only, not redistributable**) → never
+  the default. Scores are read from `data/<assembly>/funcvep/funcvep_cti_<asm>.tsv.gz`
+  (built by `setup_data.py --with-funcvep`) **or** from a tabix-indexed
+  `…vcf.gz` carrying `CTI=`/`GENE=` in INFO — so a VCF already prepared for VEP
+  `--custom` can be reused as is, without a second multi-GB conversion. Point at a
+  file outside `data/` with `ACMG_FUNCVEP_GRCH38` / `ACMG_FUNCVEP_GRCH37`. See
+  [Commercial use](#commercial-use).
 - **REVEL** (`--insilico-tool revel`): Strong / ThreePoint / Moderate /
   Supporting for PP3 (`≥0.932 / ≥0.879 / ≥0.773 / ≥0.644`); Strong / ThreePoint
   / Moderate / Supporting for BP4 (`≤0.016 / ≤0.052 / ≤0.183 / ≤0.290`). No Very
@@ -1231,6 +1252,12 @@ Notes:
   only**; commercial use requires a **separate licence** (contact the REVEL
   authors / Weiva Sieh — see <https://sites.google.com/site/revelgenomics/>).
   Not downloaded by default; opt in with `setup_data.py --with-revel`.
+- **FuncVEP-CTI** (`--insilico-tool funcvep`) is **PolyForm Strict License
+  1.0.0**: non-commercial use only, and the precomputed scores may **not be
+  redistributed**. HUVar neither bundles nor downloads them by default — stage
+  them yourself (`setup_data.py --with-funcvep`, Zenodo 10.5281/zenodo.18432730)
+  and keep the file local. The engine reads it only under `--insilico-tool
+  funcvep`, so the default configuration stays commercial-use ready.
 - **OpenSpliceAI** is GPL-3.0. Running it locally to produce classifications
   (a service/report) does not trigger GPL source-disclosure; redistributing
   the tool would. Do **not** use the Illumina SpliceAI model weights bundled in
@@ -1301,6 +1328,10 @@ export ACMG_DATA_DIR=/db/acmg
 export ACMG_ASSEMBLY=GRCh38
 export ACMG_WORKERS=8
 export ACMG_INSILICO_TOOL=esm1b
+# FuncVEP-CTI score files, when kept outside data/ (TSV or VCF, bgzip + tabix).
+# Lets an existing VEP --custom VCF be reused instead of converting it again.
+export ACMG_FUNCVEP_GRCH38=/tools/funcvep/FuncVEP_CTI_hg38.vcf.gz
+export ACMG_FUNCVEP_GRCH37=/tools/funcvep/FuncVEP_CTI_hg37.vcf.gz
 export ACMG_SPLICE_TOOL=openspliceai
 export ACMG_SUPPLEMENT_MODE=merge   # or manual-only
 

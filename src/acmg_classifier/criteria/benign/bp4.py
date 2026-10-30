@@ -67,6 +67,29 @@ def _esm1b_bp4(llr: float) -> CriterionStrength | None:
     return None
 
 
+# FuncVEP-CTI BP4 thresholds — Kayaalp et al. (Nat Genet 2026) supplementary
+# calibration table (the benign side of the PP3 table in pp3.py: -1..-4).
+# Lower CTI ⇒ more benign. Unlike AlphaMissense/ESM1b, FuncVEP's table does
+# reach Strong (-4), at CTI <= 0.0174.
+_FUNCVEP_BP4: dict[CriterionStrength, float] = {
+    CriterionStrength.STRONG: 0.0174,        # -4
+    CriterionStrength.THREE_POINT: 0.0262,   # -3
+    CriterionStrength.MODERATE: 0.0643,      # -2
+    CriterionStrength.SUPPORTING: 0.1352,    # -1
+}
+
+
+def _funcvep_bp4(score: float) -> CriterionStrength | None:
+    """Strongest BP4 strength whose ``FuncVEP-CTI <= cutoff`` holds.
+
+    Iterates by ascending cutoff (the smallest cutoff is the strongest benign
+    tier), so the first satisfied tier is the strongest one met."""
+    for strength, cutoff in sorted(_FUNCVEP_BP4.items(), key=lambda kv: kv[1]):
+        if score <= cutoff:
+            return strength
+    return None
+
+
 def _spliceai_bp4(max_delta: float, cutoff: float = 0.10) -> CriterionStrength | None:
     """SpliceAI BP4 per Walker 2023 (no-impact cutoff, default 0.10; some VCEPs
     tighten/loosen it per gene)."""
@@ -248,6 +271,27 @@ class BP4Evaluator(CriterionEvaluator):
                     return CriteriaResult.not_met(
                         ACMGCriterion.BP4,
                         f"ESM1b LLR={es.llr:.3f} (not in benign range)",
+                    )
+                return CriteriaResult.not_met(ACMGCriterion.BP4, "No in-silico score available")
+
+            if self._cfg.insilico_tool == InSilicoTool.FUNCVEP:
+                fv = annotation.funcvep
+                if fv and fv.score is not None:
+                    strength = _funcvep_bp4(fv.score)
+                    if strength:
+                        return CriteriaResult.met(
+                            ACMGCriterion.BP4, strength,
+                            f"FuncVEP-CTI={fv.score:.4f} ({strength.value})",
+                        )
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.BP4,
+                        f"FuncVEP-CTI={fv.score:.4f} (not in benign range)",
+                    )
+                if fv and fv.match == "ambiguous":
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.BP4,
+                        "FuncVEP-CTI: conflicting scores for overlapping genes at this "
+                        "position and none matches the evaluated gene",
                     )
                 return CriteriaResult.not_met(ACMGCriterion.BP4, "No in-silico score available")
 

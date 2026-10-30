@@ -175,6 +175,30 @@ class ESM1bData(BaseModel):
     llr: Optional[float] = None
 
 
+class FuncVEPData(BaseModel):
+    """FuncVEP-CTI score (Kayaalp et al., Nat Genet 2026) for a missense variant.
+
+    CTI (clinical-threshold index) is on a 0-1 scale; higher ⇒ more pathogenic.
+    PP3/BP4 strengths follow the paper's supplementary calibration table, which
+    gives a score cutoff per ACMG point (+1..+4 / -1..-4). ``binary`` is the
+    paper's single Damaging/Neutral cutoff (0.4196), reported for reference and
+    not used to award evidence.
+
+    Licence: PolyForm Strict 1.0.0 (non-commercial). The precomputed scores are
+    read only when insilico_tool is FUNCVEP, so a commercial-use run never
+    touches them.
+    """
+
+    score: Optional[float] = None
+    # Gene symbol the chosen row belongs to (FuncVEP rows are per gene, so a
+    # locus in overlapping genes carries several scores).
+    gene: Optional[str] = None
+    # How the row was chosen among the rows at this locus: "gene" (matched the
+    # evaluated gene symbol), "single" (one row), "uniform" (several rows with
+    # the same score) or "ambiguous" (conflicting scores, no gene match → no score).
+    match: Optional[str] = None
+
+
 class SpliceScore(BaseModel):
     """Unified splice prediction result (SQUIRLS or SpliceAI)."""
 
@@ -228,6 +252,9 @@ class AnnotationData(BaseModel):
     alphamissense: Optional[AlphaMissenseData] = None
     esm1b: Optional[ESM1bData] = None
     revel: Optional[RevelData] = None
+    # FuncVEP-CTI. Populated only under insilico_tool FUNCVEP (PolyForm Strict,
+    # non-commercial — see FuncVEPData), None otherwise.
+    funcvep: Optional[FuncVEPData] = None
     # Opt-in auxiliary predictors, populated only under insilico_tool
     # REVEL/ALPHAMISSENSE when --with-bayesdel / --with-cadd are set (None
     # otherwise, including always under ESM1B — see AnnotationOrchestrator).

@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **FuncVEP-CTI as a PP3/BP4 missense predictor** (`--insilico-tool funcvep`):
+  precomputed scores from Kayaalp et al. (Nat Genet 2026, Zenodo
+  10.5281/zenodo.18432730), with the per-point strengths of the paper's
+  supplementary calibration table — PP3 Strong/ThreePoint/Moderate/Supporting at
+  CTI ≥ 0.9109 / 0.8583 / 0.8023 / 0.6903 and BP4 at ≤ 0.0174 / 0.0262 / 0.0643 /
+  0.1352 (so FuncVEP, unlike ESM1b and AlphaMissense, reaches Strong on the
+  benign side). The table's binary Damaging/Neutral cutoff (0.4196) is recorded
+  for reference only. FuncVEP rows are per gene, so the row matching the
+  evaluated gene is used and genuinely conflicting scores at a shared locus make
+  PP3/BP4 abstain. New `funcvep_cti` TSV column. Staged with `setup_data.py
+  --with-funcvep [--funcvep-raw PATH]` into
+  `data/<assembly>/funcvep/funcvep_cti_<asm>.tsv.gz` (tabix); `--funcvep-raw`
+  auto-detects the Zenodo table, a VCF with `CTI=`/`GENE=` in INFO, or an
+  already-normalised 6-column TSV. A tabix-indexed VCF is also read directly
+  (`funcvep_cti_<asm>.vcf.gz`, or any path given by `ACMG_FUNCVEP_GRCH38` /
+  `ACMG_FUNCVEP_GRCH37`), so a file already prepared for VEP `--custom` can be
+  reused without a second multi-GB conversion. **PolyForm Strict
+  1.0.0 — non-commercial use only and not redistributable**, so it is never the
+  default and the file is read only when the tool is explicitly selected; the
+  default (ESM1b + OpenSpliceAI) stays commercial-use ready.
 - **AMP/ASCO/CAP 2017 tiers (somatic)**: `--tumor-type ONCOTREE_CODE` on `somatic` /
   `somatic-explain` assigns Tier I-IV (Li et al. 2017) from CIViC predictive / diagnostic /
   prognostic evidence and assertions (`civic_clinical.tsv`, built by `--only civic`) and

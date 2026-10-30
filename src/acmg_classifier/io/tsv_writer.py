@@ -24,6 +24,7 @@ _ANNOTATION_HEADER = [
     "alphamissense_score", "alphamissense_classification",
     "esm1b_llr",
     "revel_score",
+    "funcvep_cti",
     "bayesdel_score",
     "cadd_phred",
     "squirls_score",
@@ -174,6 +175,11 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
         _fmt(rv.score, ".4f") if rv and rv.score is not None else "",
     ]
 
+    fv = ann.funcvep
+    funcvep_cols = [
+        _fmt(fv.score, ".4f") if fv and fv.score is not None else "",
+    ]
+
     bd = ann.bayesdel
     bayesdel_cols = [
         _fmt(bd.score, ".4f") if bd and bd.score is not None else "",
@@ -203,7 +209,8 @@ def _build_annotation_row(result: ClassificationResult) -> list[str]:
     ]
 
     return (gnomad_cols + clinvar_cols + am_cols + esm1b_cols + revel_cols
-            + bayesdel_cols + cadd_cols + squirls_cols + splice_cols + repeat_cols)
+            + funcvep_cols + bayesdel_cols + cadd_cols + squirls_cols + splice_cols
+            + repeat_cols)
 
 
 def _build_mane_pc_row(result: ClassificationResult) -> list[str]:

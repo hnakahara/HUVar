@@ -31,11 +31,15 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import csv
+import gzip
+import io
 import os
 import shlex
 import shutil
 import subprocess
 import sys
+import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -834,6 +838,247 @@ def step_bayesdel(asm_dir: Path, assembly: str, enabled: bool,
     return True
 
 
+# FuncVEP precomputed scores (Kayaalp et al., Nat Genet 2026), Zenodo record
+# 18432730. PolyForm Strict 1.0.0: non-commercial use only and NOT redistributable,
+# so the file is staged locally and never bundled. GRCh38 only upstream; a GRCh37
+# build is made by lifting the GRCh38 output over (CrossMap) and passing the
+# result to --funcvep-raw --assembly GRCh37.
+FUNCVEP_ZENODO = (
+    "https://zenodo.org/records/18432730/files/"
+    "FuncVEP_and_ClinVEP_scores_all_possible_missense_variants.zip?download=1"
+)
+
+
+def _ensg_to_symbol(mane_summary: Path) -> dict:
+    """ENSG -> gene symbol from the MANE summary (for FuncVEP's `ensg` column)."""
+    mapping: dict[str, str] = {}
+    if not mane_summary.exists():
+        return mapping
+    opener = gzip.open if str(mane_summary).endswith(".gz") else open
+    with opener(mane_summary, "rt", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh, delimiter="\t"):
+            ensg = (row.get("Ensembl_Gene") or "").split(".")[0]
+            symbol = row.get("symbol") or ""
+            if ensg and symbol:
+                mapping.setdefault(ensg, symbol)
+    return mapping
+
+
+def _funcvep_rows_from_scores(src_path: Path, symbols: dict):
+    """Yield `chrom pos ref alt CTI gene` lines from the Zenodo zip/TSV.
+
+    Upstream layout: `ID` ("chr-pos-ref-alt"), `ensg`, `FuncVEP_CTI` (plus the
+    ClinVEP columns we do not use — only FuncVEP-CTI is wired into HUVar).
+    """
+    if str(src_path).endswith(".zip"):
+        zf = zipfile.ZipFile(src_path)
+        members = [m for m in zf.namelist() if m.endswith((".tsv", ".txt", ".csv"))]
+        if len(members) != 1:
+            raise ValueError(f"expected exactly one table inside the zip, found {members}")
+        fh = io.TextIOWrapper(zf.open(members[0]), encoding="utf-8")
+    elif str(src_path).endswith(".gz"):
+        fh = gzip.open(src_path, "rt", encoding="utf-8")
+    else:
+        fh = open(src_path, encoding="utf-8")
+    with fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        try:
+            i_id, i_ensg, i_cti = (header.index("ID"), header.index("ensg"),
+                                   header.index("FuncVEP_CTI"))
+        except ValueError as exc:
+            raise ValueError(f"unexpected FuncVEP columns: {header}") from exc
+        for line in fh:
+            cols = line.rstrip("\n").split("\t")
+            try:
+                chrom, pos, ref, alt = cols[i_id].split("-")
+                score = float(cols[i_cti])
+            except (ValueError, IndexError):
+                continue
+            if score != score:  # NaN
+                continue
+            ensg = cols[i_ensg].split(".")[0]
+            gene = symbols.get(ensg, ensg)
+            yield f"{chrom.replace('chr', '')}\t{pos}\t{ref}\t{alt}\t{score:.4f}\t{gene}\n"
+
+
+def _funcvep_format(src_path: Path) -> str:
+    """Input layout: "upstream" (Zenodo table), "vcf" (INFO CTI=/GENE=) or "tsv6"
+    (already normalised chrom/pos/ref/alt/CTI/gene). Decided from the content."""
+    name = str(src_path).lower()
+    if name.endswith(".zip"):
+        return "upstream"
+    if name.endswith((".vcf", ".vcf.gz", ".vcf.bgz")):
+        return "vcf"
+    opener = gzip.open if name.endswith(".gz") else open
+    with opener(src_path, "rt", encoding="utf-8") as fh:
+        head = fh.readline().rstrip("\n")
+    if head.startswith("##fileformat=VCF"):
+        return "vcf"
+    cols = head.split("\t")
+    return "upstream" if ("FuncVEP_CTI" in cols and "ID" in cols) else "tsv6"
+
+
+def _funcvep_rows_from_vcf(src_path: Path):
+    """Yield 6-column rows from a VCF whose INFO carries CTI= and GENE=.
+
+    This is the layout VEP ``--custom`` consumes, so an existing hg38 build (or
+    its liftover to GRCh37) can be converted without going back to the Zenodo
+    table. Multi-allelic records are skipped: the scores are written one record
+    per alternate allele."""
+    opener = gzip.open if str(src_path).lower().endswith((".gz", ".bgz")) else open
+    with opener(src_path, "rt", encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#"):
+                continue
+            cols = line.rstrip("\n").split("\t")
+            if len(cols) < 8 or "," in cols[4]:
+                continue
+            info, score, gene = cols[7], None, ""
+            for item in info.split(";"):
+                key, sep, value = item.partition("=")
+                if not sep:
+                    continue
+                if key == "CTI":
+                    score = value
+                elif key == "GENE":
+                    gene = value
+            if score is None:
+                continue
+            try:
+                value = float(score)
+            except ValueError:
+                continue
+            if value != value:  # NaN
+                continue
+            yield (f"{cols[0].replace('chr', '')}\t{cols[1]}\t{cols[3]}\t{cols[4]}"
+                   f"\t{value:.4f}\t{gene}\n")
+
+
+def _funcvep_rows_from_tsv6(src_path: Path):
+    """Yield rows from an already-6-column file (a lifted GRCh37 build, or a
+    previously produced funcvep_cti_*.tsv.gz being re-indexed)."""
+    opener = gzip.open if str(src_path).endswith(".gz") else open
+    with opener(src_path, "rt", encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#"):
+                continue
+            cols = line.rstrip("\n").split("\t")
+            if len(cols) < 5:
+                continue
+            try:
+                float(cols[4])
+                int(cols[1])
+            except ValueError:
+                continue
+            gene = cols[5] if len(cols) > 5 else ""
+            yield f"{cols[0].replace('chr', '')}\t{cols[1]}\t{cols[2]}\t{cols[3]}\t{cols[4]}\t{gene}\n"
+
+
+def step_funcvep(asm_dir: Path, assembly: str, data_dir: Path, enabled: bool,
+                 raw_path: Path | None) -> bool:
+    """Build the per-assembly FuncVEP-CTI TSV for `--insilico-tool funcvep`.
+
+    FuncVEP (Kayaalp et al., Nat Genet 2026; Zenodo 10.5281/zenodo.18432730)
+    publishes precomputed scores for all possible missense variants. We keep only
+    the CTI column and normalise to the 6-column `chrom pos ref alt CTI gene`
+    layout `funcvep_db` reads, then index with tabix. The gene symbol comes from
+    the MANE summary (ENSG -> symbol); unmapped genes keep their ENSG.
+
+    OPT-IN (`--with-funcvep`). FuncVEP is PolyForm Strict 1.0.0 — non-commercial
+    use only and not redistributable — so it is never staged by default and the
+    engine reads it only under `--insilico-tool funcvep`.
+
+    Three input layouts are accepted via `--funcvep-raw` (auto-detected): the
+    Zenodo zip/TSV, a VCF whose INFO carries `CTI=`/`GENE=` (the layout VEP
+    `--custom` consumes), and an already-normalised 6-column TSV.
+
+    Upstream coordinates are GRCh38. For GRCh37, lift the GRCh38 build over
+    (e.g. CrossMap) and pass the result with `--funcvep-raw PATH --assembly GRCh37`.
+
+    Note that `Config.funcvep_scores` also reads a tabix-indexed VCF directly, so
+    an existing `*.vcf.gz` can be used without this conversion — either placed at
+    `data/<assembly>/funcvep/funcvep_cti_<asm>.vcf.gz` or pointed to with
+    `ACMG_FUNCVEP_GRCH38` / `ACMG_FUNCVEP_GRCH37`.
+    """
+    suffix = "grch38" if assembly == "GRCh38" else "grch37"
+    dest = asm_dir / "funcvep" / f"funcvep_cti_{suffix}.tsv.gz"
+    tbi = Path(str(dest) + ".tbi")
+    if dest.exists() and tbi.exists():
+        print(f"  [SKIP] {dest.name}")
+        return True
+    if not enabled:
+        print("  [SKIP] FuncVEP not requested (pass --with-funcvep; non-commercial "
+              "licence, used only with --insilico-tool funcvep)")
+        return True
+
+    _require("sort", "bgzip", "tabix")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    src = raw_path
+    if src is None:
+        if assembly != "GRCh38":
+            print("  [SKIP] FuncVEP for GRCh37 needs --funcvep-raw PATH: lift the "
+                  "GRCh38 build over (e.g. CrossMap) and pass the lifted file — "
+                  "either a VCF with INFO CTI=/GENE= or a 6-column TSV "
+                  "(chrom pos ref alt CTI gene).")
+            return False
+        src = dest.parent / "FuncVEP_and_ClinVEP_scores_all_possible_missense_variants.zip"
+        if not src.exists():
+            print("  FuncVEP is PolyForm Strict 1.0.0 (non-commercial use only, no "
+                  "redistribution). Downloading for local use.")
+            _download(FUNCVEP_ZENODO, src, "FuncVEP precomputed scores (Zenodo)")
+    if not src.exists():
+        print(f"  [ERROR] FuncVEP source not found: {src}")
+        return False
+
+    # The upstream table is converted (ID -> chrom/pos/ref/alt, ENSG -> symbol,
+    # CTI only); a VCF (INFO CTI=/GENE=) and an already-normalised 6-column file
+    # are read directly.
+    try:
+        fmt = _funcvep_format(src)
+    except Exception as exc:
+        print(f"  [ERROR] could not read {src}: {exc}")
+        return False
+    print(f"  Input layout: {fmt}")
+    symbols = _ensg_to_symbol(data_dir / "shared" / MANE_SUMMARY_NAME) if fmt == "upstream" else {}
+    if fmt == "upstream":
+        print(f"  ENSG -> gene symbol map: {len(symbols):,} entries")
+        if not symbols:
+            print("  [WARN] no MANE summary found; FuncVEP rows will carry ENSG ids "
+                  "instead of gene symbols (run --only mane-summary first)")
+
+    body = dest.parent / "funcvep_body.tsv"
+    n = 0
+    print("  Normalising FuncVEP-CTI to 6-column TSV...")
+    with open(body, "w", encoding="utf-8") as out:
+        rows = {"upstream": lambda: _funcvep_rows_from_scores(src, symbols),
+                "vcf": lambda: _funcvep_rows_from_vcf(src),
+                "tsv6": lambda: _funcvep_rows_from_tsv6(src)}[fmt]()
+        for row in rows:
+            out.write(row)
+            n += 1
+            if n % 10_000_000 == 0:
+                print(f"    {n:,} rows...")
+    if n == 0:
+        print("  [ERROR] no FuncVEP rows parsed; check the source layout")
+        body.unlink(missing_ok=True)
+        return False
+
+    print(f"  {n:,} rows. Sorting and compressing...")
+    cmd = (
+        f"LC_ALL=C sort -k1,1 -k2,2n -k4,4 -S 2G -T {shlex.quote(str(dest.parent))} "
+        f"{shlex.quote(str(body))} | bgzip > {shlex.quote(str(dest))}"
+    )
+    subprocess.run(["bash", "-c", cmd], check=True)
+    body.unlink(missing_ok=True)
+    _run(["tabix", "-s", "1", "-b", "2", "-e", "2", "-f", str(dest)])
+    _record_manifest(data_dir, f"funcvep_{assembly}",
+                     source=str(raw_path) if raw_path else FUNCVEP_ZENODO,
+                     path=dest, variants=n,
+                     licence="PolyForm Strict 1.0.0 (non-commercial, no redistribution)")
+    return True
+
+
 # OpenSpliceAI OSAI_MANE pretrained models. Each flanking size has a 5-model
 # ensemble (random seeds rs10–rs14), mirroring SpliceAI's 5-model averaging.
 # Hosted on the JHU CCB FTP; the openspliceai CLI takes the per-flank directory
@@ -1496,6 +1741,15 @@ def main() -> None:
                         help="Download REVEL (~600 MB zip) and build the per-assembly "
                              "TSV for --insilico-tool revel. Off by default (ESM1b is "
                              "the default in-silico tool).")
+    parser.add_argument("--with-funcvep", action="store_true",
+                        help="Stage the FuncVEP precomputed scores (Zenodo 18432730) and "
+                             "build the per-assembly FuncVEP-CTI TSV for --insilico-tool "
+                             "funcvep. Off by default: FuncVEP is PolyForm Strict 1.0.0 "
+                             "(non-commercial use only, no redistribution).")
+    parser.add_argument("--funcvep-raw", type=Path, default=None, metavar="PATH",
+                        help="Path to the FuncVEP source instead of downloading: the Zenodo "
+                             "zip / its TSV for GRCh38, or — for GRCh37 — a 6-column TSV "
+                             "(chrom pos ref alt CTI gene) lifted over from the GRCh38 build.")
     parser.add_argument("--with-cadd", action="store_true",
                         help="Build the per-assembly CADD TSV (opt-in auxiliary PP3/BP4 "
                              "predictor). Source is very large (GRCh38 SNV ~80 GB). At "
@@ -1549,7 +1803,7 @@ def main() -> None:
     parser.add_argument("--only", nargs="+", default=None, metavar="STEP",
                         help="Run only the named step(s) and skip the rest. Step "
                              "keys: genome, vep, clinvar-vcf, clinvar-sqlite, "
-                             "alphamissense, esm1b, revel, cadd, bayesdel, "
+                             "alphamissense, esm1b, revel, cadd, bayesdel, funcvep, "
                              "openspliceai, gnomad-constraint, gnomad-coverage, "
                              "gnomad, gnomad-noncancer, repeatmasker, phylop, clingen, "
                              "mane-summary, mavedb, civic. "
@@ -1589,6 +1843,7 @@ def main() -> None:
         ("revel",             "REVEL",             lambda: step_revel(asm_dir, assembly, urls, args.with_revel)),
         ("cadd",              "CADD",              lambda: step_cadd(asm_dir, assembly, urls, args.with_cadd, args.cadd_raw)),
         ("bayesdel",          "BayesDel",          lambda: step_bayesdel(asm_dir, assembly, args.with_bayesdel, args.bayesdel_raw)),
+        ("funcvep",           "FuncVEP-CTI",       lambda: step_funcvep(asm_dir, assembly, data_dir, args.with_funcvep, args.funcvep_raw)),
         ("openspliceai",      "OpenSpliceAI",      lambda: step_openspliceai(asm_dir, assembly, args.skip_openspliceai)),
         # MMSplice GTF DISABLED (MMSplice integration is off). Re-enable with:
         # ("mmsplice-gtf",      "MMSplice GTF",      lambda: step_mmsplice_gtf(asm_dir, assembly, urls, args.skip_mmsplice_gtf)),
