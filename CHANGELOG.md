@@ -141,6 +141,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
     and OpenSpliceAI instead of their sum (`ACMG_OVERLAP_PRECOMPUTE=false` restores the
     sequential order).
   - `classify --profile` also prints the criteria-evaluation time per evaluator.
+  - **PS1 splice-site lookups used the wrong index.** The position-anchored ClinVar
+    queries (same splice site, ±1,2 dinucleotide partner, P/LP window) also filter on
+    the gene, and SQLite chose the gene_symbol index — scanning every ClinVar row of
+    the gene (~70 ms per query for BRCA2; 93% of the classification time of a BRCA
+    saturation batch) instead of the (chrom, pos) index (~0.01 ms). The gene filter is
+    now written `+gene_symbol` so the position index is used; results are unchanged.
   - Database handles that must not cross `fork()` (ClinVar SQLite, coverage DuckDB,
     phyloP bigWig, PVS1 reference FASTA) are re-opened per process.
 

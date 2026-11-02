@@ -280,8 +280,7 @@ def _run(tmp_path, monkeypatch, name, **cfg_kw):
     monkeypatch.setattr(orch, "AnnotationOrchestrator", _Orch)
     out = tmp_path / f"{name}.tsv"
     cfg = Config(data_dir=Path("./data"), assembly=Assembly.GRCH38, **cfg_kw)
-    res = pl.run_pipeline(vcf, cfg, output_path=out,
-                          profile_path=cfg_kw.pop("_profile", None))
+    res = pl.run_pipeline(vcf, cfg, output_path=out)
     return res, out.read_text()
 
 
@@ -314,3 +313,38 @@ def test_run_pipeline_profile_prints_evaluator_times(tmp_path, monkeypatch, caps
                     output_path=tmp_path / "o.tsv", profile_path=tmp_path / "p.prof")
     err = capsys.readouterr().err
     assert "criteria evaluation time per evaluator" in err and "PM2Evaluator" in err
+
+
+def test_position_queries_use_the_chrom_pos_index(tmp_path):
+    """query_same_splice_site / dinucleotide partner / P-LP window filter on the
+    gene too; SQLite must still search by (chrom, pos), not scan the gene's rows
+    through the gene_symbol index (70 ms per BRCA2 query on the real DB)."""
+    import sqlite3
+    from acmg_classifier.local_db import clinvar_sqlite as cs
+    from acmg_classifier.setup import clinvar_builder as b
+    db = tmp_path / "clinvar_plan.db"
+    con = sqlite3.connect(db)
+    con.executescript(b._CREATE_TABLE)
+    con.executescript(b._CREATE_INDEXES)
+    con.execute("INSERT INTO variants (variation_id, chrom, pos, ref, alt, gene_symbol, "
+                "hgvs_c, clinical_significance, review_status, star_rating) VALUES "
+                "('1', '13', 1000, 'G', 'A', 'BRCA2', 'NM_1:c.10+1G>A', 'Pathogenic', 'reviewed', 2)")
+    con.commit()
+    con.close()
+
+    statements = []
+    cs._get_conn(db).set_trace_callback(statements.append)
+    try:
+        cs.query_same_splice_site(db, "BRCA2", "chr13", 1000, "G", "T")
+        cs.query_splice_dinucleotide_partner(db, "BRCA2", "chr13", 999, "+", 2)
+        cs.query_plp_window(db, "BRCA2", "chr13", 1000)
+    finally:
+        cs._get_conn(db).set_trace_callback(None)
+    assert len(statements) == 3
+    check = sqlite3.connect(db)
+    for sql in statements:
+        params = [None] * sql.count("?")
+        plan = " ".join(str(r[-1]) for r in check.execute("EXPLAIN QUERY PLAN " + sql, params))
+        assert "idx_chrom_pos" in plan, plan
+    check.close()
+    cs._CONN_CACHE.pop(str(db), None)

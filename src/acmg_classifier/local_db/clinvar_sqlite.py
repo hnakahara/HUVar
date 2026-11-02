@@ -394,6 +394,14 @@ def query_same_codon_different_aa(
     return out
 
 
+# _GENE_FILTER_NOTE: in the position-anchored queries below the gene filter is
+# written ``+gene_symbol = ?``. The unary ``+`` stops SQLite from using an index
+# for that term; without it the planner (no ANALYZE statistics) chose the
+# gene_symbol index and scanned every ClinVar row of the gene (~70 ms per query
+# for BRCA2, 93% of the classification time of a BRCA saturation batch) instead
+# of the (chrom, pos) index (~0.01 ms). The result is unchanged.
+
+
 def query_same_splice_site(
     db_path: Path,
     gene_symbol: str,
@@ -425,7 +433,7 @@ def query_same_splice_site(
             WHERE chrom IN (?, ?)
               AND pos = ?
               AND NOT (ref = ? AND alt = ?)
-              AND gene_symbol = ?
+              AND +gene_symbol = ?  -- '+': use idx_chrom_pos (see _GENE_FILTER_NOTE)
               AND star_rating >= ?
               AND clinical_significance IN (
                   'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
@@ -488,7 +496,7 @@ def query_splice_dinucleotide_partner(
             FROM variants
             WHERE chrom IN (?, ?)
               AND pos IN (?, ?)
-              AND gene_symbol = ?
+              AND +gene_symbol = ?  -- '+': use idx_chrom_pos (see _GENE_FILTER_NOTE)
               AND star_rating >= ?
               AND clinical_significance IN (
                   'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
@@ -537,7 +545,7 @@ def query_plp_window(
             FROM variants
             WHERE chrom IN (?, ?)
               AND pos BETWEEN ? AND ?
-              AND gene_symbol = ?
+              AND +gene_symbol = ?  -- '+': use idx_chrom_pos (see _GENE_FILTER_NOTE)
               AND star_rating >= ?
               AND clinical_significance IN (
                   'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
