@@ -61,6 +61,19 @@ def cli(log_level: str):
 # classify
 # ---------------------------------------------------------------------------
 
+def _funcvep_kwargs(assembly, path):
+    """``--funcvep-path`` -> the per-assembly Config override.
+
+    One flag is enough because a run has one assembly; it is mapped to
+    ``funcvep_grch38``/``funcvep_grch37`` so the file is read for that assembly
+    only (and never silently used for the other one's coordinates)."""
+    if path is None:
+        return {}
+    asm = Assembly(assembly) if assembly else Assembly.GRCH38
+    key = "funcvep_grch38" if asm == Assembly.GRCH38 else "funcvep_grch37"
+    return {key: path}
+
+
 def _with_cspec(cfg, cspec):
     """Apply --cspec GENE=CSPEC_ID selections (cspec_overlay) or exit with the choices."""
     if not cspec:
@@ -93,6 +106,11 @@ def _with_cspec(cfg, cspec):
               help="Consult the opt-in CADD scores (must be staged via "
                    "setup_data.py --with-cadd). Licence-gated: applied only when "
                    "--insilico-tool is revel or alphamissense; ignored under esm1b/funcvep.")
+@click.option("--funcvep-path", type=click.Path(exists=True, path_type=Path), default=None,
+              help="FuncVEP-CTI score file (tabix-indexed .tsv.gz or .vcf.gz with CTI=/GENE= in "
+                   "INFO) when it is not under <data-dir>/<assembly>/funcvep/. Applies to the "
+                   "assembly of this run; equivalent to ACMG_FUNCVEP_GRCH38 / ACMG_FUNCVEP_GRCH37. "
+                   "Only read under --insilico-tool funcvep.")
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
@@ -117,6 +135,11 @@ def _with_cspec(cfg, cspec):
                    "criteria the tool left not-met. 'manual-only': for variants listed in "
                    "the supplement, classify purely from it; variants not listed fall back "
                    "to the tool's automated calls.")
+@click.option("--with-mavedb-research", is_flag=True, default=False,
+              help="Also use MaveDB calibrations flagged research-use-only (e.g. ExCALIBR) "
+                   "for PS3/BS3. Not reviewed for clinical use, so off by default. Clinical "
+                   "calibrations still take precedence; for BRCA1/2 only variants absent from "
+                   "ENIGMA Table 9 are evaluated. Env: ACMG_MAVEDB_RESEARCH_USE=true.")
 @click.option("--with-tp53-functional", is_flag=True, default=False,
               help="TP53 PS3/BS3 from the VCEP functional flowchart on the NCI TP53 "
                    "Database assay classes (bundled tp53_functional.tsv). Off by default: "
@@ -150,6 +173,7 @@ def classify(
     data_dir: Path,
     assembly: Optional[str],
     insilico_tool: str,
+    funcvep_path: Optional[Path],
     with_bayesdel: bool,
     with_cadd: bool,
     splice_tool: str,
@@ -159,6 +183,7 @@ def classify(
     supplement: Optional[Path],
     supplement_mode: str,
     with_tp53_functional: bool,
+    with_mavedb_research: bool,
     cspec: tuple[str, ...],
     exclude_self_expert_panel: bool,
     workers: int,
@@ -180,6 +205,7 @@ def classify(
         insilico_tool=InSilicoTool(insilico_tool),
         use_bayesdel=with_bayesdel,
         use_cadd=with_cadd,
+        **_funcvep_kwargs(assembly, funcvep_path),
         splice_tool=SpliceTool(splice_tool),
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
@@ -189,6 +215,7 @@ def classify(
         # Only override when the flag is given, so the env variable still works.
         **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
         **({"use_tp53_functional": True} if with_tp53_functional else {}),
+        **({"mavedb_research_use": True} if with_mavedb_research else {}),
     )
     cfg = _with_cspec(cfg, cspec)
     run_pipeline(
@@ -223,6 +250,11 @@ def classify(
 @click.option("--with-cadd", is_flag=True, default=False,
               help="Consult the opt-in CADD scores (staged via setup_data.py --with-cadd). "
                    "Applied only under --insilico-tool revel/alphamissense; ignored under esm1b/funcvep.")
+@click.option("--funcvep-path", type=click.Path(exists=True, path_type=Path), default=None,
+              help="FuncVEP-CTI score file (tabix-indexed .tsv.gz or .vcf.gz with CTI=/GENE= in "
+                   "INFO) when it is not under <data-dir>/<assembly>/funcvep/. Applies to the "
+                   "assembly of this run; equivalent to ACMG_FUNCVEP_GRCH38 / ACMG_FUNCVEP_GRCH37. "
+                   "Only read under --insilico-tool funcvep.")
 @click.option("--splice-tool",
               type=click.Choice([SpliceTool.OPENSPLICEAI.value, SpliceTool.SPLICEAI.value]),
               default=SpliceTool.OPENSPLICEAI.value, show_default=True,
@@ -251,6 +283,11 @@ def classify(
                    "entries override the strength of any criterion they name and add "
                    "criteria left not-met. 'manual-only': classify purely from the "
                    "supplied evidence.")
+@click.option("--with-mavedb-research", is_flag=True, default=False,
+              help="Also use MaveDB calibrations flagged research-use-only (e.g. ExCALIBR) "
+                   "for PS3/BS3. Not reviewed for clinical use, so off by default. Clinical "
+                   "calibrations still take precedence; for BRCA1/2 only variants absent from "
+                   "ENIGMA Table 9 are evaluated. Env: ACMG_MAVEDB_RESEARCH_USE=true.")
 @click.option("--with-tp53-functional", is_flag=True, default=False,
               help="TP53 PS3/BS3 from the VCEP functional flowchart on the NCI TP53 "
                    "Database assay classes (bundled tp53_functional.tsv). Off by default: "
@@ -284,6 +321,7 @@ def explain(
     data_dir: Path,
     assembly: str,
     insilico_tool: str,
+    funcvep_path: Optional[Path],
     with_bayesdel: bool,
     with_cadd: bool,
     splice_tool: str,
@@ -294,6 +332,7 @@ def explain(
     supplement: Optional[Path],
     supplement_mode: str,
     with_tp53_functional: bool,
+    with_mavedb_research: bool,
     cspec: tuple[str, ...],
     exclude_self_expert_panel: bool,
     transcript: Optional[str],
@@ -315,6 +354,7 @@ def explain(
         insilico_tool=InSilicoTool(insilico_tool),
         use_bayesdel=with_bayesdel,
         use_cadd=with_cadd,
+        **_funcvep_kwargs(assembly, funcvep_path),
         splice_tool=SpliceTool(splice_tool),
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
@@ -322,6 +362,7 @@ def explain(
         supplement_mode=SupplementMode(supplement_mode),
         **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
         **({"use_tp53_functional": True} if with_tp53_functional else {}),
+        **({"mavedb_research_use": True} if with_mavedb_research else {}),
     )
     cfg = _with_cspec(cfg, cspec)
 
@@ -358,6 +399,14 @@ def _somatic_options(f):
         click.option("--openspliceai-model-dir", type=click.Path(path_type=Path), default=None),
         click.option("--openspliceai-flanking-size", type=int, default=80, show_default=True),
         click.option("--spliceai-dir", type=click.Path(path_type=Path), default=None),
+        click.option("--funcvep-path", type=click.Path(exists=True, path_type=Path),
+                     default=None,
+                     help="FuncVEP-CTI score file (tabix-indexed .tsv.gz or .vcf.gz) when it is "
+                          "not under <data-dir>/<assembly>/funcvep/. Only read under "
+                          "--insilico-tool funcvep."),
+        click.option("--with-mavedb-research", is_flag=True, default=False,
+                     help="Also use research-use-only MaveDB calibrations (e.g. ExCALIBR) "
+                          "for OS2/SBS2 via HUVar PS3/BS3. Off by default."),
         click.option("--with-tp53-functional", is_flag=True, default=False,
                      help="Use the NCI TP53 Database assay classes for OS2/SBS2 in TP53 "
                           "(non-commercial use only; default: calibrated MaveDB data)."),
@@ -368,7 +417,8 @@ def _somatic_options(f):
 
 
 def _somatic_config(data_dir, assembly, insilico_tool, splice_tool, openspliceai_model_dir,
-                    openspliceai_flanking_size, spliceai_dir, with_tp53_functional, **extra):
+                    openspliceai_flanking_size, spliceai_dir, with_tp53_functional,
+                    funcvep_path=None, with_mavedb_research=False, **extra):
     from acmg_classifier.config import Config
     return Config(
         data_dir=data_dir,
@@ -378,7 +428,9 @@ def _somatic_config(data_dir, assembly, insilico_tool, splice_tool, openspliceai
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
         spliceai_dir=spliceai_dir,
+        **_funcvep_kwargs(assembly, funcvep_path),
         **({"use_tp53_functional": True} if with_tp53_functional else {}),
+        **({"mavedb_research_use": True} if with_mavedb_research else {}),
         **extra,
     )
 

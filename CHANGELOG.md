@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **Research-use-only MaveDB calibrations (ExCALIBR), opt-in** — `--with-mavedb-research`
+  / `ACMG_MAVEDB_RESEARCH_USE=true` on `classify`, `explain`, `somatic`, `somatic-explain`.
+  `build_mavedb_functional.py` now also writes RUO calibrations (`ruo=1`, plus
+  `cal_title`; `mavedb_scoresets.tsv` gains `research_use_only`); the packaged table is
+  rebuilt from the same 2026-06-24 dump (clinical rows unchanged). RUO rows are not even
+  loaded unless the option is on. Clinical calibrations always take precedence; RUO
+  calibrations are used only for score sets without one, conservatively, with the
+  strength from the calibration label capped by the gene rule. For BRCA1/BRCA2 the
+  ENIGMA Table 9 stays authoritative and only variants absent from it are evaluated
+  with MaveDB, labelled as outside the VCEP specification. A data/shared table built
+  before this change (no `ruo` column) falls back to the packaged one with a warning.
+  Recorded in the provenance. The MaveDB table's repeated fields are now interned
+  (resident memory of the table ~360 → ~220 MB by default; ~530 MB with RUO rows).
 - **FuncVEP-CTI as a PP3/BP4 missense predictor** (`--insilico-tool funcvep`):
   precomputed scores from Kayaalp et al. (Nat Genet 2026, Zenodo
   10.5281/zenodo.18432730), with the per-point strengths of the paper's
@@ -23,7 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `data/<assembly>/funcvep/funcvep_cti_<asm>.tsv.gz` (tabix); `--funcvep-raw`
   auto-detects the Zenodo table, a VCF with `CTI=`/`GENE=` in INFO, or an
   already-normalised 6-column TSV. A tabix-indexed VCF is also read directly
-  (`funcvep_cti_<asm>.vcf.gz`, or any path given by `ACMG_FUNCVEP_GRCH38` /
+  (`funcvep_cti_<asm>.vcf.gz`, or any path given by `--funcvep-path` on
+  `classify` / `explain` / `somatic` / `somatic-explain`, or by `ACMG_FUNCVEP_GRCH38` /
   `ACMG_FUNCVEP_GRCH37`), so a file already prepared for VEP `--custom` can be
   reused without a second multi-GB conversion. **PolyForm Strict
   1.0.0 — non-commercial use only and not redistributable**, so it is never the
@@ -82,6 +96,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   HUVar_app's TransVar service reads it from there.
 
 ### Fixed
+
+- `build_mavedb_functional.py --dump DIR` (an extracted dump) kept nothing because
+  the score files sorted before `main.json`; `main.json` is now read first.
 
 - **ClinVar (and other tabix) lookups dropped records next to non-ASCII lines.**
   Recent ClinVar releases contain UTF-8 disease names (e.g. "Muir-Torré_syndrome");

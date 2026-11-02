@@ -213,6 +213,7 @@ def collect(cfg) -> dict[str, Any]:
         tp53_functional=bool(getattr(cfg, "use_tp53_functional", False) is True),
         functional_assays=bool(getattr(cfg, "functional_assays", True) is True),
         mavedb_calibration=getattr(cfg, "mavedb_calibration", None),
+        mavedb_research_use=bool(getattr(cfg, "mavedb_research_use", False) is True),
         cspec_selection=(dict(getattr(cfg, "cspec_selection", None))
                          if isinstance(getattr(cfg, "cspec_selection", None), dict)
                          and getattr(cfg, "cspec_selection") else None),

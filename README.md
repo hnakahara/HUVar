@@ -557,6 +557,7 @@ Full option list:
 | `--data-dir PATH` | path | `./data` | Data root |
 | `--assembly {GRCh37,GRCh38}` | str | auto-detect from VCF header → fallback `GRCh38` | Force a specific assembly |
 | `--insilico-tool {esm1b,alphamissense,revel,funcvep}` | str | `esm1b` | Missense predictor used for PP3/BP4 (`revel` needs `setup_data.py --with-revel`; `funcvep` needs `--with-funcvep` and is non-commercial) |
+| `--funcvep-path PATH` | path | — | FuncVEP-CTI score file (tabix-indexed `.tsv.gz`, or `.vcf.gz` with `CTI=`/`GENE=` in INFO) when it is not under `<data-dir>/<assembly>/funcvep/`. Applies to the run's `--assembly` only; same as `ACMG_FUNCVEP_GRCH38` / `ACMG_FUNCVEP_GRCH37`. Read only under `--insilico-tool funcvep` |
 | `--with-bayesdel` | flag | off | **Required at classification time** to consult BayesDel for the VCEPs that define PP3/BP4 on it (ENIGMA BRCA1/2, TP53). Without it these genes fall through to the single-tool path and BayesDel is **never queried**. Applied only under `--insilico-tool revel/alphamissense`; the data must also be staged with `setup_data.py --with-bayesdel`. |
 | `--with-cadd` | flag | off | **Required at classification time** to consult CADD for the VCEPs that define PP3/BP4 on it (CTLA4/PIK3CD/PIK3R1/BMPR2/ABCA4). Without it CADD is **never queried**. Applied only under `--insilico-tool revel/alphamissense`; the data must also be staged with `setup_data.py --with-cadd`. |
 | `--splice-tool {openspliceai,spliceai}` | str | `openspliceai` | Splice predictor used for PP3/BP4/PVS1. `openspliceai` (default, GPL-3.0) runs OSAI_MANE at inference time; `spliceai` (Illumina-licensed) uses precomputed VCFs. The splice call takes precedence over the missense call — including on missense variants — when its score ≥ 0.20. |
@@ -565,6 +566,7 @@ Full option list:
 | `--spliceai-dir PATH` | path | `<data-dir>/<asm>/spliceai/` | Override SpliceAI VCF directory (only when `--splice-tool spliceai`) |
 | `--supplement PATH` | path | — | Manual evidence TSV (see below) |
 | `--supplement-mode {merge,manual-only}` | str | `merge` | How `--supplement` combines with the tool's calls (see [Manual evidence supplement](#manual-evidence-supplement)) |
+| `--with-mavedb-research` | flag | off | Also use MaveDB calibrations flagged research-use-only (ExCALIBR) for PS3/BS3: clinical calibrations still win, RUO ones are used only for score sets without one (conservatively); for BRCA1/2 only variants absent from ENIGMA Table 9 are evaluated. Every RUO-based call is labelled "research use only". Env: `ACMG_MAVEDB_RESEARCH_USE=true`. See [Functional assays](#functional-assays-ps3bs3). |
 | `--with-tp53-functional` | flag | off | TP53 PS3/BS3 from the VCEP functional flowchart on the bundled NCI TP53 Database assay classes (`resources/shared/tp53_functional.tsv`). Off by default because the database terms prohibit any use that results in direct or indirect monetization; turn it on for non-commercial use. Env: `ACMG_USE_TP53_FUNCTIONAL=true`. Recorded in the provenance sidecar. |
 | `--cspec GENE=CSPEC_ID` | repeatable | — | Evaluate a gene with several released ClinGen specifications for clinically distinct diseases under the chosen one (as in HUVar_app): RYR1 `malignant_hyperthermia` / `congenital_myopathy_ad` / `congenital_myopathy_ar`; ACTA1 `congenital_myopathy_ad` / `congenital_myopathy_ar`; VWF `vwd_ad` / `vwd_ar` (`resources/shared/disease_prevalence_multispec.tsv`). Without it, the conservative merged specification is used. Also for `explain`. Shown in the warnings column (`CSPEC:`) and recorded in the provenance. |
 | `--transcript ACCESSION` | str | — | `explain` only. Evaluate the criteria on this transcript instead of MANE Select, e.g. the gene's MANE Plus Clinical (`--transcript NM_033360.4`). VCEP position rules and ClinVar codon comparisons keep MANE Select numbering (see *Output format*); the report shows the numbering used and a `TRANSCRIPT:` warning. |
@@ -728,8 +730,8 @@ curated supplement and ClinGen expert-panel calls and before ClinVar text mining
   (`resources/shared/enigma_brca12_table9.tsv`, 4,731 variants): the listed PS3/BS3
   code and strength, matched by c. on the MANE Select transcript. Variants coded
   `None`, or not in the table, get no functional code from assays.
-- **Other genes** — MaveDB score sets with a *clinical* calibration (not
-  research-use-only; ExCALIBR is excluded): `resources/shared/mavedb_functional.tsv.gz`,
+- **Other genes** — MaveDB score sets with a *clinical* calibration (by default not
+  research-use-only; ExCALIBR is opt-in, see below): `resources/shared/mavedb_functional.tsv.gz`,
   built from the MaveDB dump of 2026-06-24 (CC0). Genomic (SGE) data are matched by
   GRCh38 coordinate, protein-level data by the NP_ accession + p. change of any of
   the gene's transcripts. Per score set the MaveDB **primary** calibration is used
@@ -748,6 +750,26 @@ curated supplement and ClinGen expert-panel calls and before ClinVar text mining
   TP53 Database flowchart when `--with-tp53-functional` is on and the variant is in
   it; otherwise the calibrated MaveDB TP53 data (TP53 VCEP caveats with PVS1 and
   splice-based PP3 apply to both).
+- **Research-use-only calibrations (opt-in)** — `--with-mavedb-research`
+  (`ACMG_MAVEDB_RESEARCH_USE=true`) also uses MaveDB calibrations flagged
+  research-use-only, i.e. the ExCALIBR calibrations ("ExCALIBR calibration" and
+  "ExCALIBR calibration (ClinVar 2018)"; 86 calibrations on 61 score sets in the
+  2026-06-24 dump, 46 of which have no clinical calibration — e.g. BRCA2 SGE of
+  exon 13 (incl. cisplatin/olaparib) and exons 15–26, CHEK2, PTEN, TP53). All three
+  BRCA1 score sets (Findlay SGE, growth and multiplexed assays) and the BRCA2 arrayed
+  HDR screen also have a clinical calibration, which is the one used. MaveDB flags them as not reviewed for clinical use, so
+  they are off by default and every call based on them is labelled
+  "research use only" in the evidence. Rules: a score set's **clinical calibration
+  always wins**; RUO calibrations are used only for score sets without one, and
+  then conservatively (all RUO calibrations of the set must agree on PS3 vs BS3,
+  the weakest strength is taken; the strength comes from the calibration's label —
+  ExCALIBR gives points rather than an OddsPath — and is capped by the gene rule).
+  For **BRCA1/BRCA2**, ENIGMA Table 9 stays authoritative: a listed variant
+  (including `None`) keeps the VCEP code, and only variants **absent from Table 9**
+  are evaluated with MaveDB (clinical calibrations first, e.g. the Fayer
+  calibration of the Findlay SGE, then ExCALIBR), labelled as outside the VCEP
+  specification. Genes whose VCEP excludes multiplexed assays (`not_applicable`)
+  are unaffected. Recorded in the provenance (`run_options.mavedb_research_use`).
 
 Refresh the MaveDB table from a newer dump with
 `python scripts/setup_data.py --data-dir <data> --only mavedb` (downloads ~1.9 GB;
@@ -1207,7 +1229,8 @@ Strengths are calibrated to Bergquist et al. *Genet Med* 2024 Table 2.
   (built by `setup_data.py --with-funcvep`) **or** from a tabix-indexed
   `…vcf.gz` carrying `CTI=`/`GENE=` in INFO — so a VCF already prepared for VEP
   `--custom` can be reused as is, without a second multi-GB conversion. Point at a
-  file outside `data/` with `ACMG_FUNCVEP_GRCH38` / `ACMG_FUNCVEP_GRCH37`. See
+  file outside `data/` with `--funcvep-path` (or `ACMG_FUNCVEP_GRCH38` /
+  `ACMG_FUNCVEP_GRCH37`). See
   [Commercial use](#commercial-use).
 - **REVEL** (`--insilico-tool revel`): Strong / ThreePoint / Moderate /
   Supporting for PP3 (`≥0.932 / ≥0.879 / ≥0.773 / ≥0.644`); Strong / ThreePoint

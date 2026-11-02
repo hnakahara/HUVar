@@ -161,6 +161,13 @@ class Config(BaseSettings):
     # its clinical calibrations; disagreeing calibrations -> no call).
     # Env: ACMG_MAVEDB_CALIBRATION.
     mavedb_calibration: str = "primary"
+    # Also use MaveDB calibrations flagged research-use-only (e.g. ExCALIBR) — not
+    # reviewed for clinical use, so OFF by default. When on, a score set's clinical
+    # calibration still wins; RUO calibrations are used only for score sets without
+    # one (conservatively), and for BRCA1/BRCA2 only for variants absent from the
+    # ENIGMA Table 9 (which stays authoritative). See criteria/functional_assays.py.
+    # --with-mavedb-research / Env: ACMG_MAVEDB_RESEARCH_USE=true.
+    mavedb_research_use: bool = False
     # Somatic oncogenicity (ClinGen/CGC/VICC SOP, Horak et al. 2022; acmg-classify
     # somatic). OP4 "absent from controls or at an extremely low frequency": met
     # when the variant is absent from gnomAD or its grpmax (popmax) allele frequency

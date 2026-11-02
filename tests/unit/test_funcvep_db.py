@@ -133,3 +133,38 @@ class TestIndexedFiles:
     def test_missing_file_returns_none(self, tmp_path):
         from acmg_classifier.local_db.funcvep_db import query_funcvep
         assert query_funcvep(tmp_path / "nope.vcf.gz", "17", 1, "G", "A") is None
+
+
+class TestCliPathOption:
+    """--funcvep-path binds to the assembly of the run, so a file for one build is
+    never read against the other build's coordinates."""
+
+    def test_maps_to_the_run_assembly(self, tmp_path):
+        from acmg_classifier.cli import _funcvep_kwargs
+        p = tmp_path / "FuncVEP_CTI_hg38.vcf.gz"
+        assert _funcvep_kwargs("GRCh38", p) == {"funcvep_grch38": p}
+        assert _funcvep_kwargs("GRCh37", p) == {"funcvep_grch37": p}
+        assert _funcvep_kwargs(None, p) == {"funcvep_grch38": p}   # CLI default
+        assert _funcvep_kwargs("GRCh38", None) == {}
+
+    def test_config_resolves_only_that_assembly(self, tmp_path):
+        from acmg_classifier.cli import _funcvep_kwargs
+        from acmg_classifier.config import Config
+        from acmg_classifier.models.enums import Assembly, InSilicoTool
+        p = tmp_path / "FuncVEP_CTI_hg38.vcf.gz"
+        p.write_bytes(b"")
+        kw = _funcvep_kwargs("GRCh38", p)
+        cfg38 = Config(data_dir=tmp_path / "data", assembly=Assembly.GRCH38,
+                       insilico_tool=InSilicoTool.FUNCVEP, **kw)
+        assert cfg38.funcvep_scores == p
+        cfg37 = Config(data_dir=tmp_path / "data", assembly=Assembly.GRCH37,
+                       insilico_tool=InSilicoTool.FUNCVEP, **kw)
+        assert cfg37.funcvep_scores != p
+        assert cfg37.funcvep_scores.name == "funcvep_cti_grch37.tsv.gz"
+
+    def test_option_is_exposed_on_every_command(self):
+        from click.testing import CliRunner
+        from acmg_classifier.cli import cli
+        for command in ("classify", "explain", "somatic", "somatic-explain"):
+            out = CliRunner().invoke(cli, [command, "--help"]).output
+            assert "--funcvep-path" in out, command

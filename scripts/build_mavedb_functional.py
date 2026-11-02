@@ -4,23 +4,30 @@
 Reads a MaveDB bulk dump (``mavedb-dump.<timestamp>.tar.gz`` from Zenodo, or the
 extracted directory). The dump holds only published, CC0-licensed data.
 
-Kept: score sets that have at least one *clinical* score calibration — not
-research-use-only, with ACMG/AMP classifications (PS3/BS3 + evidence strength)
-on its functional ranges — and are not superseded by another score set in the
-dump. ExCALIBR and other research-use-only calibrations are dropped.
+Kept: score sets that are not superseded by another score set in the dump and
+have at least one calibration with ACMG/AMP classifications (PS3/BS3 + evidence
+strength) on its functional ranges:
+
+* *clinical* calibrations (not research-use-only) — used by default;
+* *research-use-only* (RUO) calibrations, e.g. ExCALIBR — written with ``ruo=1``
+  and consulted only when the user opts in (``Config.mavedb_research_use``,
+  ``--with-mavedb-research``). They are flagged research-use-only by MaveDB
+  because they have not been reviewed for clinical use; the data stay CC0.
 
 For every mapped variant (current MaveDB mapping) the score is placed in each
-clinical calibration's functional ranges (numeric ranges, or class labels read
-from the score set's own class column), giving one row per (variant,
-calibration). The runtime (``criteria/functional_assays.py``) picks the
-calibration (primary / most conservative) and re-derives the strength from the
-range's OddsPath with the VCEP or Brnich et al. 2019 thresholds.
+calibration's functional ranges (numeric ranges, or class labels read from the
+score set's own class column), giving one row per (variant, calibration). The
+runtime (``criteria/functional_assays.py``) picks the calibration (primary / most
+conservative; clinical before RUO) and re-derives the strength from the range's
+OddsPath with the VCEP or Brnich et al. 2019 thresholds.
 
 Outputs (``--out-dir``, default resources/shared):
   mavedb_functional.tsv.gz   gene, urn, level, key, score, cal_urn, primary,
-                             criterion, mavedb_strength, oddspath, label
+                             criterion, mavedb_strength, oddspath, label, ruo, cal_title
        level = genomic (key chrN:pos:ref:alt, GRCh38) or protein (key NP_xxx:p.Xxx123Yyy)
-  mavedb_scoresets.tsv       one row per kept score set (metadata, calibrations)
+       ruo   = 1 for a research-use-only calibration, else 0
+  mavedb_scoresets.tsv       one row per kept score set (metadata, calibrations;
+                             research_use_only lists the RUO calibrations)
 
 Usage:
   python scripts/build_mavedb_functional.py --dump mavedb-dump.2026062418131.tar.gz
@@ -46,9 +53,11 @@ _HGVS_P = re.compile(r"^(N[PM]_\d+)(?:\.\d+)?:(p\.[A-Za-z]{3}\d+(?:[A-Za-z]{3}|=
 def _iter_dump(dump: Path):
     """Yield (relative path, bytes-reader) for the files of the dump (tar.gz or dir)."""
     if dump.is_dir():
-        for p in sorted(dump.rglob("*")):
-            if p.is_file() and not p.name.startswith("._"):
-                yield str(p.relative_to(dump)), p.open("rb")
+        # main.json first: the score/mapping files are only kept once it is read
+        # (a plain sorted walk yields csv/... before main.json and kept nothing).
+        files = [p for p in dump.rglob("*") if p.is_file() and not p.name.startswith("._")]
+        for p in sorted(files, key=lambda p: (p.name != "main.json", str(p))):
+            yield str(p.relative_to(dump)), p.open("rb")
         return
     with tarfile.open(dump, "r|gz") as tf:
         for m in tf:
@@ -58,9 +67,21 @@ def _iter_dump(dump: Path):
             yield name, tf.extractfile(m)
 
 
+def _has_acmg(cal: dict) -> bool:
+    return any(f.get("acmgClassification") for f in cal.get("functionalClassifications") or [])
+
+
 def _clinical(cal: dict) -> bool:
-    return (not cal.get("researchUseOnly")
-            and any(f.get("acmgClassification") for f in cal.get("functionalClassifications") or []))
+    return not cal.get("researchUseOnly") and _has_acmg(cal)
+
+
+def _research_only(cal: dict) -> bool:
+    """Research-use-only calibration with ACMG classes (e.g. ExCALIBR)."""
+    return bool(cal.get("researchUseOnly")) and _has_acmg(cal)
+
+
+def _usable_cal(cal: dict) -> bool:
+    return _clinical(cal) or _research_only(cal)
 
 
 def _in_range(v: float, f: dict) -> bool:
@@ -110,7 +131,7 @@ def build(dump: Path, out_dir: Path) -> dict:
                     for s in e["scoreSets"]]
             urns = {s["urn"] for s in sets}
             for s in sets:
-                if not any(_clinical(c) for c in s.get("scoreCalibrations") or []):
+                if not any(_usable_cal(c) for c in s.get("scoreCalibrations") or []):
                     continue
                 sup = (s.get("supersedingScoreSet") or {})
                 sup_urn = sup.get("urn") if isinstance(sup, dict) else sup
@@ -138,7 +159,9 @@ def build(dump: Path, out_dir: Path) -> dict:
     for prefix, s in sorted(wanted.items()):
         t = s["targetGenes"][0]
         gene = t.get("mappedHgncName") or t.get("name") or ""
-        cals = [c for c in s["scoreCalibrations"] if _clinical(c)]
+        # Clinical calibrations first, then research-use-only ones (ruo=1).
+        cals = ([c for c in s["scoreCalibrations"] if _clinical(c)]
+                + [c for c in s["scoreCalibrations"] if _research_only(c)])
         score_rows = scores.get(prefix) or []
         by_acc = {r["accession"]: r for r in score_rows}
         class_cols = {c["urn"]: _class_column(c, score_rows) for c in cals
@@ -178,6 +201,8 @@ def build(dump: Path, out_dir: Path) -> dict:
                     a.get("criterion", ""), a.get("evidenceStrength", ""),
                     "" if (hit or {}).get("oddspathsRatio") is None else f"{hit['oddspathsRatio']:.6g}",
                     (hit or {}).get("label", "") or "",
+                    "1" if c.get("researchUseOnly") else "0",
+                    c.get("title", "") or "",
                 ])
             n += 1
         pub = (s.get("primaryPublicationIdentifiers") or [{}])[0]
@@ -186,20 +211,23 @@ def build(dump: Path, out_dir: Path) -> dict:
         sets_out.append([
             gene, s["urn"], s.get("title", ""), pub.get("identifier", ""), first.split(",")[0],
             str(pub.get("publicationYear") or ""), "/".join(sorted(levels)), str(n),
-            " | ".join(f"{c['urn']}{'*' if c.get('primary') else ''} {c['title']}" for c in usable),
+            " | ".join(f"{c['urn']}{'*' if c.get('primary') else ''} {c['title']}"
+                       for c in usable if not c.get("researchUseOnly")),
+            " | ".join(f"{c['urn']} {c['title']}" for c in usable if c.get("researchUseOnly")),
         ])
 
     with gzip.open(out_dir / "mavedb_functional.tsv.gz", "wt", encoding="utf-8", newline="") as fh:
         fh.write(f"# MaveDB functional evidence (CC0); dump asOf {meta.get('asOf')}\n")
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(["gene", "urn", "level", "key", "score", "cal_urn", "primary",
-                    "criterion", "mavedb_strength", "oddspath", "label"])
+                    "criterion", "mavedb_strength", "oddspath", "label", "ruo", "cal_title"])
         w.writerows(rows_out)
     with (out_dir / "mavedb_scoresets.tsv").open("w", encoding="utf-8", newline="") as fh:
-        fh.write(f"# MaveDB score sets with clinical calibrations; dump asOf {meta.get('asOf')}\n")
+        fh.write(f"# MaveDB score sets with clinical and/or research-use-only calibrations; "
+                 f"dump asOf {meta.get('asOf')}\n")
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(["gene", "urn", "title", "publication", "first_author", "year", "level",
-                    "n_mapped", "calibrations"])
+                    "n_mapped", "calibrations", "research_use_only"])
         w.writerows(sets_out)
     return {"asOf": meta.get("asOf"), "score_sets": len(sets_out), "rows": len(rows_out)}
 

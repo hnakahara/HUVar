@@ -126,3 +126,98 @@ def test_tp53_uses_mavedb_when_nci_data_off():
     bs3 = [r for r in ManualBenignEvaluator(_cfg()).evaluate(_v("chr17"), ann)
            if r.criterion == ACMGCriterion.BS3][0]
     assert bs3.triggered and bs3.evidence.startswith(SRC_MAVEDB)
+
+
+# ---------------------------------------------------------------------------
+# Research-use-only MaveDB calibrations (ExCALIBR), opt-in
+# ---------------------------------------------------------------------------
+
+def _ruo_cfg(**kw):
+    return _cfg(mavedb_research_use=True, **kw)
+
+
+def test_ruo_rows_not_loaded_by_default():
+    from acmg_classifier.criteria.functional_assays import _REPO, _is_ruo, load_mavedb
+    path = _REPO / "mavedb_functional.tsv.gz"
+    assert not any(_is_ruo(r) for rs in load_mavedb(path, False).values() for r in rs)
+    assert any(_is_ruo(r) for rs in load_mavedb(path, True).values() for r in rs)
+
+
+def test_ruo_only_score_set_used_when_opted_in():
+    # CHEK2 has no clinical MaveDB calibration, only ExCALIBR (research use only).
+    ann = _ann("CHEK2", "NM_007194.4", "NP_009125.1:p.Gly14Trp")
+    assert FunctionalAssays(_cfg()).call(_v("chr22"), ann) is None
+    fa = FunctionalAssays(_ruo_cfg()).call(_v("chr22"), ann)
+    assert fa.criterion == ACMGCriterion.PS3 and fa.strength is not None
+    assert "research use only" in fa.evidence and "ExCALIBR" in fa.evidence
+    assert fa.evidence.startswith(SRC_MAVEDB)
+
+
+def test_brca_table9_stays_authoritative_with_ruo():
+    fa = FunctionalAssays(_ruo_cfg())
+    ps3 = fa.call(_v("chr17"), _ann("BRCA1", "NM_007294.4", hgvs_c="NM_007294.4:c.100C>T"))
+    assert ps3.evidence.startswith(SRC_ENIGMA_T9) and ps3.criterion == ACMGCriterion.PS3
+    none = fa.call(_v("chr17"), _ann("BRCA1", "NM_007294.4", hgvs_c="NM_007294.4:c.100C>A"))
+    assert none.criterion is None and "Table 9: None" in none.evidence
+
+
+def test_brca2_not_in_table9_uses_excalibr_when_opted_in():
+    v = _v("chr13", 32356429, "T", "A")
+    ann = _ann("BRCA2", "NM_000059.4", hgvs_c="NM_000059.4:c.99999T>A")
+    assert FunctionalAssays(_cfg()).call(v, ann) is None          # default unchanged
+    fa = FunctionalAssays(_ruo_cfg()).call(v, ann)
+    assert fa.criterion == ACMGCriterion.PS3
+    assert "research use only" in fa.evidence
+    assert "outside the VCEP specification" in fa.evidence and "not in ENIGMA Table 9" in fa.evidence
+    assert fa.strength in (S.SUPPORTING, S.MODERATE, S.STRONG)   # capped at the BRCA2 maximum
+
+
+def test_clinical_calibration_beats_ruo_in_the_same_score_set():
+    # BRCA1 SGE (00000097-0-2): Fayer is the clinical primary; ExCALIBR rows are ignored.
+    v = _v("chr17", 43045709, "A", "G")
+    ann = _ann("BRCA1", "NM_007294.4", hgvs_c="NM_007294.4:c.99999A>G")
+    fa = FunctionalAssays(_ruo_cfg()).call(v, ann)
+    assert fa.criterion == ACMGCriterion.PS3 and fa.strength == S.STRONG
+    assert "OddsPath 52.4" in fa.evidence                         # Fayer calibration
+    assert "research use only:" not in fa.evidence
+    assert "outside the VCEP specification" in fa.evidence
+
+
+def test_disagreeing_ruo_calibrations_give_no_call():
+    # ExCALIBR (PS3) vs ExCALIBR ClinVar 2018 (indeterminate) for the same score set.
+    v = _v("chr13", 32363391, "C", "T")
+    ann = _ann("BRCA2", "NM_000059.4", hgvs_c="NM_000059.4:c.99999C>T")
+    fa = FunctionalAssays(_ruo_cfg()).call(v, ann)
+    assert fa is None or fa.criterion is None
+
+
+def test_not_applicable_gene_unaffected_by_ruo():
+    # F9: VCEP gene not listed in the rules -> MaveDB never used, RUO or not.
+    ann = _ann("F9", "NM_000133.4", "NP_000124.1:p.Arg379Gln")
+    assert FunctionalAssays(_ruo_cfg()).call(_v("chrX"), ann) is None
+
+
+def test_old_data_table_without_ruo_column_falls_back_to_packaged(tmp_path):
+    # A data/shared copy built before RUO support (no ruo column) must not make the
+    # option a silent no-op.
+    import gzip
+    from acmg_classifier.criteria.functional_assays import _REPO
+    shared = tmp_path / "shared"
+    shared.mkdir()
+    with gzip.open(_REPO / "mavedb_functional.tsv.gz", "rt", encoding="utf-8") as src, \
+            gzip.open(shared / "mavedb_functional.tsv.gz", "wt", encoding="utf-8") as dst:
+        for ln in src:
+            cols = ln.rstrip("\n").split("\t")
+            if ln.startswith("#"):
+                dst.write(ln)
+            elif cols[0] == "gene":
+                dst.write("\t".join(cols[:11]) + "\n")
+            elif cols[11] == "0":
+                dst.write("\t".join(cols[:11]) + "\n")
+    cfg = Config(data_dir=tmp_path, mavedb_research_use=True)
+    fa = FunctionalAssays(cfg)
+    assert fa._mavedb_path == _REPO / "mavedb_functional.tsv.gz"
+    hit = fa.call(_v("chr22"), _ann("CHEK2", "NM_007194.4", "NP_009125.1:p.Gly14Trp"))
+    assert hit is not None and "research use only" in hit.evidence
+    # Without the option the data copy is used as before.
+    assert FunctionalAssays(Config(data_dir=tmp_path))._mavedb_path == shared / "mavedb_functional.tsv.gz"

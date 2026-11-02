@@ -1529,7 +1529,8 @@ MAVEDB_DUMP_URL = ("https://zenodo.org/records/20840937/files/"
 
 def step_mavedb(data_dir: Path, dump: Path | None = None, force: bool = False) -> bool:
     """Build data/shared/mavedb_functional.tsv.gz (+ mavedb_scoresets.tsv) from a
-    MaveDB dump: score sets with clinical (non research-use-only) calibrations."""
+    MaveDB dump: score sets with clinical calibrations, plus research-use-only ones
+    (e.g. ExCALIBR) written with ruo=1 and read only under --with-mavedb-research."""
     shared = data_dir / "shared"
     out = shared / "mavedb_functional.tsv.gz"
     if out.exists() and not force and dump is None:

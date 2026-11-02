@@ -20,6 +20,20 @@ Genes whose VCEP restricts PS3/BS3 to an approved assay list or decision tree th
 does not include multiplexed assays (``not_applicable``; by default every gene with
 a VCEP specification that is not listed in the rules table) get nothing from MaveDB.
 
+Research-use-only calibrations (opt-in, ``Config.mavedb_research_use`` /
+``--with-mavedb-research``; e.g. ExCALIBR). MaveDB flags these as not reviewed for
+clinical use, so they are never read by default. When enabled:
+
+* a score set's clinical calibrations always take precedence; its RUO
+  calibrations are used only when it has no clinical one, and then
+  conservatively (all RUO calibrations must agree on PS3 vs BS3; the weakest
+  strength is used; any disagreement gives no call);
+* for ENIGMA-governed BRCA1/BRCA2, Table 9 stays authoritative — a variant listed
+  there (including "None") keeps the VCEP code — and only variants absent from
+  Table 9 are evaluated with MaveDB (clinical calibrations first, then RUO);
+* ``not_applicable`` genes are unaffected (their VCEP excludes multiplexed assays);
+* the evidence text marks every RUO-based call "research use only".
+
 Safeguards: null consequences (PVS1 territory) are skipped; protein-level (cDNA)
 assays do not measure splicing, so BS3 from them is withheld when the splice
 predictor gives >= 0.2 (ENIGMA's SpliceAI cutoff) or no prediction.
@@ -109,13 +123,31 @@ def load_rules(path: Path) -> dict[str, dict]:
     return {r["gene"]: r for r in _rows(path)}
 
 
+def _is_ruo(r: dict) -> bool:
+    return (r.get("ruo") or "0") == "1"
+
+
 @lru_cache(maxsize=4)
-def load_mavedb(path: Path) -> dict[str, list[dict]]:
-    """key (chrN:pos:ref:alt or NP_x:p.X) -> rows (one per score set x calibration)."""
+def load_mavedb(path: Path, research_use: bool = False) -> dict[str, list[dict]]:
+    """key (chrN:pos:ref:alt or NP_x:p.X) -> rows (one per score set x calibration).
+
+    Research-use-only rows (``ruo=1``) are kept only when ``research_use`` is set,
+    so the default run neither reads nor holds them in memory. Tables built before
+    the ``ruo`` column existed contain clinical rows only."""
     out: dict[str, list[dict]] = {}
     if not path.exists():
         return out
+    from sys import intern
     for r in _rows(path):
+        if _is_ruo(r) and not research_use:
+            continue
+        # Most fields repeat across hundreds of thousands of rows (gene, score-set and
+        # calibration URNs, labels): interning them roughly halves the table's memory.
+        for f in ("gene", "urn", "level", "cal_urn", "primary", "criterion",
+                  "mavedb_strength", "label", "ruo", "cal_title"):
+            v = r.get(f)
+            if v is not None:
+                r[f] = intern(v)
         out.setdefault(r["key"], []).append(r)
     return out
 
@@ -134,6 +166,18 @@ def load_table9(path: Path) -> dict[tuple[str, str], dict]:
     return {(r["gene"], r["hgvs_c"]): r for r in _rows(path)}
 
 
+@lru_cache(maxsize=8)
+def _has_ruo_column(path: Path) -> bool:
+    """Whether a MaveDB table carries the ``ruo`` column (built since RUO support)."""
+    if not path.exists():
+        return False
+    with _open(path) as fh:
+        for ln in fh:
+            if not ln.startswith("#"):
+                return "ruo" in ln.rstrip("\n").split("\t")
+    return False
+
+
 def _strength_of(name: str) -> Optional[CriterionStrength]:
     return _FROM_TEXT.get((name or "").strip().lower().replace(" ", "_"))
 
@@ -145,10 +189,24 @@ class FunctionalAssays:
         self._cfg = cfg
         self._enabled = getattr(cfg, "functional_assays", True) is True
         self._mode = getattr(cfg, "mavedb_calibration", "primary")
+        self._ruo = getattr(cfg, "mavedb_research_use", False) is True
         self._rules = load_rules(_resolve(getattr(cfg, "functional_rules_tsv", None),
                                           "functional_evidence_rules.tsv"))
         self._mavedb_path = _resolve(getattr(cfg, "mavedb_functional_tsv", None), "mavedb_functional.tsv.gz")
         self._sets_path = _resolve(getattr(cfg, "mavedb_scoresets_tsv", None), "mavedb_scoresets.tsv")
+        if self._ruo and not _has_ruo_column(self._mavedb_path):
+            # A data/shared copy built before RUO support holds clinical rows only,
+            # which would make the option a silent no-op: use the packaged table
+            # (same pinned MaveDB release) and say so.
+            packaged = _REPO / "mavedb_functional.tsv.gz"
+            if packaged != self._mavedb_path and _has_ruo_column(packaged):
+                import structlog
+                structlog.get_logger().warning(
+                    "mavedb_table_without_ruo", path=str(self._mavedb_path),
+                    using=str(packaged),
+                    hint="rebuild with setup_data.py --only mavedb --force-mavedb")
+                self._mavedb_path = packaged
+                self._sets_path = _REPO / "mavedb_scoresets.tsv"
         self._t9_path = _resolve(getattr(cfg, "enigma_table9_tsv", None), "enigma_brca12_table9.tsv")
         from acmg_classifier.classification.gene_validity import _vcep_genes
         # VCEP genes decide the not_applicable default; fall back to the packaged
@@ -177,7 +235,13 @@ class FunctionalAssays:
         policy, ps3_max, bs3_max, spec = self.policy(pc.gene_symbol)
         if policy == "enigma_table9":
             # VCEP-curated per variant, splicing included: applied as listed.
-            return self._table9(annotation, pc.gene_symbol)
+            t9 = self._table9(annotation, pc.gene_symbol)
+            if t9 is not None or not self._ruo or pc.consequence in _NULL:
+                return t9
+            # Opt-in (research use): a variant absent from Table 9 is evaluated
+            # with MaveDB, labelled as outside the ENIGMA specification.
+            return self._mavedb(variant, annotation, pc, ps3_max, bs3_max,
+                                f"{spec}; not in ENIGMA Table 9", beyond_vcep=True)
         if policy != "oddspath" or pc.consequence in _NULL:
             return None
         return self._mavedb(variant, annotation, pc, ps3_max, bs3_max, spec)
@@ -219,21 +283,38 @@ class FunctionalAssays:
         return keys
 
     def _per_set(self, rows: list[dict]) -> tuple[Optional[str], Optional[CriterionStrength], dict]:
-        """Calibration choice for one score set -> (criterion, Brnich strength, row used)."""
-        def derive(r):
-            crit = r["criterion"]
-            if crit not in ("PS3", "BS3"):
-                return None, None
-            if r["oddspath"]:
-                st = oddspath_strength(crit, float(r["oddspath"]))
-            else:
-                st = _strength_of(r["mavedb_strength"])
-            return (crit, st) if st else (None, None)
+        """Calibration choice for one score set -> (criterion, Brnich strength, row used).
 
+        Clinical calibrations take precedence; research-use-only ones (present only
+        when opted in) are used when the set has no clinical calibration, and then
+        always conservatively (none of them is a MaveDB primary for clinical use)."""
+        clinical = [r for r in rows if not _is_ruo(r)]
+        if clinical:
+            return self._choose(clinical)
+        return self._conservative(rows)
+
+    def _choose(self, rows: list[dict]) -> tuple[Optional[str], Optional[CriterionStrength], dict]:
+        """Clinical calibrations: the MaveDB primary, or the most conservative."""
         primary = [r for r in rows if r["primary"] == "1"]
         if self._mode == "primary" and primary:
-            c, st = derive(primary[0])
+            c, st = self._derive(primary[0])
             return c, st, primary[0]
+        return self._conservative(rows)
+
+    @staticmethod
+    def _derive(r: dict) -> tuple[Optional[str], Optional[CriterionStrength]]:
+        crit = r["criterion"]
+        if crit not in ("PS3", "BS3"):
+            return None, None
+        if r["oddspath"]:
+            st = oddspath_strength(crit, float(r["oddspath"]))
+        else:
+            st = _strength_of(r["mavedb_strength"])
+        return (crit, st) if st else (None, None)
+
+    def _conservative(self, rows: list[dict]) -> tuple[Optional[str], Optional[CriterionStrength], dict]:
+        """All calibrations must agree on the criterion; the weakest strength wins."""
+        derive = self._derive
         derived = [(derive(r), r) for r in rows]
         crits = {c for (c, _), _ in derived}
         if len(crits) != 1 or None in crits:
@@ -241,8 +322,9 @@ class FunctionalAssays:
         (c, _), r = min(derived, key=lambda x: _RANK[x[0][1]])
         return c, min((st for (_, st), _ in derived), key=lambda s: _RANK[s]), r
 
-    def _mavedb(self, variant, annotation, pc, ps3_max, bs3_max, spec) -> Optional[FunctionalCall]:
-        table = load_mavedb(self._mavedb_path)
+    def _mavedb(self, variant, annotation, pc, ps3_max, bs3_max, spec,
+                beyond_vcep: bool = False) -> Optional[FunctionalCall]:
+        table = load_mavedb(self._mavedb_path, self._ruo)
         hits: dict[str, list[dict]] = {}
         level: dict[str, str] = {}
         for lvl, k in self._keys(variant, annotation, pc):
@@ -257,15 +339,22 @@ class FunctionalAssays:
         sp = annotation.splice
         splice = sp.max_delta if (sp is not None and sp.is_available) else None
         calls, notes = [], []
+        used_ruo = used_label = False
         for urn, rows in sorted(hits.items()):
             crit, st, r = self._per_set(rows)
             meta = sets.get(urn, {})
             ref = (f"{meta.get('first_author', '')} {meta.get('year', '')}".strip()
                    or meta.get("title", "")) + (f", PMID {meta['publication']}"
                                                 if meta.get("publication", "").isdigit() else "")
+            ruo = _is_ruo(r)
+            used_ruo = used_ruo or ruo
+            if crit is not None and not r["oddspath"]:
+                used_label = True
             desc = (f"{urn} ({ref}) score={r['score']}"
                     + (f" in '{r['label']}'" if r["label"] else "")
-                    + (f", OddsPath {r['oddspath']}" if r["oddspath"] else ""))
+                    + (f", OddsPath {r['oddspath']}" if r["oddspath"] else "")
+                    + (f" [research use only: {r.get('cal_title') or 'RUO calibration'}]"
+                       if ruo else ""))
             if crit is None:
                 notes.append(f"{desc}: indeterminate")
                 continue
@@ -282,6 +371,13 @@ class FunctionalAssays:
             calls.append((crit, capped, f"{desc} -> {crit}_{capped.value}{tag}"))
         basis = ("calibration: MaveDB primary" if self._mode == "primary"
                  else "calibration: most conservative") + "; strength per Brnich et al. 2019 OddsPath"
+        if used_label:
+            basis += "; strength from the MaveDB calibration label where no OddsPath is given"
+        if used_ruo:
+            basis += ("; includes research-use-only calibrations (not reviewed for clinical "
+                      "use; most conservative)")
+        if beyond_vcep:
+            basis += f"; outside the VCEP specification ({spec})"
         if not calls:
             return FunctionalCall(None, None, f"{SRC_MAVEDB} " + "; ".join(notes) + f" [{basis}]")
         best = {c: max((x for x in calls if x[0] == c), key=lambda x: _RANK[x[1]], default=None)
