@@ -59,12 +59,40 @@ class TestPp3Splice:
         ev._cfg = cfg
         return ev
 
-    def test_missense_keeps_stronger_protein_call(self):
+    def test_missense_splice_takes_precedence(self):
+        # Default: a predicted splice impact decides PP3 (Supporting), even over a
+        # stronger protein-level call, which stays in the evidence text.
         ev = self._ev()
+        ann = AnnotationData(gnomad=GnomADData(), consequences=[_pc("BRCA1")],
+                             splice=SpliceScore(tool="openspliceai", max_delta=0.6, is_available=True))
+        prot = CriteriaResult.met(ACMGCriterion.PP3, S.STRONG, "REVEL=0.95 (Strong)")
+        r = ev._with_missense_splice(ann.consequences[0], ann, prot)
+        assert r.triggered and r.strength == S.SUPPORTING
+        assert r.evidence.startswith("OpenSpliceAI") and "takes precedence" in r.evidence
+        assert "REVEL=0.95" in r.evidence and "splice impact" in r.evidence
+
+    def test_missense_no_splice_impact_keeps_protein_call(self):
+        ev = self._ev()
+        ann = AnnotationData(gnomad=GnomADData(), consequences=[_pc("BRCA1")],
+                             splice=SpliceScore(tool="spliceai", max_delta=0.05, is_available=True))
+        prot = CriteriaResult.met(ACMGCriterion.PP3, S.STRONG, "REVEL=0.95 (Strong)")
+        assert ev._with_missense_splice(ann.consequences[0], ann, prot) is prot
+
+    def test_missense_strongest_mode_keeps_stronger_protein_call(self):
+        ev = self._ev()
+        ev._cfg.pp3_missense_priority = "strongest"
         ann = AnnotationData(gnomad=GnomADData(), consequences=[_pc("BRCA1")],
                              splice=SpliceScore(tool="spliceai", max_delta=0.6, is_available=True))
         prot = CriteriaResult.met(ACMGCriterion.PP3, S.STRONG, "REVEL=0.95 (Strong)")
         assert ev._with_missense_splice(ann.consequences[0], ann, prot).strength == S.STRONG
+
+    def test_priority_config_validated(self):
+        import pytest
+        from acmg_classifier.config import Config
+        assert Config().pp3_missense_priority == "splice"
+        assert Config(pp3_missense_priority="Strongest").pp3_missense_priority == "strongest"
+        with pytest.raises(Exception):
+            Config(pp3_missense_priority="protein")
 
     def test_missense_splice_rescues_unmet_protein(self):
         ev = self._ev()

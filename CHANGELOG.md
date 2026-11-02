@@ -109,6 +109,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **PP3 for missense variants: the splice prediction takes precedence.** When
+  OpenSpliceAI / SpliceAI reaches the gene's cutoff (default ≥ 0.20), PP3 is
+  Supporting from the splice prediction even if the protein-level predictor gives a
+  stronger call; the protein-level call stays in the evidence text ("splice prediction
+  takes precedence over the protein-level call"). Previously the stronger of the two was
+  used. Matches the ENIGMA BRCA1/2 flowchart and the BP4 side. `ACMG_PP3_MISSENSE_PRIORITY=
+  strongest` restores the previous rule; recorded in the provenance (`run_options`).
+  README: SpliceAI-based PP3 is Supporting (as implemented), not Moderate.
 - **PM2 for the InSiGHT MMR genes (MLH1, MSH2, MSH6, PMS2) uses the overall gnomAD
   allele frequency** (`pm2_basis=global`), as worded in GN115/GN137/GN138/GN139
   ("allele frequency <0.00002 ... in gnomAD v4 dataset"), instead of the GrpMax

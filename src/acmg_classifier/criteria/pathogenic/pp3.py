@@ -213,10 +213,15 @@ class PP3Evaluator(CriterionEvaluator):
 
     def _with_missense_splice(self, pc, annotation: AnnotationData,
                               protein: CriteriaResult) -> CriteriaResult:
-        """A missense variant can also act through splicing (Walker 2023): PP3
-        is the stronger of the protein-level predictor and the splice
-        prediction (Supporting at the gene's SpliceAI cutoff). The splice route
-        no longer pre-empts a stronger protein-level call."""
+        """A missense variant can also act through splicing (Walker 2023).
+
+        When the splice predictor (SpliceAI / OpenSpliceAI) reaches the gene's
+        cutoff, PP3 is based on the splice prediction (Supporting), whatever the
+        protein-level predictor gives — the splice prediction takes precedence,
+        as in the ENIGMA BRCA1/2 flowchart and on the BP4 side. The two are never
+        combined; the protein-level call is kept in the evidence text.
+        ``Config.pp3_missense_priority = "strongest"`` (ACMG_PP3_MISSENSE_PRIORITY)
+        restores the former rule: the stronger of the two calls."""
         sp = annotation.splice
         if not (sp and sp.is_available and sp.max_delta is not None
                 and sp.tool in ("spliceai", "openspliceai")):
@@ -224,15 +229,19 @@ class PP3Evaluator(CriterionEvaluator):
         cut, strict = _splice_cutoff(pc.gene_symbol)
         if _spliceai_pp3(sp.max_delta, cut, strict) is None:
             return protein
-        if protein.triggered and _RANK.get(protein.strength, 0) >= _RANK[CriterionStrength.SUPPORTING]:
+        strongest = getattr(self._cfg, "pp3_missense_priority", "splice") == "strongest"
+        if strongest and protein.triggered and \
+                _RANK.get(protein.strength, 0) >= _RANK[CriterionStrength.SUPPORTING]:
             return protein
         label = "SpliceAI" if sp.tool == "spliceai" else "OpenSpliceAI"
         cut_note = (f" [{pc.gene_symbol} VCEP cutoff {'>' if strict else '>='}{cut:g}]"
                     if pc.gene_symbol in _PP3_SPLICE_CUTOFF else "")
+        prec = (" (splice prediction takes precedence over the protein-level call)"
+                if protein.triggered else "")
         return CriteriaResult.met(
             ACMGCriterion.PP3, CriterionStrength.SUPPORTING,
             f"{label} max_delta={sp.max_delta:.3f}{cut_note} (Supporting) — missense "
-            f"with predicted splice impact; protein-level: {protein.evidence}",
+            f"with predicted splice impact{prec}; protein-level: {protein.evidence}",
         )
 
     def _evaluate(

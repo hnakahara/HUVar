@@ -1242,17 +1242,25 @@ Strengths are calibrated to Bergquist et al. *Genet Med* 2024 Table 2.
   gene at that strength. REVEL scores are free for non-commercial use; see
   [Commercial use](#commercial-use). Requires `setup_data.py --with-revel`.
 
-**Splice predictor** — default **OpenSpliceAI**. The splice call takes
-precedence over the missense predictor when its max Δscore ≥ 0.20; below that
-threshold the missense predictor's call is retained. The same Δscore also feeds
-the PVS1 splice branch (≥ 0.20 supports splice-LoF).
+**Splice predictor** — default **OpenSpliceAI**. For a missense variant the
+splice call takes precedence over the missense predictor when its max Δscore
+reaches the gene's cutoff (default ≥ 0.20; VCEP-specific cutoffs, e.g. 0.50 for
+the myopathy genes, > 0.5 for PAH/GAA, ≥ 0.38 for RUNX1): PP3 is then
+**Supporting from the splice prediction**, even if the protein-level predictor
+would give a stronger call (the two are never combined; the protein-level call
+is kept in the evidence text). Below the cutoff the missense predictor's call is
+used. This follows the ENIGMA BRCA1/2 flowchart and matches the BP4 side, where a
+predicted splice impact (≥ 0.20) blocks a computational benign call.
+`ACMG_PP3_MISSENSE_PRIORITY=strongest` restores the stronger-of-the-two rule;
+the setting is recorded in the provenance. The same Δscore also feeds the PVS1
+splice branch (≥ 0.20 supports splice-LoF).
 
 - **OpenSpliceAI** (default): PP3 max_delta `≥0.20` → **Supporting**; BP4 /
   BP7 max_delta `≤0.10` → no-impact (Supporting). Shares SpliceAI's 0–1 delta
-  scale, but lacking its own OddsPath calibration, PP3 is capped at Supporting
-  (vs SpliceAI's Moderate). GPL-3.0; runtime inference via `openspliceai`.
-- **SpliceAI** (`--splice-tool spliceai`): PP3 max_delta `≥0.20` → Moderate;
-  BP4 max_delta `≤0.10` → Supporting (Walker *Am J Hum Genet* 2023).
+  scale. GPL-3.0; runtime inference via `openspliceai`.
+- **SpliceAI** (`--splice-tool spliceai`): PP3 max_delta `≥0.20` → Supporting;
+  BP4 max_delta `≤0.10` → Supporting (Walker *Am J Hum Genet* 2023: stronger
+  weight requires RNA evidence).
 - _SQUIRLS / MMSplice: retained in code but disabled (see overview note)._
 
 ### Commercial use

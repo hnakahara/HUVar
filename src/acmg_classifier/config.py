@@ -84,6 +84,13 @@ class Config(BaseSettings):
     # AlphaMissense (CC BY-NC-SA) and FuncVEP (PolyForm Strict) all restrict
     # commercial use, so none of them is ever selected implicitly.
     insilico_tool: InSilicoTool = InSilicoTool.ESM1B
+    # PP3 for missense variants with a predicted splice impact (SpliceAI /
+    # OpenSpliceAI at the gene's cutoff): "splice" (default) bases PP3 on the
+    # splice prediction (Supporting) even when the protein-level predictor gives a
+    # stronger call, as the ENIGMA BRCA1/2 flowchart does; "strongest" uses the
+    # stronger of the two (the behaviour before this option).
+    # Env: ACMG_PP3_MISSENSE_PRIORITY.
+    pp3_missense_priority: str = "splice"
     # Opt-in auxiliary missense predictors (BayesDel, CADD) consulted only by the
     # VCEPs that name them (e.g. ENIGMA BRCA1/2 / TP53 BayesDel; CADD in 2-of-3
     # combos). Both carry academic / non-commercial licence terms, so they are
@@ -198,6 +205,14 @@ class Config(BaseSettings):
     # (somatic_functional_curated.tsv; rows with status=approved only).
     # Env: ACMG_SOMATIC_LAB_FUNCTIONAL=false.
     somatic_lab_functional: bool = True
+
+    @field_validator("pp3_missense_priority")
+    @classmethod
+    def _check_pp3_priority(cls, v: str) -> str:
+        v = (v or "splice").strip().lower()
+        if v not in ("splice", "strongest"):
+            raise ValueError("pp3_missense_priority must be 'splice' or 'strongest'")
+        return v
 
     @field_validator("mavedb_calibration")
     @classmethod
