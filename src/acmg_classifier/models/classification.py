@@ -7,6 +7,24 @@ from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.annotation import ManePlusClinicalInfo
 
 
+class VcepRecord(BaseModel):
+    """Existing ClinGen VCEP classification of the variant (bundled eRepo snapshot),
+    reported next to the automated result. Multi-record fields are ``|``-joined."""
+
+    assertion: str = ""
+    met_codes: str = ""
+    conflict: bool = False
+    gene: str = ""
+    transcript: str = ""
+    hgvs_c: str = ""
+    disease: str = ""
+    expert_panel: str = ""
+    cspec_url: str = ""
+    approval_date: str = ""
+    erepo_url: str = ""
+    snapshot: str = ""
+
+
 class ClassificationResult(BaseModel):
     """Final classification for a single variant."""
 
@@ -40,6 +58,10 @@ class ClassificationResult(BaseModel):
 
     # Warnings (e.g. SQUIRLS thresholds not Walker-calibrated)
     warnings: list[str] = []
+
+    # The ClinGen VCEP classification of this exact variant, when the bundled eRepo
+    # snapshot has one (None otherwise). Informational: not used by any criterion.
+    vcep: Optional[VcepRecord] = None
 
     @computed_field  # type: ignore[prop-decorator]
     @property

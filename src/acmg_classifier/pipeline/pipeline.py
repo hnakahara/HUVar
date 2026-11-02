@@ -151,11 +151,13 @@ def run_pipeline(
         big = large_indel_warning(variant.ref, variant.alt)
         if big:
             extra_warnings.append(big)
-        from acmg_classifier.local_db.erepo_db import vcep_warning
+        from acmg_classifier.local_db.erepo_db import vcep_record, vcep_warning
         extra_warnings += vcep_warning(cfg.assembly.value, variant.chrom, variant.pos,
                                        variant.ref, variant.alt)
         result = ClassificationResult(
             variant_id=variant.key,
+            vcep=vcep_record(cfg.assembly.value, variant.chrom, variant.pos,
+                             variant.ref, variant.alt),
             chrom=variant.chrom,
             pos=variant.pos,
             ref=variant.ref,
@@ -314,8 +316,11 @@ def classify_annotated(
     else:
         pcs = ann.mane_plus_clinical_summary() if ann is not None else []
 
+    from acmg_classifier.local_db.erepo_db import vcep_record
     return ClassificationResult(
         variant_id=variant.key,
+        vcep=vcep_record(cfg.assembly.value, variant.chrom, variant.pos,
+                         variant.ref, variant.alt),
         mane_plus_clinical=pcs,
         criteria_results=criteria_results,
         classification_2015=classification_2015,

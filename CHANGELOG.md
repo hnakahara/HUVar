@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **VCEP classification in the VCF (batch) output.** When the bundled eRepo snapshot has
+  a ClinGen VCEP classification of the exact variant, the TSV adds `vcep_classification`,
+  `vcep_met_codes`, `vcep_conflict`, `vcep_expert_panel`, `vcep_disease`,
+  `vcep_approval_date`, `vcep_erepo_url` and the agreement of each automated class with it
+  (`vcep_concordance_2015` / `vcep_concordance_bayesian`: exact / same_direction /
+  discordant / vcep_conflict), after `classification_bayesian`. The JSON output carries
+  the record as `vcep` (`ClassificationResult.vcep`). Previously only a `VCEP_CLASSIFIED`
+  warning was written. Informational; no criterion uses it.
 - **Research-use-only MaveDB calibrations (ExCALIBR), opt-in** — `--with-mavedb-research`
   / `ACMG_MAVEDB_RESEARCH_USE=true` on `classify`, `explain`, `somatic`, `somatic-explain`.
   `build_mavedb_functional.py` now also writes RUO calibrations (`ruo=1`, plus

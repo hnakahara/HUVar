@@ -928,6 +928,26 @@ benign, per Tavtigian 2020. `BA1` is scored like a Very Strong benign criterion
 pathogenic evidence → VUS or higher). The 2015 classifier keeps BA1 as stand-alone
 Benign.
 
+### VCEP classification
+
+When a ClinGen VCEP has already classified the exact variant (bundled eRepo
+snapshot, `resources/<assembly>/erepo_classifications_<hg>.tsv`; 11,534 variants in
+the 2026-05-28 snapshot), its call is written next to the automated result, after
+`classification_bayesian`; the columns are empty otherwise:
+
+| Column | Content |
+|--------|---------|
+| `vcep_classification` | VCEP assertion (e.g. `Likely Pathogenic`; several records `\|`-joined) |
+| `vcep_met_codes` | Criteria the VCEP applied (e.g. `PM2_Supporting,PP3,PS3`) |
+| `vcep_conflict` | `1` when the eRepo holds different assertions for the variant |
+| `vcep_expert_panel`, `vcep_disease`, `vcep_approval_date`, `vcep_erepo_url` | Panel, disease, approval date, eRepo link |
+| `vcep_concordance_2015`, `vcep_concordance_bayesian` | Agreement of each automated class with the VCEP: `exact`, `same_direction` (P vs LP, B vs LB), `discordant`, or `vcep_conflict` |
+
+The record is informational (no criterion uses it); the `warnings` column also
+carries a `VCEP_CLASSIFIED` note, and the expert classification should generally
+take precedence over the automated one. The JSON output carries the same record
+as `vcep`.
+
 ### Annotation snapshot
 
 `gnomad_af`, `gnomad_ac`, `gnomad_an`,

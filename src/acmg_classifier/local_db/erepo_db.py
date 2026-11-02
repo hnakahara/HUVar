@@ -73,6 +73,49 @@ def lookup(assembly: str, chrom: str, pos: int, ref: str, alt: str) -> Optional[
     }
 
 
+def vcep_record(assembly: str, chrom: str, pos: int, ref: str, alt: str):
+    """The lookup as a :class:`~acmg_classifier.models.classification.VcepRecord`
+    (None when no VCEP has classified the variant, or on any lookup error)."""
+    try:
+        rec = lookup(assembly, chrom, pos, ref, alt)
+    except Exception:  # never fail a classification on the lookup
+        return None
+    if rec is None:
+        return None
+    from acmg_classifier.models.classification import VcepRecord
+    return VcepRecord(**rec)
+
+
+# VCEP assertion text (eRepo) -> HUVar Pathogenicity value
+_ASSERTION = {
+    "pathogenic": "Pathogenic", "likely pathogenic": "LikelyPathogenic",
+    "uncertain significance": "VUS", "likely benign": "LikelyBenign", "benign": "Benign",
+}
+_SIDE = {"Pathogenic": "P", "LikelyPathogenic": "P", "VUS": "U",
+         "LikelyBenign": "B", "Benign": "B"}
+
+
+def concordance(vcep_assertion: str, automated: str) -> str:
+    """Agreement of an automated class with the VCEP assertion.
+
+    ``exact`` (same 5-tier class), ``same_direction`` (P vs LP, or B vs LB),
+    ``discordant`` (anything else, e.g. VUS vs LP, P vs B), ``vcep_conflict``
+    (the eRepo holds different assertions for the variant), or ``""`` (no VCEP
+    record / unknown assertion)."""
+    calls = {_ASSERTION.get(a.strip().lower()) for a in (vcep_assertion or "").split("|") if a.strip()}
+    calls.discard(None)
+    if not calls:
+        return ""
+    if len(calls) > 1:
+        return "vcep_conflict"
+    v = calls.pop()
+    if v == automated:
+        return "exact"
+    if _SIDE.get(v) == _SIDE.get(automated) and _SIDE.get(v) in ("P", "B"):
+        return "same_direction"
+    return "discordant"
+
+
 def vcep_warning(assembly: str, chrom: str, pos: int, ref: str, alt: str) -> list[str]:
     """``["VCEP_CLASSIFIED: ..."]`` when a VCEP has classified the variant."""
     rec = lookup(assembly, chrom, pos, ref, alt)

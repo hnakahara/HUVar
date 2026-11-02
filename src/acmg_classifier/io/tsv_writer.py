@@ -46,6 +46,15 @@ _MANE_PC_HEADER = [
     "mane_plus_clinical_criteria_changes",
 ]
 
+# Existing ClinGen VCEP classification (bundled eRepo snapshot) of the exact
+# variant, next to the automated result; empty when the VCEP has not classified
+# it. *_concordance_*: exact / same_direction / discordant / vcep_conflict.
+_VCEP_HEADER = [
+    "vcep_classification", "vcep_met_codes", "vcep_conflict", "vcep_expert_panel",
+    "vcep_disease", "vcep_approval_date", "vcep_erepo_url",
+    "vcep_concordance_2015", "vcep_concordance_bayesian",
+]
+
 _HEADER = (
     [
         "variant_id", "chrom", "pos", "ref", "alt", "filter",
@@ -55,6 +64,7 @@ _HEADER = (
     + [
         "classification_2015", "rules_2015", "bayesian_score", "classification_bayesian",
     ]
+    + _VCEP_HEADER
     + _ANNOTATION_HEADER
     + [c.value for c in _ALL_CRITERIA]
     + [c.value + "_strength" for c in _ALL_CRITERIA]
@@ -236,6 +246,19 @@ def _build_mane_pc_row(result: ClassificationResult) -> list[str]:
     ]
 
 
+def _build_vcep_row(result: ClassificationResult) -> list[str]:
+    v = getattr(result, "vcep", None)
+    if v is None:
+        return [""] * len(_VCEP_HEADER)
+    from acmg_classifier.local_db.erepo_db import concordance
+    return [
+        v.assertion, v.met_codes, "1" if v.conflict else "0", v.expert_panel,
+        v.disease, v.approval_date, v.erepo_url,
+        concordance(v.assertion, result.classification_2015.value),
+        concordance(v.assertion, result.classification_bayesian.value),
+    ]
+
+
 def _build_row(result: ClassificationResult) -> list[str]:
     by_criterion = {r.criterion: r for r in result.criteria_results}
 
@@ -272,6 +295,7 @@ def _build_row(result: ClassificationResult) -> list[str]:
             str(result.bayesian_score),
             result.classification_bayesian.value,
         ]
+        + _build_vcep_row(result)
         + _build_annotation_row(result)
         + triggered
         + strengths
