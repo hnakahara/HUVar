@@ -117,6 +117,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **Faster large VCF batches** (no change to any classification):
+  - The criteria evaluation runs in worker processes (Linux, `fork`; `--workers` of
+    them by default, `--classify-workers N` / `ACMG_CLASSIFY_WORKERS` to set,
+    `1` = single process as before). The first record of each gene is evaluated in the
+    parent first so the reference tables are loaded once and shared copy-on-write;
+    results are returned in input order and are identical to the single-process path
+    (tested). Small batches (< 200 variants), `--profile` runs and the automatic setting
+    inside a Celery prefork worker (HUVar_app jobs) stay in one process. If a worker is
+    killed (e.g. out of memory) the remaining variants are finished in-process.
+  - The gnomAD coverage lookup of the ENIGMA BRCA1/2 PM2 depth gate opened a DuckDB
+    connection per variant; it now keeps one per thread/process and memoises results.
+    ClinVar SQLite lookups no longer `stat()` the database on every query (only positive
+    answers cached), and the per-codon / per-amino-acid comparator queries of PS1/PM5
+    are memoised per (gene, codon) — a saturation batch asks the same question for
+    every SNV of a codon.
+  - VEP: `vep_batch_size` default 500 → 5000 (a 53k-variant batch started VEP ~107
+    times, each reloading the cache), and when a batch has several chunks up to
+    `workers // 8` VEP processes run at once (`ACMG_VEP_PROCESSES`), each with
+    `--fork workers // processes`, on evenly sized chunks.
+  - OpenSpliceAI inference and the gnomAD batch fetch run on a helper thread while VEP
+    runs (they do not need its output), so a large batch waits for the longer of VEP
+    and OpenSpliceAI instead of their sum (`ACMG_OVERLAP_PRECOMPUTE=false` restores the
+    sequential order).
+  - `classify --profile` also prints the criteria-evaluation time per evaluator.
+  - Database handles that must not cross `fork()` (ClinVar SQLite, coverage DuckDB,
+    phyloP bigWig, PVS1 reference FASTA) are re-opened per process.
+
 - **PP3 for missense variants: the splice prediction takes precedence.** When
   OpenSpliceAI / SpliceAI reaches the gene's cutoff (default ≥ 0.20), PP3 is
   Supporting from the splice prediction even if the protein-level predictor gives a

@@ -1,5 +1,6 @@
 """SQLite query layer for ClinVar PS1/PM5/PS4 amino-acid-level lookups."""
 from __future__ import annotations
+import os
 import re
 import sqlite3
 from functools import lru_cache
@@ -30,6 +31,35 @@ _P_LP = frozenset({
 # the single biggest NFS win and is safe here — the ClinVar DB is built once
 # offline and only ever read at classification time.
 _CONN_CACHE: dict[str, sqlite3.Connection] = {}
+# Connections inherited from a parent process are parked here (never used, never
+# closed) by the after-fork hook: an SQLite handle must not be carried across
+# fork(), and letting the child close it could disturb the parent's handle.
+_FORK_ORPHANS: list[sqlite3.Connection] = []
+# Database files known to exist. Each query used to stat() its DB, which on a
+# network mount cost a measurable slice of every classification; only positive
+# answers are memoised, so a DB that is built later is still picked up.
+_EXISTING: set[str] = set()
+
+
+def _db_exists(db_path: Path) -> bool:
+    key = str(db_path)
+    if key in _EXISTING:
+        return True
+    if Path(db_path).exists():
+        _EXISTING.add(key)
+        return True
+    return False
+
+
+def _reset_after_fork() -> None:
+    """Child side of fork(): drop inherited connections so each worker process
+    opens its own (the parallel classification in pipeline.run_pipeline)."""
+    _FORK_ORPHANS.extend(_CONN_CACHE.values())
+    _CONN_CACHE.clear()
+
+
+if hasattr(os, "register_at_fork"):
+    os.register_at_fork(after_in_child=_reset_after_fork)
 
 
 def _get_conn(db_path: Path) -> sqlite3.Connection:
@@ -95,7 +125,7 @@ def query_paralog_aa_change(
     paralogue route — the same amino-acid change at the analogous residue of a
     paralogue gene (SCN1A/2A/3A/8A). No self-exclusion / proximity guard: the
     hit is in a different gene by construction."""
-    if not db_path.exists() or not aa_change:
+    if not _db_exists(db_path) or not aa_change:
         return []
     try:
         con = _get_conn(db_path)
@@ -132,7 +162,7 @@ def query_paralog_codon(
 ) -> list[ClinVarRecord]:
     """ClinVar P/LP missense records in *gene_symbol* at residue *position* with
     wild-type *ref_aa* (1-letter), for the SCN PM5 paralogue route."""
-    if not db_path.exists() or not ref_aa or not position:
+    if not _db_exists(db_path) or not ref_aa or not position:
         return []
     try:
         con = _get_conn(db_path)
@@ -158,6 +188,67 @@ def query_paralog_codon(
         star_rating=r[3], gene_symbol=r[4], hgvs_c=r[5], hgvs_p=r[6],
         amino_acid_change=r[7],
     ) for r in rows]
+
+
+# Row-level memo for the per-gene / per-codon comparator queries. Every
+# variant at a codon (up to 9 SNVs, and more in a saturation batch) asks the
+# same (gene, codon) or (gene, amino-acid change) question; the variant-specific
+# filtering (self-match, codon-proximity guard) still runs per call on the
+# cached rows. The DB is opened immutable, so the rows cannot change mid-run.
+@lru_cache(maxsize=65536)
+def _rows_same_aa(db_path: Path, gene_symbol: str, aa_key: str, min_stars: int) -> tuple:
+    return tuple(_get_conn(db_path).execute(
+        """
+        SELECT variation_id, clinical_significance, review_status, star_rating,
+               gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
+        FROM variants
+        WHERE gene_symbol = ?
+          AND amino_acid_change = ?
+          AND star_rating >= ?
+          AND clinical_significance IN (
+              'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
+          )
+        """,
+        (gene_symbol, aa_key, min_stars),
+    ).fetchall())
+
+
+@lru_cache(maxsize=65536)
+def _rows_same_codon(db_path: Path, gene_symbol: str, codon_position: int,
+                     not_like: str, min_stars: int) -> tuple:
+    return tuple(_get_conn(db_path).execute(
+        """
+        SELECT variation_id, clinical_significance, review_status, star_rating,
+               gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
+        FROM variants
+        WHERE gene_symbol = ?
+          AND codon_position = ?
+          AND (hgvs_p IS NULL OR hgvs_p NOT LIKE ?)
+          AND star_rating >= ?
+          AND clinical_significance IN (
+              'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
+          )
+        """,
+        (gene_symbol, codon_position, not_like, min_stars),
+    ).fetchall())
+
+
+@lru_cache(maxsize=65536)
+def _rows_benign_at_codon(db_path: Path, gene_symbol: str, codon_position: int,
+                          min_stars: int) -> tuple:
+    return tuple(_get_conn(db_path).execute(
+        """
+        SELECT hgvs_p
+        FROM variants
+        WHERE gene_symbol = ?
+          AND codon_position = ?
+          AND star_rating >= ?
+          AND clinical_significance IN (
+              'Benign', 'Likely benign', 'Benign/Likely benign'
+          )
+        """,
+        (gene_symbol, codon_position, min_stars),
+    ).fetchall())
 
 
 def query_same_aa_change(
@@ -196,28 +287,14 @@ def query_same_aa_change(
     cannot be disproven as same-codon).
     """
     aa_key = _aa_change_key(hgvs_p)
-    if not db_path.exists() or not aa_key:
+    if not _db_exists(db_path) or not aa_key:
         return []
 
     excl_chrom = strip_chr(exclude_chrom) if exclude_chrom else exclude_chrom
     proximity = excl_chrom is not None and exclude_pos is not None
 
     try:
-        con = _get_conn(db_path)
-        rows = con.execute(
-            """
-            SELECT variation_id, clinical_significance, review_status, star_rating,
-                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
-            FROM variants
-            WHERE gene_symbol = ?
-              AND amino_acid_change = ?
-              AND star_rating >= ?
-              AND clinical_significance IN (
-                  'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
-              )
-            """,
-            (gene_symbol, aa_key, min_stars),
-        ).fetchall()
+        rows = _rows_same_aa(db_path, gene_symbol, aa_key, min_stars)
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="same_aa", error=str(exc))
         return []
@@ -276,25 +353,11 @@ def query_same_codon_different_aa(
     codon) and is rejected. The guard only fires when the candidate coordinate is
     supplied AND the comparator has a recorded position."""
     p_change = _protein_change_only(hgvs_p)
-    if not db_path.exists() or codon_position is None:
+    if not _db_exists(db_path) or codon_position is None:
         return []
     try:
-        con = _get_conn(db_path)
-        rows = con.execute(
-            """
-            SELECT variation_id, clinical_significance, review_status, star_rating,
-                   gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
-            FROM variants
-            WHERE gene_symbol = ?
-              AND codon_position = ?
-              AND (hgvs_p IS NULL OR hgvs_p NOT LIKE ?)
-              AND star_rating >= ?
-              AND clinical_significance IN (
-                  'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic'
-              )
-            """,
-            (gene_symbol, codon_position, "%:" + (p_change or ""), min_stars),
-        ).fetchall()
+        rows = _rows_same_codon(db_path, gene_symbol, codon_position,
+                                "%:" + (p_change or ""), min_stars)
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="same_codon", error=str(exc))
         return []
@@ -349,7 +412,7 @@ def query_same_splice_site(
     same predicted effect. A shared genomic position is highly specific, so this
     matches on chrom+pos (different alt), restricted to the same gene and to
     reviewed (>=min_stars) P/LP submissions. Excludes the variant itself."""
-    if not db_path.exists() or pos is None:
+    if not _db_exists(db_path) or pos is None:
         return []
     c1, c2 = chrom_candidates(chrom)
     try:
@@ -412,7 +475,7 @@ def query_splice_dinucleotide_partner(
     record is accepted when it lies at pos±1 and its HGVS c. name has the
     partner offset, which identifies the same dinucleotide without needing the
     strand or the transcript numbering."""
-    if not db_path.exists() or pos is None or offset not in (1, 2) or sign not in "+-":
+    if not _db_exists(db_path) or pos is None or offset not in (1, 2) or sign not in "+-":
         return []
     partner = f"{sign}{3 - offset}"
     c1, c2 = chrom_candidates(chrom)
@@ -462,7 +525,7 @@ def query_plp_window(
     """P/LP ClinVar variants of *gene_symbol* within ``pos ± flank`` (used for the
     BMPR2 splice-motif PS1 rule, where the comparator may lie anywhere in the
     same donor/acceptor motif)."""
-    if not db_path.exists() or pos is None:
+    if not _db_exists(db_path) or pos is None:
         return []
     c1, c2 = chrom_candidates(chrom)
     try:
@@ -508,23 +571,10 @@ def has_benign_at_codon(
     Several PM5-Grantham VCEPs (PIK3CD, PIK3R1, GALT, …) bar PM5 at a codon where
     *any* benign variant is known. Restricted to genuine missense comparators
     (via ``_is_missense_p``) for parity with the same-codon pathogenic query."""
-    if not db_path.exists() or codon_position is None:
+    if not _db_exists(db_path) or codon_position is None:
         return False
     try:
-        con = _get_conn(db_path)
-        rows = con.execute(
-            """
-            SELECT hgvs_p
-            FROM variants
-            WHERE gene_symbol = ?
-              AND codon_position = ?
-              AND star_rating >= ?
-              AND clinical_significance IN (
-                  'Benign', 'Likely benign', 'Benign/Likely benign'
-              )
-            """,
-            (gene_symbol, codon_position, min_stars),
-        ).fetchall()
+        rows = _rows_benign_at_codon(db_path, gene_symbol, codon_position, min_stars)
     except Exception as exc:
         log.error("clinvar_sqlite_error", op="benign_at_codon", error=str(exc))
         return False
@@ -548,7 +598,7 @@ def query_pm4_deletion_content(
     Uncertain-significance variant does; else ``None``. (The spec's "not
     predicted/observed to alter splicing" qualifier is not modelled here — the
     presence of a curated P/LP or VUS in the deleted span is the signal.)"""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return None
     q_chrom = strip_chr(chrom)
     try:
@@ -583,7 +633,7 @@ def _sum_column(db_path: Path, column: str, chrom: str, pos: int, ref: str, alt:
     SCV free text — see local_db/clinvar_builder. Returning 0 on missing
     column (OperationalError) lets us read older databases built before a
     given counter was added, without forcing a full rebuild."""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return 0
     # chrom_candidates returns both "1" and "chr1" forms because the ClinVar
     # build pipeline sometimes loaded one or the other depending on source
@@ -622,7 +672,7 @@ def query_functional_pmids(db_path: Path, chrom: str, pos: int, ref: str, alt: s
     """Distinct PMIDs cited by non-expert-panel SCVs describing a damaging
     functional study (PS3 text mining). ``None`` for an old ClinVar build without
     the ``functional_pmids`` column (caller falls back to the SCV count)."""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return set()
     c1, c2 = chrom_candidates(chrom)
     try:
@@ -649,7 +699,7 @@ def query_expert_panel_criteria(db_path: Path, chrom: str, pos: int, ref: str, a
     """Criteria (PS3/PS4/PP1) applied by a ClinGen expert panel to this variant in
     ClinVar (review status >= 3 stars), as ``{code: strength}``. Empty for an old
     build without the ``ep_criteria`` column."""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return {}
     c1, c2 = chrom_candidates(chrom)
     try:
@@ -700,7 +750,7 @@ def query_bs2_benign_evidence(
     applied BS2 from an internal cohort. Returns ``(False, None)`` for an old DB
     built before the bs2 columns existed (OperationalError) — backward
     compatible, no rebuild forced for callers that don't need BS2."""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return False, None
     c1, c2 = chrom_candidates(chrom)
     try:
@@ -757,7 +807,7 @@ def query_hotspot_cluster(
     given, so a variant cannot contribute to its own hotspot (Genome Medicine
     revision, Reviewer 3).
     """
-    if not db_path.exists() or protein_position is None:
+    if not _db_exists(db_path) or protein_position is None:
         return False, "No protein position or DB unavailable"
     try:
         con = _get_conn(db_path)
@@ -886,7 +936,7 @@ def query_pp2_eligible(
     tested (Genome Medicine revision, Reviewer 3). Thresholds are parameters so
     that they can be set from Config.
     """
-    if not db_path.exists() or not gene_symbol:
+    if not _db_exists(db_path) or not gene_symbol:
         return False, "No gene or DB unavailable"
     try:
         con = _get_conn(db_path)
@@ -969,7 +1019,7 @@ def query_pathogenic_null_count(
     Ter / fs / *) or canonical ±1/2 splice-site changes (HGVS c. ``+1``, ``+2``,
     ``-1``, ``-2`` intronic offsets).
     """
-    if not db_path.exists() or not gene_symbol:
+    if not _db_exists(db_path) or not gene_symbol:
         return 0
     try:
         con = _get_conn(db_path)
@@ -998,7 +1048,7 @@ def query_pathogenic_null_stats(
     """``(P/LP null variants, all P/LP variants)`` reported in ClinVar for a gene
     (>= ``min_stars``). PVS1's LoF-mechanism gate uses the proportion of null
     variants among the gene's P/LP variants (see ``lof_mechanism_reason``)."""
-    if not db_path.exists() or not gene_symbol:
+    if not _db_exists(db_path) or not gene_symbol:
         return 0, 0
     try:
         con = _get_conn(db_path)
@@ -1043,7 +1093,7 @@ def query_pathogenic_missense_count(
     and a new null variant may not act via the same mechanism, so PVS1 strength
     is limited to Moderate.
     """
-    if not db_path.exists() or not gene_symbol:
+    if not _db_exists(db_path) or not gene_symbol:
         return 0
     try:
         con = _get_conn(db_path)
@@ -1067,7 +1117,7 @@ def query_aa_change_at(
 ) -> Optional[tuple[str, Optional[str], Optional[str]]]:
     """(gene_symbol, amino_acid_change, hgvs_p) of the ClinVar record at this
     allele, whatever its germline classification, or None."""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return None
     try:
         con = _get_conn(db_path)
@@ -1084,7 +1134,7 @@ def query_aa_change_at(
 
 def has_oncogenicity(db_path: Path) -> bool:
     """True when the ClinVar DB was built with the somatic oncogenicity columns."""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return False
     try:
         cols = {r[1] for r in _get_conn(db_path).execute("PRAGMA table_info(variants)")}
@@ -1145,7 +1195,7 @@ def query_somatic_impact(db_path: Path, chrom: str, pos: int, ref: str, alt: str
     """ClinVar Somatic Clinical Impact records (one per RCV) of this allele: dicts
     with variation_id, sci, sci_review_status, sci_stars, sci_type, conditions.
     ``None`` when the DB predates these columns."""
-    if not db_path.exists():
+    if not _db_exists(db_path):
         return None
     try:
         con = _get_conn(db_path)

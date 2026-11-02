@@ -40,7 +40,13 @@ class PVS1Evaluator(CriterionEvaluator):
         """Reference sequence (1-based inclusive, + strand) from the genome
         FASTA, or None when it is unavailable."""
         fa = getattr(self, "_fasta", False)
+        # A FastaFile inherited through fork() shares its file offset with the
+        # parent (parallel classification workers): re-open it per process.
+        import os
+        if fa is not False and getattr(self, "_fasta_pid", None) != os.getpid():
+            fa = False
         if fa is False:
+            self._fasta_pid = os.getpid()
             fa = None
             try:
                 path = Path(self._cfg.genome_fasta)

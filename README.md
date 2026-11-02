@@ -279,7 +279,7 @@ acmg-classify classify input.vcf -o results.tsv --assembly GRCh38 --data-dir /pa
 | Python | ≥ 3.11 | 3.12 recommended |
 | Disk | ~ 500 GB after setup; ~ 3 TB free during setup | The raw gnomAD VCFs (~ 1.0 TB for the v4.1 joint release on GRCh38) and intermediate files dominate during setup; they are deletable after the 85 GB DuckDB build — see [Reclaiming disk space](#reclaiming-disk-space-after-setup). The gnomAD build takes ~ 2–4 days, mostly download time |
 | RAM | ≥ 8 GB (16 GB recommended) | See [Measured resource usage](#measured-resource-usage) |
-| CPU | ≥ 2 cores (4–8 recommended) | `--workers` defaults to 4; little gain beyond 8 workers because VEP annotation dominates the run time |
+| CPU | ≥ 2 cores (4–8 recommended) | `--workers` defaults to 4. The measurements below predate the parallel criteria evaluation and concurrent VEP chunks (see [Large batches](#large-batches)); large batches now scale further with more cores |
 
 ### Measured resource usage
 
@@ -300,6 +300,23 @@ Classification of the 11,545 ClinGen eRepo variants (GRCh38; `--insilico-tool re
 | 8 GB | 8.0 GB | 14,000–45,000 | ≤ 7% slower |
 
 Peak RSS was nearly identical for 1–16 workers. Most of it consists of file-backed pages of the memory-mapped local databases, which the kernel caches when memory is available and evicts under a limit; the RSS therefore grows to the available memory rather than reflecting a hard requirement. With 16 GB no data had to be re-read from disk, and with 8 GB re-reading slowed the run only slightly. About 35 s of each run is classification; the rest is Ensembl VEP annotation.
+
+### Large batches
+
+For tens of thousands of variants (e.g. a saturation VCF) the run is split as follows; all
+settings are environment variables (`ACMG_…`) and none of them changes a classification.
+
+| Stage | How it is parallelised | Setting |
+|---|---|---|
+| VEP | Chunks of `vep_batch_size` variants (default 5000); with several chunks, up to `workers // 8` VEP processes at once, each `--fork workers // processes` | `ACMG_VEP_BATCH_SIZE`, `ACMG_VEP_PROCESSES` |
+| OpenSpliceAI / gnomAD batch fetch | Run on a helper thread while VEP runs | `ACMG_OVERLAP_PRECOMPUTE=false` to run them after VEP |
+| Per-variant lookups | `--workers` threads | — |
+| Criteria evaluation | `--workers` processes (Linux); the first record of each gene is evaluated first so the tables are loaded once and shared copy-on-write | `--classify-workers N` / `ACMG_CLASSIFY_WORKERS` (`1` = one process) |
+
+Each evaluation worker starts with the parent's memory shared, but the pages it touches are
+copied, so the resident memory grows with the number of workers; lower
+`--classify-workers` if the machine runs short. `--limit 2000 --profile prof.out` prints the
+evaluation time per criterion evaluator (that run evaluates in one process).
 
 ### External binaries (must be in `PATH`)
 
@@ -571,7 +588,9 @@ Full option list:
 | `--cspec GENE=CSPEC_ID` | repeatable | — | Evaluate a gene with several released ClinGen specifications for clinically distinct diseases under the chosen one (as in HUVar_app): RYR1 `malignant_hyperthermia` / `congenital_myopathy_ad` / `congenital_myopathy_ar`; ACTA1 `congenital_myopathy_ad` / `congenital_myopathy_ar`; VWF `vwd_ad` / `vwd_ar` (`resources/shared/disease_prevalence_multispec.tsv`). Without it, the conservative merged specification is used. Also for `explain`. Shown in the warnings column (`CSPEC:`) and recorded in the provenance. |
 | `--transcript ACCESSION` | str | — | `explain` only. Evaluate the criteria on this transcript instead of MANE Select, e.g. the gene's MANE Plus Clinical (`--transcript NM_033360.4`). VCEP position rules and ClinVar codon comparisons keep MANE Select numbering (see *Output format*); the report shows the numbering used and a `TRANSCRIPT:` warning. |
 | `--exclude-self-expert-panel` | flag | off | Benchmark mode: do not import PS3/PS4/PP1/BS2 from the ClinVar expert-panel (≥3★) record of the variant itself, so an evaluation against the eRepo does not read the reference curation. Expert-panel criteria are in any case imported only when `--supplement` is given; this flag also turns them off in that case. Recorded in the provenance sidecar (with `curated_evidence`). |
-| `--workers N` | int | `4` | Parallel workers for annotation |
+| `--workers N` | int | `4` | Parallelism: VEP `--fork` total, annotation lookup threads and, by default, criteria-evaluation processes (see [Large batches](#large-batches)) |
+| `--classify-workers N` | int | `--workers` | Criteria-evaluation worker processes (Linux); `1` = single process. Env: `ACMG_CLASSIFY_WORKERS` |
+| `--limit N` / `--profile PATH` | int / path | — | Classify only the first N variants / write cProfile stats and print the top functions and the time per criterion evaluator |
 
 > ⚠️ **BayesDel / CADD are opt-in at classification time too.** `--with-bayesdel`
 > and `--with-cadd` must be passed to **`classify`** (and `explain`), not only to

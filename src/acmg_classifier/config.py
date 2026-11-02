@@ -21,7 +21,22 @@ class Config(BaseSettings):
     data_dir: Path = Path("./data")
     assembly: Assembly = Assembly.GRCH38
     workers: int = 4
-    vep_batch_size: int = 500
+    # Variants per VEP invocation. Each invocation reloads the VEP cache, so
+    # 500-variant chunks spent most of a large run in start-up (a 53k-variant
+    # batch launched VEP ~107 times). Larger chunks are split across --fork.
+    vep_batch_size: int = 5000
+    # Concurrent VEP invocations when a batch has several chunks; the --fork
+    # count of each is workers // vep_processes so the total stays at
+    # ``workers``. 0 = automatic (workers // 8, at least 1).
+    vep_processes: int = 0
+    # Run the OpenSpliceAI inference and the gnomAD batch fetch concurrently
+    # with VEP (they need only the variant list, not the VEP output).
+    overlap_precompute: bool = True
+    # Worker processes for the criteria evaluation of a VCF batch (Linux, fork).
+    # 0 = ``workers``; 1 = classify in the main process (the previous
+    # behaviour). Each worker shares the loaded reference tables with the
+    # parent copy-on-write but opens its own database handles.
+    classify_workers: int = 0
     # Minimum ClinVar review status (stars) of a PM5 same-codon comparator and a
     # PS1 comparator (same amino-acid change / same splice site). Default 2
     # (multiple submitters, no conflicts, or higher), as suggested by Reviewer 1

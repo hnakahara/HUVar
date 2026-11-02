@@ -50,6 +50,9 @@ class CriteriaRegistry:
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
         self._evaluators: list[CriterionEvaluator] = self._build_evaluators()
+        # Per-evaluator wall time (seconds), collected only when enable_timing()
+        # was called (classify --profile); None keeps the hot loop untouched.
+        self._timing: dict[str, float] | None = None
         # Gene-specific PP2 co-requirements (e.g. BMPR2 needs PM2 + PP3).
         from acmg_classifier.criteria.pp2_genes import PP2Applicability
         self._pp2 = PP2Applicability(cfg.disease_prevalence_tsv)
@@ -112,6 +115,15 @@ class CriteriaRegistry:
             ManualBenignEvaluator(self._cfg),
         ]
 
+    def enable_timing(self) -> None:
+        """Start accumulating per-evaluator wall time (see :meth:`timings`)."""
+        self._timing = {}
+
+    def timings(self) -> dict[str, float]:
+        """Accumulated seconds per evaluator class (plus ``combination rules``
+        for the post-hoc suppression passes), largest first."""
+        return dict(sorted((self._timing or {}).items(), key=lambda kv: -kv[1]))
+
     def evaluate_all(
         self,
         variant: VariantRecord,
@@ -134,9 +146,18 @@ class CriteriaRegistry:
         rule_tag = (f" [{rc.transcript_id} (MANE Select) numbering]"
                     if rule_annotation is not annotation and rc is not None
                     and rc is not annotation.primary_consequence else "")
+        timing = self._timing
+        if timing is not None:
+            from time import perf_counter
         for evaluator in self._evaluators:
             ann = rule_annotation if evaluator.rule_numbered else annotation
-            result = evaluator.evaluate(variant, ann, supplement)
+            if timing is not None:
+                t0 = perf_counter()
+                result = evaluator.evaluate(variant, ann, supplement)
+                name = type(evaluator).__name__
+                timing[name] = timing.get(name, 0.0) + perf_counter() - t0
+            else:
+                result = evaluator.evaluate(variant, ann, supplement)
             if rule_tag and evaluator.rule_numbered:
                 for r in (result if isinstance(result, list) else [result]):
                     if r.triggered:
@@ -149,6 +170,8 @@ class CriteriaRegistry:
             else:
                 results.append(result)
 
+        if timing is not None:
+            t_rules = perf_counter()
         # Fold manual curator evidence in BEFORE the combination rules below,
         # so PVS1↔PP3 / AF-exclusion / PP2 / PM5 operate on the final,
         # curator-adjusted evidence set. This is what lets a manual entry
@@ -204,6 +227,9 @@ class CriteriaRegistry:
         # must not be). Run last so the frequency criteria are final.
         _apply_pm1_co_requirements(results, annotation)
 
+        if timing is not None:
+            timing["combination rules"] = (timing.get("combination rules", 0.0)
+                                           + perf_counter() - t_rules)
         return results
 
     def _apply_supplement_override(

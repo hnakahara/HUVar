@@ -158,13 +158,22 @@ def _with_cspec(cfg, cspec):
                    "expert-panel (>=3-star) record of the variant being classified, so the "
                    "evaluation does not read the reference curation itself. "
                    "Env: ACMG_EXCLUDE_SELF_EXPERT_PANEL=true.")
-@click.option("--workers", type=int, default=4, show_default=True)
+@click.option("--workers", type=int, default=4, show_default=True,
+              help="Parallelism: VEP --fork total, annotation lookup threads and (by "
+                   "default) the criteria-evaluation worker processes.")
+@click.option("--classify-workers", type=int, default=None,
+              help="Worker processes for the criteria evaluation (Linux). Default: "
+                   "--workers; 1 evaluates in a single process. Lower it if memory is "
+                   "tight (each worker shares the loaded tables copy-on-write but grows "
+                   "with use). Env: ACMG_CLASSIFY_WORKERS.")
 @click.option("--no-progress", is_flag=True, default=False,
               help="Disable progress bars (auto-disabled when stderr is not a TTY).")
 @click.option("--limit", type=int, default=None,
               help="Process only the first N classifiable variants. Use with --profile for fast profiling.")
 @click.option("--profile", "profile_path", type=click.Path(path_type=Path), default=None,
-              help="Write cProfile stats to PATH and print top 30 functions to stderr.")
+              help="Write cProfile stats to PATH and print top 30 functions plus the "
+                   "criteria-evaluation time per evaluator to stderr (classification "
+                   "then runs in one process so the profile covers it).")
 @click.pass_context
 def classify(
     ctx: click.Context,
@@ -187,6 +196,7 @@ def classify(
     cspec: tuple[str, ...],
     exclude_self_expert_panel: bool,
     workers: int,
+    classify_workers: Optional[int],
     no_progress: bool,
     limit: Optional[int],
     profile_path: Optional[Path],
@@ -213,6 +223,7 @@ def classify(
         supplement_mode=SupplementMode(supplement_mode),
         workers=workers,
         # Only override when the flag is given, so the env variable still works.
+        **({"classify_workers": classify_workers} if classify_workers is not None else {}),
         **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
         **({"use_tp53_functional": True} if with_tp53_functional else {}),
         **({"mavedb_research_use": True} if with_mavedb_research else {}),

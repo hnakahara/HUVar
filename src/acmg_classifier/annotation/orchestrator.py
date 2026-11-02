@@ -204,17 +204,40 @@ class AnnotationOrchestrator:
         parallel per variant, so a thread pool is the right model: GIL is
         released during SQLite/tabix calls, and we want to overlap network/
         disk waits rather than CPU work."""
-        vep_results = self._vep.annotate_batch(variants, batch_size=self._cfg.vep_batch_size)
-
         # Batch-fetch all gnomAD stats in one JOIN up front (replaces the
         # per-variant DuckDB connection in _annotate_one — the dominant cost at
         # scale). _annotate_one then reads the cache via self._gnomad.cached().
-        self._gnomad.precompute(variants)
-
+        #
         # OpenSpliceAI runs the model at inference time and caches all scores
         # in one subprocess call. Tabix-backed predictors (SpliceAI/SQUIRLS)
         # have a no-op precompute(), so this is safe to call unconditionally.
-        self._splice.precompute(variants)
+        #
+        # Neither needs the VEP output, so by default both run on a helper
+        # thread while VEP runs (the work happens in subprocesses / DuckDB,
+        # outside the GIL). A large batch then waits for the longer of VEP and
+        # OpenSpliceAI instead of their sum.
+        overlap = bool(getattr(self._cfg, "overlap_precompute", True)) and len(variants) > 1
+        if overlap:
+            def _precompute() -> None:
+                self._gnomad.precompute(variants)
+                self._splice.precompute(variants)
+
+            with ThreadPoolExecutor(max_workers=1) as pre:
+                pending = pre.submit(_precompute)
+                try:
+                    vep_results = self._vep.annotate_batch(
+                        variants, batch_size=self._cfg.vep_batch_size,
+                        processes=getattr(self._cfg, "vep_processes", 0))
+                finally:
+                    # Always wait (the helper writes caches this object reads)
+                    # and surface its error after VEP's, if any.
+                    pending.result()
+        else:
+            vep_results = self._vep.annotate_batch(
+                variants, batch_size=self._cfg.vep_batch_size,
+                processes=getattr(self._cfg, "vep_processes", 0))
+            self._gnomad.precompute(variants)
+            self._splice.precompute(variants)
 
         results: dict[str, AnnotationData] = {}
 

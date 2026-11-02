@@ -11,6 +11,7 @@ out). Source: hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/
 """
 from __future__ import annotations
 
+import os
 import threading
 from pathlib import Path
 from typing import Optional
@@ -36,6 +37,7 @@ class PhyloPReader:
         self._path = bigwig_path
         self._bw = None
         self._opened = False          # whether an open was attempted
+        self._pid = os.getpid()       # process that owns self._bw
         self._lock = threading.Lock()  # _ensure_open runs under the annotation pool
         # "Loadable" = we have a path and pyBigWig imports. The actual (slow)
         # file open is deferred to the first lookup.
@@ -56,7 +58,17 @@ class PhyloPReader:
             self._loadable = False
 
     def _ensure_open(self) -> None:
-        """Open the bigWig on first use (thread-safe, runs once)."""
+        """Open the bigWig on first use (thread-safe, runs once per process).
+
+        A handle inherited through fork() (parallel classification workers) is
+        not reused: its file offset is shared with the parent, so concurrent
+        reads would race. The child re-opens its own handle instead."""
+        if self._pid != os.getpid():
+            self._pid = os.getpid()
+            self._lock = threading.Lock()
+            if self._opened and self._bw is not None:
+                self._bw = None
+                self._opened = False
         if self._opened:
             return
         with self._lock:

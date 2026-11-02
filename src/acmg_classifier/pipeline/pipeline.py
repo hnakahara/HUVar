@@ -66,9 +66,6 @@ def run_pipeline(
     clf_2015 = Classifier2015()
     clf_bay = ClassifierBayesian()
 
-    from acmg_classifier.models.annotation import AnnotationData
-
-    results: list[ClassificationResult] = []
     all_records = list(read_vcf(vcf_path, cfg.assembly))
     # ALT='.' records carry no alternate allele — they are not variants and
     # cannot be classified. Exclude them from the main output and write them
@@ -105,78 +102,15 @@ def run_pipeline(
     annotations = orchestrator.annotate_batch(variants)
     log.info("annotations_returned", count=len(annotations))
 
-    missing_keys: list[str] = []
-    annotated_count = 0
+    missing_keys = [v.key for v in variants if v.key not in annotations]
+    annotated_count = len(variants) - len(missing_keys)
 
-    # Classification is CPU-cheap relative to annotation but still benefits
-    # from a progress bar when there are many variants — without it the user
-    # only sees the annotation bar finish and then a silent gap until the
-    # final summary line.
-    for variant in track(variants, "Classifying", total=len(variants)):
-        ann = annotations.get(variant.key)
-        # Annotation failures are non-fatal — we emit a row with an empty
-        # AnnotationData and surface the warning in the output so the user
-        # sees there *was* a variant rather than a silent gap. This matches
-        # clinical-lab expectations of "explain every input row".
-        if ann is None:
-            missing_keys.append(variant.key)
-            ann = AnnotationData()
-            extra_warnings = ["VEP returned no annotation for this variant"]
-        else:
-            annotated_count += 1
-            extra_warnings = []
-
-        sup_entries = supplement.get(variant.key, [])
-        criteria_results = registry.evaluate_all(variant, ann, sup_entries)
-        classification_2015, rules = clf_2015.classify(criteria_results)
-        score, classification_bay = clf_bay.classify(criteria_results)
-
-        def _evaluate_on(ann_tx, _variant=variant, _sup=sup_entries):
-            crit = registry.evaluate_all(_variant, ann_tx, _sup)
-            c2015, r2015 = clf_2015.classify(crit)
-            sc, cbay = clf_bay.classify(crit)
-            from acmg_classifier.classification.gene_validity import apply_gene_validity
-            tpc = ann_tx.primary_consequence
-            c2015, cbay, _w = apply_gene_validity(
-                tpc.gene_symbol if tpc else None, c2015, cbay, cfg)
-            return crit, c2015, r2015, sc, cbay
-
-        pc = ann.primary_consequence
-        from acmg_classifier.classification.gene_validity import apply_gene_validity
-        classification_2015, classification_bay, gdv_warn = apply_gene_validity(
-            pc.gene_symbol if pc else None, classification_2015, classification_bay, cfg,
-        )
-        extra_warnings = list(extra_warnings) + gdv_warn
-        from acmg_classifier.models.variant import large_indel_warning
-        big = large_indel_warning(variant.ref, variant.alt)
-        if big:
-            extra_warnings.append(big)
-        from acmg_classifier.local_db.erepo_db import vcep_record, vcep_warning
-        extra_warnings += vcep_warning(cfg.assembly.value, variant.chrom, variant.pos,
-                                       variant.ref, variant.alt)
-        result = ClassificationResult(
-            variant_id=variant.key,
-            vcep=vcep_record(cfg.assembly.value, variant.chrom, variant.pos,
-                             variant.ref, variant.alt),
-            chrom=variant.chrom,
-            pos=variant.pos,
-            ref=variant.ref,
-            alt=variant.alt,
-            filter=variant.filter,
-            transcript_id=pc.transcript_id if pc else None,
-            gene_symbol=pc.gene_symbol if pc else None,
-            hgvs_c=pc.hgvs_c if pc else None,
-            hgvs_p=pc.hgvs_p if pc else None,
-            mane_plus_clinical=plus_clinical_evaluations(ann, cfg, criteria_results, _evaluate_on),
-            annotation=ann,
-            criteria_results=criteria_results,
-            classification_2015=classification_2015,
-            classification_2015_rules=rules,
-            bayesian_score=score,
-            classification_bayesian=classification_bay,
-            warnings=extra_warnings,
-        )
-        results.append(result)
+    if profiler is not None:
+        # Per-evaluator wall time next to the cProfile output; the profile run
+        # classifies in this process so cProfile sees the evaluators.
+        registry.enable_timing()
+    ctx = _ClassifyContext(cfg, registry, clf_2015, clf_bay, annotations, supplement)
+    results = _classify_all(variants, ctx, serial=profiler is not None)
 
     # Stop the profiler BEFORE the TSV write so output I/O doesn't pollute
     # the top-N. Dump the raw stats for offline `snakeviz` / `pstats` use
@@ -197,6 +131,7 @@ def run_pipeline(
         _sys.stderr.write("\n===== cProfile top 30 (cumulative) =====\n")
         _sys.stderr.write(buf.getvalue())
         _sys.stderr.write("========================================\n")
+        _sys.stderr.write(_format_timings(registry.timings(), len(variants)))
 
     log.info(
         "pipeline_summary",
@@ -241,6 +176,252 @@ def run_pipeline(
             )
 
     return results
+
+
+class _ClassifyContext:
+    """Everything the per-variant classification needs (shared with forked
+    worker processes copy-on-write)."""
+
+    def __init__(self, cfg, registry, clf_2015, clf_bay, annotations, supplement):
+        self.cfg = cfg
+        self.registry = registry
+        self.clf_2015 = clf_2015
+        self.clf_bay = clf_bay
+        self.annotations = annotations
+        self.supplement = supplement
+
+
+def _classify_record(variant: VariantRecord, ctx: _ClassifyContext) -> ClassificationResult:
+    """Evaluate the criteria for one annotated VCF record and build its result."""
+    from acmg_classifier.models.annotation import AnnotationData
+    from acmg_classifier.classification.gene_validity import apply_gene_validity
+    from acmg_classifier.models.variant import large_indel_warning
+    from acmg_classifier.local_db.erepo_db import vcep_record, vcep_warning
+
+    cfg, registry, clf_2015, clf_bay = ctx.cfg, ctx.registry, ctx.clf_2015, ctx.clf_bay
+    ann = ctx.annotations.get(variant.key)
+    # Annotation failures are non-fatal — we emit a row with an empty
+    # AnnotationData and surface the warning in the output so the user
+    # sees there *was* a variant rather than a silent gap. This matches
+    # clinical-lab expectations of "explain every input row".
+    if ann is None:
+        ann = AnnotationData()
+        extra_warnings = ["VEP returned no annotation for this variant"]
+    else:
+        extra_warnings = []
+
+    sup_entries = ctx.supplement.get(variant.key, [])
+    criteria_results = registry.evaluate_all(variant, ann, sup_entries)
+    classification_2015, rules = clf_2015.classify(criteria_results)
+    score, classification_bay = clf_bay.classify(criteria_results)
+
+    def _evaluate_on(ann_tx, _variant=variant, _sup=sup_entries):
+        crit = registry.evaluate_all(_variant, ann_tx, _sup)
+        c2015, r2015 = clf_2015.classify(crit)
+        sc, cbay = clf_bay.classify(crit)
+        tpc = ann_tx.primary_consequence
+        c2015, cbay, _w = apply_gene_validity(
+            tpc.gene_symbol if tpc else None, c2015, cbay, cfg)
+        return crit, c2015, r2015, sc, cbay
+
+    pc = ann.primary_consequence
+    classification_2015, classification_bay, gdv_warn = apply_gene_validity(
+        pc.gene_symbol if pc else None, classification_2015, classification_bay, cfg,
+    )
+    extra_warnings = list(extra_warnings) + gdv_warn
+    big = large_indel_warning(variant.ref, variant.alt)
+    if big:
+        extra_warnings.append(big)
+    extra_warnings += vcep_warning(cfg.assembly.value, variant.chrom, variant.pos,
+                                   variant.ref, variant.alt)
+    return ClassificationResult(
+        variant_id=variant.key,
+        vcep=vcep_record(cfg.assembly.value, variant.chrom, variant.pos,
+                         variant.ref, variant.alt),
+        chrom=variant.chrom,
+        pos=variant.pos,
+        ref=variant.ref,
+        alt=variant.alt,
+        filter=variant.filter,
+        transcript_id=pc.transcript_id if pc else None,
+        gene_symbol=pc.gene_symbol if pc else None,
+        hgvs_c=pc.hgvs_c if pc else None,
+        hgvs_p=pc.hgvs_p if pc else None,
+        mane_plus_clinical=plus_clinical_evaluations(ann, cfg, criteria_results, _evaluate_on),
+        annotation=ann,
+        criteria_results=criteria_results,
+        classification_2015=classification_2015,
+        classification_2015_rules=rules,
+        bayesian_score=score,
+        classification_bayesian=classification_bay,
+        warnings=extra_warnings,
+    )
+
+
+# Below this many variants the fork / pickling overhead outweighs the gain.
+_MIN_PARALLEL_VARIANTS = 200
+# Variants classified in the parent before forking: the first record of each
+# gene, so lazily loaded per-gene tables (and the large shared ones) are in
+# memory once and inherited by every worker instead of loaded per worker.
+_MAX_WARMUP = 256
+
+# Set in the parent just before the pool forks; workers read it (fork start
+# method only, so it is inherited, never pickled).
+_FORK_CTX: dict = {}
+
+
+def classify_process_count(cfg: Config, n_variants: int) -> int:
+    """Worker processes for classifying ``n_variants`` (1 = in-process).
+
+    Parallel classification needs the ``fork`` start method (Linux), a
+    non-daemonic process and a batch large enough to pay for the pool. Inside a
+    Celery prefork worker (a daemonic billiard process, e.g. the HUVar_app batch
+    jobs) the automatic setting stays in-process so a web job does not
+    multiply its CPU use unasked; an explicit ``classify_workers`` still applies
+    there."""
+    import multiprocessing as mp
+    import sys
+
+    explicit = int(getattr(cfg, "classify_workers", 0) or 0)
+    want = explicit or int(cfg.workers or 1)
+    if want <= 1 or n_variants < _MIN_PARALLEL_VARIANTS:
+        return 1
+    if not sys.platform.startswith("linux") or "fork" not in mp.get_all_start_methods():
+        return 1
+    if mp.current_process().daemon:  # stdlib refuses children of daemons
+        return 1
+    if not explicit and "billiard" in sys.modules:
+        try:
+            from billiard.process import current_process as _bp  # type: ignore
+            if _bp().daemon:
+                return 1
+        except Exception:  # noqa: BLE001
+            pass
+    return min(want, max(1, n_variants // 50))
+
+
+def _worker_init() -> None:
+    from acmg_classifier.utils import progress
+    # Only the parent draws the "Classifying" bar.
+    progress.set_enabled(False)
+
+
+def _classify_range(bounds: tuple[int, int]) -> list[tuple[int, ClassificationResult]]:
+    ctx: _ClassifyContext = _FORK_CTX["ctx"]
+    variants = _FORK_CTX["variants"]
+    done = _FORK_CTX["done"]
+    out = []
+    for i in range(*bounds):
+        if i in done:
+            continue
+        res = _classify_record(variants[i], ctx)
+        # The parent holds the identical AnnotationData (evaluators never
+        # mutate it) and re-attaches it, so it is not pickled back.
+        res.annotation = None
+        out.append((i, res))
+    return out
+
+
+def _warmup_indices(variants: list[VariantRecord], annotations: dict) -> list[int]:
+    seen: set = set()
+    picked: list[int] = []
+    for i, v in enumerate(variants):
+        ann = annotations.get(v.key)
+        pc = ann.primary_consequence if ann is not None else None
+        gene = pc.gene_symbol if pc is not None else None
+        if gene in seen:
+            continue
+        seen.add(gene)
+        picked.append(i)
+        if len(picked) >= _MAX_WARMUP:
+            break
+    return picked
+
+
+def _classify_all(variants: list[VariantRecord], ctx: _ClassifyContext,
+                  serial: bool = False) -> list[ClassificationResult]:
+    """Classify ``variants`` in order, in worker processes when worthwhile.
+
+    The criteria evaluation is pure Python (GIL-bound), so threads do not help;
+    forked processes share the loaded reference tables copy-on-write. Results
+    are identical to the in-process loop and returned in input order."""
+    from acmg_classifier.models.annotation import AnnotationData
+    from acmg_classifier.utils.progress import progress_bar
+
+    n = len(variants)
+    n_proc = 1 if serial else classify_process_count(ctx.cfg, n)
+    if n_proc <= 1:
+        # Classification is CPU-cheap relative to annotation but still benefits
+        # from a progress bar when there are many variants — without it the user
+        # only sees the annotation bar finish and then a silent gap until the
+        # final summary line.
+        return [_classify_record(v, ctx) for v in track(variants, "Classifying", total=n)]
+
+    import gc
+    import multiprocessing as mp
+    from concurrent.futures import ProcessPoolExecutor, as_completed
+    from concurrent.futures.process import BrokenProcessPool
+
+    slots: list[Optional[ClassificationResult]] = [None] * n
+    warm = _warmup_indices(variants, ctx.annotations)
+    for i in track(warm, "Classifying (one variant per gene, pre-loading tables)",
+                   total=len(warm)):
+        slots[i] = _classify_record(variants[i], ctx)
+    # Small chunks keep the bar moving and balance genes of unequal cost.
+    chunk = max(16, min(512, n // (n_proc * 16) or 16))
+    ranges = [(s, min(s + chunk, n)) for s in range(0, n, chunk)]
+    log.info("classify_parallel", processes=n_proc, chunks=len(ranges),
+             chunk_size=chunk, warmup=len(warm))
+    _FORK_CTX.update(ctx=ctx, variants=variants, done=frozenset(warm))
+    # Freeze the objects loaded so far so the workers' garbage collector does
+    # not touch (and thereby copy) the shared pages.
+    gc.collect()
+    gc.freeze()
+    try:
+        with ProcessPoolExecutor(max_workers=n_proc, mp_context=mp.get_context("fork"),
+                                 initializer=_worker_init) as pool:
+            # Every task is submitted (and so every worker forked) BEFORE the
+            # progress bar starts: the bar's refresh thread must not exist at
+            # fork time, or a lock it holds would stay locked in the children.
+            futures = [pool.submit(_classify_range, r) for r in ranges]
+            with progress_bar("Classifying", total=n) as advance:
+                advance(len(warm))
+                try:
+                    for fut in as_completed(futures):
+                        part = fut.result()
+                        for i, res in part:
+                            ann = ctx.annotations.get(variants[i].key)
+                            res.annotation = ann if ann is not None else AnnotationData()
+                            slots[i] = res
+                        advance(len(part))
+                except BrokenProcessPool as exc:
+                    # A worker died (e.g. killed for memory). Finish in-process
+                    # below rather than losing the run.
+                    log.warning("classify_parallel_failed", error=str(exc),
+                                hint="set ACMG_CLASSIFY_WORKERS lower (or 1) if workers "
+                                     "run out of memory")
+    finally:
+        _FORK_CTX.clear()
+        gc.unfreeze()
+    missing = [i for i, r in enumerate(slots) if r is None]
+    if missing:
+        for i in track(missing, "Classifying (in-process)", total=len(missing)):
+            slots[i] = _classify_record(variants[i], ctx)
+    return slots  # type: ignore[return-value]
+
+
+def _format_timings(timings: dict[str, float], n_variants: int) -> str:
+    """Per-evaluator wall-time table for ``classify --profile``."""
+    if not timings:
+        return ""
+    total = sum(timings.values()) or 1.0
+    lines = ["\n===== criteria evaluation time per evaluator =====",
+             f"{'evaluator':<34}{'total s':>10}{'ms/variant':>12}{'share':>8}"]
+    for name, sec in timings.items():
+        per = sec * 1000.0 / max(1, n_variants)
+        lines.append(f"{name:<34}{sec:>10.2f}{per:>12.3f}{sec / total:>8.1%}")
+    lines.append("=" * 64 + "\n")
+    return "\n".join(lines)
 
 
 def annotate_one(

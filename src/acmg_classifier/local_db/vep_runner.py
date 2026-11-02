@@ -3,12 +3,15 @@ Local VEP subprocess runner.
 
 Runs Ensembl VEP as a child process with --offline --json and parses
 the JSON output into VEPConsequence / AnnotationData structures.
-Supports batched execution (default 500 variants per VEP invocation).
+Supports batched execution (default 5000 variants per VEP invocation), with
+several invocations run concurrently for large batches.
 """
 from __future__ import annotations
 import json
+import math
 import subprocess
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -302,6 +305,18 @@ def _parse_vep_record(
     return key, consequences
 
 
+def vep_process_count(n_chunks: int, workers: int, processes: int = 0) -> int:
+    """Concurrent VEP invocations for a batch of ``n_chunks`` chunks.
+
+    ``processes`` > 0 is an explicit cap; 0 picks ``workers // 8`` (each
+    invocation keeps at least 8 forks, so VEP's per-fork overhead stays small).
+    Never more than the number of chunks, never less than 1."""
+    if n_chunks <= 1:
+        return 1
+    want = processes if processes and processes > 0 else max(1, int(workers or 1) // 8)
+    return max(1, min(n_chunks, want))
+
+
 class LocalVEPRunner:
     def __init__(
         self,
@@ -328,28 +343,50 @@ class LocalVEPRunner:
     def annotate_batch(
         self,
         variants: list[VariantRecord],
-        batch_size: int = 500,
+        batch_size: int = 5000,
+        processes: int = 0,
     ) -> dict[str, list[ConsequenceInfo]]:
         """Annotate a list of variants by chunking them into VEP subprocess calls.
 
         VEP startup cost (cache load, FASTA index, plugin init) is large —
-        typically several seconds — so we amortise it across a batch of
-        ~500 variants per invocation. Smaller batches lose throughput;
-        larger batches risk hitting OS argv/stdin limits and make failure
-        recovery coarser (one bad variant kills the whole chunk)."""
+        typically several seconds — so it is amortised over ``batch_size``
+        variants per invocation (input goes through a file, so there is no
+        argv/stdin limit). When the batch has several chunks, up to
+        ``processes`` invocations run at once (0 = ``workers // 8``), each with
+        ``--fork workers // processes`` so the total fork count stays at
+        ``workers``. The chunks are sized evenly so the last one does not run
+        alone at the end."""
         results: dict[str, list[ConsequenceInfo]] = {}
-        for i in range(0, len(variants), batch_size):
-            chunk = variants[i : i + batch_size]
-            chunk_results = self._run_vep(chunk)
-            results.update(chunk_results)
+        if not variants:
+            return results
+        batch_size = max(1, int(batch_size or 1))
+        n_chunks = math.ceil(len(variants) / batch_size)
+        n_proc = vep_process_count(n_chunks, self._workers, processes)
+        if n_proc > 1:
+            # Round the chunk count up to a multiple of the process count and
+            # even out the sizes.
+            n_chunks = math.ceil(n_chunks / n_proc) * n_proc
+        size = math.ceil(len(variants) / n_chunks)
+        chunks = [variants[i : i + size] for i in range(0, len(variants), size)]
+        forks = max(1, self._workers // n_proc)
+        if n_proc <= 1:
+            for chunk in chunks:
+                results.update(self._run_vep(chunk, forks))
+            return results
+        log.info("vep_parallel", chunks=len(chunks), processes=n_proc,
+                 forks_per_process=forks, chunk_size=size)
+        with ThreadPoolExecutor(max_workers=n_proc) as pool:
+            for part in pool.map(lambda c: self._run_vep(c, forks), chunks):
+                results.update(part)
         return results
 
-    def _run_vep(self, variants: list[VariantRecord]) -> dict[str, list[ConsequenceInfo]]:
+    def _run_vep(self, variants: list[VariantRecord],
+                 forks: int | None = None) -> dict[str, list[ConsequenceInfo]]:
         with tempfile.TemporaryDirectory() as tmpdir:
             input_path = Path(tmpdir) / "input.vcf"
             output_path = Path(tmpdir) / "output.json"
             self._write_input_vcf(variants, input_path)
-            self._exec_vep(input_path, output_path)
+            self._exec_vep(input_path, output_path, forks)
             parsed = self._parse_output(output_path)
             annotatable = [v for v in variants if self._is_annotatable(v)]
             # Compare against the DEDUPLICATED key set, not len(annotatable):
@@ -393,7 +430,8 @@ class LocalVEPRunner:
                 chrom = v.chrom[3:] if v.chrom.startswith("chr") else v.chrom
                 fh.write(chrom + "\t" + str(v.pos) + "\t" + v.key + "\t" + v.ref + "\t" + v.alt + "\t.\t.\t.\n")
 
-    def _exec_vep(self, input_path: Path, output_path: Path) -> None:
+    def _exec_vep(self, input_path: Path, output_path: Path,
+                  forks: int | None = None) -> None:
         cmd = [
             self._vep_cmd,
             "--input_file", str(input_path),
@@ -410,7 +448,7 @@ class LocalVEPRunner:
             "--numbers", "--domains", "--symbol", "--biotype",
             "--uniprot",
             "--no_progress",
-            "--fork", str(self._workers),
+            "--fork", str(forks or self._workers),
             "--force_overwrite",
         ]
         log.debug("vep_exec", cmd=" ".join(cmd))
