@@ -701,7 +701,8 @@ chr17:43044295:G:A	PP1	Supporting	3 affected family members segregating variant
 > Combine it with your own curation by concatenating rows into one TSV (or keep
 > separate files and run in stages).
 
-- `variant_id` must match the canonical `chrom:pos:ref:alt` used in the output.
+- `variant_id` must match the canonical `chrom:pos:ref:alt` used in the output (the
+  normalised form; the VCF's own representation, shown as `input_variant`, is accepted too).
 - `criterion` is any ACMG code (e.g. `PVS1`, `PS1`, `PS3`, `PM2`, `PP1`, `BP1`).
 - `strength` is one of `VeryStrong`, `Strong`, `ThreePoint`, `Moderate`,
   `Supporting`.
@@ -886,8 +887,15 @@ The result TSV has the following columns (one row per variant):
 
 ### Identity & call
 
-`variant_id`, `chrom`, `pos`, `ref`, `alt`, `filter`,
+`variant_id`, `input_variant`, `chrom`, `pos`, `ref`, `alt`, `filter`,
 `transcript`, `gene`, `hgvs_c`, `hgvs_p`
+
+Alleles are **normalised** on input (minimal representation, left-aligned against the
+genome FASTA), as ClinVar, gnomAD and the SpliceAI score files are: an indel written
+with padding bases — typical of a split multi-allelic GATK record, e.g.
+`chr1:115725557 GAAA>GAA` — is evaluated as `GA>G`. `variant_id`/`chrom`/`pos`/`ref`/`alt`
+give the normalised form; `input_variant` keeps the VCF's own `chrom:pos:ref:alt` when it
+differed (empty otherwise), and the `warnings` column notes it (`NORMALIZED:`).
 
 `transcript` is the transcript every criterion is evaluated on (RefSeq MANE Select
 first, then Ensembl MANE Select, then canonical). When the gene also has a **MANE Plus

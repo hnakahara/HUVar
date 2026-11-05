@@ -178,7 +178,7 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
         if detected:
             cfg = cfg.model_copy(update={"assembly": detected})
     manual = read_somatic_supplement(supplement_path) if supplement_path else {}
-    records = list(read_vcf(vcf_path, cfg.assembly))
+    records = list(read_vcf(vcf_path, cfg.assembly, fasta=cfg.genome_fasta))
     variants = [v for v in records if unsupported_allele_reason(v.ref, v.alt) is None]
     skipped = len(records) - len(variants)
     if skipped:
@@ -195,7 +195,10 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
         big = large_indel_warning(v.ref, v.alt)
         if big:
             warn.append(big)
-        results.append(clf.classify(v, ann, manual.get(v.key), warn))
+        entries = manual.get(v.key) or (manual.get(v.input_variant) if v.input_variant else None)
+        if v.input_variant:
+            warn.append(f"NORMALIZED: VCF allele {v.input_variant} evaluated as {v.key}")
+        results.append(clf.classify(v, ann, entries, warn))
     write_somatic_tsv(results, output_path)
     log.info("somatic_summary", variants=len(results))
     return results

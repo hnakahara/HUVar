@@ -105,6 +105,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **Indels written with padding bases were not normalised, so they missed ClinVar,
+  gnomAD and the SpliceAI scores.** All three are looked up by exact CHROM:POS:REF:ALT in
+  their normalised (minimal, left-aligned) form, but VCF alleles were used as written.
+  A split multi-allelic GATK record such as `GAAA>GAA,G` gives `GAAA>GAA`, which matched
+  nothing: the variant was reported absent from gnomAD (PM2 met), without its ClinVar
+  record and with "Splice score unavailable" (e.g. CASQ2 c.738-5del, found only when
+  entered by HGVS). `read_vcf` now normalises every allele (vt algorithm: right-trim,
+  extend left from the genome FASTA, left-trim to one anchor base; a REF that does not
+  match the reference is only trimmed), for `classify`, `somatic` and `explain`. The
+  existing `left_align_and_trim` was never called and its left shift was wrong; it is
+  rewritten on the same algorithm. The output keeps the VCF's own representation in the
+  new `input_variant` column (after `variant_id`) with a `NORMALIZED:` warning, and
+  `--supplement` rows match either representation.
+
 - `build_mavedb_functional.py --dump DIR` (an extracted dump) kept nothing because
   the score files sorted before `main.json`; `main.json` is now read first.
 

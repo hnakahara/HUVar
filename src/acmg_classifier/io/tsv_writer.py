@@ -57,7 +57,7 @@ _VCEP_HEADER = [
 
 _HEADER = (
     [
-        "variant_id", "chrom", "pos", "ref", "alt", "filter",
+        "variant_id", "input_variant", "chrom", "pos", "ref", "alt", "filter",
         "transcript", "gene", "hgvs_c", "hgvs_p",
     ]
     + _MANE_PC_HEADER
@@ -278,6 +278,7 @@ def _build_row(result: ClassificationResult) -> list[str]:
     return (
         [
             result.variant_id,
+            result.input_variant or "",
             result.chrom,
             str(result.pos),
             result.ref,
@@ -300,5 +301,13 @@ def _build_row(result: ClassificationResult) -> list[str]:
         + triggered
         + strengths
         + evidences
-        + ["; ".join(result.warnings)]
+        + ["; ".join(_normalized_note(result) + list(result.warnings))]
     )
+
+
+def _normalized_note(result: ClassificationResult) -> list[str]:
+    """Warning for a VCF allele that was rewritten into its normalised form."""
+    if not result.input_variant:
+        return []
+    return [f"NORMALIZED: VCF allele {result.input_variant} evaluated as {result.variant_id} "
+            "(minimal, left-aligned representation used for ClinVar/gnomAD/splice lookups)"]

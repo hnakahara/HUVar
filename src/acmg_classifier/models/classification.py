@@ -31,6 +31,8 @@ class ClassificationResult(BaseModel):
     model_config = {"arbitrary_types_allowed": True}
 
     variant_id: str
+    # The VCF's own CHROM:POS:REF:ALT when normalisation changed it (None otherwise)
+    input_variant: Optional[str] = None
     chrom: str = ""
     pos: int = 0
     ref: str = ""

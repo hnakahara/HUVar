@@ -1,93 +1,122 @@
+"""Variant normalisation: minimal representation + left alignment.
+
+VCFs from GATK and similar callers often carry indels with extra padding bases,
+e.g. ``GAAA>GAA`` for a single-A deletion (common when a multi-allelic record such
+as ``GAAA>GAA,G`` is split). ClinVar, gnomAD and the SpliceAI score files store the
+normalised form (``GA>G``, left-aligned), and every lookup here is an exact
+CHROM:POS:REF:ALT match, so an un-normalised indel silently misses all of them
+(absent from gnomAD -> PM2 met, no ClinVar match, no splice score).
+
+``normalize_alleles`` implements the vt algorithm (Tan, Abecasis & Kang 2015):
+repeatedly right-trim the shared last base and, when an allele becomes empty,
+extend both alleles one base to the left from the reference; then trim the
+shared leading bases down to a single anchor. Without a reference only the
+trimming is done (enough for padding, but repeats are not left-shifted).
+"""
 from __future__ import annotations
+
 from pathlib import Path
-import pysam  # type: ignore
+from typing import Optional
 
 from acmg_classifier.models.variant import VariantRecord
 
 
-def _normalize_chrom(fasta: pysam.FastaFile, chrom: str) -> str:
-    """Match the input chromosome name to the form actually present in the
-    FASTA index. FASTA files in the wild use either "chr1" (UCSC) or "1"
-    (Ensembl). We try the input form first, then the toggled form, then
-    give up — pysam will surface a clean error if neither exists."""
-    if chrom in fasta.references:
-        return chrom
-    alt = chrom[3:] if chrom.startswith("chr") else f"chr{chrom}"
-    return alt if alt in fasta.references else chrom
+def _contig(fasta, chrom: str) -> Optional[str]:
+    """The FASTA's name for *chrom* ("chr1" / "1" / "chrM" / "MT"), or None."""
+    names = fasta.references
+    bare = chrom[3:] if chrom.lower().startswith("chr") else chrom
+    candidates = [chrom, bare, "chr" + bare]
+    if bare.upper() in ("M", "MT"):
+        candidates += ["chrM", "MT", "M"]
+    for c in candidates:
+        if c in names:
+            return c
+    return None
 
 
-def _fetch_ref_base(fasta: pysam.FastaFile, chrom: str, pos: int) -> str:
-    """Single base lookup at a 1-based position (pysam uses 0-based half-open).
-    Used by left_align_and_trim while shifting indels upstream."""
-    return fasta.fetch(chrom, pos - 1, pos).upper()
+def normalize_alleles(chrom: str, pos: int, ref: str, alt: str,
+                      fasta=None) -> tuple[int, str, str]:
+    """Normalised ``(pos, ref, alt)``. ``fasta`` is an open ``pysam.FastaFile`` or None.
+
+    SNVs and identical alleles are returned unchanged. Left alignment needs the
+    reference and is only attempted when the REF allele matches it at ``pos``
+    (a mismatching REF -- e.g. a VCF of another assembly -- is only trimmed)."""
+    ref, alt = ref.upper(), alt.upper()
+    if (len(ref) == 1 and len(alt) == 1) or ref == alt:
+        return pos, ref, alt
+    original = (pos, ref, alt)
+
+    contig = None
+    if fasta is not None:
+        contig = _contig(fasta, chrom)
+        if contig is not None:
+            try:
+                genome = fasta.fetch(contig, pos - 1, pos - 1 + len(ref)).upper()
+            except (ValueError, KeyError, IndexError):
+                genome = ""
+            if genome != ref:
+                contig = None
+
+    if contig is None:
+        while len(ref) > 1 and len(alt) > 1 and ref[-1] == alt[-1]:
+            ref, alt = ref[:-1], alt[:-1]
+    else:
+        while True:
+            changed = False
+            if ref and alt and ref[-1] == alt[-1]:
+                ref, alt = ref[:-1], alt[:-1]
+                changed = True
+            if (not ref or not alt) and pos > 1:
+                base = fasta.fetch(contig, pos - 2, pos - 1).upper()
+                ref, alt = base + ref, base + alt
+                pos -= 1
+                changed = True
+            if not changed:
+                break
+        if not ref or not alt:          # at the start of the contig: leave it as it was
+            return original
+
+    while len(ref) > 1 and len(alt) > 1 and ref[0] == alt[0]:
+        ref, alt = ref[1:], alt[1:]
+        pos += 1
+    return pos, ref, alt
 
 
-def left_align_and_trim(
-    variant: VariantRecord,
-    fasta_path: Path,
-) -> VariantRecord:
-    """
-    Left-align and minimally represent an indel variant against the reference FASTA.
+def open_fasta(fasta_path: Optional[Path]):
+    """An open ``pysam.FastaFile`` for *fasta_path*, or None when unavailable."""
+    if fasta_path is None or not Path(fasta_path).exists():
+        return None
+    try:
+        import pysam  # type: ignore
+        return pysam.FastaFile(str(fasta_path))
+    except Exception:  # noqa: BLE001 -- normalisation falls back to trimming
+        return None
 
-    SNVs pass through unchanged. Already left-normalised variants also pass through
-    unchanged (idempotent). This is the standard VCF normalisation step performed
-    before any database lookup so that coordinates match stored entries.
 
-    Implements the vt-style normalisation algorithm (Tan, Abecasis &
-    Kang 2015) directly because pysam/cyvcf2 don't expose a normalise
-    primitive. Order is right-trim → left-shift → left-trim; all three
-    steps are required for minimal-representation idempotency.
-    """
-    # SNVs are already in minimal representation by definition.
+def normalize_record(variant: VariantRecord, fasta=None) -> VariantRecord:
+    """*variant* in normalised form; ``input_variant`` keeps the original key when
+    the representation changed."""
+    pos, ref, alt = normalize_alleles(variant.chrom, variant.pos, variant.ref,
+                                      variant.alt, fasta)
+    if (pos, ref, alt) == (variant.pos, variant.ref, variant.alt):
+        return variant
+    # model_copy skips model_post_init, so set the derived key explicitly
+    return variant.model_copy(update={
+        "pos": pos, "ref": ref, "alt": alt,
+        "variant_id": f"{variant.chrom}:{pos}:{ref}:{alt}",
+        "input_variant": variant.input_variant or variant.key,
+    })
+
+
+def left_align_and_trim(variant: VariantRecord, fasta_path: Path) -> VariantRecord:
+    """Normalise *variant* against the FASTA at *fasta_path* (kept for API
+    compatibility; batch callers should open the FASTA once and use
+    ``normalize_record``)."""
     if variant.is_snv:
         return variant
-
-    fasta = pysam.FastaFile(str(fasta_path))
+    fasta = open_fasta(fasta_path)
     try:
-        chrom = _normalize_chrom(fasta, variant.chrom)
-        pos = variant.pos
-        ref = variant.ref
-        alt = variant.alt
-
-        # Right-trim shared suffix: e.g. ATC/AGC → AT/AG (the trailing C is
-        # redundant). Stop when one side reaches length 1 — we must always
-        # keep at least one base on each side for a valid VCF representation.
-        while len(ref) > 1 and len(alt) > 1 and ref[-1] == alt[-1]:
-            ref = ref[:-1]
-            alt = alt[:-1]
-
-        # Left-shift: if the last base of either allele equals the genomic
-        # base immediately upstream, we can shift everything one position
-        # left while keeping the same biological variant. This is what
-        # makes the representation unique across equivalent representations
-        # (e.g. CAA→CA at pos N is the same as AA→A at pos N-1).
-        while len(ref) > 1 or len(alt) > 1:
-            prev = _fetch_ref_base(fasta, chrom, pos - 1)
-            if ref[-1] != prev and alt[-1] != prev:
-                break
-            ref = prev + ref[:-1] if len(ref) > 1 else prev
-            alt = prev + alt[:-1] if len(alt) > 1 else prev
-            pos -= 1
-
-        # Left-trim shared prefix, leaving exactly one anchor base. Equivalent
-        # to right-trim on the leading side; needed when the left-shift loop
-        # adds extra anchor bases that aren't strictly necessary.
-        while len(ref) > 1 and len(alt) > 1 and ref[0] == alt[0]:
-            ref = ref[1:]
-            alt = alt[1:]
-            pos += 1
-
+        return normalize_record(variant, fasta)
     finally:
-        fasta.close()
-
-    # Returning a model_copy (not mutating in place) keeps VariantRecord
-    # effectively immutable for callers. Setting variant_id=None forces
-    # model_post_init to regenerate the canonical key from the new coords.
-    return variant.model_copy(
-        update={
-            "pos": pos,
-            "ref": ref,
-            "alt": alt,
-            "variant_id": None,
-        }
-    )
+        if fasta is not None:
+            fasta.close()

@@ -34,8 +34,19 @@ def read_vcf(
     vcf_path: Path,
     assembly: Optional[Assembly] = None,
     sample_id: Optional[str] = None,
+    fasta: Optional[Path] = None,
 ) -> Iterator[VariantRecord]:
-    """Yield VariantRecord for every ALT allele in the VCF (multi-allelic split)."""
+    """Yield VariantRecord for every ALT allele in the VCF (multi-allelic split).
+
+    Each allele is normalised (minimal representation, left-aligned against the
+    reference ``fasta`` when given) so that it matches ClinVar / gnomAD / SpliceAI,
+    which are looked up by exact CHROM:POS:REF:ALT. Splitting a multi-allelic
+    record keeps the shared padding (``GAAA>GAA,G`` -> ``GAAA>GAA``), and such an
+    allele would otherwise miss every database. The original representation is kept
+    in ``VariantRecord.input_variant``. Unsupported alleles (ALT='.', symbolic,
+    breakend, '*') are passed through untouched."""
+    from acmg_classifier.annotation.normalizer import normalize_record, open_fasta
+    from acmg_classifier.models.variant import unsupported_allele_reason
     resolved_assembly = assembly or detect_assembly_from_header(vcf_path)
     if resolved_assembly is None:
         raise ValueError(
@@ -43,7 +54,12 @@ def read_vcf(
             "Pass --assembly explicitly."
         )
 
+    ref_fasta = open_fasta(fasta)
+    if fasta is not None and ref_fasta is None:
+        log.warning("normalisation_fasta_unavailable", path=str(fasta),
+                    hint="indels are trimmed but not left-aligned")
     vcf = VCF(str(vcf_path))
+    n_normalised = 0       # alleles whose representation changed
     n_records = 0          # VCF data lines seen
     n_no_alt = 0           # records with empty ALT (reference / '.' sites)
     n_failed = 0           # ALT alleles that failed VariantRecord construction
@@ -85,11 +101,19 @@ def read_vcf(
                         ref=variant.REF, alt=alt, error=str(exc),
                     )
                     continue
+                if unsupported_allele_reason(record.ref, record.alt) is None:
+                    normalised = normalize_record(record, ref_fasta)
+                    if normalised is not record:
+                        n_normalised += 1
+                        record = normalised
                 n_yielded += 1
                 yield record
     finally:
         vcf.close()
+        if ref_fasta is not None:
+            ref_fasta.close()
         log.info(
             "vcf_read_summary",
             records=n_records, no_alt=n_no_alt, failed=n_failed, yielded=n_yielded,
+            normalised=n_normalised,
         )

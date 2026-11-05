@@ -66,7 +66,9 @@ def run_pipeline(
     clf_2015 = Classifier2015()
     clf_bay = ClassifierBayesian()
 
-    all_records = list(read_vcf(vcf_path, cfg.assembly))
+    # Alleles are normalised (trimmed + left-aligned against the genome FASTA) so
+    # that indels written with padding bases still match ClinVar / gnomAD / SpliceAI.
+    all_records = list(read_vcf(vcf_path, cfg.assembly, fasta=cfg.genome_fasta))
     # ALT='.' records carry no alternate allele — they are not variants and
     # cannot be classified. Exclude them from the main output and write them
     # to a `.not_annotated` sidecar so users can see *which* rows were
@@ -210,7 +212,10 @@ def _classify_record(variant: VariantRecord, ctx: _ClassifyContext) -> Classific
     else:
         extra_warnings = []
 
-    sup_entries = ctx.supplement.get(variant.key, [])
+    # Curator evidence may be keyed by the normalised or by the VCF's own representation
+    sup_entries = (ctx.supplement.get(variant.key)
+                   or (ctx.supplement.get(variant.input_variant) if variant.input_variant else None)
+                   or [])
     criteria_results = registry.evaluate_all(variant, ann, sup_entries)
     classification_2015, rules = clf_2015.classify(criteria_results)
     score, classification_bay = clf_bay.classify(criteria_results)
@@ -236,6 +241,7 @@ def _classify_record(variant: VariantRecord, ctx: _ClassifyContext) -> Classific
                                    variant.ref, variant.alt)
     return ClassificationResult(
         variant_id=variant.key,
+        input_variant=variant.input_variant,
         vcep=vcep_record(cfg.assembly.value, variant.chrom, variant.pos,
                          variant.ref, variant.alt),
         chrom=variant.chrom,
@@ -443,6 +449,15 @@ def annotate_one(
     if why is not None:
         raise ValueError(f"{chrom}:{pos}:{ref}:{alt}: {why}")
     variant = VariantRecord(chrom=chrom, pos=pos, ref=ref, alt=alt, assembly=cfg.assembly)
+    # Same normalisation as the VCF path, so a padded indel typed on the command line
+    # (e.g. GAAA GAA) is looked up as GA>G.
+    from acmg_classifier.annotation.normalizer import normalize_record, open_fasta
+    fasta = open_fasta(cfg.genome_fasta)
+    try:
+        variant = normalize_record(variant, fasta)
+    finally:
+        if fasta is not None:
+            fasta.close()
     orchestrator = AnnotationOrchestrator(cfg)
     ann = orchestrator.annotate_batch([variant])[variant.key]
     return variant, ann

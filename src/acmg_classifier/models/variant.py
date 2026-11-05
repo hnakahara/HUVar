@@ -56,6 +56,9 @@ class VariantRecord(BaseModel):
     qual: Optional[float] = None
     filter: Optional[str] = None
     sample_id: Optional[str] = None
+    # Original CHROM:POS:REF:ALT as written in the VCF when normalisation changed
+    # the representation (e.g. "chr1:115725557:GAAA:GAA" -> GA>G); None otherwise.
+    input_variant: Optional[str] = None
 
     @field_validator("chrom")
     @classmethod
