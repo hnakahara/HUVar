@@ -60,6 +60,15 @@ class PM5Evaluator(CriterionEvaluator):
                 if strength == CriterionStrength.NOT_MET:
                     return CriteriaResult.not_met(ACMGCriterion.PM5, evidence)
                 return CriteriaResult.met(ACMGCriterion.PM5, strength=strength, evidence=evidence)
+            # SCID VCEP point table for nonsense variants (informative truncating
+            # variants in the same exon); PM2 / PVS1 interplay in the registry.
+            from acmg_classifier.criteria.pm5_ptc import evaluate_scid_pm5
+            scid = evaluate_scid_pm5(pc, self._cfg, variant)
+            if scid is not None:
+                strength, evidence = scid
+                if strength == CriterionStrength.NOT_MET:
+                    return CriteriaResult.not_met(ACMGCriterion.PM5, evidence)
+                return CriteriaResult.met(ACMGCriterion.PM5, strength=strength, evidence=evidence)
         if pc is None or pc.consequence != ConsequenceType.MISSENSE:
             return CriteriaResult.not_met(ACMGCriterion.PM5, "Not a missense variant")
 
@@ -86,6 +95,20 @@ class PM5Evaluator(CriterionEvaluator):
                     f"{gene} VCEP: REVEL {'unavailable' if rv is None else f'{rv:.3f}'} "
                     f"(> {cond.REVEL_MIN[gene]:g} required)",
                 )
+
+        # KCNQ1 (LQTS VCEP): only at residues identical in all five KCNQ paralogues.
+        if gene in cond.PARALOG_CONSERVATION:
+            rc = getattr(annotation, "rule_consequence", None) or pc
+            ref_aa = (rc.amino_acids or "/").split("/")[0] or None
+            ok, detail = cond.paralog_conserved(gene, rc.protein_position, ref_aa)
+            if ok is False:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM5,
+                    f"{gene} VCEP: residue not conserved across the KCNQ paralogues ({detail})")
+            cons_note = (f" [conserved in KCNQ1-5: {detail}]" if ok
+                         else f" [{detail}]" if detail else "")
+        else:
+            cons_note = ""
 
         from acmg_classifier.local_db.clinvar_sqlite import (
             has_benign_at_codon,
@@ -168,6 +191,31 @@ class PM5Evaluator(CriterionEvaluator):
             qualifying = hits
             tag = "same codon, diff AA"
 
+        # VCEPs whose strength depends on how many P / LP comparators there are
+        # (MYOC, ACADVL, VWF, F8/F9, LGMD genes, RASopathy genes): points per
+        # distinct amino-acid change, then the gene's ceiling.
+        from acmg_classifier.criteria.comparator_tiers import (
+            PM5_RULES, count_distinct, tier_strength,
+        )
+        rule = PM5_RULES.get(gene)
+        if rule is not None:
+            n_p, n_lp = count_distinct(qualifying, lambda h: _comparator_change(h.hgvs_p))
+            strength, text = tier_strength(rule, n_p, n_lp)
+            if strength is None:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM5, f"Same-codon comparators below the {gene} VCEP "
+                    f"minimum: {text}")
+            cap = self._spec.max_strength(pc.gene_symbol)
+            if cap is not None:
+                strength = _min_strength(strength, cap)
+            ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
+            return CriteriaResult.met(
+                ACMGCriterion.PM5, strength=strength,
+                evidence=f"ClinVar {tag}: {text}: {ids}"
+                + (f" [{splice_note}]" if splice_note else "")
+                + self._splice_caveat(gene, sp, cand_sp, qualifying) + cons_note,
+            )
+
         # Comparator-significance policy: VCEPs that offer no Supporting PM5
         # strength require the comparator to reach Pathogenic (PTEN, VHL, KCNQ1,
         # RASopathy genes, …) — a Likely-pathogenic-only comparator must not
@@ -182,26 +230,24 @@ class PM5Evaluator(CriterionEvaluator):
 
         cap = self._spec.max_strength(pc.gene_symbol) or CriterionStrength.MODERATE
 
-        # Count-threshold VCEPs (ACVRL1/ENG, HHT): PM5 applies only when >=N
-        # DISTINCT same-codon LP/P missense comparators exist, then fires at the
-        # VCEP ceiling (Strong). Fewer than N distinct changes → PM5 not met.
+        # Count-tiered VCEPs (ACVRL1/ENG, HHT): LP and P comparators count alike;
+        # >=N DISTINCT same-codon changes give the VCEP ceiling (Strong), fewer
+        # (at least one) give Moderate. No Supporting level.
         min_count = self._spec.min_count(pc.gene_symbol)
         if min_count > 1:
             distinct = len({
                 _comparator_change(h.hgvs_p) for h in qualifying
                 if _comparator_change(h.hgvs_p)
-            })
-            if distinct < min_count:
-                return CriteriaResult.not_met(
-                    ACMGCriterion.PM5,
-                    f"only {distinct} distinct same-codon LP/P comparator(s) "
-                    f"(< {min_count} required for {pc.gene_symbol})",
-                )
+            }) or 1
+            strength = cap if distinct >= min_count else _min_strength(
+                CriterionStrength.MODERATE, cap)
             ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
+            rule = (f">={min_count}" if distinct >= min_count else f"<{min_count}")
             return CriteriaResult.met(
-                ACMGCriterion.PM5, strength=cap,
-                evidence=(f"ClinVar {tag}: >={min_count} distinct same-codon LP/P "
-                          f"({distinct}): {ids}"),
+                ACMGCriterion.PM5, strength=strength,
+                evidence=(f"ClinVar {tag}: {distinct} distinct same-codon LP/P comparator(s) "
+                          f"({rule}, {pc.gene_symbol} VCEP): {ids}"
+                          + self._splice_caveat(gene, sp, cand_sp, qualifying) + cons_note),
             )
 
         # Strength (ClinGen SVI):
@@ -215,15 +261,9 @@ class PM5Evaluator(CriterionEvaluator):
         n_distinct_path = len({
             _comparator_change(h.hgvs_p) for h in pathogenic_hits if _comparator_change(h.hgvs_p)
         })
-        n_distinct_any = len({
-            _comparator_change(h.hgvs_p) for h in qualifying if _comparator_change(h.hgvs_p)
-        })
         if n_distinct_path >= 2:
             base = CriterionStrength.STRONG
         elif pathogenic_hits:
-            base = CriterionStrength.MODERATE
-        elif gene in cond.TWO_LP_MODERATE and n_distinct_any >= 2:
-            # F8 / F9: "1 pathogenic variant or 2 likely pathogenic variants"
             base = CriterionStrength.MODERATE
         else:
             base = CriterionStrength.SUPPORTING
@@ -232,10 +272,41 @@ class PM5Evaluator(CriterionEvaluator):
         ids = ", ".join(h.variation_id or "" for h in qualifying[:3])
         return CriteriaResult.met(
             ACMGCriterion.PM5, strength=strength,
-            evidence=f"ClinVar {tag}: {ids}" + (f" [{splice_note}]" if splice_note else ""),
+            evidence=f"ClinVar {tag}: {ids}" + (f" [{splice_note}]" if splice_note else "")
+            + self._splice_caveat(gene, sp, cand_sp, qualifying) + cons_note,
         )
 
     # ------------------------------------------------------------------ helpers
+    def _splice_caveat(self, gene, sp, cand_sp, comparators) -> str:
+        """Evidence note for the VCEPs that only caution about splicing
+        (cond.SPLICE_CAVEAT): PM5 is kept; the note names the candidate and any
+        comparator (precomputed SpliceAI) at or above the gene's PP3 splice cutoff."""
+        from acmg_classifier.criteria import pm5_conditions as cond
+        if gene not in cond.SPLICE_CAVEAT:
+            return ""
+        from acmg_classifier.criteria.pathogenic.pp3 import _splice_cutoff
+        cut, strict = _splice_cutoff(gene)
+
+        def hit(x):
+            return x is not None and (x > cut if strict else x >= cut)
+        parts = []
+        if hit(cand_sp):
+            parts.append(f"candidate {sp.tool} max_delta={cand_sp:.2f}")
+        elif cand_sp is None:
+            parts.append("candidate splice prediction unavailable")
+        flagged = []
+        for h in comparators[:10]:
+            comp = self._comparator_splice(h)
+            if hit(comp):
+                flagged.append(f"{h.variation_id or h.hgvs_p} SpliceAI={comp:.2f}")
+        if flagged:
+            parts.append("comparator " + ", ".join(flagged))
+        if not parts:
+            return ""
+        op = ">" if strict else ">="
+        return (f" [{gene} VCEP caveat - review whether the effect is at the protein "
+                f"level: {'; '.join(parts)} (splice cutoff {op}{cut:g})]")
+
     def _comparator_splice(self, h: ClinVarRecord) -> float | None:
         """Precomputed SpliceAI max delta of a ClinVar comparator, or None."""
         if not self._splice_lookup_ready:

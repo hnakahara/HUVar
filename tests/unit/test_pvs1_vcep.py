@@ -194,7 +194,11 @@ class TestTruncationBands:
     def test_tp53_bands(self):
         assert evaluate_vcep_pvs1(_pc("TP53", ConsequenceType.STOP_GAINED, 350))[0] == S.VERY_STRONG
         assert evaluate_vcep_pvs1(_pc("TP53", ConsequenceType.STOP_GAINED, 353))[0] == S.STRONG
-        assert evaluate_vcep_pvs1(_pc("TP53", ConsequenceType.FRAMESHIFT, 380))[0] == S.MODERATE
+        # Frameshifts are placed by the PTC codon (flowchart); no p. -> generic tree.
+        fs = _pc("TP53", ConsequenceType.FRAMESHIFT, 380)
+        assert evaluate_vcep_pvs1(fs) is None
+        fs.hgvs_p = "NP_000537.3:p.Arg380GlufsTer5"
+        assert evaluate_vcep_pvs1(fs)[0] == S.MODERATE
 
     def test_gaa_codon916_cutoff(self):
         assert evaluate_vcep_pvs1(_pc("GAA", ConsequenceType.STOP_GAINED, 915))[0] == S.VERY_STRONG
@@ -448,7 +452,9 @@ class TestStartLost:
         assert evaluate_vcep_pvs1(_pc("UBE3A", ConsequenceType.START_LOST))[0] == S.VERY_STRONG
         assert evaluate_vcep_pvs1(_pc("GUCY2D", ConsequenceType.START_LOST))[0] == S.VERY_STRONG
         assert evaluate_vcep_pvs1(_pc("RS1", ConsequenceType.START_LOST))[0] == S.VERY_STRONG
-        assert evaluate_vcep_pvs1(_pc("MLH1", ConsequenceType.START_LOST)) is None
+        # InSiGHT v2.0.0 / MMR tree: MLH1 initiation codon -> PVS1, MSH2 -> N/A.
+        assert evaluate_vcep_pvs1(_pc("MLH1", ConsequenceType.START_LOST))[0] == S.VERY_STRONG
+        assert evaluate_vcep_pvs1(_pc("MSH2", ConsequenceType.START_LOST))[0] == S.NOT_MET
 
 
 class TestSpliceAndDeletion:

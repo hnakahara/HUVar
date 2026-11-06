@@ -41,10 +41,11 @@ def build_row(r: OncogenicityResult, call=None) -> list:
             return ""
         return f"{x.points:+d}" if not x.suppressed else "suppressed"
 
-    from acmg_classifier.io.tsv_writer import sample_cells
+    from acmg_classifier.io.tsv_writer import change_only, sample_cells
     return ([r.variant_id, getattr(r, "input_variant", None) or "", r.chrom, r.pos, r.ref,
               r.alt, r.filter, *sample_cells(call), r.transcript_id,
-             r.gene_symbol, r.hgvs_c, r.hgvs_p, r.consequence, r.gene_role,
+             r.gene_symbol, change_only(r.hgvs_c), change_only(r.hgvs_p), r.consequence,
+             r.gene_role,
              r.gene_role_source, r.gene_role_note, r.classification.value, r.score,
              r.summary(), r.hotspot,
              r.tumor_type, r.amp_tier, r.amp_level, r.amp_evidence, r.amp_note,

@@ -58,6 +58,7 @@ def test_germline_block_follows_somatic_columns(tmp_path):
     assert by["germline_classification_2015"] == g.classification_2015.value
     assert by["germline_classification_bayesian"] == g.classification_bayesian.value
     assert by["sample"] == "T1" and by["oncogenicity"] == r.classification.value
+    assert by["hgvs_p"] == "p.Val600Glu"                 # change only, no NP_ accession
 
 
 def test_without_germline_header_unchanged(tmp_path):

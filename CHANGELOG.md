@@ -21,6 +21,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **HGVS columns carry the change only.** `somatic` TSV `hgvs_c` / `hgvs_p` no longer
+  include the NM_ / NP_ accession (as `classify` already did), and VEP's URL-encoded
+  `%3D` is written as `=` (`p.Ser34=`) in both TSVs (`tsv_writer.change_only`).
+- **Rules that needed the VCEPs' supplementary files.**
+  - TP53 PP3/BP4 for single amino-acid in-frame deletions from the VCEP "single aa
+    BayesDel spreadsheet" (`resources/shared/tp53_single_aa_del_bayesdel.tsv`, 375
+    deletions): PP3_Supporting BayesDel >= 0.16 (or a predicted splice effect),
+    BP4_Supporting < 0.16 without splice impact; same BayesDel licence gate as the
+    TP53 code table. In-frame indels now reach the per-gene in silico rules.
+  - GALT PM2 exception list (c.404C>T, c.563A>G, c.584T>C, c.855G>T): PM2 not met.
+  - LGMD "benign frequency exceptions" (June 2025): checked, the BA1/BS1 exclusions
+    already matched the four listed variants.
+  - SCID VCEP PM5 point table for nonsense variants (`pm5_ptc.evaluate_scid_pm5`,
+    registry `_apply_scid_pm5`).
+  - KCNQ1 PM5: residue must be identical in KCNQ1-5
+    (`resources/shared/kcnq1_paralog_conservation.tsv`, from the cardiodb paralogue
+    annotation alignment the VCEP cites, KCNQ1_alignment.htm; 166 of 676 residues
+    conserved; `scripts/build_kcnq1_paralog_conservation.py`); P or LP comparator -> Moderate
+    (LP was rejected); both variants SpliceAI < 0.2.
+  - TP53 PVS1 per the VCEP flowchart: frameshifts by the PTC codon (a frameshift at
+    codon 345 with its stop at 360 is now Moderate, was PVS1), read-through
+    frameshift Moderate, per-site splice strengths (c.-29+1/2, c.-28-1/2,
+    c.783-1/2 N/A; c.1100+1/2, c.1101-1/2 Moderate).
+  - KCNQ1 PVS1 canonical splice per the VCEP decision tree (was PVS1 for all):
+    in-frame exons 6-9 Strong; exons 11-15 (frameshift without NMD) and 16 Moderate.
+  - GATM PVS1 (Appendix 1 tree): NMD-escape truncations before Cys407 Strong (were
+    Moderate by the 10% rule from codon 381); canonical splice exon 1 / 8 Moderate,
+    5 / 6 / 9 Strong (were PVS1).
+  - IDUA PVS1 (decision tree 05/17/2024): truncations placed by the PTC codon, NMD-
+    escaping frameshifts altering >10% of the protein Strong, initiation codon PVS1
+    (was the generic Moderate), exon 14 acceptor Moderate.
+  - RPGR PVS1 (decision tree 7/30/2024): truncations at codons 1133-1152 Moderate
+    (were PVS1).
+  - InSiGHT MMR PVS1 (MLH1/MSH2/MSH6/PMS2 decision tree, v2.0.0): truncations placed
+    by the PTC codon (a frameshift is no longer PVS1 just because it starts before the
+    cutoff); canonical splice by the skipped exon (was PVS1 for all): in-frame skips
+    (MLH1 exons 3/16-19, MSH2 3/4/5/12/16, MSH6 7, PMS2 3/6/10/12/15) Strong,
+    frameshift skips without NMD (MSH2 15, MSH6 9/10, PMS2 14) Moderate; initiation
+    codon MLH1 PVS1 and MSH2 N/A (were the generic Moderate); the last-base G>non-G
+    PVS1_Strong rule now also for MSH2, MSH6 and PMS2.
+  - GAMT and VHL PVS1 match their trees (no change).
+- **PS1 / PM5 strengths that depend on the number of P / LP comparators**
+  (`criteria/comparator_tiers.py`; points per distinct comparator, quoted from the
+  CSpecs). PM5: MYOC (Glaucoma VCEP: Strong 2P / 1P+2LP / 4LP, Moderate 1P / 2LP,
+  Supporting 1LP), ACADVL (VCEP PM5 table: LP 0.5, P 1.0; Strong >= 2, Moderate >= 1,
+  Supporting 0.5), LGMD genes DYSF, CAPN3, ANO5, SGCA/B/G/D (Strong 2P / 3LP, Moderate
+  1P / 2LP, Supporting 1LP), VWF (Moderate 1P / 2LP, Supporting 1LP; F8/F9 moved here
+  from `pm5_conditions.TWO_LP_MODERATE`) and the RASopathy genes (LP counted like P:
+  one comparator -> Moderate; the VCEP's Strong, >=2 changes observed in >=5 probands,
+  is capped at Moderate with a note in the evidence because the proband count is not
+  available; previously LP-only comparators gave no PM5 and >=2 Pathogenic gave
+  Strong). PS1: LGMD genes, F8, F9 and ACADVL give Strong for 1 P or 2 LP distinct
+  comparators (2 LP gave Moderate).
+- **PM5 for ACVRL1 / ENG (HHT VCEP GN135/136).** One distinct same-codon LP/P missense
+  comparator now gives PM5_Moderate (it was not met); two or more still give
+  PM5_Strong. LP comparators count like Pathogenic. The VCEP caveat on splicing
+  ("Beware of changes that impact splicing") is added to the PM5 evidence when the
+  candidate (or, with the SpliceAI files, a comparator) reaches the gene's PP3 splice
+  cutoff, or when the candidate has no splice prediction; it does not exclude PM5.
 - **`somatic` / `somatic-explain` evidence options aligned with `classify` / `explain`.**
   `--supplement` (and `--evidence` in `somatic-explain`) now take the ACMG curator
   evidence of `classify --supplement` / `explain --evidence` and apply to the germline

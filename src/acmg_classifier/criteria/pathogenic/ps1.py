@@ -76,6 +76,14 @@ def _cap(strength: CriterionStrength, ceiling: CriterionStrength | None) -> Crit
     return ceiling
 
 
+def _variant_key(h):
+    """Distinct-variant key of a ClinVar comparator (genomic allele, else its
+    VariationID / cDNA HGVS)."""
+    if h.pos and h.ref and h.alt:
+        return (h.chrom, int(h.pos), h.ref, h.alt)
+    return h.variation_id or h.hgvs_c
+
+
 def _aa_ref_alt(amino_acids: str | None) -> tuple[str, str] | None:
     """The 1-letter (ref, alt) from a VEP ``amino_acids`` "X/Y" missense field,
     or None when it is absent or not a single-residue substitution."""
@@ -163,11 +171,26 @@ class PS1Evaluator(CriterionEvaluator):
             pc.gene_symbol, "PS1", hits, variant.assembly.value,
         )
         if hits:
+            ids = ", ".join(h.variation_id or "" for h in hits[:3])
+            note = f" [{vcep_note}]" if vcep_note else ""
+            # VCEPs where several LP comparators add up ("1 pathogenic or 2 likely
+            # pathogenic variants" -> Strong: LGMD genes, F8/F9, ACADVL).
+            from acmg_classifier.criteria.comparator_tiers import (
+                PS1_RULES, count_distinct, tier_strength,
+            )
+            rule = PS1_RULES.get(pc.gene_symbol or "")
+            if rule is not None:
+                n_p, n_lp = count_distinct(hits, _variant_key)
+                tiered, text = tier_strength(rule, n_p, n_lp)
+                if tiered is not None:
+                    strength = _cap(tiered, self._spec.max_strength(pc.gene_symbol))
+                    return CriteriaResult.met(
+                        ACMGCriterion.PS1, strength,
+                        f"ClinVar same AA (different nucleotide), {text}: {ids}{note}")
             strength = _cap(_ps1_strength(hits), self._spec.max_strength(pc.gene_symbol))
             evidence = (
                 f"ClinVar same AA (different nucleotide), comparator {strength.value}: "
-                f"{', '.join(h.variation_id or '' for h in hits[:3])}"
-                + (f" [{vcep_note}]" if vcep_note else "")
+                f"{ids}{note}"
             )
             return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
 

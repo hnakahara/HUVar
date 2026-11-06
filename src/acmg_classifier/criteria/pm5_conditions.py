@@ -20,8 +20,12 @@ count) with the conditions that VCEPs attach to PM5 for missense variants:
 * **Grantham downgrade** — Monogenic Diabetes VCEP (GCK / HNF1A / HNF4A):
   "Supporting ... if the previously classified variant is pathogenic but has a
   greater Grantham distance" (instead of withholding PM5).
-* **Two likely-pathogenic comparators = Moderate** — F8 / F9: "1 pathogenic
-  variant or 2 likely pathogenic variants at the same residue".
+* **Paralogue conservation** — KCNQ1 (LQTS VCEP): the residue must be identical
+  in all five human KCNQ paralogues (``PARALOG_CONSERVATION``; table built by
+  ``scripts/build_kcnq1_paralog_conservation.py``).
+* Count-based strengths (F8 / F9 "1 pathogenic variant or 2 likely pathogenic
+  variants", MYOC, ACADVL, LGMD, VWF, RASopathy, KCNQ1 P/LP): see
+  :mod:`acmg_classifier.criteria.comparator_tiers`.
 * **Paralogue route** — SCN1A/2A/3A/8A: PM5_Supporting for ">1 non-identical
   amino-acid change in paralogous gene(s)" classified P/LP at the analogous
   residue.
@@ -67,6 +71,9 @@ SPLICE: dict[str, tuple[float, str, str]] = {
     "GUCY2D": (0.0, "both", "category"),
     # "SpliceAI scores for both variants should be within 10% of each other"
     "RPE65": (0.10, "both", "relative"),
+    # LQTS VCEP (KCNQ1): "SpliceAI must be used to examine both variants for
+    # similar predicted effect or lack of effect on splicing (SpliceAI delta <0.2)"
+    "KCNQ1": (0.20, "both", "max"),
 }
 
 REQUIRES_PP3: frozenset[str] = frozenset({"MLH1", "MSH2", "MSH6", "PMS2", "RPGR", "RS1"})
@@ -75,9 +82,16 @@ REVEL_MIN: dict[str, float] = {"DYSF": 0.7}
 
 GRANTHAM_SUPPORTING: frozenset[str] = frozenset({"GCK", "HNF1A", "HNF4A"})
 
-TWO_LP_MODERATE: frozenset[str] = frozenset({"F8", "F9"})
+# F8 / F9 "1 pathogenic variant or 2 likely pathogenic variants" -> PM5 Moderate:
+# criteria/comparator_tiers.py (PM5_RULES), with the other count-based VCEPs.
 
 PARALOG_SUPPORTING: frozenset[str] = frozenset({"SCN1A", "SCN2A", "SCN3A", "SCN8A"})
+
+# HHT VCEP (ACVRL1 GN135 / ENG GN136): "Beware of changes that impact splicing
+# rather than at the amino acid/protein level" -- a caveat, not an exclusion:
+# PM5 is kept and the evidence carries a note when the candidate (or, with the
+# precomputed SpliceAI files, a comparator) reaches the gene's PP3 splice cutoff.
+SPLICE_CAVEAT: frozenset[str] = frozenset({"ACVRL1", "ENG"})
 
 
 def _band(x: float) -> int:
@@ -110,3 +124,49 @@ def splice_ok(gene: str, value: float | None, side: str,
     if mode == "relative":
         return abs(value - other) <= cutoff
     return None
+
+
+# Paralogue-conservation gate: gene -> table of the gene's residues and the
+# residue each paralogue has at the aligned position (``conserved`` = 1 when all
+# match). LQTS VCEP (KCNQ1): "Residue must be highly conserved across all 5 human
+# KCNQ paralogues ... Poor conservation (ineligibility for PM5) is defined whenever
+# 1 or more KCNQ's show a different amino acid at the position."
+PARALOG_CONSERVATION: dict[str, str] = {"KCNQ1": "kcnq1_paralog_conservation.tsv"}
+
+
+def _load_conservation(name: str) -> dict[int, tuple[str, dict[str, str], bool]]:
+    import csv
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[3] / "resources" / "shared" / name
+    out: dict[int, tuple[str, dict[str, str], bool]] = {}
+    if not path.exists():
+        return out
+    with path.open(encoding="utf-8") as fh:
+        rows = csv.DictReader((ln for ln in fh if not ln.startswith("#")), delimiter="\t")
+        others = [c for c in (rows.fieldnames or []) if c.startswith("kcnq") and c != "kcnq1"]
+        for r in rows:
+            out[int(r["position"])] = (r["kcnq1"], {c.upper(): r[c] for c in others},
+                                       r["conserved"] == "1")
+    return out
+
+
+_CONS_CACHE: dict[str, dict] = {}
+
+
+def paralog_conserved(gene: str, position: int | None, ref_aa: str | None
+                      ) -> tuple[bool | None, str]:
+    """(conserved?, detail) for the gene's paralogue-conservation gate; None when
+    the gene has no gate or the residue cannot be checked."""
+    name = PARALOG_CONSERVATION.get(gene)
+    if name is None or position is None:
+        return None, ""
+    if name not in _CONS_CACHE:
+        _CONS_CACHE[name] = _load_conservation(name)
+    row = _CONS_CACHE[name].get(position)
+    if row is None:
+        return None, f"{gene} paralogue table unavailable for residue {position}"
+    aa, others, cons = row
+    if ref_aa and ref_aa != aa:
+        return None, f"{gene} residue {position} is {aa} in the table, variant reports {ref_aa}"
+    detail = ", ".join(f"{g} {a}" for g, a in others.items())
+    return cons, f"{gene} {aa}{position}: {detail}"

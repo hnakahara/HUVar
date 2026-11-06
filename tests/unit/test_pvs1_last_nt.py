@@ -93,3 +93,14 @@ def test_evaluator_hook_missense_gets_pvs1(tmp_path):
     ev2 = PVS1Evaluator(cfg)
     r = ev2.evaluate(v, ann)
     assert r.triggered and r.strength == S.STRONG and "GTGAGC" in r.evidence
+
+
+@pytest.mark.parametrize("gene,tx,h", [
+    ("MSH2", "NM_000251.3", "c.942G>A"),      # last base of exon 5
+    ("MSH6", "NM_000179.3", "c.3646G>T"),     # last base of exon 7
+    ("PMS2", "NM_000535.7", "c.705G>C"),      # last base of exon 6
+])
+def test_other_mmr_genes_strong(gene, tx, h):
+    # InSiGHT v2.0.0 states the G>non-G last-base rule for all four MMR genes.
+    s, _ = evaluate_last_nt(_pc(gene, tx, h))
+    assert s == S.STRONG

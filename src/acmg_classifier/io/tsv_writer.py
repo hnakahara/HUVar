@@ -174,11 +174,15 @@ def _sanitize_cell(value: str) -> str:
     return re.sub(r"\s*[\r\n\t]+\s*", " ", str(value)).strip()
 
 
-def _strip_transcript_prefix(hgvs: Optional[str]) -> str:
-    """NM_015658.4:c.898A>G -> c.898A>G"""
+def change_only(hgvs: Optional[str]) -> str:
+    """The change without its reference sequence: NM_015658.4:c.898A>G ->
+    c.898A>G, NP_056473.3:p.Ser300%3D -> p.Ser300= (VEP URL-encodes "=")."""
     if not hgvs:
         return ""
-    return hgvs.split(":")[-1]
+    return hgvs.split(":")[-1].replace("%3D", "=")
+
+
+_strip_transcript_prefix = change_only
 
 
 def _fmt(value, fmt=None) -> str:

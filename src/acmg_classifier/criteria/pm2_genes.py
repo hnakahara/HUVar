@@ -32,6 +32,15 @@ from typing import Optional
 
 from acmg_classifier.models.enums import CriterionStrength
 
+# Variant-level PM2 exceptions: known pathogenic variants the VCEP lists as not
+# meeting PM2 (comma-separated MANE c. / p. changes, matched as bs1_exclude).
+# GALT (Galactosemia VCEP, GN158): "GALT_PM2-Exceptions-List" (NM_000155.4):
+# c.404C>T p.(Ser135Leu), c.563A>G p.(Gln188Arg), c.584T>C p.(Leu195Pro),
+# c.855G>T p.(Lys285Asn) - "Does not meet PM2", "Known pathogenic variant".
+PM2_EXCEPTIONS: dict[str, str] = {
+    "GALT": "c.404C>T,c.563A>G,c.584T>C,c.855G>T",
+}
+
 
 @dataclass(frozen=True)
 class PM2Rule:

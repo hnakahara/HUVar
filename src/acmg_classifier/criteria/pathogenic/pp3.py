@@ -415,5 +415,17 @@ class PP3Evaluator(CriterionEvaluator):
                 )
             return CriteriaResult.not_met(ACMGCriterion.PP3, "Splice score not pathogenic")
 
+        # In-frame indels: only a per-gene VCEP rule scores them (TP53 single
+        # amino-acid deletions from the VCEP BayesDel spreadsheet).
+        if pc.consequence in (ConsequenceType.INFRAME_DELETION, ConsequenceType.INFRAME_INSERTION):
+            from acmg_classifier.criteria.insilico_genes import build_scores, combo_active
+            if combo_active(self._insilico_spec, pc.gene_symbol, self._cfg):
+                outcome = self._insilico_spec.pp3(pc.gene_symbol, build_scores(annotation, pc))
+                if outcome is not None:
+                    strength, note = outcome
+                    if strength:
+                        return CriteriaResult.met(ACMGCriterion.PP3, strength, note)
+                    return CriteriaResult.not_met(ACMGCriterion.PP3, note)
+
         # Everything else (UTR, intergenic, etc.) is out of scope for PP3.
         return CriteriaResult.not_met(ACMGCriterion.PP3, "Consequence not applicable for PP3")

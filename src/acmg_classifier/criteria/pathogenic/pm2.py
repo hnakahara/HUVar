@@ -195,6 +195,19 @@ class PM2Evaluator(CriterionEvaluator):
         if rule is not None and rule.not_applicable:
             return CriteriaResult.not_met(
                 ACMGCriterion.PM2, f"{gene}: PM2 not applicable per VCEP specification")
+        # VCEP "PM2 exception list" (GALT): known pathogenic variants that do not
+        # meet PM2 whatever their gnomAD frequency. Lists use MANE Select names.
+        from acmg_classifier.criteria.allele_frequency import variant_listed
+        from acmg_classifier.criteria.pm2_genes import PM2_EXCEPTIONS
+        if gene in PM2_EXCEPTIONS:
+            rc = annotation.rule_consequence
+            hit = variant_listed(PM2_EXCEPTIONS[gene], rc.hgvs_c if rc else None,
+                                 rc.hgvs_p if rc else None)
+            if hit:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM2,
+                    f"{gene} VCEP PM2 exception list: {hit} (known pathogenic variant, "
+                    "does not meet PM2)")
         # Strength is Supporting by default (SVI); a few VCEPs set PM2 Moderate.
         strength = rule.strength if rule else CriterionStrength.SUPPORTING
 

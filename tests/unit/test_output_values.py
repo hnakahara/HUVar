@@ -159,6 +159,13 @@ def test_reported_tiers_match_the_strength_functions(fn, table, op):
         assert fn(cutoff + eps) != strength
 
 
+def test_hgvs_change_only():
+    from acmg_classifier.io.tsv_writer import change_only
+    assert change_only("NM_000546.6:c.215C>G") == "c.215C>G"
+    assert change_only("NP_000537.3:p.Pro72%3D") == "p.Pro72="
+    assert change_only(None) == ""
+
+
 def test_row_without_call_has_empty_sample_cells():
     r = ClassificationResult(
         variant_id="chr1:1:A:G", chrom="chr1", pos=1, ref="A", alt="G", criteria_results=[],

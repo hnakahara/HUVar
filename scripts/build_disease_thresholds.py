@@ -681,7 +681,9 @@ _BP7_INTRONIC_NONCANONICAL = frozenset({
 #   MYOC (GN019) — "Does not apply to p.Gln368Ter" (the common pathogenic POAG
 #   allele, ~2.6% allelic contribution; its frequency is disease-driven, not
 #   benign). Not present in the JSON-LD BS1 description, so curated here.
-#   LGMD VCEP (GN078-GN081) "BS1 exception" variants — neither BA1 nor BS1 is
+#   LGMD VCEP (GN180, GN184-189 v2.0.0; supplementary file "benign frequency
+#   exceptions", frequency_exceptions_June2025.xlsx — checked, these four rows are
+#   the whole list) "BS1 exception" variants — neither BA1 nor BS1 is
 #   applied: DYSF NM_003494.3:c.2643+1G>A (= MANE NM_001130987.2:c.2697+1G>A;
 #   common pathogenic variant), ANO5 c.191dup p.(Asn64LysfsTer15) (common
 #   pathogenic variant), CAPN3 c.1746-20C>G (proposed hypomorph) and CAPN3
@@ -822,9 +824,9 @@ _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     # ACTA1 (GN169) Congenital Myopathies VCEP applies PVS1 Very Strong to null
     # variants ("LOF is a known mechanism"); the resolver had declined it.
     "ACTA1": {"pvs1": "applicable"},
-    # ACVRL1/ENG (HHT VCEP GN135/136): PM5_Strong requires >=2 different
-    # same-codon missense determined LP/P. Count threshold = 2 and LP comparators
-    # are accepted (clear pm5_lp).
+    # ACVRL1/ENG (HHT VCEP GN135/136): >=2 different same-codon missense
+    # determined LP/P -> PM5_Strong, one -> PM5_Moderate (no Supporting). Count
+    # for the ceiling = 2 and LP comparators count like P (clear pm5_lp).
     "ACVRL1": {"pm5_min_count": "2", "pm5_lp": ""},
     "ENG": {"pm5_min_count": "2", "pm5_lp": ""},
 }

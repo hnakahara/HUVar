@@ -227,6 +227,7 @@ class CriteriaRegistry:
         # BA1 / BS1 / PM2 are mutually exclusive frequency criteria — keep only
         # the highest-priority one (see _apply_af_mutual_exclusion).
         _apply_af_mutual_exclusion(results)
+        _apply_scid_pm5(results)
 
         # Gene-specific PM1 co-requirements (IL2RG: PM2 must be met and BA1/BS1/BS2
         # must not be). Run last so the frequency criteria are final.
@@ -614,3 +615,35 @@ def apply_ps1_splice_table2(results: list[CriteriaResult]) -> None:
         return
     if not pp3:
         _drop("PS1 for splicing outside ±1,2 requires PP3")
+
+
+_SCID_DOWN = {CriterionStrength.STRONG: CriterionStrength.MODERATE,
+              CriterionStrength.MODERATE: CriterionStrength.SUPPORTING}
+
+
+def _apply_scid_pm5(results: list[CriteriaResult]) -> None:
+    """SCID VCEP PM5 point table (nonsense variants): "The VUA must ... meet
+    PM2_Supporting"; "PM5_Strong should be downgraded to PM5_Moderate if PVS1 is
+    applied at any strength"; "PM5_Moderate ... downgraded to PM5_Supporting if
+    PVS1_VeryStrong is applied"."""
+    from acmg_classifier.criteria.pm5_ptc import SCID_EVIDENCE_PREFIX
+    by = {r.criterion: r for r in results}
+    pm5 = by.get(ACMGCriterion.PM5)
+    if (pm5 is None or not pm5.triggered or pm5.suppressed
+            or not (pm5.evidence or "").startswith(SCID_EVIDENCE_PREFIX)):
+        return
+    pm2 = by.get(ACMGCriterion.PM2)
+    if pm2 is None or not pm2.triggered or pm2.suppressed:
+        pm5.suppressed = True
+        pm5.evidence = (pm5.evidence + " [suppressed: SCID point table requires PM2]").strip()
+        return
+    pvs1 = by.get(ACMGCriterion.PVS1)
+    if pvs1 is None or not pvs1.triggered or pvs1.suppressed:
+        return
+    if pm5.strength == CriterionStrength.STRONG or (
+            pm5.strength == CriterionStrength.MODERATE
+            and pvs1.strength == CriterionStrength.VERY_STRONG):
+        new = _SCID_DOWN[pm5.strength]
+        pm5.evidence = (pm5.evidence + f" [downgraded {pm5.strength.value} -> {new.value} "
+                        f"with PVS1 ({pvs1.strength.value}), SCID VCEP]")
+        pm5.strength = new

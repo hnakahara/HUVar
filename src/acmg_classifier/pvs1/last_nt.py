@@ -12,7 +12,7 @@ VCEPs score them under PVS1 even though VEP calls them missense / synonymous:
   (p.1-1892, exons 2-38) -> PVS1_Strong (list B); in-frame skipping in FATKIN
   (p.1893-3056) -> PVS1 (list E). Hence last-nt changes are PVS1_Strong, or
   PVS1_Moderate for an in-frame HEAT-repeat exon.
-* **MLH1** (InSiGHT VCEP): "G>non-G at last base of exon if first 6 bases of the
+* **MLH1 / MSH2 / MSH6 / PMS2** (InSiGHT VCEP v2.0.0): "G>non-G at last base of exon if first 6 bases of the
   intron are not GTRRGT" -> PVS1_Strong (PVS1 only with a proven splice defect,
   which is RNA evidence and not modelled here).
 * **CDH1** (CDH1 VCEP v3.1): G to non-G at the last nucleotide of an exon ->
@@ -20,7 +20,7 @@ VCEPs score them under PVS1 even though VEP calls them missense / synonymous:
 
 The exon boundary comes from the packaged MANE exon structures; the intronic
 +1..+6 sequence is read from the reference FASTA when one is available (the
-``gtrrgt`` exclusion is applied only for ATM and MLH1, whose VCEPs state it).
+``gtrrgt`` exclusion is applied only for ATM and the MMR genes, whose VCEPs state it).
 Without a FASTA the rule is applied and the evidence says the intron was not
 checked.
 """
@@ -41,6 +41,10 @@ _GTRRGT = re.compile(r"^GT[AG][AG]GT$")
 _GENES: dict[str, tuple[str, bool]] = {
     "ATM": ("atm", True),
     "MLH1": ("strong", True),
+    # InSiGHT v2.0.0 states the same rule for MSH2, MSH6 and PMS2.
+    "MSH2": ("strong", True),
+    "MSH6": ("strong", True),
+    "PMS2": ("strong", True),
     "CDH1": ("moderate", False),
 }
 _ATM_HEAT_MAX = 1892  # last residue of the N-terminal solenoid (HEAT repeats)

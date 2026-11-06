@@ -380,4 +380,16 @@ class BP4Evaluator(CriterionEvaluator):
                 )
             return CriteriaResult.not_met(ACMGCriterion.BP4, "Splice score not in benign range")
 
+        # In-frame indels: only a per-gene VCEP rule scores them (TP53 single
+        # amino-acid deletions from the VCEP BayesDel spreadsheet).
+        if pc.consequence in (ConsequenceType.INFRAME_DELETION, ConsequenceType.INFRAME_INSERTION):
+            from acmg_classifier.criteria.insilico_genes import build_scores, combo_active
+            if combo_active(self._insilico_spec, pc.gene_symbol, self._cfg):
+                outcome = self._insilico_spec.bp4(pc.gene_symbol, build_scores(annotation, pc))
+                if outcome is not None:
+                    strength, note = outcome
+                    if strength:
+                        return CriteriaResult.met(ACMGCriterion.BP4, strength, note)
+                    return CriteriaResult.not_met(ACMGCriterion.BP4, note)
+
         return CriteriaResult.not_met(ACMGCriterion.BP4, "Consequence not applicable for BP4")

@@ -25,6 +25,7 @@ predictor is enabled, so a return value is always safe to treat as final.
 from __future__ import annotations
 
 import csv
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
@@ -156,10 +157,36 @@ class TP53Codes:
     BayesDel score so a MET call can explain *why* in its evidence. A missing file
     degrades to "no codes"."""
 
-    def __init__(self, tsv_path: Path) -> None:
+    def __init__(self, tsv_path: Path, del_path: Optional[Path] = None) -> None:
         self._by_c: dict[str, TP53Entry] = {}
         self._by_p: dict[str, Optional[TP53Entry]] = {}
+        # Single amino-acid in-frame deletions: protein change -> BayesDel, from the
+        # VCEP "single aa BayesDel spreadsheet" (tp53_single_aa_del_bayesdel.tsv,
+        # next to the code table, else the packaged resources copy).
+        self._del: dict[str, float] = {}
         self._load(tsv_path)
+        self._load_del(del_path if del_path is not None else _tp53_del_path(tsv_path))
+
+    def _load_del(self, path: Optional[Path]) -> None:
+        try:
+            if path is None or not path.exists():
+                return
+            with path.open(encoding="utf-8") as fh:
+                rows = csv.DictReader((ln for ln in fh if not ln.startswith("#")),
+                                      delimiter="\t")
+                for row in rows:
+                    p = (row.get("hgvs_p") or "").strip()
+                    try:
+                        self._del[p] = float(row.get("bayesdel") or "")
+                    except ValueError:
+                        continue
+        except Exception:  # noqa: BLE001 -- optional table
+            self._del.clear()
+
+    def deletion_bayesdel(self, hgvs_p: Optional[str]) -> Optional[float]:
+        """BayesDel of a single amino-acid in-frame deletion (VCEP spreadsheet)."""
+        p = _norm_hgvs(hgvs_p)
+        return self._del.get(p) if p else None
 
     def _load(self, tsv_path: Path) -> None:
         try:
@@ -192,7 +219,7 @@ class TP53Codes:
             self._by_p.clear()
 
     def __bool__(self) -> bool:
-        return bool(self._by_c)
+        return bool(self._by_c) or bool(self._del)
 
     def lookup(self, hgvs_c: Optional[str], hgvs_p: Optional[str]) -> Optional[TP53Entry]:
         c = _norm_hgvs(hgvs_c)
@@ -204,6 +231,65 @@ class TP53Codes:
         return None
 
 
+_TP53_DEL_NAME = "tp53_single_aa_del_bayesdel.tsv"
+_SINGLE_AA_DEL = re.compile(r"p\.\(?[A-Z][a-z]{2}\d+del\)?$")
+_TP53_DEL_CUTOFF = 0.16
+
+
+def _tp53_del_path(codes_path: Optional[Path]) -> Optional[Path]:
+    if codes_path is not None:
+        try:
+            local = Path(codes_path).with_name(_TP53_DEL_NAME)
+            if local.exists():
+                return local
+        except (TypeError, ValueError):
+            pass
+    bundled = Path(__file__).resolve().parents[3] / "resources" / "shared" / _TP53_DEL_NAME
+    return bundled if bundled.exists() else None
+
+
+def _tp53_single_aa_del(sc: InSilicoScores, codes: TP53Codes):
+    """(BayesDel or None, message) for a TP53 in-frame deletion; the message is
+    set when the variant is outside the VCEP single-aa deletion rule."""
+    p = _norm_hgvs(sc.hgvs_p)
+    if not p or not _SINGLE_AA_DEL.match(p):
+        return None, ("TP53 VCEP: in silico rule covers single amino-acid in-frame "
+                      "deletions only")
+    score = codes.deletion_bayesdel(p.replace("(", "").replace(")", ""))
+    if score is None:
+        return None, f"TP53 VCEP: {p} not in the single aa BayesDel spreadsheet"
+    return score, ""
+
+
+def _tp53_del_pp3(sc: InSilicoScores, codes: TP53Codes) -> Outcome:
+    # TP53 VCEP v2.4.0 PP3_Supporting: "Single amino acid inframe deletions (See
+    # single aa BayesDel spreadsheet): BayesDel score >= 0.16"; one with a predicted
+    # splice effect follows the splicing rule (SpliceAI >= 0.2).
+    score, msg = _tp53_single_aa_del(sc, codes)
+    if score is None:
+        return (None, msg)
+    if score >= _TP53_DEL_CUTOFF:
+        return (_SUP, f"TP53 VCEP single aa deletion BayesDel={score:.3f} >= 0.16 (Supporting)")
+    if _splice_impact(sc, 0.2):
+        return (_SUP, f"TP53 VCEP single aa deletion with predicted splice effect "
+                      f"(delta={_f(sc.splice_max)} >= 0.2; BayesDel={score:.3f}) (Supporting)")
+    return (None, f"TP53 VCEP single aa deletion BayesDel={score:.3f} < 0.16 (PP3 not met)")
+
+
+def _tp53_del_bp4(sc: InSilicoScores, codes: TP53Codes) -> Outcome:
+    # BP4_Supporting: "BayesDel score < 0.16 AND no predicted splicing impact
+    # (Splice AI < 0.2)".
+    score, msg = _tp53_single_aa_del(sc, codes)
+    if score is None:
+        return (None, msg)
+    if score >= _TP53_DEL_CUTOFF:
+        return (None, f"TP53 VCEP single aa deletion BayesDel={score:.3f} >= 0.16 (BP4 not met)")
+    if _splice_impact(sc, 0.2):
+        return (None, f"BP4 blocked by predicted splice impact (delta={_f(sc.splice_max)})")
+    return (_SUP, f"TP53 VCEP single aa deletion BayesDel={score:.3f} < 0.16, no splice "
+                  f"impact (Supporting)")
+
+
 def _tp53_evidence(entry: TP53Entry, strength: CriterionStrength) -> str:
     return (f"TP53 VCEP precomputed code '{entry.code}' "
             f"(Align-GVGD={entry.agvgd or 'NA'}, BayesDel={entry.bayesdel or 'NA'}) "
@@ -213,6 +299,8 @@ def _tp53_evidence(entry: TP53Entry, strength: CriterionStrength) -> str:
 def _tp53_pp3(sc: InSilicoScores, codes: Optional[TP53Codes]) -> Outcome:
     if not codes:
         return (None, "TP53 PP3 unavailable (VCEP code table not loaded)")
+    if sc.consequence == ConsequenceType.INFRAME_DELETION:
+        return _tp53_del_pp3(sc, codes)
     if sc.consequence != ConsequenceType.MISSENSE:
         return None
     entry = codes.lookup(sc.hgvs_c, sc.hgvs_p)
@@ -228,6 +316,8 @@ def _tp53_pp3(sc: InSilicoScores, codes: Optional[TP53Codes]) -> Outcome:
 def _tp53_bp4(sc: InSilicoScores, codes: Optional[TP53Codes]) -> Outcome:
     if not codes:
         return (None, "TP53 BP4 unavailable (VCEP code table not loaded)")
+    if sc.consequence == ConsequenceType.INFRAME_DELETION:
+        return _tp53_del_bp4(sc, codes)
     if sc.consequence != ConsequenceType.MISSENSE:
         return None
     entry = codes.lookup(sc.hgvs_c, sc.hgvs_p)

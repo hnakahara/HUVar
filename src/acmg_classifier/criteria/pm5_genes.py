@@ -17,10 +17,12 @@ Three PM5 columns are loaded here, the PM5 counterpart to
   same-codon comparator must reach **Pathogenic**; a Likely-pathogenic-only
   comparator must not trigger PM5 (PTEN, VHL, KCNQ1, RASopathy genes, …).
   Blank = a Likely-pathogenic comparator is accepted (at Supporting).
-* ``pm5_min_count`` — minimum number of DISTINCT same-codon LP/P missense
-  comparators the VCEP requires before PM5 applies (default 1). ACVRL1/ENG
-  (HHT VCEP) require ``2`` ("≥2 different missense changes at the same codon
-  determined LP/P" → PM5_Strong); below the count PM5 is not met.
+* ``pm5_min_count`` — number of DISTINCT same-codon LP/P missense comparators
+  (Likely pathogenic counted like Pathogenic) that gives the VCEP ceiling
+  (``pm5_max``); fewer, down to one, give PM5_Moderate. Blank / 1 = the ClinGen
+  SVI P/LP tiers. ACVRL1/ENG (HHT VCEP) use ``2``: "≥2 different missense changes
+  at same codon ... LP or P" → PM5_Strong, "a different missense change ... LP or
+  P" → PM5_Moderate (no Supporting level).
 """
 from __future__ import annotations
 
@@ -146,8 +148,8 @@ class PM5Spec:
         return bool(gene) and gene in self._require_p
 
     def min_count(self, gene: str | None) -> int:
-        """Minimum number of DISTINCT same-codon LP/P comparators the gene's VCEP
-        requires before PM5 applies (default 1; ACVRL1/ENG = 2)."""
+        """DISTINCT same-codon LP/P comparators that give the gene's PM5 ceiling
+        (default 1 = SVI tiers; ACVRL1/ENG = 2: two -> Strong, one -> Moderate)."""
         if not gene:
             return 1
         return self._min_count.get(gene, 1)

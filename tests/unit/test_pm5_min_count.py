@@ -1,8 +1,9 @@
 """PM5 minimum-comparator-count rule (ACVRL1/ENG, HHT VCEP GN135/136).
 
-The HHT VCEP applies PM5_Strong only when >=2 DIFFERENT same-codon missense
-changes have been determined likely pathogenic or pathogenic. Fewer than two
-distinct LP/P comparators -> PM5 not met. LP comparators count (pm5_lp cleared).
+The HHT VCEP applies PM5_Strong when >=2 DIFFERENT same-codon missense changes
+have been determined likely pathogenic or pathogenic, and PM5_Moderate for one.
+LP comparators count like P (pm5_lp cleared); there is no Supporting level. The
+splicing caveat is a note in the evidence, not an exclusion.
 """
 import sqlite3
 from unittest.mock import MagicMock
@@ -99,10 +100,51 @@ class TestEvaluator:
         r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("ACVRL1", "R/C"))
         assert r.triggered and r.strength == CriterionStrength.STRONG
 
-    def test_single_comparator_not_met(self, tmp_path):
-        # Only one distinct same-codon comparator -> below the count -> not met.
+    def test_single_comparator_moderate(self, tmp_path):
+        # One distinct same-codon comparator -> PM5_Moderate (HHT VCEP).
         db = _db(tmp_path, [
             _row("1", "ACVRL1", "NM:p.Arg175His", "R175H", "Pathogenic"),
         ])
         r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("ACVRL1", "R/C"))
-        assert not r.triggered and "< 2 required" in r.evidence
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+        assert "1 distinct" in r.evidence
+
+    def test_single_lp_comparator_moderate_not_supporting(self, tmp_path):
+        # LP counts like P: one LP comparator -> Moderate, never Supporting.
+        db = _db(tmp_path, [
+            _row("1", "ACVRL1", "NM:p.Arg175His", "R175H", "Likely pathogenic"),
+            # same change submitted twice -> still one distinct change
+            _row("3", "ACVRL1", "NM:p.Arg175His", "R175H", "Pathogenic"),
+        ])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("ACVRL1", "R/C"))
+        assert r.triggered and r.strength == CriterionStrength.MODERATE
+
+    def test_no_comparator_not_met(self, tmp_path):
+        db = _db(tmp_path, [
+            _row("1", "ACVRL1", "NM:p.Arg175His", "R175H", "Uncertain significance"),
+        ])
+        r = PM5Evaluator(_cfg(tmp_path, db)).evaluate(_snv(), _ann("ACVRL1", "R/C"))
+        assert not r.triggered
+
+    def test_splice_caveat_is_a_note_only(self, tmp_path):
+        from acmg_classifier.models.annotation import SpliceScore
+        db = _db(tmp_path, [
+            _row("1", "ACVRL1", "NM:p.Arg175His", "R175H", "Pathogenic"),
+            _row("2", "ACVRL1", "NM:p.Arg175Gln", "R175Q", "Pathogenic"),
+        ])
+        ev = PM5Evaluator(_cfg(tmp_path, db))
+        ann = _ann("ACVRL1", "R/C")
+        ann.splice = _splice(SpliceScore, 0.45)
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and r.strength == CriterionStrength.STRONG
+        assert "VCEP caveat" in r.evidence and "max_delta=0.45" in r.evidence
+        ann.splice = _splice(SpliceScore, 0.05)
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and "caveat" not in r.evidence
+        ann.splice = None
+        r = ev.evaluate(_snv(), ann)
+        assert r.triggered and "splice prediction unavailable" in r.evidence
+
+
+def _splice(cls, delta):
+    return cls(tool="openspliceai", max_delta=delta, is_available=True)

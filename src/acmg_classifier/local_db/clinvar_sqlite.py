@@ -589,6 +589,52 @@ def has_benign_at_codon(
     return any(_is_missense_p(r[0]) for r in rows)
 
 
+@lru_cache(maxsize=1024)
+def _rows_truncating(db_path: Path, gene_symbol: str, min_stars: int) -> tuple:
+    return tuple(_get_conn(db_path).execute(
+        """
+        SELECT variation_id, clinical_significance, review_status, star_rating,
+               gene_symbol, hgvs_c, hgvs_p, amino_acid_change, chrom, pos, ref, alt
+        FROM variants
+        WHERE gene_symbol = ?
+          AND star_rating >= ?
+          AND clinical_significance IN (
+              'Pathogenic', 'Likely pathogenic', 'Pathogenic/Likely pathogenic',
+              'Benign', 'Likely benign', 'Benign/Likely benign'
+          )
+          AND (hgvs_p LIKE '%Ter%' OR hgvs_p LIKE '%fs%' OR hgvs_p LIKE '%*%')
+        """,
+        (gene_symbol, min_stars),
+    ).fetchall())
+
+
+def query_truncating_variants(
+    db_path: Path, gene_symbol: Optional[str], min_stars: int = 1,
+) -> list[ClinVarRecord]:
+    """P/LP and B/LB nonsense / frameshift records of a gene (>= ``min_stars``):
+    the informative variants of the SCID VCEP PM5 point table."""
+    if not _db_exists(db_path) or not gene_symbol:
+        return []
+    try:
+        rows = _rows_truncating(db_path, gene_symbol, min_stars)
+    except Exception as exc:
+        log.error("clinvar_sqlite_error", op="truncating", error=str(exc))
+        return []
+    out = []
+    for r in rows:
+        hp = (r[6] or "").split(":")[-1]
+        if not hp or "ext" in hp or not _TRUNC_P_RE.search(hp):
+            continue
+        out.append(ClinVarRecord(
+            variation_id=str(r[0]), clinical_significance=r[1], review_status=r[2],
+            star_rating=r[3], gene_symbol=r[4], hgvs_c=r[5], hgvs_p=r[6],
+            amino_acid_change=r[7],
+            chrom=strip_chr(str(r[8])) if r[8] is not None else None,
+            pos=r[9], ref=r[10], alt=r[11],
+        ))
+    return out
+
+
 def query_pm4_deletion_content(
     db_path: Path,
     gene_symbol: str,

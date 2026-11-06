@@ -31,8 +31,16 @@ Group B (exon table)
     and only to PTC variants annotated as PVS1 — the registry suppresses
     PM5_PTC for BRCA1/2 when PVS1 is not met.
 
-Not implemented: the SCID VCEP point system (ADA, DCLRE1C, FOXN1, IL2RG, IL7R,
-JAK3, RAG1, RAG2), which scores VCEP-classified downstream nonsense variants.
+Group C (point table)
+  * SCID VCEP (ADA, DCLRE1C, FOXN1, IL2RG, IL7R, JAK3, RAG1, RAG2): nonsense
+    variants scored from informative VCEP-classified truncating variants
+    (:func:`evaluate_scid_pm5`): NMD-predicted VUA -> each P/LP truncating variant
+    in the same exon predicted to lead to NMD +1, each B/LB one -2; VUA with a PTC
+    in the final exon (no NMD) -> each P/LP truncating variant with its PTC in the
+    same exon downstream of the VUA +1, each B/LB one upstream -2. >= 4 points
+    Strong, >= 2 Moderate, 1 Supporting; <= 0 not applied. The registry withholds
+    it without PM2 and downgrades it with PVS1 (Strong -> Moderate with any PVS1,
+    Moderate -> Supporting with PVS1_VeryStrong).
 
 The PTC codon is the variant codon for stop-gained variants and the new stop
 codon for frameshifts (``p.Arg100GlyfsTer12`` -> codon 111), as computed by
@@ -100,6 +108,8 @@ _BRCA_EXONS: dict[str, tuple[tuple[int, int, Optional[CriterionStrength]], ...]]
 _BRCA_LAST_EXON = {"BRCA1": (23, 1854), "BRCA2": (27, 3309)}
 
 GENES = frozenset(_TRANSCRIPT)
+SCID_GENES = frozenset({"ADA", "DCLRE1C", "FOXN1", "IL2RG", "IL7R", "JAK3", "RAG1", "RAG2"})
+SCID_EVIDENCE_PREFIX = "PM5_PTC (SCID"
 REQUIRES_PVS1 = frozenset({"BRCA1", "BRCA2"})
 
 _CPOS = re.compile(r"c\.(\d+)")
@@ -216,3 +226,114 @@ def evaluate_pm5_ptc(
                             "— not applicable (ENIGMA Table 4)")
     return strength, (f"PM5_PTC ({gene}, ENIGMA Table 4): PTC codon {codon} in exon "
                       f"{exon} -> {strength.value}")
+
+
+# ---------------------------------------------------------------------------
+# Group C: SCID VCEP point table (nonsense variants)
+# ---------------------------------------------------------------------------
+
+_CPOS_ANY = re.compile(r"c\.(\d+)")
+_ACC = re.compile(r"^(N[MR]_\d+|ENST\d+)")
+
+
+def _record_codons(hgvs_p: Optional[str]) -> tuple[Optional[int], Optional[int]]:
+    """(first altered codon, PTC codon) of a ClinVar nonsense / frameshift record."""
+    from acmg_classifier.pvs1.nmd_predictor import _FS_RE, _STOP_RE
+    hp = (hgvs_p or "").split(":")[-1].strip()
+    m = _FS_RE.search(hp)
+    if m:
+        return int(m.group(1)), int(m.group(1)) + int(m.group(2)) - 1
+    m = _STOP_RE.search(hp)
+    if m:
+        return int(m.group(1)), int(m.group(1))
+    return None, None
+
+
+def scid_points(pc: ConsequenceInfo, records, st, exclude=None) -> tuple[int, list[str], str]:
+    """(points, per-variant notes, rule) of the SCID PM5 point table for the
+    nonsense VUA ``pc`` given ClinVar truncating ``records`` and the transcript
+    structure ``st``; rule is "nmd" / "final_exon" / "" (not covered)."""
+    from acmg_classifier.pvs1.nmd_predictor import NMD_JUNCTION_NT, ptc_codon
+    codon = ptc_codon(pc)
+    if codon is None:
+        return 0, [], ""
+    vua_end = st.cds_start - 1 + codon * 3
+    vua_exon = st.exon_of(vua_end)
+    vua_nmd = st.n_exons > 1 and st.last_junction - vua_end > NMD_JUNCTION_NT
+    if not vua_nmd and vua_exon != st.n_exons:
+        return 0, [], ""            # NMD escape in the penultimate exon: not in the table
+    rule = "nmd" if vua_nmd else "final_exon"
+    pts, notes, seen = 0, [], set()
+    for h in records:
+        acc = _ACC.match(h.hgvs_c or "")
+        if acc and _base(acc.group(1)) != _base(pc.transcript_id):
+            continue                # named on another transcript: cannot place it
+        first, ptc = _record_codons(h.hgvs_p)
+        key = (h.chrom, h.pos, h.ref, h.alt)
+        if ptc is None or key in seen or (exclude is not None and key == exclude):
+            continue
+        seen.add(key)
+        if ptc == codon and (h.hgvs_p or "").split(":")[-1].endswith(("Ter", "*", "X")):
+            continue                # the VUA's own change
+        sig = (h.clinical_significance or "").lower()
+        plp = "pathogenic" in sig
+        ptc_end = st.cds_start - 1 + ptc * 3
+        if rule == "nmd":
+            cm = _CPOS_ANY.search((h.hgvs_c or "").split(":")[-1])
+            change_pos = (st.cds_start - 1 + int(cm.group(1))) if cm else \
+                (st.cds_start - 1 + first * 3 - 2)
+            same_exon = st.exon_of(change_pos) == vua_exon
+            nmd = st.last_junction - ptc_end > NMD_JUNCTION_NT
+            if not (same_exon and nmd):
+                continue
+            score = 1 if plp else -2
+        else:
+            if st.exon_of(ptc_end) != vua_exon:
+                continue
+            if plp and ptc > codon:
+                score = 1
+            elif not plp and ptc < codon:
+                score = -2
+            else:
+                continue
+        pts += score
+        notes.append(f"{h.variation_id or h.hgvs_p} {h.clinical_significance} {score:+d}")
+    return pts, notes, rule
+
+
+def evaluate_scid_pm5(pc: ConsequenceInfo, cfg, variant
+                      ) -> Optional[tuple[CriterionStrength, str]]:
+    """SCID VCEP PM5 point table for a nonsense variant, or None when the gene /
+    consequence is not covered."""
+    if pc.gene_symbol not in SCID_GENES or pc.consequence != ConsequenceType.STOP_GAINED:
+        return None
+    from acmg_classifier.criteria.vcep_comparators import filter_comparators
+    from acmg_classifier.local_db.clinvar_sqlite import query_truncating_variants
+    from acmg_classifier.pvs1.nmd_predictor import transcript_structure
+    gene = pc.gene_symbol
+    tag = f"{SCID_EVIDENCE_PREFIX} {gene} point table)"
+    st = transcript_structure(pc.transcript_id)
+    if st is None:
+        return _S.NOT_MET, f"{tag}: transcript structure of {pc.transcript_id} unavailable"
+    min_stars = getattr(cfg, "pm5_min_stars", 2)
+    if not isinstance(min_stars, int):
+        min_stars = 2
+    records = query_truncating_variants(cfg.clinvar_sqlite, gene, min_stars)
+    # Informative variants must be classified by the SCID VCEP (eRepo /
+    # expert-panel ClinVar record), as for the missense PM5 comparators.
+    records, vcep_note = filter_comparators(gene, "PM5", records, variant.assembly.value)
+    chrom = variant.chrom[3:] if variant.chrom.lower().startswith("chr") else variant.chrom
+    pts, notes, rule = scid_points(pc, records, st,
+                                   exclude=(chrom, variant.pos, variant.ref, variant.alt))
+    if not rule:
+        return _S.NOT_MET, f"{tag}: NMD escape outside the final exon - not in the point table"
+    detail = (f"{'; '.join(notes[:6])}" if notes else "no informative variant") + \
+        (f" [{vcep_note}]" if vcep_note else "")
+    where = "NMD-predicted exon" if rule == "nmd" else "final exon (no NMD)"
+    if pts <= 0:
+        extra = " - negative points: reconsider PVS1" if pts < 0 else ""
+        return _S.NOT_MET, f"{tag}: {pts} point(s), {where}{extra} ({detail})"
+    strength = _S.STRONG if pts >= 4 else _S.MODERATE if pts >= 2 else _S.SUPPORTING
+    return strength, (f"{tag}: {pts} point(s), {where} -> {strength.value} ({detail}); "
+                      "informative truncating variants must be P/LP without PM5 and not "
+                      "only PVS1 + PM2 - review")
