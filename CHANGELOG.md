@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **VCF sample fields in the output.** `read_vcf` keeps, for each ALT allele, the samples
+  whose GT carries it with GT, depth (FORMAT/DP, else the sum of AD) and VAF (AD[alt] /
+  sum(AD), else FORMAT/AF); a multi-allelic genotype such as `1/2` is reported for both
+  alleles with the allele's own VAF. The `classify` and `somatic` TSVs have one row per
+  carrier sample (`sample`, `gt`, `dp`, `vaf` after `filter`); a sites-only VCF or an
+  allele no sample carries gives one row with them empty.
+- **Values used by the criteria in the output** (`classify` TSV, after the annotation
+  columns): `insilico_tool`, `insilico_score`, `pp3_insilico_cutoffs`,
+  `bp4_insilico_cutoffs`, `splice_pp3_cutoff`, `splice_bp4_cutoff`, `af_metric`,
+  `af_value`, `ba1_cutoff`, `bs1_cutoff`, `pm2_metric`, `pm2_value`, `pm2_cutoff`,
+  `gnomad_region_depth`, `phylop`, `phylop_cutoff`. Evaluators record them with
+  `CriterionEvaluator.note()`; they are kept on `CriteriaResult.values` (also in the
+  JSON output). The reported PP3/BP4 tier tables are checked against the strength
+  functions by a test.
+
 - **VCEP classification in the VCF (batch) output.** When the bundled eRepo snapshot has
   a ClinGen VCEP classification of the exact variant, the TSV adds `vcep_classification`,
   `vcep_met_codes`, `vcep_conflict`, `vcep_expert_panel`, `vcep_disease`,

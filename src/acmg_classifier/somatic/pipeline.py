@@ -198,7 +198,10 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
         entries = manual.get(v.key) or (manual.get(v.input_variant) if v.input_variant else None)
         if v.input_variant:
             warn.append(f"NORMALIZED: VCF allele {v.input_variant} evaluated as {v.key}")
-        results.append(clf.classify(v, ann, entries, warn))
+        res = clf.classify(v, ann, entries, warn)
+        res.input_variant = v.input_variant
+        res.sample_calls = list(v.sample_calls)
+        results.append(res)
     write_somatic_tsv(results, output_path)
     log.info("somatic_summary", variants=len(results))
     return results

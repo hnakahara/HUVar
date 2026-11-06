@@ -69,6 +69,10 @@ class CriteriaResult(BaseModel):
     direction: CriterionDirection
     evidence: str = ""             # human-readable explanation
     suppressed: bool = False       # e.g. PP3 suppressed when PVS1 triggered
+    # Numbers the evaluator actually used (score, cutoff, frequency metric…),
+    # recorded via CriterionEvaluator.note() and reported in fixed TSV columns
+    # (io.tsv_writer._INFERENCE_HEADER). Strings, already formatted.
+    values: dict[str, str] = {}
 
     @property
     def points(self) -> int:

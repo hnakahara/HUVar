@@ -103,6 +103,7 @@ class BA1Evaluator(CriterionEvaluator):
         # populations with >1 observation, so a single-observation point AF must
         # not establish BA1. Only the explicit point-AF / male-AF bases above
         # replace FAF95.
+        self.note(af_metric=metric, af_value=f"{faf:.3g}", ba1_cutoff=f"{threshold:.3g}")
         if metric.startswith("gnomAD popmax AF (FAF95 unavailable)"):
             return CriteriaResult.not_met(
                 ACMGCriterion.BA1,

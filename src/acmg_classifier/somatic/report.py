@@ -11,7 +11,8 @@ from acmg_classifier.somatic.models import OncCriterion, Oncogenicity, Oncogenic
 _CRITERIA = list(OncCriterion)
 
 HEADER = (
-    ["variant_id", "chrom", "pos", "ref", "alt", "filter", "transcript", "gene", "hgvs_c",
+    ["variant_id", "input_variant", "chrom", "pos", "ref", "alt", "filter",
+     "sample", "gt", "dp", "vaf", "transcript", "gene", "hgvs_c",
      "hgvs_p", "consequence", "gene_role", "gene_role_source", "gene_role_note",
      "oncogenicity", "oncogenicity_score", "criteria_met", "hotspot",
      "tumor_type", "amp_tier", "amp_level", "amp_evidence", "amp_note", "amp_candidates",
@@ -28,7 +29,7 @@ def _clean(v) -> str:
     return str(v).replace("\t", " ").replace("\r", " ").replace("\n", " ")
 
 
-def build_row(r: OncogenicityResult) -> list:
+def build_row(r: OncogenicityResult, call=None) -> list:
     ann = r.annotation
     gd = getattr(ann, "gnomad", None)
     sp = getattr(ann, "splice", None)
@@ -40,7 +41,9 @@ def build_row(r: OncogenicityResult) -> list:
             return ""
         return f"{x.points:+d}" if not x.suppressed else "suppressed"
 
-    return ([r.variant_id, r.chrom, r.pos, r.ref, r.alt, r.filter, r.transcript_id,
+    from acmg_classifier.io.tsv_writer import sample_cells
+    return ([r.variant_id, getattr(r, "input_variant", None) or "", r.chrom, r.pos, r.ref,
+              r.alt, r.filter, *sample_cells(call), r.transcript_id,
              r.gene_symbol, r.hgvs_c, r.hgvs_p, r.consequence, r.gene_role,
              r.gene_role_source, r.gene_role_note, r.classification.value, r.score,
              r.summary(), r.hotspot,
@@ -61,7 +64,8 @@ def write_somatic_tsv(results: list[OncogenicityResult], output_path: Optional[P
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(HEADER)
         for r in results:
-            w.writerow([_clean(x) for x in build_row(r)])
+            for call in (getattr(r, "sample_calls", None) or [None]):
+                w.writerow([_clean(x) for x in build_row(r, call)])
     finally:
         if output_path:
             fh.close()

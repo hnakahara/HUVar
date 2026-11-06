@@ -108,6 +108,7 @@ class BP7Evaluator(CriterionEvaluator):
         cutoff = self._spec.bp7_phylop(gene)
         if cutoff is None:
             cutoff = self._cfg.bp7_phylop_max
+        self.note(phylop=f"{score:.2f}", phylop_cutoff=f"<{cutoff:g}")
         if score >= cutoff:
             return f"highly conserved (phyloP={score:.2f} >= {cutoff})"
         return None

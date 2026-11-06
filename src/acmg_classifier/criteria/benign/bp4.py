@@ -232,10 +232,13 @@ class BP4Evaluator(CriterionEvaluator):
             # its VCEP requires REVEL∧CADD agreement. A None outcome means the rule
             # does not govern this consequence → fall through to the default.
             from acmg_classifier.criteria.insilico_genes import build_scores, combo_active
+            from acmg_classifier.criteria.insilico_values import missense_tool_values
             gene = pc.gene_symbol
+            self.note(**missense_tool_values(self._cfg, annotation, gene, self._revel_spec, "bp4"))
             if combo_active(self._insilico_spec, gene, self._cfg):
                 outcome = self._insilico_spec.bp4(gene, build_scores(annotation, pc))
                 if outcome is not None:
+                    self.note(insilico_tool=f"{gene} VCEP predictor rule (see BP4 evidence)")
                     strength, note = outcome
                     if strength:
                         return CriteriaResult.met(ACMGCriterion.BP4, strength, note)
@@ -349,6 +352,8 @@ class BP4Evaluator(CriterionEvaluator):
                 )
             cutoff = self._bp_spec.bp4_splice_cutoff(pc.gene_symbol)
             gene_cut = cutoff if cutoff is not None else 0.10
+            if sp.tool in ("spliceai", "openspliceai"):
+                self.note(splice_bp4_cutoff=f"<={gene_cut:g}")
             cut_src = f" [{pc.gene_symbol} VCEP cutoff {gene_cut}]" if cutoff is not None else ""
             if sp.tool == "spliceai" and sp.max_delta is not None:
                 strength = _spliceai_bp4(sp.max_delta, gene_cut)

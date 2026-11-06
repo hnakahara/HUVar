@@ -227,6 +227,7 @@ class PP3Evaluator(CriterionEvaluator):
                 and sp.tool in ("spliceai", "openspliceai")):
             return protein
         cut, strict = _splice_cutoff(pc.gene_symbol)
+        self.note(splice_pp3_cutoff=f"{'>' if strict else '>='}{cut:g}")
         if _spliceai_pp3(sp.max_delta, cut, strict) is None:
             return protein
         strongest = getattr(self._cfg, "pp3_missense_priority", "splice") == "strongest"
@@ -266,10 +267,13 @@ class PP3Evaluator(CriterionEvaluator):
             # its VCEP requires REVEL∧CADD agreement. A None outcome means the
             # rule does not govern this consequence → fall through to the default.
             from acmg_classifier.criteria.insilico_genes import build_scores, combo_active
+            from acmg_classifier.criteria.insilico_values import missense_tool_values
             gene = pc.gene_symbol
+            self.note(**missense_tool_values(self._cfg, annotation, gene, self._revel_spec, "pp3"))
             if combo_active(self._insilico_spec, gene, self._cfg):
                 outcome = self._insilico_spec.pp3(gene, build_scores(annotation, pc))
                 if outcome is not None:
+                    self.note(insilico_tool=f"{gene} VCEP predictor rule (see PP3 evidence)")
                     strength, note = outcome
                     if strength:
                         return CriteriaResult.met(ACMGCriterion.PP3, strength, note)
@@ -383,6 +387,8 @@ class PP3Evaluator(CriterionEvaluator):
                     ACMGCriterion.PP3, "No splice prediction (splice evaluation disabled)",
                 )
             cut, strict = _splice_cutoff(pc.gene_symbol)
+            if sp.tool in ("spliceai", "openspliceai"):
+                self.note(splice_pp3_cutoff=f"{'>' if strict else '>='}{cut:g}")
             cut_note = f" [{pc.gene_symbol} VCEP cutoff {'>' if strict else '>='}{cut:g}]" if pc.gene_symbol in _PP3_SPLICE_CUTOFF else ""
             if sp.tool == "spliceai" and sp.max_delta is not None:
                 strength = _spliceai_pp3(sp.max_delta, cut, strict)

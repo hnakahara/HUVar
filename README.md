@@ -888,7 +888,14 @@ The result TSV has the following columns (one row per variant):
 ### Identity & call
 
 `variant_id`, `input_variant`, `chrom`, `pos`, `ref`, `alt`, `filter`,
+`sample`, `gt`, `dp`, `vaf`,
 `transcript`, `gene`, `hgvs_c`, `hgvs_p`
+
+**One row per sample carrying the allele.** For a VCF with sample columns, each
+sample whose GT contains the ALT allele gets its own row (the classification is the
+same on every row): `sample`, `gt` (as written, e.g. `0/1`, `1|0`, `1/2`), `dp`
+(FORMAT/DP, else the sum of AD) and `vaf` (AD[alt] / sum(AD), else FORMAT/AF). A
+sites-only VCF, or an allele no sample carries, gives one row with these empty.
 
 Alleles are **normalised** on input (minimal representation, left-aligned against the
 genome FASTA), as ClinVar, gnomAD and the SpliceAI score files are: an indel written
@@ -995,6 +1002,24 @@ data is present. All three score columns are emitted for review whenever the
 corresponding data file is available, but only the tool selected by
 `--insilico-tool` feeds PP3/BP4. `splice_tool` / `splice_score` reflect the
 active `--splice-tool` (`openspliceai` by default).
+
+### Values used by the criteria
+
+`insilico_tool`, `insilico_score`, `pp3_insilico_cutoffs`, `bp4_insilico_cutoffs`,
+`splice_pp3_cutoff`, `splice_bp4_cutoff`,
+`af_metric`, `af_value`, `ba1_cutoff`, `bs1_cutoff`,
+`pm2_metric`, `pm2_value`, `pm2_cutoff`, `gnomad_region_depth`,
+`phylop`, `phylop_cutoff`
+
+The numbers the evaluators actually compared, recorded as they evaluate: the
+missense predictor PP3/BP4 used with its score and tier cutoffs (e.g.
+`Supporting>=0.6903; Moderate>=0.8023; ThreePoint>=0.8583; Strong>=0.9109`; a gene's
+VCEP REVEL cutoffs when they apply; a VCEP multi-predictor rule is named and detailed
+in the evidence), the gene's splice-prediction cutoffs, the gnomAD metric and value
+compared with the BA1 / BS1 cutoffs (FAF95, non-cancer, male AF or point AF as the
+gene's specification requires), the PM2 metric / value / cutoff, the gnomAD region
+mean depth of the ENIGMA BRCA1/2 PM2 gate, and phyloP with the BP7 cutoff. A cell is
+empty when the criterion did not reach the point where the value is used.
 
 ### Per-criterion columns
 

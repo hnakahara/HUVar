@@ -151,6 +151,7 @@ class CriteriaRegistry:
             from time import perf_counter
         for evaluator in self._evaluators:
             ann = rule_annotation if evaluator.rule_numbered else annotation
+            evaluator.__dict__["_notes"] = {}
             if timing is not None:
                 t0 = perf_counter()
                 result = evaluator.evaluate(variant, ann, supplement)
@@ -158,6 +159,10 @@ class CriteriaRegistry:
                 timing[name] = timing.get(name, 0.0) + perf_counter() - t0
             else:
                 result = evaluator.evaluate(variant, ann, supplement)
+            notes = evaluator.__dict__.get("_notes")
+            if notes:
+                for r in (result if isinstance(result, list) else [result]):
+                    r.values = {**notes, **r.values}
             if rule_tag and evaluator.rule_numbered:
                 for r in (result if isinstance(result, list) else [result]):
                     if r.triggered:

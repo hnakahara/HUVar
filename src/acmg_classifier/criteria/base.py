@@ -17,6 +17,17 @@ class CriterionEvaluator(ABC):
     # numbering of the VCEP tables and of ClinVar records.
     rule_numbered: bool = False
 
+    def note(self, **values) -> None:
+        """Record values used for the current evaluation (see CriteriaResult.values).
+
+        The registry clears the notes before each ``evaluate`` call and attaches
+        them to the returned result, so evaluators just call ``self.note(...)``
+        wherever they compute a score or cutoff, on any return path."""
+        notes = self.__dict__.setdefault("_notes", {})
+        for key, value in values.items():
+            if value is not None and value != "":
+                notes[key] = str(value)
+
     @abstractmethod
     def evaluate(
         self,

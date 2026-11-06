@@ -41,6 +41,15 @@ def large_indel_warning(ref: str, alt: str) -> Optional[str]:
     return None
 
 
+class SampleCall(BaseModel):
+    """One sample's genotype for one ALT allele (from the VCF FORMAT columns)."""
+
+    sample: str
+    gt: str = ""                    # as written, e.g. "0/1", "1|0", "1/2"
+    dp: Optional[int] = None        # FORMAT/DP, else the sum of FORMAT/AD
+    vaf: Optional[float] = None     # AD[alt] / sum(AD), else FORMAT/AF
+
+
 class VariantRecord(BaseModel):
     """Normalised representation of a single variant from a VCF record."""
 
@@ -59,6 +68,9 @@ class VariantRecord(BaseModel):
     # Original CHROM:POS:REF:ALT as written in the VCF when normalisation changed
     # the representation (e.g. "chr1:115725557:GAAA:GAA" -> GA>G); None otherwise.
     input_variant: Optional[str] = None
+    # Samples that carry this ALT allele (GT contains its index), in VCF order. Empty
+    # for a sites-only VCF or when no sample carries it.
+    sample_calls: list[SampleCall] = []
 
     @field_validator("chrom")
     @classmethod

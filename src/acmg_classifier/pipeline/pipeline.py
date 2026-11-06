@@ -242,6 +242,7 @@ def _classify_record(variant: VariantRecord, ctx: _ClassifyContext) -> Classific
     return ClassificationResult(
         variant_id=variant.key,
         input_variant=variant.input_variant,
+        sample_calls=list(variant.sample_calls),
         vcep=vcep_record(cfg.assembly.value, variant.chrom, variant.pos,
                          variant.ref, variant.alt),
         chrom=variant.chrom,

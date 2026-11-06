@@ -5,6 +5,7 @@ from pydantic import BaseModel, computed_field
 from acmg_classifier.models.enums import ACMGCriterion, Pathogenicity
 from acmg_classifier.models.criteria import CriteriaResult
 from acmg_classifier.models.annotation import ManePlusClinicalInfo
+from acmg_classifier.models.variant import SampleCall
 
 
 class VcepRecord(BaseModel):
@@ -33,6 +34,8 @@ class ClassificationResult(BaseModel):
     variant_id: str
     # The VCF's own CHROM:POS:REF:ALT when normalisation changed it (None otherwise)
     input_variant: Optional[str] = None
+    # VCF samples carrying the allele (GT/DP/VAF); the TSV has one row per sample
+    sample_calls: list[SampleCall] = []
     chrom: str = ""
     pos: int = 0
     ref: str = ""

@@ -95,6 +95,8 @@ class OncogenicityResult(BaseModel):
     model_config = {"arbitrary_types_allowed": True}
 
     variant_id: str
+    input_variant: Optional[str] = None
+    sample_calls: list = []            # list[SampleCall] (one TSV row per carrier sample)
     chrom: str = ""
     pos: int = 0
     ref: str = ""

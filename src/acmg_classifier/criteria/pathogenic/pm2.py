@@ -109,6 +109,8 @@ class PM2Evaluator(CriterionEvaluator):
             return None
         end = variant.pos + max(0, len(variant.ref) - 1)
         dp = self._coverage.mean_depth(variant.chrom, variant.pos, end)
+        if dp is not None:
+            self.note(gnomad_region_depth=f"{dp:.0f}")
         if dp is None or dp >= rule.min_depth:
             return None
         return (f"gnomAD region mean depth {dp:.0f} < {rule.min_depth:g} "
@@ -199,6 +201,7 @@ class PM2Evaluator(CriterionEvaluator):
         # Total absence from gnomAD is the strongest possible PM2 signal — it
         # implies neither presence nor a failed filter, just no record at all.
         if gd is None:
+            self.note(pm2_value="absent")
             return CriteriaResult.met(
                 ACMGCriterion.PM2, strength, "Absent from gnomAD (no record)",
             )
@@ -330,6 +333,7 @@ class PM2Evaluator(CriterionEvaluator):
                 value = gd.af if gd.af is not None else 0.0
                 metric = "global AF"
 
+        self.note(pm2_metric=metric, pm2_value=f"{value:.3g}", pm2_cutoff=f"{threshold:g}")
         if value < threshold:
             # Highest-subpopulation correction for the deflated low-AC FAF95
             # (FAF95 is the CI LOWER bound), then the homo-/hemizygote ceiling —

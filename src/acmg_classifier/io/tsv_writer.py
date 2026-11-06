@@ -32,6 +32,35 @@ _ANNOTATION_HEADER = [
     "in_repeat", "repeat_class",
 ]
 
+# Values the criteria evaluation actually used (CriteriaResult.values, recorded by
+# the evaluators): the configured missense predictor with its score and tier
+# cutoffs (PP3/BP4), the splice-prediction cutoffs, the gnomAD frequency metric and
+# value compared with the BA1/BS1/PM2 cutoffs, the gnomAD region depth of the
+# BRCA1/2 PM2 gate and phyloP of BP7. Empty when the criterion did not reach the
+# point where the value is used (e.g. no splice cutoff for a missense without a
+# splice prediction).
+_INFERENCE_HEADER = [
+    "insilico_tool", "insilico_score", "pp3_insilico_cutoffs", "bp4_insilico_cutoffs",
+    "splice_pp3_cutoff", "splice_bp4_cutoff",
+    "af_metric", "af_value", "ba1_cutoff", "bs1_cutoff",
+    "pm2_metric", "pm2_value", "pm2_cutoff", "gnomad_region_depth",
+    "phylop", "phylop_cutoff",
+]
+# Which criteria may supply each value, in order of preference.
+_INFERENCE_SOURCES = {
+    "insilico_tool": ("PP3", "BP4"), "insilico_score": ("PP3", "BP4"),
+    "pp3_insilico_cutoffs": ("PP3",), "bp4_insilico_cutoffs": ("BP4",),
+    "splice_pp3_cutoff": ("PP3",), "splice_bp4_cutoff": ("BP4",),
+    "af_metric": ("BA1", "BS1"), "af_value": ("BA1", "BS1"),
+    "ba1_cutoff": ("BA1",), "bs1_cutoff": ("BS1",),
+    "pm2_metric": ("PM2",), "pm2_value": ("PM2",), "pm2_cutoff": ("PM2",),
+    "gnomad_region_depth": ("PM2",), "phylop": ("BP7",), "phylop_cutoff": ("BP7",),
+}
+
+# VCF sample columns: one TSV row per sample carrying the allele (GT contains it);
+# a sites-only VCF, or an allele no sample carries, gives one row with these empty.
+_SAMPLE_HEADER = ["sample", "gt", "dp", "vaf"]
+
 # Supplementary MANE Plus Clinical columns. The row's main classification is the
 # MANE Select evaluation; the *_classification* / *_criteria_changes columns give
 # the classification with the criteria evaluated on the Plus Clinical transcript
@@ -58,6 +87,7 @@ _VCEP_HEADER = [
 _HEADER = (
     [
         "variant_id", "input_variant", "chrom", "pos", "ref", "alt", "filter",
+        *_SAMPLE_HEADER,
         "transcript", "gene", "hgvs_c", "hgvs_p",
     ]
     + _MANE_PC_HEADER
@@ -66,6 +96,7 @@ _HEADER = (
     ]
     + _VCEP_HEADER
     + _ANNOTATION_HEADER
+    + _INFERENCE_HEADER
     + [c.value for c in _ALL_CRITERIA]
     + [c.value + "_strength" for c in _ALL_CRITERIA]
     + [c.value + "_evidence" for c in _ALL_CRITERIA]
@@ -84,7 +115,8 @@ def write_tsv(results: list[ClassificationResult], output_path: Optional[Path]) 
         writer = csv.writer(fh, delimiter="\t")
         writer.writerow(_HEADER)
         for result in results:
-            writer.writerow([_sanitize_cell(c) for c in _build_row(result)])
+            for call in (result.sample_calls or [None]):
+                writer.writerow([_sanitize_cell(c) for c in _build_row(result, call)])
     finally:
         # Only close when we opened the file ourselves — never close stdout.
         if output_path:
@@ -259,7 +291,29 @@ def _build_vcep_row(result: ClassificationResult) -> list[str]:
     ]
 
 
-def _build_row(result: ClassificationResult) -> list[str]:
+def sample_cells(call) -> list[str]:
+    """sample / gt / dp / vaf cells (empty for None)."""
+    if call is None:
+        return ["", "", "", ""]
+    return [call.sample, call.gt, "" if call.dp is None else str(call.dp),
+            "" if call.vaf is None else f"{call.vaf:.4g}"]
+
+
+def inference_cells(criteria_results) -> list[str]:
+    """The _INFERENCE_HEADER cells from the criteria results' recorded values."""
+    by = {r.criterion.value: (r.values or {}) for r in criteria_results}
+    out = []
+    for col in _INFERENCE_HEADER:
+        value = ""
+        for crit in _INFERENCE_SOURCES[col]:
+            value = by.get(crit, {}).get(col, "")
+            if value:
+                break
+        out.append(value)
+    return out
+
+
+def _build_row(result: ClassificationResult, call=None) -> list[str]:
     by_criterion = {r.criterion: r for r in result.criteria_results}
 
     triggered = [
@@ -284,6 +338,7 @@ def _build_row(result: ClassificationResult) -> list[str]:
             result.ref,
             result.alt,
             result.filter or "",
+            *sample_cells(call),
             result.transcript_id or "",
             result.gene_symbol or "",
             _strip_transcript_prefix(result.hgvs_c),
@@ -298,6 +353,7 @@ def _build_row(result: ClassificationResult) -> list[str]:
         ]
         + _build_vcep_row(result)
         + _build_annotation_row(result)
+        + inference_cells(result.criteria_results)
         + triggered
         + strengths
         + evidences
