@@ -1,4 +1,4 @@
-"""VCF sample columns (sample/GT/DP/VAF, one row per carrier) and the inference
+"""VCF sample columns (sample/depth/allele_count/VAF, one row per carrier) and the inference
 value columns (scores and cutoffs the criteria actually used)."""
 from pathlib import Path
 
@@ -26,6 +26,7 @@ _VCF = (
     '##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths">\n'
     '##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Depth">\n'
     '##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele fraction">\n'
+    '##FORMAT=<ID=AO,Number=A,Type=Integer,Description="Alternate allele observations">\n'
     "##contig=<ID=chr1,length=1000>\n"
     "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tblood\ttumor\tmother\n"
     # biallelic: blood het, tumor het (no DP -> sum of AD), mother hom-ref
@@ -36,6 +37,8 @@ _VCF = (
     "chr1\t300\t.\tT\tC\t50\tPASS\t.\tGT:AF\t0/1:0.25\t./.:.\t0/0:0\n"
     # nobody carries it
     "chr1\t400\t.\tG\tA\t50\tPASS\t.\tGT\t0/0\t0/0\t./.\n"
+    # freebayes style: no AD, AO + DP -> count AO, VAF AO / DP
+    "chr1\t500\t.\tA\tT\t50\tPASS\t.\tGT:DP:AO\t0/1:20:5\t0/0:10:0\t./.:.:.\n"
 )
 
 
@@ -48,12 +51,14 @@ def vcf(tmp_path):
 
 def test_sample_calls_from_format_fields(vcf):
     recs = {r.key: r for r in read_vcf(vcf, Assembly.GRCH38)}
-    calls = {k: [(c.sample, c.gt, c.dp, c.vaf) for c in r.sample_calls] for k, r in recs.items()}
-    assert calls["chr1:100:A:G"] == [("blood", "0/1", 10, 0.4), ("tumor", "0|1", 40, 0.25)]
-    assert calls["chr1:200:C:T"] == [("blood", "1/2", 10, 0.5)]
-    assert calls["chr1:200:C:G"] == [("blood", "1/2", 10, 0.3), ("tumor", "0/2", 10, 0.2)]
-    assert calls["chr1:300:T:C"] == [("blood", "0/1", None, 0.25)]
+    calls = {k: [(c.sample, c.depth, c.allele_count, c.vaf) for c in r.sample_calls]
+             for k, r in recs.items()}
+    assert calls["chr1:100:A:G"] == [("blood", 10, 4, 0.4), ("tumor", 40, 10, 0.25)]
+    assert calls["chr1:200:C:T"] == [("blood", 10, 5, 0.5)]
+    assert calls["chr1:200:C:G"] == [("blood", 10, 3, 0.3), ("tumor", 10, 2, 0.2)]
+    assert calls["chr1:300:T:C"] == [("blood", None, None, 0.25)]
     assert calls["chr1:400:G:A"] == []
+    assert calls["chr1:500:A:T"] == [("blood", 20, 5, 0.25)]
 
 
 def test_one_tsv_row_per_carrier_sample(vcf, tmp_path):
@@ -69,15 +74,17 @@ def test_one_tsv_row_per_carrier_sample(vcf, tmp_path):
     lines = out.read_text().splitlines()
     head = lines[0].split("\t")
     rows = [dict(zip(head, ln.split("\t"))) for ln in lines[1:]]
-    got = [(r["variant_id"], r["sample"], r["gt"], r["dp"], r["vaf"]) for r in rows]
+    assert "gt" not in head and "dp" not in head
+    got = [(r["variant_id"], r["sample"], r["depth"], r["allele_count"], r["vaf"]) for r in rows]
     assert got == [
-        ("chr1:100:A:G", "blood", "0/1", "10", "0.4"),
-        ("chr1:100:A:G", "tumor", "0|1", "40", "0.25"),
-        ("chr1:200:C:T", "blood", "1/2", "10", "0.5"),
-        ("chr1:200:C:G", "blood", "1/2", "10", "0.3"),
-        ("chr1:200:C:G", "tumor", "0/2", "10", "0.2"),
-        ("chr1:300:T:C", "blood", "0/1", "", "0.25"),
+        ("chr1:100:A:G", "blood", "10", "4", "0.4"),
+        ("chr1:100:A:G", "tumor", "40", "10", "0.25"),
+        ("chr1:200:C:T", "blood", "10", "5", "0.5"),
+        ("chr1:200:C:G", "blood", "10", "3", "0.3"),
+        ("chr1:200:C:G", "tumor", "10", "2", "0.2"),
+        ("chr1:300:T:C", "blood", "", "", "0.25"),
         ("chr1:400:G:A", "", "", "", ""),            # nobody carries it: one row
+        ("chr1:500:A:T", "blood", "20", "5", "0.25"),
     ]
     assert head.index("sample") == head.index("filter") + 1
 
@@ -158,6 +165,8 @@ def test_row_without_call_has_empty_sample_cells():
         classification_2015=Pathogenicity.VUS, classification_2015_rules="",
         bayesian_score=0, classification_bayesian=Pathogenicity.VUS)
     row = dict(zip(_HEADER, _build_row(r)))
-    assert (row["sample"], row["gt"], row["dp"], row["vaf"]) == ("", "", "", "")
-    row = dict(zip(_HEADER, _build_row(r, SampleCall(sample="s1", gt="0/1", dp=12, vaf=0.5))))
-    assert (row["sample"], row["dp"], row["vaf"]) == ("s1", "12", "0.5")
+    assert (row["sample"], row["depth"], row["allele_count"], row["vaf"]) == ("", "", "", "")
+    row = dict(zip(_HEADER, _build_row(
+        r, SampleCall(sample="s1", depth=12, allele_count=6, vaf=0.5))))
+    cells = (row["sample"], row["depth"], row["allele_count"], row["vaf"])
+    assert cells == ("s1", "12", "6", "0.5")

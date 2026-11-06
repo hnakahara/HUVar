@@ -59,7 +59,7 @@ _INFERENCE_SOURCES = {
 
 # VCF sample columns: one TSV row per sample carrying the allele (GT contains it);
 # a sites-only VCF, or an allele no sample carries, gives one row with these empty.
-_SAMPLE_HEADER = ["sample", "gt", "dp", "vaf"]
+_SAMPLE_HEADER = ["sample", "depth", "allele_count", "vaf"]
 
 # Supplementary MANE Plus Clinical columns. The row's main classification is the
 # MANE Select evaluation; the *_classification* / *_criteria_changes columns give
@@ -308,10 +308,11 @@ def _build_vcep_row(result: ClassificationResult) -> list[str]:
 
 
 def sample_cells(call) -> list[str]:
-    """sample / gt / dp / vaf cells (empty for None)."""
+    """sample / depth / allele_count / vaf cells (empty for None)."""
     if call is None:
         return ["", "", "", ""]
-    return [call.sample, call.gt, "" if call.dp is None else str(call.dp),
+    return [call.sample, "" if call.depth is None else str(call.depth),
+            "" if call.allele_count is None else str(call.allele_count),
             "" if call.vaf is None else f"{call.vaf:.4g}"]
 
 

@@ -50,8 +50,9 @@ def _int_or_none(value) -> Optional[int]:
 
 def sample_calls_for(variant, samples: list[str], alt_index: int) -> list:
     """SampleCall for every sample whose GT contains ALT allele ``alt_index``
-    (1-based). VAF = AD[alt] / sum(AD) when AD is present, else FORMAT/AF; DP =
-    FORMAT/DP, else the sum of AD."""
+    (1-based). depth = FORMAT/DP, else the sum of AD; allele_count = AD[alt], else
+    FORMAT/AO (freebayes); VAF = AD[alt] / sum(AD) when AD is present, else
+    FORMAT/AF, else allele_count / depth."""
     from acmg_classifier.models.variant import SampleCall
 
     if not samples:
@@ -61,25 +62,30 @@ def sample_calls_for(variant, samples: list[str], alt_index: int) -> list:
     except Exception:  # noqa: BLE001 -- no GT field
         return []
     dp, ad, af = _format(variant, "DP"), _format(variant, "AD"), _format(variant, "AF")
+    ao = _format(variant, "AO")
     calls = []
     for s, gt in enumerate(genotypes):
-        alleles, phased = gt[:-1], bool(gt[-1]) if gt else False
-        if alt_index not in alleles:
+        if alt_index not in gt[:-1]:
             continue
-        text = ("|" if phased else "/").join("." if a < 0 else str(a) for a in alleles)
         depth = _int_or_none(dp[s][0]) if dp is not None else None
-        vaf = None
+        count = vaf = None
         if ad is not None:
             counts = [_int_or_none(x) for x in ad[s]]
             total = sum(c for c in counts if c is not None)
-            if alt_index < len(counts) and counts[alt_index] is not None and total > 0:
-                vaf = counts[alt_index] / total
+            if alt_index < len(counts) and counts[alt_index] is not None:
+                count = counts[alt_index]
+                if total > 0:
+                    vaf = count / total
             if depth is None and total > 0:
                 depth = total
+        if count is None and ao is not None and alt_index - 1 < len(ao[s]):
+            count = _int_or_none(ao[s][alt_index - 1])
         if vaf is None and af is not None and alt_index - 1 < len(af[s]):
             value = float(af[s][alt_index - 1])
             vaf = None if value != value else value          # NaN = missing
-        calls.append(SampleCall(sample=samples[s], gt=text, dp=depth,
+        if vaf is None and count is not None and depth:
+            vaf = count / depth
+        calls.append(SampleCall(sample=samples[s], depth=depth, allele_count=count,
                                 vaf=None if vaf is None else round(vaf, 4)))
     return calls
 

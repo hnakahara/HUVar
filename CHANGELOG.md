@@ -30,11 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   to the right option. `run_somatic_pipeline(supplement_path=...)` is now the ACMG TSV;
   the somatic one is `somatic_supplement_path`.
 - **VCF sample fields in the output.** `read_vcf` keeps, for each ALT allele, the samples
-  whose GT carries it with GT, depth (FORMAT/DP, else the sum of AD) and VAF (AD[alt] /
-  sum(AD), else FORMAT/AF); a multi-allelic genotype such as `1/2` is reported for both
-  alleles with the allele's own VAF. The `classify` and `somatic` TSVs have one row per
-  carrier sample (`sample`, `gt`, `dp`, `vaf` after `filter`); a sites-only VCF or an
-  allele no sample carries gives one row with them empty.
+  whose GT carries it with depth (FORMAT/DP, else the sum of AD), the ALT read count
+  (AD[alt], else FORMAT/AO) and VAF (AD[alt] / sum(AD), else FORMAT/AF, else count /
+  depth); a multi-allelic genotype such as `1/2` is reported for both alleles with the
+  allele's own count and VAF. The `classify` and `somatic` TSVs have one row per carrier
+  sample (`sample`, `depth`, `allele_count`, `vaf` after `filter`; the genotype itself is
+  not written); a sites-only VCF or an allele no sample carries gives one row with them
+  empty.
 - **Values used by the criteria in the output** (`classify` TSV, after the annotation
   columns): `insilico_tool`, `insilico_score`, `pp3_insilico_cutoffs`,
   `bp4_insilico_cutoffs`, `splice_pp3_cutoff`, `splice_bp4_cutoff`, `af_metric`,

@@ -12,7 +12,7 @@ _CRITERIA = list(OncCriterion)
 
 HEADER = (
     ["variant_id", "input_variant", "chrom", "pos", "ref", "alt", "filter",
-     "sample", "gt", "dp", "vaf", "transcript", "gene", "hgvs_c",
+     "sample", "depth", "allele_count", "vaf", "transcript", "gene", "hgvs_c",
      "hgvs_p", "consequence", "gene_role", "gene_role_source", "gene_role_note",
      "oncogenicity", "oncogenicity_score", "criteria_met", "hotspot",
      "tumor_type", "amp_tier", "amp_level", "amp_evidence", "amp_note", "amp_candidates",

@@ -912,14 +912,16 @@ The result TSV has the following columns (one row per variant):
 ### Identity & call
 
 `variant_id`, `input_variant`, `chrom`, `pos`, `ref`, `alt`, `filter`,
-`sample`, `gt`, `dp`, `vaf`,
+`sample`, `depth`, `allele_count`, `vaf`,
 `transcript`, `gene`, `hgvs_c`, `hgvs_p`
 
 **One row per sample carrying the allele.** For a VCF with sample columns, each
 sample whose GT contains the ALT allele gets its own row (the classification is the
-same on every row): `sample`, `gt` (as written, e.g. `0/1`, `1|0`, `1/2`), `dp`
-(FORMAT/DP, else the sum of AD) and `vaf` (AD[alt] / sum(AD), else FORMAT/AF). A
-sites-only VCF, or an allele no sample carries, gives one row with these empty.
+same on every row): `sample`, `depth` (FORMAT/DP, else the sum of AD), `allele_count`
+(reads supporting this ALT: AD[alt], else FORMAT/AO) and `vaf` (AD[alt] / sum(AD), else
+FORMAT/AF, else allele_count / depth). A multi-allelic genotype such as `1/2` gives a
+row for each allele with that allele's own count and VAF. A sites-only VCF, or an
+allele no sample carries, gives one row with these empty.
 
 Alleles are **normalised** on input (minimal representation, left-aligned against the
 genome FASTA), as ClinVar, gnomAD and the SpliceAI score files are: an indel written

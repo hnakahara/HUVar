@@ -45,8 +45,8 @@ def test_germline_block_follows_somatic_columns(tmp_path):
     g = classify_annotated(v, ann, cfg)
     r = SomaticClassifier(cfg).classify(v, ann, germline=g.criteria_results)
     r.germline = g
-    r.sample_calls = [SampleCall(sample="T1", gt="0/1", dp=100, vaf=0.25),
-                      SampleCall(sample="T2", gt="0/1", dp=80, vaf=0.1)]
+    r.sample_calls = [SampleCall(sample="T1", depth=100, allele_count=25, vaf=0.25),
+                      SampleCall(sample="T2", depth=80, allele_count=8, vaf=0.1)]
     out = tmp_path / "s.tsv"
     write_somatic_tsv([r], out)
     head, *rows = _rows(out)
@@ -114,6 +114,7 @@ def test_pipeline_writes_germline_and_limit(tmp_path, monkeypatch):
     by = dict(zip(head, row))
     assert by["germline_classification_2015"] == res[0].germline.classification_2015.value
     assert by["vaf"] == "0.25" and by["sample"] == "T1"
+    assert (by["depth"], by["allele_count"]) == ("100", "25") and "gt" not in head
 
     run_somatic_pipeline(_vcf(tmp_path), _cfg(), output_path=out, germline=False)
     head, *rows = _rows(out)

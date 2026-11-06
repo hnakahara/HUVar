@@ -42,12 +42,12 @@ def large_indel_warning(ref: str, alt: str) -> Optional[str]:
 
 
 class SampleCall(BaseModel):
-    """One sample's genotype for one ALT allele (from the VCF FORMAT columns)."""
+    """One sample carrying an ALT allele (GT contains it), from the VCF FORMAT columns."""
 
     sample: str
-    gt: str = ""                    # as written, e.g. "0/1", "1|0", "1/2"
-    dp: Optional[int] = None        # FORMAT/DP, else the sum of FORMAT/AD
-    vaf: Optional[float] = None     # AD[alt] / sum(AD), else FORMAT/AF
+    depth: Optional[int] = None         # FORMAT/DP, else the sum of FORMAT/AD
+    allele_count: Optional[int] = None  # reads with this ALT: AD[alt], else FORMAT/AO
+    vaf: Optional[float] = None         # AD[alt] / sum(AD), else FORMAT/AF, else AO / depth
 
 
 class VariantRecord(BaseModel):
