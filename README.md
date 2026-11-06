@@ -838,13 +838,37 @@ run `--only clinvar-sqlite` to reuse a kept XML). Without the columns the ClinVa
 genes (NOTCH1/2, GATA3, WT1, …) and canonical genes without an NCG majority role get no
 OVS1/OS2; edit `resources/shared/somatic_gene_role_overrides.tsv` and rebuild with
 `scripts/build_somatic_resources.py` to change roles. Manual evidence sets or
-overrides any criterion: `--evidence OP2:retinoblastoma`, `--evidence OP4:not_met:CH`
-(`somatic-explain`), or `--supplement` TSV with `variant_id`, `criterion`, `evidence`
-and optional `met` (yes/no). The output TSV has one column per criterion (`+4`,
+overrides any criterion: `--somatic-evidence OP2:retinoblastoma`,
+`--somatic-evidence OP4:not_met:CH` (`somatic-explain`), or `--somatic-supplement` TSV
+with `variant_id`, `criterion`, `evidence` and optional `met` (yes/no). The output TSV has one column per criterion (`+4`,
 `suppressed` or empty) and its evidence. Limitations: VAF, germline/somatic origin and
 the tumour type are not used; frequency evidence does not account for clonal
 haematopoiesis in gnomAD (a warning is added); cancerhotspots counts are on that
 resource's canonical isoforms (a reference-residue mismatch disables the hotspot).
+
+### Germline ACMG/AMP classification next to the oncogenicity
+
+Each `somatic` row also carries the germline classification of `acmg-classify classify`
+for the same variant, computed from the same annotation (annotation runs once): after the
+somatic columns come all `classify` columns from MANE Plus Clinical to `warnings`,
+prefixed `germline_` (`germline_classification_2015`, `germline_rules_2015`,
+`germline_bayesian_score`, `germline_classification_bayesian`, `germline_vcep_*`,
+the annotation and inference values, `germline_PVS1` … `germline_BP7_evidence`). When
+the oncogenicity evidence is insufficient (VUS) the germline classification is the one
+to weigh. `somatic-explain` prints the `explain` report after the oncogenicity report.
+`--no-germline` leaves it out (the TSV then has the somatic columns only).
+
+The options of `classify` that shape this classification are accepted by `somatic` /
+`somatic-explain`: `--with-bayesdel`, `--with-cadd`, `--cspec GENE=CSPEC_ID`,
+`--exclude-self-expert-panel`, `--supplement` (the same ACMG curator TSV as
+`classify --supplement`; it also imports ClinVar expert-panel criteria, as `classify`
+does), `--supplement-mode` and, in `somatic-explain`, `--evidence PS3:strong` (as
+`explain`); `somatic` also takes `--classify-workers` and `--limit`. The somatic
+(OVS1…SBP2) evidence has its own options, `--somatic-supplement` and
+`--somatic-evidence`; a TSV given to the wrong one is rejected with a pointer to the
+other. Curator evidence applies to the germline classification only: the oncogenicity
+reads the automated germline criteria (PP3/BP4/BP7, PM1, PS3/BS3). `--with-bayesdel`, `--with-cadd` and
+`--cspec` change those automated criteria, so they can also change OP1/SBP1.
 
 ### AMP/ASCO/CAP 2017 tiers (`--tumor-type`)
 

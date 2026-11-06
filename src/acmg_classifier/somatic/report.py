@@ -58,14 +58,24 @@ def build_row(r: OncogenicityResult, call=None) -> list:
             + ["; ".join(r.warnings)])
 
 
-def write_somatic_tsv(results: list[OncogenicityResult], output_path: Optional[Path]) -> None:
+def write_somatic_tsv(results: list[OncogenicityResult], output_path: Optional[Path],
+                      germline: Optional[bool] = None) -> None:
+    """One row per variant x carrier sample. With ``germline`` (default: when any
+    result carries one) the germline ACMG/AMP columns of `acmg-classify classify`
+    (classification_2015 .. warnings) follow, prefixed ``germline_``."""
+    from acmg_classifier.io.tsv_writer import GERMLINE_HEADER, germline_cells
+    if germline is None:
+        germline = any(getattr(r, "germline", None) is not None for r in results)
     fh = open(output_path, "w", newline="", encoding="utf-8") if output_path else sys.stdout
     try:
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
-        w.writerow(HEADER)
+        w.writerow(HEADER + (GERMLINE_HEADER if germline else []))
         for r in results:
             for call in (getattr(r, "sample_calls", None) or [None]):
-                w.writerow([_clean(x) for x in build_row(r, call)])
+                row = [_clean(x) for x in build_row(r, call)]
+                if germline:
+                    row += [_clean(x) for x in germline_cells(getattr(r, "germline", None), call)]
+                w.writerow(row)
     finally:
         if output_path:
             fh.close()

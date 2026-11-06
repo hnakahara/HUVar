@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **Germline ACMG/AMP classification in the somatic output.** `somatic` rows carry the
+  `classify` columns (MANE Plus Clinical .. warnings) with a `germline_` prefix after the
+  somatic columns, computed from the same annotation; the germline criteria are reused
+  by the oncogenicity evaluation instead of being evaluated twice. `somatic-explain`
+  prints the `explain` report after the oncogenicity report. New `somatic` /
+  `somatic-explain` options: `--with-bayesdel`, `--with-cadd`, `--cspec`,
+  `--exclude-self-expert-panel`, `--supplement-mode`, `--no-germline`; `somatic` also
+  `--classify-workers` and `--limit`. `pipeline.classify_variants()` classifies
+  already-annotated variants.
+
+### Changed
+
+- **`somatic` / `somatic-explain` evidence options aligned with `classify` / `explain`.**
+  `--supplement` (and `--evidence` in `somatic-explain`) now take the ACMG curator
+  evidence of `classify --supplement` / `explain --evidence` and apply to the germline
+  classification. The somatic (OVS1..SBP2) evidence moved to `--somatic-supplement` and
+  `--somatic-evidence`. A somatic TSV passed to `--supplement` (or an ACMG TSV to
+  `--somatic-supplement`, or a somatic code to `--evidence`) is rejected with a pointer
+  to the right option. `run_somatic_pipeline(supplement_path=...)` is now the ACMG TSV;
+  the somatic one is `somatic_supplement_path`.
 - **VCF sample fields in the output.** `read_vcf` keeps, for each ALT allele, the samples
   whose GT carries it with GT, depth (FORMAT/DP, else the sum of AD) and VAF (AD[alt] /
   sum(AD), else FORMAT/AF); a multi-allelic genotype such as `1/2` is reported for both

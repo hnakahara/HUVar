@@ -83,7 +83,7 @@ class OncCriterionResult(BaseModel):
 
 
 class ManualOncEvidence(BaseModel):
-    """Curator evidence for one somatic criterion (supplement row / --evidence)."""
+    """Curator evidence for one somatic criterion (--somatic-supplement / --somatic-evidence)."""
 
     variant_id: str
     criterion: OncCriterion
@@ -123,6 +123,11 @@ class OncogenicityResult(BaseModel):
     amp_candidates: list[str] = []
     annotation: Optional[object] = None
     warnings: list[str] = []
+    # Germline ACMG/AMP evaluation of the same variant and annotation
+    # (ClassificationResult), reported next to the oncogenicity: when the
+    # oncogenicity evidence is insufficient the germline classification is the
+    # one to weigh. None when not computed (--no-germline).
+    germline: Optional[object] = None
 
     @computed_field  # type: ignore[prop-decorator]
     @property

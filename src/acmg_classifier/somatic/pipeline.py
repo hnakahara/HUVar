@@ -127,8 +127,13 @@ class SomaticClassifier:
         return res
 
     def classify(self, variant: VariantRecord, ann, manual=None,
-                 warnings: Optional[list[str]] = None) -> OncogenicityResult:
-        germline = self._registry.evaluate_all(variant, ann, None)
+                 warnings: Optional[list[str]] = None,
+                 germline: Optional[list] = None) -> OncogenicityResult:
+        """``germline``: the HUVar criteria results of this variant and annotation
+        when already evaluated (without curator evidence) -- reused instead of
+        evaluating them again."""
+        if germline is None:
+            germline = self._registry.evaluate_all(variant, ann, None)
         crit, ctx = self._eval.evaluate(variant, ann, germline, manual)
         score = sum(r.points for r in crit)
         pc = ann.primary_consequence
@@ -163,9 +168,25 @@ class SomaticClassifier:
         )
 
 
+def _germline_config(cfg: Config, curated: bool) -> Config:
+    # Curator evidence in use: also import the criteria a ClinGen expert panel
+    # applied in ClinVar (>=3 stars), as `classify --supplement` does.
+    return cfg.model_copy(update={"curated_evidence": True}) if curated else cfg
+
+
 def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path] = None,
                          supplement_path: Optional[Path] = None,
-                         tumor_type: Optional[str] = None) -> list[OncogenicityResult]:
+                         tumor_type: Optional[str] = None,
+                         germline: bool = True,
+                         somatic_supplement_path: Optional[Path] = None,
+                         limit: Optional[int] = None) -> list[OncogenicityResult]:
+    """Oncogenicity (and, with ``germline``, the germline ACMG/AMP classification of
+    `classify`) of every classifiable VCF record, from one annotation pass.
+
+    ``supplement_path`` is the ACMG curator TSV of `classify --supplement`, which
+    applies to the germline classification only; ``somatic_supplement_path`` the
+    somatic manual evidence (OVS1..SBP2). ``limit`` keeps the first N classifiable
+    records."""
     from acmg_classifier.annotation.orchestrator import AnnotationOrchestrator
     from acmg_classifier.io.vcf_reader import detect_assembly_from_header, read_vcf
     from acmg_classifier.models.annotation import AnnotationData
@@ -177,17 +198,30 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
         detected = detect_assembly_from_header(vcf_path)
         if detected:
             cfg = cfg.model_copy(update={"assembly": detected})
-    manual = read_somatic_supplement(supplement_path) if supplement_path else {}
+    manual = read_somatic_supplement(somatic_supplement_path) if somatic_supplement_path else {}
     records = list(read_vcf(vcf_path, cfg.assembly, fasta=cfg.genome_fasta))
     variants = [v for v in records if unsupported_allele_reason(v.ref, v.alt) is None]
     skipped = len(records) - len(variants)
     if skipped:
         log.warning("somatic_skipped_records", count=skipped,
                     reason="no ALT / symbolic / breakend alleles are not classified")
-    annotations = AnnotationOrchestrator(cfg).annotate_batch(variants)
+    if limit is not None and limit < len(variants):
+        log.info("variants_limited", from_count=len(variants), to_count=limit)
+        variants = variants[:limit]
     clf = SomaticClassifier(cfg, tumor_type)
+    annotations = AnnotationOrchestrator(cfg).annotate_batch(variants)
+    germ_results = None
+    if germline:
+        from acmg_classifier.io.supplement_reader import read_supplement
+        from acmg_classifier.pipeline.pipeline import classify_variants
+        germ_sup = read_supplement(supplement_path) if supplement_path else {}
+        germ_results = classify_variants(
+            variants, annotations, _germline_config(cfg, bool(supplement_path)), germ_sup)
+    # Without curator evidence the germline criteria are exactly what the somatic
+    # evaluation reads (in silico, PM1, functional data), so they are reused.
+    reuse = germ_results is not None and not supplement_path
     results = []
-    for v in track(variants, "Classifying (somatic)", total=len(variants)):
+    for i, v in enumerate(track(variants, "Classifying (somatic)", total=len(variants))):
         ann = annotations.get(v.key)
         warn = []
         if ann is None:
@@ -198,11 +232,14 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
         entries = manual.get(v.key) or (manual.get(v.input_variant) if v.input_variant else None)
         if v.input_variant:
             warn.append(f"NORMALIZED: VCF allele {v.input_variant} evaluated as {v.key}")
-        res = clf.classify(v, ann, entries, warn)
+        g = germ_results[i] if germ_results is not None else None
+        res = clf.classify(v, ann, entries, warn,
+                           germline=g.criteria_results if reuse else None)
         res.input_variant = v.input_variant
         res.sample_calls = list(v.sample_calls)
+        res.germline = g
         results.append(res)
-    write_somatic_tsv(results, output_path)
+    write_somatic_tsv(results, output_path, germline=germline)
     log.info("somatic_summary", variants=len(results))
     return results
 
@@ -210,15 +247,30 @@ def run_somatic_pipeline(vcf_path: Path, cfg: Config, output_path: Optional[Path
 def run_somatic_single(chrom: str, pos: int, ref: str, alt: str, cfg: Config,
                        manual=None, transcript: Optional[str] = None,
                        print_result: bool = True,
-                       tumor_type: Optional[str] = None) -> OncogenicityResult:
-    from acmg_classifier.pipeline.pipeline import annotate_one
+                       tumor_type: Optional[str] = None,
+                       germline: bool = False,
+                       supplement=None) -> OncogenicityResult:
+    """``manual``: somatic evidence (ManualOncEvidence). ``germline`` also classifies
+    the variant under ACMG/AMP (as `explain`; with the curator entries
+    ``supplement``) and prints that report after the oncogenicity one."""
+    from acmg_classifier.pipeline.pipeline import annotate_one, classify_annotated
     from acmg_classifier.somatic.report import print_somatic_report
 
     clf = SomaticClassifier(cfg, tumor_type)   # validates the tumour type before annotating
     variant, ann = annotate_one(chrom, pos, ref, alt, cfg)
     if transcript:
         ann = ann.for_transcript(transcript)
-    result = clf.classify(variant, ann, manual)
+    g = None
+    if germline:
+        g = classify_annotated(variant, ann, _germline_config(cfg, bool(supplement)),
+                               supplement or None)
+    result = clf.classify(variant, ann, manual,
+                          germline=g.criteria_results if g is not None and not supplement
+                          else None)
+    result.germline = g
     if print_result:
         print_somatic_report(result)
+        if g is not None:
+            from acmg_classifier.io.report_writer import print_report
+            print_report(g, variant, ann)
     return result

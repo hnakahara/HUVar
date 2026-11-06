@@ -180,6 +180,23 @@ def run_pipeline(
     return results
 
 
+def classify_variants(variants: list[VariantRecord], annotations: dict, cfg: Config,
+                      supplement: Optional[dict] = None) -> list[ClassificationResult]:
+    """ACMG/AMP classification of already-annotated variants, in input order.
+
+    The classification half of :func:`run_pipeline` (the same evaluators, both
+    classifiers, gene-disease validity, VCEP record, Plus Clinical evaluations and
+    worker processes), for callers that annotate themselves -- the somatic pipeline
+    reports the germline classification next to the oncogenicity one."""
+    from acmg_classifier.criteria.registry import CriteriaRegistry
+    from acmg_classifier.classification.classifier_2015 import Classifier2015
+    from acmg_classifier.classification.classifier_bayesian import ClassifierBayesian
+
+    ctx = _ClassifyContext(cfg, CriteriaRegistry(cfg), Classifier2015(), ClassifierBayesian(),
+                           annotations, supplement or {})
+    return _classify_all(variants, ctx)
+
+
 class _ClassifyContext:
     """Everything the per-variant classification needs (shared with forked
     worker processes copy-on-write)."""

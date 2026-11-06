@@ -104,6 +104,22 @@ _HEADER = (
 )
 
 
+# Leading identity + sample columns (variant_id .. hgvs_p); the rest is the
+# classification block that `somatic` repeats with a ``germline_`` prefix.
+_IDENTITY_COLUMNS = 15
+assert _HEADER[_IDENTITY_COLUMNS - 1] == "hgvs_p"
+GERMLINE_PREFIX = "germline_"
+GERMLINE_HEADER = [GERMLINE_PREFIX + h for h in _HEADER[_IDENTITY_COLUMNS:]]
+
+
+def germline_cells(result: Optional[ClassificationResult], call=None) -> list[str]:
+    """The `classify` columns after hgvs_p for one result (empty cells for None);
+    the somatic TSV appends them under GERMLINE_HEADER."""
+    if result is None:
+        return [""] * len(GERMLINE_HEADER)
+    return [_sanitize_cell(c) for c in _build_row(result, call)[_IDENTITY_COLUMNS:]]
+
+
 def write_tsv(results: list[ClassificationResult], output_path: Optional[Path]) -> None:
     """Write classification rows to TSV (or stdout when output_path is None).
 

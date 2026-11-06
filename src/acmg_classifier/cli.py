@@ -421,6 +421,36 @@ def _somatic_options(f):
         click.option("--with-tp53-functional", is_flag=True, default=False,
                      help="Use the NCI TP53 Database assay classes for OS2/SBS2 in TP53 "
                           "(non-commercial use only; default: calibrated MaveDB data)."),
+        click.option("--with-bayesdel", is_flag=True, default=False,
+                     help="As in classify: consult the opt-in BayesDel scores (only under "
+                          "--insilico-tool revel/alphamissense)."),
+        click.option("--with-cadd", is_flag=True, default=False,
+                     help="As in classify: consult the opt-in CADD scores (only under "
+                          "--insilico-tool revel/alphamissense)."),
+        click.option("--cspec", "cspec", multiple=True, metavar="GENE=CSPEC_ID",
+                     help="As in classify: evaluate GENE under one of its disease-specific "
+                          "ClinGen CSpecs (RYR1, ACTA1, VWF), e.g. "
+                          "--cspec RYR1=congenital_myopathy_ar (repeatable)."),
+        click.option("--exclude-self-expert-panel", is_flag=True, default=False,
+                     help="As in classify (benchmark mode): do not import PS3/PS4/PP1/BS2 "
+                          "from the variant's own ClinVar expert-panel record."),
+        click.option("--no-germline", is_flag=True, default=False,
+                     help="Do not report the germline ACMG/AMP classification (by default it "
+                          "is reported next to the oncogenicity, from the same annotation)."),
+        click.option("--supplement", type=click.Path(exists=True, path_type=Path),
+                     default=None,
+                     help="ACMG curator evidence TSV, as classify --supplement (variant_id, "
+                          "criterion PVS1..BP7, strength, evidence). Applies to the germline "
+                          "classification only; somatic evidence goes in --somatic-supplement."),
+        click.option("--supplement-mode", type=click.Choice([m.value for m in SupplementMode]),
+                     default=SupplementMode.MERGE.value, show_default=True,
+                     help="How --supplement combines with the automated calls "
+                          "(as classify --supplement-mode)."),
+        click.option("--somatic-supplement", type=click.Path(exists=True, path_type=Path),
+                     default=None,
+                     help="Manual somatic evidence TSV: variant_id, criterion (OVS1..SBP2), "
+                          "evidence[, met=yes/no]. Sets or overrides an oncogenicity "
+                          "criterion (e.g. OP2, OS2)."),
     ]
     for o in reversed(opts):
         f = o(f)
@@ -429,12 +459,18 @@ def _somatic_options(f):
 
 def _somatic_config(data_dir, assembly, insilico_tool, splice_tool, openspliceai_model_dir,
                     openspliceai_flanking_size, spliceai_dir, with_tp53_functional,
-                    funcvep_path=None, with_mavedb_research=False, **extra):
+                    funcvep_path=None, with_mavedb_research=False, with_bayesdel=False,
+                    with_cadd=False, cspec=(), exclude_self_expert_panel=False,
+                    supplement_mode=SupplementMode.MERGE.value, **extra):
     from acmg_classifier.config import Config
-    return Config(
+    cfg = Config(
         data_dir=data_dir,
         assembly=Assembly(assembly) if assembly else Assembly.GRCH38,
         insilico_tool=InSilicoTool(insilico_tool),
+        use_bayesdel=with_bayesdel,
+        use_cadd=with_cadd,
+        supplement_mode=SupplementMode(supplement_mode),
+        **({"exclude_self_expert_panel": True} if exclude_self_expert_panel else {}),
         splice_tool=SpliceTool(splice_tool),
         openspliceai_model_dir=openspliceai_model_dir,
         openspliceai_flanking_size=openspliceai_flanking_size,
@@ -444,6 +480,7 @@ def _somatic_config(data_dir, assembly, insilico_tool, splice_tool, openspliceai
         **({"mavedb_research_use": True} if with_mavedb_research else {}),
         **extra,
     )
+    return _with_cspec(cfg, cspec)
 
 
 @cli.command()
@@ -453,31 +490,90 @@ def _somatic_config(data_dir, assembly, insilico_tool, splice_tool, openspliceai
 @click.option("--assembly", type=click.Choice([a.value for a in Assembly]), default=None,
               help="Override assembly detection from VCF header")
 @_somatic_options
-@click.option("--supplement", type=click.Path(exists=True, path_type=Path), default=None,
-              help="Manual somatic evidence TSV: variant_id, criterion (OVS1..SBP2), "
-                   "evidence[, met=yes/no]. Sets or overrides a criterion (e.g. OP2, OS2).")
 @click.option("--tumor-type", default=None, metavar="ONCOTREE_CODE",
               help="Tumour type (OncoTree code, e.g. SKCM, LUAD, COADREAD) for the AMP/ASCO/CAP "
                    "2017 tiers. Without it no tier is assigned and evidence in other tumour "
                    "types is listed for reference.")
-@click.option("--workers", type=int, default=4, show_default=True)
+@click.option("--workers", type=int, default=4, show_default=True,
+              help="Parallelism: VEP --fork total, annotation lookup threads and (by "
+                   "default) the germline criteria-evaluation worker processes.")
+@click.option("--classify-workers", type=int, default=None,
+              help="Worker processes for the germline criteria evaluation (as classify). "
+                   "Default: --workers. Env: ACMG_CLASSIFY_WORKERS.")
+@click.option("--limit", type=int, default=None,
+              help="Process only the first N classifiable variants.")
 @click.option("--no-progress", is_flag=True, default=False)
-def somatic(vcf, output, assembly, supplement, tumor_type, workers, no_progress, **opts) -> None:
+def somatic(vcf, output, assembly, supplement, somatic_supplement, tumor_type, workers,
+            classify_workers, limit, no_progress, no_germline, **opts) -> None:
     """Classify the oncogenicity of somatic variants in VCF (Horak et al. 2022).
 
     Points-based ClinGen/CGC/VICC SOP: Oncogenic / Likely oncogenic / VUS /
-    Likely benign / Benign. Clinical-significance tiers (AMP/ASCO/CAP 2017) are
-    not assigned. Uses only licence-free data (NCG gene roles, cancerhotspots.org,
-    ClinVar, gnomAD, in-silico predictors, MaveDB)."""
+    Likely benign / Benign, with the AMP/ASCO/CAP 2017 tier under --tumor-type.
+    Each row also carries the germline ACMG/AMP classification of `classify`
+    (germline_* columns, from the same annotation) unless --no-germline. Uses only
+    licence-free data (NCG gene roles, cancerhotspots.org, ClinVar, gnomAD,
+    in-silico predictors, MaveDB)."""
     from acmg_classifier.somatic.pipeline import run_somatic_pipeline
     from acmg_classifier.utils import progress
 
     if no_progress:
         progress.set_enabled(False)
-    cfg = _somatic_config(assembly=assembly, workers=workers, **opts)
+    if no_germline and supplement:
+        raise click.BadParameter("cannot be combined with --no-germline",
+                                 param_hint="--supplement")
+    # Read both now so a TSV given to the wrong option fails before annotation.
+    if supplement:
+        _read_acmg_supplement(supplement)
+    if somatic_supplement:
+        _read_onc_supplement(somatic_supplement)
+    cfg = _somatic_config(
+        assembly=assembly, workers=workers,
+        **({"classify_workers": classify_workers} if classify_workers is not None else {}),
+        **opts)
     _check_tumor_type(cfg, tumor_type)
     run_somatic_pipeline(vcf, cfg, output_path=output, supplement_path=supplement,
-                         tumor_type=tumor_type)
+                         somatic_supplement_path=somatic_supplement,
+                         tumor_type=tumor_type, germline=not no_germline, limit=limit)
+
+
+def _criteria_in_tsv(path: Path) -> set[str]:
+    import csv
+    try:
+        with path.open(encoding="utf-8", newline="") as fh:
+            rd = csv.DictReader((ln for ln in fh if not ln.startswith("#")), delimiter="\t")
+            return {(r.get("criterion") or "").strip().upper() for r in rd}
+    except (OSError, UnicodeDecodeError, csv.Error):
+        return set()
+
+
+def _read_acmg_supplement(path: Path, hint: str = "--supplement"):
+    """classify --supplement TSV; a somatic evidence TSV given here gets a pointer
+    to --somatic-supplement."""
+    from acmg_classifier.exceptions import SupplementParseError
+    from acmg_classifier.io.supplement_reader import read_supplement
+    from acmg_classifier.somatic.models import OncCriterion
+    try:
+        return read_supplement(path)
+    except SupplementParseError as exc:
+        msg = str(exc)
+        if _criteria_in_tsv(path) & {c.value for c in OncCriterion}:
+            msg += (" -- this looks like somatic evidence (OVS1..SBP2); pass it with "
+                    "--somatic-supplement")
+        raise click.BadParameter(msg, param_hint=hint)
+
+
+def _read_onc_supplement(path: Path):
+    """Somatic evidence TSV; an ACMG curator TSV given here gets a pointer to --supplement."""
+    from acmg_classifier.models.enums import ACMGCriterion
+    from acmg_classifier.somatic.pipeline import read_somatic_supplement
+    try:
+        return read_somatic_supplement(path)
+    except ValueError as exc:
+        msg = str(exc)
+        if _criteria_in_tsv(path) & {c.value for c in ACMGCriterion}:
+            msg += (" -- this looks like ACMG curator evidence (PVS1..BP7); pass it with "
+                    "--supplement")
+        raise click.BadParameter(msg, param_hint="--somatic-supplement")
 
 
 def _check_tumor_type(cfg, code):
@@ -498,36 +594,57 @@ def _check_tumor_type(cfg, code):
 @click.option("--assembly", type=click.Choice([a.value for a in Assembly]),
               default=Assembly.GRCH38.value, show_default=True)
 @_somatic_options
-@click.option("--evidence", "evidence", multiple=True, metavar="CRITERION[:not_met][:NOTE]",
-              help="Manual somatic evidence (repeatable), e.g. --evidence OP2:retinoblastoma "
-                   "--evidence OS2:'PMID 12345' --evidence OM1:not_met.")
-@click.option("--supplement", type=click.Path(exists=True, path_type=Path), default=None,
-              help="Manual somatic evidence TSV (rows for this variant are applied).")
+@click.option("--evidence", "evidence", multiple=True, metavar="CRITERION:STRENGTH[:NOTE]",
+              help="ACMG manual evidence for the germline classification, as explain "
+                   "--evidence (repeatable), e.g. --evidence PS3:strong.")
+@click.option("--somatic-evidence", "somatic_evidence", multiple=True,
+              metavar="CRITERION[:not_met][:NOTE]",
+              help="Manual somatic evidence (repeatable), e.g. --somatic-evidence "
+                   "OP2:retinoblastoma --somatic-evidence OS2:'PMID 12345' "
+                   "--somatic-evidence OM1:not_met.")
 @click.option("--transcript", default=None, metavar="ACCESSION",
               help="Evaluate on this transcript (e.g. MANE Plus Clinical) instead of MANE Select.")
 @click.option("--tumor-type", default=None, metavar="ONCOTREE_CODE",
               help="Tumour type (OncoTree code, e.g. SKCM) for the AMP/ASCO/CAP 2017 tier.")
-def somatic_explain(chrom, pos, ref, alt, assembly, evidence, supplement, transcript,
-                    tumor_type, **opts) -> None:
-    """Show the somatic oncogenicity evaluation of one variant (CHROM POS REF ALT)."""
+def somatic_explain(chrom, pos, ref, alt, assembly, evidence, somatic_evidence, supplement,
+                    somatic_supplement, transcript, tumor_type, no_germline, **opts) -> None:
+    """Show the somatic oncogenicity evaluation of one variant (CHROM POS REF ALT),
+    then the germline ACMG/AMP report of `explain` unless --no-germline."""
+    from acmg_classifier.exceptions import SupplementParseError
+    from acmg_classifier.io.supplement_reader import parse_inline_evidence as acmg_inline
     from acmg_classifier.models.variant import VariantRecord
-    from acmg_classifier.somatic.pipeline import (
-        parse_inline_evidence, read_somatic_supplement, run_somatic_single,
-    )
+    from acmg_classifier.somatic.models import OncCriterion
+    from acmg_classifier.somatic.pipeline import parse_inline_evidence, run_somatic_single
 
+    if no_germline and (supplement or evidence):
+        raise click.BadParameter("cannot be combined with --no-germline",
+                                 param_hint="--supplement / --evidence")
     cfg = _somatic_config(assembly=assembly, **opts)
     key = VariantRecord(chrom=chrom, pos=pos, ref=ref, alt=alt, assembly=cfg.assembly).key
     manual = []
+    if somatic_supplement:
+        manual.extend(_read_onc_supplement(somatic_supplement).get(key, []))
+    if somatic_evidence:
+        try:
+            manual.extend(parse_inline_evidence(list(somatic_evidence), key))
+        except ValueError as exc:
+            raise click.BadParameter(str(exc), param_hint="--somatic-evidence")
+    germ_entries = []
     if supplement:
-        manual.extend(read_somatic_supplement(supplement).get(key, []))
+        germ_entries.extend(_read_acmg_supplement(supplement).get(key, []))
     if evidence:
         try:
-            manual.extend(parse_inline_evidence(list(evidence), key))
-        except ValueError as exc:
-            raise click.BadParameter(str(exc), param_hint="--evidence")
+            germ_entries.extend(acmg_inline(list(evidence), key))
+        except SupplementParseError as exc:
+            msg = str(exc)
+            onc = {c.value for c in OncCriterion}
+            if any(e.split(":")[0].strip().upper() in onc for e in evidence):
+                msg += " -- somatic criteria (OVS1..SBP2) go in --somatic-evidence"
+            raise click.BadParameter(msg, param_hint="--evidence")
     _check_tumor_type(cfg, tumor_type)
     run_somatic_single(chrom, pos, ref, alt, cfg, manual=manual or None, transcript=transcript,
-                       tumor_type=tumor_type)
+                       tumor_type=tumor_type, germline=not no_germline,
+                       supplement=germ_entries or None)
 
 
 # ---------------------------------------------------------------------------
