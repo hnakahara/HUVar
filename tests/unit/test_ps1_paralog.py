@@ -141,7 +141,8 @@ def test_committed_tsv_paralog_groups():
     tsv = _ROOT / "resources" / "shared" / "disease_prevalence.tsv"
     with tsv.open(encoding="utf-8") as f:
         rows = {r["gene_symbol"]: r for r in csv.DictReader(f, delimiter="\t")}
-    assert rows["HRAS"]["ps1_paralog_group"] == "NRAS,KRAS"
+    assert rows["HRAS"]["ps1_paralog_group"] == "KRAS,NRAS,MRAS,RIT1,RRAS2"
+    assert rows["BRAF"]["ps1_paralog_group"] == "RAF1"
     assert rows["HBA2"]["ps1_paralog_group"] == "HBA1"
     assert rows["HBA2"]["ps1_paralog_strength"] == "Moderate"
     assert rows["SOS1"]["ps1_paralog_group"] == "SOS2"

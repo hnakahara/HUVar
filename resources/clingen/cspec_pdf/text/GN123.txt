@@ -1,0 +1,862 @@
+Criteria Specification
+ClinGen Severe Combined Immunodeficiency Disease Expert Panel Specifications to the
+ACMG/AMP Variant Interpretation Guidelines for RAG1 Version 2.2
+Affiliation: Severe Combined Immunodeficiency Disease VCEP
+Type: Richards et.al., 2015 - Combining rules
+Version : 2.2
+Released : 5/15/2026
+DOI : 10.5281/zenodo.21434500
+Release Notes :
+Edited Rules for Combining Criteria to reflect standard combinations plus (A) 1 very strong + 1 supporting
+= Likely Pathogenic and (B) 1 Strong Benign = Likely Benign.
+Refreshed and saved Rules for Combining Criteria.
+Uploaded two files to address minor PM3 changes:
+1. "PM3 Criterion: October 2025 Version, Minor Updates”
+2. “PM3: svi recommendations: October 2025 Group Responses to Minor Updates”
+Uploaded RAG1 Corrections 1.6.26 file
+Made changes regarding PP4 criteria.
+PS3_Moderate specification edit
+Added caveat to PM1
+Added BS2_Strong strength
+Added BS2_Supporting requirement to have minimum of 1 homozygote.
+
+Contributors & Keywords
+Research Group: Severe Combined
+Immunodeficiency Disease VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+RAG1 NM_000448.3 Autosomal recessive
+inheritance recombinase activating gene 1
+deficiency
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for RAG1
+Gene: RAG1 (HGNC:9831) 
+Transcripts:
+NM_000448.3
+
+HGNC Name: recombination activating 1
+Disease:
+recombinase activating gene 1
+deficiency (MONDO:0000572)
+ Mode of Inheritance:
+Autosomal recessive
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Specifications:
+
+Use ClinGen SVI recommendations for loss of function criterion
+(Tayoun et al., 2018 (PMID: 30192042)) with two modifications:
+Given that the RAG1 protein is encoded by a single exon (based
+on MANE Select transcript NM_000448.3) and nonsensemediated decay is not predicted for nonsense or frameshift
+variants, PVS1 cannot be applied at the default strength to RAG1
+variants (indicated by the red boxes in attached PVS1
+flowchart.), except in the case of a full gene deletion or
+removing/altering critical domain (NBD domain, DDBD domain
+and core domain)(indicated by the purple boxes in attached
+PVS1 flowchart.):
+PVS1 can be applied to variants not predicted to undergo
+nonsense-mediated decay but removing/altering the critical NBD
+domain (aa 394-460), DDBD domain (aa 461-517), and core
+domain (aa 387-1011) based on recommendations from Walker
+et. al., preprint (See attached PVS1 flowchart.)
+Strength modification for variants predicted to remove >10% of
+the protein (See attached PVS1 flowchart.).
+For variants not predicted to undergo nonsense-mediated
+decay, at least one pathogenic variant must be present
+downstream in order to apply PVS1_Strong (See attached PVS1
+flowchart.).
+The NBD domain (aa 394-460), DDBD domain (aa 461-517) and
+core domain (aa 387-1011) are defined as a region critical to
+protein function. (PMID: 26996199).
+
+Very Strong
+Use ClinGen SVI recommendations for loss of function criterion (Tayoun et al., 2018 (PMID:
+30192042)) with two specifications:
+
+Given that the RAG1 protein is encoded by a single exon (based on MANE Select
+transcript NM_000448.3) and nonsense-mediated decay is not predicted for
+nonsense or frameshift variants, PVS1 cannot be applied at the default strength to
+RAG1 variants (indicated by the red boxes in the Flowchart attached), except in the
+case of full gene deletion or removing/altering critical domain for the protein (NBD
+domain, DDBD domain, and core domain, indicated by the purple in the Flowchart).
+PVS1 can be applied to variants not predicted to undergo nonsense-mediated decay
+when removing/altering the critical NBD domain (aa 394-460), DDBD domain (aa
+461-517), and core domain (aa 387-1011) based on recommendations from Walker
+et al., preprint.
+Modification General recommendation,Gene-specific
+Type:
+
+Strong
+Use ClinGen SVI recommendations for loss of function criterion (Tayoun et al., 2018 (PMID:
+30192042)) with one specification:
+For variants not predicted to undergo nonsense-mediated decay but removing >10%
+of protein, at least one pathogenic variant must be present downstream in order to
+apply PVS1_Strong.
+Modification General recommendation,Gene-specific
+Type:
+
+Moderate
+Use ClinGen SVI recommendations for loss of function criterion (Tayoun et al., 2018 (PMID:
+30192042)) with one specification:
+For variants not predicted to undergo nonsense-mediated decay but removing >10%
+of protein, when at least one pathogenic variant is not present downstream,
+downgrade to PVS1_Moderate.
+Modification General recommendation
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+
+It can also be applied for splice variants at the same nucleotide and with similar impact
+prediction as previously reported pathogenic variant (if the predicted impact is equal to or
+greater than the known pathogenic variant per in silico splicing tool SpliceAI). - Example:
+c.105+1G>C is known to be pathogenic, can use PS1 for c.105+1G>T.
+Applicable if the previously established variant is classified as pathogenic by SCID VCEP
+specifications for RAG1.
+Modification Gene-specific
+Type:
+
+Moderate
+It can also be applied for splice variants at the same nucleotide and with similar impact
+prediction as previously reported pathogenic variant (if the predicted impact is equal to or
+greater than the known pathogenic variant per in silico splicing tool SpliceAI). - Example:
+c.105+1G>C is known to be likely pathogenic, can use PS1 for c.105+1G>T
+Applicable if the previously established variant is classified as likely pathogenic by SCID
+VCEP specifications for RAG1.
+Modification Gene-specific,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+The following guidelines should be used when determining the phenotypic
+Specifications:consistency of each proband:
+“Phenotype highly specific for gene” proband must meet at least
+PP4_Moderate criteria;
+“Phenotype consistent with gene but not highly specific” proband
+must meet PP4 criteria;
+“Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity”: proband has been asserted to have a SCID
+phenotype but does not meet PP4 criteria;
+Reduce points per proband by half if the phase is unconfirmed.
+
+Very Strong
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+
+Modification General recommendation,Gene-specific
+Type:
+
+Strong
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification General recommendation,Gene-specific
+Type:
+
+Moderate
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification General recommendation,Gene-specific
+Type:
+
+Supporting
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification General recommendation,Gene-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+PS3 may potentially be applied at the default strength level of strong for evidence from an
+animal model expressing the variant of interest and recapitulating the RAG1-SCID
+phenotype.
+Modification Gene-specific
+Type:
+
+Moderate
+The strength of evidence from cellular models/in vitro studies is dependent upon the
+abnormal result in a V(D)J recombination assay:
+PS3_Moderate: <25% of wild-type activity in Lee et al., 2014 (PMID: 24290284);
+Modification Gene-specific
+Type:
+
+Supporting
+The strength of evidence from cellular models/in vitro studies is dependent upon the
+abnormal result in a V(D)J recombination assay:
+PS3_Supporting:
+25-60% of wild-type activity in Lee et al., 2014 (PMID: 24290284) OR
+Reduced activity compared to wild type in Corneo et al., 2001
+(PMID: 11313270);
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+Caveat: variant must not meet BS1, BS2, or BA1 criteria.
+Specifications:
+
+Moderate
+Strength is dependent upon the location of the variant within specific functional domains
+(PMID: 26996199):
+PM1_Moderate: missense variant located in the NBD domain (amino acids 394-460)
+and DDBD domain (amino acids 461-517).
+Caveat: variant must not meet BS1, BS2, or BA1 criteria.
+
+Modification Gene-specific
+Type:
+
+Supporting
+Strength is dependent upon the location of the variant within specific functional domains
+(PMID: 26996199):
+PM1_Supporting: missense variant located elsewhere in the core domain (amino
+acids 387-1011)
+Caveat: variant must not meet BS1, BS2, or BA1 criteria.
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+gnomAD popmax filtering allele frequency <0.000102
+An additional requirement is that no homozygotes have been observed in gnomAD.
+Modification Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+VCEP
+Use ClinGen SVI adapted recommendations for in trans criterion (see PM3
+Specifications:criterion attached below) with the additional requirement that the cooccurring variant must be classified using the SCID VCEP specifications
+for RAG1.
+Caveat: All variants should be sufficiently rare (meet PM2 specification).
+The applicability of PM3 to suspected founder variants with allele
+frequencies exceeding the PM2 threshold will be evaluated on a case-bycase basis by the VCEP.
+
+Very Strong
+Use ClinGen SVI adapted recommendations for in trans criterion with the additional
+requirement that the co-occurring variant must be classified using the SCID VCEP
+specifications for RAG1.
+Modification General recommendation,Strength
+Type:
+
+Strong
+Use ClinGen SVI adapted recommendations for in trans criterion with the additional
+requirement that the co-occurring variant must be classified using the SCID VCEP
+specifications for RAG1.
+Modification General recommendation,Strength
+Type:
+
+Moderate
+Use ClinGen SVI adapted recommendations for in trans criterion with the additional
+requirement that the co-occurring variant must be classified using the SCID VCEP
+specifications for RAG1.
+Modification General recommendation,Strength
+Type:
+
+Supporting
+Use ClinGen SVI adapted recommendations for in trans criterion with the additional
+requirement that the co-occurring variant must be classified using the SCID VCEP
+specifications for RAG1.
+Modification General recommendation,Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+When applied to deletion variants, the deleted region must contain a known pathogenic
+or likely pathogenic variant that is not predicted/observed to alter splicing.
+Modification Gene-specific
+Type:
+
+Supporting
+When applied to deletion variants, the deleted region must contain a known VUS variant
+that is not predicted/observed to alter splicing.
+Modification Gene-specific,Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+For nonsense variants:
+Specifications:
+PM5_Strong
+PM5 may be applied at a Strong level of evidence for any nonsense
+variant with 4+ points from informative variants (see below point
+table). PM5_Strong should be downgraded to PM5_Moderate if PVS1
+is applied at any strength.
+PM5_Moderate
+PM5 may also be applied at a Moderate level of evidence for any
+nonsense variant with 2+ points from informative variants (see below
+point table). PM5_Moderate may not be combined with
+PVS1_VeryStrong (should be downgraded to PM5_Supporting if
+PVS1_VeryStrong is applied).
+PM5_Supporting
+Also applicable to a nonsense variant with 1 point from an
+informative variant (see point table). Informative variants must also
+be classified by these rule specifications.
+Type of variant under assessment (VUA); Informative variant;
+Score
+Nonsense variant predicted to lead to NMD; P/LP variant in the exon of
+DNA change predicted to lead to NMD; +1pt
+Nonsense variant predicted to lead to NMD; B/LB variant in the exon
+predicted to lead to NMD; -2pt
+Nonsense variant, resulting in a PTC in the final exon, not predicted to lead
+to NMD; P/LP variant resulting in a PTC in the same exon but downstream
+
+of VUA; +1pt
+Nonsense variant, resulting in a PTC in the final exon, not predicted to lead
+to NMD; B/LB variant resulting in PTC in the same exon but upstream of
+the VUA; -2pt
+NMD = nonsense-mediated decay; PTC premature termination codon
+Note: The informative variant must be classified by the SCID VCEP
+specifications and may not be the same variant used to meet “+1
+pathogenic variant downstream” on the PVS1 flowchart. If negative points
+are calculated, the curator should not apply PM5 and should reconsider if
+PVS1 is applicable for the VUA. The VUA must be sufficiently rare, meet
+PM2_Supporting, to apply this point system. If the informative variant is a
+frameshift or nonsense variant, it must reach classification as Pathogenic
+or Likely Pathogenic without use of PM5 and without use of only PVS1 plus
+PM2.
+
+Strong
+PM5 may be applied at a Strong level of evidence for any nonsense variant with 4+ points
+from informative variants (see below point table). PM5_Strong should be downgraded to
+PM5_Moderate if PVS1 is applied at any strength.
+Notes: The informative variant must be classified by the SCID VCEP specifications and
+may not be the same variant used to meet “+1 pathogenic variant downstream” on the
+PVS1 flowchart. If negative points are calculated, the curator should not apply PM5 and
+should reconsider if PVS1 is applicable for the VUA. The VUA must be sufficiently rare,
+meet PM2_Supporting, to apply this point system. If the informative variant is a frameshift
+or nonsense variant, it must reach classification as Pathogenic or Likely Pathogenic
+without use of PM5 and without use of only PVS1 plus PM2.
+Modification General recommendation,Strength
+Type:
+
+Moderate
+Applicable at default strength (PM5) if previously established variant is classified as
+pathogenic or at reduced strength of PM5_Supporting if previously established variant is
+classified as likely pathogenic.
+PM5 may also be applied at a Moderate level of evidence for any nonsense variant with
+2+ points from informative variants (see below point table). PM5_Moderate may not be
+combined with PVS1_VeryStrong (should be downgraded to PM5_Supporting if
+PVS1_VeryStrong is applied).
+Notes: The informative variant must be classified by the SCID VCEP specifications and
+may not be the same variant used to meet “+1 pathogenic variant downstream” on the
+PVS1 flowchart. If negative points are calculated, the curator should not apply PM5 and
+should reconsider if PVS1 is applicable for the VUA. The VUA must be sufficiently rare,
+meet PM2_Supporting, to apply this point system. If the informative variant is a frameshift
+
+or nonsense variant, it must reach classification as Pathogenic or Likely Pathogenic
+without use of PM5 and without use of only PVS1 plus PM2.
+Modification General recommendation,Strength
+Type:
+
+Supporting
+Applicable at default strength (PM5) if previously established variant is classified as
+pathogenic or at reduced strength of PM5_Supporting if previously established variant is
+classified as likely pathogenic. Also applicable to a nonsense variant with 1 point from an
+informative variant (see point table). Informative variants must also be classified by these
+rule specifications.
+Notes: The informative variant must be classified by the SCID VCEP specifications and
+may not be the same variant used to meet “+1 pathogenic variant downstream” on the
+PVS1 flowchart. If negative points are calculated, the curator should not apply PM5 and
+should reconsider if PVS1 is applicable for the VUA. The VUA must be sufficiently rare,
+meet PM2_Supporting, to apply this point system. If the informative variant is a frameshift
+or nonsense variant, it must reach classification as Pathogenic or Likely Pathogenic
+without use of PM5 and without use of only PVS1 plus PM2.
+Modification General recommendation,Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+The following guidelines should be used when determining the phenotypic
+Specifications:consistency of each proband:
+“Phenotype highly specific for gene” proband must meet at least
+PP4_Moderate criteria;
+“Phenotype consistent with gene but not highly specific” proband
+must meet PP4 criteria;
+“Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity”: proband has been asserted to have a SCID
+phenotype but does not meet PP4 criteria;
+Reduce points per proband by half if the phase is unconfirmed.
+
+Strong
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification General recommendation,Gene-specific
+Type:
+
+Moderate
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification General recommendation,Gene-specific
+Type:
+
+Supporting
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification General recommendation,Gene-specific
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Use ClinGen SVI recommendations for co-segregation criterion (PMID:
+Specifications:30311386) with the additional specification that unaffected individuals
+contributing to the calculated LOD score (Attached document: PP1
+specifications) must be heterozygous carriers of one of the variants
+observed in the affected individuals (i.e. do not count wild-type/wild-type,
+individuals).
+
+Strong
+Use recommendations for co-segregation criterion from PMID: 30311386, with strength
+dependent on number of affected segregations.
+Modification General recommendation
+Type:
+
+Moderate
+Use recommendations for co-segregation criterion from PMID: 30311386, with strength
+dependent on number of affected segregations.
+Modification General recommendation
+Type:
+
+Supporting
+Use recommendations for co-segregation criterion from PMID: 30311386, with strength
+dependent on number of affected segregations.
+
+Modification General recommendation
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Does not apply. The gnomAD v2.1.1 missense Z score for RAG1 (Z = 0.58)
+suggests this gene is not constrained for missense variation. Both benign
+and pathogenic missense variants are present in RAG1.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Only applicable to synonymous or intronic variants predicted to impact splicing by
+SpliceAI with a delta score greater than or equal to 0.2.
+Do not apply to missense variants.
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+PP4 applicability and strength is determined by the total points
+Specifications:accumulated by a single affected individual according to the table below
+and the following total point ranges:
+<1 Point: PP4 not met
+1 - <2 Points: PP4
+
+≥2 - <4 Points: PP4_Moderate
+≥4 Points: PP4_Strong
+Evidence Description (Points)
+Diagnostic criteria met for SCID (Criteria 1 and 3 or Criterion 4 by itself) or
+Leaky SCID/Omenn syndrome (excluding Criterion 2)1 (0.5pt)
+SCID gene panel or exome/genome sequencing conducted (only
+applicable if genetic testing did not provide an alternative genetic
+explanation for SCID/Leaky SCID/Omenn syndrome phenotype) (1pt)
+Family history of SCID (only applicable if SCID gene panel or
+exome/genome sequencing was conducted on proband and did not
+provide an alternative genetic explanation for phenotype) (0.5pt)
+Decreased presence of TCRVα7.2 (<2%) in CD3+ T lymphocytes and/or
+mucosa-associated invariant T-cells demonstrated by flow cytometry AND
+pathogenic or likely pathogenic variants in RAG2 and DCLRE1C have been
+excluded PMID: 39792639 (1.5 pt)
+Decreased presence of TCRVα7.2 (<2%) in CD3+ T lymphocytes and/or
+mucosa-associated invariant T-cells demonstrated by flow cytometry AND
+pathogenic or likely pathogenic variants in RAG2 and DCLRE1C have NOT
+been excluded PMID: 39792639 (0.5 pt)
+Increased presence of 9G4+ (>10%), 9G4int (>5%) or 9G4hi (>5%) cells
+in CD19+ B cells demonstrated by flow cytometry AND pathogenic or
+likely pathogenic variants in RAG2 have been excluded PMID: 39792639 (1
+pt)
+Increased presence of 9G4+ (>10%), 9G4int (>5%) or 9G4hi (>5%) cells
+in CD19+ B cells demonstrated by flow cytometry AND pathogenic or
+likely pathogenic variants in RAG2 have NOT been excluded PMID:
+39792639 (0.5 pt)
+SCID phenotype corrected by RAG1 gene therapy (4 pt)
+T-B-NK+ lymphocyte subset profile* (See notes) (0.5 pt)
+1 The diagnostic criteria should follow the PIDTC 2022 specification,
+
+summarized here.
+*Notes: 1) If NK cells are not noted or are present, criteria may still be
+applied if SCID gene panel or exome/genome sequencing has ruled out
+alternative causes; 2) If maternal T cells are present, the T lymphocyte
+profile is still considered to be T- (autologous T cells are absent).
+Find attached the PP4 table.
+
+Strong
+A patient score of ≥ 4 points.
+
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+A patient score of ≥2-<4 points (see instructions below).
+Modification Disease-specific,Gene-specific
+Type:
+
+Supporting
+A patient score of 1-<2 points (see instructions below).
+Modification Disease-specific,Gene-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+Maximum credible population allele frequency threshold determined using
+Specifications:Whiffin/Ware calculator (https://www.cardiodb.org/allelefrequencyapp/)
+and the following parameters:
+Prevalence: 1:5,000
+Allelic heterogeneity: 1
+Genetic heterogeneity: 0.19 (based on the contribution of RAG1
+variants to total SCID in the PIDTC 6901 cohort reported in Dvorak et
+al., 2019 (PMID: 30193840, Table 1): 19.2% rounded to 19%)
+Penetrance: 50%
+
+Stand Alone
+gnomAD popmax filtering allele frequency >0.00872.
+
+Modification Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+gnomAD popmax filtering allele frequency >0.001951
+Specifications:
+Maximum credible population allele frequency threshold determined using
+Whiffin/Ware calculator (https://www.cardiodb.org/allelefrequencyapp/)
+and the following parameters:
+Prevalence: 1:50,000
+Allelic heterogeneity: 1
+Genetic heterogeneity: 0.19 (based on the contribution of RAG1
+variants to total SCID in the PIDTC 6901 cohort reported in Dvorak et
+al., 2019 (PMID: 30193840, Table 1): 19.2% rounded to 19%)
+Penetrance: 100%
+1
+
+Consider also bottleneck populations.
+
+Strong
+gnomAD popmax filtering allele frequency >0.001951
+1 Consider also bottleneck populations.
+
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+BS2_Strong: Can be applied at Strong level if observed in at least 3 homozygotes.
+Modification Strength
+Type:
+
+Supporting
+
+Only to be used when the variant is observed in the homozygous state in a healthy adult.
+BS2_Supporting: Can be applied at Supporting level if observed in at least 1 homozygote.
+Modification Strength
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+There is not a well-established functional study which can rule out all
+damaging effects on protein function.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Can be applied without additional specifications.
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BP2
+
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Not Applicable
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Applicable to both synonymous variants and deep intronic variants affecting
+nucleotides at or beyond the +7 (donor) and -21 (acceptor) positions.
+The variant should be predicted not to impact splicing by at least two out of three in
+silico tools (freely available tools include GeneSplicer, MaxEntScan, NNSplice,
+SpliceAI, Splicing Sequences Finder (SSF), and varSEAK).
+Given the potential for poor conservation of genes related to T cell and B cell
+development among vertebrates, nucleotide conservation is not required in order
+to apply BP7.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS2, PS3,
+PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong)
+
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND ≥ 2 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6, PP1_Moderate, PP4_Moderate)
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6, PP1_Moderate, PP4_Moderate) AND 1
+
+Supporting (PS2_Supporting, PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND ≥ 2 Supporting (PS2_Supporting,
+PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting,
+PM6_Supporting, PP1, PP3, PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong) AND
+≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong) AND
+2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate) AND ≥ 2 Supporting (PS2_Supporting, PS3_Supporting, PM1_Supporting,
+PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong) AND
+1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate) AND ≥ 4 Supporting (PS2_Supporting, PS3_Supporting, PM1_Supporting,
+PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6, PP1_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong) AND
+1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong) AND
+≥ 2 Supporting (PS2_Supporting, PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate)
+
+2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate) AND ≥ 2 Supporting (PS2_Supporting, PS3_Supporting, PM1_Supporting,
+PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate) AND ≥ 4 Supporting (PS2_Supporting, PS3_Supporting, PM1_Supporting,
+PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PM5_Strong, PM6_Strong, PP1_Strong, PP4_Strong) AND
+2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PM1, PM3, PM4, PM5, PM6,
+PP1_Moderate, PP4_Moderate)
+
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND 1 Supporting (PS2_Supporting,
+PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting,
+PM6_Supporting, PP1, PP3, PP4)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4)
+1 Stand Alone (BA1)
+
+Likely Benign
+≥ 2 Supporting (BS2_Supporting, BP7)
+1 Strong (BS1, BS2, BS4)
+
+Files & Images
+PP4 - RAG1: 2025 updates 
+PM3 Criterion: October 2025 Version, Minor Updates 
+PVS1: Specified PVS1 flowchart 
+SCID VCEP PS3_BS3: Functional Evidence (RAG1) 
+PS2_PM6: SVI recommendations for de novo criteria 
+PM3: svi recommendations: October 2025 Group Responses to Minor Updates 
+PP1: PP1 specifications 
+
+PM3 Minor Amendments 12.12.2025: 
+
+

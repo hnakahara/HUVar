@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN217",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50130",
+    "@type": "Organization",
+    "label": "Congenital Heart Disease Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50130"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/267019563"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Congenital Heart Disease  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for NKX2-5 Version 1.0",
+  "lastUpdated": "2026-11-09T16:02:50.794Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/267019572",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=NKX2-5",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0800441",
+              "@type": "Disease",
+              "label": "MONDO:0800441",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "NKX2-5"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

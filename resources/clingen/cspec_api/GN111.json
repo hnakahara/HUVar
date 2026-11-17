@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN111",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50052",
+    "@type": "Organization",
+    "label": "Hemoglobinopathy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50052"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1561019304"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Hemoglobinopathy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for HBB Version 1.0",
+  "lastUpdated": "2023-02-08T12:26:28.962Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1561019317",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=HBB",
+          "@type": "Gene",
+          "label": "HBB"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN224",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50162",
+    "@type": "Organization",
+    "label": "Propionic Acidemia and Methylmalonic Acidemia Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50162"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/485353024"
+  },
+  "cspecStatus": "Pilot Rules Submitted",
+  "currentStatus": "Pilot Rules Submitted",
+  "label": "ClinGen Propionic Acidemia and Methylmalonic Acidemia  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for PCCA Version 1.0",
+  "lastUpdated": "2026-11-10T19:50:53.708Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/485353033",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=PCCA",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0011628",
+              "@type": "Disease",
+              "label": "MONDO:0011628",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "PCCA"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

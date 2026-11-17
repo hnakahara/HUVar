@@ -1,7 +1,7 @@
 gene_symbol	strength	regions	residues	alt_aa
 ABCA4	not_applicable			
 ABCD1	Moderate	507-520;617-641		
-ACADVL	Moderate	1-40;214-223;249-251;381-382;481-516	326,429,441,459,562	
+ACADVL	Moderate	1-40;214-223;249-251;381-382;460-466;481-516	326,429,441,459,562	
 ACTA1	not_applicable			
 ACTC1	not_applicable			
 ACVRL1	Moderate	209-216;329-335;348-351	40,54,56,57,58,59,66,71,72,73,75,76,78,79,80,82,83,84,85,87,229,242	

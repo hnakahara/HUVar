@@ -140,6 +140,22 @@ class PS1Evaluator(CriterionEvaluator):
             )
 
         if pc.consequence == ConsequenceType.MISSENSE:
+            # VCEPs whose PS1 (amino-acid rule) needs splicing ruled out for the
+            # variant under curation (general "VCEP Specifications" text).
+            from acmg_classifier.criteria.pm5_conditions import PS1_SPLICE
+            gate = PS1_SPLICE.get(pc.gene_symbol or "")
+            sp = annotation.splice
+            if (gate and sp and sp.is_available and sp.max_delta is not None
+                    and sp.tool in ("spliceai", "openspliceai")):
+                cut, mode = gate
+                ok = sp.max_delta < cut if mode == "max" else sp.max_delta <= cut
+                if not ok:
+                    return CriteriaResult.not_met(
+                        ACMGCriterion.PS1,
+                        f"{pc.gene_symbol} VCEP: candidate predicted to affect splicing "
+                        f"({sp.tool} max_delta={sp.max_delta:.2f}, cutoff {cut:g}); "
+                        "PS1 (same amino-acid change) not applied",
+                    )
             return self._evaluate_missense(variant, pc)
         if pc.consequence in (
             ConsequenceType.SPLICE_ACCEPTOR,
@@ -150,6 +166,35 @@ class PS1Evaluator(CriterionEvaluator):
         ):
             return self._evaluate_splice(variant, pc)
         return CriteriaResult.not_met(ACMGCriterion.PS1, "Not a missense or splice variant")
+
+    def _comparator_splice(self, h) -> float | None:
+        """Precomputed SpliceAI max delta of a ClinVar comparator, or None (no
+        SpliceAI files / another splice tool / no coordinates)."""
+        if not getattr(self, "_splice_lookup_ready", False):
+            self._splice_lookup_ready = True
+            self._splice_lookup = None
+            try:
+                from acmg_classifier.models.enums import SpliceTool
+                if getattr(self._cfg, "splice_tool", None) == SpliceTool.SPLICEAI:
+                    from acmg_classifier.local_db.splice.spliceai_predictor import (
+                        SpliceAIPredictor,
+                    )
+                    pred = SpliceAIPredictor(self._cfg.spliceai_vcf,
+                                             self._cfg.spliceai_indel_vcf)
+                    self._splice_lookup = pred if pred.is_available() else None
+            except Exception:  # noqa: BLE001 — optional resource
+                self._splice_lookup = None
+        if self._splice_lookup is None or not (
+                getattr(h, "chrom", None) and getattr(h, "pos", None)
+                and getattr(h, "ref", None) and getattr(h, "alt", None)):
+            return None
+        try:
+            v = VariantRecord(chrom=h.chrom, pos=int(h.pos), ref=h.ref, alt=h.alt,
+                              assembly=self._cfg.assembly)
+            sc = self._splice_lookup.predict(v)
+            return sc.max_delta if sc.is_available else None
+        except Exception:  # noqa: BLE001
+            return None
 
     def _evaluate_missense(self, variant: VariantRecord, pc) -> CriteriaResult:
         # Same amino-acid change at the same codon via a DIFFERENT nucleotide.
@@ -170,6 +215,27 @@ class PS1Evaluator(CriterionEvaluator):
         hits, vcep_note = filter_comparators(
             pc.gene_symbol, "PS1", hits, variant.assembly.value,
         )
+        # VCEPs that require the comparison variant not to cause a splicing defect.
+        from acmg_classifier.criteria.pm5_conditions import PS1_COMPARATOR_SPLICE_MAX
+        comp_max = PS1_COMPARATOR_SPLICE_MAX.get(pc.gene_symbol or "")
+        if hits and comp_max is not None:
+            kept, dropped, unknown = [], 0, 0
+            for h in hits:
+                sc = self._comparator_splice(h)
+                if sc is None:
+                    unknown += 1
+                elif sc > comp_max:
+                    dropped += 1
+                    continue
+                kept.append(h)
+            parts = []
+            if dropped:
+                parts.append(f"{dropped} comparator(s) excluded: SpliceAI > {comp_max:g}")
+            if unknown:
+                parts.append(f"comparator splice not assessed for {unknown}")
+            if parts:
+                vcep_note = "; ".join(x for x in (vcep_note, "; ".join(parts)) if x)
+            hits = kept
         if hits:
             ids = ", ".join(h.variation_id or "" for h in hits[:3])
             note = f" [{vcep_note}]" if vcep_note else ""
@@ -195,16 +261,36 @@ class PS1Evaluator(CriterionEvaluator):
             return CriteriaResult.met(ACMGCriterion.PS1, strength, evidence)
 
         # Paralogue (analogous-residue) route: a VCEP may grant PS1 from the same
-        # amino-acid change at the ANALOGOUS (same-numbered) residue of a sibling
-        # gene — RASopathy groups (HRAS/NRAS/KRAS, MAP2K1/MAP2K2, SOS1/SOS2) and
-        # HBA2/HBA1. Only consulted when the same-gene rule did not fire.
+        # amino-acid change at the ANALOGOUS residue of a sibling gene — RASopathy
+        # groups (HRAS/KRAS/NRAS/MRAS/RIT1/RRAS2, BRAF/RAF1, MAP2K1/MAP2K2,
+        # SOS1/SOS2) and HBA2/HBA1. Only consulted when the same-gene rule did not
+        # fire. HBA2/HBA1 share their residue numbering; the RASopathy groups do
+        # not (MAP2K2 = MAP2K1 + 4 in the kinase core, SOS1 p.Met269 = SOS2
+        # p.Met267, HRAS p.Gly12 = MRAS p.Gly22 = RIT1 p.Gly30, BRAF p.Asp594 =
+        # RAF1 p.Asp486), so a group present in the alignment table is translated
+        # through it (a residue aligned to a gap has no analogue).
         siblings = self._spec.paralog_group(pc.gene_symbol)
         if siblings:
             # No self-exclusion / codon-proximity guard for paralogues: the hit is
             # in a DIFFERENT gene (different chromosome), so it can never be the
             # variant itself and the same-codon proximity rule does not apply.
             para = []
+            aligned = self._paralog_map.has_gene(pc.gene_symbol)
+            sib_aa = _aa_ref_alt(pc.amino_acids)
             for sib in siblings:
+                if aligned and self._paralog_map.has_gene(sib):
+                    spos = self._paralog_map.analogs(
+                        pc.gene_symbol, pc.protein_position).get(sib)
+                    if spos is None or not sib_aa:
+                        continue
+                    from acmg_classifier.local_db.clinvar_sqlite import (
+                        query_paralog_aa_change,
+                    )
+                    para.extend(query_paralog_aa_change(
+                        self._cfg.clinvar_sqlite, sib, f"{sib_aa[0]}{spos}{sib_aa[1]}",
+                        min_stars=self._min_stars,
+                    ))
+                    continue
                 para.extend(query_same_aa_change(
                     self._cfg.clinvar_sqlite, sib, pc.hgvs_p, min_stars=self._min_stars,
                 ))
@@ -227,7 +313,7 @@ class PS1Evaluator(CriterionEvaluator):
         #    (fixed; LP-only does not qualify). The fixed strength is taken from
         #    ps1_paralog_strength.
         aa = _aa_ref_alt(pc.amino_acids)
-        if aa and self._paralog_map.has_gene(pc.gene_symbol):
+        if aa and not siblings and self._paralog_map.has_gene(pc.gene_symbol):
             from acmg_classifier.local_db.clinvar_sqlite import query_paralog_aa_change
             ref, alt = aa
             analogs = self._paralog_map.analogs(pc.gene_symbol, pc.protein_position)

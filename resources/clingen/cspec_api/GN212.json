@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN212",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50041",
+    "@type": "Organization",
+    "label": "Coagulation Factor Deficiency Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50041"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/100409941"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Coagulation Factor Deficiency  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for F7 Version 1.0",
+  "lastUpdated": "2026-01-13T21:29:06.559Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/100409950",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=F7",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0002244",
+              "@type": "Disease",
+              "label": "MONDO:0002244",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "F7"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

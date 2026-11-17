@@ -1,0 +1,972 @@
+Criteria Specification
+ClinGen Hereditary Breast, Ovarian and Pancreatic Cancer Expert Panel Specifications to the
+ACMG/AMP Variant Interpretation Guidelines for PALB2 Version 1.3
+Affiliation: Hereditary Breast, Ovarian and Pancreatic Cancer VCEP
+Type: Richards et.al., 2015 - Combining rules
+Description : Summary of ACMG-AMP Criteria for PALB2 (autosomal dominant and autosomal recessive
+disorders)
+Version : 1.3
+Released : 9/18/2026
+Release Notes :
+Release notes v1.3
+Further clarified use of BP4 in the presence of RNA data (BP4+BP7(RNA) is allowed, v1.2 had conflicting
+information)
+Provided additional guidance on use of gnomAD data
+Clarified Boolean operators in PS4
+Clarified PM5_sup to include p.Tyr1183*
+Clarified additional variant types can meet PM5_sup
+Updated PVS1 decision tree for duplications involving WD40 to align with the written description
+Uploaded supporting documents by individual codes (PVS1, PS1, PM3/BS2) instead of one packet with all
+code specifications.
+No other changes to criteria or attachments.
+
+Contributors & Keywords
+Research Group: Hereditary Breast, Ovarian and
+Pancreatic Cancer VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for PALB2
+General Comments:
+
+Release notes v1.3 Further clarified use of BP4 in the presence of RNA data
+(BP4+BP7(RNA) is allowed, v1.2 had conflicting information) Provided
+additional guidance on use of gnomAD data Clarified Boolean operators in
+PS4 Clarified PM5_sup to include p.Tyr1183* Clarified additional variant
+types can meet PM5_sup. Included clarification on predicted vs observed
+for splice variants. Updated PVS1 decision tree for duplications involving
+WD40 to align with the written description Uploaded supporting documents
+by individual codes (PVS1, PS1, PM3/BS2) instead of one packet with all
+code specifications. No other changes to criteria or attachments.
+
+Gene: PALB2 (HGNC:26144) 
+Transcripts:
+NM_024675.3
+
+HGNC Name: partner and localizer of BRCA2
+Disease:
+PALB2-related cancer
+predisposition
+(MONDO:0700272)  Mode
+
+of Inheritance: Autosomal
+dominant inheritance
+Fanconi anemia
+complementation group N
+(MONDO:0012565)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Specifications:
+
+Use PALB2 PVS1 Decision Tree Per PALB2 Exon Map and PALB2 PVS1
+Guide
+PVS1: Predicted splice defect
+PVS1_Strength(RNA): Observed splice defect
+The default RefSeq transcript for nucleotide (c.) annotation is
+NM_024675.3/ENST00000261584.8. Several naturally occurring
+alternate splicing isoforms have been described1. Yet, after careful
+examination, none of them is considered a candidate rescue
+transcript (very low contribution to overall expression, not coding
+proteins predicted functional, or both). In keeping with that, we have
+considered that all presumed LoF events (PVS1 decision tree
+specifications) occur in biologically relevant transcript(s).
+WD40 beta propeller and the Coiled-coil domain (CC) are considered
+indispensable for PALB2 protein function.
+PVS1 alterations that are predicted to escape NMD, but that
+adversely affect the WD40 domain can be granted PVS1 (as
+opposed to PVS1_Strong as the recommended baseline2. The
+following evidence supports this strength change:
+The WD40 domain interacts with many different protein partners
+that are involved in the double strand break repair pathway3
+Two different C-terminal truncating mutations (c.3549C>A and
+c.3549C>G) resulting in loss of the last 3 amino acids [p.
+
+(Tyr1183Ter)], were identified in trans with PALB2 stop-gain
+variants in three unrelated FA (FA-N) patients4
+The PALB2 WD40 toroidal structure is “sealed” in the
+seventh blade by interaction of the C-terminal strand with
+the incomplete N-terminal blade. The last four residues of
+PALB2 (Y1183, H1184, Y1185, and S1186) are directly
+involved in this interaction (molecular Velcro hydrogen
+bonding)15. This is the rationale for the clinical relevance of
+the last 4 amino acids of the protein.
+Alterations predicted to lead to in frame losses adversely
+affecting the WD40 structure/function are found in trans with
+LoF PALB2 alterations in Fanconi Anemia patients4
+Exon 10 donor: c.3113+5G>C (biallelic with c.395delT)
+Exon 12 donor: c.3350+4A>G (biallelic with
+c.2393_2394insCT)
+LoF alterations are rare in GnomAD in all exons
+GnomAD v2.1 accessed 5/30/2019
+Total Variants (includes splice acceptor/donorconservative)
+1418 variants
+336,349 carriers
+LoF Flag (excludes splice acceptor/donor-conservative)
+95 variants (6.7%)
+239 carriers (.07%)
+PVS1 can be applied as per the PVS1 decision tree.
+PVS1_Variable(RNA) shall be used for observed splice defects,
+whether from canonical +/-1,2 positions or other spliceogenic
+regions (including mid-exonic missense/synonymous variants
+that cause splice defects) with baseline weight as per the below
+decision tree. Weight can be further modified based on the
+quality of the RNA study including consideration of concepts
+such as:
+Starting material (where patient material is preferable to in vitro
+minigene)
+Use of NMD inhibitors where translation does occur such as cell
+lines56
+Primer design (to make sure it’s comprehensive to capture
+possible multicassette events)
+Method of quantification
+where e.g. capillary electrophoresis is preferable to
+estimation by gel band density
+where SNP analysis is most preferred (where analysis of
+exonic SNPs and their relative presence in aberrant and WT
+transcripts is informative)
+Quantification (where complete effects should have increased
+weight over incomplete effects)
+
+Specific guidance on the use of RNA evidence in variant
+assessment is not a gene-specific consideration for PALB2 at this
+time, therefore discretion is left to assessors until further
+guidance is provided for this general concept from the Sequence
+Variant Interpretation group.
+In the event that RNA data are available and they reflect a
+substantial variant-specific impact, do not use both PVS1(RNA) and
+PP3 or BP4. However, in the event that RNA data are available and
+they reflect no variant-specific impacts, PP3 or BP4 may be applied in
+conjunction with BP7(RNA).
+
+Very Strong
+Use PALB2 PVS1 Decision Tree
+Modification Gene-specific,Strength
+Type:
+
+Strong
+Use PALB2 PVS1 Decision Tree.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Use PALB2 PVS1 Decision Tree.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Use PALB2 PVS1 Decision Tree
+Modification Gene-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+VCEP
+Specifications:
+
+Missense: Do not use. Missense changes are not yet confirmed as a
+mechanism of disease for PALB2
+Splicing: See PALB2 PS1 Table (PMID: 37352859)
+
+Strong
+Use PALB2 PS1 Splicing table
+Modification General recommendation
+Type:
+
+Moderate
+Use PALB2 PS1 Splicing table
+Modification General recommendation
+Type:
+
+Supporting
+Use PALB2 PS1 Splicing table
+Modification General recommendation
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Not Applicable
+Comments:
+Do not use for AD or AR disease: Informative de novo occurrences have
+not yet been observed and de novo AR conditions are unlikely to be
+informed by phase ● Autosomal Dominant Disease: Do not useInformative de novo occurrences have not yet been observed for
+autosomal dominant disease. As breast cancer is relatively common and
+occurs frequently as an apparently sporadic event, de novo is unlikely to
+ever be informative unless specific features of PALB2-related cancer
+predisposition are identified. ● Autosomal Recessive Disease: Do not use de novo occurrences are too rare to be informative at this time. In
+addition, in a biallelic state, de novo occurrences have an exceedingly low
+probability of being able to be confirmed as in trans because parental
+testing (and identification of one variant in each parent) is typically
+required without the use of long-range technologies.
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Not Applicable
+Comments:
+● Protein: Do not use: Lack of known positive controls ● RNA: Do not use:
+See code PVS1_Variable(RNA)
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+PS4_Moderate: Do not use. Proband counting for genes causing a common
+Specifications:disorder need to be calibrated in a population-specific way before use.
+
+Strong
+Case-control studies; p-value ≤.05 **and** (Odds ratio, hazard ratio, or relative risk ≥3
+**or** lower 95% CI ≥1.5).
+Modification Disease-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+
+Comments:
+
+Do not use: Missense pathogenic variation in PALB2 is not yet confirmed
+as a mechanism of disease.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+Specifications:
+
+Is not considered a conflicting piece of evidence for variants that
+otherwise are likely benign/benign
+Use as PM2_Supporting (not moderate)
+
+Supporting
+Frequency ≤ 1/300,000 (0.000333%) in gnomAD subpopulation with the highest
+frequency
+Exception: If >0.000333% but n=1 in a single subpopulation (not present in any other
+subpopulation), that is sufficiently rare and PM2_supporting would apply.
+Modification Gene-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+VCEP
+See Fanconi Anemia PM3 tables for approach to assign points per
+Specifications:proband, and final PM3 code assignment based on the sum of PM3-related
+points.
+Fanconi Anemia (FA) of any subtype is generally considered an
+exceedingly rare, severe, early-onset disease with variable features. In the
+case of BRCA2, hypomorphic FA patients have been described who are
+diagnosed at older ages with less severe phenotypes. The criteria set forth
+in the tables below are designed to accommodate such hypomorphs and
+are recommended to be applied to all FA-associated genes which may not
+be as well described due to the extreme infrequency of their identification,
+and due to ascertainment bias (for severe phenotype) in the literature.
+General Considerations
+Variant may not exceed general population frequency >0.01%.
+
+Consider other gene panel test results as potential explanation
+for phenotype.
+Multiple unrelated cases are additive.
+Phenotype consistent:
+Chromosomal breakage with 1 clinical feature OR
+Ex. Chromosomal breakage testing + microcephaly / triangular
+face
+At least 2 of 3 clinical features from separate categories without
+chromosomal breakage studies
+Ex. (Without chromosomal breakage): Myelodysplastic
+Syndrome and microcephaly / triangular face.
+Positive for chromosome breakage test:
+Increased chromosome breakage and/or radial forms on
+cytogenetic testing of lymphocytes with diepoxybutane (DEB) or
+mitomycin C (MMC)
+Clinical features indicative of FA, including
+Physical features (in ~75% of affected persons), include:
+prenatal and/or postnatal short stature
+abnormal skin pigmentation (e.g., café au lait macules,
+hypo- pigmentation)
+Skeletal malformations (e.g., hypoplastic thumb,
+hypoplastic radius)
+Microcephaly, triangular face
+Ophthalmic anomalies
+Genitourinary tract anomalies.
+See Orphanet 13 for full list of >100 HPO terms (and their
+reported frequency).
+Pathology findings and laboratory findings (non-cancer related)
+include
+progressive bone marrow failure (unrelated to cancer
+treatment)
+aplastic anemia
+Myelodysplastic syndrome
+Inordinate toxicities from chemotherapy or radiation
+macrocytosis
+cytopenia (especially thrombocytopenia, leukopenia, and
+neutropenia)
+increased fetal hemoglobin (often precedes anemia).
+Note: FA patients with very early onset cancer (≤5yr) may
+not present with hematologic disease, which is reported to
+have median age at onset of 7 years in FA patients in
+general14
+Cancer diagnosis ≤5yr, particularly
+Blood cancers (AML)
+Brain cancers (medulloblastoma, neuroblastoma)
+
+Wilms Tumor
+Specifications are adapted from definitions from GeneReviews (last
+revision June 3, 2021)
+
+Very Strong
+PM3_VeryStrong ≥ 8 points
+See Fanconi Anemia PM3 tables for approach to assign points per proband.
+Modification Disease-specific,Strength
+Type:
+
+Strong
+PM3_Strong ≥ 4 points
+See Fanconi Anemia PM3 tables for approach to assign points per proband.
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+PM3 = 2 points
+See Fanconi Anemia PM3 tables for approach to assign points per proband.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+PM3_Supporting = 1 point
+See Fanconi Anemia PM3 tables for approach to assign points per proband.
+Modification Disease-specific,Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Not Applicable
+Comments:
+Do not use: ● In-frame deletions/insertions that are not already PVS1eligible: no information is available to justify the application of this rule. ●
+Missense and small in-frame indels: not yet confirmed as a mechanism of
+disease for PALB2. ● Stop-loss: lack of data on stop-loss variants.
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Specifications:
+
+Based on location of the most C-terminal known pathogenic variant,
+p.Tyr1183*.
+Use as PM5_Supporting (not moderate)
+Do not use for missense changes: Missense changes are not yet
+confirmed as a mechanism of disease for PALB2.
+
+Supporting
+DNA Variants: Apply to all NMD-prone, truncating variants receiving PVS1 (must be at
+VeryStrong) with premature termination codons upstream of p.His1184
+Splice Variants: Apply to all observed (not predicted) NMD-prone, truncating variants
+receiving PVS1(RNA) (must be at VeryStrong with high-quality RNA data) with
+premature termination codons upstream of p.His1184. This is not applicable for
+predicted splice impact without RNA data or PVS1(RNA) at reduced strength.
+Modification Gene-specific,Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Do not use for AD or AR disease: Informative de novo occurrences have
+not yet been observed and de novo AR conditions are unlikely to be
+informed by phase
+
+PP1
+Original ACMG
+Summary
+
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Specifications:
+
+AD Condition: use as per Co-Segregation Guidelines
+AR Condition: Affected relatives must have both variants identified in
+proband.
+Co-Segregation Guidelines
+Quantitative co-segregation analysis is mandated for more
+accurate assessment of causality for PALB2 alterations. It is
+strongly preferred that biocurators use a quantitative method
+that accommodates both pathologies of AD PALB2: breast
+cancer, ovarian cancer and pancreatic cancer. These methods
+may be conducted by biostatisticians, particularly if they are
+able to compute LR scores9 using multiple phenotypes.
+PP1_Strong: LOD ≥1.26 or Bayes Factor (LR) ≥18:1
+PP1_Moderate: LOD ≥.60 or Bayes Factor (LR) ≥4:1
+PP1: LOD ≥0.3 or Bayes Factor (LR) ≥2:18
+BS4_Supporting: LOD ≤-.32 or Bayes Factor (LR) ≤.48
+BS4_Moderate: LOD ≤ -.64 or Bayes Factor (LR) ≤.23
+BS4: LOD ≤ -1.28 or Bayes Factor (LR) LR≤.053:1
+A freely available tool, COOL (COsegregation OnLine) from Bing-Jian
+Feng’s laboratory can be used to calculate LoD scores for cosegregation analysis
+1. Navigate to COOL (COsegregation OnLine)7
+2. Input ‘PALB2’ into the ‘Input a Gene Symbol’ field (the PALB2
+defaults are approved by this VCEP)
+3. Upload your Pedigree File (see COOL (COsegregation OnLine)
+manual8 for formatting)
+4. Leave all defaults as is. Select ‘Submit’ to obtain LR based on Full
+Likelihood Bayes (FLB)
+
+Strong
+AD Condition: LOD ≥1.26 or Bayes Factor (LR) ≥18:1
+AR Condition: Segregation in ≥3 affected relatives
+Modification Gene-specific
+Type:
+
+Moderate
+AD Condition: LOD ≥.60 or Bayes Factor (LR) ≥4:1
+AR Condition: Segregation in 2 affected relatives
+Modification Gene-specific
+Type:
+
+Supporting
+AD Condition: LOD ≥0.3 or Bayes Factor (LR) ≥2:1
+AR Condition: Segregation in 1 affected relative
+Modification Gene-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Do not use. Missense is not yet confirmed or refuted as a mechanism of
+disease for PALB2
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+So far, published predictors have yet to achieve functional outcome
+for PALB2 missense variants
+NOTE: Splice analysis needs to be considered for all variant types
+(including missense, frameshift, nonsense, etc. as any variant has
+the potential to impact splicing which may preclude any expected
+protein effects)
+NOTE: PP3 for splice predictions may not be applied in addition to
+PVS1 or PVS1_Variable(RNA) codes.
+Use caution in applying the wrong type of computational evidence
+(protein vs. RNA) towards the cumulative body of evidence for the
+opposite mechanism.
+The VCEP uses SpliceAI as a sole predictor due to its ability to
+accurately predict loss of native splice sites and creation of cryptic
+sites (Jaganathan et al., 2019). This VCEP recommends SpliceAI
+thresholds set forth by the SVI in applying PP3 and BP4 to noncanonical splice variants: Apply PP3 for SpliceAI scores ≥0.2 and
+apply BP4 for SpliceAI scores ≤0.1 (Walker et al., 2023).
+
+In the event that RNA data are available and they reflect a
+substantial variant-specific impact, do not use both PVS1(RNA) and
+PP3 or BP4. However, in the event that RNA data are available and
+they reflect no variant-specific impacts, PP3 or BP4 may be applied in
+conjunction with BP7(RNA).
+
+Supporting
+Missense: Do not use.
+Splicing: Predicted impact via splicing (SpliceAI ≥0.2) for silent, missense/in-frame
+and for intronic variants outside of donor and acceptor 1,2 sites.
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+Do not use for AD disorder as breast cancer is a disease with multiple
+genetic etiology (genetic heterogeneity) and there are no features that
+can readily distinguish hereditary from sporadic causes. For AR disorder,
+use PM3 for specific phenotype considerations
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+VCEP
+Follow all SVI general guidance on applying population filters.
+Specifications:
+
+Stand Alone
+Grpmax Filtering AF >.1% in gnomAD
+Modification Disease-specific,Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Follow all SVI general guidance on applying population filters.
+Specifications:
+
+Strong
+Grpmax Filtering AF >.01% in gnomAD
+Modification Disease-specific,Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+See Fanconi Anemia BS2 tables for approach to assign points per
+Specifications:proband, and final BS2 code assignment based on the sum of BS2-related
+points.
+Do not use for individuals in population based cohorts, such as
+gnomAD
+VUA should not be bioinformatically predicted (or experimentally
+proven) to have a clinically important effect on protein or mRNA
+splicing. Co-occurrent P or LP variant should be assigned
+classification using VCEP specifications
+Consider multiple instances of co-occurrence with the same variant
+are more likely to be in cis in unrelated individuals when assessing
+BS2 application
+
+Strong
+BS2 ≥ 4 points
+See Fanconi Anemia BS2 tables for approach to assign points per proband.
+Modification Disease-specific
+Type:
+
+Moderate
+BS2_Moderate = 2 points
+See Fanconi Anemia BS2 tables for approach to assign points per proband.
+Modification Disease-specific
+Type:
+
+Supporting
+BS2_Supporting = 1 point
+See Fanconi Anemia BS2 tables for approach to assign points per proband.
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+Do not use: ● Protein functional studies (BS3) See PS3 for details ● RNA
+functional studies (Use BP7_Variable(RNA))
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+Specifications:
+
+Quantitative co-segregation analysis is mandated for more accurate
+assessment of causality for PALB2 alterations. It is strongly preferred
+
+that biocurators use a quantitative method that accommodates both
+pathologies of AD PALB2: breast cancer, ovarian cancer and
+pancreatic cancer. These methods may be conducted by
+biostatisticians, particularly if they are able to compute LR scores9
+using multiple phenotypes.
+PP1_Strong: LOD ≥1.26 or Bayes Factor (LR) ≥18:1
+PP1_Moderate: LOD ≥.60 or Bayes Factor (LR) ≥4:1
+PP1: LOD ≥0.3 or Bayes Factor (LR) ≥2:1
+BS4_Supporting: LOD ≤-.32 or Bayes Factor (LR) ≤.48
+BS4_Moderate: LOD ≤ -.64 or Bayes Factor (LR) ≤.23
+BS4: LOD ≤ -1.28 or Bayes Factor (LR) LR≤.053:1
+A freely available tool, COOL (COsegregation OnLine) from Bing-Jian
+Feng’s laboratory can be used to calculate LoD scores for cosegregation analysis
+1. Navigate to COOL (COsegregation OnLine)11
+2. Input ‘PALB2’ into the ‘Input a Gene Symbol’ field (the PALB2
+defaults are approved by this VCEP)
+3. Upload your Pedigree File (see COOL (COsegregation OnLine)
+manual12 for formatting)
+4. Leave all defaults as is. Select ‘Submit’ to obtain LR based on Full
+Likelihood Bayes (FLB)
+
+Strong
+LOD ≤ -1.28 or Bayes Factor (LR) ≤.053:1
+Modification Gene-specific
+Type:
+
+Moderate
+LOD ≤ -.64 or Bayes Factor (LR) ≤.23
+Modification Gene-specific
+Type:
+
+Supporting
+LOD ≤-.32 or Bayes Factor (LR) ≤.48
+Modification Gene-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+VCEP
+Based on published and unpublished functional studies, PALB2 has a low
+Specifications:rate of missense variants that are non-functional in relevant assays. True
+missense pathogenic variants are not yet confirmed or refuted but are
+thought to be exceedingly rare. Given the very low likelihood that
+missense variants are pathogenic, this rule applies to all missense
+variants in PALB2.
+
+Supporting
+Apply to all missense variants.
+Modification Gene-specific
+Type:
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Do not use: See Fanconi Anemia BS2 table
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Do not use: small in-frame losses are neither confirmed nor refuted as a
+mechanism of pathogenicity for PALB2. In addition, PALB2 is not
+considered to have repetitive regions without known function
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+Missense: Do not use. So far, published predictors have yet to
+achieve functional outcome for PALB2 missense variants
+NOTE: Splice analysis needs to be considered for all variant types
+(including missense, frameshift, nonsense, etc. as any variant has
+the potential to impact splicing which may preclude any expected
+protein effects)
+NOTE: BP4 for splice predictions may be applied in conjunction with
+BP7_Variable(RNA) (a lack of observed RNA defect)
+Use caution in applying the wrong type of computational evidence
+(protein vs. RNA) towards the cumulative body of evidence for the
+opposite mechanism.
+The VCEP uses SpliceAI as a sole predictor due to its ability to
+accurately predict loss of native splice sites and creation of cryptic
+sites (Jaganathan et al., 2019). This VCEP recommends SpliceAI
+thresholds set forth by the SVI in applying PP3 and BP4 to noncanonical splice variants: Apply PP3 for SpliceAI scores ≥0.2 and
+apply BP4 for SpliceAI scores ≤0.1 (Walker et al., 2023).
+In the event that RNA data are available and they reflect a
+substantial variant-specific impact, do not use both PVS1(RNA) and
+PP3 or BP4. However, in the event that RNA data are available and
+they reflect no variant-specific impacts, PP3 or BP4 may be applied in
+conjunction with BP7(RNA).
+
+Supporting
+Missense: Do not use.
+Splicing: No predicted impact via splicing (SpliceAI ≤0.1). Do not apply for missense
+variants.
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Do not use: Cases with multiple pathogenic variants have been observed
+with no noticeable difference in phenotype (e.g. BRCA1 and BRCA2). In
+addition, PALB2 has moderate penetrance and will naturally occur with
+
+other pathogenic variants more frequently due to higher
+tolerance/presence in the general population.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+Specifications:
+
+BP7: Synonymous and deep intronic
+Can be used for deep intronic variants beyond (but not
+including) +7 (donor) and -21 (acceptor)
+May also apply BP4 to achieve Likely Benign
+Is not considered a conflicting piece of evidence against a body
+of evidence supporting a pathogenic splice defect
+BP7_Variable(RNA): RNA functional studies
+Lack of aberrant splice defect: Please see PVS1_Variable(RNA)
+section (above) for guidance on baseline weights and
+modifications of weight based on quality for RNA assays
+In the event that RNA data are available and they reflect a
+substantial variant-specific impact, do not use both PVS1(RNA)
+and PP3 or BP4. However, in the event that RNA data are
+available and they reflect no variant-specific impacts, PP3 or
+BP4 may be applied in conjunction with BP7(RNA).
+
+Strong
+BP7_Strong(RNA): Observed lack of aberrant RNA defect for silent substitutions and
+intronic variants. Variable weight applied depending on curator discretion of assay quality.
+Modification General recommendation
+Type:
+
+Moderate
+
+BP7_Moderate(RNA): Observed lack of aberrant RNA defect for silent substitutions and
+intronic variants. Variable weight applied depending on curator discretion of assay quality.
+Modification General recommendation
+Type:
+
+Supporting
+BP7: Use for synonymous and deep intronic variants defined as further than (but not
+including) +7 and further than (but not including) -21 at donor and acceptor sites,
+respectively.
+BP7(RNA): Observed lack of aberrant RNA defect for silent substitutions and intronic
+variants. Variable weight applied depending on curator discretion of assay quality.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong AND ≥ 1 Strong
+1 Very Strong AND ≥ 2 Moderate
+1 Very Strong AND 1 Moderate AND 1 Supporting
+1 Very Strong AND ≥ 2 Supporting
+
+≥ 2 Strong
+1 Strong AND ≥ 3 Moderate
+1 Strong AND 2 Moderate AND ≥ 2 Supporting
+1 Strong AND 1 Moderate AND ≥ 4 Supporting
+
+Likely Pathogenic
+1 Very Strong AND 1 Moderate
+1 Strong AND 1 Moderate
+1 Strong AND ≥ 2 Supporting
+
+≥ 3 Moderate
+2 Moderate AND ≥ 2 Supporting
+1 Moderate AND ≥ 4 Supporting
+1 Very Strong (PVS1) AND 1 Supporting (PVS1_Supporting, PS1_Supporting, PM2_Supporting,
+PM3_Supporting, PM5_Supporting, PP1, PP3)
+
+Benign
+≥ 2 Strong
+1 Stand Alone
+
+Likely Benign
+1 Strong AND 1 Supporting
+
+≥ 2 Supporting
+1 Strong (BS1, BS2, BS4, BP7_Strong)
+
+Files & Images
+PALB2 PM3/BS2: HBOP VCEP PALB2 PM3 and BS2 requirements and tables. v1.3 
+PALB2 PVS1: HBOP VCEP PALB2 PVS1 exon map and decision tree. v1.3 
+PALB2 PM3/BS2: HBOP VCEP PALB2 PM3 and BS2 requirements and tables. 
+PALB2 PS1: HBOP VCEP PALB2 PS1 splicing table. v1.3 
+
+References
+1.
+
+Lopez-Perolio I Leman R et al. Alternative splicing and ACMG-AMP-2015-based classification of
+PALB2 genetic variants: an ENIGMA report. J Med Genet (2019) 56 (7) p. 453-460.
+10.1136/jmedgenet-2018-105834 30890586 
+
+2.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+3.
+
+Ducy M Sesma-Sanz L et al. The Tumor Suppressor PALB2: Inside Out. Trends Biochem Sci
+(2019) 44 (3) p. 226-240. 10.1016/j.tibs.2018.10.008 30638972 
+
+4.
+
+Reid S Schindler D et al. Biallelic mutations in PALB2 cause Fanconi anemia subtype FA-N and
+predispose to childhood cancer. Nat Genet (2007) 39 (2) p. 162-4. 10.1038/ng1947 17200671
+
+
+5.
+
+Thermann R Neu-Yilik G et al. Binary specification of nonsense codons by splicing and
+cytoplasmic translation. EMBO J (1998) 17 (12) p. 3484-94. 10.1093/emboj/17.12.3484
+9628884 
+
+6.
+
+Carter MS Doskow J et al. A regulatory mechanism that detects premature nonsense codons in
+T-cell receptor transcripts in vivo is reversed by protein synthesis inhibitors in vitro. J Biol
+Chem (1995) 270 (48) p. 28995-9003. 10.1074/jbc.270.48.28995 7499432 
+
+7.
+
+[https://fengbj-laboratory.org/cool2/server.uu.html](https://fengbjlaboratory.org/cool2/server.uu.html) 
+
+8.
+
+[https://fengbj-laboratory.org/cool2/manual.html](https://fengbjlaboratory.org/cool2/manual.html) 
+
+9.
+
+Tavtigian SV Greenblatt MS et al. Modeling the ACMG/AMP variant classification guidelines as a
+Bayesian classification framework. Genet Med (2018) 20 (9) p. 1054-1060.
+10.1038/gim.2017.210 29300386 
+
+10.
+
+[http://cardiodb.org/allelefrequencyapp/](http://cardiodb.org/allelefrequencyapp/:) 
+
+11.
+
+https://fengbj-laboratory.org/cool2/server.uu.html 
+
+12.
+
+https://fengbj-laboratory.org/cool2/manual.html 
+
+13.
+
+https://www.orpha.net/consor/cgi-bin/Disease_HPOTerms_Simple.php?lng=EN 
+
+14.
+
+Ebens CL MacMillan ML et al. Hematopoietic cell transplantation in Fanconi anemia: current
+evidence, challenges and recommendations. Expert Rev Hematol (2017) 10 (1) p. 81-97.
+10.1080/17474086.2016.1268048 27929686 
+
+15.
+
+Oliver AW Swift S et al. Structural basis for recruitment of BRCA2 by PALB2. EMBO Rep (2017)
+18 (7) p. 1264. 10.15252/embr.201744508 28673926 
+
+

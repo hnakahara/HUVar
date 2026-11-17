@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN191",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50086",
+    "@type": "Organization",
+    "label": "X-linked Inherited Retinal Disease Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50086"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1828497822"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen X-linked Inherited Retinal Disease  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for NDP Version 1.0",
+  "lastUpdated": "2026-10-22T19:59:36.211Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1828497831",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=NDP",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0010691",
+              "@type": "Disease",
+              "label": "MONDO:0010691",
+              "modeOfInheritance": [
+                {
+                  "@id": "",
+                  "@label": "X-linked inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "NDP"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

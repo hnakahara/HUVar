@@ -1,0 +1,488 @@
+Criteria Specification
+ClinGen Familial Hypercholesterolemia Expert Panel Specifications to the ACMG/AMP Variant
+Classification Guidelines Version 1.2
+Affiliation: Familial Hypercholesterolemia VCEP
+Description : This version is specified for the following genes: LDLR
+Version : 1.2
+Released : 11/9/2021
+DOI : 10.5281/zenodo.21421538
+Release Notes :
+Updated for clarification on PM3 and BP2, and typo correction.
+
+Contributors & Keywords
+Research Group: Familial Hypercholesterolemia
+VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+LDLR NM_000527.5
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for LDLR
+Gene: LDLR (HGNC:6547) 
+Transcripts:
+NM_000527.5
+
+HGNC Name: low density lipoprotein receptor
+Disease:
+hypercholesterolemia, familial
+(MONDO:0007750) 
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+See PVS1 flow diagram (Figure 1).
+Modification Disease-specific,Strength
+Type:
+
+Strong
+See PVS1 flow diagram (Figure 1).
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+See PVS1 flow diagram (Figure 1).
+Modification Disease-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Missense variant at the same codon as a variant classified pathogenic (by these
+guidelines), and predicts the same amino acid change. Caveat: there is no in silico
+predicted splicing impact for either variant.
+Modification Clarification
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Strong
+
+Variant is de novo in a patient with the disease and no family history. Follow SVI guidance
+for de novo occurrences: https://clinicalgenome.org/working-groups/sequence-variantinterpretation/
+Modification Clarification
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Variant meets Level 1 pathogenic functional study criteria. See Table 3. (1) Study of the
+whole LDLR cycle (LDLR expression/biosynthesis, LDL binding, and LDL internalization)
+performed in heterologous cells (with noendogenous LDLR) transfected with mutant
+plasmid. Assay result of <70% ofwild-type activity in either expression/biosynthesis,
+binding OR internalization.
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Variant meets Level 2 pathogenic functional study criteria. See Table 3. (1) Study of a)
+only part of the LDLR cycle following Level 1 methodology, or b) whole or part of the LDLR
+cycle in true homozygous patient cells. A variant with assay results of <70% of wild type
+activity in either LDLR expression/biosynthesis, LDL binding OR internalization. (2) RNA
+studies, using RNA extracted from heterozygous or true homozygous patient cells, where
+aberrant transcript is confirmed by sequencing and is quantified as >25% of total
+transcript from heterozygous cells or 50% of total transcript from homozygous cells. (3)
+Variants with two or more Level 3 functional studies (must be different assays); or any
+Level 3 functional study #1-4 performed by two or more independent labs with
+concordant results.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Variant meets Level 3 pathogenic functional study criteria. See Table 3. (1) Study of LDLR
+cycle (whole or part) in heterozygous patient cells, with assay results of <85% of wildtype activity in either LDLR expression/biosynthesis, LDL binding OR internalization. (2)
+Luciferase studies with transcription levels of <50% compared to wild-type (applicable to
+
+5’UTR/promoter variants). (3) Minigene splicing assays with <10% wild-type transcript
+present where anaberrant transcript from the candidate variant is confirmed by
+sequencing. (4) High-throughput assays, which include alternative microscopy assays
+(e.g.,Thormaehlen et al., 2015), Multiplex Assays of Variant Effect (MAVE) (e.g.,Weile &
+Roth, 2018) and deep mutational scanning assays, can be considered here, only if assay
+has been validated with a minimum of four pathogenic and four benign variant controls in
+LDLR. Note: % activity thresholds will be defined by the FH VCEP as more data becomes
+available. (5) RNA studies, using RNA extracted from heterozygous or homozygous patient
+cells, with aberrant transcript confirmed by sequencing (but without transcript
+quantification).
+Modification Disease-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Strong
+Variant is found in ≥10 unrelated FH cases (FH diagnosis met by validated clinical
+criteria). Caveat: variant must also meet PM2
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Variant is found in 6-9 unrelated FH cases (FH diagnosis made by validated clinical
+criteria). Caveat: variant must also meet PM2.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Variant is found in 2-5 unrelated FH cases (FH diagnosis made by validated clinical
+criteria). Caveat: variant must also meet PM2.
+
+Modification Disease-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Missense variant located in exon 4, or a missense change in one of 60 highly conserved
+cysteine residues (listed in Supp. Table 4). Caveat: variant must also meet PM2.
+Modification Disease-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Moderate
+Variant has a PopMax MAF ≤0.0002 (0.02%) in gnomAD. Consider exceptions for known
+founder variants.
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Moderate
+This criterion can be used for a candidate LDLR variant observed in an individual with a
+homozygous FH phenotype when there is only one other pathogenic or likely pathogenic
+variant in LDLR (in trans), APOB or PCSK9. Caveat: variant must also meet PM2.
+
+Modification Disease-specific
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+In-frame deletion/insertions smaller than one whole exon, or in-frame whole-exon
+duplications not considered in any PVS1 criteria. Caveat: variant must also meet PM2.
+Modification Disease-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Missense variant at a codon with ≥2 missense variants classified pathogenic (by these
+guidelines), and predicts a different amino acid change.
+Modification Strength
+Type:
+
+Moderate
+Missense variant at the same codon as a variant classified pathogenic (by these
+guidelines), and predicts a different amino acid change.
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Moderate
+See PS2 above.
+Modification Clarification
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Variant segregates with phenotype in ≥6 informative meioses in ≥1 family. Must include
+≥2 affected relatives (LDL-C >75th centile) with the variant.
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Variant segregates with phenotype in 4-5 informative meioses in ≥1 family. Must include
+≥2 affected relatives (LDL-C >75th centile) with the variant.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Variant segregates with phenotype in 2-3 informative meioses in ≥1 family. Must include
+≥1 affected relative (LDL-C >75th centile) with the variant.
+Modification Disease-specific,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+
+PP3
+
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+REVEL score ≥0.75 (missense variants), or predicted impact to splicing using MaxEntScan
+(see Fig. 2 for suggested thresholds).
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Supporting
+Any LDLR variant identified in an FH patient [diagnosis based on validated clinical criteria,
+e.g. Dutch Lipid Clinic Network (≥6), Simon Broome possible/definite), MEDPED], after
+alternative causes of high cholesterol are excluded. Caveat: variant must also meet PM2.
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+Original ACMG
+Summary
+
+PubMed : 29543229 
+
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Variant has a PopMax FAF ≥0.005 (0.5%) in gnomAD.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Variant has a PopMax FAF ≥0.002 (0.2%) in gnomAD.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Variant is identified in ≥3 heterozygous or ≥1 homozygous well-phenotyped, untreated,
+normolipidemic adults (unrelated).
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+
+Variant meets Level 1 benign functional study criteria. See Table 3. (1) Study of the whole
+LDLR cycle (LDLR expression/biosynthesis, LDL binding, and LDL internalization)
+performed in heterologous cells (with no endogenous LDLR) transfected with mutant
+plasmid. Assay result of >90% of wild-type activity in expression/biosynthesis, binding
+AND internalization. Note: studies of only part of the LDLR cycle are not eligible for BS3 or
+BS3_Supporting.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Variant meets Level 3 benign functional study criteria. See Table 3. (1) Study of whole
+LDLR cycle in a) true homozygous patient cells, with assay result of >90% of wild-type
+activity in biosynthesis, binding AND internalization; or in b) heterozygous patient cells
+with assay result of >95% of wild-type activity in biosynthesis, binding AND
+internalization. (2) Luciferase studies with transcription levels of >90% when compared to
+wild-type (applicable to 5’UTR/promoter variants). (3) RNA studies, using RNA extracted
+from heterozygous or homozygous patientcells, with a) aberrant transcripts quantification,
+where aberrant transcript is<10% of total transcript OR b) without transcript
+quantification where noaberrant transcript is confirmed by sequencing. (4) Minigene
+splicing assay where only wild-type transcript is present and confirmed by sequencing. (5)
+High-throughput assays as defined above; only applicable when assay canindicate the
+whole LDLR cycle (LDLR expression/biosynthesis, LDL binding AND internalization) is
+unaffected.
+Modification Disease-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Lack of segregation in ≥2 index case families (unrelated), when data is available for ≥2
+informative meioses in each family. Caveat: must be ≥1 unaffected relative (LDL-C <50th
+centile) who is positive for the variant.
+Modification Disease-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+If a FH patient with a heterozygous phenotype has a pathogenic or likely pathogenic
+variant in LDLR (in trans), APOB or PCSK9, BP2 is applicable to any additional LDLR
+variants.
+Modification Disease-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+
+REVEL score ≤0.5 (missense variants), or no predicted impact to splicing using
+MaxEntScan (see Fig. 2 for suggested thresholds).
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Variant is synonymous. Caveat: variant must also meet BP4 (i.e. no predicted impact on
+splicing).
+Modification Disease-specific
+Type:
+
+

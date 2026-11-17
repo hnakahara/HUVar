@@ -1,0 +1,848 @@
+Criteria Specification
+ClinGen Pulmonary Hypertension Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for BMPR2 Version 2.0
+Affiliation: Pulmonary Hypertension VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : ClinGen PH Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines
+for BMPR2 Version 1.0.0
+Version : 2.0
+Released : 1/30/2026
+DOI : 10.5281/zenodo.21434642
+Release Notes :
+type of specification: points based system based on Tatvigian et al 2020
+-clarified PS1 strong/moderate/supporting for non-canonical splice variants
+-under PS3, edited “PVS1_strength (RNA)” to remove “strength”
+-under PM1, removed Arg899Pro from the list of non-critical aa (also in BS3), fixed the Gly47Gln typo, and
+removed redundant lists of non-critical residues
+-under BS1, fixed the ≥ symbol
+-under BS2, added a moderate strength and adjusted the number of homozygotes for supporting and
+moderate
+
+Contributors & Keywords
+Research Group: Pulmonary Hypertension VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+BMPR2 NM_001204.7 Autosomal dominant
+inheritance pulmonary arterial hypertension
+
+Rules for BMPR2
+Gene: BMPR2 (HGNC:1078) 
+Transcripts:
+NM_001204.7
+
+Criteria & Strength Specifications
+
+HGNC Name: bone morphogenetic protein
+receptor type 2
+Disease:
+pulmonary arterial
+hypertension
+(MONDO:0015924)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Biologically relevant transcript: NM_001204.7. LOF variants 5' or at c.2816
+Specifications:(exons 1-12) are expected to undergo NMD. Variants 3' to c.2816 (exon
+13) are not expected to undergo NMD. Exon 13 does not contain regions
+critical for protein function and encodes <10% of the protein. Variants
+p.Trp9* and p.Trp13* (W13*) are known to escape NMD and produce a
+truncated protein (PMID: 20095988). Critical regions for protein function:
+ligand binding domain (aa 33-131), kinase domain (aa 203-504),
+heterodimerization domain (aa 485-492), and transmembrane domain (aa
+151-171). For canonical splice variants, RNA splicing assay data is not
+necessary for applying PVS1; follow the decision tree based on the
+predicted effect of disrupted splicing. Note that exons 2, 3, 4, 6 are inframe and a loss of a canonical splice acceptor/donor is not expected to
+result in NMD. Non-canonical splice site variants with RNA splicing assay
+data may be applicable for PVS1 according to the decision tree. The
+initiation codon is located in exon 1. There are approximately 27 in-frame
+downstream AUG initiation codons including 5 sites located in ex 4-6
+having translation initiation scores similar or greater than the exon 1
+codon (PMID: 20095988). However, there are many P/LP variants
+upstream of exons 4-6.
+
+Very Strong
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease. Caveats:
+Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+**Use the PVS1 decision tree guide.
+
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+Use the PVS1 decision tree guide.
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Use the PVS1 decision tree guide.
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+PS1 can be applied to non-canonical splicing variants as specified below
+Specifications:and according to guidelines by the ClinGen SVI Splicing Subgroup (PMID:
+37352859). Prerequisite: the predicted event of the variant under
+assessment must precisely match the predicted event of the comparison
+(i.e both predicted to lead to exon skipping, or both to lead to enhanced
+use of a cryptic splice motif), AND the strength of the prediction for the
+variant under assessment must be of similar or higher than the strength
+of the prediction for the comparison variant.
+
+Strong
+
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change. Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+Default
+4
+Point
+Value:
+Modification None
+Type:
+
+Moderate
+Same amino acid change as a previously established likely pathogenic variant
+regardless of nucleotide change. For splice variants outside splice donor/acceptor ± 1,2
+dinucleotide positions but residing in the same splice donor motif (last 3 bases of the exon
+and intronic positions +3 to +6) or acceptor motif (first base of the exon and intronic
+positions -20 to -3) as a previously established pathogenic variant. The splice motif
+coordinates are as defined by Walker et al 2023 (PMID: 37352859).
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+For splice variants outside splice donor/acceptor ± 1,2 dinucleotide positions, same splice
+donor motif (last 3 bases of the exon and intronic positions +3 to +6) or acceptor motif
+(first base of the exon and intronic positions -20 to -3) as a previously established likely
+pathogenic variant. The splice motif coordinates are as defined by Walker et al 2023
+(PMID: 37352859).
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate
+motherhood, errors in embryo transfer, etc. can contribute to non-maternity.
+Default
+4
+Point
+Value:
+Modification No change
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Can be applied additively with PP3 if applicable. Not applicable for splicing
+Specifications:effects; consider PVS1 (RNA).
+
+Strong
+Use the BMPR2 functional assay document for guidance on allowable assays. The
+document is based on the recommendations by Brnich et al 2019 (PMID: 31892348).
+Known variant validation controls (i.e. established pathogenic and benign variants) are
+required. One exception is if the same functional assay has been performed for the same
+variant by two independent groups and demonstrated to have the same functional effect
+by both groups. Also applicable for non-canonical splice site variants when RNA splice site
+assay data is available demonstrating abnormal splicing; positive and negative controls
+are required, preferably from patients and matched unaffected individuals. Note that
+splicing assay results may be tissue-sensitive.
+Default
+4
+Point
+Value:
+Modification General recommendation,Gene-specific
+Type:
+
+Supporting
+Use the BMPR2 functional assay document for guidance on allowable assays as described
+above. If no known variant validation controls (i.e. established pathogenic and benign
+variants) were used, then score at the supporting strength.
+
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Affected individuals are defined as having a mean pulmonary artery
+Specifications:pressure (mPAP) >20 mm Hg by right heart catheterization (RHC), or
+estimated by echocardiography if RHC is not advised. Strength is based on
+the number of unrelated PAH (heritable and/or idiopathic) probands
+identified with a variant. Unpublished, VCEP-approved internal
+case/variant data is acceptable if the proband does not have another
+pathogenic or likely pathogenic BMPR2 variant. Justification for the
+proband thresholds is provided in the “Data and citations related to PS4”
+attachment. PS4 (at any strength) and PM2_supporting can be used
+additively.
+
+Strong
+Prior observation of the variant in >4 unrelated patients with the same phenotype, and its
+absence in controls.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+Prior observation of the variant in >3 unrelated patients with the same phenotype, and its
+absence in controls.
+
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Prior observation of the variant in >1 unrelated patients with the same phenotype, and its
+absence in controls.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+Well-established functional domains for BMPR2 include the extracellular
+Specifications:(ligand-binding) domain, protein kinase domain, and heterodimerization
+motif within the kinase domain. Strong evidence based on evolutionary
+conservation, in vitro functional assays, and protein structural analyses
+indicates the critical (or non-critical) nature of specific amino acid residues
+within each of these domains (see attached “Data and citations related to
+PM1”). Strength should be applied accordingly.
+
+Strong
+Variant changes a critical amino acid. Extracellular domain: p.Cys34, Cys60, Cys66,
+Cys84, Cys94, Cys99, Cys116, Cys117, Cys118, Cys123. Kinase domain: p.Gly210,
+Gly212, Lys230, Glu/Asn245, Asp333, Asn338, Asp351, Gly353 Glu386, Asp405,
+Gly410, Arg491. KD heterodimerization: p.Asp485, Gln486, Asp487, Ala488, Arg489,
+Ala490, Arg491, Leu492.
+Note that Gly182Asp and Met186Val have been demonstrated non-critical/not necessary
+for kinase activity based on a luciferase assay (PMID: 18321866) (apply BS3). We note
+that Glu503Asp has demonstrated lack of of effect on canonical signaling in one assay,
+this has not been replicated in an independent assay; in the absence of further
+investigation, this variant cannot be conclusively designated non-critical (do not apply
+BS3). While tested variants in the extracellular domain (p.Gln42Arg, Gly47Asn, Gln82His,
+Thr102Ala, Ser107Pro) have limited or no effect on canonical signaling, studies have
+indicated that they may play a role in disruption of non-canonical/SMAD-independent
+
+pathways (PMIDs: 14583445 and 16002577). In the absence of further investigation,
+these variants cannot be conclusively designated non-critical (do not apply BS3).
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Variant changes an amino acid in the extracellular domain (aa 33-131) or kinase domain
+(aa 203-504) but without functional evidence indicating critical or non-critical.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+PAH has a prevalence of 15-50 cases/million individuals and the
+Specifications:population allele frequency threshold for PM2 is based on this frequency.
+There is no evidence for a genetic ancestry effect on PAH prevalence, so
+the use of any sub-population data is acceptable (as long as there is a
+minimum allele count of 1,000). As specified by the SVI WG, PM2 is scored
+at the supporting level only. Note that PM2_supporting and PS4 (at any
+strength) can be used additively.
+
+Supporting
+Present at <0.01% among gnomAD controls, using the subpopulation with the highest
+frequency and at least 1,000 allele counts. Caveat: Population data for indels may be
+poorly called by next generation sequencing.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+PAH is autosomal dominant.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Default
+2
+Point
+Value:
+Modification No change
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before. Example: Arg156His is pathogenic;
+now you observe Arg156Cys. Caveat: Beware of changes that impact splicing rather than
+at the amino acid/protein level. Also applicable for variants affecting the same splice site
+as a confirmed splice variant with similar or worse splicing in silico predictions
+
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+Novel missense change at an amino acid residue where a different missense change
+determined to be likely pathogenic has been seen before.
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Confirmation of maternity and paternity is required.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Note: PAH exhibits variable age of onset and incomplete penetrance.
+Specifications:Three levels of evidence are applied based on autosomal dominant
+likelihood ratios of 10 (3 meioses, LOD 0.9, supporting), 30 (5 meioses,
+LOD 1.5, moderate), and 100 (7 meioses, LOD 2.1, strong) provided that
+PM2 (absent or rare in large population cohorts) is met. Demonstration of
+segregation in more than one family is not necessary as BMPR2 is a wellestablished PAH gene. PMID: 29300372.
+
+Strong
+Co-segregation with disease in ≥7 affected family members.
+Default
+Point
+
+4
+
+Value:
+Modification Strength
+Type:
+
+Moderate
+Co-segregation with disease in ≥5 affected family members.
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+Co-segregation with disease in ≥3 affected family members.
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+VCEP
+BMPR2 has a z-score of 3.28 for missense variants which is above the
+Specifications:threshold of 3.09 (PMID: 40496714) for constraint.
+
+Supporting
+PM2_supporting and PP3 must be met.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PP3
+Original ACMG
+Summary
+
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Two out of three REVEL/AlphaMissense/CADD predictor scores must meet the thresholds
+for supporting as specified in Pejaver 2022 PMID: 36413997 (CADD) and Bergquist et al
+2025 PMID: 40084623 (AlphaMissense, REVEL). CADD ≥25.3, AlphaMissense ≥0.792,
+REVEL ≥0.644. The criterion can also be used for non-canonical splice variants if SpliceAI
+≥0.2.
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+PAH does not have a single genetic etiology.
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+Original ACMG
+Summary
+
+PubMed : 29543229 
+
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Allele frequency is above 1% in gnomAD, including any sub-population with at least 1,000
+allele counts.
+Default
+Not Applicable
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency ≥0.1% among gnomAD controls, using the subpopulation with the
+highest frequency and at least 1,000 allele counts.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+Strength based on number of homozygotes observed among gnomAD
+Specifications:controls. Criteria not applicable for heterozygotes as BMPR2 variants
+exhibit incomplete penetrance.
+
+Strong
+Observed in ≥3 homozygotes in gnomAD controls or reported in the literature (healthy
+adult individuals).
+
+Default
+-4
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+Observed in ≥2 homozygotes in gnomAD controls or reported in the literature (healthy
+adult individuals).
+Default
+-2
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+Supporting
+Observed in ≥1 homozygote in gnomAD controls or reported in the literature (healthy
+adult individuals).
+Default
+-1
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+Not applicable for splicing effects; replaced by BP7_strong (RNA).
+Specifications:
+
+Strong
+Use the BMPR2 functional assay document for acceptable assays and guidance. Note that
+Gly182Asp and Met186Val have been demonstrated non-critical/not necessary for kinase
+activity based on a luciferase assay (apply BS3). We note that Glu503Asp has
+demonstrated lack of of effect on canonical signaling in one assay, this has not been
+replicated in an independent assay; in the absence of further investigation, this variants
+cannot be conclusively designated non-critical (do not apply BS3). While tested variants in
+the extracellular domain (p.Gln42Arg, Gly47Asn, Gln82His, Thr102Ala, Ser107Pro) have
+limited or no effect on canonical signaling, studies have indicated that they may play a
+role in disruption of non-canonical/SMAD-independent pathways (PMIDs: 14583445 and
+
+16002577). In the absence of further investigation, these variants cannot be conclusively
+designated non-critical (do not apply BS3).
+Note that p.Cys34, Cys60, Cys66, Cys84, Cys94, Cys99, Cys116, Cys117, Cys118,
+Cys123, Gly210, Gly212, Lys230, Glu/Asn245, Asp333, Asn338, Asp351, Gly353 Glu386,
+Asp405, Gly410, Asp485, Gln486, Asp487, Ala488, Arg489, Ala490, Arg491, Arg491, and
+Leu492 have been demonstrated critical (apply PM1_strong).
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+For variants that have demonstrated limited or no effect on canonical signaling but not
+tested for effect on non-canonical/SMAD-independent pathways (PMID: 14583445 and
+16002577).
+Default
+-1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+Lack of disease segregation among BMPR2 variant carriers should not be
+Specifications:scored due to low penetrance of PAH variants in families. Lack of variant
+segregation in affected family members should be scored.
+
+Strong
+Lack of variant segregation in affected members of a family.
+Default
+Point
+Value:
+
+-4
+
+Modification No change
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Both LOF and missense variants are known to cause PAH.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+VCEP
+Applicable if observed in cis with a P/LP BMPR2 variant in an individual
+Specifications:with PAH.
+
+Supporting
+No change - use as originally described
+Default
+-1
+Point
+Value:
+Modification No change
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Supporting
+In frame-deletions/insertions in a repetitive region without a known function.
+Default
+Point
+Value:
+
+-1
+
+Modification No change
+Type:
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Two out of three REVEL/AlphaMissense/CADD predictor scores must meet the thresholds
+for supporting as specified in Pejaver 2022 PMID: 36413997 (CADD) and Bergquist et al
+2025 PMID: 40084623 (AlphaMissense, REVEL). CADD ≤22.7, AlphaMissense ≤0.169,
+REVEL ≤0.29. The criterion can also be used for non-canonical splice variants if SpliceAI
+≤0.1; can be applied in conjunction with BP7. For synonymous variants, CADD ≤22.7 is
+sufficient since REVEL and AlphaMissense are not applicable.
+Default
+-1
+Point
+Value:
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+VCEP
+Can be applied when PVS1 or PM2 AND PP3 are not met and a
+Specifications:pathogenic/likely pathogenic variant in a PH VCEP-defined definitive gene
+has been identified. Definitive genes include ACVRL1, ATP13A3, CAV1,
+EIF2AK4, ENG, GDF2, KCNK3, KDR, SMAD9, SOX17, and TBX4.
+
+Supporting
+No change - use as originally described
+Default
+Point
+Value:
+
+-1
+
+Modification No change,Strength
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+Use default Splice AI predictions. Intronic variants outside of defined
+Specifications:splicing motifs are applicable. (PMID: 37352859).
+
+Strong
+If BP7 is met and negative RNA splicing assay data is available, then apply BP7_strong.
+Acceptable splicing assays should have positive and negative controls, preferably from
+patients and matched unaffected individuals. Note that splicing assay results may be
+tissue-sensitive.
+Default
+-4
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved. Applicable after assignment of BP4 for no adverse splicing predictions,
+and inclusive of exonic and intronic variants. Not applicable for synonymous variants
+located at the first base or the last three bases of an exon.
+Default
+Point
+
+-1
+
+Value:
+Modification No change
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+-1 - 5
+
+Likely Benign
+
+-6 - -2
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+BMPR2 Functional assay guide related to PS3: 
+Data and citations related to PS4: 
+Data and citations related to PM1: 
+PH VCEP Pilot Results_BMPR2 final 1.2026: 
+Point-based system for variant classification: Point-based system for variant classification 
+
+

@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN228",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50039",
+    "@type": "Organization",
+    "label": "Hereditary Breast, Ovarian and Pancreatic Cancer Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50039"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/522546466"
+  },
+  "cspecStatus": "Classification Rules Submitted",
+  "currentStatus": "Classification Rules Submitted",
+  "label": "ClinGen Hereditary Breast, Ovarian and Pancreatic Cancer  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for CHEK2 Version 1.0",
+  "lastUpdated": "2026-10-02T19:46:40.076Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/522546475",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=CHEK2",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0700271",
+              "@type": "Disease",
+              "label": "MONDO:0700271",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "CHEK2"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

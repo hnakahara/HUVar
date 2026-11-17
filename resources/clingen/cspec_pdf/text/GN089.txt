@@ -1,0 +1,765 @@
+Criteria Specification
+ClinGen InSiGHT Hereditary Colorectal Cancer/Polyposis Expert Panel Specifications to the
+ACMG/AMP Variant Interpretation Guidelines for APC Version 2.1
+Affiliation: InSiGHT Hereditary Colorectal Cancer/Polyposis VCEP
+Description : The following criteria are for classic or attenuated familial adenomatous polyposis only and
+does not apply to Gastric adenocarcinoma and proximal polyposis of the stomach (GAPPS,
+MONDO:0017790). The preferred transcript for coding, intronic and promoter 1A variants is NM_000038.6
+(MANE transcript). The NM_001127510.2 transcript differs from NM_000038.6 in the number of "noncoding" exons in the 5' region, which results in different exon numbering (in NM_000038.6 there is only
+one non-coding exon, in NM_001127510.2 there is one additional non-coding exon and one non-coding
+exon overlapping with NM_000038.6; the 15 coding exons are the same). For the promoter 1B deletion the
+preferred transcript is NM_001127511.3, which has an alternative coding exon 1. The LRG_130 summarizes
+all three “additional” exons of the previously mentioned transcripts, resulting in 18 exons). To standardize,
+variants in this document are described in HGVS nomenclature according to their positions in the
+NM_000038.6 transcript unless otherwise specified. Numbered exons in this document refers to exons 1-16
+in the NM_000038.6transcript. Refer to Supplementary Table 1 for exon number conversions. It is
+important to note that these criteria are not developed for low/moderate penetrant variants (e. g.
+c.3920T>A p.(Ile1307Lys) and c.3949G>C p.(Glu1317Gln)).
+Version : 2.1
+Released : 11/24/2023
+DOI : 10.5281/zenodo.21434150
+Release Notes :
+Correction of some inaccuracies in the Rules for Combining Criteria.
+Addition of some relevant instructions out of the supplementary material
+Change in Fig. 1A: Update of the possible pathways for “G to non-G changes”
+Change in Fig. 1B: Transfer of splice variants c.136-1G>A,C,T; c.136-2A>C,G,T; c.220+1G>A,C,T and
+c.220+2T>A,C,G from List E to List A and transfer of c.220G>A,C,T from List E to List B based on
+RNA and phenotype data
+Update of the supplementary material file.
+
+Contributors & Keywords
+Research Group: InSiGHT Hereditary Colorectal
+Cancer/Polyposis VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+APC NM_000038.6 Autosomal dominant
+inheritance familial adenomatous polyposis 1
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for APC
+Gene: APC (HGNC:583) 
+Transcripts:
+NM_000038.6
+
+HGNC Name: APC regulator of WNT signaling
+pathway
+Disease:
+familial adenomatous
+polyposis 1 (MONDO:0021056)
+
+ Mode of Inheritance:
+Autosomal dominant
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single
+or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of
+disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Null variant in a gene where LOF is a known mechanism of disease. As per modified
+decision tree (Figure 1) [Reference 1].
+Modification Gene-specific,Strength
+Type:
+
+Strong
+Null variant in a gene where LOF is a known mechanism of disease. As per modified
+decision tree (Figure 1) [Reference 1].
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Null variant in a gene where LOF is a known mechanism of disease. As per modified
+decision tree (Figure 1) [Reference 1].
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Null variant in a gene where LOF is a known mechanism of disease. As per modified
+decision tree (Figure 1) [Reference 1].
+
+Modification Gene-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+VCEP
+Recommended splice prediction programs:
+Specifications:
+SpliceAI: https://spliceailookup.broadinstitute.org/,
+MaxEntScan :
+http://hollywood.mit.edu/burgelab/maxent/Xmaxentscan_scoreseq.html
+for 5’splice sites and
+http://hollywood.mit.edu/burgelab/maxent/Xmaxentscan_scoreseq_acc.html
+for 3’splice sites
+VarSeak: https://varseak.bio/
+For SpliceAI a loss of the native splice site is considered for scores between
+0.8 and 1. A gain of a cryptic splice site is considered strong for scores
+between 0.8 and 1 and as moderate for a score between 0.2 and 0.8.
+For MaxEntScan predictions a score of >3 is required for credibility of a
+native site prediction and a threshold of -15% is considered for native
+splice site loss (Houdayer et al. 2012, PMID 22505045). A score >3 is used
+as a conservative measure for cryptic site use in the context of native site
+loss.
+
+Strong
+The previously established variant was classified as Pathogenic according to the APCspecific modifications.
+This criterion can be applied to both missense and splice variants in APC.
+Missense variants: when the variant under assessment results in the same amino acid
+change as previously established Pathogenic variant(s).
+There are currently only two Likely Pathogenic missense variants: c.3077A>G p.
+(Asn1026Ser) and c.3084T>A p.(Ser1028Arg). Other variants leading to the same
+missense change at these positions meet PS1_Moderate. No missense variant has been
+classified as Pathogenic based on current evidence.
+Splice variants: when the variant under assessment affects splicing at the same
+nucleotide as a previously established Pathogenic variant. The splice prediction must be
+
+above defined thresholds (see instructions) or similar to the previously established variant
+by multiple in silico predictors.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+The previously established variant was classified as Likely Pathogenic according to the
+APC-specific modifications.
+This criterion can be applied to both missense and splice variants in APC.
+Missense variants: when the variant under assessment results in the same amino acid
+change as previously established Likely Pathogenic variant(s).
+There are currently only two Likely Pathogenic missense variants: c.3077A>G p.
+(Asn1026Ser) and c.3084T>A p.(Ser1028Arg). Other variants leading to the same
+missense change at these positions meet PS1_Moderate. No missense variant has been
+classified as Pathogenic based on current evidence.
+Splice variants: when the variant under assessment affects splicing at the same
+nucleotide as a previously established Likely Pathogenic variant. The splice prediction
+must be above defined thresholds (see instructions) or similar to the previously
+established variant by multiple in silico predictors.
+Modification Gene-specific,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+≥ 4 de novo scores. For curation of de novo score see Tables 1 and 2.
+Modification Gene-specific,Strength
+Type:
+
+Strong
+2-3.5 de novo scores. For curation of de novo score see Tables 1 and 2.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+1-1.5 de novo score. For curation of de novo score see Tables 1 and 2.
+Modification Gene-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Very Strong
+RNA assays show
+1. a premature stop codon
+OR
+2. inframe skipping of exon 13 or 14
+AND the absence of full-length transcript.
+Modification Gene-specific,Strength
+Type:
+
+Strong
+RNA assays show
+1. a premature stop codon
+OR
+2. inframe skipping of exon 13 or 14
+AND < 10% of full-length transcript.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+RNA assays show
+1. a premature stop codon AND reports of exon deletion/skipping/loss, insertion of
+intronic nucleotides
+OR
+2. inframe skipping of exon 13 or 14 AND reports of exon deletion/skipping/loss,
+insertion of intronic nucleotides
+OR
+3. other inframe skipping AND absent or < 10% full-length transcript.
+
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+RNA assays show
+1. inframe skipping of exons other than exon 13 or 14 AND reports of exon
+deletion/skipping/loss, insertion of intronic nucleotides
+OR
+2. over-expression of an alternative transcript (exons 10, 11 or 15)
+Protein assays show
+Increased β-catenin regulated transcription activity and/or decreased binding to β-catenin
+by surface plasmon resonance (only for variants within the β-catenin binding domain,
+which refers to codons 959-2129 of APC) [Reference 2].
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0
+and the confidence interval around the estimate of RR or OR does not include 1.0. See
+manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Very Strong
+≥ 16 phenotype points. For phenotype points curation see Table 1.
+Modification Gene-specific,Strength
+Type:
+
+Strong
+4-15.5 phenotype points. For phenotype points curation see Table 1.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+2-3.5 phenotype points. For phenotype points curation see Table 1.
+
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+1-1.5 phenotype point. For phenotype points curation see Table 1.
+Modification Gene-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+General recommendation: Use the total population from the non-cancer
+Specifications:dataset from gnomAD (v2.1.1)
+
+Supporting
+Rare in controls, defined by an allele frequency ≤ 0.0003% (0.000003) if the allele count is
+> 1 OR by an allele frequency < 0.001% (0.00001) if the allele count is ≤ 1.
+Modification Gene-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Not Applicable
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+The reported missense variant was determined to be Pathogenic according to the APCspecific modifications.
+There are currently only two Likely Pathogenic missense variants: c.3077A>G p.
+(Asn1026Ser) and c.3084T>A p.(Ser1028Arg). Other different missense variants at these
+positions meet PM5_supporting. No missense variant has been classified as Pathogenic
+based on current evidence.
+Grantham´s distance of the variant under assessment must have an equal or higher score
+than the reported variant [Reference 3].
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+The reported missense variant was determined to be Likely Pathogenic according to the
+APC-specific modifications.
+There are currently only two Likely Pathogenic missense variants: c.3077A>G p.
+(Asn1026Ser) and c.3084T>A p.(Ser1028Arg). Other different missense variants at these
+positions meet PM5_supporting. No missense variant has been classified as Pathogenic
+based on current evidence.
+Grantham´s distance of the variant under assessment must have an equal or higher score
+than the reported variant [Reference 3].
+
+Modification Gene-specific,Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+PM6_VeryStrong: ≥ 4 de novo scores. For curation of de novo score see
+Specifications:Tables 1 and 2.
+
+Strong
+2-3.5 de novo scores. For curation of de novo score see Tables 1 and 2.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+1-1.5 de novo scores. For curation of de novo score see Tables 1 and 2.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+0.5 de novo scores. For curation of de novo score see Tables 1 and 2.
+Modification Gene-specific,Strength
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Affected individuals exhibit at least 0.5 point of the phenotype point
+Specifications:system (see Table 1), for relatives also ≥ 10 or “multiple” colorectal
+adenomas are considered as 0.5 point.
+Only genotype and phenotype positive individuals and obligate carriers
+with phenotype are counted (note: carriers who have received
+chemoprevention and may have a milder phenotype can also be counted).
+
+Strong
+Variant segregates in ≥ 7 meioses in ≥ 2 families.
+Modification Strength
+Type:
+
+Moderate
+Variant segregates in 5-6 meioses in ≥ 1 family.
+Modification Strength
+Type:
+
+Supporting
+Variant segregates in 3-4 meioses in ≥ 1 family.
+Modification Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can be
+used only once in any evaluation of a variant.
+VCEP
+Recommended splice prediction programs: see PS1
+Specifications:
+
+Supporting
+Missense variants: Do not use computational prediction models for conservation,
+evolution, etc. In silico splicing predictors should be used for presumed missense variants
+to reveal possible splicing effects.
+
+Non-canonical splicing variants: Multiple in silico splicing predictors support a
+deleterious effect.
+Modification Gene-specific,Strength
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+General recommendation: Use the non-cancer dataset from gnomAD
+Specifications:(v2.1.1)
+
+Stand Alone
+GnomAD Popmax Filtering Allele Frequency (AF) ≥ 0.1% (0.001).
+Modification Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+
+Allele frequency is greater than expected for disorder.
+VCEP
+General recommendation: Use the non-cancer dataset from gnomAD
+Specifications:(v2.1.1)
+
+Strong
+GnomAD Popmax Filtering Allele Frequency (AF) ≥ 0.001% (0.00001).
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+The non-cancer dataset from gnomAD (v2.1.1) cannot be used for
+Specifications:”heterozygous healthy individuals”, because of the limited phenotype
+information and since it is usually already used for BA1/BS1. However, the
+non-cancer dataset from gnomAD (v2.1.1) can be used to search for
+homozygous individuals.
+
+Strong
+≥ 10 points for healthy individuals OR ≥ 2 times in homozygous state.
+A healthy individual worth 1 point is defined by:
+Age ≥ 50 years
++ Less than 5 adenomatous polyps in a colonoscopy
++ Absence of features in Table 1
+OR
+Age ≥ 50 years
++ Colorectal cancer/polyposis was not the indication for testing
+A healthy individual worth 0.5 points is defined by keywords including control, noncancer, normal, unaffected population.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+≥ 3 points for healthy individuals.
+A healthy individual worth 1 point is defined by:
+
+Age ≥ 50 years
++ Less than 5 adenomatous polyps in a colonoscopy
++ Absence of features in Table 1
+OR
+Age ≥ 50 years
++ Colorectal cancer/polyposis was not the indication for testing
+A healthy individual worth 0.5 points is defined by keywords including control, noncancer, normal, unaffected population.
+Modification Gene-specific,Strength
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+RNA assay of a synonymous or intronic variant in constitutional patient sample
+demonstrates no mRNA aberration
+AND
+biallelic expression is shown and/or nonsense-mediated decay inhibition was used.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+RNA assay of a synonymous or intronic variant in constitutional patient sample
+demonstrates no mRNA aberration, without demonstration of biallelic expression or use of
+nonsense-mediated decay inhibition
+OR
+Protein assay show retention of β-catenin regulated transcription activity comparable to
+wild-type (only for variants within the β-catenin binding domain, which refers to codons
+959-2129 of APC, see PMID: 33348689)
+Modification Gene-specific,Strength
+Type:
+
+BS4
+
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Affected member without the variant must score at least 1 phenotype point or at least two
+affected members without the variant must each score at least 0.5 phenotype points (see
+Table 1).
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Affected member without the variant must score at least 0.5 phenotype points (see Table
+1).
+Modification Gene-specific,Strength
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+VCEP
+A number of assumed “missense” variants are in fact splice variants. At
+Specifications:least several splice prediction tools should be used.
+Recommended splice prediction programs: see PS1
+
+Supporting
+BP1 is applicable to APC with the exception of missense variants located in the first 15amino acid repeat of the β-catenin binding domain (codon 1021-1035).
+Modification No change
+Type:
+
+BP2
+Original ACMG
+Summary
+
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans with a (Likely) Pathogenic APC variant OR ≥ 3 times in an unknown
+phase with different (Likely) Pathogenic APC variants.
+Modification Gene-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Recommended splice prediction programs: see PS1
+Specifications:
+
+Supporting
+Missense variants: BP4 is not applicable.
+Synonymous (silent) or intronic variants: Multiple in silico splicing predictors suggest
+no impact on gene or gene product.
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+VCEP
+(Likely) Pathogenic variant in another adenomatous polyposis gene
+Specifications:(heterozygous variants in POLD1 or POLE; biallelic variants in MUTYH,
+NTHL1 or MSH3; in patients with onset in childhood / adolescence: biallelic
+variants in MLH1, MSH2, MSH6 or PMS2). This rule is only applicable when
+a colorectal polyposis phenotype is present.
+
+Supporting
+Only applicable for an alternate genetic basis of the colorectal polyposis phenotype.
+Modification No change
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+The use of BP7 with BP4 is allowed.
+Specifications:
+Recommended splice prediction programs: see PS1
+
+Supporting
+A synonymous (silent) or intronic variant at or beyond +7/–21 for which multiple splicing
+prediction algorithms predict no impact to the splice consensus sequence nor the creation
+of a new splice site.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+
+Pathogenic
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM6_Strong, PP1_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM6_Strong, PP1_Strong) AND ≥ 3 Moderate
+(PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM6_Strong, PP1_Strong) AND 2 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate) AND ≥ 2
+
+Supporting (PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting,
+PM6_Supporting, PP1, PP3)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM6_Strong, PP1_Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate) AND ≥ 4
+Supporting (PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting,
+PM6_Supporting, PP1, PP3)
+
+1 Very Strong (PVS1) AND ≥ 1 Strong (PS1, PS2, PS4, PM6_Strong, PP1_Strong)
+1 Very Strong (PS2_Very Strong, PS3_Very Strong, PS4_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1,
+PS2, PS3, PS4, PM6_Strong, PP1_Strong)
+
+1 Very Strong (PVS1) AND ≥ 2 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM5, PM6,
+PP1_Moderate)
+
+1 Very Strong (PS2_Very Strong, PS3_Very Strong, PS4_Very Strong) AND ≥ 2 Moderate
+(PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate)
+
+1 Very Strong (PVS1) AND 1 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM5, PM6,
+PP1_Moderate) AND 1 Supporting (PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting,
+PP1)
+
+1 Very Strong (PS2_Very Strong, PS3_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate) AND 1 Supporting
+(PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1,
+PP3)
+
+1 Very Strong (PVS1) AND ≥ 2 Supporting (PS4_Supporting, PM2_Supporting, PM5_Supporting,
+PM6_Supporting, PP1)
+
+1 Very Strong (PS2_Very Strong, PS3_Very Strong, PS4_Very Strong) AND ≥ 2 Supporting
+(PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1,
+PP3)
+
+Likely Pathogenic
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM6_Strong, PP1_Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM6_Strong, PP1_Strong) AND ≥ 2 Supporting
+(PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1,
+PP3)
+
+≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6,
+PP1_Moderate)
+
+2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6,
+PP1_Moderate) AND ≥ 2 Supporting (PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM5_Supporting, PM6_Supporting, PP1, PP3)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM6_Strong, PP1_Strong) AND 2 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate)
+1 Very Strong (PVS1) AND 1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate,
+PM5, PM6, PP1_Moderate)
+1 Very Strong (PS2_Very Strong, PS3_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6, PP1_Moderate)
+
+1 Very Strong (PVS1) AND 1 Supporting (PVS1_Supporting, PS4_Supporting, PM2_Supporting,
+PM5_Supporting, PM6_Supporting, PP1)
+1 Very Strong (PS2_Very Strong, PS3_Very Strong, PS4_Very Strong) AND 1 Supporting
+(PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1,
+PP3)
+1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM5, PM6,
+PP1_Moderate) AND ≥ 4 Supporting (PVS1_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM5_Supporting, PM6_Supporting, PP1, PP3)
+
+Benign
+1 Stand Alone (BA1)
+
+≥ 2 Strong (BS1, BS2, BS3, BS4)
+
+Likely Benign
+≥ 2 Supporting (BS2_Supporting, BS3_Supporting, BS4_Supporting, BP1, BP2, BP4, BP5, BP7)
+1 Strong (BS1, BS2, BS3, BS4)
+
+Files & Images
+Table 1&2: Table 1. Point system for phenotypic description relevant to criteria PS2, PS4, PM6, PP1
+and BS4 & Table 2. Curation of de novo score for PS2 / PM6 based on the phenotype point system 
+Supplementary material_V2: 
+APC-specifi c rules for combining criteria: 
+Fig. 1: Modified decision tree for PVS1_Variable [Reference 1] 
+
+References
+1.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+2.
+
+Juanes MA Cytoskeletal Control and Wnt Signaling-APC's Dual Contributions in Stem Cell Division
+and Colorectal Cancer. Cancers (Basel) (2020) 12 (12) 10.3390/cancers12123811 33348689
+
+
+3.
+
+Grantham R Amino acid difference formula to help explain protein evolution. Science (1974)
+185 (4154) p. 862-4. 10.1126/science.185.4154.862 4843792 
+
+

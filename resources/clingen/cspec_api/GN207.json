@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN207",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50079",
+    "@type": "Organization",
+    "label": "Parkinson's Disease Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50079"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1833089217"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen Parkinson's Disease Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for GBA1 Version 1.0",
+  "lastUpdated": "2025-03-31T15:36:24.608Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1833089231",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=GBA1",
+          "@type": "Gene",
+          "label": "GBA1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

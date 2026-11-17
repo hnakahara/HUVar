@@ -1,0 +1,42 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN062",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50020",
+    "@type": "Organization",
+    "label": "Brain Malformations Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50020"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/643243132"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Brain Malformations Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for MTOR Version 1.1",
+  "lastUpdated": "2022-08-18T19:14:18.044Z",
+  "legacyFullySuperseded": false,
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/643243139",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=MTOR",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0016054",
+              "@type": "Disease",
+              "label": "MONDO:0016054"
+            }
+          ],
+          "label": "MTOR"
+        }
+      ]
+    }
+  ],
+  "version": "1.1"
+}

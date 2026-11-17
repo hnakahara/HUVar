@@ -10,3 +10,4 @@ enigma_table9	ClinGen ENIGMA BRCA1/BRCA2 VCEP Specifications Table 9 V1.2 (2024-
 somatic_gene_roles	Network of Cancer Genes 7.1 canonical drivers (NCG_cancerdrivers_annotation_supporting_evidence.tsv, md5 1deb4a35) + curated overrides	2026-10-28	http://network-cancer-genes.org/
 cancer_hotspots	cancerhotspots.org v2 (hotspots_v2.xls; ODbL 1.0)	2026-10-28	https://github.com/cBioPortal/cancerhotspots
 oncotree_doid	OncoTree 2025-10-03 (CC BY 4.0) mapped to Disease Ontology 2026-09-30 (CC0)	2026-10-29	https://github.com/cBioPortal/oncotree
+vcep_functional_codes	ClinGen VCEP functional-evidence files: TP53 Functional worksheet Table S3 (GN009 v2.4), OTC Functional Supplement Table S7 (Lo 2023) + OTC SVI assay documentation (Dec 2025), GALT PS3 functional assay table (July 2024), PAH PS3 functional data Table S8 (Kanavy 2019) with eRepo 2026-05-28 PAH codes, IDUA Appendix 3 (GN091 v1.2)	2026-11-10	https://cspec.genome.network/cspec/ui/svi/

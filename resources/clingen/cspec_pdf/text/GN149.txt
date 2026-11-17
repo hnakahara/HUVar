@@ -1,0 +1,761 @@
+Criteria Specification
+ClinGen Congenital Myopathies Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for MTM1 Version 1.0
+Affiliation: Congenital Myopathies VCEP
+Description : The Congenital Myopathies VCEP aims to (1) define criteria for the specific classification of
+variants related to congenital myopathies based on the ACMG standards and guidelines for variant
+interpretation and classification, and (2) review the majority of reported variants that have been
+associated with these disorders to provide expert-approved classification for their clinical significance,
+starting with 5 genes that have been described as having Definitive evidence for a causal role in disease:
+ACTA1, NEB, MTM1, DNM2, RYR1.
+Version : 1.0
+Released : 8/7/2024
+DOI : 10.5281/zenodo.21434749
+
+Contributors & Keywords
+Research Group: Congenital Myopathies VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+MTM1 NM_000252.3 X-linked inheritance
+centronuclear myopathy
+
+Rules for MTM1
+Gene: MTM1 (HGNC:7448) 
+Transcripts:
+NM_000252.3
+
+HGNC Name: myotubularin 1
+Disease:
+centronuclear myopathy
+(MONDO:0018947)  Mode
+of Inheritance: X-linked
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+See PVS1 flowchart
+Modification Gene-specific
+Type:
+
+Strong
+See PVS1 flowchart
+Modification Gene-specific
+Type:
+
+Moderate
+See PVS1 flowchart
+Modification Gene-specific
+Type:
+
+Supporting
+See PVS1 flowchart
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change. Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate
+motherhood, errors in embryo transfer, etc. can contribute to non-maternity.
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+
+Modification No change
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Strong may only be considered for variant-specific mouse models. Currently, no other
+assays are applicable at this strength.
+Modification Disease-specific
+Type:
+
+Moderate
+Where indicated, some of the assays from PS3_Supporting may be stacked to reach a
+Moderate Strength
+Modification Gene-specific
+Type:
+
+Supporting
+Five specific assays are currently suggested to be applied at Supporting:
+1. Phosphatase Activity: An abnormal readout consists of reduced phosphatase activity
+(measured via levels of PtdIns and PtdIns5p or increased levels of precursors)
+2. Myotubularin Localization**: An abnormal readout consists of altered localization
+(presence in spots/aggregates/extensions, loss of cytoplasmic localization)
+3. Myotubularin Translocation**: An abnormal readout consists of loss of MTM1
+recruitment to late endosomal compartment following EGF stimulation
+4. Intracellular Trafficking (Trafficking of endosomal cargo is thought to require
+phosphoinositide conversion and may be disrupted by defective MTM1 activity): An
+abnormal readout consists of reduced localization/trafficking of receptor proteins
+5. Protein and Lipid Association: An abnormal readout consists of decreased association
+with known binding partner (BIN1, Desmin, hVPS34-PI 3-Kinase, MTMR12,
+Phosphoinositide, or EEA Membrane association)
+**These two assays should not be stacked because they may not be assessing
+independent biological function
+If not listed above, it is acceptable to use PS3_Supporting for other functional analyses if
+The assay has been validated by a known pathogenic and benign variant AND
+
+There is plausible reason that the function the assay is testing relates to the
+phenotype AND
+The assay conditions are likely to mimic the physiological environment.
+Modification Gene-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+X-linked case counts are adopted from the Rett and Angelman-like
+Specifications:disorders VCEP (PMID: 34837432). PS4 can be used to count cases for
+both affected males (XY) and females (XX). Females must meet PP4 to be
+counted towards PS4.
+
+Strong
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls. Note 1: Relative risk (RR) or odds ratio (OR), as obtained from
+case-control studies, is >5.0 and the confidence interval around the estimate of RR or OR
+does not include 1.0. See manuscript for detailed guidance. Note 2: In instances of very
+rare variants where case-control studies may not reach statistical significance, the prior
+observation of the variant in multiple unrelated patients with the same phenotype, and its
+absence in controls, may be used as moderate level of evidence.
+In instances of very rare variants where case-control studies may not reach statistical
+significance, the prior observation of the variant in multiple unrelated patients with the
+same phenotype, and its absence in controls, may be used as moderate level of evidence.
+5+ cases
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+3-4 cases
+
+Modification Disease-specific,Gene-specific
+Type:
+
+Supporting
+2 cases
+Modification Disease-specific,Gene-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+There are no defined hotspots or critical functional domains in MTM1 at
+this time.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+PM2_Supporting may be applied if the minor allele frequency in population databases of
+at least 2000 alleles is absent (1 observation allowed in females only)
+Modification Disease-specific,Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Biallelic case counts should not be used for MTM1.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before. Example: Arg156His is pathogenic;
+
+now you observe Arg156Cys. Caveat: Beware of changes that impact splicing rather than
+at the amino acid/protein level.
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+Assumed de novo, but without confirmation of paternity and maternity.
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+X-linked segregation counts adopted from the Rett and Angelman-like
+Specifications:disorders VCEP (PMID: 34837432)
+
+Strong
+At least five segregations
+Modification General recommendation
+Type:
+
+Moderate
+3-4 segregations
+Modification General recommendation
+Type:
+
+Supporting
+2 segregations
+Modification General recommendation
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+MTM1 is not a gene that is constrained for missense variation. Hence PP2
+is not applicable.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.). Caveat: As many in silico
+algorithms use the same or very similar input for their predictions, each algorithm should
+not be counted as an independent criterion. PP3 can be used only once in any evaluation
+of a variant.
+
+PP3 is met if the REVEL score ≥ 0.7 or if the variant is predicted to impact splicing using
+SpliceAI score ≥0.5
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Supporting
+Affected Males (must be negative for BIN1, RYR1, and DNM2 variants)
+Muscle biopsy with rounded muscle fibers with a single centrally located nucleus
+surrounded by a halo devoid of contractile elements, but containing mitochondria
+Carrier Females (a panel test for neuromuscular disease to rule out other
+causes)
+Observation of myopathy (may be asymmetric) AND at least 1 other feature
+Unilateral skeletal asymmetry
+Narrow, elongated face
+High arched palate
+Modification Disease-specific,Gene-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+The minor allele frequency using the filtering allele frequency of either exomes or
+genomes in gnomAD is ≥0.000016. All continental gnomAD populations used should
+have at least 2000 alleles and >1 observation.
+Modification Disease-specific,Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+The minor allele frequency using the filtering allele frequency of either exomes or
+genomes in gnomAD is ≥0.0000016. All continental gnomAD populations used should
+have at least 2000 alleles and >1 observation.
+Modification Disease-specific,Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+
+Modification No change
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+The VCEP has decided that lack of demonstrated effect in a functional
+assay should not count against the pathogenicity of an MTM1 variant
+because of the numerous possible functions of myotubularin; therefore all
+specified functional assays will only be used as evidence for pathogenicity.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Lack of segregation in affected members of a family. Caveat: The presence of
+phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation
+among affected individuals. Also, families may have more than one pathogenic variant
+contributing to an autosomal dominant disorder, further confounding an apparent lack of
+segregation.
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+
+Modification No change
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Both missense and truncating variants in MTM1 are disease-causing.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+Modification No change
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+Comments:
+
+There are no regions in MTM1 where BP3 would apply.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc) Caveat: As many in silico algorithms use
+the same or very similar input for their predictions, each algorithm cannot be counted as
+an independent criterion. BP4 can be used only once in any evaluation of a variant.
+BP4 is met if the REVEL score ≤ 0.15 or if the variant is not predicted to impact splicing
+using SpliceAI.
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+
+Modification No change
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous variant for which SpliceAI predicts no impact to the splice consensus
+sequence nor the creation of a new splice site AND the nucleotide is not highly conserved.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PS2_Very Strong) AND ≥ 1 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong,
+PM6_Strong, PP1_Strong)
+1 Very Strong (PS2_Very Strong) AND ≥ 2 Moderate (PS1_Moderate, PS2_Moderate, PS3_Moderate,
+PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+
+1 Very Strong (PS2_Very Strong) AND 1 Moderate (PS1_Moderate, PS2_Moderate, PS3_Moderate,
+PS4_Moderate, PM4, PM5, PM6, PP1_Moderate) AND 1 Supporting (PS1_Supporting, PS2_Supporting,
+PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3,
+PP4)
+
+1 Very Strong (PS2_Very Strong) AND ≥ 2 Supporting (PS1_Supporting, PS2_Supporting,
+PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3,
+PP4)
+
+≥ 2 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong)
+1 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND ≥ 3 Moderate
+(PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+
+1 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 2 Moderate
+(PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate) AND ≥ 2
+
+Supporting (PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 1 Moderate
+(PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate) AND ≥ 4
+Supporting (PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PS2_Very Strong) AND 1 Moderate (PS1_Moderate, PS2_Moderate, PS3_Moderate,
+PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+1 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 1 Moderate
+(PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+1 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND ≥ 2 Supporting
+(PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting,
+PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+2 Moderate (PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+AND ≥ 2 Supporting (PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Moderate (PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+AND ≥ 4 Supporting (PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Strong (PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 2 Moderate
+(PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4, BP2_Strong, BP5_Strong)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS2, BS4, BP2_Strong, BP5_Strong) AND 1 Supporting (BS2_Supporting,
+BS4_Supporting, BP2, BP4, BP5, BP7)
+
+≥ 2 Supporting (BS2_Supporting, BS4_Supporting, BP2, BP4, BP5, BP7)
+
+Files & Images
+MTM1 approved functional assays: 
+MTM1 PVS1 guidance: 
+
+References
+1.
+
+Royer B Hnia K et al. The myotubularin-amphiphysin 2 complex in membrane tubulation and
+centronuclear myopathies. EMBO Rep (2013) 14 (10) p. 907-15. 10.1038/embor.2013.119
+23917616 
+
+2.
+
+Hnia K Tronchère H et al. Myotubularin controls desmin intermediate filament architecture and
+mitochondrial dynamics in human and mouse skeletal muscle. J Clin Invest (2011) 121 (1) p.
+
+70-85. 10.1172/JCI44021 21135508 
+3.
+
+Cao C Laporte J et al. Myotubularin lipid phosphatase binds the hVPS15/hVPS34 lipid kinase
+complex on endosomes. Traffic (2007) 8 (8) p. 1052-67. 10.1111/j.1600-0854.2007.00586.x
+17651088 
+
+4.
+
+Tsujita K Itoh T et al. Myotubularin regulates the function of the late endosome through the
+gram domain-phosphatidylinositol 3,5-bisphosphate interaction. J Biol Chem (2004) 279 (14) p.
+13817-24. 10.1074/jbc.M312294200 14722070 
+
+5.
+
+Ketel K Krauss M et al. A phosphoinositide conversion mechanism for exit from endosomes.
+Nature (2016) 529 (7586) p. 408-12. 10.1038/nature16516 26760201 
+
+6.
+
+Gupta VA Hnia K et al. Loss of catalytically inactive lipid phosphatase myotubularin-related
+protein 12 impairs myotubularin stability and promotes centronuclear myopathy in zebrafish.
+PLoS Genet (2013) 9 (6) p. e1003583. 10.1371/journal.pgen.1003583 23818870 
+
+7.
+
+Laporte J Blondeau F et al. The PtdIns3P phosphatase myotubularin is a cytoplasmic protein that
+also localizes to Rac1-inducible plasma membrane ruffles. J Cell Sci (2002) 115 (Pt 15) p. 310517. 10.1242/jcs.115.15.3105 12118066 
+
+8.
+
+Beggs AH Böhm J et al. MTM1 mutation associated with X-linked myotubular myopathy in
+Labrador Retrievers. Proc Natl Acad Sci U S A (2010) 107 (33) p. 14697-702.
+10.1073/pnas.1003677107 20682747 
+
+9.
+
+Taylor GS Maehama T et al. Myotubularin, a protein tyrosine phosphatase mutated in
+myotubular myopathy, dephosphorylates the lipid second messenger, phosphatidylinositol 3phosphate. Proc Natl Acad Sci U S A (2000) 97 (16) p. 8910-5. 10.1073/pnas.160255697
+10900271 
+
+10.
+
+Tronchère H Laporte J et al. Production of phosphatidylinositol 5-phosphate by the
+phosphoinositide 3-phosphatase myotubularin in mammalian cells. J Biol Chem (2004) 279 (8)
+p. 7304-12. 10.1074/jbc.M311071200 14660569 
+
+11.
+
+Schaletzky J Dove SK et al. Phosphatidylinositol-5-phosphate activation and conserved substrate
+specificity of the myotubularin phosphatidylinositol 3-phosphatases. Curr Biol (2003) 13 (6) p.
+504-9. 10.1016/s0960-9822(03)00132-5 12646134 
+
+12.
+
+Amoasii L Bertazzi DL et al. Phosphatase-dead myotubularin ameliorates X-linked centronuclear
+myopathy phenotypes in mice. PLoS Genet (2012) 8 (10) p. e1002965.
+10.1371/journal.pgen.1002965 23071445 
+
+13.
+
+Pierson CR Dulin-Smith AN et al. Modeling the human MTM1 p.R69C mutation in murine Mtm1
+results in exon 4 skipping and a less severe myotubular myopathy phenotype. Hum Mol Genet
+(2012) 21 (4) p. 811-25. 10.1093/hmg/ddr512 22068590 
+
+14.
+
+McKnight D Bean L et al. Recommendations by the ClinGen Rett/Angelman-like expert panel for
+gene-specific variant interpretation methods. Hum Mutat (2022) 43 (8) p. 1097-1113.
+10.1002/humu.24302 34837432 
+
+

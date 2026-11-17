@@ -1,0 +1,578 @@
+Criteria Specification
+ClinGen FBN1 Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines
+Version 1.0
+Affiliation: FBN1 VCEP
+Description : This version specified for the following genes: FBN1
+Version : 1.0
+Released : 1/5/2022
+DOI : 10.5281/zenodo.21421606
+
+Contributors & Keywords
+Research Group: FBN1 VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+FBN1 NM_000138
+
+Rules for FBN1
+Gene: FBN1 (HGNC:3603) 
+Transcripts:
+NM_000138
+
+HGNC Name: fibrillin 1
+Disease:
+Marfan syndrome
+(MONDO:0007947) 
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Specifications:
+
+Follow the adapted flowchart.
+There is only 1 relevant transcript for FBN1 (NM_000138).
+
+The C-terminal region is proven to be critical to protein function
+(multiple LP/P variants identified in this region).
+PP3 cannot be applied if using the PVS1criterion for splice site
+variants in position +/- ½.
+
+Very Strong
+Nonsense/frameshift variants predicted to undergo NMD (not affecting last exon or
+55 last nt of penultimate exon).
+1,2 splice site variants leading to exon skipping or use of a cryptic splice site
+disrupting the reading frame and predicted to undergo NMD.
+Full gene deletion.
+Single to multi-exon deletion disrupting the reading frame and predicted to undergo
+NMD.
+Duplication (>=1 exon in size and completely contained within gene) proven in
+tandem and disrupting the reading frame and predicted to undergo NMD.
+Modification Disease-specific
+Type:
+
+Strong
+Nonsense/frameshift variants predicted to escape NMD (affecting last exon, last 55nt
+of the penultimate exon).
+1,2 splice site variants leading to exon skipping or use of a cryptic splice site
+disrupting the reading frame and predicted to escape NMD.
+1,2 splice site variants leading to exon skipping or use of a cryptic splice site but
+preserving the reading frame.
+Single to multi-exon deletion disrupting the reading frame and predicted to escape
+NMD.
+Single to multi-exon deletion preserving the reading frame.
+Duplication (>=1 exon in size and completely contained within gene) presumed in
+tandem and presumably disrupting the reading frame and predicted to escape NMD.
+Modification Strength
+Type:
+
+Moderate
+Initiation codon variant with 1 or more pathogenic variant(s) upstream of closest
+potential in-frame start codon.
+Modification Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Beware of changes that impact splicing rather than the amino acid. Splicing
+predictions should remain the same for WT and mutant alleles.
+Original variant should be pathogenic according to the (modified) ACMG guidelines
+for variant classification.
+Modification None
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Specifications:
+
+Use the SVI WG point-based system
+https://clinicalgenome.org/working-groups/sequence-variantinterpretation/
+The expert panel provided definitions for: ‘highly specific phenotype’:
+TAAD + ectopia lentis (mainly caused by variants in FBN1).
+‘consistent phenotype:’ TAAD + systemic score ≥7 (can be caused by
+variants in few other HTAD genes). ‘consistent but genetic
+heterogeneity’:(isolated) TAAD, isolated ectopia lentis and in case of
+a child (age <20yrs) systemic score≥ 7 in whom TAAD is progressive
+and can be developed later in life. The EP recommends that the
+parents had a full clinical work-up and an echocardiogram to exclude
+MFS/HTAAD.
+
+Very Strong
+Four points
+Modification Strength
+Type:
+
+Strong
+Two-three points
+
+Modification Disease-specific
+Type:
+
+Moderate
+One point
+Modification Strength
+Type:
+
+Supporting
+0.5 points
+Modification Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Use the ‘Funtional Assay SVI Documentation’
+Specifications:(https://clinicalgenome.org/working-groups/sequence-variantinterpretation/). For step 2 assessment
+Functional studies deemed appropriate: cDNA analyses showing
+altered FBN1 sequence. Functional studies showing altered FBN1
+protein or RNA expression, proteolysis, folding, assembly, trafficking,
+secretion, Ca2+ binding, matrix deposition (cfr Dave Hollister assay),
+microfibril fragmentation/catabolism in an in vitro engineered
+system.
+Functional studies NOT deemed appropriate: non-specific altered
+TGF-beta signaling or histological hallmarks of medial degeneration,
+which are associated with many other types of variants in genes that
+are associated with MFS or HTAAD in general. For step 3 assessment:
+Studies should be performed in the presence of NMD inhibitor.
+
+Strong
+Follow the ‘Funtional Assay SVI Documentation’
+Modification Disease-specific
+Type:
+
+Moderate
+Follow the ‘Funtional Assay SVI Documentation’
+Modification Strength
+Type:
+
+Supporting
+Use the ‘Funtional Assay SVI Documentation’.
+Modification Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Specifications:
+
+Each additional proband meeting Ghent criteria or having ectopia
+lentis may receive 1 point while those having only thoracic aortic
+disease or high systemic score or those for which the phenotype is
+not described in the literature will receive 0.5 points. * Caveat:
+BA1/BS1 should not be met.
+
+Strong
+If ≥ 4 points.
+Modification Disease-specific
+Type:
+
+Moderate
+If 2-3.5 points.
+Modification Strength
+Type:
+
+Supporting
+If 1-1.5 points.
+
+Modification Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Strong
+Cys residues in cbEGF-like domains
+Add caveat: PM5/PS1 should not be used when this argument applies.
+Modification Strength
+Type:
+
+Moderate
+Cys in EGF-like domain, Cys in TB domain, Cys in hybrid domain, (D/N)-X-(D/N)-(E/Q)Xm-(D/N)-Xn-(Y/F) substitution in cbEGF-like domain, invariant calcium-binding or
+hydroxylation residue in cbEGF-like domain, critical Gly between Cys2-Cys3 in cbEGFlike domain, Gly between Cys3-Cys4 if there is an upstream cbEGF domain, Cyscreating variants.
+Add caveat: N to S substitution in the second N of de consensus sequence and G to A
+might be tolerated, PM1 should not be used in these cases.
+Modification Disease-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Threshold: <5.0E-6 (<0.0005%).
+Use the highest ethnic population allele frequency.
+Caveat: PVS1 + PM2_Supportive may reach Likely Pathogenic.
+Caveat: Do not use Finnish, Ashkenazi Jewish, or “Other” populations in gnomAD.
+Minimum amount of studied alleles should be 2000.
+
+Modification Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Add caveat: cannot be applied simultaneously with PVS1 (at any strength level)
+Modification None
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Add caveat: Use argument with caution when the original missense variant created a
+cysteine especially in a cbEGFlike domain (cfr PM1_strong) as this may increase the
+pathogenicity level of this variant improperly.
+Add caveat: original variant should be pathogenic according to the (modified) ACMG
+guidelines for variant classification.
+Modification None
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+Specifications:
+
+Use the SVI WG point-based system
+https://clinicalgenome.org/working-groups/sequence-variantinterpretation/
+The expert panel provided definitions for: ‘highly specific phenotype’:
+TAAD + ectopia lentis (mainly caused by variants in FBN1).
+‘consistent phenotype:’ TAAD + systemic score ≥7 (can be caused by
+variants in few other HTAD genes). ‘consistent but genetic
+heterogeneity’:(isolated) TAAD, isolated ectopia lentis and in case of
+a child (age <20yrs) systemic score≥ 7 in whom TAAD is progressive
+and can be developed later in life. The EP recommends that the
+parents had a full clinical work-up and an echocardiogram to exclude
+MFS/HTAAD.
+
+Very Strong
+4 points
+Modification Strength
+Type:
+
+Strong
+2-3 points.
+Modification Disease-specific
+Type:
+
+Moderate
+1 point.
+Modification Disease-specific
+Type:
+
+Supporting
+0.5 points.
+Modification Strength
+Type:
+
+PP1
+
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Specifications:
+
+Only count affected individuals from the same family (minus
+proband) that carry the variant or obligate carriers known with the
+disease.
+The EP will not specifically define “affected”, “clinical examination” or
+cut-offs for aortic Z-scores. These are left to the discretion of the
+referring physicians.
+
+Strong
+≥5 affected individuals.
+Modification Strength
+Type:
+
+Moderate
+4 affected individuals.
+Modification Strength
+Type:
+
+Supporting
+2-3 affected individuals.
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Supporting
+Add caveat: if this argument is used pro-pathogenicity, there must be other arguments
+supporting pathogenicity, and no arguments supporting a benign assertion.
+Modification None
+Type:
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Recommended prediction program for missense variants: REVEL. Use 0.75 as a
+discriminatory cut-off value.
+Recommended prediction programs for splice variants: GeneSplicer, MaxEntscan,
+and NNSPLICE. The outcome of all 3 prediction programs need to be in concordance.
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Supporting
+Use if patient fulfils revised Ghent criteria.
+Can be used if any of the family members have a highly specific phenotype.
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Allele frequency above 0.1% in ExAc and gnomAD
+Use the ethnic population with the highest allele frequency.
+Caveat: Do not use Finnish, Ashkenazi Jewish, or “Other” populations in gnomAD.
+Minimum amount of studied alleles should be 2000.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency greater than expected for disease (>0.005%).
+Use the ethnic population with the highest allele frequency.
+Caveat: Do not use Finnish, Ashkenazi Jewish, or “Other” populations in gnomAD.
+Minimum amount of studied alleles should be 2000.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+
+BS3
+Original ACMG
+Summary
+
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+Use the ‘Funtional Assay SVI Documentation’ (https://clinicalgenome.org/workinggroups/sequence-variant-interpretation/). For step 2 assessment.
+Functional studies deemed appropriate:
+cDNA analyses showing altered FBN1 sequence.
+Functional studies showing altered FBN1 protein or RNA expression, proteolysis,
+folding, assembly, trafficking, secretion, Ca2+ binding, matrix deposition (cfr Dave
+Hollister assay), microfibril fragmentation/catabolism in an in vitro engineered
+system.
+Functional studies NOT deemed appropriate: non-specific altered TGF-beta signaling
+or histological hallmarks of medial degeneration, which are associated with many
+other types of variants in genes that are associated with MFS or HTAAD in general.
+For step 3 assessment: Studies should be performed in the presence of NMD
+inhibitor.
+Modification None
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Caution is warranted when the phenotype is not highly specific. Lack of segregation
+should then be clear in >1 affected family member.
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans in multiple cases (+2) with co-occuring pathogenic variants and
+phenotype is not more severe than when seen in isolation.
+Observed in cis with a pathogenic variant, if the pathogenic variant has been seen in
+isolation in a patient with the disease phenotype.
+Modification Disease-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Recommended prediction program for missense variants: REVEL. Use 0.326 as a
+discriminatory cut-off value.
+Recommended prediction programs for splice variants: GeneSplicer, MaxEntscan,
+and NNSPLICE. The outcome of all 3 prediction programs need to be in concordance.
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+Modification None
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site AND the nucleotide is
+not highly conserved. BP7 applicable as described.
+Modification None
+Type:
+
+

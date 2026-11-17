@@ -1,0 +1,397 @@
+Criteria Specification
+ClinGen Mitochondrial Disease Nuclear and Mitochondrial Expert Panel Specifications to the
+ACMG/AMP Variant Interpretation Guidelines Version 1.0
+Affiliation: Mitochondrial Diseases VCEP
+Description : This document contains one of the two sets of ACMG/AMP specifications from the ClinGen
+Mitochondrial Disease Nuclear and Mitochondrial Variant Curation Expert Panel
+Version : 1.0
+Released : 4/30/2020
+DOI : 10.5281/zenodo.21421544
+
+Contributors & Keywords
+Research Group: Mitochondrial Diseases VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+
+Rules for Mitochondrial Genes
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Large heteroplasmic mtDNA deletions, where at least one gene is completely deleted
+
+Strong
+Assessment of small deletions, nonsense, and frameshift variants in protein-coding genes
+should follow established guidelines (Abou Tayoun et al., 2018)
+
+Moderate
+Assessment of small deletions, nonsense, and frameshift variants in protein-coding genes
+should follow established guidelines (Abou Tayoun et al., 2018)
+
+Supporting
+Assessment of small deletions, nonsense, and frameshift variants in protein-coding genes
+should follow established guidelines (Abou Tayoun et al., 2018)
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Applied per original ACMG/AMP guidelines
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+De novo (maternity confirmed or identical full mtDNA sequence) in a patient with the
+disease and no family history; with weighting per ClinGen SVI guidance
+
+Strong
+De novo (maternity confirmed or identical full mtDNA sequence) in a patient with the
+disease and no family history; with weighting per ClinGen SVI guidance
+
+Moderate
+De novo (maternity confirmed or identical full mtDNA sequence) in a patient with the
+disease and no family history; with weighting per ClinGen SVI guidance
+
+Supporting
+De novo (maternity confirmed or identical full mtDNA sequence) in a patient with the
+disease and no family history; with weighting per ClinGen SVI guidance
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Supporting
+Functional validation is present in cybrid studies or single fiber analysis
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Strong
+Variant present in ≥16 unrelated probands
+
+Moderate
+Variant present in ≥4 unrelated probands
+
+Supporting
+Variant present in 2 unrelated probands in different top-level haplogroups
+
+PM1
+
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Frequency <0.00002 (0.002%, 1/50,000) from controls
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+mtDNA variants are maternally inherited and not inherited in an
+autosomal recessive manner.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Applied per original ACMG/AMP guidelines
+
+PM5
+Original ACMG
+Summary
+
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Applied per original ACMG/AMP guidelines (protein-coding genes)
+
+Supporting
+Same nucleotide position as previously established pathogenic variant in a rRNA/tRNA
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Very Strong
+Assumed de novo, but without confirmation of maternity (maternal testing done by
+targeted variant analysis and/or targeted gene sequencing)
+
+Strong
+Assumed de novo, but without confirmation of maternity (maternal testing done by
+targeted variant analysis and/or targeted gene sequencing)
+
+Moderate
+Assumed de novo, but without confirmation of maternity (maternal testing done by
+targeted variant analysis and/or targeted gene sequencing)
+
+Supporting
+Assumed de novo, but without confirmation of maternity (maternal testing done by
+targeted variant analysis and/or targeted gene sequencing)
+
+PP1
+Original ACMG
+Summary
+
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Moderate
+Co-segregation with disease in 5+ maternal family members and level of heteroplasmy
+segregating with disease manifestations
+
+Supporting
+Co-segregation with disease in 2-4 maternal family members and level of heteroplasmy
+segregating with disease manifestations
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+mtDNA exhibits lack of recombination and a relatively high mutation rate
+(due to lack of histones or other protective structures) that allows for
+mtDNA variants to accumulate over time.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, etc)
+
+PP4
+Original ACMG
+Summary
+
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Supporting
+Decreased ETC enzyme activity (<20%) performed in a CLIA-approved (or equivalentlycertified) laboratory in muscle, liver, and/or fibroblasts (for fibroblasts, must be seen in
+multiple unrelated probands and/or assayed in different individuals).
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Top-level haplogroup defining variants in individuals that are members of that same toplevel haplogroup OR Allele frequency > 0.01 (1%)
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency 0.005 - 0.0099 (0.5% - 0.99%)
+
+BS2
+Original ACMG
+Summary
+
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed at a higher heteroplasmy in a healthy adult individual, especially in healthy
+maternal family members, than in same tissue tested in an affected individual
+
+Supporting
+Observed at a higher heteroplasmy in a healthy adult individual, especially in healthy
+maternal family members, than in different tissue(s) tested in an affected individual
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Supporting
+No evidence of functional effect in cybrid studies or single fiber analysis is present (no
+statistically significant difference from control; mean values of <2 SD from control mean,
+or 50% enzyme activity compared to controls).
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Lack of segregation in affected members of a family and/or segregation of disease in
+paternal family members
+
+BP1
+Original ACMG
+Summary
+
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Most variants in protein-coding mtDNA genes are not truncating, but
+rather missense variants. Even if truncating variants were more common,
+this would not preclude missense variants from also causing a loss of
+protein function.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Other mtDNA variant is observed in individual’s mtDNA that has previously been
+confirmed to be pathogenic
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+There are a few locations in the mtDNA genome where indels within a
+repetitive region are observed outside of two common locations: one is in
+the hypervariable region 1 (around position 16,189) and the other in
+hypervariable region 2 (around position 310). These indels are well-known
+benign findings.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, etc)
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Mitochondrial DNA variant found in a case with a nuclear DNA-related disease
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous (silent) variant.
+
+

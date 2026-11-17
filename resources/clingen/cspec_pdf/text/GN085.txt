@@ -1,0 +1,863 @@
+Criteria Specification
+ClinGen Monogenic Diabetes Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for HNF4A Version 4.0
+Affiliation: Monogenic Diabetes VCEP
+Type: Richards et.al., 2015 - Combining rules
+Description : ClinGen Monogenic Diabetes Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines
+Version : 4.0
+Released : 10/10/2025
+DOI : 10.5281/zenodo.21434048
+Release Notes :
+Updating PS2 to clarify when a family history of diabetes prevents this criterion from being applied
+Changing PM1 application for variants occurring within the HNF1A/HNF1B and PDX1 (formerly IPF1)
+binding sites of the promoter.
+
+Contributors & Keywords
+Research Group: Monogenic Diabetes VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+HNF4A NM_175914.5 Autosomal dominant
+inheritance monogenic diabetes
+
+Rules for HNF4A
+General Comments:
+
+Upgrade initiation codon variants from PVS1_Moderate to PVS1_Strong on
+the basis that next methionine is Met71 and multiple variants not found in
+gnomAD have been reported in patients meeting diagnostic criteria for
+MODY (PMID: 23348805)
+
+Gene: HNF4A (HGNC:5024) 
+Transcripts:
+NM_175914.5
+
+Criteria & Strength Specifications
+
+PVS1
+
+HGNC Name: hepatocyte nuclear factor 4 alpha
+Disease:
+monogenic diabetes
+(MONDO:0015967)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Per recommendations from the SVI, when RNA analysis demonstrates
+Specifications:abnormal splicing from non-canonical splice site variants, apply PS3
+instead of PVS1.
+
+Very Strong
+Use HNF4A PVS1 decision tree.
+Variants generating PTCs in exon 10 and last 55 nucleotides of exon 9 (c.1162-1216)
+are not expected to cause NMD1
+The most 3’ nonsense or frameshift variant is c.1256C>G, p.S419X in the last
+exon. This variant has been classified as Pathogenic by the MDEP. There are six
+other nonsense and frameshift variants in exon 10, none of which have case
+information and are all currently classified as VUS. The collective evidence
+supports applying PVS1 for variants at codon 419 (c.1257) and 5’ and
+PVS1_Supporting for variants at c.1258 (G)/p.Gly420 and 3’.
+“Exon skipping or use of a cryptic splice site that preserves reading frame” and
+“Single to multi-exon deletion that preserves reading frame”
+Exons 1, 2 (LRG 4), 3 (LRG 5), 4 (LRG 6), 6 (LRG 8): deletion or skipping causes
+frameshift: PVS1
+Exons 5 (LRG 7), 7 (LRG 9), 8 (LRG 10), 9 (LRG 11) - deletion or skipping causes
+in-frame deletion, 52/52/79/51-79 AA deleted, that is >10 % of the protein in
+each case - PVS1_Strong
+Exon 10 (LRG 12) - 46 AA, contains the transactivation domain, includes stop
+loss - PVS1_Strong
+Modification Strength
+Type:
+
+Strong
+Use HNF4A PVS1 decision tree.
+“Exon skipping or use of a cryptic splice site that preserves reading frame” and
+“Single to multi-exon deletion that preserves reading frame”
+
+Exons 5 (LRG 7), 7 (LRG 9), 8 (LRG 10), 9 (LRG 11) - deletion or skipping causes
+in-frame deletion, 52/52/79/51-79 AA deleted, that is >10 % of the protein in
+each case - PVS1_Strong
+Exon 10 (LRG 12) - 46 AA, contains the transactivation domain, includes stop
+loss - PVS1_Strong
+Apply PVS1_Strong to initiation codon variants. MDEP has classified two start codon
+variants as likely pathogenic (c.3G>A: PM2_Supporting + PP4_Moderate +
+PP1_Strong + PVS1_Moderate (c.1delA); c.1delA: PM2_Supporting + PP1 +
+PP4_Moderate + PVS1_Moderate) and there are multiple P/LP variants before the
+next methionine, p.Met71.
+Modification Strength
+Type:
+
+Supporting
+Use HNF4A PVS1 decision tree.
+Apply PVS1_Supporting to nonsense or frameshift variants at c.1258 (G)/p.Gly420 and 3’.
+Modification Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Applicable for a same amino acid change if the previously established variant is classified
+as pathogenic by ClinGen MDEP specifications.
+PS1 can also be applied for canonical and non-canoncial splicing variants that have a
+SpliceAI score within 10% of the original variant, or a greater predicted deleterious impact
+than the comparision (likely) pathogenic variant. See Table 2 from PMID: 37352859 for
+determining when PS1 should be applied at the Strong, Moderate, or Supporting level in
+these instances.
+Modification General recommendation
+Type:
+
+Moderate
+
+Applicable for a same amino acid change if the previously established variant is classified
+as likely pathogenic by ClinGen MDEP specifications.
+PS1 can also be applied for canonical and non-canoncial splicing variants that have a
+SpliceAI score within 10% of the original variant, or a greater predicted deleterious impact
+than the comparision (likely) pathogenic variant. See Table 2 from PMID: 37352859 for
+determining when PS1 should be applied at the Strong, Moderate, or Supporting level in
+these instances.
+Modification Strength
+Type:
+
+Supporting
+PS1 can also be applied for canonical and non-canoncial splicing variants that have a
+SpliceAI score within 10% of the original variant, or a greater predicted deleterious impact
+than the comparision (likely) pathogenic variant. See Table 2 from PMID: 37352859 for
+determining when PS1 should be applied at the Strong, Moderate, or Supporting level in
+these instances.
+Modification Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+To obtain maximum points (“phenotype highly specific for gene”) patient
+Specifications:must meet criteria for PP4 (result of ≥50% chance or higher of testing
+positive for MODY on the MODY Probability calculator
+(https://www.diabetesgenes.org/mody-probability-calculator/) and
+negative HNF1A testing). To obtain standard points (“phenotype
+consistent with gene but not highly specific”), the phenotype of the
+patient must include diabetes. Probands (and/or family members when
+assessing segregation for PP1) with evidence of an autoimmune etiology
+of diabetes and/or absolute or near-absolute insulin deficiency will be
+excluded when assessing criteria that includes phenotype information.
+Such evidence includes the following:One or more positive diabetes
+autoantibodies (IA-2A, ZnT8A+, GAD) (Ref 7,8,9,10). Very low or negative
+C-peptide, defined as either fasting or non-fasting random C-peptide
+(<200pmol/L or 0.6ng/mL)(Ref 11,12) or urinary C-peptide/creatinine ratio
+<0.2 nmol/mmol (Ref 8,9)
+
+Do not apply PS2 if the proband has an affected parent with any of the
+following:
+Affected parent meets PP4 specifications
+Parent is described as having similarly atypical diabetes to the
+proband
+Parent was diagnosed with non-autoimmune diabetes before age 30
+
+Very Strong
+Use SVI recommended point-based system with specifications for “Phenotype
+Consistency” per instructions.
+Modification Gene-specific,Strength
+Type:
+
+Strong
+Use SVI recommended point-based system with specifications for “Phenotype
+Consistency” per instructions.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Use SVI recommended point-based system with specifications for “Phenotype
+Consistency” per instructions.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Use SVI recommended point-based system with specifications for “Phenotype
+Consistency” per instructions.
+Modification Gene-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+See list of approved functional studies and guidelines for interpretation of
+Specifications:data.
+
+Strong
+Applicable to non-canonical splice site variants that have RNA and in silico evidence of
+aberrant splicing.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+List of approved functional studies and guidelines for interpretation:
+EMSA for DNA binding
+“Decreased function” is defined as activity less than 60% of wildtype
+Note: the effect of the variant on DNA binding will be highly dependent on
+whether the variant is located within the DNA binding domain.
+Luciferase assays for transactivation
+“Decreased function” is defined as activity less than 60% of wildtype
+Note: this threshold is not 100% specific for transactivation (TA) activity and is
+complicated by the fact that TA activity will vary depend on many factors, for
+instance cell line that is used (HeLa, INS, MIN6 etc).
+Western blotting and indirect immunofluorescence for protein expression (specifically
+levels and nuclear and cytoplasmic localization, respectively).
+Determining appropriate thresholds for protein expression is more difficult due
+to variability in results due to the complexity of the technique. Sample
+preparations, gel loading, transfer efficiency, specificity of the antibody, choice
+of internal control and inaccurate detection and quantification are some of the
+factors that can contribute to varying and inconsistent results. If a reduction in
+protein expression is seen by immunoblotting, then further testing by
+quantitative PCR (qPCR) is recommended in order to measure the mRNA level
+and assess whether a reduction in amount of protein is due to a reduced mRNA
+level.
+To use PS3_Supporting, functional study must have been performed on a transfected
+variant. If a study was performed on a cell line generated from a patient sample
+(and therefore contains the variant plus wild-type allele) does not count as
+PS3_Supporting.
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+The phenotype of the patient must include diabetes, with evidence of an
+Specifications:autoimmune etiology and/or absolute or near-absolute insulin deficiency
+(see above) considered as exclusionary. Variant should meet
+PM2_Supporting in order to use PS4 at any level (careful review of
+gnomAD QC data may be necessary to assess whether variant is real or
+an artifact, especially if variant is in a polyC region).
+
+Strong
+7 (seven) or more unrelated occurrences = Strong. Variant should meet PM2_Supporting
+in order to use PS4 at any level (careful review of gnomAD QC data may be necessary to
+assess whether variant is real or an artifact, especially if variant is in a polyC region).
+Phenotype of affected individuals must include diabetes, without clear evidence of an
+autoimmune etiology.
+One or more positive diabetes autoantibodies (IA-2A, ZnT8A+, GAD)7,8,9,10
+Very low or negative C-peptide, defined as either fasting or non-fasting random Cpeptide (<200pmol/L or 0.6ng/mL)11,12 or urinary C-peptide/creatinine ratio <0.2
+nmol/mmol8,9
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+4-6 unrelated occurrences = Moderate. Variant should meet PM2_Supporting in order to
+use PS4 at any level. Phenotype of affected individuals must include diabetes, without
+clear evidence of an autoimmune etiology.
+One or more positive diabetes autoantibodies (IA-2A, ZnT8A+, GAD)7,8,9,10
+Very low or negative C-peptide, defined as either fasting or non-fasting random Cpeptide (<200pmol/L or 0.6ng/mL)11,12 or urinary C-peptide/creatinine ratio <0.2
+nmol/mmol8,9
+Modification Gene-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Applicable to amino acids that directly bind DNA and are necessary for Zinc-finger or
+homodimer formation2
+Directly bind DNA: Asp43, His49, Tyr 50, Gly51, Asp56, Gly57, Lys59, Arg63, Arg64,
+Arg67, His70, Tyr72, Arg87, Asn88, Arg91, Arg94, Gln109, Arg112
+Homodimer: Arg75, Gln89, Glu111, Asp113
+Zinc finger: Cys38, Cys41, Cys55, Cys58, Cys74, Cys80, Cys90, Cys93
+Applicable to variants within the promoter region that are direct HNF1A/HNF1B binding
+sites 15, 16:
+c.-170 to c.-173 and c.-178 to c.-181 (NM_175914.4)
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+This criterion can be used for missense variants in well-conserved regions within the DNA
+and ligand-binding domains. It can also be used for variants within certain conserved
+transcription factor binding sites in the promoter (see below for details).
+Promoter region:
+c.-132 to c.-141 (HNF6/OC2 binding site)
+c.-143 to c.-149, c.-151 (PDX1 (formerly IPF1) binding site)
+c.-169, c.-174, c.-176, and c.-177 (HNF1A/HNF1B binding site)
+DNA binding:
+codons 37-113 (NM_175914.4:c.175C-339C p.Leu37-Asp113) (While the paper
+describing the crystal structure of HNF4A2 shows the sequence as amino acids
+33-113, amino acids 33-36 do not bind DNA and the conserved sequence starts
+as Leu37.)
+Ligand binding:
+codons 180-220 and 300-350
+(NM_175914.4:c.538G-658G p.Ala180-Val220)
+(NM_175914.4:c.898T-1048G p.Tyr300-Glu350)
+Modification Gene-specific,Strength
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+Recommend using as supporting level of evidence (PM2_Supporting) per
+Specifications:ClinGen guidance. Per guidance from ClinGen/SVI, PM2_Supporting + PVS1
+is sufficient evidence of a variant being likely pathogenic. We recommend
+investigating the genotype metrics in gnomAD for variants that have been
+flagged for having failed one or more quality parameters, as it is possible
+that some of these filtered variants are actually real. The number of
+filtered alleles can be counted to determine whether PM2_Supporting
+would be met even if they were genuine calls. If the filtered calls are
+sufficient in number to not meet PM2_Supporting, then we would not use
+it. Because it is also possible that these calls are false positives, we would
+not use filtered variants to support BA1 or BS1.
+
+Supporting
+gnomAD Grpmax FAF ≤ 1:333,000 (≤ 0.000003 or 0.0003%)
+Modification General recommendation,Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+For deletions/insertions of more than one amino acid in a non-repeat region, use as
+moderate level of evidence.
+Modification Strength
+Type:
+
+Supporting
+For single amino acid deletions/insertions, use as supporting level of evidence
+
+Modification Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Applicable once two amino acid changes have been classified as pathogenic at the same
+amino acid residue.
+Modification Strength
+Type:
+
+Moderate
+The novel amino acid change must have a Grantham distance greater than or equal to the
+previously classified pathogenic variant.
+Modification Strength
+Type:
+
+Supporting
+Apply if the previously classified amino acid change is likely pathogenic (rather than
+pathogenic) or if the previously classified variant is pathogenic but has a greater
+Grantham distance than the novel variant.
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Subsumed by PS2.
+
+PP1
+
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Variable penetrance and phenocopies complicate co-segregation studies.
+Specifications:The presence of type 1 and type 2 diabetes phenocopies and significance
+of variants in unaffected individuals as defined above will need to be
+considered. If a family member(s) shows evidence of an autoimmune
+etiology for their diabetes and/or absolute or near-absolute insulin
+deficiency (see below), do not include them in PP1 calculation.One or
+more positive diabetes autoantibodies (IA-2A, ZnT8A+, GAD) (Ref
+7,8,9,10). Very low or negative C-peptide, defined as either fasting or nonfasting random C-peptide (<200pmol/L or 0.6ng/mL) (Ref 11,12) or urinary
+C-peptide/creatinine ratio <0.2 nmol/mmol (Ref 8,9). Unaffected family
+members without the variant under assessment can also be used in
+segregation analysis(Ref 5). An individual is considered “unaffected” if
+over age 70 and non-diabetic (based on Exeter work (Ref 13) which shows
+penetrance of HNF4A-MODY at 98% by age 70).
+
+Strong
+Use thresholds suggested by Jarvik and Browning5
+Single Family : ≤ 1/32 (5 meioses)
+> 1 Family : ≤ 1/16 (4 meioses)
+Modification General recommendation,Gene-specific
+Type:
+
+Moderate
+Use thresholds suggested by Jarvik and Browning5
+Single Family : ≤ 1/16 (4 meioses)
+> 1 Family : ≤ 1/8 (3 meioses)
+Modification General recommendation,Gene-specific
+Type:
+
+Supporting
+Use thresholds suggested by Jarvik and Browning5
+Single Family : ≤ 1/8 (3 meioses)
+> 1 Family : ≤ ¼ (2 meioses)
+Modification General recommendation,Gene-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+While missense variants in HNF4A are a common mechanism of
+monogenic diabetes, and the constraint score for HNF4A (gene) is 1.81,
+the MDEP does not support using this criterion at this time.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Use REVEL score of ≥0.70 as supportive evidence of pathogenicity. We also support using
+SpliceAI to assess the predicted impact of non-canonical splicing variants and
+synonymous variants: apply PP3 when the predicted change is at least 0.2 4,3.
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+MODY probability calculator result of ≥50% chance of testing positive
+Specifications:(https://www.diabetesgenes.org/mody-probability-calculator/) AND
+negative HNF1A genetic analysis, given the similarities in phenotypes
+between HNF1A-MODY and HNF4A-MODY. Clinical judgement may need to
+be used when applying this criterion, as the MODY Probability Calculator is
+not as reliable for non-European ancestry individuals or people diagnosed
+>35. For example, use of PP4 is acceptable in the absence of HNF1A
+analysis when the MPC is >50% and the phenotype is specific to HNF4A,
+
+for example someone in the family with neonatal hypoglycemia that is
+responsive to diazoxide or hyperinsulinemic hypoglycemia. If individual
+was tested due to neonatal hypoglycemia, PP4 can be used if ABCC8 and
+KCNJ11 testing are negative (no MODY Probability Calculator result
+required). Certain assumptions can be made in order to use the MODY
+probability calculator. Specific clinical info about parents not given but
+lab/literature states “Family history of diabetes”, click “Parent with
+diabetes” in calculator. If no information about family history of diabetes is
+provided, run the calculator in both conditions (yes/no) and document
+whether this makes a difference in overall probability score.
+Weight/Height/BMI not given but lab/literature states patient is “lean”,
+enter BMI of 30. HbA1c is not provided, enter 6% and 10% and document
+whether this makes a difference in overall probability score. Treatment
+information is not provided, cannot use calculator.
+
+Moderate
+Phenotype: MODY Probability Calculator result ≥50% chance of testing positive6 AND
+negative HNF1A testing AND presence of at least one additional feature characteristic of
+_HNF4A_-MODY:
+Antibody negative and/or persistent C-peptide after five years following T1DM
+diagnosis
+Personal or family history of persistent neonatal hypoglycemia
+Personal or family history of large for gestational age (LGA) infants or macrosomia in
+the absence of sufficient maternal hyperglycemia
+Response to low-dose SU (extreme response- hypoglycemia)
+Biochemical/Molecular phenotypic evidence from patient cell lines
+Fanconi phenotype in conjunction with c.187C>T p.R63W
+Modification Gene-specific
+Type:
+
+Supporting
+MODY Probability Calculator (MPC)6 result ≥50% chance of testing positive AND negative
+HNF1A testing
+Modification Gene-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+gnomAD Grpmax FAF ≥ 1:10,000 (≥ 0.01% or 0.0001).
+Modification Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+If there is a Grpmax Filtering AF for both exomes and genomes, use the
+Specifications:one with the larger denominator.
+
+Strong
+gnomAD Grpmax FAF ≥ 1:30,000 (≥0.0033% or 0.000033)
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Apply to normoglycemic individuals age 70 or older (i.e., genotype positive, phenotype
+negative)
+Modification Gene-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+To use BS3, functional study must have been performed on a transfected
+Specifications:variant. If a study was performed on a cell line generated from a patient
+sample (and therefore contains the variant plus wild-type allele) it cannot
+count as BS3.
+
+Strong
+Applicable to non-canonical splice site variants that have RNA and in silico evidence of
+normal splicing.
+Modification Gene-specific
+Type:
+
+Supporting
+List of approved functional studies and guidelines for interpretation of data.
+EMSA for DNA binding
+“No functional impact” is defined as ≥75% activity of wildtype
+Note: the effect of the variant on DNA binding will be highly dependent on
+whether the variant is located within the DNA binding domain.
+Luciferase assays for transactivation
+“No functional impact” is defined as ≥75% activity of wildtype
+Note: this threshold is not 100% specific for transactivation (TA) activity and is
+complicated by the fact that TA activity will vary depend on many factors, for
+instance cell line that is used (HeLa, INS, MIN6 etc). Assays should include
+controls for WT, T2DM and known MODY variants.
+Western blotting and indirect immunofluorescence for protein expression (specifically
+levels and nuclear and cytoplasmic localization, respectively).
+Determining appropriate thresholds for protein expression is more difficult due
+to variability in results due to the complexity of the technique. Sample
+preparations, gel loading, transfer efficiency, specificity of the antibody, choice
+of internal control and inaccurate detection and quantification are some of the
+factors that can contribute to varying and inconsistent results. If a difference in
+protein expression compared to WT is seen by immunoblotting, then further
+testing by quantitative PCR (qPCR) is recommended in order to measure the
+mRNA level and assess whether the difference in amount of protein is due to a
+reduced mRNA level.
+
+Modification Gene-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Applicable to family members without variant who have MPC6 score ≥50% (i.e., genotype
+negative, phenotype positive).
+Modification General recommendation,Gene-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Also applicable when in cis or trans with a likely pathogenic variant.
+Modification General recommendation
+Type:
+
+BP3
+
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Use a REVEL score of ≤0.15 as supportive evidence of no predicted impact on the gene or
+gene product. We also support using SpliceAI to assess the predicted impact of noncanonical splicing variants and synonymous variants: apply BP4 when the predicted
+change is below 0.23,4.
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+A variant in another monogenic diabetes gene is Pathogenic/Likely Pathogenic.
+Modification General recommendation
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Apply BP7 when the predicted change from SpliceAI is below 0.2 AND phyloP100 way <
+2.0.
+Modification Gene-specific
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong AND ≥ 1 Strong
+1 Very Strong AND ≥ 2 Moderate
+1 Very Strong AND 1 Moderate AND 1 Supporting
+1 Very Strong AND ≥ 2 Supporting
+
+≥ 2 Strong
+1 Strong AND ≥ 3 Moderate
+1 Strong AND 2 Moderate AND ≥ 2 Supporting
+1 Strong AND 1 Moderate AND ≥ 4 Supporting
+
+Likely Pathogenic
+1 Very Strong AND 1 Moderate
+1 Strong AND 1 Moderate
+1 Strong AND ≥ 2 Supporting
+
+≥ 3 Moderate
+2 Moderate AND ≥ 2 Supporting
+1 Moderate AND ≥ 4 Supporting
+1 Strong AND 2 Moderate
+
+Benign
+≥ 2 Strong
+1 Stand Alone
+
+Likely Benign
+
+1 Strong AND 1 Supporting
+
+≥ 2 Supporting
+
+Files & Images
+PS2 De Novo Points Table: Table for determining strength of PS2 for apparent de novo variants 
+HNF4A PVS1 Decision Tree: Decision tree for determining strength of PVS1 
+
+References
+1.
+
+Popp MW Maquat LE Organizing principles of mammalian nonsense-mediated mRNA decay.
+Annu Rev Genet (2013) 47 p. 139-65. 10.1146/annurev-genet-111212-133424 24274751 
+
+2.
+
+Lu P Rha GB et al. Structural basis of natural promoter recognition by a unique nuclear receptor,
+HNF4alpha. Diabetes gene product. J Biol Chem (2008) 283 (48) p. 33685-97.
+10.1074/jbc.M806213200 18829458 
+
+3.
+
+Jaganathan K Kyriazopoulou Panagiotopoulou S et al. Predicting Splicing from Primary Sequence
+with Deep Learning. Cell (2019) 176 (3) p. 535-548.e24. 10.1016/j.cell.2018.12.015 30661751
+
+
+4.
+
+Wai HA Lord J et al. Blood RNA analysis can increase clinical diagnostic rate and resolve variants
+of uncertain significance. Genet Med (2020) 22 (6) p. 1005-1014. 10.1038/s41436-020-0766-9
+32123317 
+
+5.
+
+Jarvik GP Browning BL Consideration of Cosegregation in the Pathogenicity Classification of
+Genomic Variants. Am J Hum Genet (2016) 98 (6) p. 1077-1081. 10.1016/j.ajhg.2016.04.003
+27236918 
+
+6.
+
+https://www.diabetesgenes.org/mody-probability-calculator/ 
+
+7.
+
+McDonald TJ Colclough K et al. Islet autoantibodies can discriminate maturity-onset diabetes of
+the young (MODY) from Type 1 diabetes. Diabet Med (2011) 28 (9) p. 1028-33.
+10.1111/j.1464-5491.2011.03287.x 21395678 
+
+8.
+
+Shields BM Shepherd M et al. Population-Based Assessment of a Biomarker-Based Screening
+Pathway to Aid Diagnosis of Monogenic Diabetes in Young-Onset Patients. Diabetes Care
+(2017) 40 (8) p. 1017-1025. 10.2337/dc17-0224 28701371 
+
+9.
+
+Patel KA Weedon MN et al. Zinc Transporter 8 Autoantibodies (ZnT8A) and a Type 1 Diabetes
+Genetic Risk Score Can Exclude Individuals With Type 1 Diabetes From Inappropriate Genetic
+Testing for Monogenic Diabetes. Diabetes Care (2019) 42 (2) p. e16-e17. 10.2337/dc18-0373
+30409810 
+
+10.
+
+Carlsson A Shepherd M et al. Absence of Islet Autoantibodies and Modestly Raised Glucose
+Values at Diabetes Diagnosis Should Lead to Testing for MODY: Lessons From a 5-Year Pediatric
+Swedish National Cohort Study. Diabetes Care (2020) 43 (1) p. 82-89. 10.2337/dc19-0747
+31704690 
+
+11.
+
+Hattersley AT Greeley SAW et al. ISPAD Clinical Practice Consensus Guidelines 2018: The
+diagnosis and management of monogenic diabetes in children and adolescents. Pediatr
+Diabetes (2018) 19 Suppl 27 p. 47-63. 10.1111/pedi.12772 30225972 
+
+12.
+
+Pihoker C Gilliam LK et al. Prevalence, characteristics and clinical diagnosis of maturity onset
+diabetes of the young due to mutations in HNF1A, HNF4A, and glucokinase: results from the
+SEARCH for Diabetes in Youth. J Clin Endocrinol Metab (2013) 98 (10) p. 4055-62.
+10.1210/jc.2013-1279 23771925 
+
+13.
+
+Patel KA Kettunen J et al. Heterozygous RFX6 protein truncating variants are associated with
+MODY with reduced penetrance. Nat Commun (2017) 8 (1) p. 888. 10.1038/s41467-01700895-9 29026101 
+
+14.
+
+Hamilton AJ Bingham C et al. The HNF4A R76W mutation causes atypical dominant Fanconi
+syndrome in addition to a β cell phenotype. J Med Genet (2014) 51 (3) p. 165-9.
+10.1136/jmedgenet-2013-102066 24285859 
+
+15.
+
+Jolma A Yan J et al. DNA-binding specificities of human transcription factors. Cell (2013) 152 (12) p. 327-39. 10.1016/j.cell.2012.12.009 23332764 
+
+16.
+
+Ng NHJ Ghosh S et al. HNF4A and HNF1A exhibit tissue specific target gene regulation in
+pancreatic beta cells and hepatocytes. Nat Commun (2024) 15 (1) p. 4288. 10.1038/s41467024-48647-w 38909044 
+
+

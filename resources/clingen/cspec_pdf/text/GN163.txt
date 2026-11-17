@@ -1,0 +1,798 @@
+Criteria Specification
+ClinGen Dopa Decarboxylase (Aromatic L-Amino Acid Decarboxylase) Expert Panel
+Specifications to the ACMG/AMP Variant Interpretation Guidelines for DDC Version 1.0
+Affiliation: Dopa Decarboxylase (Aromatic L-Amino Acid Decarboxylase) VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Version : 1.0
+Released : 11/12/2026
+
+Contributors & Keywords
+Research Group: Dopa Decarboxylase (Aromatic
+L-Amino Acid Decarboxylase) VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for DDC
+General Comments:
+
+Based on the request of the VCEP Review Committee, the VCEP has
+classified: - 8 variants (B/LB in ClinVar) that utilize the BA1, BS1, BP4,
+and/or BP7 criteria, bringing to the list to a total of 10 B/LB (based on
+ClinVar classification) - 2 inframe indels The VCEP also added a statement
+to clarify BS2, that the patient must have normal DDC enzyme activity in
+order to apply this criterion. Please also note the the VCEP discussed, in
+detail, the potential use of BP7 for intronic variants between +7 and -21,
+but decided NOT to include this for now.
+
+Gene: DDC (HGNC:2719) 
+Transcripts:
+NM_001082971.2
+
+HGNC Name: dopa decarboxylase
+Disease:
+aromatic L-amino acid
+decarboxylase deficiency
+(MONDO:0012084)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+(Very Strong 8 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Cannot be used together with PM4 or PP3
+If there's a stop loss variant, then PM4 is to be considered.
+Classifications should be made according to a decision tree (See attached) (Based on
+Tayoun et al., 2018)
+Default
+8
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Cannot be used together with PM4 or PP3
+If there's a stop loss variant, then PM4 is to be considered.
+Classifications should be made according to a decision tree (See attached) (Based on
+Tayoun et al., 2018)
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+(Strong 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Cannot be used together with PM4 or PP3
+If there's a stop loss variant, then PM4 is to be considered.
+Classifications should be made according to a decision tree (See attached) (Based on
+Tayoun et al., 2018)
+Default
+Point
+Value:
+
+2
+
+Modification Gene-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Same amino acid change as a previously established (likely) pathogenic variant
+must reach a classification of LP without PS1 using these DDC specifications.
+Initiation codon variants where a different nucleotide substitution affecting the
+initiation codon has been classified as pathogenic.
+Splicing variants where a different nucleotide substitution has been classified as
+a pathogenic and the variant being assessed is predicted by in silico tools to have a
+similar or greater deleterious impact.
+Consider nucleotide changes that impact splicing rather than at the amino
+acid/protein level
+Default
+4
+Point
+Value:
+Modification General recommendation
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Not Applicable
+Comments:
+The occurrence of de novo variants in DDC is not a mechanism of disease
+for AADC deficiency due to AR MoH, and the observation that a variant in
+DDC has arisen de novo does not support its causality. Any de novo
+
+variants will be assessed based on the variant type, functional evidence,
+and in trans data.
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Moderate
+(Moderate 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+in vitro activity < 10% in non-patient derived cells or in solution.
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+in vitro activity < 45% in non-patient derived cells or in solution OR totally insoluble
+variants in bacterial or eukaryotic cells (only recovered in the pellet)
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+Comments:
+Should NOT be used as arguments for DDC variant classification. ONLY
+considered for autosomal dominant disorders.
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+(Moderate 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Located in a mutational hot spot and/or critical and well-established functional
+domain (e.g., active site of an enzyme) without benign variation.
+Suggested hotspots (Bisello et al, 2023, PMID:37466248):
+1. HS: c.439-447; p.Ser147-p.Ser149 (PLP binding)
+2. HS: c.574-576; p.His192 (PLP-binding)
+3. HS: c.714+4A>T /IVS6+4A>T (founder variant)
+4. HS: c.811-813; p.Asp271 (PLP binding)
+5. HS: c.907-909 ; p.Lys303 (PLP binding)
+6. HS: c.979-1071; p.Arg327-p.Phe357 (catalysis)
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Will NOT be used at moderate strength.
+
+Only applied as a Supporting criterion
+<0.02%, 0.0002
+an order of magnitude below the BS1 threshold
+Unless the variant under assessment is a known hypomorphic allele, homozygotes
+present in population databases should not be acceptable for the application of
+PM2_Supporting. Will include hypomorphic alleles in pilot phase to develop more
+clear guidelines. (Bisello et al., 2024, PMID: 39166734; Bisello & Bertoldi., 2022,
+PMID: 36232540).
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Very Strong
+(Very Strong 8 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Can only be used in connection with PM2_supporting.
+*4 points awarded from Table 1 (See attached Ellard et al., 2020;
+https://www.acgs.uk.com/media/11631/uk-practice-guidelines-for-variantclassification-v4-01-2020.pdf )
+Default
+8
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Can only be used in connection with PM2 supporting.
+Follow SVI guidance for PM3 - *2 points awarded from table 1(See attached Ellard et
+al., 2020; https://www.acgs.uk.com/media/11631/uk-practice-guidelines-for-variantclassification-v4-01-2020.pdf ). e.g., Detected in trans in 2 probands with a
+pathogenic variant (recessive)
+*Not more than 2 homozygotes to be used points calculations for PM3_Strong
+
+Default
+4
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Moderate
+(Moderate 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Follow SVI guidance for PM3 - *1 point awarded from table 1(See attached Ellard et
+al., 2020; https://www.acgs.uk.com/media/11631/uk-practice-guidelines-for-variantclassification-v4-01-2020.pdf ). e.g., Detected in trans in 1 probands with a
+pathogenic variant (recessive)
+*Not more than 2 homozygotes to be used points calculations for PM3_Moderate
+Default
+2
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Can only be used in connection with PM2 supporting.
+*****0.5 points awarded from table 1(See attached Ellard et al., 2020) e.g., Two
+variants that meet PM2_Supporting detected in trans: OR a homozygous variant
+meeting PM2_Supporting
+PM2_supporting must be met for PM3_moderate - with the exception of known
+hypomorphic alleles. A PMID is not available for Ellard, et al. 2020. This
+document can be found at: https://www.acgs.uk.com/media/11631/uk-practiceguidelines-for-variant-classification-v4-01-2020.pdf
+Unless the variant under assessment is a known hypomorphic allele,
+homozygotes present in population databases should not be acceptable for the
+application of PM2_Supporting. Will include hypomorphic alleles in pilot phase to
+develop more clear guidelines. (Bisello et al., 2024, PMID: 39166734; Bisello &
+Bertoldi., 2022, PMID: 36232540).
+Default
+1
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+PM4
+
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+(Moderate 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Use for in frame deletions and insertions of 2 or more amino acid.
+e.g., PM4_moderate:c.270_281dup; p.Ala91_Leu94dup
+PM4 cannot be used together with PVS1.
+Stop loss variants in DDC have not been reported, as far as we are aware.
+PM4 classification for stop loss variants should be made according to previously
+published decision tree (Ellard et al. 2020) (See attached)
+Default
+2
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Use for in frame deletions and insertions is a single amino acid
+e.g., PM4_supporting: c.58_60del; p.Tyr20del
+PM4 cannot be used together with PVS1
+Stop loss variants in DDC have not been reported, as far as we are aware
+PM4 classification for stop loss variants should be made according to previously
+published decision tree (Ellard et al. 2020) (See attached)
+Default
+1
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+(Moderate 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Novel missense change at amino acid residue where a different missense change is
+determined to be pathogenic in at least 1 case, where a different missense change is
+determined to be pathogenic in at least 1 case as determined by the DDC VCEP or
+curated using these DDC specifications in the absence of applying PM5 for that
+variant (or similar).
+Likely pathogenic variant as determined by VCEP at the residue in ≥2 cases.
+Caveat – Beware of changes that impact splicing rather than at the amino
+acid/protein level.
+Default
+2
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Likely pathogenic variant as determined by VCEP at the residue in only one case.
+Caveat - Consider changes that impact splicing rather than at the amino
+acid/protein level
+Default
+1
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Not to be used – highly unlikely that two de novo variants arise in the
+same gene in trans. The occurrence of de novo variants in DDC is not a
+mechanism of disease for AADC deficiency due to AR MoH, and the
+observation that a variant in DDC has arisen de novo does not support its
+
+causality. Any de novo variants will be assessed based on the variant type,
+functional evidence, and in trans data.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Co-segregation with disease phenotype in multiple affected family members:
+*3 affected homozygotes/compound heterozygotes + 0 Unaffected
+homozygous/compound heterozygotes.
+Default
+4
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Moderate
+(Moderate 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Co-segregation with disease phenotype in multiple affected family members:
+*2 affected homozygotes/compound heterozygotes + 0 Unaffected
+homozygotes/compound heterozygotes
+Default
+2
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Co-segregation with disease phenotype in multiple affected family members:
+*1 affected homozygotes/compound heterozygotes + 0 Unaffected
+homozygotes/compound heterozygotes
+Default
+Point
+
+1
+
+Value:
+Modification General recommendation,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not to be used – no significant Missense constraint (p-value >0.001) for
+DDC (Decipher).
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Missense variants with REVEL >0.55, we suggest ≥0.55: lowest REVEL score likely
+pathogenic variants is 0.552, p.Val68Met (Himmelreich et al 2022, PMID: 36427457)
+Predicted impact on splicing by SpliceAI not in classical splicing.
+For canonical splice site variant, the cut-off for SpliceAI is 0.5
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+See attached PP4 points table.
+Default
+4
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+(Moderate 3 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+See attached PP4 points table.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+(Supporting 2 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+See attached PP4 points table.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+A “stand-alone” criterion -10 points - automatically classified as benign.
+An allele frequency of ≥0.004 (0.4%) in any continental population in gnomAD v2.1.1
+or v4.0 with >2000 alleles as a cutoff for stand-alone benign criteria which is
+calculated using 100% genetic heterogeneity, because DDC variants are the only
+known genetic cause of AADC deficiency, and full penetrance.
+Default
+Not Applicable
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Any variant with a frequency>0.002 (0.2%) (based on the estimated prevalence of 1
+in 90,000 in gnomAD (max allelic contribution = 44%; max genetic contribution =
+100%) will meet strong benign criteria.
+Use the highest population minor allele frequency in any given continental
+population with >2,000 alleles (European non-Finnish, African, East Asian, South
+Asian, Latino) (PMID 20211383)
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+The patient must have normal DDC enzyme activity in order to apply this criterion.
+Exception to this rule applies for hypomorphic variants, which are benign in the
+homozygous state but can cause disease/clinically relevant enzyme deficiency when
+in trans with a severe deleterious variant. It is presently not possible to set activity
+range for individuals homozygous for hypomorphic alleles.
+Default
+-4
+Point
+Value:
+Modification General recommendation
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+In vitro activity >60%
+Default
+-1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Lack of segregation in affected members of a family. Follow SVI guidance.
+Default
+-4
+Point
+Value:
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Both truncating and missense variants known to cause disease.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+NOT to be used as arguments for DDC variant classification. Observed in
+trans with a pathogenic variant for a fully penetrant dominant
+gene/disorder or observed in cis with a pathogenic variant in any
+inheritance pattern.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Not to be used - No known repetitive regions in DDC.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+For splice site variants use SpliceAI. BP4 can be applied if there is a SpliceAI “low score”
+(delta score ≤0.2 “predicted to alter splicing”).
+Due to some pathogenic variants having low REVEL scores, BP4 is not applied for
+missense variants.
+Default
+-1
+Point
+Value:
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Not to be used. Individuals with alternative genetic causes for phenotype
+can also be DDC carriers.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BP7
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Strong
+(Strong 4 points per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Silent substitutions that are absence of experimentally observed splicing impacts
+(Walker et al., AJHG 2023, PMID 37352859)
+Only apply if BP4 is met.
+Evolutionary conservation is not considered informative for application of this
+code.
+Default
+-4
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Supporting
+(Supporting 1 point per Bayesian framework, Tavtigian, et al. 2018, PMID:
+29300386)
+Synonymous (silent) variant with low prior probability of pathogenicity if no predicted
+impact on splicing. SpliceAI <0.2, no predicted impact on splicing, as per BP4.
+Default
+-1
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+Functional assay SVI documentation DDC 11.25.24: 
+Points Table PM3 DDC 11.25.24: 
+Points Table PP4 DDC 11.25.24: 
+DDC PVS1 Decision Tree 11.25.24: 
+Plasma AADC enzymatic assay_DDC 11.25.24: 
+REVEL scores for DDC variants: 
+ClinGen DDC VCEP pilot data V2: Updated pilot data, now including B/LB, and inframe indels as
+requested by the VCEP Review Committee. 
+UK Practice Guidelines for Variant Classification DDC 11.25.24: 
+
+

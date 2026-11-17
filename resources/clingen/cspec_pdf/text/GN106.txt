@@ -1,0 +1,854 @@
+Criteria Specification
+ClinGen X-linked Inherited Retinal Disease Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for RPGR Version 1.0
+Affiliation: X-linked Inherited Retinal Disease VCEP
+Description : RPGR specifications
+Version : 1.0
+Released : 5/16/2025
+DOI : 10.5281/zenodo.21434377
+Release Notes :
+Pilot Rules Submitted as of 01/22/2024.
+
+Contributors & Keywords
+Research Group: X-linked Inherited Retinal
+Disease VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+RPGR NM_001034853.2 X-linked inheritance RPGRrelated retinopathy
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for RPGR
+General Comments:
+
+In addition to the specific criteria for codes listed below, the VCEP has
+adopted the point-based combining scoring in Table 2 and Table 3 of PMID:
+32720330. Table 2 assigns points for pathogenic (0 for indeterminate, 1 for
+supporting, 2 for moderate, 4 for strong, and 8 for very strong), and benign
+(0 for indeterminate, -1 for supporting, -2 for moderate, -4 for strong, and
+-8 for very strong) codes. Table 3 provides final categories of Pathogenic
+(>= 10), Likely Pathogenic (6-9), Uncertain (0-5), Likely Benign (-1 to -6),
+Benign (<=7). There are two transcripts for RPGR: NM_001034853.2 is the
+retinal specific transcript for which the gene-disease association has been
+defined and NM_000328.3 which is more broadly expressed in other
+tissues. The two transcripts overlap for exons 1 to 15. NM_001034853.2
+reads through the exon 15 terminal splice site and continues into ORF15.
+NM_000328.3 splices from exon 15 to exon 16 and includes exons 16 to 19.
+These rules have been specified for the ORF15 transcript with ACMG/AMP
+default specifications for NM_000328.3 exons 16 to 19.
+
+Gene: RPGR (HGNC:10295) 
+Transcripts:
+NM_001034853.2
+
+HGNC Name: retinitis pigmentosa GTPase
+regulator
+Disease:
+RPGR-related retinopathy
+(MONDO:0100437)  Mode
+
+of Inheritance: X-linked
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Use SVI recommendations (PMID 30192042) with modifications as shown
+Specifications:in the RPGR PVS1 Decision Tree figure attached.
+
+Very Strong
+Use SVI recommendations (PMID 30192042, and PMID 37352859) with modifications as
+shown in the RPGR PVS1 Decision Tree with splice guidance figures attached.
+NM_001034853.2 - Transcript isoform C reads through the splice site at the end of exon
+15 (ORF15) creating a longer protein sequence with a repetitive region in the 3’ end. This
+is the transcript expressed in retina.
+NM_000328.3 - Transcript isoform A includes 19 exons and produces a shorter mRNA and
+protein sequence than isoform C. Variants in exons 16 to 19 are not associated with RPGRrelated retinopathy.
+PVS1_Met designation for variants predicted to undergo NMD, nonsense or frameshift
+variants that disrupt the critical function of glutamylation in ORF15, or variants causing
+skipped or deleted exons that affect regions critical to protein function.
+Modification Gene-specific,Strength
+Type:
+
+Strong
+PVS1_Strong designation for variants that remove more than 10% of the protein and are
+not expected to lead to NMD.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+PVS1_Moderate designation for initiation codon variants with upstream pathogenic
+variants of closest potential in-frame start codon or for variants in NM_00328.3 which
+remove less than 10% of the protein and are not expected to lead to NMD.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+PVS1_Supporting designation for initiation codon variants without upstream pathogenic
+variants of closest potential in-frame start codon.
+Modification Gene-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+See RPGR specific PVS1 Decision Tree.
+Specifications:
+
+Strong
+Same amino acid change as a previously established Pathogenic variant regardless of
+nucleotide change.
+Comparison variant must have been evaluated by the X-linked IRD VCEP using these
+rules and established as a pathogenic variant and classified as such.
+For assessing same amino acid changes, SpliceAI scores for both variants should be
+within 10% of each other.
+Same predicted splicing impact as a previously classified Pathogenic variant.
+Used in conjunction with PP3 for variants located outside the splice donor/acceptor
++/-1,2 dinucleotide positions that have a splice AI score ≥0.2 and have a comparable
+nucleotide variant at the same position that has been designated Pathogenic.
+Used in conjunction with PVS1 for variants located at the splice donor/acceptor
++/-1,2 dinucleotide positions and that have a comparable variant within the same
+splice donor/acceptor +/-1,2 dinucleotide that has been designated Pathogenic.
+Specific combinations are found in _RPGR_-specific PVS1 Decision Tree part (b) (Table
+2 from Walker 2023).
+
+Modification Clarification,General recommendation
+Type:
+
+Moderate
+Same amino acid change as a previously established Likely Pathogenic variant regardless
+of nucleotide change.
+Comparison variant must have been evaluated by the X-linked IRD VCEP using these
+rules and established as likely pathogenic variant and classified as such.
+For assessing same amino acid changes, SpliceAI scores for both variants should be
+within 10% of each other.
+Same predicted splicing impact as a previously classified Pathogenic variant.
+Used in conjunction with PP3 for variants located outside the splice donor/acceptor
++/-1,2 dinucleotide positions that have a splice AI score ≥0.2 and have a comparable
+nucleotide variant at the same position that has been designated Likely Pathogenic.
+Used in conjunction with PVS1_(reduced strength) for variants located at the splice
+donor/acceptor +/-1,2 dinucleotide positions and that have a comparable variant
+within the same splice donor/acceptor motif (but outside of the +/-1,2 dinucleotide)
+that has been designated Pathogenic.
+Specific combinations are found in _RPGR_-specific PVS1 Decision Tree part (b) (Table
+2 from Walker 2023).
+Modification Clarification,General recommendation
+Type:
+
+Supporting
+Used in conjunction with PP3 for variants located outside the splice donor/acceptor
++/-1,2 dinucleotide positions that have a splice AI score ≥0.2 and have a comparable
+nucleotide variant within the same motif that has been designated Likely Pathogenic.
+Used in conjunction with PVS1 or PVS1_(reduced strength) for variants located at the
+splice donor/acceptor +/-1,2 dinucleotide positions and have a comparable Likely
+Pathogenic or Pathogenic variant either within the same splice site donor/acceptor
+motif, outside the +/-1,2 dinucleotide, or at the +/-1,2 dinucleotide.
+Specific combinations are found in _RPGR_-specific PVS1 Decision Tree part (b) (Table 2
+from Walker 2023).
+Modification Clarification,General recommendation
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Note that all probands being considered for any pathogenic
+Specifications:phenotype codes (e.g. PP1, PM6, PS2, PS4) at any strength must
+have the following phenotype characteristics: affected males
+should have some functional vision impairment by age 30, and/or
+decreased or absent cone and/or rod ERG / FAF responses.
+Affected females can be considered if they have an affected male
+relative described, and their relationship is consistent with an Xlinked inheritance.
+
+Very Strong
+Use SVI point scale for counting cases (see Table 1 on PS2_PM6 table), use option 3
+“Phenotype consistent with gene but not hightly specific and high genetic heterogeneity.”
+Confirmed de novo with confirmed maternity worth 0.5 points per proband. Total 4.0
+points to use at the very strong strength.
+Modification Gene-specific
+Type:
+
+Strong
+Use SVI point scale for counting cases (see Table 1 on PS2_PM6 table), use option 3
+“Phenotype consistent with gene but not hightly specific and high genetic heterogeneity.”
+Confirmed de novo with confirmed maternity worth 0.5 points per proband. Assumed de
+novo with assumed maternity worth 0.25 points per proband. Total 2.0 points to use at the
+strong strength.
+Modification Gene-specific
+Type:
+
+Moderate
+Use SVI point scale for counting cases (see Table 1 on PS2_PM6 table), use option 3
+“Phenotype consistent with gene but not hightly specific and high genetic heterogeneity.”
+Confirmed de novo with confirmed maternity worth 0.5 points per proband. Assumed de
+novo with assumed maternity worth 0.25 points per proband. Total 1.0 points to use at the
+moderate strength.
+Modification Gene-specific
+Type:
+
+Supporting
+Use SVI point scale for counting cases (see Table 1 on PS2_PM6 table), use option 3
+“Phenotype consistent with gene but not hightly specific and high genetic heterogeneity.”
+Confirmed de novo with confirmed maternity worth 0.5 points per proband. Assumed de
+
+novo with assumed maternity worth 0.25 points per proband. Total 0.5 points to use at the
+supporting strength.
+Modification Gene-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+See excel file for details.
+Specifications:
+
+Supporting
+Assays with OddsPath >2.1 as per the SVI recommendations1
+Applies to the following functional studies:
+Protein-protein interaction (PMIDs: 30622176, 20631154, 10958648, 23213406,
+9990021, 36445968)
+Protein localization to connecting cilia (PMIDs: 30622176, 25630948).
+Glutamylation assays (only applicable to truncating variants in exon 15, PMIDs:
+27162334, 36445968)
+-ORAnimal models that replicate the phenotype.
+Modification Gene-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Note that all probands being considered for any pathogenic
+Specifications:phenotype codes (e.g. PP1, PM6, PS2, PS4) at any strength must
+have the following phenotype characteristics: affected males
+should have some functional vision impairment by age 30, and/or
+decreased or absent cone and/or rod ERG / FAF responses.
+Affected females can be considered if they have an affected male
+relative described, and their relationship is consistent with an Xlinked inheritance.
+Probands counted for PS4 must be unrelated to each other.
+Probands may overlap with PP4 probands at the supporting level.
+
+Very Strong
+Use of this code requires ≥ 8 probands and PM2_Supporting must be met.
+Modification Gene-specific,Strength
+Type:
+
+Strong
+Use of this code requires ≥ 6 probands and PM2_Supporting must be met.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Use of this code at the moderate strength requires 3-5 probands and
+PM2_Supporting must be met.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Use of this code at the supporting strength requires ≥ 2 probands and PM2_Supporting
+must be met.
+OR
+If PS4 Met at the PS4_Supporting level by 1 proband (when a separate
+unrelated proband has been used for PP4):
+This variant has been reported in at least 1 proband meeting one of the PS4 requirements
+of a male with some functional vision impairment by age 30 and/or decreased or absent
+ERG responses, or a female with functional visual abnormality and documentation of a
+male relative affected with retinitis pigmentosa, as well as a second apparently unrelated
+proband previously used for the PP4 code.
+
+Modification Gene-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+See PM2_Supporting.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Allele frequency in males ≤ 0.00005 (≤5x10-5) in population databases.
+Highest allele frequency in a subpopulation should be used to assess this.
+Modification Clarification,Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+VCEP
+ORF15 repetitive region (amino acids 585 to 1078) should not be
+Specifications:evaluated here.
+
+Strong
+Use for stop loss variants in aa 1153. These variants will produce a 38 amino acid
+extension which was shown to have a deleterious effect (PMID:33805381, variant in
+c.3457).
+Modification Gene-specific
+Type:
+
+Moderate
+Protein length changes in exons 1-14, due to in-frame deletions/insertions in a non-repeat
+region. Or, in ORF15 outside of the repetitive region in amino acids 585 to 1078, due to inframe deletions/insertions in a non-repeat region.
+Modification Clarification,Gene-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Must have 2 comparison variants reaching pathogenic classification using these
+specifications.
+- The novel change must not affect
+splicing (SpliceAI ≤ 0.2), must meet PP3, and have a Grantham score equal to or greater
+than the previously published variants.
+Modification Clarification,Gene-specific
+Type:
+
+Supporting
+Same residue as a previously established likely pathogenic variant (assessed
+independently of PM5).
+- The novel change must not affect splicing (SpliceAI ≤ 0.2), must meet PP3, and have a
+Grantham score equal to or greater than the previously published variants.
+
+Modification Clarification,Gene-specific
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+See PS2 for de novo data.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Note that all probands being considered for any pathogenic
+Specifications:phenotype codes (e.g. PP1, PM6, PS2, PS4) at any strength must
+have the following phenotype characteristics: affected males
+should have some functional vision impairment by age 30, and/or
+decreased or absent cone and/or rod ERG / FAF responses.
+Affected females can be considered if they have an affected male
+relative described, and their relationship is consistent with an Xlinked inheritance.
+
+Strong
+Use of this code requires ≥4 meioses in >1 family
+Only phenotype positive relatives with the same variant identified in the
+proband should be counted as segregations.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+≥ 3 meioses
+In ≥ 1 families
+Only phenotype positive relatives with the same variant identified in the
+proband should be counted as segregations.
+
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+≥ 2 meioses in the same family
+OR proband with affected mother
+Only phenotype positive relatives with the same variant identified in the
+proband should be countedas segregations.
+Modification Gene-specific,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Strong
+Applies to missense variants with a REVEL score above 0.932, that are not predicted to
+disrupt splicing (with a SpliceAI score less than 0.2). This criteria is met at the strong
+level.
+Modification General recommendation
+Type:
+
+Moderate
+Applies to missense variants with a REVEL score between 0.773 and 0.931, that are not
+predicted to disrupt splicing (with a SpliceAI score less than 0.2). This criteria is met at the
+moderate level.
+
+Modification General recommendation
+Type:
+
+Supporting
+Applies to missense variants with a REVEL score between 0.644 and 0.772 that are not
+predicted to disrupt splicing (with a SpliceAI score less than 0.2).
+For variants with SpliceAI scores greater than or equal to 0.2, in the two first or last two
+bases in an exon or the 6 intronic bases flanking an exon, this code is met at the
+supporting level.
+Modification Clarification,General recommendation,Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+Patient’s phenotype or family history is highly specific for a disease with a
+Specifications:single genetic etiology.
+A point system was developed to determine when there is enough
+information about a proband’s phenotype to qualify for use of this
+code (see below). Review eligible phenotype characteristics and add
+up points for each finding. This code can be used for a single
+proband.
+4 or more phenotype points are required to use this code.
+Do not include a proband with a suspected diagnosis of more than
+one retinal disease.
+
+Required for use of PP4 (0 points each)
+Males have functional vision impairment by age 30
+Decreased or absent cone and/or rod ERG or FAF responses
+
+Specific RPGR Phenotype Findings List (2 points each)
+Family history consistent with X-linked inheritance,
+no male-to male transmission
+Previous exome, genome or 100+ retinal dystrophy panel (that
+includes X-linked genes) testing that did not provide an alternative
+explanation for visual impairment
+
+Consistent with RPGR Findings (0.5 or 1 point each)
+Rod involvement relatively greater than cone involvement (1)
+Onset in the 1st or 2nd decade of life (ages 2-19) (1)
+Delayed or milder phenotype in females (1)
+
+Unlike carriers of other X-linked RP, female carriers show some
+retinal pathology by age 50 (usually by age 30), by abnormal
+fundus pigmentation, and more certainly by ERG response
+amplitude reduction
+Patient report of Night blindness/nyctalopia (0.5)
+Optic nerve pallor (0.5)
+Pigmentary retinopathy (0.5)
+Poor pupillary light response (0.5)
+Abnormal color vision (0.5)
+Decreased central vision acuity (0.5)
+Myopia (0.5) or high myopia (e.g. -6 Diopter and higher) (1.0)
+Photodysphoria / photophobia (0.5)
+Visual field constriction (0.5)
+
+Moderate
+> 8 phenotype points required; two specific criteria must be met
+Modification Clarification,Gene-specific,Strength
+Type:
+
+Supporting
+4-7 phenotype points required; one specific criterion must be met.
+Modification Clarification,Gene-specific,Strength
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+
+Allele frequency in males is above 5% in Exome Sequencing Project, 1000 Genomes or
+Exome Aggregation Consortium in the subpopulation with the highest frequency.
+Modification Clarification
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency in males is greater than expected for the disorder. Use for alleles with
+frequency ≥8.3x10-5 (based on the most frequent pathogenic allele).
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Only count males over age 30 with a documented eye examination with functional studies
+(normal ERG or FAF).
+Modification Disease-specific,Gene-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+
+BS4
+
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+For maternally inherited variants in RPGR, a variant present in a clinically verified
+(documented with a normal eye examination with functional studies including a normal
+ERG) unaffected male over age 30 could be used to establish this code.
+Inheritance is complicated in consanguineous families and in dual diagnoses situations so
+panel testing of unaffected members required to confirm presence of the variant.
+Modification Clarification,Disease-specific,Gene-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+X-linked gene.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Supporting
+
+Use for ORF15 repetitive regions only (amino acids 585-1078). These events can be
+multiple and large (e.g. 9 plus 15 total 20-30 bp is known, a single 21bp event is
+common). Please note that ORF15 encompasses residues 585 through 1152, with UniProt
+identifying particularly disordered regions between 609-776, 790-906, and 989-1020.
+Modification Clarification,Gene-specific
+Type:
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Strong
+Stand Alone criteria applies to:
+Missense variants: REVEL ≤ 0.003
+Synonymous variants or noncoding variants: SpliceAI ≤ 0.1
+Strong criteria applies to:
+Missense variants: REVEL between 0.004 and 0.016
+Synonymous variants or noncoding variants: SpliceAI ≤ 0.1
+Modification General recommendation
+Type:
+
+Moderate
+Applies to:
+Missense variants: REVEL between 0.017 and 0.183
+Synonymous variants or noncoding variants: SpliceAI ≤ 0.1
+Modification General recommendation
+Type:
+
+Supporting
+Applies to:
+Missense variants: REVEL between 0.184 and 0.290
+Synonymous variants or noncoding variants: SpliceAI ≤ 0.1
+
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Applies to:
+Synonymous variants or noncoding variants with no impact on splicing (SpliceAI ≤ 0.2)
+AND
+PhyloP < 0 for conservation
+Modification Clarification,Gene-specific
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS2, PS4,
+PM4_Strong, PP1_Strong, PP3_Strong)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+AND 1 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3,
+PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS4, PM4_Strong, PP1_Strong, PP3_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PM4_Strong, PP1_Strong, PP3_Strong) AND ≥ 3 Moderate
+(PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate,
+PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PM4_Strong, PP1_Strong, PP3_Strong) AND 2 Moderate
+(PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate,
+PP4_Moderate) AND ≥ 2 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PM4_Strong, PP1_Strong, PP3_Strong) AND 1 Moderate
+(PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate,
+PP4_Moderate) AND ≥ 4 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PM4_Strong, PP1_Strong, PP3_Strong) AND 1 Moderate
+(PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate,
+PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PM4_Strong, PP1_Strong, PP3_Strong) AND ≥ 2 Supporting
+(PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting,
+PM6_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6,
+PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate,
+PP3_Moderate, PP4_Moderate) AND ≥ 2 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting,
+PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate,
+PP3_Moderate, PP4_Moderate) AND ≥ 4 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting,
+PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PM4_Strong, PP1_Strong, PP3_Strong) AND 2 Moderate
+(PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate,
+PP4_Moderate)
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 1 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3,
+PP4)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4, BP4_Strong)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS2, BS4, BP4_Strong) AND 1 Supporting (BP3, BP4, BP7)
+
+≥ 2 Supporting (BP3, BP4, BP7)
+
+Files & Images
+PVS1 Decision Tree for RPGR: Powerpoint file includes splice assessment and updated
+coordinates for SVI review. 
+Standard Operating Procedure - RPGR- V.7: Standard operating procedures for RPGR variant
+curation. 
+Phenotype Features - RPGR Specifications: Introduction to the phenotype features of RPGR in
+both affected males and carrier females (who may or may not be affected). 
+c.730A-T Variant Report: Pilot Variant c.730A>T curation for SVI review. 
+PS3 Functional Evidence - RPGR Specifications: Excel file describing functional assays as of
+November 2022. 
+RPGR PVS1 and PVS1 (RNA) Decision Tree: RPGR specific PVS1 and PVS1 (RNA) Decision Tree.
+
+
+References
+1.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+2.
+
+Meindl A Dry K et al. A gene (RPGR) with homology to the RCC1 guanine nucleotide exchange
+factor is mutated in X-linked retinitis pigmentosa (RP3). Nat Genet (1996) 13 (1) p. 35-42.
+10.1038/ng0596-35 8673101 
+
+3.
+
+De Silva SR Arno G et al. The X-linked retinopathies: Physiological insights, pathogenic
+mechanisms, phenotypic features and novel therapies. Prog Retin Eye Res (2021) 82 p.
+100898. 10.1016/j.preteyeres.2020.100898 32860923 
+
+4.
+
+Vervoort R Lennon A et al. Mutational hot spot within a new RPGR exon in X-linked retinitis
+pigmentosa. Nat Genet (2000) 25 (4) p. 462-6. 10.1038/78182 10932196 
+
+5.
+
+Zhang Q Giacalone JC et al. Disruption of RPGR protein interaction network is the common
+feature of RPGR missense variations that cause XLRP. Proc Natl Acad Sci U S A (2019) 116
+(4) p. 1353-1360. 10.1073/pnas.1817639116 30622176 
+
+6.
+
+Murga-Zamalloa CA Atkins SJ et al. Interaction of retinitis pigmentosa GTPase regulator (RPGR)
+with RAB8A GTPase: implications for cilia dysfunction and photoreceptor degeneration. Hum
+Mol Genet (2010) 19 (18) p. 3591-8. 10.1093/hmg/ddq275 20631154 
+
+7.
+
+Hong DH Pawlyk BS et al. Dominant, gain-of-function mutant produced by truncation of RPGR.
+Invest Ophthalmol Vis Sci (2004) 45 (1) p. 36-41. 10.1167/iovs.03-0787 14691151 
+
+8.
+
+Nanda A Salvetti AP et al. Exploring the Variable Phenotypes of RPGR Carrier Females in
+Assessing their Potential for Retinal Gene Therapy. Genes (Basel) (2018) 9 (12)
+10.3390/genes9120643 30567410 
+
+9.
+
+Rozet JM Perrault I et al. Dominant X linked retinitis pigmentosa is frequently accounted for by
+truncating mutations in exon ORF15 of the RPGR gene. J Med Genet (2002) 39 (4) p. 284-5.
+10.1136/jmg.39.4.284 11950860 
+
+10.
+
+Pejaver V Byrne AB et al. Calibration of computational tools for missense variant pathogenicity
+classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet (2022) 109
+(12) p. 2163-2177. 10.1016/j.ajhg.2022.10.013 36413997 
+
+11.
+
+Walker LC Hoya M et al. Using the ACMG/AMP framework to capture evidence related to
+predicted and observed impact on splicing: Recommendations from the ClinGen SVI Splicing
+Subgroup. Am J Hum Genet (2023) 110 (7) p. 1046-1067. 10.1016/j.ajhg.2023.06.002
+37352859 
+
+12.
+
+Tavtigian SV Harrison SM et al. Fitting a naturally scaled point system to the ACMG/AMP variant
+classification guidelines. Hum Mutat (2020) 41 (10) p. 1734-1737. 10.1002/humu.24088
+32720330 
+
+

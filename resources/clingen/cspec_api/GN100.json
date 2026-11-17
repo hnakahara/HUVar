@@ -1,0 +1,1151 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN100",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50002",
+    "@type": "Organization",
+    "label": "Cardiomyopathy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50002"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1535827397"
+  },
+  "cspecStatus": "Released",
+  "currentStatus": "Released",
+  "label": "ClinGen Cardiomyopathy Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for TPM1 Version 1.0",
+  "lastUpdated": "2024-04-22T15:45:10.424Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1535827410",
+      "@type": "RuleSet",
+      "criteriaCodes": [
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716036",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence suggest no impact on gene or gene product (conservation, evolutionary, splicing impact, etc)\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm cannot be counted as an independent criterion. BP4 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716036/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716036/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716036/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716036/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716036/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "As many _in silico_ algorithms use the same or very similar input for their predictions, each algorithm should not be counted as an independent criterion. Meta-predictors, such as REVEL, are preferred over multiple individual predictors.\n\nUse of REVEL (Ioannidis et al. 2016[<sup>13</sup>](#pmid_27666373)) is recommended at thresholds of **≤0.40 for BP4**.\n\nClinical judgment is needed if any individual algorithms or conservation data are contradictory to REVEL data.\n\nPositive predictive value for benign/no impact predictions is generally higher than for pathogenic/impact predictions.\n\n[SpliceAI](https://spliceailookup.broadinstitute.org)[<sup>14</sup>](#pmid_30661751) is recommended for evaluation of predicted splice impacts.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716025",
+          "@type": "CriteriaCode",
+          "description": "A synonymous variant for which splicing prediction algorithms predict no impact to the splice consensus sequence nor the creation of a new splice site AND the nucleotide is not highly conserved.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716025/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716025/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716025/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716025/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716025/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Also applicable to **intronic variants outside the splice consensus sequence (-4 and +7 outward)** for which splicing prediction algorithms predict no impact to the splice consensus sequence NOR the creation of a new splice site AND the nucleotide is not highly conserved.\n\nRule can be combined with BP4 to make a variant likely benign per Richards _et al._ 2015[<sup>1</sup>](#pmid_25741868).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP7"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716022",
+          "@type": "CriteriaCode",
+          "description": "Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of disease.\nCaveats:\n * Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).\n * Use caution interpreting LOF variants at the extreme 3’ end of a gene.\n * Use caution with splice variants that are predicted to lead to exon skipping but leave the remainder of the protein intact.\n * Use caution in the presence of multiple transcripts.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716022/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716022/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716022/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716022/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716022/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PVS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716019",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as pathogenic, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716019/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716019/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716019/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716019/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Supporting"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716019/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Moderate"
+            }
+          ],
+          "label": "PP5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716016",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene for which primarily truncating variants are known to cause disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716016/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716016/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716016/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716016/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716016/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716015",
+          "@type": "CriteriaCode",
+          "description": "Lack of segregation in affected members of a family.\nCaveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation among affected individuals. Also, families may have more than one pathogenic variant contributing to an autosomal dominant disorder, further confounding an apparent lack of segregation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716015/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716015/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716015/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Any non-segregations should be carefully evaluated to rule out a phenocopy or the presence of a second disease-causing variant before considering it as conflicting or benign evidence. \n\n1.  The presence of “phenocopies” (e.g., athlete’s heart, hypertensive heart disease, ischemic cardiomyopathy, alcoholic cardiomyopathy, diabetic cardiomyopathy) can mimic non-segregation (i.e., lack of segregation) among affected individuals. \n2.  Families may have more than one pathogenic variant contributing to an autosomal dominant disorder, further confounding an apparent ‘non-segregation’.\n\nBecause of these possibilities, **multiple (≥2) non-segregations** that are highly unlikely to be phenocopies or due to alternate variants (e.g., those without a possible alternate cause) **are required to apply this rule**.  A higher number of non-segregations is necessary for instances where alternative causes are possible (e.g., non-segregation in a sibling with childhood onset cardiomyopathy versus a grandparent with hypertension and HCM).\n\nCareful consideration of the above points is required when using this data as conflicting evidence, especially when overall evidence supports likely pathogenic or pathogenic.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716015/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716015/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716009",
+          "@type": "CriteriaCode",
+          "description": "Protein length changes due to in-frame deletions/insertions in a non-repeat region or stop-loss variants.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716009/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716009/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716009/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716009/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Strength of rule should be carefully considered and may require downgrading to SUPPORTING based on the predicted impact of the variant, including the size of the deletion/insertion, its location, and conservation of the region. \n\nFor genes where PVS1 is not applicable (i.e., where there is no evidence that pLOF variants cause disease), consider using this rule at MODERATE or SUPPORTING strength for truncating variants that do NOT undergo nonsense mediated decay (NMD).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716009/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716034",
+          "@type": "CriteriaCode",
+          "description": "Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.\nExample: Val->Leu caused by either G>C or G>T in the same codon.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716034/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716034/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716034/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "No cardiomyopathy specifications. Apply as outlined by Richards _et al_. 2015[<sup>1</sup>](#pmid_25741868).\n\nExample of when rule should NOT be applied. NM\\_000256.3(_MYBPC3_): c.2308G>A (p.Asp770Asn) has an established impact on splicing leading to nonsense mediated decay (NMD) and should not be used to provide evidence for other variants observed to result in the same amino acid change.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716034/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716034/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716031",
+          "@type": "CriteriaCode",
+          "description": "In frame-deletions/insertions in a repetitive region without a known function.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716031/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716031/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716031/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716031/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716031/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716028",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is greater than expected for disorder.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716028/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716028/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716028/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Allele frequency is **≥0.0001 for** _**TPM1**_ based on the **filtering allele frequency (FAF)** in **gnomAD** in the subpopulation with the highest frequency (popmax).\n\nCriterion BS1 may only be used as standalone evidence to classify a variant as Likely Benign in the absence of conflicting data. See SVI guidance (Tavtigian _et al._ 2018[<sup>15</sup>](#pmid_29300386); Tavtigian _et al._ 2020[<sup>16</sup>](#pmid_32720330)). \n\nSee BA1 for additional specifications that also apply to BS1.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716028/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716028/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716026",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence support a deleterious effect on the gene or gene product (conservation, evolutionary, splicing impact, etc.).\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm should not be counted as an independent criterion. PP3 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716026/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716026/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716026/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716026/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716026/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "As many _in silico_ algorithms use the same or very similar input for their predictions, each algorithm should not be counted as an independent criterion. Meta-predictors, such as REVEL, are preferred over multiple individual predictors.\n\nUse of REVEL (Ioannidis _et al._ 2016[<sup>13</sup>](#pmid_27666373)) is recommended at thresholds of **≥0.70 for PP3**.\n\nClinical judgment is needed if any individual algorithms or conservation data are contradictory to REVEL data.\n\nPositive predictive value for benign/no impact predictions is generally higher than for pathogenic/impact predictions.\n\n[SpliceAI](https://spliceailookup.broadinstitute.org)[<sup>14</sup>](#pmid_30661751) is recommended for evaluation of predicted splice impacts.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716020",
+          "@type": "CriteriaCode",
+          "description": "For recessive disorders, detected in trans with a pathogenic variant\nNote: This requires testing of parents (or offspring) to determine phase.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716020/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716020/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716020/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716020/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716020/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716018",
+          "@type": "CriteriaCode",
+          "description": "Observed in a healthy adult individual for a recessive (homozygous), dominant (heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an early age.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716018/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716018/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716018/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716018/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716018/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716013",
+          "@type": "CriteriaCode",
+          "description": "Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before.\nExample: Arg156His is pathogenic; now you observe Arg156Cys.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716013/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716013/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716013/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716013/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "This criterion can be used at MODERATE if a different missense variant at the same codon has been classified as _pathogenic_ using these modified guidelines without application of PM5.\n\nThe impact of the amino acid change being evaluated needs to be compared to the impact of the amino acid change that is established as pathogenic (e.g., a change of Ala to His is less severe than Ala to Cys change). Consider reducing the strength of this rule to SUPPORTING if the predicted impact is not expected to be equivalent or more severe.\n\nPM5 should not be combined with PM1.  If both are applicable at MODERATE weight, use of PM5 is most appropriate since it is variant specific.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716013/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "This criterion can be considered at SUPPORTING if a different missense variant at the same codon has been classified as _likely pathogenic_ using these modified guidelines without application of PM5.\n\nThe impact of the amino acid change being evaluated needs to be compared to the impact of the amino acid change that is established as likely pathogenic (e.g., a change of Ala to His is less severe than Ala to Cys change). Consider reducing the strength of this rule to NOT APPLICABLE if the predicted impact is not expected to be equivalent or more severe.\n\nPM5 should not be combined with PM1.  The one with the higher strength should be applied, but if both are applicable at SUPPORTING weight, use of PM5 is most appropriate since it is variant specific.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716029",
+          "@type": "CriteriaCode",
+          "description": "Variant found in a case with an alternate molecular basis for disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716029/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716029/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716029/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716029/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716029/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716014",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies show no damaging effect on protein function or splicing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716014/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716014/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716014/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "See PS3 specifications.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716014/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "See PS3 specifications.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716014/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "See PS3 specifications.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716010",
+          "@type": "CriteriaCode",
+          "description": "Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.\nCaveat: Population data for indels may be poorly called by next generation sequencing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716010/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716010/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716010/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716010/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716010/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "The values used to calculate the PM2 thresholds were derived from studies in Northern European populations that have been relatively well-characterized with regards to disease prevalence and variant spectrum. These thresholds can be applied to any population where disease prevalence is considered comparable (1/500 or lower), where the most frequent pathogenic variant accounts for no more than 2% of cases (e.g., has an allele frequency of ≤0.02 in cases based on the upper bound of 95% CI), and where the penetrance of a pathogenic variant is expected to be at least 50% (Kelly _et al._ 2018[<sup>10</sup>](#pmid_29300372)).\n\nA threshold of **≤0.00004** in the subpopulation with the highest frequency when using the upper bound of the 95% CI activates this rule.\n\n1.  Alternatively, this is equivalent to the variant NOT being observed more than once (≤1 allele) in gnomAD v.2.1.1 in one of the non-founder populations (e.g., absence required from the Other and Ashkenazi Jewish subpopulations).\n2.  Applying a threshold of ≤0.00004 (upper bound of 95% CI of the allele frequency in gnomAD) is equivalent to the variant being seen in a single subpopulation and that subpopulation meets any of the following:\n    *   **Allele Count (AC) in Allele Number (AN)**\n    *   ≤1 in ≥120,000\n    *   ≤2 in ≥160,000\n    *   ≤3 in ≥195,000\n    *   ≤4 in ≥230,000\n\ngnomAD is the preferred database for this calculation, but currently only displays the filtering allele frequency (FAF), which is equivalent to a lower bound estimate of the 95% CI, when the upper bound is what is needed.\n\n*   Confidence interval tools, such as [Confit-de-MAF](https://www.genecalculators.net/confit-de-maf.html), can be used to determine the upper bound of the 95% CI of the observed allele frequency.\n\nDue to current technical limitations of next generation sequencing technologies, minor allele frequencies for complex variants (e.g., large indels) may not be accurately represented in population databases.\n\nCaution should be used when a variant is only identified, or over-represented, in one of the smaller gnomAD populations, as the gnomAD allele frequencies may not accurately represent the true population frequency.\n\nPopulation databases may contain affected or pre-symptomatic individuals for diseases with reduced penetrance/variable onset.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716035",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as benign, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716035/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716035/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716035/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716035/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Supporting"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716035/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Moderate"
+            }
+          ],
+          "label": "BP6"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716033",
+          "@type": "CriteriaCode",
+          "description": "De novo (both maternity and paternity confirmed) in a patient with the disease and no family history.\nNote: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716033/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716033/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716033/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Refer to SVI guidance on number/combination of cases required based on phenotype specificity[<sup>2</sup>](#url_c73e109e-b916-5a72-b7b1-1762446f3c11).\n\nFor most cardiomyopathies, it is recommended to default to **Phenotype consistency: “Phenotype consistent with gene but not highly specific”**. Clinical judgment is required for shifting to a higher or lower category. \n\nFor use as a STRONG or VERY STRONG criterion, ideally parents have been thoroughly clinically evaluated without evidence of cardiomyopathy (ideally using a combination of ECG and echocardiogram or cardiac MRI for maximum sensitivity).\n\nA family history consistent with _de novo_ inheritance should not have any clinical signs or symptoms suggestive of cardiomyopathy in a 1<sup>st</sup> or 2<sup>nd</sup> degree relative, for example: \n\n1.  Sudden death under 60 years of age\n2.  Heart transplant\n3.  Implantable cardiac defibrillator (ICD) under 60 years of age\n4.  Features of cardiomyopathy (e.g., systolic dysfunction, hypertrophy, left ventricular enlargement in an individual without risk factors).\n5.  Other related/overlapping cardiomyopathies\n\nExamples of non-suspicious family history may include non-specific clinical features (e.g., palpitations, syncope, borderline/inconclusive echocardiogram findings, heart attack if age appropriate and suspected to result from coronary artery disease), but every attempt should be made to clarify features. \n\nGenerally, this criterion is only applicable in the ABSENCE of any other possible disease-causing variants.  If other pathogenic or likely pathogenic variants are present, consider decreasing points assigned or overall weight.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716033/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716033/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716030",
+          "@type": "CriteriaCode",
+          "description": "Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease.\nNote: May be used as stronger evidence with increasing segregation data.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716030/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716030/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716030/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Due to the genotypic and phenotypic heterogeneity of inherited cardiomyopathies, segregation thresholds have been conservatively set at **≥7** **segregations** (LOD score of 2.1) for **STRONG**.\n\nAlthough rare for inherited cardiomyopathies, when the phenotype/presentation of a variant within and across families is highly specific (e.g., early-onset severe RCM in all affected individuals), the following thresholds as proposed by Jarvik and Browning (2016)[<sup>11</sup>](#pmid_27236918) can be considered: \n\n*   STRONG evidence requires ≥5 segregations (LOD score of 1.5)\n\nOnly genotype positive/phenotype positive individuals are counted as segregations, which can include affected obligate carriers. Genotype positive/phenotype negative individuals are generally less informative for cardiomyopathy genes due to variable age at onset and reduced penetrance.\n\nPhenotypes should be clinically confirmed, whenever possible, and should not include individuals with a suspected diagnosis.  \n\nImportant considerations include:\n\n1.  Segregation of a variant within a single family or haplotype has the potential to represent linkage disequilibrium with another undetected variant.  If linkage disequilibrium is a concern, consider downgrading strength of segregation. \n2.  Use of segregation criteria should be carefully evaluated if variant frequency meets criteria for BS1.\n3.  Caution is needed when counting segregations in presence of other possible disease-causing variants, as both variants may be contributing to the phenotype. \n4.  Caution is needed when distantly related (≥3<sup>rd</sup> degree) affected individuals are connected by unknown or unaffected relatives (raises possibility of multiple causes of disease).",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716030/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Due to the genotypic and phenotypic heterogeneity of inherited cardiomyopathies, segregation thresholds have been conservatively set at **≥5** **segregations** (LOD score of 1.5) for **MODERATE**.\n\nAlthough rare for inherited cardiomyopathies, when the phenotype/presentation of a variant within and across families is highly specific (e.g., early-onset severe RCM in all affected individuals), the following thresholds as proposed by Jarvik and Browning (2016)[<sup>11</sup>](#pmid_27236918) can be considered: \n\n*   MODERATE evidence requires ≥4 segregations (LOD score of 1.2)\n\nOnly genotype positive/phenotype positive individuals are counted as segregations, which can include affected obligate carriers. Genotype positive/phenotype negative individuals are generally less informative for cardiomyopathy genes due to variable age at onset and reduced penetrance.\n\nPhenotypes should be clinically confirmed, whenever possible, and should not include individuals with a suspected diagnosis.  \n\nImportant considerations include:\n\n1.  Segregation of a variant within a single family or haplotype has the potential to represent linkage disequilibrium with another undetected variant.  If linkage disequilibrium is a concern, consider downgrading strength of segregation. \n2.  Use of segregation criteria should be carefully evaluated if variant frequency meets criteria for BS1 (see below).\n3.  Caution is needed when counting segregations in presence of other possible disease-causing variants, as both variants may be contributing to the phenotype. \n4.  Caution is needed when distantly related (≥3<sup>rd</sup> degree) affected individuals are connected by unknown or unaffected relatives (raises possibility of multiple causes of disease).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716030/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Due to the genotypic and phenotypic heterogeneity of inherited cardiomyopathies, segregation thresholds have been conservatively set at **≥3** **segregations** (LOD score of 0.9) for **SUPPORTING**. The thresholds as proposed by Jarvik and Browning (2016)[<sup>11</sup>](#pmid_27236918) are the same at ≥3 segregations (LOD score of 0.9) for supporting.\n\nOnly genotype positive/phenotype positive individuals are counted as segregations, which can include affected obligate carriers. Genotype positive/phenotype negative individuals are generally less informative for cardiomyopathy genes due to variable age at onset and reduced penetrance.\n\nPhenotypes should be clinically confirmed, whenever possible, and should not include individuals with a suspected diagnosis.  \n\nImportant considerations include:\n\n1.  Segregation of a variant within a single family or haplotype has the potential to represent linkage disequilibrium with another undetected variant.  If linkage disequilibrium is a concern, consider downgrading strength of segregation. \n2.  Use of segregation criteria should be carefully evaluated if variant frequency meets criteria for BS1 (see below).\n3.  Caution is needed when counting segregations in presence of other possible disease-causing variants, as both variants may be contributing to the phenotype. \n4.  Caution is needed when distantly related (≥3<sup>rd</sup> degree) affected individuals are connected by unknown or unaffected relatives (raises possibility of multiple causes of disease).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716012",
+          "@type": "CriteriaCode",
+          "description": "Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or observed in cis with a pathogenic variant in any inheritance pattern.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716012/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716012/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716012/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716012/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716012/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Other variants must be pathogenic as defined by these specifications.\n\nTesting of parents or other informative relatives is often required to determine _cis_/_trans_ status.\n\nIf a variant is seen in _trans_ (or as double heterozygous) with another pathogenic variant in ≥2 cases and the phenotype is not more severe than when either of the two variants are seen in isolation, this rule may be applied (i.e., high confidence this variant is NOT contributing to disease).\n\n*   \\<1% of cases of HCM have >1 pathogenic or likely pathogenic variant (0.6%; Alfares _et al._ 2015[<sup>17</sup>](#pmid_25611685)).\n\nThis rule cannot be applied when the variant has only been observed in _cis_ with a pathogenic variant as its significance in isolation is unknown in this scenario. \n\nCaution is needed if using this criterion as a primary piece of evidence for classifying a variant as likely benign/benign (i.e., only 2 SUPPORTING criteria are sufficient for a likely benign classification).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716011",
+          "@type": "CriteriaCode",
+          "description": "The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls.\nNote 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0 and the confidence interval around the estimate of RR or OR does not include 1.0. See manuscript for detailed guidance.\nNote 2: In instances of very rare variants where case-control studies may not reach statistical significance, the prior observation of the variant in multiple unrelated patients with the same phenotype, and its absence in controls, may be used as moderate level of evidence.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716011/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716011/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716011/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Currently few well-designed case-control studies have been performed for inherited cardiomyopathies.  Until such studies become available, comparative analyses can be undertaken using case data (e.g., internal and/or published cohorts) and control data from population-level cohorts (e.g., gnomAD). \n\nCohorts used in these analyses should meet the following criteria: \n\n1.  The cases have a clinical diagnosis of the specified disorder or related phenotype (e.g., all cases have HCM or another relevant phenotype\\*). \n    *   When assessing cases, it's important to consider how likely another potential cause of the phenotype has been excluded.  This includes considering the presence of other variants in relevant genes (particularly those likely to be contributing to phenotype) and the extent of testing performed (i.e., single gene sequencing, panel testing, whole exome/genome sequencing).\n2.  The controls should not be derived from study populations that might be enriched for the specified disorder.\n3.  The denominator of the cohorts must be available (e.g., variant detected in 5 out of 3,500 cases and 1 out of 60,000 controls).\n4.  The cohorts do not include closely related individuals (i.e., family members are not included in the case counts).\n5.  The cohorts do not overlap with other cohorts being used in the analysis (i.e., cases are not being counted more than once).\n6.  The population diversity of the case and control cohorts are broadly similar.\n7.  Consider the size of the case cohort — larger cohorts are likely to provide more accurate estimates of variant frequency; therefore, it may be preferable to use data from the largest available case series for case-control analyses (e.g., Walsh _et al._ 2017[<sup>5</sup>](#pmid_27532257), [DECIPHER](https://www.deciphergenomics.org/gene/TPM1/patient-overlap/snvs)).\n\nTo account for limitations that arise when performing unmatched case-control analyses, the following stringent OR threshold is recommended:\n\n*   **STRONG** evidence requires the lower bound of the 95% confidence interval (CI) around the odds ratio (OR) estimate to be **≥20**\n\nA PS4 calculator is available at [www.cardiodb.org](https://www.cardiodb.org/ps4_calculator/ps4_calculator.html).\n\nIf multiple cohorts are available, the final ORs and associated CIs need to be harmonized across all cohorts to determine the final level (e.g., if 2 large cohorts have an OR of ~6 and a third small cohort has an OR of 11, application at a SUPPORTING level should be considered).  \n\n**\\*RELEVANT PHENOTYPES:**\n\n1.  Cases of HCM and RCM may be combined as they are considered part of the same disease spectrum. \n2.  For the eight genes covered by these guidelines, the combination of probands with other phenotypes should be reviewed by a clinical expert to determine if grouping is appropriate. \n3.  Additional considerations for LVNC and end-stage HCM: \n    *   Due to the current debate about whether isolated LVNC represents a true disease entity or variation of typical cardiac morphology (Anderson _et al._ 2017[<sup>6</sup>](#pmid_28395867); Oechslin _et al._ 2017[<sup>7</sup>](#pmid_28545618); Hershberger _et al._ 2017[<sup>8</sup>](#pmid_29212902); Ross _et al._ 2020[<sup>9</sup>](#pmid_31143950)), individuals with isolated LVNC should NOT be added to proband or segregation counts (including individuals with isolated LVNC in a family with other cardiomyopathies).\n\nHCM and DCM have distinct mechanisms of disease and therefore pathogenetic variants are not anticipated to cause both primary phenotypes. While occurrence in both phenotypes may initially be considered as evidence against pathogenicity, end-stage HCM can present similarly to DCM. Careful consideration is needed before including DCM or related phenotypes in case or segregation data for primarily HCM variants.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716011/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Currently few well-designed case-control studies have been performed for inherited cardiomyopathies.  Until such studies become available, comparative analyses can be undertaken using case data (e.g., internal and/or published cohorts) and control data from population-level cohorts (e.g., gnomAD). \n\nCohorts used in these analyses should meet the following criteria: \n\n1.  The cases have a clinical diagnosis of the specified disorder or related phenotype (e.g., all cases have HCM or another relevant phenotype\\*). \n    *   When assessing cases, it's important to consider how likely another potential cause of the phenotype has been excluded.  This includes considering the presence of other variants in relevant genes (particularly those likely to be contributing to phenotype) and the extent of testing performed (i.e., single gene sequencing, panel testing, whole exome/genome sequencing).\n2.  The controls should not be derived from study populations that might be enriched for the specified disorder.\n3.  The denominator of the cohorts must be available (e.g., variant detected in 5 out of 3,500 cases and 1 out of 60,000 controls).\n4.  The cohorts do not include closely related individuals (i.e., family members are not included in the case counts).\n5.  The cohorts do not overlap with other cohorts being used in the analysis (i.e., cases are not being counted more than once).\n6.  The population diversity of the case and control cohorts are broadly similar.\n7.  Consider the size of the case cohort — larger cohorts are likely to provide more accurate estimates of variant frequency; therefore, it may be preferable to use data from the largest available case series for case-control analyses (e.g., Walsh _et al._ 2017[<sup>5</sup>](#pmid_27532257), [DECIPHER](https://www.deciphergenomics.org/gene/TPM1/patient-overlap/snvs)).\n\nTo account for limitations that arise when performing unmatched case-control analyses, the following stringent OR threshold is recommended:\n\n*   **MODERATE** evidence requires the lower bound of the 95% CI around the OR to be **≥10**\n\nA PS4 calculator is available at [www.cardiodb.org](https://www.cardiodb.org/ps4_calculator/ps4_calculator.html).\n\nIf multiple cohorts are available, the final ORs and associated CIs need to be harmonized across all cohorts to determine the final level (e.g., if 2 large cohorts have an OR of ~6 and a third small cohort has an OR of 11, application at a SUPPORTING level should be considered).  \n\n**\\*RELEVANT PHENOTYPES:**\n\n1.  Cases of HCM and RCM may be combined as they are considered part of the same disease spectrum. \n2.  For the eight genes covered by these guidelines, the combination of probands with other phenotypes should be reviewed by a clinical expert to determine if grouping is appropriate. \n3.  Additional considerations for LVNC and end-stage HCM: \n    *   Due to the current debate about whether isolated LVNC represents a true disease entity or variation of typical cardiac morphology (Anderson _et al._ 2017[<sup>6</sup>](#pmid_28395867); Oechslin _et al._ 2017[<sup>7</sup>](#pmid_28545618); Hershberger _et al._ 2017[<sup>8</sup>](#pmid_29212902); Ross _et al._ 2020[<sup>9</sup>](#pmid_31143950)), individuals with isolated LVNC should NOT be added to proband or segregation counts (including individuals with isolated LVNC in a family with other cardiomyopathies).\n\nHCM and DCM have distinct mechanisms of disease and therefore pathogenetic variants are not anticipated to cause both primary phenotypes. While occurrence in both phenotypes may initially be considered as evidence against pathogenicity, end-stage HCM can present similarly to DCM. Careful consideration is needed before including DCM or related phenotypes in case or segregation data for primarily HCM variants.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716011/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Currently few well-designed case-control studies have been performed for inherited cardiomyopathies.  Until such studies become available, comparative analyses can be undertaken using case data (e.g., internal and/or published cohorts) and control data from population-level cohorts (e.g., gnomAD). \n\nCohorts used in these analyses should meet the following criteria: \n\n1.  The cases have a clinical diagnosis of the specified disorder or related phenotype (e.g., all cases have HCM or another relevant phenotype\\*). \n    *   When assessing cases, it's important to consider how likely another potential cause of the phenotype has been excluded.  This includes considering the presence of other variants in relevant genes (particularly those likely to be contributing to phenotype) and the extent of testing performed (i.e., single gene sequencing, panel testing, whole exome/genome sequencing).\n2.  The controls should not be derived from study populations that might be enriched for the specified disorder.\n3.  The denominator of the cohorts must be available (e.g., variant detected in 5 out of 3,500 cases and 1 out of 60,000 controls).\n4.  The cohorts do not include closely related individuals (i.e., family members are not included in the case counts).\n5.  The cohorts do not overlap with other cohorts being used in the analysis (i.e., cases are not being counted more than once).\n6.  The population diversity of the case and control cohorts are broadly similar.\n7.  Consider the size of the case cohort — larger cohorts are likely to provide more accurate estimates of variant frequency; therefore, it may be preferable to use data from the largest available case series for case-control analyses (e.g., Walsh _et al._ 2017[<sup>5</sup>](#pmid_27532257), [DECIPHER](https://www.deciphergenomics.org/gene/TPM1/patient-overlap/snvs)).\n\nTo account for limitations that arise when performing unmatched case-control analyses, the following stringent OR threshold is recommended:\n\n*   **SUPPORTING** evidence requires the lower bound of the 95% CI around the OR to be **≥5**\n\nA PS4 calculator is available at [www.cardiodb.org](https://www.cardiodb.org/ps4_calculator/ps4_calculator.html).\n\nIf multiple cohorts are available, the final ORs and associated CIs need to be harmonized across all cohorts to determine the final level (e.g., if 2 large cohorts have an OR of ~6 and a third small cohort has an OR of 11, application at a SUPPORTING level should be considered).  \n\n**\\*RELEVANT PHENOTYPES:**\n\n1.  Cases of HCM and RCM may be combined as they are considered part of the same disease spectrum. \n2.  For the eight genes covered by these guidelines, the combination of probands with other phenotypes should be reviewed by a clinical expert to determine if grouping is appropriate. \n3.  Additional considerations for LVNC and end-stage HCM: \n    *   Due to the current debate about whether isolated LVNC represents a true disease entity or variation of typical cardiac morphology (Anderson _et al._ 2017[<sup>6</sup>](#pmid_28395867); Oechslin _et al._ 2017[<sup>7</sup>](#pmid_28545618); Hershberger _et al._ 2017[<sup>8</sup>](#pmid_29212902); Ross _et al._ 2020[<sup>9</sup>](#pmid_31143950)), individuals with isolated LVNC should NOT be added to proband or segregation counts (including individuals with isolated LVNC in a family with other cardiomyopathies).\n\nHCM and DCM have distinct mechanisms of disease and therefore pathogenetic variants are not anticipated to cause both primary phenotypes. While occurrence in both phenotypes may initially be considered as evidence against pathogenicity, end-stage HCM can present similarly to DCM. Careful consideration is needed before including DCM or related phenotypes in case or segregation data for primarily HCM variants.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716032",
+          "@type": "CriteriaCode",
+          "description": "Patient’s phenotype or family history is highly specific for a disease with a single genetic etiology.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716032/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716032/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716032/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716032/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716032/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716027",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies supportive of a damaging effect on the gene or gene product.\nNote: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are considered the most well-established.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716027/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716027/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716027/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "**In vitro splicing assays (e.g., RNA studies)**\n\n_In vitro_ splicing assays may be considered as **STRONG** evidence, providing the following criteria are met.\n\n*   Prior knowledge of predominant transcripts in cardiac tissue\n\nAnalysis undertaken using RNA extracted from cardiac tissue from the individual with the variant\n\nAnalysis undertaken using RNA extracted from whole blood providing the relevant transcripts (isoforms) are expressed in blood and are at sufficient levels to assess splice disruption.\n\nAssay shows a clear, reproducible and convincing effect on splicing (i.e. a distinct splice product, present at a level comparable to the splice product from the wild-type allele), which is not observed in controls\n\n*   Confirmation of abnormal splice product by Sanger sequencing\n\n**NOTE:** Mini-gene assay in non-patient derived cell lines are NOT considered to provide STRONG evidence.\n\n**NOTE:**  Whether to activate this rule needs to be reconciled with the variant spectrum and disease mechanism for the gene at hand (i.e., consider whether the effect is likely to lead to LOF or an in-frame alteration and whether this type of effect is expected to be disease causing) (Abou Tayoun _et al._ 2018[<sup>3</sup>](#pmid_30192042)).",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716027/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "**In vivo models (e.g., variant knock-in animal models)**\n\nMammalian variant-specific knock-in animal models that produce a phenotype consistent with the clinical phenotype in humans (e.g., structural and/or functional cardiac abnormalities, premature death, arrhythmia) may be considered as **MODERATE** evidence\n\n**NOTE:** The following assays/models do NOT meet criteria\n\n1.  Assays that are known to be associated with non-specific cardiac phenotypes (e.g., morpholino-induced pericardial edema in zebrafish)\n2.  In vivo evidence that is not variant specific, such as whole gene alterations (i.e., cDNA or whole gene transgenic mice and whole or partial gene knock-out mice)",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716027/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "_**In vitro**_ **assays (e.g., biochemical assays of myofilament function, motility assays, human iPSC-CM)**\n\nWhile some _in vitro_ assays may provide evidence that a variant in a cardiomyopathy gene has an effect on protein and/or myofilament function, at present, there are no validated “gold-standard” assays that are considered to reliably predict the clinical phenotype.\n\nAs such, in the cardiomyopathy genes listed in these guidelines, data from individual _in vitro_ studies are unlikely to meet the criteria required to assign this rule at more than SUPPORTING level.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716024",
+          "@type": "CriteriaCode",
+          "description": "Assumed de novo, but without confirmation of paternity and maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716024/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716024/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716024/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716024/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Refer to SVI guidance on number/combination of cases required based on phenotype specificity[<sup>2</sup>](#url_c73e109e-b916-5a72-b7b1-1762446f3c11).\n\nFor most cardiomyopathies, it is recommended to default to “phenotype consistent with gene but not highly specific”. Clinical judgment is required for shifting to a higher or lower phenotypic consistency. \n\nSee PS2 for additional considerations.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716024/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM6"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716023",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716023/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Allele frequency is **≥0.001** based on the **filtering allele frequency (FAF)** in **gnomAD** in the subpopulation with the highest frequency (popmax).\n\nThe values used to calculate the BA1 threshold were derived from studies in Northern European populations that have been relatively well-characterized with regards to disease prevalence and variant spectrum. These thresholds can be applied to any population where disease prevalence is considered comparable (1/300 or lower).\n\nThe threshold is applicable when assessing variants in the context of autosomal dominant cardiomyopathy. \n\ngnomAD is the preferred database for this calculation. If a subpopulation specific FAF other than the popmax is needed, this value can be calculated using the AlleleFrequencyApp on the [CardioDB website](https://cardiodb.org/allelefrequencyapp/).\n\n1.  Using the Inverse AF tab, enter in the population size and the number of alleles identified and it will calculate the FAF.  \n2.  Set confidence to 0.95 (95%).\n3.  If the FAF is ≥0.001, this rule can be applied.\n\nThe FAF by platform (e.g., exome vs. genome; v.2.1.1 vs. v.3.1.1) should be considered, the larger population is most likely to have the most accurate representation of “true” population allele frequency.\n\nCaution is needed when considering any population cohorts that are smaller than the smallest subpopulations within gnomAD v.2.1.1 (e.g., ~5000 individuals or ~10,000 alleles). Despite this conservative nature of this threshold and approach, in smaller cohorts, the observed allele frequency may less accurately reflect the true allele frequency. Traditionally, once a variant is classified as Benign, it is rarely re-evaluated and so the highest confidence is needed to establish that classification on an allele frequency alone.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716023/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716023/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716023/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716023/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BA1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716021",
+          "@type": "CriteriaCode",
+          "description": "Located in a mutational hot spot and/or critical and well-established functional domain (e.g. active site of an enzyme) without benign variation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716021/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716021/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716021/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716021/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716021/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716017",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene that has a low rate of benign missense variation and where missense variants are a common mechanism of disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716017/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716017/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716017/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716017/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/1768716017/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Application of this rule takes into consideration empirical data quantifying levels of rare missense variant enrichment in HCM referral cohorts compared to population-based cohorts (Walsh _et al._ 2019[<sup>12</sup>](#pmid_30696458)) rather than the missense constraint score in gnomAD. \n\nOn the basis of data from Walsh _et al._ 2019[<sup>12</sup>](#pmid_30696458), **PP2 is currently** **only applicable to** _**TPM1**_ **for HCM** (transcripts ENST00000403994 and NM\\_001018005.2)_._\n\nData from HCM case cohorts was used to derive these cluster regions. Therefore, this rule should NOT be applied when additional evidence for the variant supports that the variant causes a phenotype other than HCM (e.g., variant seen in multiple DCM cases).\n\nEnrichment was not observed for DCM in any genes.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP2"
+        }
+      ],
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=TPM1",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0005045",
+              "@type": "Disease",
+              "label": "MONDO:0005045",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "TPM1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

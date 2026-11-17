@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN131",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50066",
+    "@type": "Organization",
+    "label": "Kidney Cystic and Ciliopathy Disorders  Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50066"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1572290283"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen Kidney Cystic and Ciliopathy Disorders   Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for PKD2 Version 1.0",
+  "lastUpdated": "2023-05-10T14:33:01.757Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1572290296",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=PKD2",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0004691",
+              "@type": "Disease",
+              "label": "MONDO:0004691",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "PKD2"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

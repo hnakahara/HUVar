@@ -102,3 +102,98 @@ class SpliceExonOverrides:
         if exon is None:
             return None
         return self._table.get((gene, exon))
+
+
+# ---------------------------------------------------------------------------
+# Reading-frame effect of skipping the exon (ClinGen SVI PVS1 tree, splice arm)
+# ---------------------------------------------------------------------------
+
+from typing import NamedTuple, Optional
+
+
+class ExonSkip(NamedTuple):
+    """Coding consequence of skipping one exon of a MANE transcript."""
+    exon: int                 # skipped exon (VEP numbering, all exons counted)
+    n_exons: int
+    coding_nt: int            # coding bases in the skipped exon
+    in_frame: bool            # coding_nt divisible by 3
+    pct_protein: float        # coding_nt / CDS length (0-1)
+    has_start: bool           # exon holds the initiation codon
+    has_stop: bool            # exon holds the stop codon
+    penultimate: bool         # exon is the last-but-one exon of the transcript
+    pct_from_exon: float      # CDS fraction from this exon's first coding base to the stop
+
+
+def exon_skip_effect(consequence: ConsequenceType, intron: str | None,
+                     transcript_id: str | None) -> Optional[ExonSkip]:
+    """Frame / size of the exon a canonical +/-1,2 variant is predicted to skip,
+    computed from the MANE exon structure (``resources/shared/mane_exons.tsv``,
+    same numbering as VEP). None when the transcript structure or the intron
+    number is unavailable."""
+    exon = skipped_exon(consequence, intron)
+    if exon is None:
+        return None
+    from acmg_classifier.pvs1.nmd_predictor import transcript_structure
+    st = transcript_structure(transcript_id)
+    if st is None or not (1 <= exon <= st.n_exons):
+        return None
+    start = sum(st.exon_lengths[:exon - 1]) + 1
+    end = start + st.exon_lengths[exon - 1] - 1
+    lo, hi = max(start, st.cds_start), min(end, st.cds_end)
+    coding = hi - lo + 1 if hi >= lo else 0
+    cds_len = st.cds_end - st.cds_start + 1
+    return ExonSkip(
+        exon=exon, n_exons=st.n_exons, coding_nt=coding,
+        in_frame=coding > 0 and coding % 3 == 0,
+        pct_protein=coding / cds_len if cds_len else 0.0,
+        has_start=start <= st.cds_start <= end,
+        has_stop=start <= st.cds_end <= end,
+        penultimate=exon == st.n_exons - 1,
+        pct_from_exon=((st.cds_end - lo + 1) / cds_len) if coding and cds_len else 0.0,
+    )
+
+
+def _ten_pct(frac: float) -> CriterionStrength:
+    return CriterionStrength.STRONG if frac > 0.10 else CriterionStrength.MODERATE
+
+
+def svi_exon_skip_strength(eff: Optional[ExonSkip],
+                           inframe_strength: CriterionStrength | None = None,
+                           ) -> Optional[tuple[CriterionStrength, str]]:
+    """PVS1 strength for a canonical +/-1,2 splice variant by the SVI tree's
+    exon-skipping branch (Abou Tayoun et al. 2018, "role of region unknown"):
+
+    * in-frame skip -> PVS1_Strong if the exon encodes >10% of the protein, else
+      PVS1_Moderate (``inframe_strength`` replaces this when a VCEP fixes it);
+    * skip of the exon holding the stop codon, or out-of-frame skip of the
+      penultimate exon (frameshift that reaches the last exon, so NMD is not
+      expected) -> 10% rule on the C-terminal part from the skipped exon.
+
+    Returns None — keep the caller's default (frameshift predicted to undergo
+    NMD -> PVS1) — for out-of-frame skips of other exons, for exons holding the
+    initiation codon (start-loss, a different branch) and when the exon
+    structure is unknown."""
+    if eff is None or eff.coding_nt == 0 or eff.has_start:
+        return None
+    pct = f"{eff.pct_protein * 100:.1f}%"
+    if eff.has_stop:
+        frac = eff.pct_from_exon
+        s = _ten_pct(frac)
+        return s, (f"skips exon {eff.exon}/{eff.n_exons} holding the stop codon "
+                   f"({frac * 100:.1f}% of the protein altered, NMD not expected; "
+                   "10% rule)")
+    if eff.in_frame:
+        if inframe_strength is not None:
+            return inframe_strength, (f"in-frame skip of exon {eff.exon}/{eff.n_exons} "
+                                      f"({eff.coding_nt} nt, {pct} of the protein)")
+        s = _ten_pct(eff.pct_protein)
+        return s, (f"in-frame skip of exon {eff.exon}/{eff.n_exons} ({eff.coding_nt} nt, "
+                   f"{pct} of the protein; role of region unknown, 10% rule)")
+    if eff.penultimate:
+        frac = eff.pct_from_exon
+        s = _ten_pct(frac)
+        return s, (f"out-of-frame skip of penultimate exon {eff.exon}/{eff.n_exons}: "
+                   f"frameshift into the last exon, NMD not expected "
+                   f"({frac * 100:.1f}% of the protein altered; 10% rule)")
+    return None
+

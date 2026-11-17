@@ -18,6 +18,12 @@ class BA1Evaluator(CriterionEvaluator):
     def __init__(self, cfg: Config) -> None:
         self._cfg = cfg
         self._thresholds = DiseaseThresholds(cfg.disease_prevalence_tsv)
+        # gnomAD coverage for the ENIGMA BRCA1/2 read-depth condition; optional.
+        from acmg_classifier.local_db.coverage_db import CoverageDB
+        try:
+            self._coverage = CoverageDB(getattr(cfg, "gnomad_coverage_db", None))
+        except Exception:  # noqa: BLE001 - no coverage DB -> gate skipped
+            self._coverage = None
 
     def evaluate(
         self,
@@ -115,6 +121,16 @@ class BA1Evaluator(CriterionEvaluator):
         # BA1 cutoffs can be ~1e-3/1e-5, which ".4f" rounds misleadingly. The
         # comparison uses full float precision regardless of this display.
         if faf >= threshold:
+            from acmg_classifier.criteria.allele_frequency import min_alleles_block
+            few = min_alleles_block(gene, gd)
+            if not few:
+                from acmg_classifier.criteria.allele_frequency import depth_block
+                few = depth_block(self._coverage, gene, variant)
+            if few:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BA1,
+                    f"{metric}={faf:.3g} >= BA1 threshold {threshold:.3g} but {few}",
+                )
             return CriteriaResult.met(
                 ACMGCriterion.BA1,
                 evidence=f"{metric}={faf:.3g} >= BA1 threshold {threshold:.3g} for {gene or 'default'}",

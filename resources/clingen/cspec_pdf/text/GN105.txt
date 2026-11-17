@@ -1,0 +1,727 @@
+Criteria Specification
+ClinGen Peroxisomal Disorders Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for ABCD1 Version 1.0
+Affiliation: Peroxisomal Disorders VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : ABCD1 specifications v 1.0
+Version : 1.0
+Released : 4/6/2026
+DOI : 10.5281/zenodo.21434373
+
+Contributors & Keywords
+Research Group: Peroxisomal Disorders VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+ABCD1 NM_000033.4 X-linked inheritance
+adrenoleukodystrophy
+
+Rules for ABCD1
+Gene: ABCD1 (HGNC:61) 
+Transcripts:
+NM_000033.4
+
+HGNC Name: ATP binding cassette subfamily D
+member 1
+Disease:
+adrenoleukodystrophy
+(MONDO:0018544)  Mode
+of Inheritance: X-linked
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+The Perox VCEP will utilize SVI’s PVS1 recommendation for determining applicable PVS1
+strength level (Abou Tayoun et al 2018; PMID: 30192042). Refer to the modified PVS1
+decision tree attached.
+PVS1 RNA is applicable for splicing defects demonstrated by RNA studies on patient
+mRNA or when a variant expressed in human/mammalian host cells. Strength level may
+be decided based on the assay as well as the abundance of normal splice products as
+recommended by Walker et al, 2023.
+Exons 1 and 9 are in-frame. Exon skipping consequences for splice site variants are listed
+in the attached table.
+Default
+8
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Splicing abnormalities (using VCEP-specified prediction algorithms or evidence from
+literature) should be excluded for all missense variants
+PS1 will be applied at the strong level for 1 previously established pathogenic
+variant
+PS1 can also be applied at the strong level for 1 previously established pathogenic
+canonical splice site variant (at the same position)
+The other variant(s) used for evidence should also have been curated using Perox
+VCEP rule specifications and reach a pathogenic/likely pathogenic classification
+without using PS1.
+Default
+Point
+Value:
+
+4
+
+Modification Strength
+Type:
+
+Moderate
+Splicing abnormalities (using VCEP-specified prediction algorithms or evidence from
+literature) should be excluded for all missense variants
+PS1 will be applied at the moderate level for 1 previously established likely
+pathogenic variant
+PS1 can also be applied at the moderate level for 1 previously established likely
+pathogenic canonical splice site variant (at the same position)
+The other variant(s) used for evidence should also have been curated using Perox
+VCEP rule specifications and reach a pathogenic/likely pathogenic classification
+without using PS1.
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate
+motherhood, errors in embryo transfer, etc. can contribute to non-maternity.
+Confirmed maternity and paternity by WES Trio or paternity and maternity testing
+for affected females. Confirmation of maternity is sufficient in the case of affected
+males.
+Use SVI-recommended point system at 2nd tier, “phenotype consistent with gene but
+not highly specific”, for probands meeting PP4 and at the 1st tier, “phenotype highly
+specific for gene”, for probands meeting PP4_Moderate
+See attached table.
+Default
+Point
+Value:
+
+4
+
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Supporting
+Applicable for beta-oxidation activity assays OR immunofluorescence assays showing
+absence or mislocalization of protein OR immunoblotting assay showing absence or
+reduced protein levels.
+Note: for variants meeting PS1, functional studies on a different variant (different
+nucleotide change, same amino acid change) may be applicable to the variant being
+curated. PS3_supporting may be used in addition to PS1.
+There are not many benign variants to curate for functional evidence at this time. We
+would favor using PS3_moderate in the event that more variants with functional
+evidence are classified as benign by the Peroxisomal Disorders VCEP.
+Default
+1
+Point
+Value:
+Modification None
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Very Strong
+
+Applicable when multiple unrelated probands are reported with the same variant. All
+probands counted should meet at least PP4_supporting phenotype criteria. When
+multiple unrelated individuals are reported with the variant, use the proband that
+would meet the highest strength level for PP4 and count the remaining ones (at least
+meeting PP4_supporting strength) towards PS4.
+PS4_Very Strong applicable for ≥ 16 probands
+Note: We caution against applying PS4 for >4 cases (meeting phenotype criteria D/E
+and F) with the same variant identified solely on newborn screening.
+Default
+8
+Point
+Value:
+Modification Strength
+Type:
+
+Strong
+Applicable when multiple unrelated probands are reported with the same variant. All
+probands counted should meet at least PP4_supporting phenotype criteria. When
+multiple unrelated individuals are reported with the variant, use the proband that
+would meet the highest strength level for PP4 and count the remaining ones (at least
+meeting PP4_supporting strength) towards PS4.
+PS4 applicable for 4 -15 probands
+Note: We caution against applying PS4 for >4 cases (meeting phenotype criteria D/E
+and F) with the same variant identified solely on newborn screening.
+Default
+4
+Point
+Value:
+Modification Strength
+Type:
+
+Moderate
+Applicable when multiple unrelated probands are reported with the same variant. All
+probands counted should meet at least PP4_supporting phenotype criteria. When
+multiple unrelated individuals are reported with the variant, use the proband that
+would meet the highest strength level for PP4 and count the remaining ones (at least
+meeting PP4_supporting strength) towards PS4.
+PS4_Moderate for 2-3 probands
+Note: We caution against applying PS4 for >4 cases (meeting phenotype criteria D/E
+and F) with the same variant identified solely on newborn screening.
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+Applicable when multiple unrelated probands are reported with the same variant. All
+probands counted should meet at least PP4_supporting phenotype criteria. When
+multiple unrelated individuals are reported with the variant, use the proband that
+would meet the highest strength level for PP4 and count the remaining ones (at least
+meeting PP4_supporting strength) towards PS4.
+PS4_Supporting for 1 proband
+Note: We caution against applying PS4 for >4 cases (meeting phenotype criteria D/E
+and F) with the same variant identified solely on newborn screening.
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+PM1 applied at moderate strength for variants within the Walker A (aa 507-520;
+c.1519-c.1560) and B (aa 617-641; c.1849-c.1923) domains
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+
+PM2_Supporting can be applied if the variant is absent in hemizygotes AND has a
+maximum allele frequency of <0.00017% (0.0000017) in heterozygotes in the latest
+version of gnomAD. Use the highest population MAF from a non-bottleneck
+population from the latest version of gnomAD.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Default
+2
+Point
+Value:
+Modification No change
+Type:
+
+PM5
+Original ACMG
+Summary
+
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before. Example: Arg156His is pathogenic;
+now you observe Arg156Cys. Caveat: Beware of changes that impact splicing rather than
+at the amino acid/protein level.
+Splicing abnormalities (using VCEP-specified prediction algorithms or evidence from
+literature) should be excluded for all missense variants
+PM5 will be applied at moderate strength for 1 pathogenic variant with no benign
+variation at the residue
+The other variant(s) used for evidence should also have been curated using the
+Perox VCEP rule specifications and must reach a pathogenic/likely pathogenic
+classification without PM5
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+PM5_Supporting can be applied for 1 likely pathogenic variant with no benign
+variation at the residue.
+The other variant(s) used for evidence should also have been curated using the
+Perox VCEP rule specifications and must reach a pathogenic/likely pathogenic
+classification without PM5
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Moderate
+
+Assumed de novo, but without confirmation of paternity and maternity.
+See PS2 specification; Use SVI-recommended point system at 2nd tier for probands
+meeting PP4 and at the 1st tier for probands meeting PP4_Moderate
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Segregations can be counted across families. All individuals counted for segregation
+must be genotype positive AND phenotype positive. In the absence of a pedigree
+available to determine relationships, segregations among related individuals can be
+counted conservatively (assuming closest relationships).
+PP1_Strong: 3 affected segregations (in addition to proband)
+Default
+4
+Point
+Value:
+Modification Strength
+Type:
+
+Moderate
+Segregations can be counted across families. All individuals counted for segregation
+must be genotype positive AND phenotype positive. In the absence of a pedigree
+available to determine relationships, segregations among related individuals can be
+counted conservatively (assuming closest relationships).
+PP1_Moderate: 2 affected segregation (in addition to proband)
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+
+Segregations can be counted across families. All individuals counted for segregation
+must be genotype positive AND phenotype positive. In the absence of a pedigree
+available to determine relationships, segregations among related individuals can be
+counted conservatively (assuming closest relationships).
+PP1_supporting: 1 affected segregation (in addition to proband)
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable. ABCD1 is not constrained for missense (Z score: 1.87)
+variants.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+For missense variants, use REVEL with a score of >0.85
+For variants with a splicing impact (loss of canonical splice sites AND creation of
+cryptic sites), use SpliceAI with a score of ≥ 0.5
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP4
+
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Moderate
+Use PP4 table to determine the appropriate PP4 strength level
+When multiple unrelated individuals are reported with the variant, use the proband
+that would meet the highest strength level for PP4 and count the remaining ones (at
+least meeting PP4_supporting strength) toward PS4.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Use PP4 table to determine the appropriate PP4 strength level
+When multiple unrelated individuals are reported with the variant, use the proband
+that would meet the highest strength level for PP4 and count the remaining ones (at
+least meeting PP4_supporting strength) toward PS4.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+Original ACMG
+Summary
+
+PubMed : 29543229 
+
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Use a Total Grpmax filtering allele frequency (FAF) cutoff of ≥0.017% (0.00017) from the
+most resent version of gnomAD. This frequency was calculated using the Whiffen-Ware
+calculator with a prevalence estimated at 1 in 5000 (actual prevalence in hemizygotes
+and heterozygotes is reported to be 1 in 16800, GeneReviews, Bezman et al 2001;
+however, a more conservative BA1 was designated based on a value 1 order of
+magnitude higher than the BS1 cut-off), penetrance at 60% (based on penetrance in
+heterozygotes by expert judgment, maximum allelic contribution and maximum genetic
+contribution at 100%).
+Default
+Not Applicable
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Use a Total Grpmax filtering allele frequency (FAF) cutoff of ≥0.0017% (0.000017) from
+the most recent version of gnomAD. This frequency was calculated using the WhiffenWare calculator with a prevalence estimated at 1 in 50000 (upper limit of prevalence
+range in hemizygotes; GeneReviews), penetrance at 60% (based on penetrance in
+heterozygotes by expert judgment, maximum allelic contribution and maximum genetic
+contribution at 100%).
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+This code is applicable when >10 hemizygous healthy adult (>40y) males are
+observed
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Supporting
+BS3_Supporting is applicable for beta-oxidation activity assay in ALD fibroblasts
+transfected with variant, showing >57% activity of WT (PMID: 34946879)
+Default
+-1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+
+Lack of segregation in affected members of a family. Caveat: The presence of
+phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation
+among affected individuals. Also, families may have more than one pathogenic variant
+contributing to an autosomal dominant disorder, further confounding an apparent lack of
+segregation.
+Use as is when there is a lack of segregation in 1 affected male in the family in
+addition to the proband
+Default
+-4
+Point
+Value:
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable. Missense variants are also known to cause disease.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+Use when variant is found to be is cis with another pathogenic variant
+The “in-cis” variant should also be curated by the Perox VCEP to apply rule.
+Default
+-1
+Point
+Value:
+Modification None
+Type:
+
+BP3
+
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+● Not applicable. Repetitive regions without a known function are not
+well-described in ABCD1.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+For missense variants, use REVEL with a score of ≤ 0.5 AND SpliceAI with a score <
+0.1
+For variants with splicing impact (exonic and intronic variants, not applicable for UTR
+variants), use SpliceAI with a score < 0.1
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+● Not applicable. Adrenoleukodystrophy has variable age of onset and
+there is variable expressivity in affected individuals.
+
+BP6
+Original ACMG
+Summary
+
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Can be applied to synonymous variants meeting BP4 criteria OR intronic variants meeting
+BP4 criteria and are beyond the Walker et. al. (PMID 37352859) defined splice region of
++7/-21
+Conservation does not have to be considered for this code to apply
+Default
+-1
+Point
+Value:
+Modification None
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+PVS1 tables: 
+ABCD1_PVS1_decisiontree_090225: 
+ABCD1 rules for combining criteria July 2023: 
+ABCD1 functional assays_090225: 
+ABCD1 PP4 phenotype table: 
+PS2 table: 
+
+

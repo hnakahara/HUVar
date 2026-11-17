@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN107",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50078",
+    "@type": "Organization",
+    "label": "GRIN Disorders  Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50078"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1553377025"
+  },
+  "cspecStatus": "Pilot Rules Submitted",
+  "currentStatus": "Pilot Rules Submitted",
+  "label": "ClinGen GRIN Disorders   Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for GRIN1 Version 1.0",
+  "lastUpdated": "2026-11-11T08:06:02.011Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1553377038",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=GRIN1",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0100038",
+              "@type": "Disease",
+              "label": "MONDO:0100038",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "GRIN1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

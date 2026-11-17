@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN236",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50132",
+    "@type": "Organization",
+    "label": "Ocular Anterior Segment Disorder Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50132"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1120413828"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Ocular Anterior Segment Disorder  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for FOXC1 Version 1.0",
+  "lastUpdated": "2026-10-12T22:20:40.009Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1120413837",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=FOXC1",
+          "@type": "Gene",
+          "label": "FOXC1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

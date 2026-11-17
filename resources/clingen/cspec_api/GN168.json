@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN168",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50099",
+    "@type": "Organization",
+    "label": "InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50099"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1742141534"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen InSiGHT Hereditary Colorectal Cancer/Polyposis  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for MUTYH Version 1.0",
+  "lastUpdated": "2025-04-24T14:58:56.000Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1742141543",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=MUTYH",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0012041",
+              "@type": "Disease",
+              "label": "MONDO:0012041",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "MUTYH"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

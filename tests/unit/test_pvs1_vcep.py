@@ -127,10 +127,21 @@ class TestTruncationBands:
     def test_palb2_all_truncations_very_strong(self):
         assert evaluate_vcep_pvs1(_pc("PALB2", ConsequenceType.STOP_GAINED, 1183))[0] == S.VERY_STRONG
 
-    def test_palb2_ptc_after_tyr1183_strong(self):
-        pc = _pc("PALB2", ConsequenceType.STOP_GAINED, 1184)
-        pc.hgvs_p = "p.His1184Ter"
-        assert evaluate_vcep_pvs1(pc)[0] == S.STRONG
+    def test_palb2_nonsense_after_tyr1183_moderate(self):
+        # PVS1 guide v1.3: nonsense p.His1184X / p.Tyr1185X / p.Ser1186X -> Moderate.
+        for pos, hp in ((1184, "p.His1184Ter"), (1186, "p.Ser1186Ter")):
+            pc = _pc("PALB2", ConsequenceType.STOP_GAINED, pos)
+            pc.hgvs_p = hp
+            assert evaluate_vcep_pvs1(pc)[0] == S.MODERATE
+
+    def test_palb2_frameshift_not_impacting_tyr1183_supporting(self):
+        pc = _pc("PALB2", ConsequenceType.FRAMESHIFT, 1184)
+        pc.hgvs_p = "p.His1184GlnfsTer20"
+        s, ev = evaluate_vcep_pvs1(pc)
+        assert s == S.SUPPORTING and "does not alter codon 1183" in ev
+
+    def test_palb2_initiation_codon_pvs1(self):
+        assert evaluate_vcep_pvs1(_pc("PALB2", ConsequenceType.START_LOST))[0] == S.VERY_STRONG
 
     def test_palb2_frameshift_judged_by_new_stop(self):
         # VCEP pilot: c.3543del p.Phe1181LeufsTer10 (stop at 1190, C-terminal
@@ -338,11 +349,22 @@ class TestTruncationBands:
 
     def test_neb_bands(self):
         assert evaluate_vcep_pvs1(_pc("NEB", ConsequenceType.STOP_GAINED, 5000))[0] == S.VERY_STRONG
-        assert evaluate_vcep_pvs1(_pc("NEB", ConsequenceType.STOP_GAINED, 8500))[0] == S.MODERATE
+        # NMD escape lies in the critical C-terminal exons 161-183 -> PVS1.
+        assert evaluate_vcep_pvs1(_pc("NEB", ConsequenceType.STOP_GAINED, 8500))[0] == S.VERY_STRONG
 
     def test_f8_bands(self):
         assert evaluate_vcep_pvs1(_pc("F8", ConsequenceType.STOP_GAINED, 2000))[0] == S.VERY_STRONG
-        assert evaluate_vcep_pvs1(_pc("F8", ConsequenceType.FRAMESHIFT, 2300))[0] == S.STRONG
+        pc = _pc("F8", ConsequenceType.FRAMESHIFT, 2300)
+        pc.hgvs_p = "p.Leu2300ProfsTer5"
+        assert evaluate_vcep_pvs1(pc)[0] == S.STRONG
+        # Bands are keyed on the stop codon: a frameshift starting at codon 2270
+        # whose new stop is at 2290 escapes NMD -> Strong; one stopping at 2280
+        # -> PVS1.
+        pc = _pc("F8", ConsequenceType.FRAMESHIFT, 2270)
+        pc.hgvs_p = "p.Ser2270AlafsTer21"
+        assert evaluate_vcep_pvs1(pc)[0] == S.STRONG
+        pc.hgvs_p = "p.Ser2270AlafsTer11"
+        assert evaluate_vcep_pvs1(pc)[0] == S.VERY_STRONG
 
     def test_pten_bands(self):
         assert evaluate_vcep_pvs1(_pc("PTEN", ConsequenceType.STOP_GAINED, 375))[0] == S.VERY_STRONG

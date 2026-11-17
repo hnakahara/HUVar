@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN181",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50061",
+    "@type": "Organization",
+    "label": "Limb Girdle Muscular Dystrophy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50061"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1807909298"
+  },
+  "cspecStatus": "CSpec Deleted",
+  "currentStatus": "CSpec Deleted",
+  "label": "ClinGen Limb Girdle Muscular Dystrophy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for SGCA Version 1.0",
+  "lastUpdated": "2024-07-23T16:15:03.634Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1807909307",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=SGCA",
+          "@type": "Gene",
+          "label": "SGCA"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

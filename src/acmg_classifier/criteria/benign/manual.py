@@ -48,6 +48,12 @@ class ManualBenignEvaluator(CriterionEvaluator):
             if entries:
                 entry = entries[0]
                 results.append(CriteriaResult.met(criterion, entry.strength, entry.evidence))
+            elif criterion == ACMGCriterion.BS3 and (vt := self._functional.vcep_call(variant, annotation)):
+                # VCEP variant-level functional table (TP53 Table S3, OTC, GALT, PAH).
+                if vt.criterion == ACMGCriterion.BS3:
+                    results.append(CriteriaResult.met(criterion, vt.strength, vt.evidence))
+                else:
+                    results.append(CriteriaResult.not_met(criterion, vt.evidence))
             elif criterion == ACMGCriterion.BS3 and self._tp53_bs3(annotation) is not None:
                 # TP53: BS3 from the VCEP functional flowchart on systematic assay data.
                 results.append(self._tp53_bs3(annotation))

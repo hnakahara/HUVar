@@ -1,0 +1,1072 @@
+Criteria Specification
+ClinGen Urea Cycle Disorders Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for OTC Version 1.0
+Affiliation: Urea Cycle Disorders VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : Ornithine Carbamoyltransferase (OTC) specifications
+Version : 1.0
+Released : 2/27/2026
+DOI : 10.5281/zenodo.21434759
+
+Contributors & Keywords
+Research Group: Urea Cycle Disorders VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+OTC NM_000531.6 X-linked inheritance ornithine
+carbamoyltransferase deficiency
+
+Rules for OTC
+General Comments:
+
+The UCD VCEP will use the Bayesian point system as described by
+Tavtigan, 2020 [PMID:32720330]. See attached “Points System OTC” for
+points scale.
+
+Gene: OTC (HGNC:8512) 
+Transcripts:
+NM_000531.6
+
+HGNC Name: ornithine transcarbamylase
+Disease:
+ornithine
+carbamoyltransferase
+deficiency (MONDO:0010703)
+ Mode of Inheritance: Xlinked inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Specifications:
+
+c.955 is the boundary for nonsense mediated decay (NMD).
+Nonsense or frameshift variants including or upstream of c.955 are
+expected to undergo NMD and lead to loss of OTC.
+PVS1 is applicable to initiation codon variants and all canonical splice
+variants as suggested in Tayoun et al, 2018, as the c.1A>T sequence
+variant, resulting in p.M1L amino acid substitution, causes severe
+neonatal disease [PMID:16786505].
+Removal of one or more exons that are spliced in-frame (exons 6, 7,
+8, 9 and 10) will prevent folding of the protein lacking amino acids
+encoded by those exons [PMID: 19475717, 1627356, 23278509,
+16786505]
+PVS1 is applicable to frameshift and nonsense sequence variants
+upstream of c.1033 in OTC.
+The H11 alpha helix of OTC (encoded by amino acids 322-344) is
+critical for the correct folding of OTC protein [PMID:9852088].
+Several variants predicted to escape NMD, but alter the H11
+alpha helix are reported in males with severe, early onset,
+neonatal OTC deficiency; p.S321* [PMID:11793468], p.E328*
+[PMID:16786505], p.W332* [PMID:16786505, 8112735],
+p.Phe324GInfs*16 [PMID: 35211578] demonstrating the critical
+nature of this region of OTC. Given this, the UCD VCEP is setting
+the PVS1 boundary at the end of the H11 alpha helix at
+nucleotide c.1032.
+PVS1 is applicable for nonsense, frameshift, and splice
+variants affecting nucleotide c.1032 and upstream
+
+PVS1_RNA
+See attached PVS1 decision tree, adapted from Walker, et. al. 2023
+[PMID:37352859] for observed RNA splicing defects from functional
+splicing assays (minigene assay, RNA Sequencing, transcriptome analysis,
+etc) [PMID: 39418753]
+See PVS1_RNA on the “OTC VCEP PVS1 Decision tree” file
+
+Very Strong
+See “OTC VCEP PVS1 Decision tree” file
+Default
+Point
+
+8
+
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+PVS1_Strong is applicable for nonsense frameshift, and splice variants affecting
+nucleotide c.1033 and downstream
+Several variants downstream of c.1032 leading to frameshift, stop-loss, and
+protein extension are reported in affected individuals in the literature
+demonstrating the critical role of the C-terminal region of OTC for protein
+function [PMID:9143919, 39256843, 23278509, 34014557, 34014569]
+See “OTC VCEP PVS1 Decision tree” file
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+See “OTC VCEP PVS1 Decision tree” file
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+To avoid applying evidence for variants that potentially impact splicing,
+Specifications:SpliceAI score must be checked for both the reported variant and the
+variant under review. PS1 at any strength is only applicable if spliceAI for
+both variants is ≤0.2
+
+Strong
+
+Applicable when the previously reported variant is classified as Pathogenic using these
+OTC specifications.
+Default
+4
+Point
+Value:
+Modification No change
+Type:
+
+Moderate
+Applicable when the previously reported variant is classified as Likely Pathogenic using
+these OTC specifications.
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Specifications:
+
+Individuals meeting PP4_Moderate criteria can be counted as
+“Phenotype highly specific for gene”. Individuals meeting
+PP4_Supporting criteria can be counted as “Phenotype consistent
+with gene but not highly specific”.
+Confirmation of maternity only is sufficient to award full de novo
+points in male probands given X-linked inheritance pattern of OTC
+Cumulative score should be calculated across all de novo or
+suspected de novo occurrences for the variant under review including
+occurrences in the literature as well as individual clinical cases
+meeting respective PP4 criteria
+
+Very Strong
+Use ClinGen Sequence Variant Interpretation (SVI) Review Committee recommended
+scoring system, attached “PS2.PM6_Scoring”.
+Default
+Point
+Value:
+
+8
+
+Modification Disease-specific,Gene-specific
+Type:
+
+Strong
+Use SVI recommended scoring system, attached “PS2.PM6_Scoring”.
+Default
+4
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+Use SVI recommended scoring system, attached “PS2.PM6_Scoring”.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+Supporting
+Use SVI recommended scoring system, attached “PS2.PM6_Scoring”.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Specifications:
+
+Yeast growth assays in which the ARG3 open reading frame of a
+yeast strain is replaced with the OTC coding sequence, and site
+directed mutagenesis utilized to introduce variant of interest [PMID:
+37146589] can be used at PS3_Moderate or PS3_Supporting based on
+the % of growth compared to wildtype strains (see attached
+Functional Assay spreadsheet)
+
+PS3_Supporting is also applicable as recommended by Brnich et al.
+[PMID:31892348] for functional evidence from assays using nonpatient derived material. Enzyme activity must be measured in nonpatient derived cell lines, when site-directed mutagenesis has been
+used to introduce a variant of interest into plasmid
+PS3 evidence is not applicable for assays performed in patient
+derived cell lines or tissues. PP4 evidence should be utilized for
+enzyme activity assays performed in patient derived cells
+Per Walker, et.al, 2023 [PMID:37352859], evidence for
+observed impact on splicing as determined by splicing assays
+(RNASeq, minigene assay, etc) should use PVS1 (RNA)
+evidence; therefore PS3 is not applicable for these assays
+
+Strong
+PS3 at a strong level is not applicable for OTC enzyme activity assays. Please see
+PS3_Moderate and PS3_supporting below.
+Default
+4
+Point
+Value:
+Modification Gene-specific,None,Strength
+Type:
+
+Moderate
+Yeast growth assays -- applicable when growth of the ARG3 variant strain is ≤50% when
+compared to wildtype strains
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Yeast growth assays -- applicable when growth of the ARG3 variant strain is >50 and
+≤65% when compared to wildtype strains
+Enzyme activity in non-patient derived cell lines -- applicable if enzyme activity of the
+variant under review is <20% compared to wildtype.
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Specifications:
+
+To avoid double counting, an individual reported in the
+literature cannot be counted for both PP4 and PS4 evidence.
+PS4 criteria can be applied for the occurrence of any
+individual for which PP4 criteria was met, but was NOT used
+as evidence.
+Pathogenic variants in OTC are often private mutations at conserved
+amino acid residues. However, several recurrent variants have been
+reported in large cohort studies [see Supplemental Table 1;
+PMID:26059767]
+
+Very Strong
+8 additional male or female probands observed - must meet PP4 criteria and/or have
+documented hyperammonemia or metabolic decompensation under physiological stress
+to be counted
+Default
+8
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Strong
+4 additional male or female probands observed - must meet PP4 criteria and/or have
+documented hyperammonemia or metabolic decompensation under physiological stress
+to be counted
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+2 additional male or female probands observed - must meet PP4 criteria and/or have
+documented hyperammonemia or metabolic decompensation under physiological stress
+to be counted
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+One additional male or female proband observed - must meet PP4 criteria and/or have
+documented hyperammonemia or metabolic decompensation under physiological stress
+to be counted
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+Specifications:
+
+Rationale from Shi et. al. [PMID:9852088, 10813810, 11237854]
+which identified important structural regions for proper enzyme
+function including substrate binding sites and active sites of the
+enzyme. Based on this and information from UniProt (P00480) the
+following regions are designated to be important functional domains
+and variants at these amino acids have been reported in affected
+individuals in the literature [Supp. Table 1, PMID:26059767]
+If PM1 and PP3 are utilized for the same variant, the total
+strength of PP3 + PM1 can be used at a maximum strength
+level of Strong (+4 points).
+
+Moderate
+The following residues are considered critical within OTC:
+Carbamoylphosphate binding site – amino acids: Ser-90, Thr-91, Arg-92, Thr-93, His-117,
+Arg-141, His-168, Gln-171, Leu-304, and Arg-330
+
+Ornithine binding site – amino acids: Leu-163, Asn-198, Asn-199, Asp-263, Ser-267, Met
+268
+Catalytic site – amino acids: His-302, Cys-303, Leu-304
+Conserved amino acids important for OTC structure and function:
+Arg-277 - Affect Km for ornithine [PMID: 9175746, 9065786]
+Pro-305 - cis-proline that stabilizes the HCLP motif [PMID: 9852088]
+Gly-269 - part of the mobile SMG loop [PMID: 8544185]
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+PM2 will be used at a supporting level of evidence per SVI guidance
+Specifications:(https://www.clinicalgenome.org/site/assets/files/5182/pm2__svi_recommendation_-_approved_sept2020.pdf)
+
+Supporting
+Applicable for variants in OTC with Grpmax Filtering Allele Frequency <0.000015
+(0.0015%) AND ≤1 homo- or hemizygote in the most current version of gnomAD available
+at the time of curation.
+Rationale: The most common pathogenic variant in population databases is p.Arg40Cys,
+which is associated with late onset OTC Deficiency (PMID: 23209112, 7860066, 11260212,
+others) and present in 17 heterozygotes and 6 hemizygotes in gnomAD(v4.0.0) (Mino
+Allele frequency=0.001586% in European populations). Other commonly reported
+pathogenic variants (p.Arg277Trp, p.Arg141Gln, p.Arg141Ter) are rare or absent in
+population databases, therefore a threshold of 0.0015% is set for PM2_Supporting.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Not applicable, as OTC is an X-linked gene and biallelic females are
+sufficiently rare
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+PM4 is applicable as described for in-frame loss or gain of ≥1 amino acid but less than an
+entire exon. For in-frame deletions or insertions ≥1 exon, defer to PVS1 flowchart.
+Default
+2
+Point
+Value:
+Modification No change
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Caveat: Beware of changes that impact splicing rather than at the amino
+Specifications:acid/protein level.
+To avoid applying evidence for variants that potentially impact
+splicing, SpliceAI score must be checked for both the reported variant
+and the variant under review. PS1 at any strength is only applicable
+if spliceAI for both variants is ≤0.2
+
+Moderate
+PM5 is applicable as described if the variant under review occurs at the same amino acid
+as a variant classified Pathogenic using these OTC specifications.
+Default
+2
+Point
+Value:
+Modification No change
+Type:
+
+Supporting
+PM5 is applicable as described if the variant under review occurs at the same amino acid
+as a variant classified Likely Pathogenic using these OTC specifications.
+Default
+1
+Point
+Value:
+Modification No change
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Strong
+Use PS2/PM6 criteria described under PS2. Occurrences of de novo and presumed de
+novo are summed for a final PS2/PM6 evidence strength.
+Default
+4
+Point
+Value:
+Modification No change
+Type:
+
+Moderate
+Use PS2/PM6 criteria described under PS2. Occurrences of de novo and presumed de
+novo are summed for a final PS2/PM6 evidence strength.
+Default
+2
+Point
+Value:
+Modification No change
+Type:
+
+Supporting
+Use PS2/PM6 criteria described under PS2. Occurrences of de novo and presumed de
+novo are summed for a final PS2/PM6 evidence strength.
+Default
+1
+Point
+Value:
+Modification No change
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Specifications:
+
+For segregation evidence, consider unaffected, variant negative
+males as informative
+To be counted as an “affected” relative, the variant positive
+individual must minimally meet PP4_Supporting criteria or have
+documented hyperammonemia and/or metabolic decompensation
+under physiological stress
+
+Strong
+≥5 informative segregations
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+3-4 informative segregations
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+2 informative segregations
+
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable, gnomAD (05/2021) expected missense 131.9, observed
+missense 89, for Z=1.33 (o/e =0.67).
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+Missense variants - weight to apply for PP3 follows the specifications
+in Pejaver et.al 2022 (PMID:36413997). The UCD VCEP uses the
+REVEL score for OTC variants.
+Per Walker et.al. (PMID: 37352859) PP3_Supporting is applicable for
+splice region and intronic variants with spliceAI delta score ≥0.20
+For in-frame deletions and insertions, defer to PM4 criteria
+If PP3 and PM1 are utilized for the same variant, the total strength of
+PP3 + PM1 can be used at a maximum strength level of Strong (+4
+points).
+
+Strong
+Missense variants - REVEL score ≥0.932
+Default
+4
+Point
+Value:
+Modification None
+Type:
+
+Moderate
+Missense variants - REVEL score ≥0.773 and <0.932
+Default
+2
+Point
+Value:
+Modification None
+Type:
+
+Supporting
+Missense variants - REVEL score ≥0.644 and <0.773
+Splice region and intronic variants - spliceAI delta score ≥0.20
+Default
+1
+Point
+Value:
+Modification None
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+Specifications:
+
+Calculate proband phenotype points based on the attached
+“OTC_PP4_Points” table and use total points to award PP4 strength
+based on ranges below
+The same proband cannot be used for both PP4 and PS4 criteria. In
+the event of multiple probands reported / present with the same
+variant under review, use the proband with the highest phenotype
+points for PP4 evidence, and the remaining proband(s) minimally
+meeting PS4 required phenotype to score PS4
+
+Moderate
+Proband phenotype points total ≥1.5 points
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+
+Proband phenotype points total >0.5 to <1.5 points
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+Specifications:
+
+BA1 is equivalent to -8 points on the Bayesian scale.
+The incidence for OTC deficiency is as high as 1:14,000 or 0.007%,
+however other studies suggest a prevalence of 1:70,000
+(PMID:24006547). The most common pathogenic variant in
+population databases is p.Arg40Cys, which is associated with late
+onset OTC Deficiency (PMID: 23209112, 7860066, 11260212, others)
+and present in 17 heterozygotes and 6 hemizygote in
+gnomAD(v4.0.0) (Allele frequency=0.001546%, PopMax
+frequency=0.00436325% in European populations). Given these
+data, an allele frequency >0.01 (1.0%) or present in ≥ 10 (female)
+homozygotes or (male) hemizygotes in gnomAD is set as stand alone
+evidence of a Benign variant.
+Variants known to be associated with late onset OTC deficiency may
+be present in frequency higher than expected for a pathogenic
+variant in OTC and with homozygotes and/or hemizygotes in
+population databases. Known variants for which Benign population
+codes (BA1, BS1, BS2) are not applicable are included in the BA1
+exception list for OTC
+
+BA1 exception list for OTC:
+p.Arg40Cys
+
+p.Ala208Thr
+
+Stand Alone
+Allele frequency above 0.010000 (1.0%), Grpmax Filtering Allele Frequency OR ≥10
+(female) homozygotes or (male) hemizygotes in the most current version of gnomAD
+available at the time of curation.
+Default
+Not Applicable
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Specifications:
+
+The incidence for OTC deficiency is as high as 1:14,000 or 0.007%,
+however other studies suggest a prevalence of 1:70,000
+(PMID:24006547). The most common pathogenic variant in
+population databases is p.Arg40Cys, which is associated with late
+onset OTC Deficiency (PMID: 23209112, 7860066, 11260212, others)
+and present in 17 heterozygotes and 6 hemizygote in
+gnomAD(v4.0.0) (Allele frequency=0.001546%, PopMax
+frequency=0.00436325% in European populations). Given these
+data, an allele frequency >0.01 (1.0%) or present in ≥ 10 (female)
+homozygotes or (male) hemizygotes in gnomAD is set as stand alone
+evidence of a Benign variant.
+Both BS1 and BS2 cannot be applied if the same or overlapping
+dataset(s) are used to assess population data
+Variants known to be associated with late onset OTC deficiency may
+be present in frequency higher than expected for a pathogenic
+variant in OTC and with homozygotes and/or hemizygotes in
+population databases. Known variants for which Benign population
+codes (BA1, BS1, BS2) are not applicable are included in the BS1
+exception list for OTC
+
+BS1 exception list for OTC:
+p.Arg40Cys
+p.Ala208Thr
+
+Strong
+
+An allele frequency >0.002000 (0.2%), Grpmax Filtering Allele Frequency in the most
+current version of gnomAD available at the time of curation.
+Note: Both BS1 and BS2 cannot be applied if the same dataset is used to assess
+population data
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+Specifications:
+
+The incidence for OTC deficiency is as high as 1:14,000 or 0.007%,
+however other studies suggest a prevalence of 1:70,000
+(PMID:24006547). The most common pathogenic variant in
+population databases is p.Arg40Cys, which is associated with late
+onset OTC Deficiency (PMID: 23209112, 7860066, 11260212, others)
+and present in 17 heterozygotes and 6 hemizygote in
+gnomAD(v4.0.0) (Allele frequency=0.001546%, PopMax
+frequency=0.00436325% in European populations). Given these
+data, an allele frequency >0.01 (1.0%) or present in ≥ 10 (female)
+homozygotes or (male) hemizygotes in gnomAD is set as stand alone
+evidence of a Benign variant.
+Both BS1 and BS2 cannot be applied if the same or overlapping
+dataset(s) are used to assess population data
+Variants known to be associated with late onset OTC deficiency may
+be present in frequency higher than expected for a pathogenic
+variant in OTC and with homozygotes and/or hemizygotes in
+population databases. Known variants for which Benign population
+codes (BA1, BS1, BS2) are not applicable are included in the BS1
+exception list for OTC
+
+BS2 exception list for OTC:
+p.Arg40Cys
+p.Ala208Thr
+
+Strong
+
+The variant is observed in >5 (female) homozygotes or 5 (male) hemizygotes in the most
+current version of gnomAD available at the time of curation.
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+Yeast growth assays in which the ARG3 open reading frame of a yeast
+Specifications:strain is replaced with the OTC coding sequence, and site directed
+mutagenesis utilized to introduce variant of interest [PMID: 37146589] can
+be used at BS3_Moderate or BS3_Supporting based on the % of growth
+compared to strains containing wildtype ARG3 (see attached Functional
+Assay spreadsheet).
+
+Moderate
+BS3_Moderate is applicable when growth of the variant strain is ≥80% when compared to
+strains containing the wildtype OTC gene.
+Default
+-2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Yeast growth assays in which the ARG3 open reading frame of a yeast strain is replaced
+with human OTC coding sequence, and site directed mutagenesis utilized to introduce
+variant of interest (PMID: 37146589)
+BS3_Supporting is applicable when growth of the variant strain is >65% and <80% growth
+when compared to strains containing the wildtype OTC gene.
+Default
+-1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+Specifications:
+
+Females with pathogenic OTC variants have highly variable
+phenotypes and may be asymptomatic with normal biochemical
+values, or be variably affected dependent upon X-Chromosome
+inactivation and other physiological and environmental factors.
+Given this, absence of a phenotype or biochemical abnormality in a
+female carrier of the variant under review should not be counted
+towards benign evidence [PMID:9831349, 26059767].
+Late onset OTC deficiency is documented and well known for specific
+variants in OTC and an unaffected male counted as benign evidence
+should have a reported age at, or above, that of other affected males
+in the same family.
+Known late onset variants in OTC: p.Arg40Cys, p.Lys88Asn,
+p.Ala208Thr, p.Glu273del, p.Leu301Phe
+
+Supporting
+Presence of the variant under review in an unaffected male of a family if the age of the
+unaffected male is at or above the age of onset for other affected males in the family.
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable. Pathogenic missense variants have been documented for
+OTC deficiency.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Applicable in females for which OTC deficiency is diagnosed and the variant under review
+is identified in trans or in cis with a known pathogenic variant, or if the variant under
+review is identified in cis in a male with OTC deficiency.
+Default
+-1
+Point
+Value:
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Not applicable. OTC does not contain repetitive regions without known
+function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+Missense variants - weight to apply for BP4 follows the specifications
+in Pejaver et.al 2022 (PMID:36413997). The UCD VCEP uses the
+REVEL score for OTC variants.
+Per Walker et.al. [PMID: 37352859] BP4_Supporting is applicable for
+splice variants outside the donor/acceptor dinucleotides with no
+predicted impact on splicing by SpliceAI (delta score <0.1)
+
+Per Walker et.al. [PMID:37352859] BP4_Supporting is applicable for
+synonymous variants with spliceAI <0.1 if the variant is outside the
+first nucleotide of an exon or the last three nucleotides of an exon
+
+Strong
+Missense variants - REVEL score ≤0.016
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+Missense variants - REVEL score >0.016 and ≤0.183
+Default
+-2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Missense variants - REVEL score >0.183 and ≤0.290
+Splice region and intronic variants - spliceAI delta score <0.1
+Synonymous variants – spliceAI delta score <0.1 if variant is not within the first or last
+three nucleotides of an exon.
+Default
+-1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Applicable when the variant of interest is identified in a male with an alternative
+molecular etiology of elevated hyperammonemia including biallelic pathogenic/likely
+pathogenic variants in autosomal recessive disease or a pathogenic/likely pathogenic
+variant for autosomal dominant or X-linked disease.
+
+Default
+-1
+Point
+Value:
+Modification No change
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+Specifications:
+
+Applicable as described in Walker et.al, 2023 [PMID:37352859] for
+splicing or intronic variants with experimental evidence (RNASeq,
+minigene assay, etc.) demonstrating no effect on splicing
+For synonymous variants, BP4_Supporting must be met for
+BP7_Supporting to be applicable
+
+Strong
+Applicable for potential splicing or intronic variants with experimental evidence
+demonstrating no splicing effect of the variant under review (BP7_strong (RNA).
+Default
+-4
+Point
+Value:
+Modification No change
+Type:
+
+Supporting
+Splicing / intronic variant -- applicable for intronic variants with spliceAI <0.10 if the
+variant under review is outside splice region +7/-21 nucleotides.
+
+Synonymous variants -- applicable when BP4_Supporting is met and only if the
+synonymous variant is outside the first base of an exon and last 3 bases of an exon.
+Default
+-1
+Point
+Value:
+Modification No change
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+OTC Updates for CSpec_050125: 
+OTC PVS1 Decision Tree_110425: 
+OTC Step 3 Comments_110425: 
+Points System OTC: 
+OTC functional supplement table_January2024: 
+OTC Pilot data_110425: 
+OTC splicing table_093025: 
+OTC_Functional_Assay_120825: 
+OCT PVS1 Decision Tree: 
+UCD_VCEP_response_OTC_120825: 
+UCD VCEP BP4 table OTC: 
+OTC PS2.PM6 scoring_093025: 
+OTC PP4 points_093025: 
+UCD VCEP PP3 table OTC: 
+
+OTC VCEP response to SVI_093025: 
+
+

@@ -59,6 +59,19 @@ PM5_RULES: dict[str, TierRule] = {
     # Pathogenic or Likely Pathogenic classification"; "Not used at the PM5_Strong
     # level" -> one P or LP comparator gives Moderate.
     "KCNQ1": TierRule(1.0, 1.0, ((S.MODERATE, 1.0),), "LQTS VCEP"),
+    # GN104 CYP1B1 1.0.0: Strong "2 previously established pathogenic variants";
+    # Moderate "pathogenic variant ... or 2 previously established likely pathogenic
+    # variants"; Supporting "likely pathogenic variant". LP comparators alone never
+    # reach Strong.
+    "CYP1B1": TierRule(10.0, 1.0, ((S.STRONG, 20.0), (S.MODERATE, 2.0), (S.SUPPORTING, 1.0)),
+                       "Glaucoma VCEP (CYP1B1) v1.0.0"),
+    # GN106 RPGR 1.0.0: Moderate "Must have 2 comparison variants reaching
+    # pathogenic classification"; Supporting "Same residue as a previously
+    # established likely pathogenic variant". A single Pathogenic comparator (not
+    # worded) is at least as good as one LP -> Supporting; LP comparators never
+    # add up to Moderate.
+    "RPGR": TierRule(1.0, 0.001, ((S.MODERATE, 2.0), (S.SUPPORTING, 0.001)),
+                     "X-linked IRD VCEP v1.0.0"),
 }
 # GN180/184-189 LGMD 2.0.0: Strong "2 pathogenic or 3 likely pathogenic variants
 # resulting in different amino acid changes at the same residue"; Moderate "1 P or

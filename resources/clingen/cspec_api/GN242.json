@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN242",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50107",
+    "@type": "Organization",
+    "label": "Leukodystrophy and Leukoencephalopathy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50107"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1494401385"
+  },
+  "cspecStatus": "Classification Rules Submitted",
+  "currentStatus": "Classification Rules Submitted",
+  "label": "ClinGen Leukodystrophy and Leukoencephalopathy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for ARSA Version 1.0",
+  "lastUpdated": "2026-10-07T00:01:18.844Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1494401392",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=ARSA",
+          "@type": "Gene",
+          "label": "ARSA"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

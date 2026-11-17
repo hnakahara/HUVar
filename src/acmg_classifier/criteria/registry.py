@@ -232,6 +232,10 @@ class CriteriaRegistry:
         # Gene-specific PM1 co-requirements (IL2RG: PM2 must be met and BA1/BS1/BS2
         # must not be). Run last so the frequency criteria are final.
         _apply_pm1_co_requirements(results, annotation)
+        _apply_pp3_pm1_cap(results, annotation)
+        _apply_combination_caps(results, annotation)
+        _apply_bs1_bs2_exclusion(results, annotation)
+        _apply_bp7_bp4_exclusion(results, annotation)
 
         if timing is not None:
             timing["combination rules"] = (timing.get("combination rules", 0.0)
@@ -393,12 +397,21 @@ class CriteriaRegistry:
                     r.suppressed = True
                     r.evidence = (r.evidence + " [suppressed: PM4 not with PVS1 "
                                   "(ClinGen SVI PVS1 recommendation)]").strip()
-        excluded = self._pm4_regions.excludes(gene)
-        if not excluded:
-            return
         active = {
             r.criterion.value for r in results if r.triggered and not r.suppressed
         }
+        # Co-requirements (LDLR / RS1: "Variant must also meet PM2").
+        requires = getattr(self._pm4_regions, "requires", None)
+        missing = [c for c in (requires(gene) if requires else ()) if c not in active]
+        if missing:
+            for r in results:
+                if r.criterion == ACMGCriterion.PM4 and r.triggered and not r.suppressed:
+                    r.suppressed = True
+                    r.evidence = (r.evidence + f" [suppressed: {gene} VCEP PM4 requires "
+                                  f"{'+'.join(missing)}]").strip()
+        excluded = self._pm4_regions.excludes(gene)
+        if not excluded:
+            return
         clash = [c for c in excluded if c in active]
         if not clash:
             return
@@ -513,13 +526,175 @@ def _apply_pm1_co_requirements(results: list[CriteriaResult], annotation: Annota
                               "PM1_Strong]").strip()
 
 
+# VCEPs that cap PP3 and its combination with PM1 (Pejaver 2022 recommendation,
+# stated in the specification): gene -> PP3 ceiling (None = no PP3 ceiling).
+#   * SCN1A/1B/2A/3A/8A (GN067-070, GN076): "Strength should be capped at
+#     Moderate, and limit the combination of PP3 and PM1 to reach no higher than
+#     strong".
+#   * PAH (GN006): "PP3 + PM1 should not exceed Strong".
+_PP3_PM1_CAP: dict[str, "CriterionStrength | None"] = {}
+
+
+def _init_pp3_pm1_cap() -> None:
+    from acmg_classifier.models.enums import CriterionStrength
+    _PP3_PM1_CAP.update({g: CriterionStrength.MODERATE
+                         for g in ("SCN1A", "SCN1B", "SCN2A", "SCN3A", "SCN8A")})
+    _PP3_PM1_CAP["PAH"] = None
+    # General text: OTC "the total strength of PP3 + PM1 can be used at a maximum
+    # strength level of Strong (+4 points)"; CYP1B1 "The combination of PP3 and
+    # PM1 should not be higher than 4 points".
+    _PP3_PM1_CAP["OTC"] = None
+    _PP3_PM1_CAP["CYP1B1"] = None
+
+
+def _apply_pp3_pm1_cap(results: list[CriteriaResult], annotation: AnnotationData) -> None:
+    """Cap PP3 (SCN genes: Moderate) and the PP3 + PM1 total at Strong (4 points)
+    for the VCEPs that state it; PM1 is reduced (or withheld) to fit."""
+    from acmg_classifier.models.enums import CriterionStrength as S
+    if not _PP3_PM1_CAP:
+        _init_pp3_pm1_cap()
+    pc = annotation.rule_consequence or annotation.primary_consequence
+    gene = pc.gene_symbol if pc else None
+    if gene not in _PP3_PM1_CAP:
+        return
+    points = {S.SUPPORTING: 1, S.MODERATE: 2, S.THREE_POINT: 3, S.STRONG: 4,
+              S.VERY_STRONG: 8}
+    by_points = {1: S.SUPPORTING, 2: S.MODERATE, 3: S.THREE_POINT}
+
+    def _met(code):
+        return next((r for r in results if r.criterion == code and r.triggered
+                     and not r.suppressed), None)
+
+    pp3 = _met(ACMGCriterion.PP3)
+    if pp3 is None:
+        return
+    ceiling = _PP3_PM1_CAP[gene]
+    if ceiling is not None and points.get(pp3.strength, 0) > points[ceiling]:
+        pp3.evidence = (pp3.evidence + f" [{pp3.strength.value}->{ceiling.value}: "
+                        f"{gene} VCEP caps PP3 at {ceiling.value}]").strip()
+        pp3.strength = ceiling
+    pm1 = _met(ACMGCriterion.PM1)
+    if pm1 is None:
+        return
+    room = 4 - points.get(pp3.strength, 0)
+    if points.get(pm1.strength, 0) <= room:
+        return
+    if room <= 0:
+        pm1.suppressed = True
+        pm1.evidence = (pm1.evidence + f" [suppressed: {gene} VCEP — PP3 + PM1 must not "
+                        "exceed Strong]").strip()
+    else:
+        new = by_points[room]
+        pm1.evidence = (pm1.evidence + f" [{pm1.strength.value}->{new.value}: {gene} VCEP "
+                        "— PP3 + PM1 must not exceed Strong]").strip()
+        pm1.strength = new
+
+
+# Combined-weight ceilings from the general "VCEP Specifications" text of the CSpec
+# pages: gene -> [(criteria in the order they are reduced, max points, wording)].
+#   * CYP1B1: "the combination of PP3, PM1 and PM5 should not be higher than 5
+#     points, and the combination of PP3, PM1 and PS1 should not be higher than 6
+#     points" (PP3 + PM1 <= 4 is applied first, in _apply_pp3_pm1_cap).
+#   * MYOC: "The combination of PP3 and PM5 should not be higher than 5 points, and
+#     the combination of PP3 and PS1 should not be higher than 6 points".
+#   * F8 / F9: "Combined weight of codes PM1 and PM5 applied for a single variant
+#     can only equal strong".
+#   * TP53: "If both PS1 and PM5 are met, apply the strongest weight possible for
+#     each rule code not to exceed a combined strength of strong (4 points)".
+# The specifications do not say which criterion gives way; the comparator-count
+# criterion (PM5) or the predictor (PP3) is reduced before PS1 / PM1.
+_COMBINATION_CAPS: dict[str, tuple[tuple[tuple[str, ...], int, str], ...]] = {
+    "CYP1B1": ((("PM5", "PM1", "PP3"), 5, "PP3 + PM1 + PM5 <= 5 points"),
+               (("PP3", "PM1", "PS1"), 6, "PP3 + PM1 + PS1 <= 6 points")),
+    "MYOC": ((("PM5", "PP3"), 5, "PP3 + PM5 <= 5 points"),
+             (("PP3", "PS1"), 6, "PP3 + PS1 <= 6 points")),
+    "F8": ((("PM5", "PM1"), 4, "PM1 + PM5 <= Strong"),),
+    "F9": ((("PM5", "PM1"), 4, "PM1 + PM5 <= Strong"),),
+    "TP53": ((("PM5", "PS1"), 4, "PS1 + PM5 <= Strong"),),
+}
+
+
+def _apply_combination_caps(results: list[CriteriaResult], annotation: AnnotationData) -> None:
+    from acmg_classifier.models.enums import CriterionStrength as S
+    pc = annotation.rule_consequence or annotation.primary_consequence
+    rules = _COMBINATION_CAPS.get(pc.gene_symbol if pc else None)
+    if not rules:
+        return
+    gene = pc.gene_symbol
+    points = {S.SUPPORTING: 1, S.MODERATE: 2, S.THREE_POINT: 3, S.STRONG: 4,
+              S.VERY_STRONG: 8}
+    by_points = {1: S.SUPPORTING, 2: S.MODERATE, 3: S.THREE_POINT, 4: S.STRONG}
+    for order, cap, wording in rules:
+        met = {}
+        for r in results:
+            if r.criterion.value in order and r.triggered and not r.suppressed:
+                met[r.criterion.value] = r
+        if len(met) < 2:
+            continue
+        excess = sum(points.get(r.strength, 0) for r in met.values()) - cap
+        for code in order:
+            if excess <= 0:
+                break
+            r = met.get(code)
+            if r is None:
+                continue
+            have = points.get(r.strength, 0)
+            new = max(0, have - excess)
+            excess -= have - new
+            if new == 0:
+                r.suppressed = True
+                r.evidence = (r.evidence + f" [suppressed: {gene} VCEP — {wording}]").strip()
+            else:
+                r.evidence = (r.evidence + f" [{r.strength.value}->{by_points[new].value}: "
+                              f"{gene} VCEP — {wording}]").strip()
+                r.strength = by_points[new]
+
+
+# ABCA4 (BP7 general text): "BP4 is not used in combination with this rule code".
+_BP7_NOT_WITH_BP4 = frozenset({"ABCA4"})
+
+
+def _apply_bp7_bp4_exclusion(results: list[CriteriaResult], annotation: AnnotationData) -> None:
+    pc = annotation.primary_consequence
+    if pc is None or pc.gene_symbol not in _BP7_NOT_WITH_BP4:
+        return
+    if not any(r.criterion == ACMGCriterion.BP7 and r.triggered and not r.suppressed
+               for r in results):
+        return
+    for r in results:
+        if r.criterion == ACMGCriterion.BP4 and r.triggered and not r.suppressed:
+            r.suppressed = True
+            r.evidence = (r.evidence + f" [suppressed: {pc.gene_symbol} VCEP — BP4 is not "
+                          "used in combination with BP7]").strip()
+
+
+# SLC6A8 (CCDS VCEP): "BS1 and BS2 should not be co-applied based on the number of
+# homo- or hemizygotes present in gnomAD".
+_BS1_BS2_EXCLUSIVE = frozenset({"SLC6A8"})
+
+
+def _apply_bs1_bs2_exclusion(results: list[CriteriaResult], annotation: AnnotationData) -> None:
+    pc = annotation.primary_consequence
+    if pc is None or pc.gene_symbol not in _BS1_BS2_EXCLUSIVE:
+        return
+    if not any(r.criterion == ACMGCriterion.BS1 and r.triggered and not r.suppressed
+               for r in results):
+        return
+    for r in results:
+        if (r.criterion == ACMGCriterion.BS2 and r.triggered and not r.suppressed
+                and (r.evidence or "").startswith("gnomAD")):
+            r.suppressed = True
+            r.evidence += (f" [suppressed: {pc.gene_symbol} VCEP — BS2 from gnomAD counts "
+                           "is not co-applied with BS1]")
+
+
 def _apply_tp53_functional_caveats(results: list[CriteriaResult], annotation: AnnotationData) -> None:
     """TP53 VCEP: PS3/BS3 from protein-level assays (Kato, Giacomelli...) are not
     applied when PP3 is based on SpliceAI; PS3 is not applied with PVS1 at full
     strength and is downgraded to Moderate with PVS1_Strong. Only results from the
     systematic TP53 functional data are touched (curated entries are left as given)."""
     from acmg_classifier.criteria.tp53_functional import SRC_TP53_FUNCTIONAL
-    from acmg_classifier.criteria.functional_assays import SRC_MAVEDB
+    from acmg_classifier.criteria.functional_assays import SRC_MAVEDB, SRC_VCEP_TABLE
     from acmg_classifier.models.enums import CriterionStrength
 
     pc = annotation.primary_consequence
@@ -527,7 +702,7 @@ def _apply_tp53_functional_caveats(results: list[CriteriaResult], annotation: An
         return
     func = [r for r in results if r.criterion in (ACMGCriterion.PS3, ACMGCriterion.BS3)
             and r.triggered and not r.suppressed
-            and (r.evidence or "").startswith((SRC_TP53_FUNCTIONAL, SRC_MAVEDB))]
+            and (r.evidence or "").startswith((SRC_TP53_FUNCTIONAL, SRC_MAVEDB, SRC_VCEP_TABLE))]
     if not func:
         return
     splice_pp3 = any(r.criterion == ACMGCriterion.PP3 and r.triggered

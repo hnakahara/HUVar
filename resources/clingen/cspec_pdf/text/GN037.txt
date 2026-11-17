@@ -1,0 +1,730 @@
+Criteria Specification
+ClinGen Rett and Angelman-like Disorders Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for UBE3A Version 7.0
+Affiliation: Rett and Angelman-like Disorders VCEP
+Type: Richards et.al., 2015 - Combining rules
+Description : 1 Strong AND 3 Supporting added to benign criteria code. 1 Strong added to likely benign
+criteria code.
+Version : 7.0
+Released : 5/1/2026
+DOI : 10.5281/zenodo.21421718
+Release Notes :
+1 Strong AND 3 Supporting added to benign criteria code.
+1 Strong added to likely benign criteria code.
+
+Contributors & Keywords
+Research Group: Rett and Angelman-like
+Disorders VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+UBE3A NM_130838.2 Autosomal dominant
+inheritance Angelman syndrome
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for UBE3A
+Gene: UBE3A (HGNC:12496) 
+Transcripts:
+NM_130838.2
+
+HGNC Name: ubiquitin protein ligase E3A
+Disease:
+Angelman syndrome
+(MONDO:0007113)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Refer to PVS1 flow chart for additional guidance.
+Specifications:
+For intragenic deletions/duplications that are predicted to result in a
+product that preserves reading frame:
+For single exon in-frame deletions assign the same strength (PVS1,
+PVS1_strong, or PVS1_moderate) as for splice site variants that
+preserve reading frame indicated above.
+For multiple exon in-frame deletions PVS1 can be assigned to
+deletions that include single in-frame exons in the PVS1 category
+(listed above) OR if the exon contains a functionally important
+domain as specified in PM1.
+Given the extensive data available for UBE3A, classifications for
+single or multi-exon in-frame deletions are assigned as PVS1 or
+PVS1_strong. Refer to PVS1 flow chart for additional guidance.
+
+Very Strong
+Null variant in a gene where loss of function is a known mechanism of disease.
+Use as defined by ClinGen SVI working group (PMID:30192042).
+PVS1 is applicable for:
+Any truncating variant up to p.K8413
+Any frameshift variant that results in a read-through of the stop codon
+Initiation codon variants
+Canonical splice site variants predicted to result in an out-of-frame product
+Intragenic deletions/duplications predicted to result in an out-of-frame product.
+Full gene deletion
+Modification Disease-specific
+Type:
+
+Strong
+Null variant in a gene where loss of function is a known mechanism of disease.
+PVS1_Strong is applicable for:
+Any truncating variant from p.A842 to p.G850
+Canonical splice site variants that flank exons 7, 8 (in-frame exons)
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Null variant in a gene where loss of function is a known mechanism of disease.
+
+PVS1_Moderate is applicable for any truncating variant distal of p.G850.
+Modification Disease-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Modification None
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Applicable to all genes in affected individuals identified as mosaic for the
+Specifications:variant (as the presence of a variant in the mosaic state is confirmatory of
+the variant being de novo).
+Because of the very high de novo rate of pathogenic variants in UBE3A, de
+novo observation can be attributed the highest value points per proband
+(2 points for confirmed de novo and 1 point for assumed de novo) if the
+patient is known to be affected with a neurodevelopmental phenotype
+consistent with the gene.
+
+Very Strong
+De novo (maternity and paternity confirmed) in a patient with the disease and no family
+history.
+≥2 independent occurrences of PS2.
+≥2 independent occurrences of PM6 and one occurrence of PS2.
+
+Evidence from literature must be fully evaluated to support independent events.
+Modification None
+Type:
+
+Strong
+De novo (maternity and paternity confirmed) in a patient with the disease and no family
+history.
+1 occurrence of PS2.
+Modification None
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Well-established in vitro or in vivo functional studies supportive of a damaging effect.
+RNA studies that demonstrate abnormal splicing and an out-of-frame transcript.
+Do not use for canonical splice site variants and when PVS1 is used.
+Modification Disease-specific
+Type:
+
+Supporting
+Well-established in vitro or in vivo functional studies supportive of a damaging effect.
+RNA studies that demonstrate abnormal splicing and an inframe product (unless it
+affects an in-frame exon specified in the PVS1 section).
+See included table for acceptable functional studies.
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Specifications:
+
+Detailed phenotype not needed. Need to confirm patient is ‘affected
+with a neurodevelopmental phenotype consistent with the gene’ at a
+minimum.
+Patient can be published OR an internal case OR observed at an
+outside lab (i.e. via ClinVar) OR described in the reputable databases
+(LOVD). However, the independent case has to be confirmed to be a
+different patient than yours (compare gender/age).
+Do not use this criterion for variants where BS1 is applied or where
+PM2 does not apply.
+
+Strong
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls.
+5+ observations.
+Modification Strength
+Type:
+
+Moderate
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls.
+3-4 observations.
+Modification Strength
+Type:
+
+Supporting
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls.
+Use for 2nd independent occurrence.
+Modification Strength
+Type:
+
+PM1
+
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Located in a mutational hot spot and/or critical and well-established functional domain.
+3’ cysteine binding site: aa 8203
+Modification Disease-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Absent/rare from controls in an ethnically-matched cohort population sample.
+Use if absent, zero observations in control databases.
+Modification Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Not applicable for UBE3A.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Strong
+Protein length changes due to stop-loss variants.
+PM4_Strong is applicable to stop-loss variants in UBE3A, as several stop loss variants
+in this gene has been described in affected individuals.4
+Modification Disease-specific
+Type:
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region.
+Modification Disease-specific
+Type:
+
+Supporting
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Smaller in-frame events (< 3 amino acid residues) unless they occur in a functionally
+important region (see PM1 for functionally important domain for this gene).
+Modification Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Missense change at an amino acid residue where a different missense change determined
+to be pathogenic has been seen before.
+≥2 different missense changes affecting the amino acid residue.
+Do not apply PM1 in these situations.
+Modification Strength
+Type:
+
+Moderate
+Missense change at an amino acid residue where a different missense change determined
+to be pathogenic has been seen before.
+
+A Grantham or BLOSUM score comparison can be used to determine if the variant is
+predicted to be as or more damaging than the established pathogenic variant.
+Modification None
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+Because of the very high de novo rate of pathogenic variants in UBE3A, de
+Specifications:novo observation can be attributed the highest value points per proband
+(2 points for confirmed de novo and 1 point for assumed de novo) if the
+patient is known to be affected with a neurodevelopmental phenotype
+consistent with the gene.
+
+Very Strong
+Assumed de novo without confirmation of paternity and maternity.
+≥4 independent occurrences of PM6. Evidence from literature must be fully
+evaluated to support independent events.
+Modification Strength
+Type:
+
+Strong
+Assumed de novo without confirmation of paternity and maternity.
+≥2 independent occurrences of PM6. Evidence from literature must be fully
+evaluated to support independent events.
+Modification Strength
+Type:
+
+Moderate
+Assumed de novo without confirmation of paternity and maternity.
+1 occurrence of PM6.
+Modification None
+Type:
+
+PP1
+Original ACMG
+Summary
+
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Note: individuals must have disease consistent with reported phenotype
+Specifications:(even if on the mild end of spectrum of the disease).
+
+Strong
+Co-segregation with disease in multiple affected family members.
+≥5 informative meiosis.
+Modification Strength
+Type:
+
+Moderate
+Co-segregation with disease in multiple affected family members.
+3-4 informative meiosis.
+Modification Strength
+Type:
+
+Supporting
+Co-segregation with disease in multiple affected family members.
+2 informative meiosis.
+Modification Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable for UBE3A.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product.
+For missense variants use REVEL with a score ≥ 0.644.
+For splice site variants use SpliceAI with a score ≥ 0.2.
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Supporting
+Phenotype specific for disease with single genetic etiology.
+See gene specific clinical phenotype guidelines.
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+VCEP
+The frequency cutoffs are based on MECP2 expected disease allele
+Specifications:frequency (1 in 10,000 for the disease prevalence / (1.5 alleles [assumes
+50/50 male/female ratio] * 0.8 for 80% penetrance)). MECP2 is the most
+prevalent of the genes covered in the Rett/Angelman-like working group
+and was chosen as most conservative number.
+
+Stand Alone
+Use large population databases (i.e. gnomAD).
+Use if variant is present at ≥0.000083 (0.0083%) in any sub-population.
+Use if allele frequency is met in any general continental population dataset of at
+least 2,000 observed alleles.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+The frequency cutoffs are based on MECP2 expected disease allele
+Specifications:frequency divided by 10-fold. MECP2 is the most prevalent of the genes
+covered in the Rett/Angelman-like working group and was chosen as most
+conservative number.
+
+Strong
+Use large population databases (i.e. gnomAD).
+Use if variant is present at ≥0.0000083 (0.00083%) and <0.000083 (0.0083%) in
+any sub-population.
+Use if allele frequency is met in any general continental population dataset of at
+least 2,000 observed alleles.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+VCEP
+Specifications:
+
+Should be applied in cases where the healthy adult is devoid of
+neurodevelopmental phenotypes.
+Best to use with internal curated data that includes clinical
+information or published patients that have been phenotyped.
+
+Strong
+Observed in the heterozygous/hemizygous state in a healthy adult.
+4 unaffected (related and maternally inherited or unrelated) heterozygotes
+Modification Strength
+Type:
+
+Supporting
+Observed in the heterozygous/hemizygous state in a healthy adult.
+2 unaffected (related and maternally inherited or unrelated) heterozygotes
+Modification Strength
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+Well-established in vitro or in vivo functional studies shows no damaging effect on protein
+function.
+RNA functional studies that demonstrate no impact on splicing and transcript
+composition. It can be downgraded based on quality of data.
+Not applicable for other functional studies.
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+Need to confirm that the family member is ‘affected with a
+Specifications:neurodevelopmental phenotype consistent with the gene’ at a minimum.
+
+Strong
+Lack of segregation in affected members of a family.
+Absent in a similarly affected family member, when seen in two or more families.
+Modification Strength
+Type:
+
+Supporting
+Lack of segregation in affected members of a family.
+Absent in a similarly affected family member.
+Modification Strength
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable for UBE3A.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+VCEP
+Knock out of UBE3A results in disease but viable phenotype.5
+Specifications:
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder;
+or observed in cis with a pathogenic variant in any inheritance pattern.
+BP2 is not applicable for UBE3A in trans state.
+
+Modification Disease-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Supporting
+In-frame deletions/insertions in a repetitive region without a known function.
+BP3 is applicable if there are in-frame deletions/duplications in a repetitive region
+where other in-frame deletions/duplications have been observed with an overall
+frequency commensurate with the BA1 threshold for this gene.
+Modification None
+Type:
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc).
+For missense variants use REVEL with a score ≤ 0.290.
+For splice site variants use SpliceAI with a score ≤ 0.1.
+Modification None
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+VCEP
+Specifications:
+
+For example if a variant in UBE3A is identified in a patient with
+lissencephaly in whom a pathogenic variant is identified in the
+
+PAFAH1B1 gene.
+Variant should also be maternally inherited in the case with an
+alternate molecular basis for disease for this criteria to be used.
+Do not apply if variant is de novo.
+
+Strong
+Variant found in a case with an alternate molecular basis for disease.
+≥3 cases with alternate molecular basis for disease.
+Modification Strength
+Type:
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+1 case with alternate molecular basis for disease.
+Modification Disease-specific
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+For silent variants BP4 and BP7 can be added.
+Specifications:
+
+Supporting
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site AND the nucleotide is
+not highly conserved.
+
+Defined 'not highly conserved' regions in BP7 as those with PhastCons score <1
+and/or PhyloP score <0.1 and/or the variant is the reference nucleotide in one
+primate and/or three mammal species.
+For splice site variants use SpliceAI with a score ≤ 0.1.
+Modification None
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PM6_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS2, PS3,
+PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong)
+1 Very Strong (PVS1, PS2_Very Strong, PM6_Very Strong) AND ≥ 2 Moderate (PVS1_Moderate,
+PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate)
+1 Very Strong (PVS1, PS2_Very Strong, PM6_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate) AND 1 Supporting (PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM4_Supporting, PP1, PP3, PP4)
+
+1 Very Strong (PVS1, PS2_Very Strong, PM6_Very Strong) AND ≥ 2 Supporting (PS3_Supporting,
+PS4_Supporting, PM2_Supporting, PM4_Supporting, PP1, PP3, PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND ≥ 3
+Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 2
+Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate) AND ≥ 2 Supporting
+(PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 1
+Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate) AND ≥ 4 Supporting
+(PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PM6_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 1
+Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND ≥ 2
+Supporting (PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate)
+2 Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate) AND ≥ 2
+Supporting (PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting, PP1, PP3, PP4)
+1 Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate) AND ≥ 4
+Supporting (PS3_Supporting, PS4_Supporting, PM2_Supporting, PM4_Supporting, PP1, PP3, PP4)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong) AND 2
+Moderate (PVS1_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate)
+
+Benign
+
+≥ 2 Strong (BS1, BS2, BS3, BS4, BP5_Strong)
+1 Stand Alone (BA1)
+1 Strong (BS1, BS2, BS3, BS4, BP5_Strong) AND 3 Supporting (BS2_Supporting, BS4_Supporting, BP2,
+BP3, BP4, BP5, BP7)
+
+Likely Benign
+≥ 2 Supporting (BS2_Supporting, BS4_Supporting, BP2, BP3, BP4, BP5, BP7)
+1 Strong (BS1, BS2, BS3, BS4, BP5_Strong)
+
+Files & Images
+PVS1 Flowchart for UBE3A: 
+UBE3A Functional Assays: 
+Clinical Phenotype Guidelines: Phenotype guidelines for UBE3A mentioned in PP4. 
+
+References
+1.
+
+Bienvenu T Carrié A et al. MECP2 mutations account for most cases of typical forms of Rett
+syndrome. Hum Mol Genet (2000) 9 (9) p. 1377-84. 10.1093/hmg/9.9.1377 10814719 
+
+2.
+
+Erlandson A Hallberg B et al. MECP2 mutation screening in Swedish classical Rett syndrome
+females. Eur Child Adolesc Psychiatry (2001) 10 (2) p. 117-21. 10.1007/s007870170034
+11469283 
+
+3.
+
+Fang P Lev-Lehman E et al. The spectrum of mutations in UBE3A causing Angelman syndrome.
+Hum Mol Genet (1999) 8 (1) p. 129-35. 10.1093/hmg/8.1.129 9887341 
+
+4.
+
+Sadikovic B Fernandes P et al. Mutation Update for UBE3A variants in Angelman syndrome.
+Hum Mutat (2014) 35 (12) p. 1407-17. 10.1002/humu.22687 25212744 
+
+5.
+
+Jiang YH Armstrong D et al. Mutation of the Angelman ubiquitin ligase in mice causes increased
+cytoplasmic p53 and deficits of contextual learning and long-term potentiation. Neuron (1998)
+21 (4) p. 799-811. 10.1016/s0896-6273(00)80596-6 9808466 
+
+6.
+
+Pejaver V Byrne AB et al. Calibration of computational tools for missense variant pathogenicity
+classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet (2022) 109
+(12) p. 2163-2177. 10.1016/j.ajhg.2022.10.013 36413997 
+
+

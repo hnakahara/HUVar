@@ -180,3 +180,12 @@ Values are transcribed from publicly available ClinGen VCEP criteria
 specifications (cspec.genome.network) and standard epidemiology resources
 (Orphanet, OMIM, GeneReviews). Keep `source_vcep` / `cspec_url` populated so
 every threshold remains auditable and attributable to its VCEP.
+
+## Latest specifications for review
+
+`cspec_api/` holds every specification as currently served by the CSpec API, with a
+`manifest.tsv` that compares each one with the `cspec_json/` snapshot (June 2026) used
+to build the tables. Refresh with `python scripts/fetch_cspec_api.py`; see
+`cspec_api/README.md`. `cspec_pdf/` holds the web-page PDFs of the Released
+specifications (with the general "VCEP Specifications" text) and their text copies
+(`--pdf`; see `cspec_pdf/README.md`).

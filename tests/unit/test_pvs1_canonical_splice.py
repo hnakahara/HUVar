@@ -10,11 +10,14 @@ from acmg_classifier.pvs1.decision_tree import _splice_branch
 
 def _pc(cq=ConsequenceType.SPLICE_ACCEPTOR):
     return ConsequenceInfo(transcript_id="NM_000321.3", gene_id="ENSG00000139687", gene_symbol="RB1",
-                           consequence=cq, biotype="protein_coding", is_mane_select=True, intron="3/26")
+                           consequence=cq, biotype="protein_coding", is_mane_select=True, intron="2/26")
 
 
-def _run(score, tool="openspliceai", alt_rescue=False, cq=ConsequenceType.SPLICE_ACCEPTOR):
+def _run(score, tool="openspliceai", alt_rescue=False, cq=ConsequenceType.SPLICE_ACCEPTOR,
+         intron=None):
     pc = _pc(cq)
+    if intron is not None:
+        pc.intron = intron
     ann = AnnotationData(consequences=[pc],
                          splice=SpliceScore(tool=tool, max_delta=score, is_available=True))
     v = VariantRecord(chrom="chr13", pos=48345079, ref="G", alt="A", assembly=Assembly.GRCH38)
@@ -22,7 +25,8 @@ def _run(score, tool="openspliceai", alt_rescue=False, cq=ConsequenceType.SPLICE
 
 
 def test_low_openspliceai_score_still_very_strong():
-    # RB1 c.381-1G>A: OpenSpliceAI (80-nt model) 0.06 -> previously Moderate.
+    # RB1 intron-2 acceptor (skips the 116-nt exon 3: frameshift -> NMD):
+    # OpenSpliceAI (80-nt model) 0.06 -> previously Moderate.
     s, ev = _run(0.06)
     assert s == S.VERY_STRONG
     assert "presumed" in ev and "OpenSpliceAI=0.060" in ev
@@ -82,3 +86,39 @@ def test_pp3_scores_noncanonical_splice_annotation(tmp_path):
     v = VariantRecord(chrom="chrX", pos=1, ref="AG", alt="A", assembly=Assembly.GRCH38)
     r = PP3Evaluator(Config()).evaluate(v, ann)
     assert r.triggered, r.evidence
+
+
+# --- SVI exon-skipping arm (in-frame / stop-codon exon / penultimate exon) ---
+
+def test_inframe_exon_skip_follows_10pct_rule():
+    # RB1 c.381-1G>A (intron 3 acceptor) skips exon 4: 120 nt, in-frame, 4.3% of
+    # the protein, role unknown -> PVS1_Moderate.
+    s, ev = _run(0.9, intron="3/26")
+    assert s == S.MODERATE
+    assert "in-frame skip of exon 4/27" in ev and "10% rule" in ev
+
+
+def test_inframe_skip_with_rescue_transcript_not_above_moderate():
+    assert _run(0.9, intron="3/26", alt_rescue=True)[0] == S.MODERATE
+
+
+def test_skip_of_stop_codon_exon_uses_10pct_rule():
+    # RB1 intron-26 acceptor skips exon 27 (last; holds the stop codon).
+    s, ev = _run(0.9, intron="26/26")
+    assert s == S.MODERATE and "holding the stop codon" in ev
+
+
+def test_out_of_frame_penultimate_exon_skip_escapes_nmd():
+    # RB1 intron-26 donor skips exon 26 (50 nt, out of frame): the frameshift
+    # runs into the last exon -> NMD not expected -> 10% rule (Moderate).
+    s, ev = _run(0.9, intron="26/26", cq=ConsequenceType.SPLICE_DONOR)
+    assert s == S.MODERATE and "penultimate exon 26/27" in ev
+
+
+def test_non_mane_transcript_keeps_very_strong():
+    pc = _pc()
+    pc.transcript_id = "NM_999999.1"
+    pc.intron = "3/26"
+    ann = AnnotationData(consequences=[pc])
+    v = VariantRecord(chrom="chr13", pos=48345079, ref="G", alt="A", assembly=Assembly.GRCH38)
+    assert _splice_branch(v, ann, MagicMock(), True, False, pc)[0] == S.VERY_STRONG

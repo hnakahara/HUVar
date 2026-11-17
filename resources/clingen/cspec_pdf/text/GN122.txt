@@ -1,0 +1,1240 @@
+Criteria Specification
+ClinGen Antibody Deficiencies Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for CTLA4 Version 2.0
+Affiliation: Antibody Deficiencies VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Version : 2.0
+Released : 7/31/2026
+DOI : 10.5281/zenodo.21723733
+Release Notes :
+This submission includes updates to the PVS1, PM5, PS4, PP3, BP4, BP7, and PS3 codes.
+
+Contributors & Keywords
+Research Group: Antibody Deficiencies VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+CTLA4 NM_005214.5 Autosomal dominant
+inheritance autoimmune lymphoproliferative
+syndrome due to CTLA4 haploinsuffiency
+
+Rules for CTLA4
+Gene: CTLA4 (HGNC:2505) 
+Transcripts:
+NM_005214.5
+
+HGNC Name: cytotoxic T-lymphocyte
+associated protein 4
+Disease:
+autoimmune
+lymphoproliferative syndrome
+due to CTLA4 haploinsuffiency
+(MONDO:0014493)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single
+or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of
+disease.
+Caveats:
+
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave the
+remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites,
+Specifications:initiation codon, single or multi-exon deletion) in a gene where loss of
+function (LOF) is a known mechanism of disease.
+Use caution interpreting LOF variants at the extreme 3’ end of the
+gene
+Use caution with splice variants that are predicted to lead to exon
+skipping but leave the remainder of the protein intact
+
+Very Strong
+For truncating variants that introduce a premature stop between codons 2 and 172,
+which is predicted to trigger nonsense-mediated decay, apply PVS1 at the default
+(very strong) level. While this recommendation already matches ClinGen guidance
+(PMID: 30192042), it should be mentioned that this includes truncating variants
+located in the isoform-specific exon 3, because similar clinical phenotypes are
+associated with null variants in exon 3 and exon 2 (PMID: 25329329, PMID:
+34111452), despite the fact that exon 3 is omitted from an
+alternative transcript (NM_001037631.3) that encodes the soluble isoform (PMID:
+40168991).
+For truncating variants between codons 173 and 182, which encode part of the
+transmembrane domain, apply PVS1 at the default (very strong) level. The
+transmembrane domain spans amino acids 162-182, is necessary for CTLA4
+localization to the cell surface, and is the main topological feature present in the
+critical membrane-bound form of CTLA4 but absent from the soluble form of CTLA4
+that does not have the same ability to prevent the disease state (PMID: 25213377).
+If a missense, synonymous, or intronic variant outside of the canonical splice sites has
+a SpliceAI score greater than or equal to 0.2 and has been confirmed to cause
+complete or near-complete disruption of splicing within the mRNA in a study of
+patient RNA or minigene assay, avoid PP3 and PS3_Supporting and evaluate PVS1
+instead (PMID: 37352859).
+In order to avoid over-weighing loss-of-function evidence, PP3 and PS3 are mutually
+exclusive with PVS1 at the default (very strong) level. These additional codes cannot
+be applied for a variant that has already met PVS1.
+Default
+8
+Point
+Value:
+Modification Clarification
+Type:
+
+Strong
+For truncating variants between codons 183 and 201, which are not predicted to
+trigger nonsense-mediated decay or to disrupt the transmembrane domain but result
+in C-terminal truncation of more than 10% of the protein product, apply PVS1_Strong.
+Default
+4
+Point
+Value:
+Modification Clarification
+Type:
+
+Moderate
+Apply PVS1_Moderate for nonsense or frameshift variants between codons 202 and
+223 of CTLA4, as these are predicted not to undergo nonsense-mediated decay and to
+result in C-terminal truncation of less than 10% of the protein product.
+Apply PVS1_Moderate for initiation codon variants, as there are no known alternative
+start codons and the closest potential in-frame start codon is at codon 38. There is at
+least one report of an initiation codon variant that leads to CTLA4 phenotypes and
+though there is no direct experimental evidence of loss of expression, the authors
+assert that there is a proximally located N-terminal nonsense variant (34 aa away)
+that results in no protein product, making it unlikely that there is alternative start
+codon usage (PMID: 25329329).
+Default
+2
+Point
+Value:
+Modification Clarification
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Same amino acid change as a previously established pathogenic variant
+Specifications:regardless of nucleotide change.
+
+Strong
+Use PS1 for missense variants when other variant was classified pathogenic by VCEP
+standards without using PS1.
+
+Beware of changes that impact splicing rather than the amino acid (based on RNA
+data or splicing predictors). Splicing predictions (by SpliceAI) should remain the same
+for WT and both mutant alleles.
+Use at the default (PS1) level for splicing variants in combination with PP3 if located
+outside the splice donor/acceptor +/-1,2 dinucleotide positions that have a splice AI
+score ≥0.2 and have a comparable nucleotide variant at the same position that has
+been classified pathogenic by VCEP standards (PMID: 37352859).
+Use at the default (PS1) level for splicing variants in combination with PVS1 if located
+within the splice donor/acceptor +/-1,2 dinucleotide positions with a comparable
+variant within the same splice donor/acceptor +/-1,2 dinucleotide that has
+been classified pathogenic by VCEP standards (PMID: 37352859).
+Default
+4
+Point
+Value:
+Modification Clarification
+Type:
+
+Moderate
+Use PS1_Moderate for missense variants when the other variant was classified likely
+pathogenic by VCEP standards without using PS1.
+Beware of changes that impact splicing rather than the amino acid (based on RNA
+data or splicing predictors). Splicing predictions (by SpliceAI) should remain the same
+for WT and both mutant alleles.
+Use at the PS1_Moderate level for splicing variants in combination with PP3 if located
+outside the splice donor/acceptor +/-1,2 dinucleotide positions that have a splice AI
+score ≥0.2 with a comparable nucleotide variant at the same position that has
+been classified likely pathogenic by VCEP standards (PMID: 37352859).
+Use at the PS1_Moderate level for splicing variants in combination with PP3 if located
+outside the splice donor/acceptor +/-1,2 dinucleotide positions that have a splice AI
+score ≥0.2 with a comparable variant within the same splice region that has been
+classified pathogenic by VCEP standards (PMID: 37352859).
+Use at the PS1_Moderate level for splicing variants in combination with PVS1 (at
+reduced strength) if located within the splice donor/acceptor +/-1,2 dinucleotide
+positions with a comparable variant within the same splice donor/acceptor motif
+(but outside the +/-1,2 dinucleotide) that has been classified pathogenic by
+VCEP standards (PMID: 37352859).
+Default
+2
+Point
+Value:
+Modification Clarification
+Type:
+
+Supporting
+
+Use at the PS1_Supporting level for splicing variants in combination with PP3 if
+located outside the splice donor/acceptor +/-1,2 dinucleotide positions that have a
+splice AI score ≥0.2 with a comparable nucleotide variant within the same motif
+that has been classified likely pathogenic by VCEP standards (PMID: 37352859).
+Use at the PS1_Supporting level in combination with PVS1 for splicing variants
+within splice donor/acceptor +/-1,2 dinucleotide positions with a variant at the same
+nucleotide position or within the same donor/acceptor +/-1,2 dinucleotide
+with the same predicted impact that has been classified pathogenic by VCEP
+standards (PMID: 37352859).
+Use at the PS1_Supporting level in combination with PVS1 for splicing variants
+within splice donor/acceptor +/-1,2 dinucleotide positions with a variant within the
+same splice region, but outside the donor/acceptor +/-1,2 dinucleotide, with
+the same predicted impact that has been classified pathogenic or likely
+pathogenic by VCEP standards (PMID: 37352859).
+Use at the PS1_Supporting level in combination with PVS1 (at reduced strength)
+for splicing variants within splice donor/acceptor +/-1,2 dinucleotide positions with a
+variant within the same splice region, but outside the donor/acceptor +/-1,2
+dinucleotide, with the same predicted impact that has been classified likely
+pathogenic by VCEP standards (PMID: 37352859).
+Default
+1
+Point
+Value:
+Modification Clarification
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+De novo (both maternity and paternity confirmed) in a patient with the
+Specifications:disease and no family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate
+motherhood, errors in embryo transfer, etc. can contribute to nonmaternity.
+
+Very Strong
+The “phenotypic consistency” used on the SVI point-counting table below will be chosen
+for each proband by the number of phenotype points scored by the proband on the PS4
+scoring system:
+
+(A) If the proband scores greater than or equal to 4 and <6 phenotype points in the
+PS4 counting rubric, use the number of de novo points corresponding to “Phenotype
+consistent with gene but not highly specific and high genetic heterogeneity”.
+(B) If the proband scores 6 or more phenotype points in the PS4 counting rubric AND
+is not known to harbor biallelic LRBA variants, use the number of de novo points
+corresponding to “Phenotype consistent with gene but not highly specific”.
+(C) If the proband scores 10 or more phenotype points in the PS4 counting rubric
+AND is not known to harbor biallelic LRBA variants, use the number of de novo points
+corresponding to “Phenotype highly specific for gene”.
+Default
+8
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Strong
+The “phenotypic consistency” used on the SVI point-counting table below will be chosen
+for each proband by the number of phenotype points scored by the proband on the PS4
+scoring system:
+(A) If the proband scores greater than or equal to 4 and <6 phenotype points in the
+PS4 counting rubric, use the number of de novo points corresponding to “Phenotype
+consistent with gene but not highly specific and high genetic heterogeneity”.
+(B) If the proband scores 6 or more phenotype points in the PS4 counting rubric AND
+is not known to harbor biallelic LRBA variants, use the number of de novo points
+corresponding to “Phenotype consistent with gene but not highly specific”.
+(C) If the proband scores 10 or more phenotype points in the PS4 counting rubric
+AND is not known to harbor biallelic LRBA variants, use the number of de novo points
+corresponding to “Phenotype highly specific for gene”.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+The “phenotypic consistency” used on the SVI point-counting table below will be chosen
+for each proband by the number of phenotype points scored by the proband on the PS4
+scoring system:
+(A) If the proband scores greater than or equal to 4 and <6 phenotype points in the
+PS4 counting rubric, use the number of de novo points corresponding to “Phenotype
+consistent with gene but not highly specific and high genetic heterogeneity”.
+(B) If the proband scores 6 or more phenotype points in the PS4 counting rubric AND
+is not known to harbor biallelic LRBA variants, use the number of de novo points
+
+corresponding to “Phenotype consistent with gene but not highly specific”.
+(C) If the proband scores 10 or more phenotype points in the PS4 counting rubric
+AND is not known to harbor biallelic LRBA variants, use the number of de novo points
+corresponding to “Phenotype highly specific for gene”.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+The “phenotypic consistency” used on the SVI point-counting table below will be chosen
+for each proband by the number of phenotype points scored by the proband on the PS4
+scoring system:
+(A) If the proband scores greater than or equal to 4 and <6 phenotype points in the
+PS4 counting rubric, use the number of de novo points corresponding to “Phenotype
+consistent with gene but not highly specific and high genetic heterogeneity”.
+(B) If the proband scores 6 or more phenotype points in the PS4 counting rubric AND
+is not known to harbor biallelic LRBA variants, use the number of de novo points
+corresponding to “Phenotype consistent with gene but not highly specific”.
+(C) If the proband scores 10 or more phenotype points in the PS4 counting rubric
+AND is not known to harbor biallelic LRBA variants, use the number of de novo points
+corresponding to “Phenotype highly specific for gene”.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and robust
+in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Well-established in vitro or in vivo functional studies supportive of a
+Specifications:damaging effect on the gene or gene product.
+
+Strong
+
+A calculated OddsPath >18.7 is needed to upgrade any assay result showing
+abnormal CTLA4 function to PS3 (as recommended in PMID: 31892348).
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+A minimum of 11 total P/LP and B/LB variant controls (classified using these same
+specifications) are needed to upgrade any assay result showing abnormal CTLA4
+function to PS3_Moderate (as recommended in PMID: 31892348).
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+An abnormal functional result by a CTLA4 variant in non-patient cells in an approved
+assay should be applied at PS3_Supporting strength. Further details on how to
+interpret the assays can be found in the associated manuscript.
+Expanded information about all published functional studies in non-patient cells
+(PS3/BS3) or patient cells (PS4/PP4) assessed by the VCEP can be found in the
+attached file entitled CTLA4_Functional Assay_Research_PS3_BS3.
+In vitro assays in non-patient cells approved by the VCEP for application of
+PS3_Supporting include:
+(1) Transendocytosis OR soluble CD80 and/or CD86 ligand endocytosis (i.e.
+PMID: 25329329, PMID: 25632005, PMID: 25367873, PMID: 27102614, PMID:
+29375547, PMID: 15814706, PMID: 20870175)
+(2) In vitro T Cell Suppression (i.e. PMID: 29375547, PMID: 26478010, PMID:
+25213377)
+(3) CTLA4 Endocytosis and Recycling (i.e. PMID: 15814706)
+(4) Cell surface and/or intracellular CTLA4 expression (i.e. PMID: 25367873,
+PMID: 14578884, PMID: 29375547, PMID: 7559643, PMID: 25213377)
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS4
+
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0
+and the confidence interval around the estimate of RR or OR does not include 1.0. See
+manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+The prevalence of the variant in affected individuals is significantly
+Specifications:increased compared to the prevalence in controls
+
+Strong
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+A proband would be excluded for this criterion if found to harbor homozygous or
+compound heterozygous LRBA variants that are either rare VUS or have been
+classified Likely Pathogenic or Pathogenic.
+PS4 at the default (Strong) level is Met by observation of the variant in at least 4
+independent probands.
+The probands used for PS4 cannot include the same proband used for PP4.
+In order to be counted for this criterion, a proband must meet one of the following two
+requirements:
+To have reported phenotypes that score a minimum of 6 phenotype points, as
+well as genotyping of the LRBA locus to confirm the absence of biallelic variants
+in LRBA that have been classified either Likely Pathogenic or Pathogenic. Note: a
+monoallelic LRBA variant can be tolerated.
+OR
+To have reported phenotypes that score a minimum of 10 phenotype points, in
+the absence of genotyping of the LRBA locus.
+Description of the phenotype point system can be found in the bullet points below or
+in a more detailed form in the attached table entitled “CTLA4 Phenotype Scoring
+Table”. The table includes a total of two 4-point criteria, one 3-point criterion, five 2point criteria, and twelve 1-point criteria:
+Clinical criteria
+Sinopulmonary findings 4
+Non-infectious gastrointestinal or hepatobiliary disease 4
+Immune-mediated cytopenias 2
+Nonmalignant Lymphoproliferation 2
+Severe, persistent, recurrent viral infections including skin warts 2
+Immune-mediated skin and hair findings 1
+Endocrinopathy 1
+
+Severe, persistent, recurrent, atypical, opportunistic bacterial, Mycobacterial or
+fungal infections 1
+Neurological findings 1
+Inflammatory findings (arthritis, vasculitis, recurrent fevers) 1
+Lymphoma 1
+Clinical immunophenotypic data
+Hypogammaglobulinemia 2
+Lymphopenia 1
+Abnormal TBNK levels 1
+Presence of autoantibodies 1
+Defective antigen-specific immune responses 1
+Histopathology findings of lymphocytic / granulomatous tissue infiltration 1
+Patient cell-based assay data
+Transendocytosis / Soluble CD80/CD86 ligand endocytosis (reduced) 3
+Ex vivo T cell suppression (reduced) 2
+Cell surface and/or intracellular CTLA4 expression (reduced) 1
+Default
+4
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+PS4_Moderate is Met by observation of the variant in 2-3 independent probands.
+The probands used for PS4_Moderate cannot include the same proband used for PP4.
+In order to be counted for this criterion, a proband must meet one of the following two
+requirements:
+To have reported phenotypes that score a minimum of 6 phenotype points, as
+well as genotyping of the LRBA locus to confirm the absence of biallelic variants
+in LRBA that have been classified either Likely Pathogenic or Pathogenic. Note: a
+monoallelic LRBA variant can be tolerated.
+OR
+To have reported phenotypes that score a minimum of 10 phenotype points, in
+the absence of genotyping of the LRBA locus.
+Description of the phenotype point system can be found in the bullet points below or
+in a more detailed form in the attached table entitled “CTLA4 Phenotype Scoring
+Table”. The table includes a total of two 4-point criteria, one 3-point criterion, five 2point criteria, and twelve 1-point criteria:
+Clinical criteria
+Sinopulmonary findings 4
+Non-infectious gastrointestinal or hepatobiliary disease 4
+Immune-mediated cytopenias 2
+Nonmalignant Lymphoproliferation 2
+Severe, persistent, recurrent viral infections including skin warts 2
+Immune-mediated skin and hair findings 1
+
+Endocrinopathy 1
+Severe, persistent, recurrent, atypical, opportunistic bacterial, Mycobacterial or
+fungal infections 1
+Neurological findings 1
+Inflammatory findings (arthritis, vasculitis, recurrent fevers) 1
+Lymphoma 1
+Clinical immunophenotypic data
+Hypogammaglobulinemia 2
+Lymphopenia 1
+Abnormal TBNK levels 1
+Presence of autoantibodies 1
+Defective antigen-specific immune responses 1
+Histopathology findings of lymphocytic / granulomatous tissue infiltration 1
+Patient cell-based assay data
+Transendocytosis / Soluble CD80/CD86 ligand endocytosis (reduced) 3
+Ex vivo T cell suppression (reduced) 2
+Cell surface and/or intracellular CTLA4 expression (reduced) 1
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+PS4_Supporting is Met by 1 observation of the variant in a proband.
+The proband used for PS4_Supporting cannot be the same proband used for PP4.
+In order to be counted for this criterion, a proband must meet one of the following two
+requirements:
+To have reported phenotypes that score a minimum of 6 phenotype points, as
+well as genotyping of the LRBA locus to confirm the absence of biallelic variants
+in LRBA that have been classified either Likely Pathogenic or Pathogenic. Note: a
+monoallelic LRBA variant can be tolerated.
+OR
+To have reported phenotypes that score a minimum of 10 phenotype points, in
+the absence of genotyping of the LRBA locus.
+Description of the phenotype point system can be found in the bullet points below or
+in a more detailed form in the attached table entitled “CTLA4 Phenotype Scoring
+Table”. The table includes a total of two 4-point criteria, one 3-point criterion, five 2point criteria, and twelve 1-point criteria:
+Clinical criteria
+Sinopulmonary findings 4
+Non-infectious gastrointestinal or hepatobiliary disease 4
+Immune-mediated cytopenias 2
+Nonmalignant Lymphoproliferation 2
+Severe, persistent, recurrent viral infections including skin warts 2
+
+Immune-mediated skin and hair findings 1
+Endocrinopathy 1
+Severe, persistent, recurrent, atypical, opportunistic bacterial, Mycobacterial or
+fungal infections 1
+Neurological findings 1
+Inflammatory findings (arthritis, vasculitis, recurrent fevers) 1
+Lymphoma 1
+Clinical immunophenotypic data
+Hypogammaglobulinemia 2
+Lymphopenia 1
+Abnormal TBNK levels 1
+Presence of autoantibodies 1
+Defective antigen-specific immune responses 1
+Histopathology findings of lymphocytic / granulomatous tissue infiltration 1
+Patient cell-based assay data
+Transendocytosis / Soluble CD80/CD86 ligand endocytosis (reduced) 3
+Ex vivo T cell suppression (reduced) 2
+Cell surface and/or intracellular CTLA4 expression (reduced) 1
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+Located in a mutational hot spot and/or critical and well-established
+Specifications:functional domain without benign variation
+
+Moderate
+Not mutually exclusive with PM5.
+Met by variants in the MYPPPY domain (residues 134-139), which is required for
+interaction with CD80 and CD86.
+Default
+2
+Point
+Value:
+Modification Clarification
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+Absent from controls (or at extremely low frequency)
+Specifications:
+
+Supporting
+Supporting level only
+Met for total allele frequency lower than 1.43 x 10-7 (0.000000143) across all
+populations in gnomAD v4.1.0.
+Threshold is based on the experts’ estimate of CTLA-4 insufficiency prevalence of
+1/200,000 – 1/1,000,000 people and 45-70% penetrance. The lower end of the
+prevalence estimate (1 in 1,000,000) and the higher end of the penetrance estimate
+(70%) were used for this calculation. Allelic heterogeneity of 1 and genetic
+heterogeneity of 1 were also assumed for the calculation.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Not applicable, as this code is specific to recessive disorders.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+VCEP
+Protein length changes due to in-frame deletions/insertions in a non-repeat
+Specifications:region or stop-loss variants
+
+Moderate
+This code is mutually exclusive with PVS1 (PMID: 30192042) and PP3 (in order not to
+double-count in silico predictor data) but can be used together with PM1.
+Met at default strength (PM4) by an in-frame deletion resulting in a protein length
+change greater than or equal to 2 amino acids, if at least one of the deleted
+nucleotides is highly conserved (PhyloP score greater than or equal to 2.0) and if
+SpliceAI score is <0.2.
+Met at default strength (PM4) by an in-frame insertion resulting in a protein length
+change greater than or equal to 2 amino acids, if at least one of the adjacent amino
+acids is highly conserved (PhyloP score greater than or equal to 2.0) and if SpliceAI
+score is <0.2.
+The region of the protein affected by the variant is key to consider. If variants within
+this region occur in healthy populations, the region is polymorphic. Incomplete
+penetrance should also be considered as a caveat for polymorphism.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Missense change at an amino acid residue where a different missense
+Specifications:change determined to be pathogenic has been seen before
+
+Moderate
+Do not apply for any variant that meets BS1 or BA1.
+Not mutually exclusive with PM1.
+Comparison variant must have a Pathogenic or Likely Pathogenic classification
+reached using these VCEP-specified rules without using PM5.
+The variant of interest must have an equal or higher Grantham score than the
+Pathogenic / Likely Pathogenic comparison
+
+variant (https://en.wikipedia.org/wiki/Amino_acid_replacement#Grantham's_distance).
+SpliceAI must be used to examine both variants for lack of effect on splicing
+(SpliceAI Δ score <0.2).
+Default
+2
+Point
+Value:
+Modification Clarification
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+De novo in a patient with the disease and no family history
+Specifications:
+For PM6, maternity and paternity are not confirmed but assumed, with
+no family history of the disease.
+
+Strong
+The “phenotypic consistency” used on the SVI point-counting table below will be
+chosen for each proband by the number of phenotype points scored by the proband
+on the PS4 scoring system:
+(A) If the proband scores greater than or equal to 4 and <6 phenotype points in
+the PS4 counting rubric, use the number of de novo points corresponding to
+“Phenotype consistent with gene but not highly specific and high genetic
+heterogeneity”.
+(B) If the proband scores 6 or more phenotype points in the PS4 counting rubric
+AND is not known to harbor biallelic LRBA variants, use the number of de novo
+points corresponding to “Phenotype consistent with gene but not highly
+specific”.
+(C) If the proband scores 10 or more phenotype points in the PS4 counting
+rubric AND is not known to harbor biallelic LRBA variants, use the number of de
+novo points corresponding to “Phenotype highly specific for gene”.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+The “phenotypic consistency” used on the SVI point-counting table below will be
+chosen for each proband by the number of phenotype points scored by the proband
+
+on the PS4 scoring system:
+(A) If the proband scores greater than or equal to 4 and <6 phenotype points in
+the PS4 counting rubric, use the number of de novo points corresponding to
+“Phenotype consistent with gene but not highly specific and high genetic
+heterogeneity”.
+(B) If the proband scores 6 or more phenotype points in the PS4 counting rubric
+AND is not known to harbor biallelic LRBA variants, use the number of de novo
+points corresponding to “Phenotype consistent with gene but not highly
+specific”.
+(C) If the proband scores 10 or more phenotype points in the PS4 counting
+rubric AND is not known to harbor biallelic LRBA variants, use the number of de
+novo points corresponding to “Phenotype highly specific for gene”.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+The “phenotypic consistency” used on the SVI point-counting table below will be
+chosen for each proband by the number of phenotype points scored by the proband
+on the PS4 scoring system:
+(A) If the proband scores greater than or equal to 4 and <6 phenotype points in
+the PS4 counting rubric, use the number of de novo points corresponding to
+“Phenotype consistent with gene but not highly specific and high genetic
+heterogeneity”.
+(B) If the proband scores 6 or more phenotype points in the PS4 counting rubric
+AND is not known to harbor biallelic LRBA variants, use the number of de novo
+points corresponding to “Phenotype consistent with gene but not highly
+specific”.
+(C) If the proband scores 10 or more phenotype points in the PS4 counting
+rubric AND is not known to harbor biallelic LRBA variants, use the number of de
+novo points corresponding to “Phenotype highly specific for gene”.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP1
+Original ACMG
+Summary
+
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Co-segregation with disease in multiple affected family members in a gene
+Specifications:definitively known to cause the disease.
+
+Strong
+Due to incomplete penetrance (45-70%), PP1 will require each family member to
+reach at least 6 points in the PS4 counting rubric in order to be considered affected
+for the purpose of counting co-segregations.
+Met at the PP1_Strong level for co-segregation of the variant with the affected
+phenotype across at least 4 meioses in one family or combined across multiple
+unrelated families.
+PP1 should not be applied when a variant also has population data meeting BA1 or
+BS1 since a common variant may appear to segregate with the disease by chance.
+Default
+4
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Due to incomplete penetrance (45-70%), PP1_Moderate will require each family
+member to reach at least 6 points in the PS4 counting rubric in order to be considered
+affected for the purpose of counting co-segregations.
+Met at the PP1_Moderate level for co-segregation of the variant with the affected
+phenotype across at least two meioses in one family or combined across multiple
+unrelated families.
+PP1 should not be applied when a variant also has population data meeting BA1 or
+BS1 since a common variant may appear to segregate with the disease by chance.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Due to incomplete penetrance (45-70%), PP1 will require each family member to
+reach at least 6 points in the PS4 counting rubric in order to be considered affected
+for the purpose of counting co-segregations.
+Met at the supporting level for co-segregation of the variant with the affected
+phenotype across at least one meiosis (i.e. the variant is present in the proband + an
+affected relative).
+
+PP1 should not be applied when a variant also has population data meeting BA1 or
+BS1 since a common variant may appear to segregate with the disease by chance.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Missense variant in a gene that has a low rate of benign missense variation
+and where missense variants are a common mechanism of disease Not
+applicable, as analysis of the evolutionary constraint of CTLA4 (low
+missense Z-score) shows that some missense variation is tolerated
+(benign).
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can be
+used only once in any evaluation of a variant.
+VCEP
+Multiple lines of computational evidence support a deleterious effect on
+Specifications:the gene or gene product (conservation, evolutionary, splicing impact, etc)
+
+Supporting
+Met at the default (PP3) level by a missense variant with REVEL score greater than or
+equal to 0.644 and CADD PHRED score greater than or equal to 25.3 (PMID:
+36413997).
+The above requirement for agreement between two in silico tools was reached
+following a pilot study of suspected pathogenic and suspected benign variants
+(assembled from ClinVar submissions and published assertions of pathogenicity).
+Some suspected pathogenic CTLA4 variants fall in REVEL’s benign range while some
+suspected benign CTLA4 variants fall in CADD’s pathogenic range. All false positive
+
+and false negative predictions in the test set could be avoided by requiring that both
+tools agree in order for PP3 or BP4 to be Met.
+Met by missense, synonymous, or intronic variants outside the +/-1,2 dinucleotide
+positions that are predicted as damaging using SpliceAI (cutoff Δ score greater than
+or equal to 0.2).
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+Patient’s phenotype or family history is highly specific for a disease with a
+Specifications:single genetic etiology.
+
+Moderate
+In order to be counted for PP4_Moderate, a proband must;
+score at least 10 phenotype points in the PS4 counting rubric
+AND
+have been genotyped using a method able to detect LRBA variants without
+biallelic variants found AND
+have experimental data from the patient's cells showing a functional defect in
+the CTLA4 pathway such as defective transendocytosis or soluble ligand
+endocytosis, defective Treg suppression of T cell proliferation, or reduced surface
+or whole cell CTLA4 expression.
+Patient cell-based assays approved for application of PP4_Moderate include;
+(1) Transendocytosis or soluble ligand endocytosis (i.e. PMID: 25329329, PMID:
+34111452, PMID: 28159733)
+(2) Treg-mediated suppression of T cell proliferation (i.e. PMID: 25213377)
+(3) Cell surface and/or intracellular CTLA4 expression (i.e. PMID: 25213377,
+PMID: 25329329, PMID: 34111452, PMID: 28159733)
+This proband cannot be used for the PS4 code.
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+Default
+Point
+Value:
+
+2
+
+Modification Gene-specific
+Type:
+
+Supporting
+In order to be counted for PP4 at the default (supporting) level of strength, a proband
+must;
+score at least 10 phenotype points in the PS4 counting rubric
+AND
+have been genotyped using a method able to detect LRBA variants without
+biallelic variants found.
+This proband cannot be used for the PS4 code.
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Met for GrpMax Filtering Allele Frequency greater than or equal to 1.11 x 10-5
+(0.0000111) in gnomAD, with at least 5 alleles total across all populations in gnomAD
+(gnomAD v4.1.0).
+Threshold is based on the experts’ estimate of CTLA-4 insufficiency prevalence of
+1/200,000 – 1/1,000,000 people and 45-70% penetrance. A higher prevalence
+estimate (1 in 100,000) and the lower end of the penetrance estimate (45%) were
+used for this calculation. Allelic heterogeneity of 1 and genetic heterogeneity of 1
+were also assumed for the calculation.
+
+Default
+Not Applicable
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Allele frequency is greater than expected for disorder
+Specifications:
+
+Strong
+Met for GrpMax Filtering Allele Frequency greater than or equal to 1.11 x 10-6
+(0.00000111) in gnomAD, with at least 3 alleles total across all populations in
+gnomAD (gnomAD v4.1.0).
+If GrpMax filtering allele frequency is not listed for the variant, this code is evaluated
+in relation to the maximum allele frequency among the five major continental
+populations (African / African-American, East Asian, European non-Finnish, Latino /
+Admixed-American, or South Asian), but requires at least 3 alleles total across all
+populations in gnomAD (gnomAD v4.1.0) to be met.
+Threshold is based on the experts’ estimate of CTLA-4 insufficiency prevalence of
+1/200,000 – 1/1,000,000 people and 45-70% penetrance. An intermediate prevalence
+estimate (1 in 500,000) and the lower end of the penetrance estimate (45%) were
+used for this calculation. Allelic heterogeneity of 1 and genetic heterogeneity of 0.5
+were also assumed for the calculation.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+
+Comments:
+
+Not applicable due to incomplete penetrance.
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+Well-established in vitro or in vivo functional studies show no damaging
+Specifications:effect on protein function or splicing.
+
+Strong
+A calculated OddsPath < 0.053 is needed to upgrade any assay result showing normal
+CTLA4 function to BS3 (as recommended in PMID: 31892348).
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+A minimum of 11 total P/LP and B/LB variant controls (classified using these same
+specifications) are needed to upgrade any assay result showing normal CTLA4
+function to BS3_Moderate (as recommended in PMID: 31892348).
+Default
+-2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+A normal result for a CTLA4 variant using one of the approved assays below cannot
+be interpreted to mean normal CTLA4 function by itself. BS3_Supporting can only be
+applied when a second different assay also shows a normal result.
+Expanded information about all published functional studies in non-patient cells
+(PS3/BS3) or patient cells (PS4/PP4) assessed by the VCEP can be found in the
+attached file entitled CTLA4_Functional Assay_Research_PS3_BS3.
+Although suspected benign variants are not present in all of the PMIDs below, in vitro
+assays in non-patient cells approved by the VCEP for application of BS3_Supporting
+include:
+(1) Transendocytosis OR soluble CD80 and/or CD86 ligand endocytosis (i.e.
+PMID: 25329329, PMID: 25632005, PMID: 25367873, PMID: 27102614, PMID:
+29375547, PMID: 15814706, PMID: 20870175)
+
+(2) In vitro T Cell Suppression (i.e. PMID: 29375547, PMID: 26478010, PMID:
+25213377)
+(3) CTLA4 Endocytosis and Recycling (i.e. PMID: 15814706)
+(4) Cell surface and/or intracellular CTLA4 expression (i.e. PMID: 25367873,
+PMID: 14578884, PMID: 29375547, PMID: 7559643, PMID: 25213377)
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+Lack of segregation in affected members of a family
+Specifications:
+
+Strong
+Due to incomplete penetrance (45-70%), BS4 will require each family member to
+reach at least 6 points in the PS4 counting rubric in order to be considered affected
+for the purpose of counting lack of segregation.
+Lack of segregation should be identified in more than 1 affected family member.
+Default
+-4
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Due to incomplete penetrance (45-70%), BS4_Supporting will require each family
+member to reach at least 6 points in the PS4 counting rubric in order to be considered
+affected for the purpose of counting lack of segregation.
+If only 1 affected family member lacks segregation of the genotype, downgrade to
+BS4_Supporting.
+Default
+Point
+Value:
+
+-1
+
+Modification Disease-specific,Strength
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable, as pathogenic CTLA4 variants are not limited to truncating
+variants, but can be missense as well.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Do not use this criterion. BP2 would be more applicable to a very large,
+polymorphic gene, while it’s rarely going to come up for a short gene like
+CTLA4. Also, while biallelic cases have not yet been found, they exist for
+other IEI genes.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Not applicable, as repetitive regions of unknown function are not known
+within CTLA4. The most relevant known variant,
+NM_005214.5(CTLA4):c.110_118del, may be better evaluated as a
+potential splice variant (splice acceptor loss and splice acceptor gain).
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Multiple lines of computational evidence suggest no impact on gene or
+Specifications:gene product (conservation, evolutionary, splicing impact, etc.)
+
+Supporting
+Met at the default (BP4) level by a missense variant with REVEL less than or equal to
+0.290, CADD PHRED score less than or equal to 22.7, and SpliceAI Δ score <0.1
+(PMID: 36413997).
+The above requirement for agreement between two in silico tools was reached
+following a pilot study of suspected pathogenic and suspected benign variants
+(assembled from ClinVar submissions and published assertions of pathogenicity).
+Some suspected pathogenic CTLA4 variants fall in REVEL’s benign range while some
+suspected benign CTLA4 variants fall in CADD’s pathogenic range. All false positive
+and false negative predictions in the test set could be avoided by requiring that both
+tools agree in order for PP3 or BP4 to be Met.
+Applicable to both synonymous variants and all intronic variants outside the +/-1,2
+dinucleotide positions not predicted to impact splicing by SpliceAI (SpliceAI Δ score
+<0.1, PMID: 37352859).
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+VCEP
+Variant found in a case with an alternate molecular basis for disease
+Specifications:
+
+Supporting
+Two such cases are required to mitigate the VCEP’s concern over relying on other
+groups’ classifications of pathogenic variants in genes such as LRBA.
+Default
+Point
+Value:
+
+-1
+
+Modification Disease-specific
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+A synonymous (silent) variant for which splicing prediction algorithms
+Specifications:predict no impact to the splice consensus sequence nor the creation of a
+new splice site AND the nucleotide is not highly conserved
+
+Strong
+BP7_Strong (RNA) is met by variants with experimental evidence of no impact on
+splicing (PMID: 3735285).
+Default
+-4
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+Apply only if BP4 is met.
+Applicable to both synonymous variants and intronic variants not predicted to impact
+splicing by SpliceAI (SpliceAI Δ score <0.1, PMID: 37352859).
+Only applicable for intronic/non-coding variants located outside the donor/acceptor
+splice region (conservatively designated as intronic variants at or beyond
+positions +7/−21) or for synonymous exonic variants located outside of the first
+nucleotide or the last 3 nucleotides of the exon (PMID: 37352859).
+
+Default
+-1
+Point
+Value:
+Modification Clarification
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+CTL4 Domains and Exons: Figure showing the domain structure and exon organization of CTLA4 
+CTLA4_Pilot_Results: Updated results from 37 CTLA4 pilot variants curated using these
+specifications 
+Points system to reach final classification: Rules for combining pathogenic and benign codes to
+reach final classification according to points system (PMID: 32720330). 
+07_22_26 VCEP updates in response to reviewer comments: VCEP updates and responses to
+review of proposed version 2.0.0 of CTLA4 specifications 
+06/04/2026 VCEP updates in response to SVI review: VCEP updates and responses to review of
+proposed version 2.0.0 of CTLA4 specifications 
+PS2 / PM6 Table: PS2 / PM6 table for determining de novo code strength 
+CTLA4_Functional Assay_Research_PS3_BS3: Excel file listing the CTLA4 functional assays
+approved or not approved for PS3 and BS3 
+VCEP updates in response to SVI review: VCEP updates and responses to CTLA4 SVI review 
+PVS1 Decision Tree for CTLA4: Decision tree to guide PVS1 strength level selection for loss-of-function
+variants in CTLA4.
+
+CTLA4 Phenotype Scoring Table: Table describing the phenotype point system used determine
+proband eligibility for inclusion in the PS4 and PP4 codes
+
+

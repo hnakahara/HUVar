@@ -1,0 +1,1199 @@
+Criteria Specification
+ClinGen Myeloid Malignancy Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for RUNX1 Version 3.1
+Affiliation: Myeloid Malignancy VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : MM-VCEP Specifications for RUNX1 Variant Curation
+Version : 3.1
+Released : 2/13/2026
+DOI : 10.5281/zenodo.21421484
+Release Notes :
+(1) New gnomAD MAF threshold for PM2_supporting ≤ 0.00005 to account for larger population in gnomAD v4.
+(2) Upgraded strength of PM1 to PM1_strong when used for missense variants at the following residues: R107, K110, A134, R162, R166, S167, R169, G170, K194,
+T196, D198, R201, R204. Added a caveat to not use PM5/PS1 at any level if PM1 was applied.
+(3) Upgraded strength of PM4 to PM4_strong when used for missense variants at the following residues: R107, K110, A134, R162, R166, S167, R169, G170, K194,
+T196, D198, R201, R204. Added an allowance to use PM4 for stop-loss variants.
+(4) Established PVS1_variable (RNA) and BP7_variable (RNA) to be used when RNA data is available for splicing variants. PS1 is now able to be used for splicing
+variants with the same predicted splicing event as a known pathogenic/likely pathogenic splicing variant.
+(5) Conservation data is no longer considered when applying BP7. BP7 is limited to intronic variants, and synonymous variants which don’t occur in the last 3
+nucleotides preceding a canonical donor splice site or the first nucleotide following a canonical acceptor splice site.
+(6) Revised PM5 to account for Grantham scores when evaluating missense variants.
+
+Contributors & Keywords
+Research Group: Myeloid Malignancy VCEP
+Keywords: human biology genomics variant variant classification clingen
+disease standards RUNX1 NM_001754.4 (RUNX1c) Autosomal dominant
+inheritance hereditary thrombocytopenia and hematologic cancer
+predisposition syndrome
+
+Rights Holder: The Clinical Genome Resource (ClinGen)
+
+Rules for RUNX1
+General Comments:
+
+Release notes: (1) New gnomAD MAF threshold for PM2_supporting ≤ 0.00005 to account for larger population in
+gnomAD v4. (2) Upgraded strength of PM1 to PM1_strong when used for missense variants at the following residues:
+R107, K110, A134, R162, R166, S167, R169, G170, K194, T196, D198, R201, R204. Added a caveat to not use
+PM5/PS1 at any level if PM1 was applied. (3) Upgraded strength of PM4 to PM4_strong when used for missense
+variants at the following residues: R107, K110, A134, R162, R166, S167, R169, G170, K194, T196, D198, R201, R204.
+Added an allowance to use PM4 for stop-loss variants. (4) Established PVS1_variable (RNA) and BP7_variable (RNA) to
+be used when RNA data is available for splicing variants. PS1 is now able to be used for splicing variants with the
+same predicted splicing event as a known pathogenic/likely pathogenic splicing variant. (5) Conservation data is no
+longer considered when applying BP7. BP7 is limited to intronic variants, and synonymous variants which don’t occur
+in the last 3 nucleotides preceding a canonical donor splice site or the first nucleotide following a canonical acceptor
+splice site. (6) Revised PM5 to account for Grantham scores when evaluating missense variants.
+
+Gene: RUNX1 (HGNC:10471) 
+Transcripts:
+NM_001754.4 (RUNX1c)
+
+HGNC Name: RUNX family transcription factor 1
+Disease:
+hereditary thrombocytopenia and hematologic
+cancer predisposition syndrome
+(MONDO:0011071)  Mode of Inheritance:
+Autosomal dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single or multi-exon deletion) in a gene where loss of
+function (LOF) is a known mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Specifications:
+
+ClinGen Myeloid Malignancy Variant Curation Expert Panel (MM-VCEP) notes:
+(1) We recommend using RUNX1 isoform c as the default transcript (NM_001754.4), since this is the isoform used
+for annotation by most clinical laboratories.
+
+(2) Three major isoforms (a, b, c) are expressed by use of two promotors and alternative splicing. Expression of the
+short human RUNX1a isoform has been shown to favor expansion of the hematopoietic stem cell (HSC) pool,
+whereas expression of the full length RUNX1b and RUNX1c isoforms function to promote hematopoietic
+differentiation. RUNX1 LOF variants are a common mechanism of disease in familial platelet disorder with
+predisposition to acute myeloid leukemia (FPD/AML). C-terminal truncating variants not predicted to undergo
+nonsense-mediated mRNA decay (NMD) are classified as PVS1_strong, deletions of exon 1-3, presumably only
+affecting RUNX1 isoform c, meet PVS1_moderate.
+(3) Most splicing effects are based on predictions. The rules can be modified in the future if new functional
+evidence3 becomes available. The rules can be modified in the future if RNA evidence becomes available using
+Walker et al., 2023, PMID: 37352859 5 as a guide; modification of strength should be based on the quality of the
+RNA study where:
+1. Comparison to a control is necessary
+2. Patient RNA is better than minigene assays
+3. Primers are designed to capture the possibility of multi-exonic/multi-cassette events
+4. NMD inhibitors (e.g., puromycin, proprietary molecule found in PAXgene tubes), particularly when the predicted
+effect is nonsense-mediated decay, are used
+5. Quantification of the effect by SNP analysis is better than PSI (percent splicing index) analysis is better than
+capillary electrophoresis is better than estimation by gel band density
+6. Multiple studies are better than a single study
+*Caution should be used in modifying strength when the effect of the splicing impact is incomplete ("leaky" splice
+site) or unclear
+
+RUNX1 Specification:
+Per modified RUNX1 PVS1 decision tree for single-nucleotide variants (SNVs) and CNVs and table of splicing effects.
+Strength-modified: PVS1, PVS1_Strong, PVS1_Moderate
+PVS1_Variable (RNA): When RNA/splicing data is available for a variant, apply PVS1 at the appropriate strength
+level based on the predicted effect of the aberrant mRNA on protein translation as it corresponds to the
+PVS1_Variable splicing table. Strength may also be modified based on the quality of the RNA analysis (as described
+above). For "leaky" splice sites, strength level should be decreased by one if a near-complete impact is
+demonstrated, but no code should be applied if an incomplete impact is demonstrated. Refer to Walker et al., 2023,
+PMID: 37352859 5 for additional guidance.
+SNVs, Indels/Delins, Splicing Variants
+[RUNX1 PVS1 decision tree for SNVs]
+CNVs
+[RUNX1 PVS1 decision tree for CNVs]
+Canonical Splice Site Variants (see Supplemental Table)
+[Summary of splicing effects]
+
+Very Strong
+Per modified RUNX1 PVS1 decision tree for SNVs and CNVs and table of splicing effects.
+Default Point
+Value:
+Modification
+Type:
+
+8
+Gene-specific
+
+Strong
+Per modified RUNX1 PVS1 decision tree for SNVs and CNVs and table of splicing effects.
+Default Point
+Value:
+Modification
+Type:
+
+4
+Gene-specific,Strength
+
+Moderate
+Per modified RUNX1 PVS1 decision tree for SNVs and CNVs and table of splicing effects.
+Default Point
+Value:
+Modification
+Type:
+
+2
+Gene-specific,Strength
+
+PS1
+Original ACMG Summary
+
+Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein level.
+VCEP
+Specifications:
+
+MM-VCEP Notes:
+(1) The previously established pathogenic variant must be reviewed by the MM-VCEP and asserted pathogenic/likely
+pathogenic before this rule can be applied.
+(2) For missense variants, RNA data or agreement in splicing predictor show no impact on splicing.
+(3) For splice site variants, do not apply this code except for variants in the canonical donor/acceptor
+(“dinucleotide”) sites, the U2 donor motif (last 3 bases of the exon and 6 nucleotides of the intron), or the U2
+acceptor motif (20 nucleotides of the intron and 1st base of the exon). Splicing predictions for the variant being
+evaluated and the known pathogenic/likely pathogenic (as assessed by VCEP rules) should match before
+consideration of the criterion, with at least similar scores. Do not apply for +2G>C variants.
+
+RUNX1 Specification:
+For missense variants:
+PS1: Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.
+PS1_Moderate: Same amino acid change as a previously established likely pathogenic variant regardless of
+nucleotide change.
+For splice site variants:
+PS1_Variable: Follow recommendations from the ClinGen SVI Splicing Subgroup (Walker et al., 2023, PMID:
+37352859 5)
+[PS1 splicing application]
+
+Strong
+PS1: Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.
+For splice site variants:
+PS1_Variable: Follow recommendations from the ClinGen SVI Splicing Subgroup (Walker et al., 2023, PMID: 37352859 5)
+Default Point
+Value:
+Modification
+Type:
+
+4
+General recommendation,Strength
+
+Moderate
+PS1_Moderate: Same amino acid change as a previously established likely pathogenic variant regardless of nucleotide change.
+For splice site variants:
+PS1_Variable: Follow recommendations from the ClinGen SVI Splicing Subgroup (Walker et al., 2023, PMID: 37352859 5)
+Default Point
+Value:
+Modification
+Type:
+
+2
+General recommendation,Strength
+
+PS2
+Original ACMG Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to
+non-maternity.
+VCEP
+Specifications:
+
+De novo (both maternity and paternity confirmed) in a patient with the disease and no family history
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer,
+etc. can contribute to non-maternity.
+MM-VCEP notes:
+(1) The FPD/AML phenotype is not highly specific and there is substantial genetic heterogeneity. We thus concluded
+that due to the lack of a highly specific phenotype and genetic heterogeneity, the maximum allowable value is 1
+point contributing to the overall score.
+(2) The phenotype of a deleterious RUNX1 mutation encompasses at least one of the following three criteria:
+1. Mild to moderate thrombocytopenia with normal platelet size and volume in the absence of other
+causative factors such as autoimmune (e.g. antibodies against platelet surface antigens) or drug-related
+
+thrombocytopenia.
+2. Platelet ultrastructural and/or functional defects including platelet alpha or dense granule secretion
+defects or impaired platelet aggregation - particularly in response to collagen and epinephrine.
+3. Diagnosis of a hematologic malignancy, most commonly affecting the myeloid lineage causing acute
+myeloid leukemia (AML) or myelodysplastic syndrome (MDS), less frequently involving the lymphoid
+lineage manifesting as T-acute lymphoblastic leukemia (T-ALL). There are rare case-reports of patients with
+germline RUNX1 mutations and mixed myeloproliferative syndromes/MDS such as chronic myelomonocytic
+leukemia, as well as case-reports of patients with B-ALL, and hairy-cell leukemia.
+(3) No family history is defined as the absence of the variant and any of the _RUNX1_-phenotypic criteria in first and
+second-degree relatives.
+(4) The maximum allowable strength by combining PS2 and PM6 is to apply one moderate or two supporting rules
+(the maximum allowable value is still 1 point).
+
+RUNX1 Specification:
+Following the ClinGen Sequence Variant Interpretation (SVI) Working Group guidance, de novo RUNX1 variants will
+be scored at the third tier of the point-based system (“Phenotype consistent with gene but not highly specific and
+high genetic heterogeneity”) with maximum allowable value of 1 point contributing to overall score:
+PS2_Moderate: ≥ 2 proven de novo occurrences (both maternity and paternity confirmed) in patients with
+FPD/AML phenotype.
+PS2_Supporting: 1 proven de novo occurrence (both maternity and paternity confirmed) in a patient with FPD/AML
+phenotype.
+
+Moderate
+PS2_Moderate: ≥ 2 proven de novo occurrences (both maternity and paternity confirmed) in patients with FPD/AML phenotype.
+Default Point
+Value:
+Modification
+Type:
+
+2
+Disease-specific,Strength
+
+Supporting
+PS2_Supporting: 1 proven de novo occurrence (both maternity and paternity confirmed) in a patient with FPD/AML phenotype.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Disease-specific,Strength
+
+PS3
+Original ACMG Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are
+considered the most well-established.
+VCEP
+Specifications:
+
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on the gene or gene product.
+MM-VCEP notes:
+1. Transactivation assays demonstrating altered transactivation compared to wildtype (wt) are often performed
+as functional studies to evaluate the pathogenicity of a RUNX1 variant. Promoter sequences of M-CSFR, PF4, CFMS and GZMB, containing consensus RUNX1 binding sites TGTGGT, have been used for this purpose. The
+transactivation assay must include wt and known pathogenic controls, as well as co-expression with CBFâ.
+2. Data from secondary assays are frequently used to evaluate an altered function of mutant RUNX1.
+Electrophoretic mobility shift assays and yeast hybrid assays are performed to demonstrate decreased DNA
+binding affinity, and co-immunoprecipitation assays, fluorescence resonance energy transfer assays and
+affinity assays can demonstrate diminished heterodimerization ability of mutant RUNX1 with CBFâ. Abnormal
+cellular localization of mutant RUNX1 can be shown by immunofluorescence and cell-fractionation with Western
+Blot. Sorted primary hematopoietic stem and progenitor cells can be used for demonstration of reduced colonyforming potential and xenotransplantation experiments may reveal abnormal function of mutant RUNX1 in
+vivo.
+
+RUNX1 Specification:
+PS3: Transactivation assays demonstrating altered transactivation (<20% of wt, and/or reduced to levels similar to
+well established pathogenic variants such as R201Q or R166Q) AND data from a secondary assay demonstrating
+altered function. Not applicable if variant meets PVS1. If variant meets PVS1_strong, upgrade to PVS1.
+PS3_Moderate: Transactivation assays demonstrating altered transactivation (<20% of wt and/or reduced to levels
+similar to well established pathogenic variants such as R201Q or R166Q) OR ≥ 2 secondary assays demonstrating
+
+altered function.
+PS3_Supporting: Transactivation assays demonstrating enhanced transactivation (>115% of wt).
+
+Strong
+PS3: Transactivation assays demonstrating altered transactivation (<20% of wt, and/or reduced to levels similar to well established
+pathogenic variants such as R201Q or R166Q) AND data from a secondary assay demonstrating altered function. Not applicable if variant
+meets PVS1. If variant meets PVS1_strong, upgrade to PVS1.
+Default Point
+Value:
+Modification
+Type:
+
+4
+Gene-specific,Strength
+
+Moderate
+PS3_Moderate: Transactivation assays demonstrating altered transactivation (<20% of wt and/or reduced to levels similar to well
+established pathogenic variants such as R201Q or R166Q) OR ≥ 2 secondary assays demonstrating altered function.
+Default Point
+Value:
+Modification
+Type:
+
+2
+Gene-specific,Strength
+
+Supporting
+PS3_Supporting: Transactivation assays demonstrating enhanced transactivation (>115% of wt).
+Default Point
+Value:
+Modification
+Type:
+
+1
+Gene-specific,Strength
+
+PS4
+Original ACMG Summary
+The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0 and the confidence interval around the estimate
+of RR or OR does not include 1.0. See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach statistical significance, the prior observation of the
+variant in multiple unrelated patients with the same phenotype, and its absence in controls, may be used as moderate level of evidence.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+(1) There is currently no published RUNX1 case control study. The criteria of a case control study can be added into
+the rules, if such a study will be published in the future. The original ACMG/AMP criterion states that in the absence
+of a published case-control study, the observation of the variant in multiple unrelated patients with the same
+phenotype and its absence in controls, may be used. The MM-VCEP created a “quasi-case-control study” with the
+estimated number of probands worldwide and the overall gnomAD population as control cohort. In order to apply
+this code, the proband has to meet the _RUNX1_-phenotypic criteria (see PS2) and the variant has to be either
+absent from gnomAD or only present once.
+
+RUNX1 Specification:
+PS4: ≥ 4 probands meeting at least one of the _RUNX1_-phenotypic criteria (OR 127.1).
+PS4_Moderate: 2-3 probands meeting at least one of the _RUNX1_-phenotypic criteria (OR 63.5-95.3).
+PS4_Supporting: 1 proband meeting at least one of the _RUNX1_-phenotypic criteria (OR 31.8).
+
+Strong
+PS4: ≥ 4 probands meeting at least one of the _RUNX1_-phenotypic criteria (OR 127.1).
+Default Point
+Value:
+Modification
+Type:
+
+4
+Disease-specific,Strength
+
+Moderate
+PS4_Moderate: 2-3 probands meeting at least one of the _RUNX1_-phenotypic criteria (OR 63.5-95.3).
+Default Point
+Value:
+
+2
+
+Modification
+Type:
+
+Disease-specific,Strength
+
+Supporting
+PS4_Supporting: 1 proband meeting at least one of the _RUNX1_-phenotypic criteria (OR 31.8).
+Default Point
+Value:
+Modification
+Type:
+
+1
+Disease-specific,Strength
+
+PM1
+Original ACMG Summary
+Located in a mutational hot spot and/or critical and well-established functional domain (e.g. active site of an enzyme) without benign
+variation.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+1. The Runt homology domain (RHD) has been established as highly conserved DNA binding domain without any
+benign variation in ClinVar. Thirteen somatic and/or germline mutational hotspots within the RHD have been
+identified: R107, K110, A134, R162, R166, S167, R169, G170, K194, T196, D198, R201, R204.
+2. Variants in other parts of the RHD (amino acid (AA) 89-204) have been described as likely
+pathogenic/pathogenic before. There was additional evidence of germline pathogenic/likely pathogenic RUNX2
+variants affecting AA 89 and 94 (PMID 17290219) [00](#PMID_ 17290219), a gene with a Runt Homology
+Domain that has 90% sequence homology with RUNX1. AA 89 is also still part of the b-sheet of the CBF
+heterodimerization domain, which is functionally important. Thus, we prompt to establish PM1_supporting with
+reduced strength-level for these variants.
+3. No reported germline RUNX1 mutations in AA residues 77-88 of the RHD to date. If there is more evidence
+available, this region may be expanded in the future to other parts of the RHD or the protein.
+
+RUNX1 Specification:
+PM1_strong: Variant affecting one of the following 13 AA residues within the RHD: R107, K110, A134, R162, R166,
+S167, R169, G170, K194, T196, D198, R201, R204.
+PM1_Supporting: Variant affecting one of the other AA residues 89-204 within the RHD.
+
+Strong
+PM1_strong: Variant affecting one of the following 13 AA residues within the RHD: R107, K110, A134, R162, R166, S167, R169, G170,
+K194, T196, D198, R201, R204.
+Default Point
+Value:
+Modification
+Type:
+
+4
+Gene-specific,Strength
+
+Supporting
+PM1_Supporting: Variant affecting one of the other AA residues 89-204 within the RHD.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Gene-specific,Strength
+
+PM2
+Original ACMG Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing Project, 1000 Genomes or Exome Aggregation
+Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+1. New gnomAD MAF threshold for PM2_supporting ≤ 0.00005 to account for larger population in gnomAD v4.The
+mean coverage of RUNX1 in the population database used should be at least 20x.
+
+RUNX1 Specification:
+PM2_Supporting: Minor allele frequency ≤ 0.00005 with at least 2000 alleles tested around and 20x coverage at
+the position.
+Caveat:
+
+*We recommend evaluating PM2_supporting using the GrpMax FAF when it is available in gnomAD v4.1.0. If a
+GrpMax FAF value is not available, we recommend requiring that all subpopulations meet the PM2_supporting
+threshold.
+
+Supporting
+PM2_Supporting: Minor allele frequency ≤ 0.00005 with at least 2000 alleles tested around and 20x coverage at the position.
+Caveat:
+*We recommend evaluating PM2_supporting using the GrpMax FAF when it is available in gnomAD v4.1.0. If a GrpMax FAF value is not
+available, we recommend requiring that all subpopulations meet the PM2_supporting threshold.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Gene-specific,Strength
+
+PM3
+Original ACMG Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+
+MM-VCEP notes: FPD/AML is inherited in an autosomal dominant manner, thus PM3 is not applicable.
+
+PM4
+Original ACMG Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stop-loss variants.
+VCEP
+Specifications:
+
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stop-loss variants.
+MM-VCEP notes:
+1. The RHD has been established as highly conserved DNA binding domain without any benign variation in
+ClinVar. Thirteen somatic and/or germline mutational hotspots within the RHD have been identified: R107,
+K110, A134, R162, R166, S167, R169, G170, K194, T196, D198, R201, R204.
+2. Variants in other parts of the RHD (AA 89-204) have been described as likely pathogenic/pathogenic before.
+There was additional evidence of germline pathogenic/likely pathogenic RUNX2 variants affecting AA 89 and 94
+(PMID 17290219)6, a gene with a Runt Homology Domain that has 90% sequence homology with RUNX1. AA 89
+is also still part of the b-sheet of the CBF heterodimerization domain, which is functionally important. Thus, we
+prompt to establish PM4_supporting with reduced strength-level for these variants.
+3. No reported germline RUNX1 mutations in AA residues 77-88 of the RHD to date. If there is more evidence
+available, this region may be expanded in the future to other parts of the RHD or the protein.
+
+RUNX1 Specification:
+For in-frame/indel variants:
+PM4_strong: In-frame deletion/insertion impacting at least one of the following AA residues within the RHD: R107,
+K110, A134, R162, R166, S167, R169, G170, K194, T196, D198, R201, R204.
+PM4_Supporting:
+In-frame deletion/insertion impacting at least one of the other AA residues 89-204 within the RHD.
+For stop loss variants:
+PM4: Stop-loss variant causing a protein extension.
+
+Strong
+For in-frame/indel variants:
+PM4_strong: In-frame deletion/insertion impacting at least one of the following AA residues within the RHD: R107, K110, A134, R162,
+R166, S167, R169, G170, K194, T196, D198, R201, R204.
+For stop loss variants:
+PM4: Stop-loss variant causing a protein extension.
+Default Point
+Value:
+Modification
+Type:
+
+4
+Gene-specific,Strength
+
+Moderate
+In-frame deletion/insertion impacting at least one of the following amino acid residues within the RHD: R107, K110, A134, R162, R166,
+S167, R169, G170, K194, T196, D198, R201, R204.
+Default Point
+Value:
+Modification
+Type:
+
+2
+Gene-specific,Strength
+
+Supporting
+PM4_Supporting:
+In-frame deletion/insertion impacting at least one of the other AA residues 89-204 within the RHD.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Gene-specific,Strength
+
+PM5
+Original ACMG Summary
+Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein level.
+VCEP
+Specifications:
+
+Missense change at an amino acid residue where a different missense change determined to be pathogenic has
+been seen before.
+MM-VCEP notes:
+1. RNA data or SpliceAI ≤ 0.20
+2. The previously established pathogenic variant must be reviewed by the MM-VCEP and asserted
+pathogenic/likely pathogenic before this rule can be applied.
+3. For missense variants, the Grantham score of the alternate residue of the new variant should be equal or
+higher to that of the alternate residue of the known pathogenic/likely pathogenic variant. [Grantham score
+table]
+
+(Grantham, 1974, PMID: 48437927)
+4. There are at least two nonsense/frameshift variants that were curated as pathogenic in each exon (exons 3-7)
+without applying PM5_Supporting.
+
+RUNX1 Specification:
+PM5_Strong: Missense change at an AA residue where ≥ 2 different missense changes which have been
+determined to be pathogenic before (after accounting for Grantham scores).
+PM5: Missense change at an AA residue where a different missense change which has been determined to be
+pathogenic before (after accounting for Grantham scores).
+PM5_Supporting: Missense change at an AA residue where a different missense change which has been
+determined to be likely pathogenic before (after accounting for Grantham scores).
+PM5_Supporting is also applied to nonsense/frameshift variants that are downstream of c.98 (in transcript
+NM_001754.4).
+
+Caveats:
+*Of note, the variant must not impact splicing based on RNA assay or SpliceAI ≤ 0.20.
+*The nonsense/frameshift variants before c.98 only affect one of the RUNX1 functional transcript. PVS1 is also not
+appliable in this region based on the RUNX1 PVS1 decision tree.
+*PM5 cannot be used if PM1 was applied at any strength level.
+
+Strong
+PM5_Strong: Missense change at an AA residue where ≥ 2 different missense changes which have been determined to be pathogenic
+before (after accounting for Grantham scores).
+Caveats:
+*Of note, the variant must not impact splicing based on RNA assay or SpliceAI ≤ 0.20.
+*The nonsense/frameshift variants before c.98 only affect one of the RUNX1 functional transcript. PVS1 is also not appliable in this region
+based on the RUNX1 PVS1 decision tree.
+*PM5 cannot be used if PM1 was applied at any strength level.
+Default Point
+Value:
+Modification
+Type:
+
+4
+Strength
+
+Moderate
+PM5: Missense change at an AA residue where a different missense change which has been determined to be pathogenic before (after
+accounting for Grantham scores).
+Caveats:
+*Of note, the variant must not impact splicing based on RNA assay or SpliceAI ≤ 0.20.
+*The nonsense/frameshift variants before c.98 only affect one of the RUNX1 functional transcript. PVS1 is also not appliable in this region
+based on the RUNX1 PVS1 decision tree.
+*PM5 cannot be used if PM1 was applied at any strength level.
+Default Point
+Value:
+Modification
+Type:
+
+2
+Strength
+
+Supporting
+PM5_Supporting: Missense change at an AA residue where a different missense change which has been determined to be likely
+pathogenic before (after accounting for Grantham scores).
+PM5_Supporting is also applied to nonsense/frameshift variants that are downstream of c.98 (in transcript NM_001754.4).
+Caveats:
+*Of note, the variant must not impact splicing based on RNA assay or SpliceAI ≤ 0.20.
+*The nonsense/frameshift variants before c.98 only affect one of the RUNX1 functional transcript. PVS1 is also not appliable in this region
+based on the RUNX1 PVS1 decision tree.
+*PM5 cannot be used if PM1 was applied at any strength level.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Strength
+
+PM6
+Original ACMG Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+(1) FPD/AML phenotype is not highly specific and there is substantial genetic heterogeneity. We thus concluded that
+due to the lack of a highly specific phenotype and genetic heterogeneity, the maximum allowable value is 1 point
+contributing to the overall score.
+(2) The phenotype of a deleterious RUNX1 mutation encompasses at least one of the three phenotypic criteria (see
+PS2).
+
+(3) No family history is defined as the absence of the variant and any of the RUNX1-phenotypic criteria in first and
+second-degree relatives.
+(4) The maximum allowable strength by combining PS2 and PM6 is to apply one moderate or two supporting rules
+(the maximum allowable value is still 1 point).
+
+RUNX1 Specification:
+Following the SVI guidance, assumed de novo RUNX1 variants will be scored at the third tier of the point-based
+system with maximum allowable value of 1 point contributing to overall score:
+PM6: ≥ 4 assumed de novo occurrences (without confirmation of maternity and paternity) in patients with FPD/AML
+phenotype.
+PM6_Supporting: 2 or 3 assumed de novo occurrences (without confirmation of maternity and paternity) in
+patients with FPD/AML phenotype.
+
+Moderate
+RUNX1 Specification:
+Following the SVI guidance, assumed de novo RUNX1 variants will be scored at the third tier of the point-based system with maximum
+allowable value of 1 point contributing to overall score:
+PM6: ≥ 4 assumed de novo occurrences (without confirmation of maternity and paternity) in patients with FPD/AML phenotype.
+Default Point
+Value:
+Modification
+Type:
+
+2
+Disease-specific,Strength
+
+Supporting
+RUNX1 Specification:
+Following the SVI guidance, assumed de novo RUNX1 variants will be scored at the third tier of the point-based system with maximum
+allowable value of 1 point contributing to overall score:
+PM6_Supporting: 2 or 3 assumed de novo occurrences (without confirmation of maternity and paternity) in patients with FPD/AML
+phenotype.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Disease-specific,Strength
+
+PP1
+Original ACMG Summary
+Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Specifications:
+
+Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease.
+MM-VCEP notes:
+1. The MM-VCEP adopted the approach being taken by other ClinGen-EPs and supported by the SVI and other
+work with additional meioses supporting higher evidence levels based on calculated LOD scores of 0.9, 1.5 and
+2.1, respectively, with three or four meioses for PP1, five or six meioses for PP1_moderate and seven or
+more meioses for PP1_strong.
+2. Affected individuals show at least one of the _RUNX1_-phenotypic criteria (see PS2).
+3. Only genotype and phenotype positive individuals and obligate carriers are counted.
+4. The MM-VCEP waived the ACMG/AMP recommendations for demonstrating co-segregation in more than one
+family given that many RUNX1 variants are unique to families and do not occur in other unrelated families.
+
+RUNX1 Specification:
+PP1_Strong: ≥ 7 meioses observed within one or across multiple families.
+PP1_Moderate: 5 or 6 meioses observed within one or across multiple families.
+PP1: 3 or 4 meioses observed within one or across multiple families.
+
+Strong
+PP1_Strong: ≥ 7 meioses observed within one or across multiple families.
+Default Point
+Value:
+
+4
+
+Modification
+Type:
+
+Disease-specific,Strength
+
+Moderate
+PP1_Moderate: 5 or 6 meioses observed within one or across multiple families.
+Default Point
+Value:
+Modification
+Type:
+
+2
+Disease-specific,Strength
+
+Supporting
+PP1: 3 or 4 meioses observed within one or across multiple families.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Disease-specific,Strength
+
+PP2
+Original ACMG Summary
+Missense variant in a gene that has a low rate of benign missense variation and where missense variants are a common mechanism of
+disease.
+
+Not Applicable
+Comments:
+
+MM-VCEP notes: The recommended cutoff for PP2 by the SVI is a missense constraint z score of ≥ 3.09 which was
+not met by RUNX1 (2.48 on ExAC and 2.08 on gnomAD). In addition, there are 9 benign/likely benign missense
+RUNX1 variants in ClinVar.
+
+PP3
+Original ACMG Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene product (conservation, evolutionary, splicing
+impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm should not be counted as an
+independent criterion. PP3 can be used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+1. For in-silico evaluation of missense variants, the MM-VCEP recommends using REVEL, a meta-predictor
+combining 13 individual tools with high sensitivity and specificity and that has recently demonstrated highest
+performance compared to any individual tool or other ensemble methods.
+2. The threshold of REVEL is based on the evaluation of 25 germline PATH/LPATH and 25 BEN/LBEN missense
+variants in RUNX1. With the comparison of 11 different ensemble in-silico predictors (BayesDel AF, CADD,
+Condel, DANN, Eigen, FATHMM-MKL, MetaLR, MetaSVM, REVEL, UMD predictor, VEST) and their respective AUC,
+REVEL was found to be among the highest performing tools (AUC=1) and the new threshold for PP3 and BP4
+was based on the REVEL scores at 90% sensitivity and 90% specificity, respectively.
+3. We compared the performance of the new splice predictor SpliceAI and MES, which has been shown to be the
+highest performing tool pre-SpliceAI by using a test set of 202 variants in genes associated with inherited
+hematologic malignancies/AA/BMF or cytopenia. The thresholds for PP3 and BP4 were established based on the
+SpliceAI score at 90% sensitivity (PP3, ≥ 0.38) and 90% specificity (BP4, ≤ 0.20).
+4. For some variant types that REVEL or SpliceAI scores are not available, multiple other predictors in agreements
+can be used in PP3.
+5. PP3 cannot be applied for canonical splice site variants.
+
+RUNX1 Specification:
+For missense variants:
+PP3: REVEL score ≥ 0.88 or SpliceAI ≥ 0.38, including the creation of cryptic novel splice sites.
+For synonymous and intronic (intron 4-8) variants:
+PP3: SpliceAI ≥ 0.38, including the creation of cryptic novel splice sites.
+Caveats:
+*Do not use for variants with a predicted splicing effect that is proven by RNA analysis. See PVS1_Variable (RNA).
+*Do not use for for canonical splice site variants.
+
+Supporting
+
+For missense variants:
+PP3: REVEL score ≥ 0.88 or SpliceAI ≥ 0.38, including the creation of cryptic novel splice sites.
+For synonymous and intronic (intron 4-8) variants:
+PP3: SpliceAI ≥ 0.38, including the creation of cryptic novel splice sites.
+Caveats:
+*Do not use for variants with a predicted splicing effect that is proven by RNA analysis. See PVS1_Variable (RNA).
+*Do not use for for canonical splice site variants.
+Default Point
+Value:
+Modification
+Type:
+
+1
+Disease-specific,Gene-specific
+
+PP4
+Original ACMG Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic etiology.
+
+Not Applicable
+Comments:
+
+MM-VCEP notes: The FPD/AML phenotype is rather unspecific and can be caused by a number of other inherited
+predisposition syndromes, somatic mutations or environmental factors that are insufficient to meet the original
+ACMG/AMP rule PP4.
+
+PP5
+Original ACMG Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available to the laboratory to perform an independent
+evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.
+PubMed : 29543229 
+
+BA1
+Original ACMG Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+FPD/AML with germline RUNX1 mutation is a rare disorder. The phenotype of carriers of a germline RUNX1 mutation
+includes three criteria (mild to moderate thrombocytopenia, platelet ultrastructural and/or functional defects and
+diagnosis of a hematologic malignancy). Of these three criteria, thrombocytopenia is the most common feature.
+Most clinical laboratories establish their platelet count reference values by measuring samples from at least 120
+healthy individuals and identifying the most outlying 5% of observed values. Most often, these outlying observations
+are split evenly between the ends of the test result distribution in the reference population, 2.5% at each end of the
+distribution, resulting in a two-sided reference interval. Using this approach, the prevalence of thrombocytopenia
+can be defined as 1 in 40 (lower 2.5%) in general population. The penetrance in families with RUNX1 germline
+mutation is high to near-complete. We identified a family with a penetrance of 85% among known carriers of the
+mutation as the pedigree with the lowest penetrance to date. So far, no founder mutations in RUNX1 have been
+reported, de novo variants are rare but have been described. The MM-VCEP modified BA1 using extremely
+conservative values to account for the unknown prevalence and disease attribution to RUNX1. In order to obtain a
+_RUNX1_-specific population allele frequency for BA1, we utilized the Whiffin/Ware calculator
+(http://cardiodb.org/allelefrequencyapp/) with a prevalence of 1 in 40, a conservative unascertained penetrance
+estimate of 85%, an allelic heterogeneity of 100% and a maximum genetic heterogeneity of 10%. A 95% confidence
+interval was used to develop the threshold. The threshold developed for application of BA1 as a stand-alone
+criterion is a minor allele frequency of equal to or higher than 0.0015 (0.15%).
+The MM-VCEP also adopted the SVI recommendation that the variant be present in any general continental
+population dataset with a minimum number of 2,000 alleles and variant present in ≥ 5 alleles.
+
+RUNX1 Specification:
+BA1: Minor allele frequency ≥ 0.0015 (0.15%) in any general continental population dataset with ≥ 2,000 alleles
+tested and variant present in ≥ 5 alleles.
+
+Stand Alone
+RUNX1 Specification:
+
+BA1: Minor allele frequency ≥ 0.0015 (0.15%) in any general continental population dataset with ≥ 2,000 alleles tested and variant present
+in ≥ 5 alleles.
+Default Point
+Value:
+Modification
+Type:
+
+Not Applicable
+Disease-specific
+
+BS1
+Original ACMG Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+MM-VCEP notes:
+Similarly, for the BS1 calculation, we utilized the Whiffin/Ware calculator (http://cardiodb.org/allelefrequencyapp/) with a prevalence of 1 in
+40, a conservative unascertained penetrance estimate of 85%, an allelic heterogeneity of 100% and a maximum genetic heterogeneity of
+1% (one magnitude lower than for BA1). A 95% confidence interval was used to develop the threshold. We developed a range for
+application of BS1 for variants with a minor allele frequency between 0.00015 (0.015%) and 0.0015 (0.15%).
+1. The MM-VCEP also adopted the SVI recommendation that the variant be present in any general continental population dataset with a
+minimum number of 2,000 alleles and variant present in ≥ 5 alleles.
+2. The variant can be classified as likely benign based on BS1 alone if there is no contradictory evidence supporting pathogenicity.
+
+RUNX1 Specification:
+BS1: Minor allele frequency between 0.00015 (0.015%) and 0.0015 (0.15%) in any general continental population dataset with ≥ 2,000
+alleles tested and variant present in ≥ 5 alleles.
+Default Point
+Value:
+Modification
+Type:
+
+-4
+Disease-specific
+
+BS2
+Original ACMG Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant (heterozygous), or X-linked (hemizygous) disorder, with full
+penetrance expected at an early age.
+
+Not Applicable
+Comments:
+
+MM-VCEP notes: BS2 is not applicable since FPD/AML patients display incomplete penetrance and the average age
+of onset of hematologic malignancies is 33 years.
+
+BS3
+Original ACMG Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein function or splicing.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+1. Transactivation assays demonstrating altered transactivation compared to wt are often performed as
+functional studies to evaluate the pathogenicity of a RUNX1 variant. Promoter sequences of M-CSFR, PF4, CFMS and GZMB, containing consensus RUNX1 binding sites TGTGGT, have been used for this purpose. The
+transactivation assay must include wt and known pathogenic controls, as well as co-expression with CBFâ.
+2. Data from secondary assays are frequently used to evaluate an altered function of mutant RUNX1.
+Electrophoretic mobility shift assays and yeast hybrid assays are performed to demonstrate decreased DNA
+binding affinity, and co-immunoprecipitation assays, fluorescence resonance energy transfer assays and
+affinity assays can demonstrate diminished heterodimerization ability of mutant RUNX1 with CBFâ. Abnormal
+cellular localization of mutant RUNX1 can be shown by immunofluorescence and cell-fractionation with Western
+Blot. Sorted primary hematopoietic stem and progenitor cells can be used for demonstration of reduced colonyforming potential and xenotransplantation experiments may reveal abnormal function of mutant RUNX1 in
+vivo.
+
+RUNX1 Specification:
+BS3: Transactivation assays demonstrating normal transactivation (80-115% of wt) AND data from a secondary
+assay demonstrating normal function.
+BS3_Supporting: Transactivation assays demonstrating normal transactivation (80-115% of wt).
+
+Strong
+
+BS3: Transactivation assays demonstrating normal transactivation (80-115% of wt) AND data from a secondary assay demonstrating normal
+function.
+Default Point
+Value:
+Modification
+Type:
+
+-4
+Gene-specific,Strength
+
+Supporting
+BS3_Supporting: Transactivation assays demonstrating normal transactivation (80-115% of wt).
+Default Point
+Value:
+Modification
+Type:
+
+-1
+Gene-specific,Strength
+
+BS4
+Original ACMG Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation among affected
+individuals. Also, families may have more than one pathogenic variant contributing to an autosomal dominant disorder, further confounding
+an apparent lack of segregation.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+This code should only be applied for genotype-negative, phenotype-positive family members.
+
+RUNX1 Specification:
+BS4: Applicable when observed in ≥ 2 informative meioses.
+
+Strong
+BS4: Applicable when observed in ≥ 2 informative meioses.
+Default Point
+Value:
+Modification
+Type:
+
+-4
+General recommendation
+
+BP1
+Original ACMG Summary
+Missense variant in a gene for which primarily truncating variants are known to cause disease.
+
+Not Applicable
+Comments:
+
+MM-VCEP notes: BP1 is not applicable for RUNX1, because both truncating and missense variants cause FPD/AML.
+
+BP2
+Original ACMG Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or observed in cis with a pathogenic variant in any
+inheritance pattern.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+BP2 is applicable per the original ACMG/AMP guidelines. In vivo, mice lacking Runx1 die during mid-embryonic
+development. Biallelic pathogenic variants in RUNX1 have never been reported in FPD/AML patients. A variant in
+trans with a known pathogenic variant or observation of the variant in the homozygous state in individuals without
+FPD/AML phenotype can be considered supporting benign evidence.
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or observed in cis with a pathogenic variant in any
+inheritance pattern.
+Default Point
+Value:
+Modification
+Type:
+
+BP3
+
+-1
+None
+
+Original ACMG Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+
+MM-VCEP notes: RUNX1 does not contain a repetitive region without known function. BP3 is therefore deemed not
+applicable.
+
+BP4
+Original ACMG Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product (conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm cannot be counted as an
+independent criterion. BP4 can be used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+1. For in-silico evaluation of missense variants, the MM-VCEP recommends using REVEL, a meta-predictor
+combining 13 individual tools with high sensitivity and specificity and that has recently demonstrated highest
+performance compared to any individual tool or other ensemble methods.
+2. The threshold of REVEL is based on the evaluation of 25 germline PATH/LPATH and 25 BEN/LBEN missense
+variants in RUNX1. With the comparison of 11 different ensemble in-silico predictors (BayesDel AF, CADD,
+Condel, DANN, Eigen, FATHMM-MKL, MetaLR, MetaSVM, REVEL, UMD predictor, VEST) and their respective AUC,
+REVEL was found to be among the highest performing tools (AUC=1) and the new threshold for PP3 and BP4
+was based on the REVEL scores at 90% sensitivity and 90% specificity, respectively.
+3. We compared the performance of the new splice predictor SpliceAI and MES, which has been shown to be the
+highest performing tool pre-SpliceAI by using a test set of 202 variants in genes associated with inherited
+hematologic malignancies/AA/BMF or cytopenia. The thresholds for PP3 and BP4 were established based on the
+SpliceAI score at 90% sensitivity (PP3, ≥ 0.38) and 90% specificity (BP4, ≤ 0.20).
+
+RUNX1 Specification:
+For missense variants:
+BP4: REVEL score < 0.50 AND SpliceAI ≤ 0.20
+For synonymous and Intronic variants:
+BP4: SpliceAI ≤ 0.20
+
+Supporting
+For missense variants:
+BP4: REVEL score < 0.50 AND SpliceAI ≤ 0.20
+For synonymous and Intronic variants:
+BP4: SpliceAI ≤ 0.20
+Default Point
+Value:
+Modification
+Type:
+
+-1
+Disease-specific,Gene-specific
+
+BP5
+Original ACMG Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+
+BP5 is not applicable. In rare circumstances, a patient can carry two pathogenic variants in genes predisposing to
+hematologic malignancies.
+
+BP6
+Original ACMG Summary
+Reputable source recently reports variant as benign, but the evidence is not available to the laboratory to perform an independent
+evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.
+PubMed : 29543229 
+
+BP7
+
+Original ACMG Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the splice consensus sequence nor the creation of a new
+splice site AND the nucleotide is not highly conserved.
+VCEP
+Specifications:
+
+MM-VCEP notes:
+1. Conservation is no longer a requirement for BP7 based on its limited predicted power and recommendations
+from the ClinGen SVI Splicing Subgroup (Cheung et al., 2019, 30503770; Walker et al., 2023, PMID:
+373528599).
+2. Splicing effects are currently based solely on predictions. The rules can be modified in the future if RNA
+evidence becomes available using Walker et al., 2023, PMID: 373528599 as a guide; modification of strength
+should be based on the quality of the RNA study where:
+1. Comparison to a control is necessary
+2. Patient RNA is better than minigene assays
+3. Primers are designed to capture the possibility of multi-exonic/multi-cassette events
+4. NMD inhibitors (e.g., puromycin, proprietary molecule found in PAXgene tubes), particularly when the
+predicted effect is nonsense-mediated decay, are used
+5. Quantification of the effect by SNP analysis is better than PSI (percent splicing index) analysis is better
+than capillary electrophoresis is better than estimation by gel band density
+6. Multiple studies are better than a single study
+* Caution should be used in modifying strength when the effect of the splicing impact is incomplete ("leaky" splice
+site) or unclear.
+
+RUNX1 Specification:
+BP7: Applicable for
+Synonymous variants – excluding those in the last 3 nucleotides preceding a canonical donor splice site or the
+first nucleotide following a canonical acceptor splice site – with SpliceAI ∆ scores ≤ 0.20.
+Intronic variants with SpliceAI ∆ scores ≤ 0.20.
+BP7_Variable (RNA):
+Applicable for variants with RNA data, with weighting based on the quality of the available RNA data.
+
+Supporting
+BP7: Applicable for
+Synonymous variants – excluding those in the last 3 nucleotides preceding a canonical donor splice site or the first nucleotide following
+a canonical acceptor splice site – with SpliceAI ∆ scores ≤ 0.20.
+Intronic variants with SpliceAI ∆ scores ≤ 0.20.
+BP7_Variable (RNA):
+Applicable for variants with RNA data, with weighting based on the quality of the available RNA data.
+Default Point
+Value:
+Modification
+Type:
+
+-1
+Disease-specific,Gene-specific
+
+Point Based Variant Classification Categories
+Category
+
+Point Ranges
+
+Pathogenic
+
+10
+
+Likely Pathogenic
+
+6-9
+
+Uncertain Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+MM-VCEP RUNX1 Pilot Results: MM-VCEP RUNX1 Pilot Results 
+PS1 splicing application: PS1 splicing application
+
+RUNX1 PVS1 decision tree for CNVs: RUNX1 PVS1 decision tree for CNVs
+
+Grantham score table: Grantham score table
+
+Summary of splicing effects: Summary of splicing effects
+
+RUNX1 PVS1 decision tree for SNVs: RUNX1 PVS1 decision tree for SNVs
+
+References
+1.
+
+Walker LC, Hoya M, Wiggins GAR, et al. Using the ACMG/AMP framework to capture evidence related to predicted and observed impact on splicing:
+Recommendations from the ClinGen SVI Splicing Subgroup. Am J Hum Genet. 2023;110(7):1046-1067. doi:10.1016/j.ajhg.2023.06.002
+
+2.
+
+Matheny CJ, Speck ME, Cushing PR, et al. Disease mutations in RUNX1 and RUNX2 create nonfunctional, dominant-negative, or hypomorphic alleles.
+EMBO J. 2007;26(4):1163-1175. doi:10.1038/sj.emboj.7601568
+
+3.
+
+Grantham R. Amino acid difference formula to help explain protein evolution. Science. 1974;185(4154):862-864. doi:10.1126/science.185.4154.862
+
+4.
+
+Tavtigian SV, Harrison SM, Boucher KM, Biesecker LG. Fitting a naturally scaled point system to the ACMG/AMP variant classification guidelines. Hum
+Mutat. 2020;41(10):1734-1737. doi:10.1002/humu.24088
+
+5.
+
+Walker LC Hoya M et al. Using the ACMG/AMP framework to capture evidence related to predicted and observed impact on splicing:
+Recommendations from the ClinGen SVI Splicing Subgroup. Am J Hum Genet (2023) 110 (7) p. 1046-1067. 10.1016/j.ajhg.2023.06.002 37352859
+
+
+6.
+
+Matheny CJ Speck ME et al. Disease mutations in RUNX1 and RUNX2 create nonfunctional, dominant-negative, or hypomorphic alleles. EMBO J
+(2007) 26 (4) p. 1163-75. 10.1038/sj.emboj.7601568 17290219 
+
+7.
+
+Grantham R Amino acid difference formula to help explain protein evolution. Science (1974) 185 (4154) p. 862-4. 10.1126/science.185.4154.862
+4843792 
+
+8.
+
+Walker LC Hoya M et al. Using the ACMG/AMP framework to capture evidence related to predicted and observed impact on splicing:
+Recommendations from the ClinGen SVI Splicing Subgroup. Am J Hum Genet (2023) 110 (7) p. 1046-1067. 10.1016/j.ajhg.2023.06.002 37352859
+
+
+9.
+
+Walker LC Hoya M et al. Using the ACMG/AMP framework to capture evidence related to predicted and observed impact on splicing:
+Recommendations from the ClinGen SVI Splicing Subgroup. Am J Hum Genet (2023) 110 (7) p. 1046-1067. 10.1016/j.ajhg.2023.06.002 37352859
+
+
+

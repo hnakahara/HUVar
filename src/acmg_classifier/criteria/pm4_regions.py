@@ -3,8 +3,9 @@
 Loads the table produced by ``scripts/build_pm4_regions.py``: positive
 strength regions/residues (an in-frame indel impacting one gets that strength),
 deny regions (withheld), a per-gene ``region_default`` (the strength for an
-in-frame indel matching no region), and a stop-loss strength. The PM4 evaluator
-consults this before its flat default.
+in-frame indel matching no region), a stop-loss strength, a small-indel size
+for the "Supporting outside the functional regions" tier and the criteria PM4
+requires / excludes. The PM4 evaluator consults this before its flat default.
 """
 from __future__ import annotations
 
@@ -31,17 +32,27 @@ _RANK = {
 
 class _GeneRule:
     __slots__ = ("tiers", "deny", "region_default", "stoploss",
-                 "conserved_phylop", "deletion_content", "excludes", "nt_phylop")
+                 "conserved_phylop", "deletion_content", "excludes", "nt_phylop",
+                 "small_outside", "requires", "deletion_tiers", "deny_below")
 
     def __init__(self) -> None:
         # list of (strength, ranges:list[(a,b)], residues:frozenset[int])
         self.tiers: list[tuple[CriterionStrength, list, frozenset]] = []
         self.deny: list[tuple[int, int]] = []
+        # (ranges, min aa): PM4 withheld in the ranges for indels below min aa
+        # (AIPL1 p.328-384 "unless the indel is >= 5 amino acids").
+        self.deny_below: list[tuple[list, int]] = []
+        # (strength, ranges) that apply to in-frame DELETIONS only (NEB exon 55).
+        self.deletion_tiers: list[tuple[CriterionStrength, list]] = []
         self.region_default: CriterionStrength | None | str = None  # str sentinel "not_met"
         self.stoploss: CriterionStrength | None | str = None        # "not_applicable" sentinel
         self.conserved_phylop: float | None = None
         self.deletion_content: bool = False
         self.excludes: tuple[str, ...] = ()
+        self.requires: tuple[str, ...] = ()
+        # Rett/Angelman VCEPs: an indel of <= this many aa is Supporting unless it
+        # lies in a functionally important (tier) region, where it keeps the tier.
+        self.small_outside: int | None = None
         self.nt_phylop: float | None = None  # ABCA4: synonymous/missense PM4 at a
         #                                      nucleotide with phyloP >= this
 
@@ -88,11 +99,26 @@ class PM4Regions:
                         rule.nt_phylop = float((row.get("regions") or "").strip())
                     except ValueError:
                         pass
-                elif kind == "excludes":
-                    rule.excludes = tuple(
+                elif kind in ("excludes", "requires"):
+                    setattr(rule, kind, tuple(
                         c.strip().upper() for c in (row.get("regions") or "").split(",")
                         if c.strip()
-                    )
+                    ))
+                elif kind == "small_outside":
+                    try:
+                        rule.small_outside = int((row.get("regions") or "").strip())
+                    except ValueError:
+                        pass
+                elif kind.endswith("_deletion") and kind[:-9] in _STRENGTH:
+                    ranges = _parse_ranges(row.get("regions") or "")
+                    if ranges:
+                        rule.deletion_tiers.append((_STRENGTH[kind[:-9]], ranges))
+                elif kind == "deny_below":
+                    try:
+                        rule.deny_below.append((_parse_ranges(row.get("regions") or ""),
+                                                int((row.get("residues") or "").strip())))
+                    except ValueError:
+                        pass
                 elif kind == "deny":
                     rule.deny.extend(_parse_ranges(row.get("regions") or ""))
                 elif kind in _STRENGTH:
@@ -131,6 +157,53 @@ class PM4Regions:
         if rule.region_default == "not_met":
             return "not_met"
         return rule.region_default  # CriterionStrength or None (→ Moderate default)
+
+    def deletion_strength(
+        self, gene: str | None, position: int | None
+    ) -> CriterionStrength | None:
+        """Strength for an in-frame DELETION at *position* from the gene's
+        deletion-only rows (``strong_deletion`` ...), or ``None``."""
+        rule = self._by_gene.get(gene or "")
+        if rule is None or position is None:
+            return None
+        best = None
+        for strength, ranges in rule.deletion_tiers:
+            if any(a <= position <= b for a, b in ranges):
+                if best is None or _RANK[strength] > _RANK[best]:
+                    best = strength
+        return best
+
+    def denied_below(self, gene: str | None, position: int | None,
+                     aa: int | None) -> int | None:
+        """Minimum indel size (aa) required at *position* when the indel (*aa*
+        amino acids; unknown counts as too small) is below it, else ``None``."""
+        rule = self._by_gene.get(gene or "")
+        if rule is None or position is None:
+            return None
+        for ranges, min_aa in rule.deny_below:
+            if any(a <= position <= b for a, b in ranges) and (aa is None or aa < min_aa):
+                return min_aa
+        return None
+
+    def in_tier(self, gene: str | None, position: int | None) -> bool:
+        """True when *position* lies in one of the gene's positive regions/residues."""
+        rule = self._by_gene.get(gene or "")
+        if rule is None or position is None:
+            return False
+        return any(position in residues or any(a <= position <= b for a, b in ranges)
+                   for _s, ranges, residues in rule.tiers)
+
+    def small_outside(self, gene: str | None) -> int | None:
+        """Largest in-frame indel (aa) that is only Supporting outside the gene's
+        functional regions (Rett/Angelman VCEPs: "< 3 amino acid residues unless
+        they occur in a functionally important region"), or ``None``."""
+        rule = self._by_gene.get(gene or "")
+        return rule.small_outside if rule else None
+
+    def requires(self, gene: str | None) -> tuple[str, ...]:
+        """ACMG codes that must also be met for PM4 in *gene* (LDLR / RS1: PM2)."""
+        rule = self._by_gene.get(gene or "")
+        return rule.requires if rule else ()
 
     def stoploss_strength(
         self, gene: str | None

@@ -40,7 +40,7 @@ def test_tp53_frameshift_by_ptc_codon():
 @pytest.mark.parametrize("csq,hgvs_c,want", [
     (CT.SPLICE_DONOR, "NM_000546.6:c.-29+1G>A", S.NOT_MET),       # E1 donor
     (CT.SPLICE_ACCEPTOR, "NM_000546.6:c.-28-2A>G", S.NOT_MET),    # E2 acceptor
-    (CT.SPLICE_DONOR, "NM_000546.6:c.74+1G>A", S.VERY_STRONG),    # E2 donor
+    (CT.SPLICE_DONOR, "NM_000546.6:c.74+1G>A", S.STRONG),         # E2 donor (worksheet)
     (CT.SPLICE_ACCEPTOR, "NM_000546.6:c.783-1G>A", S.NOT_MET),    # E8 acceptor
     (CT.SPLICE_DONOR, "NM_000546.6:c.1100+1G>A", S.MODERATE),     # E10 donor
     (CT.SPLICE_ACCEPTOR, "NM_000546.6:c.1101-2A>G", S.MODERATE),  # E11 acceptor
@@ -156,3 +156,36 @@ def test_mmr_splice(gene, hgvs_c, want):
                                        ("MSH6", S.STRONG), ("PMS2", S.STRONG)])
 def test_mmr_initiation(gene, want):
     assert _ev(gene, _MMR[gene], CT.START_LOST)[0] == want
+
+
+@pytest.mark.parametrize("gene,tx", [("BRCA1", "NM_007294.4"), ("BRCA2", "NM_000059.4")])
+def test_brca_initiation_codon_pvs1(gene, tx):
+    # ENIGMA Table 4 / Appendix D: initiation codon -> PVS1 (upgraded from Moderate).
+    assert _ev(gene, tx, CT.START_LOST)[0] == S.VERY_STRONG
+
+
+@pytest.mark.parametrize("gene,tx,hgvs_c,want,rna", [
+    ("BRCA1", "NM_007294.4", "c.301+1G>A", S.SUPPORTING, False),
+    ("BRCA1", "NM_007294.4", "c.301+1G>C", S.SUPPORTING, True),
+    ("BRCA1", "NM_007294.4", "c.548-1G>A", S.NOT_MET, False),     # exon 8(9): N/A
+    ("BRCA1", "NM_007294.4", "c.671-2A>G", S.MODERATE, False),
+    ("BRCA1", "NM_007294.4", "c.-20+1G>A", S.NOT_MET, False),     # 5'UTR intron
+    ("BRCA1", "NM_007294.4", "c.5193+2T>C", S.NOT_MET, False),    # functional GC donor
+    ("BRCA1", "NM_007294.4", "c.5193+2T>A", S.VERY_STRONG, False),
+    ("BRCA2", "NM_000059.4", "c.8331+1G>C", S.STRONG, False),
+    ("BRCA2", "NM_000059.4", "c.6937+2T>G", S.NOT_MET, False),    # Table 4 "+1T" typo
+    ("BRCA2", "NM_000059.4", "c.7976+2C>T", S.NOT_MET, False),
+    ("BRCA2", "NM_000059.4", "c.9257-2A>G", S.SUPPORTING, False),
+    ("BRCA2", "NM_000059.4", "c.1909+1G>A", S.VERY_STRONG, True),
+])
+def test_enigma_table4_splice_sites(gene, tx, hgvs_c, want, rna):
+    csq = CT.SPLICE_DONOR if "+" in hgvs_c else CT.SPLICE_ACCEPTOR
+    st, ev = _ev(gene, tx, csq, hgvs_c=f"{tx}:{hgvs_c}")
+    assert st == want and "ENIGMA Table 4" in ev
+    assert ("(RNA)" in ev) is rna
+
+
+def test_enigma_unlisted_site_defers_to_generic_tree():
+    # A deletion at a donor is not in the substitution table -> generic tree (None).
+    assert _ev("BRCA1", "NM_007294.4", CT.SPLICE_DONOR,
+               hgvs_c="NM_007294.4:c.301+1del") is None

@@ -1,0 +1,845 @@
+Criteria Specification
+ClinGen Epilepsy Sodium Channel Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for SCN1A Version 2.0
+Affiliation: Epilepsy Sodium Channel VCEP
+Description : SCN1A
+Version : 2.0
+Released : 1/7/2025
+DOI : 10.5281/zenodo.21433911
+Release Notes :
+Release contains updates to exon numbering and revised PM1 table.
+
+Contributors & Keywords
+Research Group: Epilepsy Sodium Channel VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+SCN1A NM_001165963.3 Autosomal dominant
+inheritance Dravet syndrome Autosomal dominant
+inheritance generalized epilepsy with febrile
+seizures plus Autosomal dominant inheritance
+developmental and epileptic encephalopathy
+
+Rules for SCN1A
+General Comments:
+
+Please disregard the "Rules for Combining Criteria" section. Instead, please
+refer to "Combining Rules" attachment, as we have incorporated the
+points-based system.
+
+Gene: SCN1A (HGNC:10585) 
+Transcripts:
+NM_001165963.3
+
+HGNC Name: sodium voltage-gated channel
+alpha subunit 1
+Disease:
+Dravet syndrome
+(MONDO:0100135)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+generalized epilepsy with
+febrile seizures plus
+(MONDO:0018214)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+developmental and epileptic
+encephalopathy
+(MONDO:0100062)  Mode
+
+of Inheritance: Autosomal
+dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+For a full gene deletion, a pathogenic classification is warranted.
+Specifications:
+
+Very Strong
+Follow SVI guidance per workflow in Tayoun et al (2018), included as “PVS1 Decision
+Tree”.
+Modification Disease-specific,General recommendation
+Type:
+
+Strong
+Follow SVI guidance per workflow in Tayoun et al (2018), included as “PVS1 Decision
+Tree”.
+Modification Disease-specific,General recommendation
+Type:
+
+Moderate
+Follow SVI guidance per workflow in Tayoun et al (2018), included as “PVS1 Decision
+Tree”.
+Modification Disease-specific,General recommendation
+Type:
+
+Supporting
+Follow SVI guidance per workflow in Tayoun et al (2018), included as “PVS1 Decision
+Tree”.
+
+Modification Disease-specific,General recommendation
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+The paralogous sodium channel genes associated with neurodevelomental
+Specifications:disorders (SCN1A, SCN2A, SCN3A, SCN8A) share >77% sequence identity
+(PMID:33531663). The four homologous domains with voltage sensor and
+pore region remain largely preserved across the channels. Differences lie
+within the terminal regions and cytoplasmic loops. When these regions are
+excluded from analysis, homology increases to >90% (PMID:33531663;
+PMID:16382098). As such, Pathogenic and Likely Pathogenic variants in
+paralogous genes can be considered for PS1.
+
+Strong
+Same/identical amino acid change as previously reported (Caveat: beware of changes
+that impact splicing rather than at the amino acid/protein level).
+Same amino acid change as a previously established Pathogenic variant regardless
+of nucleotide change. Example: Val->Leu caused by either G>C or G>T in the same
+codon.
+>1 Identical amino acid change in paralogous gene previously established as
+Pathogenic or Likely Pathogenic, including NDD genes with equivalent constraint
+scores (SCN1A, SCN2A, SCN3A, SCN8A). See Paralogous Gene Table for
+corresponding amino acid positions.
+Same predicted impact on splicing as previously classified variant (Refer to Table 2 in
+Walker et al, 2023).
+PS1 can be applied at varying strengths for splice variants, in conjunction with either
+PP3 or PVS1. PS1 strength depends on location of the variant under assessment
+(within or outside the +/- 1,2 dinucleotide positions) and the location of the
+previously classified variant (within or outside the +/- 1,2 dinucleotide position).
+Specific combinations are outlined in Table 2 in Walker, et al (2023) PMID: 37352859,
+also provided as a supplement ("PS1_Variants impacting splicing").
+Modification Gene-specific
+Type:
+
+Moderate
+Same/identical amino acid change as previously reported (Caveat: beware of changes
+that impact splicing rather than at the amino acid/protein level).
+Same amino acid change as a previously established Likely Pathogenic variant
+regardless of nucleotide change. Example: Val->Leu caused by either G>C or G>T in
+the same codon.
+Same predicted impact on splicing as previously classified variant (Refer to Table 2 in
+Walker et al, 2023).
+PS1 can be applied at varying strengths for splice variants, in conjunction with either
+PP3 or PVS1. PS1 strength depends on location of the variant under assessment
+(within or outside the +/- 1,2 dinucleotide positions) and the location of the
+previously classified variant (within or outside the +/- 1,2 dinucleotide position).
+Specific combinations are outlined in Table 2 in Walker, et al (2023) PMID: 37352859,
+also provided as a supplement ("PS1_Variants impacting splicing").
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Same/identical amino acid change as previously reported (Caveat: beware of changes
+that impact splicing rather than at the amino acid/protein level).
+A single identical amino acid change in a paralogous gene previously established as
+Pathogenic or Likely Pathogenic, including NDD genes with equivalent constraint
+scores (SCN1A, SCN2A, SCN3A, SCN8A). See Paralogous Gene Table for
+corresponding amino acid positions.
+Same predicted impact on splicing as previously classified variant (Refer to Table 2 in
+Walker et al, 2023).
+PS1 can be applied at varying strengths for splice variants, in conjunction with either
+PP3 or PVS1. PS1 strength depends on location of the variant under assessment
+(within or outside the +/- 1,2 dinucleotide positions) and the location of the
+previously classified variant (within or outside the +/- 1,2 dinucleotide position).
+Specific combinations are outlined in Table 2 in Walker, et al (2023) PMID: 37352859,
+also provided as a supplement ("PS1_Variants impacting splicing").
+Modification Gene-specific
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+*Clinical Criteria for Dravet Syndrome: Based on Li et al, 2021 (PMID:
+Specifications:34338318)
+Major features
+-Fever-sensitive seizures,
+-Hemiclonic or tonic-clonic seizures,
+-Status epilepticus
+Minor criteria (at least 3)
+-Normal development prior to seizure onset
+-Seizure onset <=12m
+-Developmental impairment by age 5y
+-Intellectual disability
+
+Very Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Points based system for each unrelated proband determined by phenotypic
+specificity. Total of 4 points will arrive at Very Strong.
+Dravet*: 2 points
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+Modification Disease-specific,Strength
+Type:
+
+Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Points based system for each unrelated proband determined by phenotypic
+specificity. Total of 2 points will arrive at Strong.
+Dravet*: 2 points
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Points based system for each unrelated proband determined by phenotypic
+specificity. Total of 1 point will arrive at Moderate.
+Dravet*: 2 points
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Points based system for each unrelated proband determined by phenotypic
+specificity. Total of 0.5 points will arrive at Supporting.
+Dravet*: 2 points
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+Modification Disease-specific,Strength
+Type:
+
+PS3
+
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+If a variant is found to have differences from wildtype of multiple levels of
+Specifications:strength (example: strong level of evidence in peak current and moderate
+level of evidence in persistent current), use the highest level of evidence
+(capping at strong). If a variant has been studied in multiple publications,
+use the strongest level of evidence available.
+
+Strong
+In patch clamping experiments: Peak current as defined by FENICS ontology
+(https://bioportal.bioontology.org/ontologies/FENICS) is less than or equal to 72.7% of
+wildtype.
+In patch clamping experiments: Persistent current as defined by FENICS ontology
+(https://bioportal.bioontology.org/ontologies/FENICS) is greater than or equal to 135%
+of wildtype.
+In patch clamping experiments: Voltage dependence of activation as defined by
+FENICS ontology (https://bioportal.bioontology.org/ontologies/FENICS) is shifted by at
+least 2.2 mV (absolute value).
+In patch clamping experiments: Voltage dependence of inactivation as defined by
+FENICS ontology (https://bioportal.bioontology.org/ontologies/FENICS) is shifted by at
+least 4.1 mV (absolute value).
+Mouse knock-in model displays spontaneous seizures.
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+In patch clamping experiments: Peak current as defined by FENICS ontology
+(https://bioportal.bioontology.org/ontologies/FENICS) is less than or equal to 80.6% of
+wildtype.
+In patch clamping experiments: Persistent current as defined by FENICS ontology
+(https://bioportal.bioontology.org/ontologies/FENICS) is greater than or equal to 125%
+of wildtype.
+In patch clamping experiments: Voltage dependence of activation as defined by
+FENICS ontology (https://bioportal.bioontology.org/ontologies/FENICS) is shifted by at
+least 2.1 mV (absolute value).
+In patch clamping experiments: Voltage dependence of inactivation as defined by
+FENICS ontology (https://bioportal.bioontology.org/ontologies/FENICS) is shifted by at
+least 3.0 mV (absolute value).
+Mouse knock-in model displays induced seizures
+
+Zebrafish knock-in model displays spontaneous seizures, evidenced by
+hyperexcitability through electrophysiology or calcium imaging-based studies
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Zebrafish knock-in model displays induced seizures, evidenced by hyperexcitability
+through electrophysiology or calcium imaging-based studies
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+*Clinical Criteria for Dravet Syndrome: Based on Li et al, 2021 (PMID:
+Specifications:34338318)
+Major features
+-Fever-sensitive seizures,
+-Hemiclonic or tonic-clonic seizures,
+-Status epilepticus
+Minor criteria (at least 3)
+-Normal development prior to seizure onset
+-Seizure onset <=12m
+-Developmental impairment by age 5y
+-Intellectual disability
+
+Very Strong
+Present in in multiple unrelated patients with consistent phenotype. Points based system
+for each unrelated proband determined by phenotypic specificity. Total of 16+ points will
+arrive at Very Strong.
+Dravet*: 2 points
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Strong
+Present in in multiple unrelated patients with consistent phenotype. Points based system
+for each unrelated proband determined by phenotypic specificity. Total of 4-15.5 points
+will arrive at Strong.
+Dravet*: 2 points
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+Present in in multiple unrelated patients with consistent phenotype. Points based system
+for each unrelated proband determined by phenotypic specificity. Total of 2-3.5 points
+will arrive at Moderate.
+Dravet*: 2 points
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Supporting
+Present in in multiple unrelated patients with consistent phenotype. Points based system
+for each unrelated proband determined by phenotypic specificity. Total of 1-1.5 points
+will arrive at Supporting.
+Dravet*: 2 points
+
+Genetic Epilepsy with Febrile Seizures Plus: 1 point
+Developmental and Epileptic Encephalopathy: 1 point
+Hemiplegic migraine: 0.5 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.5 points
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+Pathogenic Enriched Regions (PERs): Regions that are enriched for
+Specifications:Pathogenic variants (ClinVar/HGMD) across gene families, lack population
+(gnomAD) variants. Pérez-Palma, 2020 PMID: 31871067 & Lal et al,
+2020 PMID: 32183904
+
+Moderate
+Variant is located within a Pathogenic Enriched Region. See specific amino acid residues
+noted in the attached “PM1 Table".
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+One or fewer alleles, if a minimum of 10,000 alleles assessed in population databases,
+such as the Genome Aggregation Database (gnomAD). Caveat: Population data for indels
+may be poorly called by next generation sequencing.
+Modification General recommendation,Other
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+SCN1A is associated with autosomal dominant inheritance.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Modification No change
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+The paralogous sodium channels genes associated with
+Specifications:neurodevelomental disorders (SCN1A, SCN2A, SCN3A, SCN8A) share
+>77% sequence identity (PMID:33531663). In other words, the sodium
+channel genes share 87.7% (SCN2A), 84.7% (SCN3A), and 77.0% (SCN8A)
+amino acid sequence similarly with SCN1A (Ensembl).
+The four functional homologous domains with voltage sensor and pore
+region remains largely preserved across the channels. Differences lie
+within the terminal regions and cytoplasmic loops. When these regions are
+excluded from analysis, homology increases to >90% (PMID:33531663;
+PMID:16382098).
+
+As such, Pathogenic and Likely Pathogenic variants in paralogous genes
+can be considered for PM5.
+Rule Combining Stipulation: If PM5_Strong is reached, and the variant
+falls within a PM1 region, then do not add PM1 with PM5_Strong.
+
+Strong
+Greater than or equal to 2 known pathogenic variants at same site as novel change
+(within the same gene).
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Moderate
+Novel missense change at an amino acid residue in the same gene where a different
+missense variant was determined to be Pathogenic.
+Modification General recommendation
+Type:
+
+Supporting
+Novel missense change at an amino acid residue where a different missense change
+determined to be Likely Pathogenic has been seen before. Example: Arg156His is
+pathogenic; now you observe Arg156Cys.
+>1 Non-Identical aa change in paralogous gene(s) where a different missense
+change determined to be Pathogenic or Likely Pathogenic, including NDD genes
+with equivalent constraint scores (SCN1A, SCN2A, SCN3A, SCN8A)
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+*Clinical Criteria for Dravet Syndrome: Based on Li et al, 2021 (PMID:
+Specifications:34338318)
+Major features
+-Fever-sensitive seizures,
+-Hemiclonic or tonic-clonic seizures,
+-Status epilepticus
+Minor criteria (at least 3)
+
+-Normal development prior to seizure onset
+-Seizure onset <=12m
+-Developmental impairment by age 5y
+-Intellectual disability
+
+Strong
+Assumed de novo, but without confirmation of paternity and maternity. Points based
+system for each unrelated proband determined by phenotypic specificity. Total of 2
+points will arrive at Strong. Total of 4 points will arrive at Very Strong.
+Dravet*: 1 points
+Genetic Epilepsy with Febrile Seizures Plus: 0.5 points
+Developmental and Epileptic Encephalopathy: 0.5 points
+Hemiplegic migraine: 0.25 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.25 points
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Assumed de novo, but without confirmation of paternity and maternity. Points based
+system for each unrelated proband determined by phenotypic specificity. Total of 1 point
+will arrive at Moderate.
+Dravet*: 1 points
+Genetic Epilepsy with Febrile Seizures Plus: 0.5 points
+Developmental and Epileptic Encephalopathy: 0.5 points
+Hemiplegic migraine: 0.25 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.25 points
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Assumed de novo, but without confirmation of paternity and maternity. Points based
+system for each unrelated proband determined by phenotypic specificity. Total of 0.5
+points will arrive at Supporting.
+Dravet*: 1 points
+Genetic Epilepsy with Febrile Seizures Plus: 0.5 points
+Developmental and Epileptic Encephalopathy: 0.5 points
+
+Hemiplegic migraine: 0.25 points
+Other epilepsy types or syndromes not included above, with or without associated
+neurodevelopmental features: 0.25 points
+Modification Disease-specific,Strength
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Co-segregation with disease in multiple affected family members.
+>=7 independent meioses
+Modification Strength
+Type:
+
+Moderate
+Co-segregation with disease in multiple affected family members.
+5-6 independent meioses
+Modification Strength
+Type:
+
+Supporting
+Co-segregation with disease in multiple affected family members.
+3-4 independent meioses
+Modification Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+
+Comments:
+
+Benign missense variants are common.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Moderate
+Follow ClinGen’s recommendations (PMID: 36413997) using REVEL as the computational
+tool, with the following stipulations:
+1. Strength should be capped at Moderate, and
+2. limit the combination of PP3 and PM1 to reach no higher than strong
+Modification General recommendation,Strength
+Type:
+
+Supporting
+Follow ClinGen’s recommendations (PMID: 36413997) using REVEL as the computational
+tool, with the following stipulations: with the following stipulations:
+1. Strength should be capped at Moderate, and
+2. limit the combination of PP3 and PM1 to reach no higher than strong
+Modification General recommendation,Strength
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+Phenotypic specificity incorporated into PS2, PM6, PS4
+
+PP5
+Original ACMG
+Summary
+
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Allele frequency is above 0.02% in GnomAD or other large population database, must be
+greater than or equal to 5 alleles if a minimum of 10,000 alleles was assessed.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency is above 0.0004% in GnomAD or other large population database, must
+be greater than or equal to 5 alleles if a minimum of 10,000 alleles was assessed.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed in a healthy adult individual.
+
+Modification No change
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+Cellular electrophysiology (voltage clamp recording): Values indicating “no
+impact on channel function” have not been sufficiently characterized to
+date. Additionally, one cannot exclude non-electrophysiological defects
+such as mis-localization in a neuron based solely on heterologous
+expression studies. This can be re-assessed by the EP over time and as
+benign variants are functionally characterized in the future. Animal
+Models: Lack of an epilepsy phenotype in an animal model is insufficient
+to support benignity of a variant. Additionally, some non-epilepsy comorbidities, such as behavioral characteristics that may mimic intellectual
+disability and/or autism spectrum disorder, are still being established and
+could support pathogenicity. This can be re-assessed by the EP over time.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Not Applicable
+Comments:
+Reduced penetrance, variable expressivity and phenocopies
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Missense variants are common cause of disease.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+Modification No change
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Supporting
+In frame-deletions/insertions in a repetitive region without a known function.
+Modification No change
+Type:
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Moderate
+Follow ClinGen’s recommendations (PMID: 36413997) using REVEL as the computational
+tool.
+Modification General recommendation
+Type:
+
+Supporting
+
+Follow ClinGen’s recommendations (PMID: 36413997) using REVEL as the computational
+tool.
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+Modification No change
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+Modification No change
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS2, PS3,
+PS4, PM5_Strong, PM6_Strong, PP1_Strong, PP3_Strong)
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate,
+PP3_Moderate)
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate,
+PP3_Moderate) AND 1 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM5_Strong, PM6_Strong, PP1_Strong, PP3_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM5_Strong, PM6_Strong, PP1_Strong, PP3_Strong) AND ≥ 3
+Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM1, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM5_Strong, PM6_Strong, PP1_Strong, PP3_Strong) AND 2
+Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM1, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate) AND ≥ 2 Supporting (PVS1_Supporting, PS2_Supporting,
+PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM5_Strong, PM6_Strong, PP1_Strong, PP3_Strong) AND 1
+Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM1, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate) AND ≥ 4 Supporting (PVS1_Supporting, PS2_Supporting,
+PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP3)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM1, PM4, PM5, PM6, PP1_Moderate,
+PP3_Moderate)
+
+Benign
+≥ 2 Strong (BS1, BS2)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS2) AND 1 Supporting (BP2, BP3, BP5, BP7)
+
+≥ 2 Supporting (BP2, BP3, BP5, BP7)
+
+Files & Images
+PM1 Table: 
+Combining Rules: 
+PVS1 exon numbering: 
+Paralogous Gene Table : Amino Acid Mapping 
+
+PS1_Variants impacting splicing: 
+
+

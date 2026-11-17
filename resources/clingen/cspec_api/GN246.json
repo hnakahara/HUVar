@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN246",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50177",
+    "@type": "Organization",
+    "label": "ALPL Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50177"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1652453047"
+  },
+  "cspecStatus": "CSpec Deleted",
+  "currentStatus": "CSpec Deleted",
+  "label": "ClinGen ALPL  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for ALPL Version 1.0.0",
+  "lastUpdated": "2026-07-16T13:15:44.418Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1652453054",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=ALPL",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0100609",
+              "@type": "Disease",
+              "label": "MONDO:0100609",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0032113",
+                  "@label": "Semidominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "ALPL"
+        }
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}

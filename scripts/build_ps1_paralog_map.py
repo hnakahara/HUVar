@@ -54,20 +54,49 @@ def _read_xlsx(path: Path) -> list[list[str]]:
     return rows
 
 
-# KCNQ1 PS1 paralogue (GN112) is approved for KCNQ2 only; the paralogue table the
-# VCEP references (cardiodb) gives no KCNQ2 residue numbers, so the analogous
-# residue is taken from a Needleman-Wunsch global alignment of the two UniProt
-# sequences (validated against the spec example KCNQ1 p.Thr144Ala ↔ KCNQ2
-# p.Thr114Ala). The alignment is appended to the SCN table as KCNQ1/KCNQ2 rows.
-_KCNQ1_ACC, _KCNQ2_ACC = "P51787", "O43526"
+# Paralogue groups without a machine-readable VCEP residue table: the analogous
+# residue is taken from Needleman-Wunsch global alignments of the UniProt
+# sequences (= MANE Select proteins) to the group's first ("hub") gene, and
+# appended to the SCN table as one row per hub residue.
+#   * KCNQ1 / KCNQ2 (GN112): PS1 paralogue approved for KCNQ2 only; validated
+#     against the spec example KCNQ1 p.Thr144Ala <-> KCNQ2 p.Thr114Ala.
+#   * RASopathy VCEP "Applicable for observed analogous residue positions in ...":
+#     MAP2K1 / MAP2K2 (GN045; p.Tyr130 <-> p.Tyr134), SOS1 / SOS2 (GN041; p.Met269
+#     <-> p.Met267), BRAF / RAF1 (GN049 / GN040; CR2 p.Ser365 <-> p.Ser259, kinase
+#     p.Asp594 <-> p.Asp486) and HRAS / KRAS / NRAS / MRAS / RIT1 / RRAS2 (GN046 ...;
+#     HRAS p.Gly12 / p.Gln61 <-> MRAS p.Gly22 / p.Gln71, RIT1 p.Gly30 / p.Gln79,
+#     RRAS2 p.Gly23 / p.Gln72). KRAS is the MANE isoform 4B (P01116-2).
+_GROUPS = (
+    ("KCNQ1", "P51787", (("KCNQ2", "O43526"),)),
+    ("MAP2K1", "Q02750", (("MAP2K2", "P36507"),)),
+    ("SOS1", "Q07889", (("SOS2", "Q07890"),)),
+    ("BRAF", "P15056", (("RAF1", "P04049"),)),
+    ("HRAS", "P01112", (("KRAS", "P01116-2"), ("NRAS", "P01111"), ("MRAS", "O14807"),
+                        ("RIT1", "Q92963"), ("RRAS2", "P62070"))),
+)
+_PAIR_GENES = [g for hub, _a, spokes in _GROUPS for g in (hub, *[sg for sg, _ in spokes])]
+
+
+def _read_fasta(path: Path) -> dict[str, str]:
+    """Sequences keyed by accession (">sp|ACC|..." or ">ACC")."""
+    seqs: dict[str, str] = {}
+    key = None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line.startswith(">"):
+            head = line[1:].split()[0]
+            key = head.split("|")[1] if "|" in head else head
+            seqs[key] = ""
+        elif key and line:
+            seqs[key] += line
+    return seqs
 
 
 def _uniprot_seq(acc: str) -> str:
-    import json
     import urllib.request
-    j = json.load(urllib.request.urlopen(
-        f"https://rest.uniprot.org/uniprotkb/{acc}.json", timeout=60))
-    return j["sequence"]["value"]
+    text = urllib.request.urlopen(
+        f"https://rest.uniprot.org/uniprotkb/{acc}.fasta", timeout=60).read().decode()
+    return "".join(line.strip() for line in text.splitlines() if not line.startswith(">"))
 
 
 def _nw_align(a: str, b: str, gap: int = -8) -> dict[int, int]:
@@ -115,47 +144,94 @@ def _nw_align(a: str, b: str, gap: int = -8) -> dict[int, int]:
     return out
 
 
-def _kcnq_rows(ncols: int) -> list[list[str]]:
-    """KCNQ1↔KCNQ2 alignment rows (padded to the SCN column width + KCNQ1/KCNQ2)."""
-    try:
-        q1, q2 = _uniprot_seq(_KCNQ1_ACC), _uniprot_seq(_KCNQ2_ACC)
-    except Exception as exc:  # offline / UniProt down → SCN-only table
-        print(f"  [warn] KCNQ1/KCNQ2 alignment skipped ({exc})")
-        return []
-    amap = _nw_align(q1, q2)
-    rows = []
-    for p1 in sorted(amap):
-        rows.append([""] * ncols + [str(p1), str(amap[p1])])
-    return rows
+def _pair_rows(scn: list[str], fasta: dict[str, str]) -> dict[str, list[list[str]]]:
+    """Alignment rows per group (keyed by its hub gene), padded to the header:
+    one row per hub residue with the aligned residue of every other member."""
+    width = len(scn) + len(_PAIR_GENES)
+    out: dict[str, list[list[str]]] = {}
+    for hub, hub_acc, spokes in _GROUPS:
+        try:
+            hub_seq = fasta.get(hub_acc) or _uniprot_seq(hub_acc)
+            maps = {g: _nw_align(hub_seq, fasta.get(acc) or _uniprot_seq(acc))
+                    for g, acc in spokes}
+        except Exception as exc:  # offline / UniProt down
+            print(f"  [warn] {hub} group alignment skipped ({exc})")
+            continue
+        rows = []
+        for p in range(1, len(hub_seq) + 1):
+            hits = {g: m[p] for g, m in maps.items() if p in m}
+            if not hits:
+                continue
+            row = [""] * width
+            row[len(scn) + _PAIR_GENES.index(hub)] = str(p)
+            for g, q in hits.items():
+                row[len(scn) + _PAIR_GENES.index(g)] = str(q)
+            rows.append(row)
+        out[hub] = rows
+    return out
 
 
-def build(xlsx: Path, out: Path) -> int:
-    rows = _read_xlsx(xlsx)
-    scn_header = [h.strip() for h in rows[0]]
-    header = scn_header + ["KCNQ1", "KCNQ2"]
+def _existing(out: Path) -> tuple[list[str], list[list[str]]]:
+    with out.open(encoding="utf-8") as fh:
+        rows = list(csv.reader(fh, delimiter="\t"))
+    return rows[0], rows[1:]
+
+
+def build(xlsx: Path | None, out: Path, fasta: Path | None = None) -> int:
+    """Write the table. Without *xlsx* the SCN rows (and any pair that cannot be
+    re-aligned) are kept from the existing *out* file."""
+    old_header, old_rows = _existing(out) if out.exists() else ([], [])
+    if xlsx is not None:
+        rows = _read_xlsx(xlsx)
+        scn = [h.strip() for h in rows[0]]
+        scn_rows = []
+        for r in rows[1:]:
+            cells = [("" if (c.strip().upper() in ("", "NA")) else c.strip())
+                     for c in (r + [""] * len(scn))[:len(scn)]]
+            if any(cells):
+                scn_rows.append(cells)
+    else:
+        scn = [h for h in old_header if h not in _PAIR_GENES]
+        scn_rows = [r[:len(scn)] for r in old_rows if any(r[:len(scn)])]
+    pairs = _pair_rows(scn, _read_fasta(fasta) if fasta else {})
+    header = scn + _PAIR_GENES
     out.parent.mkdir(parents=True, exist_ok=True)
     n = 0
     with out.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.writer(fh, delimiter="\t")
+        w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(header)
-        for r in rows[1:]:
-            cells = [("" if (c.strip().upper() in ("", "NA")) else c.strip())
-                     for c in (r + [""] * len(scn_header))[:len(scn_header)]]
-            if any(cells):
-                w.writerow(cells + ["", ""])  # SCN row, KCNQ cols empty
-                n += 1
-        for kr in _kcnq_rows(len(scn_header)):
-            w.writerow(kr)
+        for cells in scn_rows:
+            w.writerow(cells + [""] * len(_PAIR_GENES))
             n += 1
+        for hub, _acc, spokes in _GROUPS:
+            rows = pairs.get(hub)
+            if rows is None and hub in old_header:   # keep the existing alignment
+                members = [g for g in (hub, *[sg for sg, _ in spokes]) if g in old_header]
+                idx = {g: old_header.index(g) for g in members}
+                rows = []
+                for r in old_rows:
+                    r = r + [""] * (len(old_header) - len(r))
+                    if r[idx[hub]] and any(r[idx[g]] for g in members if g != hub):
+                        row = [""] * len(header)
+                        for g in members:
+                            row[header.index(g)] = r[idx[g]]
+                        rows.append(row)
+            for row in rows or []:
+                w.writerow(row)
+                n += 1
     return n
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--xlsx", required=True, help="Paralogous-Genes_AminoAcid-Mapping.xlsx")
+    ap.add_argument("--xlsx", help="Paralogous-Genes_AminoAcid-Mapping.xlsx (SCN); "
+                    "omit to keep the SCN rows of the existing table")
+    ap.add_argument("--fasta", help="UniProt FASTA with the pair sequences (offline use); "
+                    "missing accessions are fetched from UniProt")
     ap.add_argument("--out", default="resources/shared/ps1_paralog_map.tsv")
     args = ap.parse_args()
-    n = build(Path(args.xlsx), Path(args.out))
+    n = build(Path(args.xlsx) if args.xlsx else None, Path(args.out),
+              Path(args.fasta) if args.fasta else None)
     print(f"paralog alignment rows: {n} | written → {args.out}")
 
 

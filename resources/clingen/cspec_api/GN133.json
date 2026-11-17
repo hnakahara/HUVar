@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN133",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50128",
+    "@type": "Organization",
+    "label": "Hereditary Angioedema Variant Curation Expert Panel ",
+    "url": "https://clinicalgenome.org/affiliation/50128"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1575651794"
+  },
+  "cspecStatus": "Pilot Rules Submitted",
+  "currentStatus": "Pilot Rules Submitted",
+  "label": "ClinGen Hereditary Angioedema  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for SERPING1 Version 1.0",
+  "lastUpdated": "2026-10-23T15:30:24.970Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1575651807",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=SERPING1",
+          "@type": "Gene",
+          "label": "SERPING1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

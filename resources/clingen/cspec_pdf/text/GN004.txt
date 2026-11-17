@@ -1,0 +1,557 @@
+Criteria Specification
+ClinGen RASopathy Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines Version 1.0
+Affiliation: RASopathy VCEP
+Description : ACMG rules for RASopathy
+Version : 1.0
+Released : 7/18/2017
+DOI : 10.5281/zenodo.21421453
+
+Contributors & Keywords
+Research Group: RASopathy VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+SHOC2 NRAS RAF1 SOS1 SOS2 PTPN11 KRAS
+MAP2K1 HRAS RIT1 MAP2K2 BRAF
+
+Rules for SHOC2, NRAS, RAF1, SOS1, SOS2, PTPN11, KRAS, MAP2K1, HRAS, RIT1,
+MAP2K2, BRAF
+Gene: SHOC2 (HGNC:15454) 
+Transcripts:
+
+HGNC Name: SHOC2 leucine rich repeat
+scaffold protein
+Disease:
+
+Gene: NRAS (HGNC:7989) 
+Transcripts:
+
+HGNC Name: NRAS proto-oncogene, GTPase
+Disease:
+
+Gene: RAF1 (HGNC:9829) 
+
+HGNC Name: Raf-1 proto-oncogene,
+serine/threonine kinase
+Disease:
+
+Transcripts:
+Gene: SOS1 (HGNC:11187) 
+Transcripts:
+Gene: SOS2 (HGNC:11188) 
+Transcripts:
+Gene: PTPN11 (HGNC:9644) 
+
+HGNC Name: SOS Ras/Rac guanine nucleotide
+exchange factor 1
+Disease:
+HGNC Name: SOS Ras/Rho guanine nucleotide
+exchange factor 2
+Disease:
+
+Transcripts:
+
+HGNC Name: protein tyrosine phosphatase
+non-receptor type 11
+Disease:
+
+Gene: KRAS (HGNC:6407) 
+Transcripts:
+
+HGNC Name: KRAS proto-oncogene, GTPase
+Disease:
+
+Gene: MAP2K1 (HGNC:6840) 
+Transcripts:
+
+HGNC Name: mitogen-activated protein kinase
+kinase 1
+Disease:
+
+Gene: HRAS (HGNC:5173) 
+Transcripts:
+
+HGNC Name: HRas proto-oncogene, GTPase
+Disease:
+
+Gene: RIT1 (HGNC:10023) 
+Transcripts:
+
+HGNC Name: Ras like without CAAX 1
+Disease:
+
+Gene: MAP2K2 (HGNC:6842) 
+
+HGNC Name: mitogen-activated protein kinase
+kinase 2
+Disease:
+
+Transcripts:
+Gene: BRAF (HGNC:1097) 
+Transcripts:
+
+HGNC Name: B-Raf proto-oncogene,
+serine/threonine kinase
+Disease:
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+LOF and/or haploinsufficiency has not been clearly identified as disease
+mechanisms for these genes relative to the RASopathy spectrum
+phenotype, therefore in general this rule is not applicable. Note that
+PTPN11 is currently the only gene with a confirmed association to another
+non-RASopathy disorder due to LOF alleles. Variants in PTPN11 with
+predicted LOF should not be evaluated by these RASopathy specific
+criteria, but should defer to non-adjusted criteria. Given that some
+historical LOF variants (e.g. canonical splice sites) could potentially result
+in a gain of function, users should assess using these criteria and nonadjusted criteria to identify the highest likelihood of pathogenicity for all
+associated diseases. We recommend that the ClinGen Dosage Sensitivity
+
+Map Status
+(http://www.ncbi.nlm.nih.gov/projects/dbvar/clingen/index.shtml) be
+reviewed for any new apparently LOF disease associations prior to
+classification assessment.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Previously established variant must be established as pathogenic per these criteria for
+germline RASopathy variants. This evidence rule can also be applied for the any observed
+analogous residue positions/regions throughout the gene in highly analogous groupings
+below: Group 1: HRAS, NRAS, KRAS Group 2: MAP2K1, MAP2K2 Group 3: SOS1, SOS2
+Modification Analogous Gene
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+≥2 independent occurrences of PS2 OR ≥2 independent occurrences of PM6 and one
+occurrence of PS2. Evidence from literature must be fully evaluated to support
+independent events.
+Modification Strength
+Type:
+
+Strong
+De novo (paternity confirmed) in a patient with the disease and no family history.
+Modification None
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Approved functional studies are available for each individual gene in the supplemental
+material. Additional functional studies can be submitted to the expert panel for approval.
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Strong
+≥5 independent occurrences.
+Modification General
+Type:
+
+Moderate
+≥3 independent occurrences.
+Modification Strength
+Type:
+
+Supporting
+≥1 independent occurrences.
+
+Modification Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+See supplemental material for approved functional domains and residues. This evidence
+rule can also be applied for the same analogous residue positions/regions in highly
+analogous groupings below: Group 1: HRAS, NRAS, KRAS Group 2: MAP2K1, MAP2K2 Group
+3: SOS1, SOS2
+Modification Analogous Gene
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Moderate
+The variant must be completely absent from all population databases.
+Modification General
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+This criterion is not applicable to the RASopathies.
+
+PM4
+
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Modification None
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Previously established variant must be established as pathogenic per these criteria.
+Amino acid changes of variants should be concordant with pathogenicity based on how
+conservative or non-conservative (within the context of amino acid chain groupings) the
+residue change is relative to the known pathogenic residue changes. This evidence rule
+can also be used for pathogenic missense variants seen in the same analogous residue
+position in highly analogous groupings below: Group 1: HRAS, NRAS, KRAS Group 2:
+MAP2K1, MAP2K2 Group 3: SOS1, SOS2 This rule should not be used as independent
+criteria for calculating pathogenicity in conjunction with PM1 if the amino acid residue
+being interrogated is explicitly designated as a “mutational hot-spot”. For example, Gly12
+in HRAS is listed as a hot-spot for PM1 usage. In these situations, only PM1 should be used
+when combining criteria for final variant classification in order to avoid premature
+designation of a likely pathogenic classification in the absence of other evidence for
+pathogenicity. ≥2 different pathogenic missense changes seen before at same residue of
+missense change.
+Modification Strength
+Type:
+
+Moderate
+Previously established variant must be established as pathogenic per these criteria.
+Amino acid changes of variants should be concordant with pathogenicity based on how
+conservative or non-conservative (within the context of amino acid chain groupings) the
+
+residue change is relative to the known pathogenic residue changes. This evidence rule
+can also be used for pathogenic missense variants seen in the same analogous residue
+position in highly analogous groupings below: Group 1: HRAS, NRAS, KRAS Group 2:
+MAP2K1, MAP2K2 Group 3: SOS1, SOS2 This rule should not be used as independent
+criteria for calculating pathogenicity in conjunction with PM1 if the amino acid residue
+being interrogated is explicitly designated as a “mutational hot-spot”. For example, Gly12
+in HRAS is listed as a hot-spot for PM1 usage. In these situations, only PM1 should be used
+when combining criteria for final variant classification in order to avoid premature
+designation of a likely pathogenic classification in the absence of other evidence for
+pathogenicity.
+Modification Analogous Gene
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Strong
+≥2 independent occurrences of PM6. Evidence from literature must be fully evaluated to
+support independent events.
+Modification Strength
+Type:
+
+Moderate
+Confirmed de novo without confirmation of paternity and maternity.
+Modification None
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Usage of PP1 requires at least three informative meioses. Segregation in more than one
+family is recommended. ≥7 informative meioses.
+
+Modification Strength
+Type:
+
+Moderate
+Usage of PP1 requires at least three informative meioses. Segregation in more than one
+family is recommended. ≥5 informative meioses.
+Modification Strength
+Type:
+
+Supporting
+Usage of PP1 requires at least three informative meioses. Segregation in more than one
+family is recommended.
+Modification General
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Supporting
+PP2 is applicable to all RASopathy genes described and curated herein.
+Modification Disease-specific
+Type:
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product.
+Modification None
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+This criterion is not applicable to the RASopathies. See PS4 criterion for
+proband counting options.
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+An allele frequency ≥0.05% was approved. See supplemental material for additional
+frequency information.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+An allele frequency ≥0.025% was approved. See supplemental material for additional
+frequency information.
+
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Due to variable expressivity and severity, extensive clinical workup for RASopathy
+spectrum features is warranted, thus general population data should not be used for this
+criterion. Clinical laboratories are encouraged to accumulate more than 3 instances of
+well phenotyped family members before applying this strong criterion.
+Modification General
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+Approved functional studies are available for each individual gene in the supplemental
+material. Additional functional studies can be submitted to the expert panel for approval.
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+
+Requires only one informative meiosis and does not require an additional piece of
+supporting evidence to classify variant as likely benign.
+Modification General
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Supporting
+This rule has contraindications for use with RASopathies. Given the disease mechanism is
+gain-of-function for RASopathies, BP1 should be used for any truncating variant
+(nonsense, frameshift, affects canonical splice sites, initiation codon, entire gene or multi
+exon deletion) in genes without established LOF correlation to disease. See the
+supplemental material regarding dosage sensitivity information for each individual gene
+and potential association to disorders associated with LOF variants.
+Modification Disease-specific
+Type:
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder;
+or observed in cis with a pathogenic variant in any inheritance pattern.
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Supporting
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Modification None
+Type:
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc) Caveat: As many in silico algorithms use
+the same or very similar input for their predictions, each algorithm cannot be counted as
+an independent criterion. BP4 can be used only once in any evaluation of a variant.
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+Modification Variant found in a case with an alternate molecular basis for
+Type:
+disease
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BP7
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site AND the nucleotide is
+not highly conserved. This rule is also applicable for intronic positions (except canonical
+splice sites) or non-coding variants and should be used in conjunction with BP4.
+Modification General
+Type:
+
+

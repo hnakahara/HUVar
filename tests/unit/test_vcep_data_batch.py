@@ -185,7 +185,8 @@ class TestRPGRpm4:
     def test_orf15_repeat_not_met(self):
         # The ORF15 repetitive region (585-1078) must NOT be evaluated → N/A.
         assert self._r().indel_strength("RPGR", 800) == "not_met"
-        assert self._r().indel_strength("RPGR", 1100) == "not_met"   # repetitive C-terminus
+        # ORF15 outside the repetitive region (1079-1152) → Moderate.
+        assert self._r().indel_strength("RPGR", 1100) == CriterionStrength.MODERATE
 
     def test_stoploss_strong(self):
         assert self._r().stoploss_strength("RPGR") == CriterionStrength.STRONG
@@ -207,20 +208,30 @@ class TestVHLpm4:
 
 
 class TestFunctionalDomainOnlyPM4:
-    """FOXG1 / TCF4 / UBE3A: in-frame indel PM4 applies only within the PM1
-    functionally important domain → Moderate; elsewhere N/A."""
+    """FOXG1 / TCF4 / UBE3A (Rett/Angelman VCEPs): in-frame indels in a non-repeat
+    region are Moderate; < 3 aa is Supporting outside the PM1 functional domain
+    (small_outside); the VCEP's excluded regions are denied."""
 
     def _r(self):
         return PM4Regions(_PM4)
 
     def test_foxg1_forkhead_moderate(self):
-        assert self._r().indel_strength("FOXG1", 200) == CriterionStrength.MODERATE  # 181-275
-        assert self._r().indel_strength("FOXG1", 100) == "not_met"                   # outside
+        r = self._r()
+        assert r.indel_strength("FOXG1", 200) == CriterionStrength.MODERATE  # 181-275
+        assert r.in_tier("FOXG1", 200) and not r.in_tier("FOXG1", 300)
+        assert r.indel_strength("FOXG1", 300) == CriterionStrength.MODERATE  # non-repeat
+        assert r.indel_strength("FOXG1", 50) == "not_met"                    # His-rich deny
+        assert r.small_outside("FOXG1") == 2
 
     def test_tcf4_bhlh_moderate(self):
-        assert self._r().indel_strength("TCF4", 580) == CriterionStrength.MODERATE   # 564-617
-        assert self._r().indel_strength("TCF4", 100) == "not_met"
+        r = self._r()
+        assert r.indel_strength("TCF4", 580) == CriterionStrength.MODERATE   # 564-617
+        assert r.indel_strength("TCF4", 100) == CriterionStrength.MODERATE
+        assert r.in_tier("TCF4", 580) and not r.in_tier("TCF4", 100)
 
     def test_ube3a_residue_moderate(self):
-        assert self._r().indel_strength("UBE3A", 820) == CriterionStrength.MODERATE  # residue 820
-        assert self._r().indel_strength("UBE3A", 821) == "not_met"
+        # 3' cysteine binding site: aa 820 in the VCEP isoform = MANE aa 840.
+        r = self._r()
+        assert r.in_tier("UBE3A", 840) and not r.in_tier("UBE3A", 820)
+        assert r.indel_strength("UBE3A", 821) == CriterionStrength.MODERATE
+        assert r.small_outside("UBE3A") == 2

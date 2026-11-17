@@ -1,0 +1,895 @@
+Criteria Specification
+ClinGen ACADVL Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines
+for ACADVL Version 2.2
+Affiliation: ACADVL VCEP
+Type: Richards et.al., 2015 - Combining rules
+Description : ACADVL Specifications version 2.0. The VCEP reviewed all the codes and updated wording.
+ACADVL Specifications version 2.0.1. The VCEP updated the wording for PP3 and BP4 to only include
+reference to the Splice AI tool. 6/11/26 the VCEP added that PVS1 + PM2 (supporting) = Likely Pathogenic
+Version : 2.2
+Released : 7/20/2026
+DOI : 10.5281/zenodo.21457671
+Release Notes :
+Version 2.0.1 - the ACADVL VCEP reviewed the PP3 and BP4 codes' wording and updated the reference to
+only include the Splice AI tool.
+6/11/26 the VCEP added that PVS1 + PM2 (supporting) = Likely Pathogenic
+7/14/26 the VCEP re-added that PVS1 + PM2 (supporting) = LP; No pilot classifications changed due to this
+added rule.
+
+Contributors & Keywords
+Research Group: ACADVL VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+ACADVL NM_000018.4 Autosomal recessive
+inheritance very long chain acyl-CoA
+dehydrogenase deficiency
+
+Rules for ACADVL
+General Comments:
+
+Version 2.0
+
+Gene: ACADVL (HGNC:92) 
+Transcripts:
+NM_000018.4
+
+HGNC Name: acyl-CoA dehydrogenase very
+long chain
+Disease:
+very long chain acyl-CoA
+dehydrogenase deficiency
+(MONDO:0008723)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Loss of function is a known mechanism for VLCAD Deficiency. The specifications below are
+based on published guidance for assigning strength of evidence for PVS1 (Abou Tayoun et
+al., (2018) PMID: 30192042). There are multiple transcripts for ACADVL. The major
+isoform, NM_000018.4, encodes a 655 amino acid precursor protein that contains a 40
+amino acid N-terminal target sequence that is removed during uptake (Aoyama et al.,
+(1995) PMID: 7668252). In a joint project between NCBI and EMBL-EBI (MANE),
+NM_000018.4 was designated as the most relevant transcript. Nonsense or Frameshift:
+Use caution when interpreting LOF variants at the 3’ end of the gene.
+NMD is not predicted if the variant is in the last exon (exon 20) or in the last 50
+nucleotides of the penultimate exon (exon 19).
+Canonical Splice Site (+1, +2, -1, -2): All donor/acceptor sites follow the GT/AG rule,
+except for the donor splice site of intron 8, which begins with GC. PVS1 should not be
+applied for variants in the splice donor site of intron 8 since the impact of GC donor
+splice sites is not well understood. For +1 or +2 GT donor splice site variants, the
+exon immediately 5’ of the variant is predicted to be skipped. For -1 or -2 AG
+acceptor splice site variants, the exon immediately 3’ of the variants is predicted to
+be skipped.
+Initiation codon: The next in-frame methionine is at position 6 (on transcript
+NM_000018). However, the first 40 amino acids comprise the leader sequence in the
+precursor peptide and are important for proper localization of the protein (Aoyama et
+al., (1995) PMID: 7668252). Therefore, initiator codon variants will meet
+PVS1_Strong.
+Well-established _in vitro_ or _in vivo_ functional studies supportive of a damaging
+effect _as measured by effect on mRNA transcript profile (mRNA assay only)._ Apply
+as PVS1 (RNA) at appropriate strength.
+See ACADVL PVS1 decision tree; cannot be combined with PM1
+
+Modification Disease-specific
+Type:
+
+Strong
+Loss of function is a known mechanism for VLCAD Deficiency. The specifications below are
+based on published guidance for assigning strength of evidence for PVS1 (Abou Tayoun et
+al., (2018) PMID: 30192042). There are multiple transcripts for ACADVL. The major
+isoform, NM_000018.4, encodes a 655 amino acid precursor protein that contains a 40
+amino acid N-terminal target sequence that is removed during uptake (Aoyama et al.,
+(1995) PMID: 7668252). In a joint project between NCBI and EMBL-EBI (MANE),
+NM_000018.4 was designated as the most relevant transcript. Nonsense or Frameshift:
+Use caution when interpreting LOF variants at the 3’ end of the gene.
+NMD is not predicted if the variant is in the last exon (exon 20) or in the last 50
+nucleotides of the penultimate exon (exon 19).
+Canonical Splice Site (+1, +2, -1, -2): All donor/acceptor sites follow the GT/AG rule,
+except for the donor splice site of intron 8, which begins with GC. PVS1 should not be
+applied for variants in the splice donor site of intron 8 since the impact of GC donor
+splice sites is not well understood. For +1 or +2 GT donor splice site variants, the
+exon immediately 5’ of the variant is predicted to be skipped. For -1 or -2 AG
+acceptor splice site variants, the exon immediately 3’ of the variants is predicted to
+be skipped.
+Initiation codon: The next in-frame methionine is at position 6 (on transcript
+NM_000018). However, the first 40 amino acids comprise the leader sequence in the
+precursor peptide and are important for proper localization of the protein (Aoyama et
+al., (1995) PMID: 7668252). Therefore, initiator codon variants will meet
+PVS1_Strong.
+Well-established _in vitro_ or _in vivo_ functional studies supportive of a damaging
+effect _as measured by effect on mRNA transcript profile (mRNA assay only)._ Apply
+as PVS1 (RNA) at appropriate strength.
+See ACADVL PVS1 decision tree; cannot be combined with PM1
+Modification Disease-specific
+Type:
+
+Moderate
+Loss of function is a known mechanism for VLCAD Deficiency. The specifications below are
+based on published guidance for assigning strength of evidence for PVS1 (Abou Tayoun et
+al., (2018) PMID: 30192042). There are multiple transcripts for ACADVL. The major
+isoform, NM_000018.4, encodes a 655 amino acid precursor protein that contains a 40
+amino acid N-terminal target sequence that is removed during uptake (Aoyama et al.,
+(1995) PMID: 7668252). In a joint project between NCBI and EMBL-EBI (MANE),
+NM_000018.4 was designated as the most relevant transcript. Nonsense or Frameshift:
+Use caution when interpreting LOF variants at the 3’ end of the gene.
+NMD is not predicted if the variant is in the last exon (exon 20) or in the last 50
+nucleotides of the penultimate exon (exon 19).
+
+Canonical Splice Site (+1, +2, -1, -2): All donor/acceptor sites follow the GT/AG rule,
+except for the donor splice site of intron 8, which begins with GC. PVS1 should not be
+applied for variants in the splice donor site of intron 8 since the impact of GC donor
+splice sites is not well understood. For +1 or +2 GT donor splice site variants, the
+exon immediately 5’ of the variant is predicted to be skipped. For -1 or -2 AG
+acceptor splice site variants, the exon immediately 3’ of the variants is predicted to
+be skipped.
+Initiation codon: The next in-frame methionine is at position 6 (on transcript
+NM_000018). However, the first 40 amino acids comprise the leader sequence in the
+precursor peptide and are important for proper localization of the protein (Aoyama et
+al., (1995) PMID: 7668252). Therefore, initiator codon variants will meet
+PVS1_Strong.
+Well-established _in vitro_ or _in vivo_ functional studies supportive of a damaging
+effect _as measured by effect on mRNA transcript profile (mRNA assay only)._ Apply
+as PVS1 (RNA) at appropriate strength.
+See ACADVL PVS1 decision tree; cannot be combined with PM1
+Modification Disease-specific
+Type:
+
+Supporting
+Loss of function is a known mechanism for VLCAD Deficiency. The specifications below are
+based on published guidance for assigning strength of evidence for PVS1 (Abou Tayoun et
+al., (2018) PMID: 30192042). There are multiple transcripts for ACADVL. The major
+isoform, NM_000018.4, encodes a 655 amino acid precursor protein that contains a 40
+amino acid N-terminal target sequence that is removed during uptake (Aoyama et al.,
+(1995) PMID: 7668252). In a joint project between NCBI and EMBL-EBI (MANE),
+NM_000018.4 was designated as the most relevant transcript. Nonsense or Frameshift:
+Use caution when interpreting LOF variants at the 3’ end of the gene.
+NMD is not predicted if the variant is in the last exon (exon 20) or in the last 50
+nucleotides of the penultimate exon (exon 19).
+Canonical Splice Site (+1, +2, -1, -2): All donor/acceptor sites follow the GT/AG rule,
+except for the donor splice site of intron 8, which begins with GC. PVS1 should not be
+applied for variants in the splice donor site of intron 8 since the impact of GC donor
+splice sites is not well understood. For +1 or +2 GT donor splice site variants, the
+exon immediately 5’ of the variant is predicted to be skipped. For -1 or -2 AG
+acceptor splice site variants, the exon immediately 3’ of the variants is predicted to
+be skipped.
+Initiation codon: The next in-frame methionine is at position 6 (on transcript
+NM_000018). However, the first 40 amino acids comprise the leader sequence in the
+precursor peptide and are important for proper localization of the protein (Aoyama et
+al., (1995) PMID: 7668252). Therefore, initiator codon variants will meet
+PVS1_Strong.
+Well-established _in vitro_ or _in vivo_ functional studies supportive of a damaging
+effect _as measured by effect on mRNA transcript profile (mRNA assay only)._ Apply
+as PVS1 (RNA) at appropriate strength.
+
+See ACADVL PVS1 decision tree; cannot be combined with PM1
+Modification Disease-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same amino acid change as a previously established pathogenic variant classified
+using the ACADVL specifications without application of PS1, regardless of nucleotide
+change OR Same amino acid change as ≥2 previously established likely pathogenic
+variants classified using the ACADVL specifications without application of PS1,
+regardless of nucleotide change.
+Caveat (from ACMG/AMP guidelines): Assess the possibility that the variant may
+act directly through the DNA change (e.g. through splicing disruption as
+assessed by at least computational analysis) instead of through the amino acid
+change.
+Same predicted impact on splicing as previously classified variant (Refer to Table 2 in
+Walker et al., (2023) PMID: 37352859).
+PS1 can be applied at varying strengths for splice variants, in conjunction with
+either PP3 or PVS1. PS1 strength depends on location of the variant under
+assessment (within or outside the +/- 1,2 dinucleotide positions) and the
+location of the previously classified variant (within or outside the +/- 1,2
+dinucleotide position). Specific combinations are outlined in Table 2 in Walker, et
+al., (2023) PMID: 37352859.
+Modification Gene-specific
+Type:
+
+Moderate
+PS1_Moderate: Same amino acid change as a previously established likely
+pathogenic variant classified using the ACADVL specifications without application of
+PS1, regardless of nucleotide change.
+Caveat (from ACMG/AMP guidelines): Assess the possibility that the variant may
+act directly through the DNA change (e.g. through splicing disruption as
+assessed by at least computational analysis) instead of through the amino acid
+change.
+
+Same predicted impact on splicing as previously classified variant (Refer to Table 2 in
+Walker et al., (2023) PMID: 37352859).
+PS1 can be applied at varying strengths for splice variants, in conjunction with
+either PP3 or PVS1. PS1 strength depends on location of the variant under
+assessment (within or outside the +/- 1,2 dinucleotide positions) and the
+location of the previously classified variant (within or outside the +/- 1,2
+dinucleotide position). Specific combinations are outlined in Table 2 in Walker et
+al., (2023) PMID: 37352859.
+Modification Gene-specific
+Type:
+
+Supporting
+Same predicted impact on splicing as previously classified variant (Refer to Table 2 in
+Walker et al., (2023) PMID: 37352859).
+PS1 can be applied at varying strengths for splice variants, in conjunction with
+either PP3 or PVS1. PS1 strength depends on location of the variant under
+assessment (within or outside the +/- 1,2 dinucleotide positions) and the
+location of the previously classified variant (within or outside the +/- 1,2
+dinucleotide position). Specific combinations are outlined in Table 2 in Walker et
+al., (2023) PMID: 37352859.
+Modification Gene-specific
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Not Applicable
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Very Strong
+
+Functional evidence from non-patient derived material with only a single variant best
+reflects the variant-level data. Apply patient-derived evidence in PP4.
+Apply criteria at the level determined by validation parameters (see PS3 BS3
+flowchart).
+Enzyme activity assays, total protein production, protein stability, dimer formation
+and transcript production are valid assays to consider for PS3. Apply criteria at the
+level determined by validation parameters (see PS3 BS3 flowchart). OddsPath
+analysis sufficient for very strong application.
+Modification Disease-specific
+Type:
+
+Strong
+Functional evidence from non-patient derived material with only a single variant best
+reflects the variant-level data. Apply patient-derived evidence in PP4.
+Apply criteria at the level determined by validation parameters (see PS3 BS3
+flowchart).
+Enzyme activity assays, total protein production, protein stability, dimer formation
+and transcript production are valid assays to consider for PS3. Apply criteria at the
+level determined by validation parameters (see PS3 BS3 flowchart).
+Modification Disease-specific
+Type:
+
+Moderate
+Functional evidence from non-patient derived material with only a single variant best
+reflects the variant-level data. Apply patient-derived evidence in PP4.
+Apply criteria at the level determined by validation parameters (see PS3 BS3
+flowchart).
+Enzyme activity assays, total protein production, protein stability, dimer formation
+and transcript production are valid assays to consider for PS3. Apply criteria at the
+level determined by validation parameters (see PS3 BS3 flowchart).
+Modification Disease-specific
+Type:
+
+Supporting
+Functional evidence from non-patient derived material with only a single variant best
+reflects the variant-level data. Apply patient-derived evidence in PP4.
+Apply criteria at the level determined by validation parameters (see PS3 BS3
+flowchart).
+Enzyme activity assays, total protein production, protein stability, dimer formation
+and transcript production are valid assays to consider for PS3. Apply criteria at the
+level determined by validation parameters (see PS3 BS3 flowchart). If an enzyme
+activity assay has >20% activity it cannot be weighted above PS3_supporting
+regardless of flowchart results.
+
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+See table PM1, curators may seek approval from the expert panel for identifying
+additional hotspots or critical regions as discovered in literature searches for
+inclusion.
+Moderate
+p.1-40,mitochondrial signal peptide, PMIDs: 18227065*, 20060901
+p.214-223, nucleotide/substrate binding, PMIDs: 18227065*, 20060901
+p.249-251, nucleotide/substrate binding, PMIDs: 18227065*, 20060901
+p.R326, CpG dinucleotide, PMID: 9973285
+p.381-382, FAD binding and salt-bridge interaction, PMID: 20060901
+p.R429, CpG dinucleotide, PMID: 9973285
+p.E441, Adjacent to FAD binding, on dimer formation loop, PMIDs:
+20060901
+p.R459, dimerization, PMID: 14517516
+p.481-516, membrane binding, PMIDs: 18227065*, 20060901
+p.562, nucleotide/substrate binding, PMIDs: 18227065*, 20060901
+*protein is described in mature protein nomenclature without signal
+peptide; add 40 amino acids to reach HGVS nomenclature
+
+Modification Disease-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Variants with a highest population minor allele frequency (MAF) <0.001 (0.1%) in any
+continental population with >2000 alleles in gnomAD will meet PM2_supporting.
+Calculated using the Prevalence of 1:100,000, Allelic Contribution of 0.2, Genetic
+Contribution of 1, and Penetrance of 0.75 to allow for mild VLCADD that may develop
+in adulthood. This was multiplied by 1.5 to account for mildly pathogenic variants
+being present in carriers within the population databases.
+It is acceptable for an ACADVL variant to be present in controls because VLCAD
+deficiency is a recessive condition. It is also possible for homozygous ACADVL
+variants to be present in population databases due to later onset of the condition. If
+homozygous variants are present, the number should be noted and discussed with
+an expert.
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Very Strong
+Details of the cDNA change must be used to describe any variants used as evidence
+for PM3. If the variant is described only as an amino acid change, this is not
+sufficient. Probands must also meet PP4 criteria to be counted.
+If more than one case has the same genotype and the variants are not confirmed in
+trans, then only one case should be used for assigning points to avoid overcounting
+evidence if the variants are actually in cis and hence inherited together in multiple
+individuals or potentially counting the same case twice. If the variants are confirmed
+to be in trans, more than one individual with the same genotype can be counted as
+long as the reports do not represent the same case.
+
+These variant interpretation guidelines should be used to determine the classification
+of the “other variant” in order to determine the appropriate number of points to
+assign.
+For a variant to be “confirmed in trans” in a compound heterozygous patient,
+parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed. Otherwise,
+the phase of the variants is unknown. Parental testing is not required for
+homozygous cases.
+See PM3 table
+PM3 score ≥ 4.0
+Modification Disease-specific
+Type:
+
+Strong
+Details of the cDNA change must be used to describe any variants used as evidence
+for PM3. If the variant is described only as an amino acid change, this is not
+sufficient. Probands must also meet PP4 criteria to be counted.
+If more than one case has the same genotype and the variants are not confirmed in
+trans, then only one case should be used for assigning points to avoid overcounting
+evidence if the variants are actually in cis and hence inherited together in multiple
+individuals or potentially counting the same case twice. If the variants are confirmed
+to be in trans, more than one individual with the same genotype can be counted as
+long as the reports do not represent the same case.
+These variant interpretation guidelines should be used to determine the classification
+of the “other variant” in order to determine the appropriate number of points to
+assign.
+For a variant to be “confirmed in trans” in a compound heterozygous patient,
+parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed. Otherwise,
+the phase of the variants is unknown. Parental testing is not required for
+homozygous cases.
+See PM3 table
+PM3 score ≥ 2.0 < 4.0
+Modification Disease-specific
+Type:
+
+Moderate
+Details of the cDNA change must be used to describe any variants used as evidence
+for PM3. If the variant is described only as an amino acid change, this is not
+sufficient. Probands must also meet PP4 criteria to be counted.
+If more than one case has the same genotype and the variants are not confirmed in
+trans, then only one case should be used for assigning points to avoid overcounting
+evidence if the variants are actually in cis and hence inherited together in multiple
+individuals or potentially counting the same case twice. If the variants are confirmed
+
+to be in trans, more than one individual with the same genotype can be counted as
+long as the reports do not represent the same case.
+These variant interpretation guidelines should be used to determine the classification
+of the “other variant” in order to determine the appropriate number of points to
+assign.
+For a variant to be “confirmed in trans” in a compound heterozygous patient,
+parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed. Otherwise,
+the phase of the variants is unknown. Parental testing is not required for
+homozygous cases.
+See PM3 table
+PM3 score ≥ 1.0 < 2.0
+Modification Disease-specific
+Type:
+
+Supporting
+Details of the cDNA change must be used to describe any variants used as evidence
+for PM3. If the variant is described only as an amino acid change, this is not
+sufficient. Probands must also meet PP4 criteria to be counted.
+If more than one case has the same genotype and the variants are not confirmed in
+trans, then only one case should be used for assigning points to avoid overcounting
+evidence if the variants are actually in cis and hence inherited together in multiple
+individuals or potentially counting the same case twice. If the variants are confirmed
+to be in trans, more than one individual with the same genotype can be counted as
+long as the reports do not represent the same case.
+These variant interpretation guidelines should be used to determine the classification
+of the “other variant” in order to determine the appropriate number of points to
+assign.
+For a variant to be “confirmed in trans” in a compound heterozygous patient,
+parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed. Otherwise,
+the phase of the variants is unknown. Parental testing is not required for
+homozygous cases.
+See PM3 table
+PM3 score ≥ 0.5 < 1.0
+Modification Disease-specific
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Follow recommendations as outlined in ACMG/AMP guidelines and/or Sequence Variant
+Interpretation working group.
+Modification Disease-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+See PM5 table. Note: Cannot be applied with PM1, apply criteria with the highest
+strength. If both are applicable at the same strength, apply PM5 as it is amino acid
+specific.
+Modification Disease-specific
+Type:
+
+Moderate
+See PM5 table. Note: Cannot be applied with PM1, apply criteria with the highest
+strength. If both are applicable at the same strength, apply PM5 as it is amino acid
+specific.
+Two likely pathogenic variants at the same codon
+One pathogenic variant at the same codon
+Modification Disease-specific
+Type:
+
+Supporting
+See PM5 table. Note: Cannot be applied with PM1, apply criteria with the highest
+strength. If both are applicable at the same strength, apply PM5 as it is amino acid
+specific.
+One likely pathogenic variant at the same codon
+Modification Disease-specific
+Type:
+
+PM6
+
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Moderate
+Assumed de novo, but without confirmation of paternity and maternity.
+Modification No change
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+See PP1 table. Probands are NOT counted toward segregation. Likewise, carrier
+parents DO NOT count as unaffected segregations. Affected segregations = #
+affected individuals in the family with the variants - 1. Affected segregations are
+defined as affected family members (typically siblings) who harbor the variant in
+question and a second variant on the remaining allele. Unaffected segregations are
+defined as unaffected family members, typically siblings, who are at risk to inherit
+the two variants identified in the proband. These individuals should be either wildtype for both variants identified in the proband, or a heterozygous carrier for a single
+variant. There may be scenarios where individuals other than siblings could be
+counted as segregations, such as in families where one parent is affected with the
+autosomal recessive disorder, in large families with multiple branches, or in
+consanguineous families.
+Strong (32:1 Likelihood)
+A LOD score ≥ 1.50
+Modification Disease-specific
+Type:
+
+Moderate
+See PP1 table. Probands are NOT counted toward segregation. Likewise, carrier
+parents DO NOT count as unaffected segregations. Affected segregations = #
+affected individuals in the family with the variants - 1. Affected segregations are
+defined as affected family members (typically siblings) who harbor the variant in
+question and a second variant on the remaining allele. Unaffected segregations are
+defined as unaffected family members, typically siblings, who are at risk to inherit
+the two variants identified in the proband. These individuals should be either wild-
+
+type for both variants identified in the proband, or a heterozygous carrier for a single
+variant. There may be scenarios where individuals other than siblings could be
+counted as segregations, such as in families where one parent is affected with the
+autosomal recessive disorder, in large families with multiple branches, or in
+consanguineous families.
+Moderate (16:1 Likelihood)
+A LOD score < 1.50 ≥ 1.20
+Modification Disease-specific
+Type:
+
+Supporting
+See PP1 table. Probands are NOT counted toward segregation. Likewise, carrier
+parents DO NOT count as unaffected segregations. Affected segregations = #
+affected individuals in the family with the variants - 1. Affected segregations are
+defined as affected family members (typically siblings) who harbor the variant in
+question and a second variant on the remaining allele. Unaffected segregations are
+defined as unaffected family members, typically siblings, who are at risk to inherit
+the two variants identified in the proband. These individuals should be either wildtype for both variants identified in the proband, or a heterozygous carrier for a single
+variant. There may be scenarios where individuals other than siblings could be
+counted as segregations, such as in families where one parent is affected with the
+autosomal recessive disorder, in large families with multiple branches, or in
+consanguineous families.
+Supporting (4:1 Likelihood)
+An LOD score < 1.20 ≥ 0.60
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+This rule does not apply as there are benign and pathogenic missense
+variants in ACADVL.
+
+PP3
+Original ACMG
+Summary
+
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Missense changes with a REVEL scores >0.75 will meet PP3
+For in-frame deletions and insertions, use Mutation Taster.
+For non-canonical splice site variants, use Splice AI. Based on data from Jaganathan
+et al., (2019) PMID: 30661751, Houdayer et al., (2012) PMID: 22505045 and Tang et
+al., (2016) PMID: 27313609 and Walker et al., (2023) PMID:37352859, PP3 can be
+applied if there is, a SpliceAI “high score” (Δ Score ≥ 0.5 “confidently predicted
+splice variants”) (exclude any results with Δ Score ≤ 0.2 from consideration of
+pathogenicity, <0.2 are not “predicted to alter splicing”).
+For SpliceAI’s cryptic splice-site rules, the creation of a new splice-site with Δ Score ≥
+0.5 may be enough to produce a large proportion of aberrant transcripts.
+If a new splice site is predicted to be generated, this rule can be applied if the newly
+generated splice site is significantly stronger than the wild type site (Δ Score ≥ 0.5
+using SpliceAI).
+Do not apply this rule for canonical splice site changes meeting PVS1.
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Moderate
+Abnormal tests that are consistent with VLCAD deficiency include deficient VLCAD
+enzyme activity in patient cells (leukocytes, fibroblasts, liver, heart, or skeletal
+muscle, or amniocytes), abnormal C14:1 acylcarnitine values from newborn
+screening (NBS), and abnormal acylcarnitine values from follow-up plasma analysis.
+2 points (See PP4 Table)
+Modification Disease-specific
+Type:
+
+Supporting
+Abnormal tests that are consistent with VLCAD deficiency include deficient VLCAD
+enzyme activity in patient cells (leukocytes, fibroblasts, liver, heart, or skeletal
+
+muscle, or amniocytes), abnormal C14:1 acylcarnitine values from newborn
+screening (NBS), and abnormal acylcarnitine values from follow-up plasma analysis.
+1 point (See PP4 Table)
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Variants with a highest population minor allele frequency (MAF) ≥0.007 (0.7%) in any
+continental population with >2000 alleles in gnomAD will meet BA1.
+Calculated using the Prevalence of 1:30,000, Allelic Contribution of 1, Genetic
+Contribution of 1, and Penetrance of 0.75 to allow for mild VLCADD that may
+develop in adulthood.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Variants with a highest population minor allele frequency (MAF) ≥0.0035 (0.35%) in
+any continental population with >2000 alleles in gnomAD will meet BS1.
+Calculated using the Prevalence of 1:30,000, Allelic Contribution of 0.5, Genetic
+Contribution of 1, and Penetrance of 0.75 to allow for mild VLCAD that may
+
+develop in adulthood.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+Enzyme activity assays, total protein production, protein stability, dimer formation and
+transcript production are valid assays to consider for PS3. Apply criteria at the level
+determined by validation parameters (see PS3 BS3 flowchart).
+Modification Disease-specific
+Type:
+
+Moderate
+Enzyme activity assays, total protein production, protein stability, dimer formation and
+transcript production are valid assays to consider for PS3. Apply criteria at the level
+determined by validation parameters (see PS3 BS3 flowchart).
+Modification Disease-specific
+Type:
+
+Supporting
+Enzyme activity assays, total protein production, protein stability, dimer formation and
+transcript production are valid assays to consider for PS3. Apply criteria at the level
+determined by validation parameters (see PS3 BS3 flowchart).
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Follow recommendations as outlined in ACMG/AMP guidelines and/or Sequence Variant
+Interpretation working group
+Modification No change
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+This rule does not apply. There are known pathogenic missense variants in
+ACADVL.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder;
+or observed in cis with a pathogenic variant in any inheritance pattern.
+Modification No change
+Type:
+
+BP3
+
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+There are no known repetitive regions without known function in ACADVL.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Missense changes with a REVEL score <0.5 will meet BP4.
+For in-frame deletions and insertions, use Mutation Taster.
+For non-canonical splice site variants, use Splice AI. Based on data from Jaganathan
+et al., 2019 (PMID: 30661751), Houdayer et al., 2012 (PMID: 22505045), Tang et al.,
+2016 (PMID: 27313609), and Walker et al., (2023) PMID:37352859, BP4 can be
+applied if there is a Δ Score ≤ 0.1.
+Do not apply this rule if there is evidence for creation of a cryptic splice site.
+Can be used with BP7 code.
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+An individual could be a carrier of a pathogenic variant in ACADVL and
+have another disorder.
+
+BP6
+Original ACMG
+Summary
+
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Strong
+BP7_Strong (RNA) in vitro evidence of no splicing impact for intronic or synonymous
+variants irrespective of position and predicted impact on splicing.
+Modification Disease-specific
+Type:
+
+Supporting
+A synonymous (silent) variant for which splicing prediction algorithms predict no
+impact to the splice consensus sequence nor the creation of a new splice site AND
+the nucleotide is not highly conserved
+Can be used for intronic variants that fall outside the minimal splice region (≥+7 or
+≤-21)
+Can be used with BP4 code.
+Modification Gene-specific
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong AND ≥ 1 Strong
+1 Very Strong AND ≥ 2 Moderate
+1 Very Strong AND 1 Moderate AND 1 Supporting
+1 Very Strong AND ≥ 2 Supporting
+
+≥ 2 Strong
+1 Strong AND ≥ 3 Moderate
+1 Strong AND 2 Moderate AND ≥ 2 Supporting
+1 Strong AND 1 Moderate AND ≥ 4 Supporting
+
+Likely Pathogenic
+1 Very Strong AND 1 Moderate
+1 Strong AND 1 Moderate
+1 Strong AND ≥ 2 Supporting
+
+≥ 3 Moderate
+2 Moderate AND ≥ 2 Supporting
+1 Moderate AND ≥ 4 Supporting
+1 Strong AND 2 Moderate
+1 Very Strong (PVS1) AND 1 Supporting (PM2_Supporting)
+
+Benign
+≥ 2 Strong
+1 Stand Alone
+
+Likely Benign
+1 Strong AND 1 Supporting
+
+≥ 2 Supporting
+
+Files & Images
+PP1 tables: 
+PM3 table: 
+PS3 and BS3 flowchart: 
+PP4 points table: 
+PM1 table_updated: 
+PM5 table: 
+PS3 functional assay: 
+PVS1 decision tree: 
+
+

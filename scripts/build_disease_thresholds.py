@@ -32,7 +32,7 @@ from typing import Optional
 
 COLUMNS = [
     "gene_symbol", "inheritance", "prevalence", "allelic_het", "genetic_het",
-    "penetrance", "bs1_threshold", "bs1_strength", "bs1_exclude", "ba1_threshold", "ba1_exclude",
+    "penetrance", "bs1_threshold", "bs1_strength", "bs1_supporting_threshold", "bs1_exclude", "ba1_threshold", "ba1_exclude",
     "af_basis",
     "ba1_hom_count",
     "pm2_threshold", "pm2_strength", "pm2_basis", "pm2_subpop", "pm2_zygosity",
@@ -49,6 +49,7 @@ COLUMNS = [
     "bp7_splice_cutoff",
     "revel_pp3_supporting", "revel_pp3_moderate", "revel_pp3_strong",
     "revel_bp4_supporting", "revel_bp4_moderate", "revel_bp4_strong",
+    "revel_bp4_very_strong",
     "source_vcep", "cspec_url", "notes",
 ]
 
@@ -590,17 +591,19 @@ _BS2_CLINICAL_CONFIRMATION = frozenset({
 #   RPGR  GN106 / RS1 GN126 — males >30y with eye exam + functional studies
 #                             (normal ERG/FAF; "without retinoschisis")
 #   F8    GN071 / F9 GN080  — male with normal factor VIII/IX activity (>40% IU)
-#   SLC6A8 GN027            — male with documented normal creatine transport study
-#   PDHA1 GN014             — well-characterized phenotype (explicitly "not just
-#                             seen in database") / Pyruvate enzyme assay
 #   CDKL5/MECP2/SLC9A6 GN016 — "N unaffected (related/unrelated) Het/Hemi" Rett-
 #                             like individuals (phenotyped, internal/family data)
 # gnomAD is presumed-healthy and unphenotyped (and, per the hemizygote-count
 # limitation, an unreliable source for X-linked male counts), so a gnomAD-count
 # BS2 would FALSELY fire on a pathogenic X-linked variant. Forced not_applicable.
 _BS2_XLINKED_INTERNAL = frozenset({
-    "CDKL5", "RS1", "PDHA1", "RPGR",
-    "SLC9A6", "F9", "SLC6A8", "MECP2", "F8",
+    "CDKL5", "RS1", "RPGR",
+    "SLC9A6", "F9", "MECP2", "F8",
+    # NB: SLC6A8 (GN027) and PDHA1 (GN014) are NOT here — besides the phenotyped-
+    # male routes their BS2 also takes gnomAD counts: SLC6A8 ">=2 homo- or
+    # hemizygotes in the most current version of gnomAD"; PDHA1 ">=16 hemizygotes
+    # in gnomAD" (Strong) / "4-15 hemizygotes in gnomAD" (Supporting). Routed
+    # applicable through _AUDIT_OVERRIDES (VCEP requirements audit, Nov 2026).
     # NB: IL2RG (GN129) is NOT here — its SCID VCEP takes the hemizygote count
     # ">=3 in gnomAD" (Strong) / ">=2 in gnomAD" (Supporting), so it is
     # gnomAD-eligible; routed applicable with bs2_strength tiers.
@@ -785,11 +788,10 @@ _PP3_RULES: dict[str, dict[str, str]] = {
 #   Both cspec numbers are typos; gnomAD male (XY) AF basis is already correct.
 _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     "RPGR": {"bs1_threshold": "0.000005", "ba1_threshold": "0.00005"},
-    # MECP2 / CDKL5 (GN036 / GN034): the "<3 aa unless functionally important
-    # region" PM4 Supporting tier is NOT a size-based downgrade for these genes —
-    # PM4 applies only within their PM1 functional domains (pm4_regions.tsv) where
-    # small events stay Moderate. Clear the mined size cutoff so no out-of-domain
-    # small indel leaks a size-only PM4_Supporting.
+    # Rett / Angelman VCEPs (GN032-037): the "<3 aa unless functionally important
+    # region" PM4 Supporting tier is region-dependent (small events inside a PM1
+    # functional domain stay Moderate), so it is carried by the ``small_outside``
+    # rows of pm4_regions.tsv; the flat size cutoff mined here is cleared.
     "MECP2": {"pm4_supporting_max_aa": "", "af_basis": "popmax"},
     "CDKL5": {"pm4_supporting_max_aa": ""},
     "FOXG1": {"pm4_supporting_max_aa": "", "af_basis": "popmax"},
@@ -830,6 +832,124 @@ _CURATED_OVERRIDES: dict[str, dict[str, str]] = {
     "ACVRL1": {"pm5_min_count": "2", "pm5_lp": ""},
     "ENG": {"pm5_min_count": "2", "pm5_lp": ""},
 }
+
+# VCEP requirements audit (November 2026): values the text mining does not pick
+# up, merged per column into the overrides above (see the criteria texts).
+#   * BP4 scope / splice cutoffs: VHL "missense predictors should not be used to
+#     assign the BP4 evidence code"; GP1BA / GP1BB "SpliceAI score is zero";
+#     GCK / HNF1A / HNF4A BP4 and BP7 "predicted change ... below 0.2";
+#     GP1BA / GP1BB / GP9 BP7 "score = 0.2 or less".
+#   * REVEL tiers: SCN genes follow Pejaver with PP3 "capped at Moderate" and BP4
+#     listed at Supporting / Moderate; PAH BP4 Moderate / Strong "as described in
+#     Pejaver et al."; RPGR / RS1 BP4 Strong 0.004-0.016 (<= 0.003 is their Stand
+#     Alone tier: revel_bp4_very_strong, below); AIPL1 PP3 Moderate >= 0.774 and Strong
+#     (the specification text has the digits transposed: ">= 0.093").
+#   * BS1_Supporting thresholds (bs1_supporting_threshold).
+#   * BP7 without a conservation requirement (bp7_phylop = na).
+#   * BS2 gnomAD counts: SLC6A8 ">= 2 homo- or hemizygotes"; PDHA1 ">= 16
+#     hemizygotes" Strong, "4-15 hemizygotes" Supporting.
+#   * PM2: SCN genes "One or fewer alleles"; DICER1 "across gnomAD ... at least
+#     20x coverage"; RUNX1 "20x coverage".
+_AUDIT_OVERRIDES: dict[str, dict[str, str]] = {
+    'VHL': {'bp4_scope': 'splice_only'},
+    'GP1BA': {'bp4_splice_cutoff': '0', 'bp4_missense_splice_max': '0', 'bp7_splice_cutoff': '0.2'},
+    'GP1BB': {'bp4_splice_cutoff': '0', 'bp4_missense_splice_max': '0', 'bp7_splice_cutoff': '0.2'},
+    'SCN1A': {'revel_pp3_supporting': '0.644', 'revel_pp3_moderate': '0.773', 'revel_bp4_supporting': '0.29', 'revel_bp4_moderate': '0.183', 'pm2_threshold': '0'},
+    'SCN1B': {'revel_pp3_supporting': '0.644', 'revel_pp3_moderate': '0.773', 'revel_bp4_supporting': '0.29', 'revel_bp4_moderate': '0.183', 'pm2_threshold': '0'},
+    'SCN2A': {'revel_pp3_supporting': '0.644', 'revel_pp3_moderate': '0.773', 'revel_bp4_supporting': '0.29', 'revel_bp4_moderate': '0.183', 'pm2_threshold': '0'},
+    'SCN3A': {'revel_pp3_supporting': '0.644', 'revel_pp3_moderate': '0.773', 'revel_bp4_supporting': '0.29', 'revel_bp4_moderate': '0.183', 'pm2_threshold': '0'},
+    'SCN8A': {'revel_pp3_supporting': '0.644', 'revel_pp3_moderate': '0.773', 'revel_bp4_supporting': '0.29', 'revel_bp4_moderate': '0.183', 'pm2_threshold': '0'},
+    'PAH': {'revel_bp4_moderate': '0.183', 'revel_bp4_strong': '0.016', 'bp7_phylop': 'na'},
+    'RPGR': {'revel_bp4_strong': '0.016'},
+    'RS1': {'revel_bp4_strong': '0.016'},
+    'AIPL1': {'revel_pp3_moderate': '0.774', 'revel_pp3_strong': '0.932'},
+    'ABCA4': {'bs1_supporting_threshold': '0.00163', 'bp7_phylop': 'na'},
+    'ACVRL1': {'bs1_supporting_threshold': '0.0008', 'bp7_phylop': 'na'},
+    'ENG': {'bs1_supporting_threshold': '0.0008', 'bp7_phylop': 'na'},
+    'BRCA1': {'bs1_supporting_threshold': '0.00002'},
+    'BRCA2': {'bs1_supporting_threshold': '0.00002'},
+    'CDH23': {'bs1_supporting_threshold': '0.0007'},
+    'GJB2': {'bs1_supporting_threshold': '0.0007'},
+    'MYO7A': {'bs1_supporting_threshold': '0.0007'},
+    'SLC26A4': {'bs1_supporting_threshold': '0.0007'},
+    'USH2A': {'bs1_supporting_threshold': '0.0007'},
+    'MYO6': {'bs1_supporting_threshold': '0.0007'},
+    'TECTA': {'bs1_supporting_threshold': '0.0007'},
+    'MYO15A': {'bs1_supporting_threshold': '0.0007'},
+    'OTOF': {'bs1_supporting_threshold': '0.0007'},
+    'PTEN': {'bs1_supporting_threshold': '0.0000043', 'bp7_phylop': 'na'},
+    'APC': {'bp7_phylop': 'na'},
+    'ATM': {'bp7_phylop': 'na'},
+    'PALB2': {'bp7_phylop': 'na'},
+    'CDH1': {'bp7_phylop': 'na'},
+    'CTLA4': {'bp7_phylop': 'na'},
+    'CYP1B1': {'bp7_phylop': 'na'},
+    'DICER1': {'bp7_phylop': 'na', 'pm2_basis': 'global', 'pm2_min_depth': '20'},
+    'GAMT': {'bp7_phylop': 'na'},
+    'GATM': {'bp7_phylop': 'na'},
+    'IDUA': {'bp7_phylop': 'na'},
+    'LDLR': {'bp7_phylop': 'na'},
+    'MLH1': {'bp7_phylop': 'na'},
+    'MSH2': {'bp7_phylop': 'na'},
+    'MSH6': {'bp7_phylop': 'na'},
+    'PMS2': {'bp7_phylop': 'na'},
+    'OTC': {'bp7_phylop': 'na'},
+    'PIK3CD': {'bp7_phylop': 'na'},
+    'PIK3R1': {'bp7_phylop': 'na'},
+    'SLC6A8': {'bp7_phylop': 'na', 'bs2': 'applicable', 'bs2_count': '2', 'bs2_xl_hom': '1'},
+    'VWF': {'bp7_phylop': 'na'},
+    'ANO5': {'bp7_phylop': 'na'},
+    'CAPN3': {'bp7_phylop': 'na'},
+    'DYSF': {'bp7_phylop': 'na'},
+    'SGCA': {'bp7_phylop': 'na'},
+    'SGCB': {'bp7_phylop': 'na'},
+    'SGCD': {'bp7_phylop': 'na'},
+    'SGCG': {'bp7_phylop': 'na'},
+    'GP9': {'bp7_splice_cutoff': '0.2'},
+    'GCK': {'bp7_splice_cutoff': '0.2', 'bp4_splice_cutoff': '0.2'},
+    'HNF1A': {'bp7_splice_cutoff': '0.2', 'bp4_splice_cutoff': '0.2'},
+    'HNF4A': {'bp7_splice_cutoff': '0.2', 'bp4_splice_cutoff': '0.2'},
+    'PDHA1': {'inheritance': 'XL', 'bs2': 'applicable', 'bs2_strength': 'Strong:16,Supporting:4'},
+    'RUNX1': {'pm2_min_depth': '20'},
+}
+# PS1 "Applicable for observed analogous residue positions in HRAS, KRAS, MRAS,
+# NRAS, RIT1, and RRAS2" / "in BRAF and RAF1" (RASopathy VCEP); the residues are
+# paired through ps1_paralog_map.tsv.
+_RAS_GROUP = ("HRAS", "KRAS", "NRAS", "MRAS", "RIT1", "RRAS2")
+for _g in _RAS_GROUP:
+    _AUDIT_OVERRIDES.setdefault(_g, {})["ps1_paralog_group"] = ",".join(
+        x for x in _RAS_GROUP if x != _g)
+_AUDIT_OVERRIDES.setdefault("BRAF", {})["ps1_paralog_group"] = "RAF1"
+_AUDIT_OVERRIDES.setdefault("RAF1", {})["ps1_paralog_group"] = "BRAF"
+# RASopathy VCEP v2.3.0 single-gene specs (PM5 general text on the CSpec page, not
+# in the criteria JSON): "PM1 and PM5 may be used in conjunction at moderate
+# levels, however, PM1 may not be applied if PM5_Strong is applied" -> no PM5/PM1
+# exclusion (the superseded grouped GN004 text still yields one); the PM5_Strong
+# case is handled on the PM1 side (pm1_hotspots.PM1_CO_REQUIREMENTS).
+for _g in ("BRAF", "HRAS", "KRAS", "MAP2K1", "MAP2K2", "NRAS", "PTPN11", "RAF1", "RIT1",
+           "SHOC2", "SOS1", "SOS2"):
+    _AUDIT_OVERRIDES.setdefault(_g, {})["pm5_excludes"] = ""
+# RPGR / RS1 BP4 "Stand Alone ... REVEL <= 0.003" -> Very Strong tier.
+for _g in ("RPGR", "RS1"):
+    _AUDIT_OVERRIDES.setdefault(_g, {})["revel_bp4_very_strong"] = "0.003"
+# IL2RG (GN129) PM2_Supporting: "gnomAD popmax filtering allele frequency <0.000124"
+# and "no hemizygotes have been observed in gnomAD" (text supplied from the CSpec
+# page; the snapshot JSON carries another criterion's sentence here).
+_AUDIT_OVERRIDES.setdefault("IL2RG", {}).update(
+    {"pm2_threshold": "0.000124", "pm2_basis": "faf", "pm2_zygosity": "hemi:0"})
+# General "VCEP Specifications" text of the CSpec pages (resources/clingen/
+# cspec_pdf/text, November 2026), which the criteria JSON does not carry:
+#   * TP53 / CYP1B1 PM5: Grantham "equal or worse" / "equal or greater".
+#   * PM2 coverage: CDH1 "mean coverage ... at least 30x"; HBB / HBA2 ">= 20x".
+#   * HBB / HBA2 BP7: "SpliceAI <= 0.3 AND GERP++ < 0" (phyloP < 0 stands in for GERP).
+#   * PTEN BP4: "SpliceAI: scores 0-0.2 are considered evidence of benign".
+#   * PAH: "BP4_very strong: applicable as described in Pejaver et al." (REVEL <= 0.003).
+#   * APC BA1 / BS1 / PM2: "Use the non-cancer dataset from gnomAD".
+#   * SERPINC1: common founder variants "excluded from eligibility of the BS1 code".
+for _g, _cols in {'TP53': {'pm5_grantham': 'ge'}, 'CYP1B1': {'pm5_grantham': 'ge'}, 'CDH1': {'pm2_min_depth': '30'}, 'HBB': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'HBA2': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'PTEN': {'bp4_splice_cutoff': '0.2'}, 'PAH': {'revel_bp4_very_strong': '0.003'}, 'APC': {'pm2_subset': 'non_cancer'}, 'SERPINC1': {'bs1_exclude': 'p.Pro73Leu,p.Arg79His,p.Thr147Ala,p.Ala416Ser,p.Leu131Phe,p.Val30Glu'}}.items():
+    _AUDIT_OVERRIDES.setdefault(_g, {}).update(_cols)
+for _g, _cols in _AUDIT_OVERRIDES.items():
+    _CURATED_OVERRIDES.setdefault(_g, {}).update(_cols)
 
 
 def _bs2_applicability(rule_set: dict) -> str:

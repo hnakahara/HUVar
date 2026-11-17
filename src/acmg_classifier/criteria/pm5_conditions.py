@@ -15,7 +15,7 @@ count) with the conditions that VCEPs attach to PM5 for missense variants:
 * **PP3 must be met** — InSiGHT MMR genes ("Only use PM5 if PP3 is supporting"),
   RPGR / RS1 ("must meet PP3"). Enforced after all criteria are evaluated
   (``REQUIRES_PP3``; see ``CriteriaRegistry``).
-* **REVEL minimum** — DYSF: "the REVEL score for the missense variant under
+* **REVEL minimum** — LGMD VCEP genes: "the REVEL score for the missense variant under
   curation should be >0.7".
 * **Grantham downgrade** — Monogenic Diabetes VCEP (GCK / HNF1A / HNF4A):
   "Supporting ... if the previously classified variant is pathogenic but has a
@@ -26,6 +26,9 @@ count) with the conditions that VCEPs attach to PM5 for missense variants:
 * Count-based strengths (F8 / F9 "1 pathogenic variant or 2 likely pathogenic
   variants", MYOC, ACADVL, LGMD, VWF, RASopathy, KCNQ1 P/LP): see
   :mod:`acmg_classifier.criteria.comparator_tiers`.
+* **Analogous-residue comparators** — RASopathy VCEP paralogue groups
+  (``PARALOG_COMPARATORS``): P / LP changes at the aligned residue of a paralogue
+  are counted with the same-codon comparators.
 * **Paralogue route** — SCN1A/2A/3A/8A: PM5_Supporting for ">1 non-identical
   amino-acid change in paralogous gene(s)" classified P/LP at the analogous
   residue.
@@ -45,8 +48,10 @@ SPLICE: dict[str, tuple[float, str, str]] = {
     # "must not affect splicing (SpliceAI <= 0.2)" (candidate)
     "RPGR": (0.20, "candidate", "le"),
     "RS1": (0.20, "candidate", "le"),
-    # "exclude likely splice effects (SpliceAI < 0.5)" for both
-    "DYSF": (0.50, "both", "max"),
+    # LGMD VCEP (DYSF, CAPN3, ANO5, SGCA/B/G/D): "exclude likely splice effects
+    # (SpliceAI score < 0.5 ...)" for the variant under curation and the comparator(s)
+    **{g: (0.50, "both", "max")
+       for g in ("DYSF", "CAPN3", "ANO5", "SGCA", "SGCB", "SGCG", "SGCD")},
     # "Splice AI score must be < 0.1 for both"
     "SLC6A8": (0.10, "both", "max"),
     # "in silico predictors do not suggest a splicing defect" (PP3 cutoff 0.2)
@@ -71,21 +76,67 @@ SPLICE: dict[str, tuple[float, str, str]] = {
     "GUCY2D": (0.0, "both", "category"),
     # "SpliceAI scores for both variants should be within 10% of each other"
     "RPE65": (0.10, "both", "relative"),
+    # General "VCEP Specifications" text of the CSpec pages (not in the criteria
+    # JSON): TP53 "Splicing should be ruled out with either RNA data or SpliceAI
+    # (SpliceAI < 0.2)"; RUNX1 "RNA data or SpliceAI <= 0.20"; CYP1B1 "must not
+    # affect splicing (SpliceAI <= 0.2)"; OTC "SpliceAI ... for both variants is
+    # <= 0.2"; IDUA "no splicing impact for either variant (SpliceAI <= 0.1)";
+    # AIPL1 "exclude potential splice effects (SpliceAI scores should be < 0.20)"
+    # for both.
+    "TP53": (0.20, "candidate", "max"),
+    "RUNX1": (0.20, "candidate", "le"),
+    "CYP1B1": (0.20, "candidate", "le"),
+    "OTC": (0.20, "both", "le"),
+    "IDUA": (0.10, "both", "le"),
+    "AIPL1": (0.20, "both", "max"),
     # LQTS VCEP (KCNQ1): "SpliceAI must be used to examine both variants for
     # similar predicted effect or lack of effect on splicing (SpliceAI delta <0.2)"
     "KCNQ1": (0.20, "both", "max"),
 }
 
-REQUIRES_PP3: frozenset[str] = frozenset({"MLH1", "MSH2", "MSH6", "PMS2", "RPGR", "RS1"})
+# + CYP1B1 "must meet PP3", AIPL1 "confirm the applicability of PP3" (general text).
+REQUIRES_PP3: frozenset[str] = frozenset({"MLH1", "MSH2", "MSH6", "PMS2", "RPGR", "RS1",
+                                          "CYP1B1", "AIPL1"})
 
-REVEL_MIN: dict[str, float] = {"DYSF": 0.7}
+# PS1 for a missense variant (general "VCEP Specifications" text): the candidate
+# must not be predicted to act through splicing. gene -> (SpliceAI cutoff, mode);
+# "max" = below the cutoff, "le" = at or below. TP53 "(SpliceAI < 0.2)"; MYOC "must
+# not affect splicing (SpliceAI <= 0.2)"; RUNX1 "no impact on splicing"; OTC "<= 0.2";
+# IDUA "(SpliceAI < 0.1)"; ATM "as long as a splice defect is ruled out".
+# (GUCY2D / AIPL1 state the condition for the comparison variant: below.)
+PS1_SPLICE: dict[str, tuple[float, str]] = {
+    "TP53": (0.20, "max"), "MYOC": (0.20, "le"), "RUNX1": (0.20, "le"),
+    "OTC": (0.20, "le"), "IDUA": (0.10, "max"), "ATM": (0.20, "max"),
+}
+
+REVEL_MIN: dict[str, float] = {
+    g: 0.7 for g in ("DYSF", "CAPN3", "ANO5", "SGCA", "SGCB", "SGCG", "SGCD")}
 
 GRANTHAM_SUPPORTING: frozenset[str] = frozenset({"GCK", "HNF1A", "HNF4A"})
 
 # F8 / F9 "1 pathogenic variant or 2 likely pathogenic variants" -> PM5 Moderate:
 # criteria/comparator_tiers.py (PM5_RULES), with the other count-based VCEPs.
 
+# PS1 comparators that must not act through splicing (LCA VCEP general text:
+# "SpliceAI must be used to ensure comparison variant is not causing a splicing
+# defect (score <= 0.1)"). gene -> highest SpliceAI max delta allowed for the
+# comparison variant. Checked with the precomputed SpliceAI files (runs that use
+# SpliceAI); a comparator without a score is kept and the evidence says so.
+PS1_COMPARATOR_SPLICE_MAX: dict[str, float] = {"GUCY2D": 0.10, "AIPL1": 0.10}
+
 PARALOG_SUPPORTING: frozenset[str] = frozenset({"SCN1A", "SCN2A", "SCN3A", "SCN8A"})
+
+# RASopathy VCEP v2.3.0 (PM5 general text): "Applicable for observed analogous
+# residue positions in BRAF and RAF1" / "in MAP2K1 and MAP2K2" / "in SOS1 and SOS2"
+# / "in HRAS, KRAS, MRAS, NRAS, RIT1, and RRAS2". A (likely) pathogenic change to a
+# DIFFERENT amino acid at the analogous residue of a paralogue (same wild-type
+# residue; alignment in ps1_paralog_map.tsv) counts as a PM5 comparator like a
+# same-codon one. The same change in the paralogue is PS1, not PM5.
+PARALOG_COMPARATORS: dict[str, tuple[str, ...]] = {}
+for _grp in (("BRAF", "RAF1"), ("MAP2K1", "MAP2K2"), ("SOS1", "SOS2"),
+             ("HRAS", "KRAS", "NRAS", "MRAS", "RIT1", "RRAS2")):
+    for _g in _grp:
+        PARALOG_COMPARATORS[_g] = tuple(x for x in _grp if x != _g)
 
 # HHT VCEP (ACVRL1 GN135 / ENG GN136): "Beware of changes that impact splicing
 # rather than at the amino acid/protein level" -- a caveat, not an exclusion:

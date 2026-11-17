@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **Latest CSpec specifications for review** (`resources/clingen/cspec_api/`, 250 files,
+  GN001-GN251, fetched 2026-11-17 by `scripts/fetch_cspec_api.py`), with `manifest.tsv`
+  comparing each specification with the June 2026 snapshot the tables are built from,
+  and the CSpec web-page PDFs of the 128 Released specifications with plain-text copies
+  (`resources/clingen/cspec_pdf/`, `--pdf`), which also carry the general "VCEP
+  Specifications" text that the API JSON lacks. Not read by the engine.
 - **Germline ACMG/AMP classification in the somatic output.** `somatic` rows carry the
   `classify` columns (MANE Plus Clinical .. warnings) with a `germline_` prefix after the
   somatic columns, computed from the same annotation; the germline criteria are reused
@@ -21,6 +27,130 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **VCEP requirements audit (all genes, automated criteria).** Corrections where the
+  result differed from the specification text:
+  - PS1 paralogue: MAP2K1/MAP2K2 and SOS1/SOS2 comparators are looked up at the aligned
+    residue (`ps1_paralog_map.tsv`, UniProt alignment; MAP2K2 = MAP2K1 + 4, SOS1 p.269 =
+    SOS2 p.267) instead of the same residue number.
+  - PM4: Rett / Angelman genes (MECP2, CDKL5, FOXG1, TCF4, UBE3A) — in-frame indels in a
+    non-repeat region are Moderate, < 3 aa Supporting unless in a PM1 functional domain
+    (`small_outside` rows); MECP2 / UBE3A regions are now in MANE numbering. Stop-loss
+    variants in MECP2 / UBE3A are PM4_Strong. LDLR / RS1
+    need PM2 (`requires` rows); AIPL1 / GUCY2D need a conserved residue (PhyloP > 2.0).
+  - PM2: ITGA2B / ITGB3 — Moderate only when absent, Supporting below 0.0001.
+  - PP3: SCN1A/1B/2A/3A/8A capped at Moderate; PP3 + PM1 limited to Strong for the SCN
+    genes and PAH (PM1 is reduced or withheld). VHL splice-based PP3 needs SpliceAI > 0.5.
+  - BP4: VHL on splice predictions only; GP1BA / GP1BB need SpliceAI = 0.
+  - PM5: the LGMD conditions (SpliceAI < 0.5 for both variants, REVEL > 0.7) apply to
+    CAPN3, ANO5 and SGCA/B/G/D as well as DYSF; RPGR Moderate needs two Pathogenic
+    comparators.
+  - PS1 paralogue (continued): BRAF/RAF1 and HRAS/KRAS/NRAS/MRAS/RIT1/RRAS2 are aligned
+    the same way (HRAS p.Gly12 = MRAS p.Gly22 = RIT1 p.Gly30 = RRAS2 p.Gly23; BRAF p.Asp594
+    = RAF1 p.Asp486).
+  - BS1_Supporting tier (new column `bs1_supporting_threshold`): ABCA4, ACVRL1 / ENG
+    (Strong with >= 2 homozygotes), BRCA1/2, hearing-loss recessive genes, PTEN.
+  - PM2 gene clauses: one allele allowed (DNM2, NEB, SCN genes; MTM1 in females only),
+    minimum alleles assessed (2,000 / 10,000), ACVRL1 / ENG < 6 alleles, APC single-allele
+    cutoff, CDH1 and TP53 subpopulation rules, DICER1 global AF with one allele per
+    subpopulation and 20x coverage.
+  - RASopathy genes: PM1 and PM5 are no longer mutually exclusive ("may be used in
+    conjunction at moderate levels"); PM1 is withheld only when PM5 is Strong.
+  - RASopathy PM5 "applicable for observed analogous residue positions": P / LP changes
+    to a different amino acid at the aligned residue of a paralogue (BRAF/RAF1,
+    MAP2K1/2, SOS1/2, HRAS/KRAS/NRAS/MRAS/RIT1/RRAS2) count as PM5 comparators.
+  - General "VCEP Specifications" text of the CSpec pages (not in the criteria JSON;
+    reviewed from `resources/clingen/cspec_pdf/text`):
+    - PM5 splice / PP3 / Grantham conditions for TP53, RUNX1, CYP1B1, OTC, IDUA, AIPL1;
+      PS1 (same amino-acid change) is withheld when the candidate is predicted to affect
+      splicing for TP53, MYOC, RUNX1, OTC, IDUA, ATM.
+    - Combined-weight ceilings: PP3 + PM1 <= Strong (OTC, CYP1B1); CYP1B1 PP3 + PM1 + PM5
+      <= 5 and PP3 + PM1 + PS1 <= 6 points; MYOC PP3 + PM5 <= 5 and PP3 + PS1 <= 6;
+      F8 / F9 PM1 + PM5 <= Strong; TP53 PS1 + PM5 <= Strong.
+    - PM1 not with PM5_Strong (SCN genes, ACVRL1, ENG); RPE65 PM1 not with BA1 / BS1.
+    - BA1 / BS1 minimum allele counts (CDH1, MYOC, CYP1B1, RUNX1, F8, F9); APC frequency
+      criteria on the non-cancer subset; SERPINC1 founder variants excluded from BS1.
+    - PM2 coverage (CDH1 30x, HBB / HBA2 20x); HBB / HBA2 BP7 (SpliceAI <= 0.3, not
+      conserved); PTEN splice cutoffs (PP3 >= 0.5, BP4 <= 0.2); PAH BP4 Very Strong;
+      ABCA4 BP4 not with BP7; AIPL1 PM4 in p.328-384 only for indels >= 5 aa.
+    - RYR1 in-frame deletions in the pore region (aa 4800-4950) PM4_Strong; CDH1 PP3 not
+      at c.387G (last nucleotide of exon 3); BRCA1 / BRCA2 BA1 and BS1 withheld when the
+      gnomAD mean read depth is below 20 (needs the coverage database).
+    - GUCY2D / AIPL1 PS1: comparison variants with SpliceAI > 0.1 are not used (precomputed
+      SpliceAI lookup). MYOC / CYP1B1 / BMPR2 PM2: a GrpMax population with fewer than
+      10,000 / 2,000 / 1,000 alleles is not used (global AF instead).
+  - IL2RG PM2_Supporting: GrpMax FAF < 0.000124 and no hemizygotes in gnomAD.
+  - BS2 from gnomAD counts: SLC6A8 (>= 2 homo-/hemizygotes; not co-applied with BS1) and
+    PDHA1 (>= 16 hemizygotes Strong, 4-15 Supporting).
+  - PM4: PTEN only in the catalytic motifs (and stop-loss); NEB in-frame deletions in
+    exon 55 Strong; RPGR ORF15 aa 1079-1152 Moderate. PM5: CYP1B1 Moderate with two LP.
+  - PP3 / BP4 / BP7: SCN BP4 Supporting / Moderate only; PAH BP4 Moderate / Strong;
+    RPGR / RS1 BP4 Strong up to 0.016 and Very Strong (their Stand Alone tier, new column
+    `revel_bp4_very_strong`) at <= 0.003; AIPL1 PP3 Moderate / Strong; ABCA4 PP3_Moderate
+    for SpliceAI >= 0.8 and BP7 at Moderate; no conservation requirement for BP7 where
+    the VCEP states none (32 genes); BP7 / BP4 splice cutoff 0.2 for GCK, HNF1A, HNF4A
+    and BP7 0.2 for GP1BA, GP1BB, GP9.
+
+- **PS3/BS3 from the VCEPs' variant-level functional tables**
+  (`resources/shared/vcep_functional_codes.tsv`, `scripts/build_vcep_functional_codes.py`;
+  policy `vcep_table` in `functional_evidence_rules.tsv`).
+  - TP53: Table S3 of the VCEP Functional worksheet (4,193 missense rows, Funk 2025
+    included). Codon-specific codes are matched by c. / VEP codons. The table is now
+    the default; the NCI flowchart (opt-in) and MaveDB are used only for variants
+    absent from it.
+  - OTC: Lo 2023 yeast complementation with the VCEP growth thresholds; SMG motif and
+    splice-impact variants excluded.
+  - GALT: the VCEP activity table.
+  - PAH: Kanavy 2019 Table S8. For the 76 variants classified in the eRepo, the
+    current VCEP code and strength are used (including PS3 Strong, or no
+    PS3/BS3). Pilot-only PS3 calls are stored as PS3_Moderate.
+  - BS3 from these protein-level tables is withheld without a splice score < 0.2.
+  - IDUA: Appendix 3 "Variants" sheet (30 variants; the numeric cells are
+    percent-formatted), coded with the study thresholds and the Matte Western-blot
+    PS3_Moderate. Multi-study variants need concordant calls.
+- **Rules from the files distributed on the CSpec pages** (audit of the 473 files
+  attached to the 112 released specifications; revisions published after the
+  2026-06-05 snapshot are tracked separately and not applied here).
+  - **PVS1, SVI exon-skipping arm.** Canonical +/-1,2 splice variants were always
+    PVS1 in the generic tree. Using the MANE exon structure
+    (`vcep_pvs1_exons.exon_skip_effect`), an in-frame skip, a skip of the exon holding
+    the stop codon, or an out-of-frame skip of the penultimate exon now follows the
+    10%-of-protein rule (Strong / Moderate). Frame-disrupting skips predicted to
+    undergo NMD stay PVS1.
+  - **PVS1, per-gene in-frame skips.** New `_GeneSpec.splice_inframe`:
+    - 10% rule: MYBPC3, F8, NEB, SCN1B / 2A / 3A / 8A, FOXN1.
+    - Strong, with a note that the VCEP needs a downstream pathogenic variant: ADA,
+      DCLRE1C, JAK3, IL7R, IL2RG.
+  - **PVS1, new rows in `vcep_pvs1_splice_exons.tsv`.** PTEN 3 / 8 / 9 Strong;
+    ACADVL 3 / 6 / 9 / 11 / 12 / 20 Moderate and 13 / 14 Strong; F8 7 PVS1 and
+    25 / 26 Strong; F9 1 / 4 / 5 Strong; NEB 55 and 161–183 PVS1; SLC6A8 2 / 5
+    Strong; SLC9A6 4, UBE3A 9 / 10, MECP2 3 and HNF1A 10 Strong (VCEP exon numbers
+    mapped to MANE). Rows now also apply to genes without a PVS1 spec.
+  - **PVS1, per-allele splice tables** (`resources/shared/vcep_pvs1_splice_sites.tsv`,
+    read with the ENIGMA Table 4):
+    - ATM v1.6: list B Strong, lists C / F Supporting, and the 5'UTR, GC-creating and
+      GC-donor sites N/A.
+    - PALB2 v1.3: c.49-1/-2 Moderate, c.211+1/+2 Supporting, list D Strong,
+      c.108+2T>C and c.3350+2C>T N/A.
+    - TP53: c.74+1/+2 Strong (PVS1 Splicing Worksheet). The exon 8 acceptor stays
+      N/A, following the flowchart.
+  - **PVS1, truncation rules.**
+    - PALB2: nonsense p.1184–1186 Moderate. A frameshift impacting p.Tyr1183 with an
+      extended C-terminus is Strong; one starting after Tyr1183 is Supporting
+      (`fs_tail_rule`).
+    - NEB: the NMD-escape region (critical exons 161–183) is PVS1.
+    - F8, HBB and HBA2: bands are keyed on the PTC codon.
+    - New LGMD specs (DYSF, SGCA, SGCB, SGCG, SGCD, CAPN3, ANO5): a PTC in codons
+      1–34 is Moderate (re-initiation, `trunc_reinit_moderate`); otherwise
+      NMD → PVS1, escape → 10% rule; in-frame splice → 10% rule.
+  - **PVS1, initiation codon.** ATM, PALB2, OTC and ABCA4 (new spec) are PVS1.
+  - **BA1 / BS1 exclusions.** The ABCA4 BS1 exclusion list (7 variants), and the HBB
+    Appendix 4 (13 variants) and HBA2 Appendix 4 (c.95+2_95+6del) BA1 / BS1
+    exclusions.
+  - **PM1 and BS2.**
+    - ACADVL PM1: p.460–466 added (PM1 table, 03/13/25).
+    - FOXN1 / JAK3 PM1 caveat from the corrections documents: must not meet BA1, BS1
+      or BS2.
+    - DCLRE1C BS2 counts homozygotes only (count 1).
 - **HGVS columns carry the change only.** `somatic` TSV `hgvs_c` / `hgvs_p` no longer
   include the NM_ / NP_ accession (as `classify` already did), and VEP's URL-encoded
   `%3D` is written as `=` (`p.Ser34=`) in both TSVs (`tsv_writer.change_only`).
@@ -61,6 +191,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
     frameshift skips without NMD (MSH2 15, MSH6 9/10, PMS2 14) Moderate; initiation
     codon MLH1 PVS1 and MSH2 N/A (were the generic Moderate); the last-base G>non-G
     PVS1_Strong rule now also for MSH2, MSH6 and PMS2.
+  - BRCA1 / BRCA2 initiation codon → PVS1 (ENIGMA Specifications Table 4 V1.2 "E2
+    PVS1 START codon"; Appendix D Figures 3 / 5, "upgraded from Moderate"); was the
+    generic PVS1_Moderate.
+  - BRCA1 / BRCA2 canonical splice (±1,2 substitutions) per ENIGMA Specifications
+    Table 4 (`resources/shared/enigma_pvs1_splice_sites.tsv`, 575 substitutions): e.g.
+    BRCA1 c.301+1/2, c.442-1/2, c.4097-1/2, c.4186-1/2, c.4358-1/2 Supporting;
+    c.671-1/2, c.4096+1/2 Moderate; exons 8(9)/9(10), the 5'UTR intron and
+    c.5193+2T>C N/A; BRCA2 c.8331+1/2 Strong, c.68-1/2, c.8488-1/2, c.9118-1G>A,
+    c.9257-1/2 Supporting, exons 4/6/7/10/12 sites, c.7976+2C>T and c.8953+2T>C N/A
+    (were the generic tree). Codes marked "(RNA)" in Table 4 are noted in the
+    evidence. Substitutions not in the table (and indels) keep the generic tree.
   - GAMT and VHL PVS1 match their trees (no change).
 - **PS1 / PM5 strengths that depend on the number of P / LP comparators**
   (`criteria/comparator_tiers.py`; points per distinct comparator, quoted from the

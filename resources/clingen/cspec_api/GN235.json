@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN235",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50169",
+    "@type": "Organization",
+    "label": "RYR2 Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50169"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/834031056"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen RYR2  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for RYR2 Version 1.0",
+  "lastUpdated": "2026-06-22T18:06:12.543Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/834031063",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=RYR2",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0011484",
+              "@type": "Disease",
+              "label": "MONDO:0011484",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "RYR2"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

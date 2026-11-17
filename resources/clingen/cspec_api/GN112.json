@@ -1,0 +1,1175 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN112",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50108",
+    "@type": "Organization",
+    "label": "Potassium Channel Arrhythmia Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50108"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1562365900"
+  },
+  "cspecStatus": "Released",
+  "currentStatus": "Pilot Rules Submitted",
+  "label": "ClinGen Potassium Channel Arrhythmia Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for KCNQ1 Version 1.0",
+  "lastUpdated": "2026-10-07T07:37:16.618Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1562365913",
+      "@type": "RuleSet",
+      "criteriaCodes": [
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433518",
+          "@type": "CriteriaCode",
+          "description": "Lack of segregation in affected members of a family.\nCaveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation among affected individuals. Also, families may have more than one pathogenic variant contributing to an autosomal dominant disorder, further confounding an apparent lack of segregation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433518/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433518/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433518/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Lack of segregation in affected members of a family \n\n*   BS4 is met by absence of the variant in 2 or more affected family members\n*   The family member must have QTc greater than or equal to 480ms or Schwartz score >3 or syncope.\n*   Please use the European Society of Cardiology guidelines for 2022 (PMID: 36017572, Table 10) to calculate a modified Schwartz score.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433518/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433518/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Lack of segregation in affected members of a family\n\n*   BS4\\_supporting is met by absence of the variant in 1 affected family member\n*   The family member must have QTc greater than or equal to 480ms or Schwartz score >3 or syncope.\n*   Please use the European Society of Cardiology guidelines for 2022 (PMID: 36017572, Table 10) to calculate a modified Schwartz score.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433526",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence suggest no impact on gene or gene product (conservation, evolutionary, splicing impact, etc)\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm cannot be counted as an independent criterion. BP4 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433526/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433526/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433526/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433526/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433526/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Multiple lines of computational evidence suggest no impact on gene or gene product (conservation, evolutionary, splicing impact, etc.) \n\n*   REVEL and SpliceAI are the preferred predictors\n*   Apply this code for a missense variant if the REVEL score is \\<0.25 AND no splicing defect is predicted according to SpliceAI.\n*   Use SpliceAI to look for a possible splicing defect. Apply this code if delta score for donor gain, donor loss, acceptor gain, or acceptor loss is \\<0.1 (in addition to REVEL score \\<0.25).\n*   Apply this code for a synonymous or intronic variant if delta score for donor gain, donor loss, acceptor gain, or acceptor loss is \\<0.1 (PMID: 37352859).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433521",
+          "@type": "CriteriaCode",
+          "description": "Assumed de novo, but without confirmation of paternity and maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433521/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433521/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433521/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Assumed de novo, but without confirmation of paternity and maternity.\n\n*   For PM6, maternity and paternity are not confirmed but assumed, with no family history of disease (no evidence of QT-prolongation in parents or family history of sudden, unexplained death under the age of 40 years).\n*   The _de novo_ variant in question must be coding or flanking.\n*   The PM6 strength level depends on the clinical phenotype specificity and number of probands as defined in Tables 1 and 2.\n*   When using Table 1 to find the number of points per proband, if the proband has a phenotype sufficient to diagnose LQTS (prolonged QTc interval >480ms), the row used should usually be \"phenotype consistent with gene but not highly specific\". During the pilot phase, curators should also note the genotyping method and whether comprehensive testing of all/other LQTS genes has been performed.\n*   When using Table 1 to find the number of points per proband, if the proband meets PP4, so that the phenotype is sufficient to diagnose \\_KCNQ1\\_-specific LQTS (LQT 1), the number of points corresponding to \"phenotype highly specific for gene\" should be used instead. Note: This would require QTc prolongation above 480ms AND either swimming-associated events OR treadmill stress test result (PMID: 21699858) OR T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844).![](https://lh6.googleusercontent.com/4dOzwji0rs6_gSczQOWVPcEOk-W6h4Ey-wBCZTtqRdLJizyKdB6AU08BvSlBsOQ0HOkPeRFn1xEL6ofBU7fc1B0awCfBVfKQYdboYFwdPZmyf1zH0vBaH4AE-eenxPhcIlpuAXes9kp9vlJQ9f-kcA)",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433521/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Assumed de novo, but without confirmation of paternity and maternity.\n\n*   For PM6, maternity and paternity are not confirmed but assumed, with no family history of disease (no evidence of QT-prolongation in parents or family history of sudden, unexplained death under the age of 40 years).\n*   The _de novo_ variant in question must be coding or flanking.\n*   The PM6 strength level depends on the clinical phenotype specificity and number of probands as defined in Tables 1 and 2.\n*   When using Table 1 to find the number of points per proband, if the proband has a phenotype sufficient to diagnose LQTS (prolonged QTc interval >480ms), the row used should usually be \"phenotype consistent with gene but not highly specific\". During the pilot phase, curators should also note the genotyping method and whether comprehensive testing of all/other LQTS genes has been performed.\n*   When using Table 1 to find the number of points per proband, if the proband meets PP4, so that the phenotype is sufficient to diagnose \\_KCNQ1\\_-specific LQTS (LQT 1), the number of points corresponding to \"phenotype highly specific for gene\" should be used instead. Note: This would require QTc prolongation above 480ms AND either swimming-associated events OR treadmill stress test result (PMID: 21699858) OR T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844).![](https://lh6.googleusercontent.com/4dOzwji0rs6_gSczQOWVPcEOk-W6h4Ey-wBCZTtqRdLJizyKdB6AU08BvSlBsOQ0HOkPeRFn1xEL6ofBU7fc1B0awCfBVfKQYdboYFwdPZmyf1zH0vBaH4AE-eenxPhcIlpuAXes9kp9vlJQ9f-kcA)",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433521/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Assumed de novo, but without confirmation of paternity and maternity.\n\n*   For PM6, maternity and paternity are not confirmed but assumed, with no family history of disease (no evidence of QT-prolongation in parents or family history of sudden, unexplained death under the age of 40 years).\n*   The _de novo_ variant in question must be coding or flanking.\n*   The PM6 strength level depends on the clinical phenotype specificity and number of probands as defined in Table 1.\n*   When using Table 1 to find the number of points per proband, if the proband has a phenotype sufficient to diagnose LQTS (prolonged QTc interval >480ms), the row used should usually be \"phenotype consistent with gene but not highly specific\". During the pilot phase, curators should also note the genotyping method and whether comprehensive testing of all/other LQTS genes has been performed.\n*   When using Table 1 to find the number of points per proband, if the proband meets PP4, so that the phenotype is sufficient to diagnose \\_KCNQ1\\_-specific LQTS (LQT 1), the number of points corresponding to \"phenotype highly specific for gene\" should be used instead. Note: This would require QTc prolongation above 480ms AND either swimming-associated events OR treadmill stress test result (PMID: 21699858) OR T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844).![](https://lh6.googleusercontent.com/4dOzwji0rs6_gSczQOWVPcEOk-W6h4Ey-wBCZTtqRdLJizyKdB6AU08BvSlBsOQ0HOkPeRFn1xEL6ofBU7fc1B0awCfBVfKQYdboYFwdPZmyf1zH0vBaH4AE-eenxPhcIlpuAXes9kp9vlJQ9f-kcA)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM6"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433537",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene for which primarily truncating variants are known to cause disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433537/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433537/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433537/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433537/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433537/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Missense variant in a gene for which primarily truncating variants are known to cause disease\n\n*   Not applicable, as pathogenic _KCNQ1_ variants are not limited to truncating variants, but can be missense as well.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433528",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is greater than expected for disorder.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433528/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433528/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433528/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Allele frequency is greater than expected for disorder  \n\n*   Maximum allele frequency in gnomAD (in one of the 5 continental populations; African/African-American, East Asian, European non-Finnish, Latino/Admixed-American, or South Asian) greater than or equal to 0.0004 (0.04%).",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433528/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433528/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433525",
+          "@type": "CriteriaCode",
+          "description": "Protein length changes due to in-frame deletions/insertions in a non-repeat region or stop-loss variants.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433525/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433525/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433525/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433525/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Protein length changes due to in-frame deletions/insertions in a non-repeat region or stop-loss variants\n\n*   This code is mutually exclusive with PVS1 (PMID: 30192042) and PP3 (in order not to double-count _in silico_ predictor data) but can be used together with PM1.\n*   In-frame insertions or deletions of any size will meet PM4 at the moderate (default) level, due to the greater importance of the location of the variant rather than the size.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433525/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433513",
+          "@type": "CriteriaCode",
+          "description": "Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before.\nExample: Arg156His is pathogenic; now you observe Arg156Cys.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433513/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433513/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433513/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433513/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before.\n\n*   Caveat: Residue must be highly conserved across all 5 human KCNQ paralogues in order to be considered for PM5. To confirm conservation, curators should access paralogue data and regions of alignment and non-alignment between KCNQ1 and KCNQ2, KCNQ3, KCNQ4, and KCNQ5  at the site below: [https://www.cardiodb.org/paralogue_annotation/gene.php?name=KCNQ1](https://www.cardiodb.org/paralogue_annotation/gene.php?name=KCNQ1).\n*   Poor conservation (ineligibility for PM5) is defined whenever 1 or more KCNQ’s show a different amino acid at the position. \n*   Comparison variants must have a Pathogenic or Likely Pathogenic classification reached using these VCEP-specified rules without using PM5.\n*   Variants at any codon where a likely benign / benign variant has been classified by the group are not eligible for PM5.\n*   SpliceAI must be used to examine both variants for similar predicted effect or lack of effect on splicing (SpliceAI Δ score \\<0.2).\n*   Not used at the PM5\\_Strong level.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433513/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433531",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as benign, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433531/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433531/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433531/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433531/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Supporting"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433531/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Moderate"
+            }
+          ],
+          "label": "BP6"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433532",
+          "@type": "CriteriaCode",
+          "description": "Patient’s phenotype or family history is highly specific for a disease with a single genetic etiology.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433532/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433532/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433532/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433532/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433532/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Patient’s phenotype or family history is highly specific for a disease with a single genetic etiology.\n\n*   QT prolongation above 480ms AND\n*   Swimming-associated events OR\n*   Treadmill stress test result (PMID: 21699858) OR\n*   T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433533",
+          "@type": "CriteriaCode",
+          "description": "In frame-deletions/insertions in a repetitive region without a known function.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433533/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433533/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433533/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433533/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433533/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "In-frame deletions/insertions in a repetitive region without a known function\n\n*   Not applicable to _KCNQ1_",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433512",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene that has a low rate of benign missense variation and where missense variants are a common mechanism of disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433512/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433512/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433512/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433512/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433512/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Missense variant in a gene that has a low rate of benign missense variation and where missense variants are a common mechanism of disease \n\n*   Not applicable due to presence of benign variation throughout the _KCNQ1_ gene (since the missense constraint Z-score in gnomAD is 1.83, lower than 3).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433534",
+          "@type": "CriteriaCode",
+          "description": "A synonymous variant for which splicing prediction algorithms predict no impact to the splice consensus sequence nor the creation of a new splice site AND the nucleotide is not highly conserved.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433534/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433534/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433534/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433534/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433534/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "A synonymous variant for which splicing prediction algorithms predict no impact to the splice consensus sequence nor the creation of a new splice site AND the nucleotide is not highly conserved.\n\n*   Use SpliceAI to look for suspected splicing defects (cutoff Δ score \\<0.1).\n*   Use PhyloP to check for conservation (cutoff \\<2.0).\n*   Please note that SpliceAI Δ score \\<0.1 AND PhyloP score \\<2.0 must both be met.\n*   This code can be met by synonymous variants except for variants in the last 3 nucleotides of an exon, or in the 1st nucleotide of an exon.\n*   This code can be met by intronic variants except for variants in positions +1 to +6 or -1 to -20, which are considered part of the splice donor and splice acceptor sites (PMID: 37352859).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP7"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433519",
+          "@type": "CriteriaCode",
+          "description": "Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or observed in cis with a pathogenic variant in any inheritance pattern.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433519/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433519/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433519/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433519/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433519/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or observed in cis with a pathogenic variant in any inheritance pattern.\n\n*   Not applicable to _KCNQ1_ due to biallelic cases (Jervell and Lange-Nielsen syndrome)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433510",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence support a deleterious effect on the gene or gene product (conservation, evolutionary, splicing impact, etc.).\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm should not be counted as an independent criterion. PP3 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433510/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433510/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433510/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433510/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433510/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Multiple lines of computational evidence support a deleterious effect on the gene or gene product (conservation, evolutionary, splicing impact, etc)\n\n*   REVEL and SpliceAI are the preferred predictors\n*   Apply this code if REVEL score is greater than or equal to 0.75.\n*   Use SpliceAI to look for a possible splicing defect. Apply this code if delta score for donor gain, donor loss, acceptor gain, or acceptor loss is greater than or equal to 0.2 (PMID: 37352859).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433514",
+          "@type": "CriteriaCode",
+          "description": "The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls.\nNote 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0 and the confidence interval around the estimate of RR or OR does not include 1.0. See manuscript for detailed guidance.\nNote 2: In instances of very rare variants where case-control studies may not reach statistical significance, the prior observation of the variant in multiple unrelated patients with the same phenotype, and its absence in controls, may be used as moderate level of evidence.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433514/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433514/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433514/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls\n\n*   In order to be evaluated for this criterion, the variant must not meet BS1.\n*   PS4 is Met by 6 or more probands.\n*   This code is not considered mutually exclusive with PM3. For example, variants associated with both dominant and recessive cases can meet both PS4 and PM3.\n*   If probands are reported in at least 2 papers, and the author lists from the two papers contain any of the same authors names, definitely the patients are the same, so count only one case for PS4.\n*   If the two lists of authors are totally distinct / different, usually you can count both cases for PS4.\n*   Patients reported as affected must have QTc measurement greater than or equal to 460ms in order to be counted. Diagnosis of long QT syndrome by itself is not sufficient for inclusion.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433514/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls\n\n*   In order to be evaluated for this criterion, the variant must not meet BS1.\n*   PS4\\_moderate is Met by 3-5 probands.\n*   This code is not considered mutually exclusive with PM3. For example, variants associated with both dominant and recessive cases can meet both PS4 and PM3.\n*   If probands are reported in at least 2 papers, and the author lists from the two papers contain any of the same authors names, definitely the patients are the same, so count only one case for PS4.\n*   If the two lists of authors are totally distinct / different, usually you can count both cases for PS4.\n*   Patients reported as affected must have QTc measurement greater than or equal to 460ms in order to be counted. Diagnosis of long QT syndrome by itself is not sufficient for inclusion.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433514/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls\n\n*   In order to be evaluated for this criterion, the variant must not meet BS1.\n*   PS4\\_supporting is Met by 2 independent observations of the variant in probands.\n*   This code is not considered mutually exclusive with PM3. For example, variants associated with both dominant and recessive cases can meet both PS4 and PM3.\n*   If probands are reported in at least 2 papers, and the author lists from the two papers contain any of the same authors names, definitely the patients are the same, so count only one case for PS4.\n*   If the two lists of authors are totally distinct / different, usually you can count both cases for PS4.\n*   Patients reported as affected must have QTc measurement greater than or equal to 460ms in order to be counted. Diagnosis of long QT syndrome by itself is not sufficient for inclusion.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433535",
+          "@type": "CriteriaCode",
+          "description": "Located in a mutational hot spot and/or critical and well-established functional domain (e.g. active site of an enzyme) without benign variation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433535/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433535/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433535/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433535/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Located in a mutational hot spot and/or critical and well-established functional domain (_e.g._ active site of an enzyme) without benign variation \n\n*   The variant must be rare (meeting PM2\\_Supporting) in order to be considered for PM1.\n*   Met by a rare variant within the pore helix (amino acids 300 to 320). This region is known to be a critical region of KCNQ1 and has been confirmed to show an absence of likely benign or benign variants listed in gnomAD.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433535/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433529",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies supportive of a damaging effect on the gene or gene product.\nNote: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are considered the most well-established.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433529/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433529/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433529/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Well-established _in vitro_ or _in vivo_ functional studies supportive of a damaging effect on the gene or gene product. Note: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are considered the most well-established.\n\nPlease refer to the linked table below for strength level specifications:\n\n[https://docs.google.com/presentation/d/1YA_82T8orad_nAy_fjapiFFz3ZSITVwZ/edit#slide=id.p1](https://docs.google.com/presentation/d/1YA_82T8orad_nAy_fjapiFFz3ZSITVwZ/edit#slide=id.p1)\n\nCaveats:\n\n1.  Conflicting evidence from different papers - no points\n2.  Same types of evidence (e.g RNA and Protein Metabolism) coming from the same paper - count 1\n3.  No more than 2 pieces of evidence can be counted from the same paper\n4.  Same finding in 2 papers from the same group – count 1\n5.  Electrophysiology result can only meet PS3 if the variant is co-expressed with KCNE1 and the current magnitude is outside the normal range defined by the paper and is statistically significantly different from the normal control.\n6.  Please count Experimental / Structural / Functional Simulation (PMID: 29021305) only when the results align with a electrophysiology experiment.\n\nElectrophysiology and Experimental / Structural / Functional Simulation assays approved by the VCEP for PS3 are:\n\n(1) Manual patch-clamp (e.g. PMIDs: 21380488, 30571187, 11162126, 19959132, 30591322, 17053194)\n\n(2) Automated patch-clamp (e.g. PMID: 30571187)\n\n(3) Microelectrode array analysis of hIPSC-cardiomyocytes (e.g. PMID: 35765105) \n\n(4) Experimental / Structural / Functional Simulation (e.g. PMIDs: 29021305, 35442947, 32096762)\n\nRNA or Protein Metabolism assays approved by the VCEP for PS3 are:\n\n(5) Cell Surface Localization by Flow Cytometry (e.g. PMID: 29532034)  \n\n(6) Mislocalization by Immunofluorescence of KCNQ1 (e.g. PMIDs: 21380488, 19114714, 11162126, 17053194) or KCNH2 (e.g. PMIDs: 19959132, 30591322)\n\n(7) Total Cell Expression by Flow Cytometry (e.g. PMID: 29532034)\n\n(8) Western Blotting (e.g. PMIDs: 21380488, 19114714)\n\n(9) RNA Metabolism showing partial / incomplete disruption of splicing (e.g. PMIDs: 17292394, 28264985)\n\n*   Functional assays are described at the following link: [https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446](https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446)",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433529/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Well-established _in vitro_ or _in vivo_ functional studies supportive of a damaging effect on the gene or gene product. Note: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are considered the most well-established.\n\nPlease refer to the linked table below for strength level specifications:\n\n[https://docs.google.com/presentation/d/1YA_82T8orad_nAy_fjapiFFz3ZSITVwZ/edit#slide=id.p1](https://docs.google.com/presentation/d/1YA_82T8orad_nAy_fjapiFFz3ZSITVwZ/edit#slide=id.p1)\n\nCaveats:\n\n1.  Conflicting evidence from different papers - no points\n2.  Same types of evidence (e.g RNA and Protein Metabolism) coming from the same paper - count 1\n3.  No more than 2 pieces of evidence can be counted from the same paper\n4.  Same finding in 2 papers from the same group – count 1\n5.  Electrophysiology result can only meet PS3 if the variant is co-expressed with KCNE1 and the current magnitude is outside the normal range defined by the paper and is statistically significantly different from the normal control.\n6.  Please count Experimental / Structural / Functional Simulation (PMID: 29021305) only when the results align with a electrophysiology experiment.\n\nElectrophysiology and Experimental / Structural / Functional Simulation assays approved by the VCEP for PS3 are:\n\n(1) Manual patch-clamp (e.g. PMIDs: 21380488, 30571187, 11162126, 19959132, 30591322, 17053194)\n\n(2) Automated patch-clamp (e.g. PMID: 30571187)\n\n(3) Microelectrode array analysis of hIPSC-cardiomyocytes (e.g. PMID: 35765105) \n\n(4) Experimental / Structural / Functional Simulation (e.g. PMIDs: 29021305, 35442947, 32096762)\n\nRNA or Protein Metabolism assays approved by the VCEP for PS3 are:\n\n(5) Cell Surface Localization by Flow Cytometry (e.g. PMID: 29532034)  \n\n(6) Mislocalization by Immunofluorescence of KCNQ1 (e.g. PMIDs: 21380488, 19114714, 11162126, 17053194) or KCNH2 (e.g. PMIDs: 19959132, 30591322)\n\n(7) Total Cell Expression by Flow Cytometry (e.g. PMID: 29532034)\n\n(8) Western Blotting (e.g. PMIDs: 21380488, 19114714)\n\n(9) RNA Metabolism showing partial / incomplete disruption of splicing (e.g. PMIDs: 17292394, 28264985)\n\n*   Functional assays are described at the following link: [https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446](https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446)",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433529/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Well-established _in vitro_ or _in vivo_ functional studies supportive of a damaging effect on the gene or gene product. Note: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are considered the most well-established.\n\nPlease refer to the linked table below for strength level specifications:\n\n[https://docs.google.com/presentation/d/1YA_82T8orad_nAy_fjapiFFz3ZSITVwZ/edit#slide=id.p1](https://docs.google.com/presentation/d/1YA_82T8orad_nAy_fjapiFFz3ZSITVwZ/edit#slide=id.p1)\n\nCaveats:\n\n1.  Conflicting evidence from different papers - no points\n2.  Same types of evidence (e.g RNA and Protein Metabolism) coming from the same paper - count 1\n3.  No more than 2 pieces of evidence can be counted from the same paper\n4.  Same finding in 2 papers from the same group – count 1\n5.  Electrophysiology result can only meet PS3 if the variant is co-expressed with KCNE1 and the current magnitude is outside the normal range defined by the paper and is statistically significantly different from the normal control.\n6.  Please count Experimental / Structural / Functional Simulation (PMID: 29021305) only when the results align with a electrophysiology experiment.\n\nElectrophysiology and Experimental / Structural / Functional Simulation assays approved by the VCEP for PS3 are:\n\n(1) Manual patch-clamp (e.g. PMIDs: 21380488, 30571187, 11162126, 19959132, 30591322, 17053194)\n\n(2) Automated patch-clamp (e.g. PMID: 30571187)\n\n(3) Microelectrode array analysis of hIPSC-cardiomyocytes (e.g. PMID: 35765105) \n\n(4) Experimental / Structural / Functional Simulation (e.g. PMIDs: 29021305, 35442947, 32096762)\n\nRNA or Protein Metabolism assays approved by the VCEP for PS3 are:\n\n(5) Cell Surface Localization by Flow Cytometry (e.g. PMID: 29532034)  \n\n(6) Mislocalization by Immunofluorescence of KCNQ1 (e.g. PMIDs: 21380488, 19114714, 11162126, 17053194) or KCNH2 (e.g. PMIDs: 19959132, 30591322)\n\n(7) Total Cell Expression by Flow Cytometry (e.g. PMID: 29532034)\n\n(8) Western Blotting (e.g. PMIDs: 21380488, 19114714)\n\n(9) RNA Metabolism showing partial / incomplete disruption of splicing (e.g. PMIDs: 17292394, 28264985)\n\n*   Functional assays are described at the following link: [https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446](https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433515",
+          "@type": "CriteriaCode",
+          "description": "De novo (both maternity and paternity confirmed) in a patient with the disease and no family history.\nNote: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433515/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433515/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "_De novo_ (both maternity and paternity confirmed) in a patient with the disease and no family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.\n\n*   For PS2, both maternity and paternity must be confirmed, with no family history of disease (no evidence of QT-prolongation in parents or family history of sudden, unexplained death under the age of 40 years). Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, _etc._ can contribute to non-maternity. Cases and parents genotyped by trio whole exome sequencing are considered to have confirmed maternity and paternity.\n*   The _de novo_ variant in question must be coding or flanking.\n*   The PS2 strength level depends on the clinical phenotype specificity and number of probands as defined in Tables 1 and 2.\n*   When using Table 1 to find the number of points per proband, if the proband has a phenotype sufficient to diagnose LQTS (prolonged QTc interval >480ms), the row used should usually be \"phenotype consistent with gene but not highly specific\". During the pilot phase, curators should also note the genotyping method and whether comprehensive testing of all/other LQTS genes has been performed.\n*   When using Table 1 to find the number of points per proband, if the proband meets PP4, so that the phenotype is sufficient to diagnose \\_KCNQ1\\_-specific LQTS (LQT 1), the number of points corresponding to \"phenotype highly specific for gene\" should be used instead. Note: This would require QTc prolongation above 480ms AND either swimming-associated events OR treadmill stress test result (PMID: 21699858) OR T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844).![](https://lh6.googleusercontent.com/4dOzwji0rs6_gSczQOWVPcEOk-W6h4Ey-wBCZTtqRdLJizyKdB6AU08BvSlBsOQ0HOkPeRFn1xEL6ofBU7fc1B0awCfBVfKQYdboYFwdPZmyf1zH0vBaH4AE-eenxPhcIlpuAXes9kp9vlJQ9f-kcA)",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433515/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "_De novo_ (both maternity and paternity confirmed) in a patient with the disease and no family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.\n\n*   For PS2, both maternity and paternity must be confirmed, with no family history of disease (no evidence of QT-prolongation in parents or family history of sudden, unexplained death under the age of 40 years). Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, _etc._ can contribute to non-maternity. Cases and parents genotyped by trio whole exome sequencing are considered to have confirmed maternity and paternity.\n*   The _de novo_ variant in question must be coding or flanking.\n*   The PS2 strength level depends on the clinical phenotype specificity and number of probands as defined in Tables 1 and 2.\n*   When using Table 1 to find the number of points per proband, if the proband has a phenotype sufficient to diagnose LQTS (prolonged QTc interval >480ms), the row used should usually be \"phenotype consistent with gene but not highly specific\". During the pilot phase, curators should also note the genotyping method and whether comprehensive testing of all/other LQTS genes has been performed.\n*   When using Table 1 to find the number of points per proband, if the proband meets PP4, so that the phenotype is sufficient to diagnose \\_KCNQ1\\_-specific LQTS (LQT 1), the number of points corresponding to \"phenotype highly specific for gene\" should be used instead. Note: This would require QTc prolongation above 480ms AND either swimming-associated events OR treadmill stress test result (PMID: 21699858) OR T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844).",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433515/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "_De novo_ (both maternity and paternity confirmed) in a patient with the disease and no family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.\n\n*   For PS2, both maternity and paternity must be confirmed, with no family history of disease (no evidence of QT-prolongation in parents or family history of sudden, unexplained death under the age of 40 years). Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, _etc._ can contribute to non-maternity. Cases and parents genotyped by trio whole exome sequencing are considered to have confirmed maternity and paternity.\n*   The _de novo_ variant in question must be coding or flanking.\n*   The PS2 strength level depends on the clinical phenotype specificity and number of probands as defined in Tables 1 and 2.\n*   When using Table 1 to find the number of points per proband, if the proband has a phenotype sufficient to diagnose LQTS (prolonged QTc interval >480ms), the row used should usually be \"phenotype consistent with gene but not highly specific\". During the pilot phase, curators should also note the genotyping method and whether comprehensive testing of all/other LQTS genes has been performed.\n*   When using Table 1 to find the number of points per proband, if the proband meets PP4, so that the phenotype is sufficient to diagnose \\_KCNQ1\\_-specific LQTS (LQT 1), the number of points corresponding to \"phenotype highly specific for gene\" should be used instead. Note: This would require QTc prolongation above 480ms AND either swimming-associated events OR treadmill stress test result (PMID: 21699858) OR T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433515/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "_De novo_ (both maternity and paternity confirmed) in a patient with the disease and no family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.\n\n*   For PS2, both maternity and paternity must be confirmed, with no family history of disease (no evidence of QT-prolongation in parents or family history of sudden, unexplained death under the age of 40 years). Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, _etc._ can contribute to non-maternity. Cases and parents genotyped by trio whole exome sequencing are considered to have confirmed maternity and paternity.\n*   The _de novo_ variant in question must be coding or flanking.\n*   The PS2 strength level depends on the clinical phenotype specificity and number of probands as defined in Tables 1 and 2.\n*   When using Table 1 to find the number of points per proband, if the proband has a phenotype sufficient to diagnose LQTS (prolonged QTc interval >480ms), the row used should usually be \"phenotype consistent with gene but not highly specific\". During the pilot phase, curators should also note the genotyping method and whether comprehensive testing of all/other LQTS genes has been performed.\n*   When using Table 1 to find the number of points per proband, if the proband meets PP4, so that the phenotype is sufficient to diagnose \\_KCNQ1\\_-specific LQTS (LQT 1), the number of points corresponding to \"phenotype highly specific for gene\" should be used instead. Note: This would require QTc prolongation above 480ms AND either swimming-associated events OR treadmill stress test result (PMID: 21699858) OR T-wave morphology characteristic of LQT1 (PMID: 7586261, 29141844).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433524",
+          "@type": "CriteriaCode",
+          "description": "Observed in a healthy adult individual for a recessive (homozygous), dominant (heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an early age.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433524/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433524/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433524/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Observed in a healthy adult individual for a recessive (homozygous), dominant (heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an early age.\n\n*   Not applicable due to incomplete penetrance.\n*   Please note that hearing loss and other phenotypes are not completely penetrant in homozygotes (PMID: 23392653, [https://www.ncbi.nlm.nih.gov/books/NBK1405/#jln.Summary](https://www.ncbi.nlm.nih.gov/books/NBK1405/#jln.Summary)).",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433524/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433524/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433523",
+          "@type": "CriteriaCode",
+          "description": "For recessive disorders, detected in trans with a pathogenic variant\nNote: This requires testing of parents (or offspring) to determine phase.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433523/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433523/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "For recessive disorders, detected in _trans_ with a pathogenic variant  Note: This requires testing of parents (or offspring) to determine phase\n\n*   Can be used for variants seen in patients with Jervell and Lange-Nielsen syndrome, if the phenotype includes both long QT interval and congenital deafness.\n*   This code is not considered mutually exclusive with PS4. For example, variants associated with both recessive and dominant cases can meet both PM3 and PS4.\n*   Use the ClinGen SVI recommendations to determine evidence weight for this rule code.\n*   Both variants must be classified using these rule specifications.\n\n![](https://lh6.googleusercontent.com/k8TLTROZpnhrx_KFdTguCHToaXwLEnf9Kn9MqXkNr-AdlbStJ_8aGhhXI2u2CZhCuDWJY0FrfVsfOmSdd5Wu8rfHx7gxvGoj7u_j8uqLzURiWrcj8OZOZipYCcQfCkeZCWcJIsqtKnY8)",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433523/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "For recessive disorders, detected in _trans_ with a pathogenic variant  Note: This requires testing of parents (or offspring) to determine phase\n\n*   Can be used for variants seen in patients with Jervell and Lange-Nielsen syndrome, if the phenotype includes both long QT interval and congenital deafness.\n*   This code is not considered mutually exclusive with PS4. For example, variants associated with both recessive and dominant cases can meet both PM3 and PS4.\n*   Use the ClinGen SVI recommendations to determine evidence weight for this rule code.\n*   Both variants must be classified using these rule specifications.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433523/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "For recessive disorders, detected in _trans_ with a pathogenic variant  Note: This requires testing of parents (or offspring) to determine phase\n\n*   Can be used for variants seen in patients with Jervell and Lange-Nielsen syndrome, if the phenotype includes both long QT interval and congenital deafness.\n*   This code is not considered mutually exclusive with PS4. For example, variants associated with both recessive and dominant cases can meet both PM3 and PS4.\n*   Use the ClinGen SVI recommendations to determine evidence weight for this rule code.\n*   Both variants must be classified using these rule specifications.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433523/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "For recessive disorders, detected in _trans_ with a pathogenic variant  Note: This requires testing of parents (or offspring) to determine phase\n\n*   Can be used for variants seen in patients with Jervell and Lange-Nielsen syndrome, if the phenotype includes both long QT interval and congenital deafness.\n*   This code is not considered mutually exclusive with PS4. For example, variants associated with both recessive and dominant cases can meet both PM3 and PS4.\n*   Use the ClinGen SVI recommendations to determine evidence weight for this rule code.\n*   Both variants must be classified using these rule specifications.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433511",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433511/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.\n\n*   Maximum allele frequency in gnomAD (in one of the 5 continental populations; African/African-American, East Asian, European non-Finnish, Latino/Admixed-American, or South Asian) greater than or equal to 0.004 (0.4%).",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433511/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433511/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433511/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433511/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BA1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433516",
+          "@type": "CriteriaCode",
+          "description": "Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease.\nNote: May be used as stronger evidence with increasing segregation data.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433516/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433516/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433516/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease  \n\n*   Each affected family member must have Schwartz score (PMID: 36017572, Table 10) >3 or QTc greater than or equal to 480ms or syncope in order to be included / counted.\n*   The proband + 7 affected family members with the variant meets PP1\\_Strong.\n*   The numbers above have been informed by PMID: 27236918.\n*   If any family member is affected but does not harbor the variant, use BS4 (non-segregation) instead.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433516/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease  \n\n*   Each affected family member must have Schwartz score (PMID: 36017572, Table 10) >3 or QTc greater than or equal to 480ms or syncope in order to be included / counted.\n*   The proband + 5 affected family members with the variant meets PP1\\_Moderate.\n*   The numbers above have been informed by PMID: 27236918.\n*   If any family member is affected but does not harbor the variant, use BS4 (non-segregation) instead.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433516/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease  \n\n*   Each affected family member must have Schwartz score (PMID: 36017572, Table 10) >3 or QTc greater than or equal to 480ms or syncope in order to be included / counted.\n*   The proband + 3 affected family members with the variant meets PP1.\n*   The numbers above have been informed by PMID: 27236918.\n*   If any family member is affected but does not harbor the variant, use BS4 (non-segregation) instead.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433536",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as pathogenic, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433536/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433536/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433536/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433536/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Supporting"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433536/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Moderate"
+            }
+          ],
+          "label": "PP5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433527",
+          "@type": "CriteriaCode",
+          "description": "Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.\nExample: Val->Leu caused by either G>C or G>T in the same codon.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433527/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433527/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433527/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Same amino acid change as a previously established pathogenic variant regardless of nucleotide change. Example: Val->Leu caused by either G>C or G>T in the same codon. Caveat: Beware of changes that impact splicing rather than at the amino acid/protein level.\n\n*   The comparison variant must reach a pathogenic classification using these rule specifications, and must have reached pathogenic without the use of the PS1 code.\n*   SpliceAI must be used to ensure that the comparison variant is not causing a splicing defect.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433527/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PS1 is met at the PS1\\_Moderate level if the comparison variant reaches a likely pathogenic classification using these rule specifications, without the use of the PS1 code.\n*   This code can also be met at the PS1\\_Moderate level when the corresponding variant in the paralogous KCNQ2 gene meets criteria to be classified as Pathogenic by the KCNQ Channel Brain Disorders Variant Curation Expert Panel specifications. Curators should access paralogue data and regions of alignment and non-alignment between KCNQ1 and KCNQ2 at the site below: [https://www.cardiodb.org/paralogue_annotation/gene.php?name=KCNQ1.](https://www.cardiodb.org/paralogue_annotation/gene.php?name=KCNQ1.)\n*   The corresponding variant in the paralogous gene must substitute the same amino acid as the variant being considered, not a different amino acid.\n*   An example is that the NM\\_000218.3(KCNQ1):c.430A>G (p.Thr144Ala) has a paralogous variant in NM\\_172107.4(KCNQ2):c.340A>G (p.Thr114Ala). If the latter variant in _KCNQ2_ is classified Pathogenic in the future by the KCNQ Channel Brain Disorders Variant Curation Expert Panel specifications, the paralogous p.Thr144Ala variant in _KCNQ1_ will meet PS1\\_Moderate.\n*   The paralogous variant must have reached Pathogenic classification without the use of the PS1 code.\n*   While this paralogue-based strategy has been approved for _KCNQ2_ only, this criterion may eventually apply to the _KCNQ3_, _KCNQ4_, and _KCNQ5_ genes too, following future specifications and variant classifications by the KCNQ Channel Brain Disorders Variant Curation Expert Panel.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433527/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433522",
+          "@type": "CriteriaCode",
+          "description": "Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of disease.\nCaveats:\n * Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).\n * Use caution interpreting LOF variants at the extreme 3’ end of a gene.\n * Use caution with splice variants that are predicted to lead to exon skipping but leave the remainder of the protein intact.\n * Use caution in the presence of multiple transcripts.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433522/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433522/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "For truncating variants, apply PVS1 at default (VeryStrong) level if the variant affects codons 1-581, since nonsense-mediated decay is predicted.\n\n[https://docs.google.com/presentation/d/1-Dz9jmvebv1z1QoSBdON3vbbNaH-V2-v/edit#slide=id.p1](https://docs.google.com/presentation/d/1-Dz9jmvebv1z1QoSBdON3vbbNaH-V2-v/edit#slide=id.p1)",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433522/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433522/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Apply PVS1\\_Moderate for truncating variants between codons 582 and 620, for which nonsense-mediated decay is not predicted. This region includes the subunits assembly domain (SAD) between residues 589-620, which mediates tetramerization, so that truncating variants that remove this region are reportedly unable to assemble and are disease-causing (PMID: 10654932).\n\n[https://docs.google.com/presentation/d/1-Dz9jmvebv1z1QoSBdON3vbbNaH-V2-v/edit#slide=id.p1](https://docs.google.com/presentation/d/1-Dz9jmvebv1z1QoSBdON3vbbNaH-V2-v/edit#slide=id.p1)",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433522/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Apply PVS1\\_Supporting for truncating variants between codons 621 and 676, for which nonsense-mediated decay is not predicted, and the SAD is retained. As a result, these distal variants may still yield functional channels. Please note that although one variant with good evidence of pathogenicity has been found within this region, (NM\\_000218.3(KCNQ1):c.1893del (p.Arg632fs)) it appears to exert a pathogenic effect through a dominant negative (mistrafficking) mechanism rather than true null mechanism (PMID: 22739119).\n\n[https://docs.google.com/presentation/d/1-Dz9jmvebv1z1QoSBdON3vbbNaH-V2-v/edit#slide=id.p1](https://docs.google.com/presentation/d/1-Dz9jmvebv1z1QoSBdON3vbbNaH-V2-v/edit#slide=id.p1)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PVS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433530",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies show no damaging effect on protein function or splicing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433530/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433530/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433530/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Well-established _in vitro_ or _in vivo_ functional studies show no damaging effect on protein function or splicing.\n\nPlease refer to the linked table below for strength level specifications:\n\n[https://docs.google.com/presentation/d/1cdlToGFzYGRbyaTmseiIDQx9AlCKNPfJ/edit#slide=id.p1](https://docs.google.com/presentation/d/1cdlToGFzYGRbyaTmseiIDQx9AlCKNPfJ/edit#slide=id.p1)\n\nCaveats:\n\n1.  Conflicting evidence from different papers - no points\n2.  Same types of evidence (e.g RNA and Protein Metabolism) coming from the same paper - count 1\n3.  No more than 2 pieces of evidence can be counted from the same paper\n4.  Same finding in 2 papers from the same group – count 1\n5.  Electrophysiology result can only meet BS3 if the variant is co-expressed with KCNE1 and if the variant current magnitude is within the normal range defined by the paper and is NOT statistically significantly different from the normal control.\n6.  Please count Experimental / Structural / Functional Simulation (PMID: 29021305) only when the results align with a electrophysiology experiment.\n\nElectrophysiology and Experimental / Structural / Functional Simulation assays approved by the VCEP for BS3 are:\n\n(1) Manual patch-clamp (e.g. PMIDs: 21380488, 30571187, 11162126, 19959132, 30591322, 17053194)\n\n(2) Automated patch-clamp (e.g. PMID: 30571187)\n\n(3) Microelectrode array analysis of hIPSC-cardiomyocytes (e.g. PMID: 35765105) \n\n(4) Experimental / Structural / Functional Simulation (e.g. PMIDs: 29021305, 35442947, 32096762)\n\nRNA or Protein Metabolism assays approved by the VCEP for BS3 are:\n\n(5) Cell Surface Localization by Flow Cytometry (e.g. PMID: 29532034)  \n\n(6) Mislocalization by Immunofluorescence of KCNQ1 (e.g. PMIDs: 21380488, 19114714, 11162126, 17053194) or KCNH2 (e.g. PMIDs: 19959132, 30591322)\n\n(7) Total Cell Expression by Flow Cytometry (e.g. PMID: 29532034)\n\n(8) Western Blotting (e.g. PMIDs: 21380488, 19114714)\n\n(9) RNA Metabolism showing partial / incomplete disruption of splicing (e.g. PMIDs: 17292394, 28264985)\n\n*   Functional assays are described at the following link: [https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446](https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446)",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433530/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Well-established _in vitro_ or _in vivo_ functional studies show no damaging effect on protein function or splicing.\n\nPlease refer to the linked table below for strength level specifications:\n\n[https://docs.google.com/presentation/d/1cdlToGFzYGRbyaTmseiIDQx9AlCKNPfJ/edit#slide=id.p1](https://docs.google.com/presentation/d/1cdlToGFzYGRbyaTmseiIDQx9AlCKNPfJ/edit#slide=id.p1)\n\nCaveats:\n\n1.  Conflicting evidence from different papers - no points\n2.  Same types of evidence (e.g RNA and Protein Metabolism) coming from the same paper - count 1\n3.  No more than 2 pieces of evidence can be counted from the same paper\n4.  Same finding in 2 papers from the same group – count 1\n5.  Electrophysiology result can only meet BS3 if the variant is co-expressed with KCNE1 and if the variant current magnitude is within the normal range defined by the paper and is NOT statistically significantly different from the normal control.\n6.  Please count Experimental / Structural / Functional Simulation (PMID: 29021305) only when the results align with a electrophysiology experiment.\n\nElectrophysiology and Experimental / Structural / Functional Simulation assays approved by the VCEP for BS3 are:\n\n(1) Manual patch-clamp (e.g. PMIDs: 21380488, 30571187, 11162126, 19959132, 30591322, 17053194)\n\n(2) Automated patch-clamp (e.g. PMID: 30571187)\n\n(3) Microelectrode array analysis of hIPSC-cardiomyocytes (e.g. PMID: 35765105) \n\n(4) Experimental / Structural / Functional Simulation (e.g. PMIDs: 29021305, 35442947, 32096762)\n\nRNA or Protein Metabolism assays approved by the VCEP for BS3 are:\n\n(5) Cell Surface Localization by Flow Cytometry (e.g. PMID: 29532034)  \n\n(6) Mislocalization by Immunofluorescence of KCNQ1 (e.g. PMIDs: 21380488, 19114714, 11162126, 17053194) or KCNH2 (e.g. PMIDs: 19959132, 30591322)\n\n(7) Total Cell Expression by Flow Cytometry (e.g. PMID: 29532034)\n\n(8) Western Blotting (e.g. PMIDs: 21380488, 19114714)\n\n(9) RNA Metabolism showing partial / incomplete disruption of splicing (e.g. PMIDs: 17292394, 28264985)\n\n*   Functional assays are described at the following link: [https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446](https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446)",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433530/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Well-established _in vitro_ or _in vivo_ functional studies show no damaging effect on protein function or splicing.\n\nPlease refer to the linked table below for strength level specifications:\n\n[https://docs.google.com/presentation/d/1cdlToGFzYGRbyaTmseiIDQx9AlCKNPfJ/edit#slide=id.p1](https://docs.google.com/presentation/d/1cdlToGFzYGRbyaTmseiIDQx9AlCKNPfJ/edit#slide=id.p1)\n\nCaveats:\n\n1.  Conflicting evidence from different papers - no points\n2.  Same types of evidence (e.g RNA and Protein Metabolism) coming from the same paper - count 1\n3.  No more than 2 pieces of evidence can be counted from the same paper\n4.  Same finding in 2 papers from the same group – count 1\n5.  Electrophysiology result can only meet BS3 if the variant is co-expressed with KCNE1 and if the variant current magnitude is within the normal range defined by the paper and is NOT statistically significantly different from the normal control.\n6.  Please count Experimental / Structural / Functional Simulation (PMID: 29021305) only when the results align with a electrophysiology experiment.\n\nElectrophysiology and Experimental / Structural / Functional Simulation assays approved by the VCEP for BS3 are:\n\n(1) Manual patch-clamp (e.g. PMIDs: 21380488, 30571187, 11162126, 19959132, 30591322, 17053194)\n\n(2) Automated patch-clamp (e.g. PMID: 30571187)\n\n(3) Microelectrode array analysis of hIPSC-cardiomyocytes (e.g. PMID: 35765105) \n\n(4) Experimental / Structural / Functional Simulation (e.g. PMIDs: 29021305, 35442947, 32096762)\n\nRNA or Protein Metabolism assays approved by the VCEP for BS3 are:\n\n(5) Cell Surface Localization by Flow Cytometry (e.g. PMID: 29532034)  \n\n(6) Mislocalization by Immunofluorescence of KCNQ1 (e.g. PMIDs: 21380488, 19114714, 11162126, 17053194) or KCNH2 (e.g. PMIDs: 19959132, 30591322)\n\n(7) Total Cell Expression by Flow Cytometry (e.g. PMID: 29532034)\n\n(8) Western Blotting (e.g. PMIDs: 21380488, 19114714)\n\n(9) RNA Metabolism showing partial / incomplete disruption of splicing (e.g. PMIDs: 17292394, 28264985)\n\n*   Functional assays are described at the following link: [https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446](https://docs.google.com/spreadsheets/d/12iWEYVxD5-wMutqqW10u-7RKupCoElij/edit#gid=1933102446)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433520",
+          "@type": "CriteriaCode",
+          "description": "Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.\nCaveat: Population data for indels may be poorly called by next generation sequencing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433520/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433520/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433520/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433520/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433520/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.\n\n*   Supporting level only\n*   Maximum allele frequency in gnomAD (in one of the 5 continental populations; African/African-American, East Asian, European non-Finnish, Latino/Admixed-American, or South Asian) \\<0.00001 (0.001%)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433517",
+          "@type": "CriteriaCode",
+          "description": "Variant found in a case with an alternate molecular basis for disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433517/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433517/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433517/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433517/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/439433517/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Variant found in a case with an alternate molecular basis for disease\n\n*   Caveat: BP5 is not applicable when the phenotypes (ie: trigger type; PMID: 32882399, 11136691, 18373596 or treadmill stress test; PMID: 21699858) indicate _KCNQ1_ as the cause. BP5 is only applicable when the phenotypes match another form of LQTS (caused by a variant in _KCNH2_, _SCN5A_, or _KCNE1_, PMID: 19862833, PMID: 31941373, PMID: 33517668) or when phenotype details are not sufficiently specific.\n*   Note: The rate of cases with multiple suspected deleterious variants in the same or different LQTS-associated genes may be relatively high (5.2% in one cohort, PMID: 24667783). The group will consider this possibility during the pilot.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP5"
+        }
+      ],
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=KCNQ1",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0100316",
+              "@type": "Disease",
+              "label": "MONDO:0100316",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                },
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "KCNQ1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN109",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50114",
+    "@type": "Organization",
+    "label": "Neurofibromatosis and Schwannomatosis Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50114"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1553923915"
+  },
+  "cspecStatus": "Approved For Release",
+  "currentStatus": "Approved For Release",
+  "label": "ClinGen Neurofibromatosis and Schwannomatosis  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for NF1 Version 1.0",
+  "lastUpdated": "2026-07-23T17:55:18.862Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1553923928",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=NF1",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0018975",
+              "@type": "Disease",
+              "label": "MONDO:0018975",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "NF1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

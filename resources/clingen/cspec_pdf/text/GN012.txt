@@ -1,0 +1,557 @@
+Criteria Specification
+ClinGen Malignant Hyperthermia Susceptibility Expert Panel Specifications to the ACMG/AMP
+Variant Interpretation Guidelines for RYR1 Version 2.0
+Affiliation: Malignant Hyperthermia Susceptibility VCEP
+Description : This version specified for the following genes: RYR1
+Version : 2.0
+Released : 3/1/2022
+DOI : 10.5281/zenodo.21421536
+Release Notes :
+(1) Revised PS4 such that at all strength levels an individual with two VUS/LP/P variants in RYR1 cannot be
+considered as supporting pathogenicity of either variant. (2) PS1 can be used at level moderate for
+previously classified likely pathogenic variant at the same codon with the same amino acid change. (3)
+PM5 can be used at level supporting for previously classified likely pathogenic variant at the same codon,
+different amino acid change. (4) PM1 should be downgraded to supporting when either PS1 or PM5 are
+used.
+
+Contributors & Keywords
+Research Group: Malignant Hyperthermia
+Susceptibility VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+RYR1 NM_000540.3
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for RYR1
+Gene: RYR1 (HGNC:10483) 
+Transcripts:
+NM_000540.3
+
+HGNC Name: ryanodine receptor 1
+Disease:
+malignant hyperthermia of
+anesthesia (MONDO:0018493)
+
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+PVS1 is not applicable. MHS is due to gain of function variants in RYR1.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change
+Previously established pathogenic variant must reach a classification of pathogenic
+without PS1
+Modification None
+Type:
+
+Moderate
+Same amino acid change as a previously established likely pathogenic variant regardless
+of nucleotide change.
+Previously established likely pathogenic variant must reach a classification of likely
+pathogenic without PS1.
+Modification Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, ≥8 points
+Modification Strength
+Type:
+
+Strong
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, a total of 4-7
+points
+Modification Strength
+Type:
+
+Moderate
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, a total of 2-3
+points
+Modification Strength
+Type:
+
+Supporting
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, a total of 1
+point
+Modification Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Well-established functional studies supportive of a damaging effect on protein function
+Knock-in mouse showing MH reaction in response to RYR1 agonist AND increased
+sensitivity to RYR1 agonists in ex vivo tisue/cells
+Modification Strength,Disease-specific
+Type:
+
+Moderate
+Well-established functional studies supportive of a damaging effect on protein function
+
+Increased sensitivity to RYR1 agonist in HEK293 in vitro assay, Ca2+ release
+significantly increased compared to WT, controls to include known pathogenic and
+benign variants, n≥3.
+Three or more independent ex vivo studies all showing release of Ca2+ in response
+to RYR1 agonist
+Knock-in mouse showing MH reaction in response to RYR1 agonist OR increased
+sensitivity to RYR1 agonists in ex vivo tissue/cells (but not both, which would be
+PS3_strong)
+Modification Strength,Disease-specific
+Type:
+
+Supporting
+Well-established functional studies supportive of a damaging effect on protein function
+Two independent ex vivo studies all showing release of Ca2+ in response to RYR1
+agonist
+Modification Strength,Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Strong
+The prevalence of the variant in affected individuals significantly increased compared with
+the prevalence in controls.
+≥7 MH case points. Probands with a personal or family history of an MH event are
+awarded 0.5 points, probands with a personal or family history of a positive (MHS)
+IVCT/CHCT are awarded an additional 0.5 points. Probands with multiple variants in
+RYR1 classified as VUS, likely pathogenic or pathogenic are not considered. Popmax
+in gnomAD ≤0.00006.
+For variants with popmax MAF gnomAD >0.00006, an odds ratio of ≥18.7 when
+comparing MH case points to allele count in gnomAD can qualify. Popmax in gnomAD
+must be <0.0038.
+
+Modification Strength,Disease-specific
+Type:
+
+Moderate
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls.
+2-6 MH case points. Probands with a personal or family history of an MH event are
+awarded 0.5 points, probands with a personal or family history of a positive (MHS)
+IVCT/CHCT are awarded an additional 0.5 points. Probands with multiple variants in
+RYR1 classified as VUS, likely pathogenic or pathogenic are not considered. Popmax
+in gnomAD ≤0.00006.
+For variants with popmax MAF in gnomAD >0.00006, an odds ratio of ≥4.33 when
+comparing MH case points to allele count in gnomAD can qualify. Popmax in gnomAD
+must be <0.0038.
+Modification Strength,Disease-specific
+Type:
+
+Supporting
+The prevalence of the variant in affected individuals is significantly increased compared
+withthe prevalence in controls.
+1 MH case point. Probands with a personal or family history of an MH event are
+awarded 0.5 points, probands with a personal or family history of a positive (MHS)
+IVCT/CHCT are awarded an additional 0.5 points. Probands with multiple variants in
+RYR1 classified as VUS, likely pathogenic or pathogenic are not considered. Popmax
+in gnomAD ≤0.00006. For variants with popmax MAF in gnomAD >0.00006, an odds
+ratio of ≥2.08 when comparing MH case points to allele count in gnomAD can qualify.
+Popmax in gnomAD must be <0.0038.
+Modification Strength,Disease-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Located in a mutational hot spot and/or critical and well established functional domain.
+Residues 1-552 (N-terminal region) and 2,101-2,458 (central region)
+PM1 should not be applied at a moderate weight with PS1/PM5, see PM1_Supporting.
+
+Modification Disease-specific
+Type:
+
+Supporting
+Located in a mutational hot spot and/or critical and well established functional domain.
+Residues 1-552 (N-terminal region) and 2,101-2,458 (central region), if PS1/PM5
+applicable then PM1 should be used at supporting
+Residues 4,631-4,991 (C-terminal region).
+Modification Strength,Disease-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Not Applicable
+Comments:
+PM2 is not used alone.
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+PM3 is not applicable. MHS is inherited as an autosomal dominant trait
+with reduced penetrance.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Not Applicable
+Comments:
+PM4 is not applicable. The majority of RYR1 variants that are causative for
+MHS are missense variants.
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Missense change at an amino acid residue where a different missense varaint previously
+determined to be pathogenic
+Previously established pathogenic variant must reach a classification of
+pathogenicity without PM5
+Grantham score for alternate pathogenic variant must be less than for variant being
+assessed
+Modification None
+Type:
+
+Supporting
+Missense change at an amino acid residue where a different missense variant previously
+determined to be pathogenic.
+Previously established likely pathogenic variant can be considered supporting
+evidence, must reach a classification of likely pathogenic without PM5.
+Grantham score for alternate likely pathogenic variant must be less than for variant
+being assessed.
+Modification Strength,Disease-specific
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Very Strong
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, ≥8 points
+Modification Strength
+Type:
+
+Strong
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, a total of 4-7
+points
+Modification Strength
+Type:
+
+Moderate
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, a total of 2-3
+points
+Modification Strength
+Type:
+
+Supporting
+Each proven de novo case, 2 points, each assumed de novo case, 1 point, a total of 1
+point
+Modification Strength
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Co-segregation with disease in ≥7 reported meioses
+Modification Strength
+Type:
+
+Moderate
+Co-segregation with disease in 5-6 reported meioses
+Modification Strength
+Type:
+
+Supporting
+Co-segregation with disease in 3-4 reported meioses
+Modification Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+PP2 is not applicable. RYR1 does not appear to be constrained for
+missense variation with a z-score of 1.92 in gnomAD.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Moderate
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product
+Use REVEL score of >0.85
+Modification Strength
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+PP4 is not applicable, variants in CACNA1S also result in MHS.
+
+PP5
+Original ACMG
+Summary
+
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Popmax allele frequency >0.0038 (0.38%)
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Popmax allele frequency >0.0008 (0.08%)
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder with full penetrance expected at an
+early age.
+Two or more variant positive individuals with a negative IVCT/CHCT test
+
+Modification Disease-specific
+Type:
+
+Moderate
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder with full penetrance expected at an
+early age.
+One variant positive individual with a negative IVCT/CHCT test
+Modification Strength,Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Moderate
+Well-established functional studies show no damaging effect on protein function
+Three or more independent ex vivo studies, NO significant release of Ca2+ in
+response to agonist
+Modification Strength,Disease-specific
+Type:
+
+Supporting
+Well-established functional studies show no damaging effect on protein function
+No significant increased sensitivity to RYR1 agonist in an approved in vitro assay,
+Ca2+ release measured, n≥3
+One or two independent ex vivo studies, NO significant release of Ca2+ in response
+to agonist
+Knock-in mouse showing no MH reaction in response to RYR1 agonist AND no
+increased sensitivity to RYR1 agonists in ex vivo tissue/cells
+Modification Strength, Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Not Applicable
+Comments:
+BS4 is not applicable. Phenotype for MHS is routinely determined based on
+the vitro contraction test (IVCT) that has a false positive rate of
+approximately 6% (PP1) or the caffeine-halothane contracture test (CHCT).
+As the phenotype in individuals who have not experienced an MH crisis
+cannot be reliably determined BS4 is not utilized.
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+BP1 is not applicable. MH is caused primarily by missense variants in
+RYR1.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in cis with a pathogenic variant in any inheritance pattern
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+BP3 is not applicable. RYR1 does not have repetitive regions without
+known function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Computational evidence suggest no impact on gene or gene product, REVEL score of <0.5
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+BP5 is not applicable as individuals have been described with MHS and
+two pathogenic variants in RYR1.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site AND the nucleotide is
+not highly conserved
+Modification None
+Type:
+
+

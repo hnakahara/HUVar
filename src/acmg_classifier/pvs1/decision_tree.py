@@ -258,6 +258,21 @@ def _splice_branch(
     splice_lof_predicted = True
 
     if splice_lof_predicted:
+        # Exon-skipping branch of the SVI tree: an in-frame skip, a skip of the
+        # exon holding the stop codon or an out-of-frame skip of the penultimate
+        # exon is not a frameshift-to-NMD event, so the strength follows the
+        # 10%-of-protein rule (role of region unknown) instead of PVS1.
+        from acmg_classifier.pvs1.vcep_pvs1_exons import (
+            exon_skip_effect, svi_exon_skip_strength,
+        )
+        skip = svi_exon_skip_strength(
+            exon_skip_effect(pc.consequence, pc.intron, pc.transcript_id))
+        if skip is not None:
+            strength, why = skip
+            if alt_rescue and strength == CriterionStrength.STRONG:
+                strength = CriterionStrength.MODERATE
+                why += "; alt transcript may rescue"
+            return strength, f"{pc.consequence.value}; {why} ({splice_tool_note})"
         if not alt_rescue:
             return (
                 CriterionStrength.VERY_STRONG,

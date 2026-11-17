@@ -129,6 +129,21 @@ class _GeneSpec:
     # stop beyond the natural one is placed in ``trunc_bands`` by its first altered
     # codon (InSiGHT MMR genes).
     readthrough_first_codon: bool = False
+    # Exon-skipping arm for canonical +/-1,2 splice variants whose skipped exon
+    # has no row in vcep_pvs1_splice_exons.tsv: "10pct" applies the SVI tree's
+    # role-unknown rule (in-frame skip / stop-codon exon / penultimate-exon
+    # frameshift -> Strong if >10% of the protein, else Moderate); "strong" fixes
+    # in-frame skips at PVS1_Strong (SCID VCEP: Strong when >=1 pathogenic variant
+    # lies downstream in the skipped region). None keeps the flat ``splice``.
+    splice_inframe: str | None = None
+    # PTC within the first N codons (the first 100 bp) -> PVS1_Moderate because
+    # translation can re-initiate downstream (LGMD VCEP: codons 1-34).
+    trunc_reinit_moderate: int | None = None
+    # (N, s_in, s_after): a frameshift whose new stop lies beyond codon N (or that
+    # has no stop) is scored s_in when it alters codon N or earlier, s_after when
+    # it starts after codon N (PALB2: frameshift impacting p.Tyr1183 -> Strong,
+    # not impacting it -> Supporting).
+    fs_tail_rule: tuple[int, CriterionStrength, CriterionStrength] | None = None
 
 
 _SPECS: dict[str, _GeneSpec] = {
@@ -137,17 +152,20 @@ _SPECS: dict[str, _GeneSpec] = {
     # 9(10) (c.548-670; PTC codons 184-224) are N/A (in-frame skipping of these
     # exons is functional); last exon 23(24): PTC < p.I1855 PVS1, PTC > p.L1854
     # N/A. BRCA2: last exon 27 PTC < p.T3310 PVS1, PTC > p.E3309 N/A; all other
-    # exons PVS1. Splice / start / deletion follow the generic tree.
+    # exons PVS1. Initiation codon → PVS1 (Table 4 "E2 PVS1 START codon";
+    # Appendix D Figures 3 / 5: no known alternative start, >=1 pathogenic variant
+    # upstream of the closest in-frame start p.M18 (BRCA1) / p.M124 (BRCA2) →
+    # "PVS1 (upgraded from Moderate)"). Splice / deletion follow the generic tree.
     "BRCA1": _GeneSpec(
         gene="BRCA1", transcript="NM_007294.4", aa_len=1863,
         trunc_bands=((1, 183, _S.VERY_STRONG), (184, 224, _S.NOT_MET),
                      (225, 1854, _S.VERY_STRONG), (1855, 1863, _S.NOT_MET)),
-        trunc_ptc=True, start_lost=None, splice=None, deletion=None,
+        trunc_ptc=True, start_lost=_S.VERY_STRONG, splice=None, deletion=None,
     ),
     "BRCA2": _GeneSpec(
         gene="BRCA2", transcript="NM_000059.4", aa_len=3418,
         trunc_bands=((1, 3309, _S.VERY_STRONG), (3310, 3418, _S.NOT_MET)),
-        trunc_ptc=True, start_lost=None, splice=None, deletion=None,
+        trunc_ptc=True, start_lost=_S.VERY_STRONG, splice=None, deletion=None,
     ),
     # ITGA2B (Platelet Disorders VCEP): SVI tree with specified critical regions.
     # The transmembrane domain (c.2980-3057, p.994-1019) is critical: an NMD-
@@ -209,11 +227,16 @@ _SPECS: dict[str, _GeneSpec] = {
     # ATM (Hereditary breast cancer / ENIGMA). The C-terminal FATKIN
     # (FAT+kinase+FATC) domain is critical; a truncation anywhere up to the most
     # 3' pathogenic residue p.R3047 removes the kinase domain → PVS1. After R3047
-    # (last <0.3%) no pathogenic truncations are known → N/A.
+    # (last <0.3%) no pathogenic truncations are known → N/A. Initiation codon →
+    # PVS1 (PVS1 guide v1.6). Canonical +/-1,2 splice: the per-allele lists of the
+    # guide (B: in-frame HEAT skips → Strong; C/F: small in-frame indels →
+    # Supporting; 5'UTR / GC-creating / GC-donor sites → N/A) are in
+    # resources/shared/vcep_pvs1_splice_sites.tsv; lists A/D/E and unlisted
+    # sites → PVS1.
     "ATM": _GeneSpec(
         gene="ATM", transcript="NM_000051.4", aa_len=3056,
         trunc_bands=((1, 3047, _S.VERY_STRONG), (3048, 3056, _S.NOT_MET)),
-        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
     # GP9 (Platelet disorder VCEP). Single coding exon → not NMD-subject. The
     # transmembrane domain (aa148-169) is critical; a truncation at/before 169
@@ -311,13 +334,20 @@ _SPECS: dict[str, _GeneSpec] = {
     # residue a frameshift alters: a PTC upstream of His1184 (p.Tyr1183* is the
     # most C-terminal pathogenic truncation) → PVS1; a PTC after Tyr1183,
     # including frameshifts that read through the native stop into a C-terminal
-    # extension, → PVS1_Strong (VCEP pilot c.3543del p.Phe1181LeufsTer10, new
-    # stop at codon 1190). Canonical splice → PVS1.
+    # extension (VCEP pilot c.3543del p.Phe1181LeufsTer10, new stop at codon
+    # 1190): PVS1 guide v1.3 — a frameshift impacting p.Tyr1183 that codes an
+    # alternative/extended C-terminus → PVS1_Strong, one NOT impacting Tyr1183
+    # (starting at codon 1184 or later) → PVS1_Supporting; nonsense p.His1184X /
+    # p.Tyr1185X / p.Ser1186X (role unknown) → PVS1_Moderate. Initiation codon →
+    # PVS1 (closest in-frame Met296; critical CC domain lost). Canonical splice:
+    # per-allele table (c.49-1/-2 Moderate, c.211+1/+2 Supporting, list D exon 4/5
+    # sites Strong, c.108+2T>C / c.3350+2C>T N/A) in vcep_pvs1_splice_sites.tsv;
+    # lists A/B/C and unlisted sites → PVS1.
     "PALB2": _GeneSpec(
         gene="PALB2", transcript="NM_024675.4", aa_len=1186,
-        trunc_bands=((1, 1183, _S.VERY_STRONG), (1184, 1187, _S.STRONG)),
-        trunc_ptc=True, readthrough_fs=_S.STRONG,
-        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        trunc_bands=((1, 1183, _S.VERY_STRONG), (1184, 1187, _S.MODERATE)),
+        trunc_ptc=True, fs_tail_rule=(1183, _S.STRONG, _S.SUPPORTING),
+        start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
     # FBN1 (Marfan VCEP). NMD-based: nonsense/frameshift predicted to undergo NMD
     # → PVS1; predicted to escape NMD (last exon / last 55 nt of penultimate exon)
@@ -389,6 +419,11 @@ _SPECS: dict[str, _GeneSpec] = {
         start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
         splice_sites={
             ("donor", -29): _S.NOT_MET, ("acceptor", -28): _S.NOT_MET,
+            # PVS1 Splicing Worksheet: exon 2 donor (c.74+1/+2) -> PVS1_Strong
+            # (start-codon exon; in-frame use of downstream Met40/Met44).
+            ("donor", 74): _S.STRONG,
+            # The worksheet notes the exon 8 acceptor was later upgraded to PVS1
+            # on clinical data; the PVS1 flowchart (followed here) keeps N/A.
             ("acceptor", 783): _S.NOT_MET,
             ("donor", 1100): _S.MODERATE, ("acceptor", 1101): _S.MODERATE,
         },
@@ -487,6 +522,7 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="IL2RG", transcript="NM_000206.3", aa_len=369,
         trunc_bands=((1, 369, _S.VERY_STRONG),),
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="strong",
     ),
     # MECP2 (Rett/Angelman VCEP). MANE Select is the brain-predominant MeCP2_e1
     # isoform NM_001110792.2 (498 aa); the VCEP rule is written in MeCP2_e2
@@ -531,20 +567,26 @@ _SPECS: dict[str, _GeneSpec] = {
     # ADA, DCLRE1C, JAK3 (SCID VCEP): standard SVI tree with the NMD-escape >10%
     # rule (Strong if >10% removed — VCEP also requires a downstream pathogenic
     # variant, approximated here — else Moderate).
+    # SCID VCEP genes (ADA / DCLRE1C / JAK3 / IL7R / IL2RG): in-frame exon
+    # skipping (role of region unknown) → PVS1_Strong when >=1 pathogenic
+    # variant lies downstream (splice_inframe="strong"); FOXN1 → 10% rule.
     "ADA": _GeneSpec(
         gene="ADA", transcript="NM_000022.4", aa_len=363,
         trunc_nmd=(_S.VERY_STRONG, None),
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="strong",
     ),
     "DCLRE1C": _GeneSpec(
         gene="DCLRE1C", transcript="NM_001033855.3", aa_len=692,
         trunc_nmd=(_S.VERY_STRONG, None),
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="strong",
     ),
     "JAK3": _GeneSpec(
         gene="JAK3", transcript="NM_000215.4", aa_len=1124,
         trunc_nmd=(_S.VERY_STRONG, None),
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="strong",
     ),
     # IL7R (SCID VCEP): like IL2RG, the transmembrane domain (begins aa240) and
     # distal cytoplasmic region are critical, and the NMD-escape zone (last exon 8
@@ -554,6 +596,7 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="IL7R", transcript="NM_002185.5", aa_len=459,
         trunc_nmd=(_S.VERY_STRONG, _S.STRONG),
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="strong",
     ),
     # FOXN1 (SCID VCEP): NMD (≤ codon 526, c.1577) → PVS1; NMD escape removing the
     # transactivation domain (aa511-563) or >10% of protein → Strong; distal of
@@ -564,6 +607,7 @@ _SPECS: dict[str, _GeneSpec] = {
         trunc_bands=((1, 526, _S.VERY_STRONG), (527, 584, _S.STRONG),
                      (585, 648, _S.MODERATE)),
         start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
     # RAG2 (SCID VCEP): single-exon gene → NMD never predicted. PVS1 only for full
     # gene deletion or removing/altering the critical core (aa1-383) + PHD
@@ -678,10 +722,11 @@ _SPECS: dict[str, _GeneSpec] = {
     # → PVS1; nonsense/frameshift/splice at c.1033 (codon 345) and downstream →
     # PVS1_Strong (the C-terminal region is critical, with reported pathogenic
     # frameshift/stop-loss/extension variants).
+    # Initiation codon → PVS1 (>=1 pathogenic variant upstream of the next Met56).
     "OTC": _GeneSpec(
         gene="OTC", transcript="NM_000531.6", aa_len=354,
         trunc_bands=((1, 344, _S.VERY_STRONG), (345, 354, _S.STRONG)),
-        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
     # SLC9A6 (Christianson syndrome VCEP, X-linked). The VCEP residue numbering
     # (null ≤p.A563, p.C564-T601 → Strong, p.Y602-A669 → Moderate) is in the
@@ -758,42 +803,59 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="SCN1B", transcript="NM_001037.5", aa_len=218,
         trunc_bands=((1, 204, _S.VERY_STRONG), (205, 218, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
     # SCN2A / SCN3A / SCN8A (Epilepsy VCEP): NMD (stop 5' of the boundary codon)
     # → PVS1; NMD escape → Strong if >10% (≥~200 aa) removed else Moderate.
+    # Canonical splice: in-frame exon skips (PVS1 exon-numbering table) → role
+    # unknown, 10% rule (splice_inframe).
     "SCN2A": _GeneSpec(
         gene="SCN2A", transcript="NM_001371246.1", aa_len=2005,
         trunc_bands=((1, 1591, _S.VERY_STRONG), (1592, 1805, _S.STRONG),
                      (1806, 2005, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
     "SCN3A": _GeneSpec(
         gene="SCN3A", transcript="NM_006922.4", aa_len=2000,
         trunc_bands=((1, 1586, _S.VERY_STRONG), (1587, 1801, _S.STRONG),
                      (1802, 2000, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
     "SCN8A": _GeneSpec(
         gene="SCN8A", transcript="NM_014191.4", aa_len=1980,
         trunc_bands=((1, 1582, _S.VERY_STRONG), (1583, 1783, _S.STRONG),
                      (1784, 1980, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
-    # NEB (nemaline myopathy): NMD (PTC ≤ p.8452, c.25354) → PVS1; NMD escape
-    # (the last <10%) → PVS1_Moderate. Initiation codon → Supporting.
+    # NEB (Congenital Myopathies VCEP, GN146): NMD (PTC ≤ p.8452, c.25354) →
+    # PVS1; NMD escape lies in the critical C-terminal exons (161-183: SH3 /
+    # serine-rich region) → PVS1 as well. Initiation codon → Supporting.
+    # Canonical splice: in-frame skips of the critical exons 55 and 161-183 stay
+    # PVS1 (vcep_pvs1_splice_exons.tsv); other in-frame skips (role unknown, each
+    # <10%) → 10% rule (Moderate).
     "NEB": _GeneSpec(
         gene="NEB", transcript="NM_001164508.2", aa_len=8525,
-        trunc_bands=((1, 8452, _S.VERY_STRONG), (8453, 8525, _S.MODERATE)),
+        trunc_bands=((1, 8525, _S.VERY_STRONG),),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
     # F8 (Coagulation Factor / Hemophilia A VCEP, X-linked): NMD (nonsense ≤
     # c.6851 ≈ codon 2283) → PVS1; NMD escape (C-terminal C2 domain critical) →
-    # PVS1_Strong. Initiation codon → PVS1_Moderate (≥1 pathogenic upstream of
-    # the c.96/codon-32 alt start).
+    # PVS1_Strong. The cutoff is the position of the stop codon (frameshift -1/+2
+    # up to c.6826, +1/-2 up to c.6728 → PVS1), hence trunc_ptc. Initiation codon
+    # → PVS1_Moderate (≥1 pathogenic upstream of the c.96/codon-32 alt start).
+    # Canonical splice (RNA tree): exon 7 (listed with the NMD exons) → PVS1,
+    # exons 25/26 → Strong (vcep_pvs1_splice_exons.tsv); other in-frame exon
+    # skips → role unknown, 10% rule.
     "F8": _GeneSpec(
         gene="F8", transcript="NM_000132.4", aa_len=2351,
         trunc_bands=((1, 2283, _S.VERY_STRONG), (2284, 2351, _S.STRONG)),
+        trunc_ptc=True,
         start_lost=_S.MODERATE, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
     # PTEN VCEP: NMD (stop at/5' to p.D375, c.1121) → PVS1; NMD escape (role
     # unknown, <10%) → PVS1_Moderate. Initiation codon → PVS1.
@@ -805,19 +867,24 @@ _SPECS: dict[str, _GeneSpec] = {
     # MYBPC3 (Cardiomyopathy VCEP): LoF is established for MYBPC3. NMD (prior to
     # p.1254) → PVS1; NMD escape (role unknown, <10% C-terminus) →
     # PVS1_Moderate. Initiation codon → PVS1_Supporting.
+    # Canonical splice: in-frame exons 2-4, 8-11, 14, 20, 22, 24-27 → role
+    # unknown, 10% rule (splice_inframe).
     "MYBPC3": _GeneSpec(
         gene="MYBPC3", transcript="NM_000256.3", aa_len=1274,
         trunc_bands=((1, 1253, _S.VERY_STRONG), (1254, 1274, _S.MODERATE)),
         start_lost=_S.SUPPORTING, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
     ),
     # HBB (Hemoglobinopathy VCEP, β-globin). NMD only for PTCs in codons 24-87
     # (Peixeiro 2011); PTCs 5' of p.Glu23 or 3' of p.Thr88 escape NMD. Escape
     # truncations removing >10% → Strong, <10% → Moderate (so early PTCs that
-    # remove most of the protein → Strong). Initiation codon → PVS1.
+    # remove most of the protein → Strong). Initiation codon → PVS1. Bands are
+    # keyed on the PTC (nonsense or frameshift-induced stop).
     "HBB": _GeneSpec(
         gene="HBB", transcript="NM_000518.5", aa_len=147,
         trunc_bands=((1, 23, _S.STRONG), (24, 87, _S.VERY_STRONG),
                      (88, 133, _S.STRONG), (134, 147, _S.MODERATE)),
+        trunc_ptc=True,
         start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
     # HBA2 (Hemoglobinopathy VCEP, α-globin). NMD for PTCs 5' of p.Leu84 (c.251);
@@ -827,6 +894,7 @@ _SPECS: dict[str, _GeneSpec] = {
         gene="HBA2", transcript="NM_000517.6", aa_len=142,
         trunc_bands=((1, 83, _S.VERY_STRONG), (84, 128, _S.STRONG),
                      (129, 142, _S.MODERATE)),
+        trunc_ptc=True,
         start_lost=_S.VERY_STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
     # GATM (Cerebral creatine deficiency VCEP, GN025 v2.0.0; Appendix 1 PVS1
@@ -901,10 +969,131 @@ _SPECS: dict[str, _GeneSpec] = {
         trunc_bands=((1, 341, _S.VERY_STRONG), (342, 379, _S.MODERATE)),
         start_lost=_S.STRONG, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
     ),
+
+    # ===================================================================
+    # CSpec file audit (2026-11): genes whose VCEP PVS1 tree had no spec.
+    # ===================================================================
+
+    # LGMD VCEP (DYSF GN180, SGCB GN184, SGCG GN185, SGCD GN186, CAPN3 GN187,
+    # ANO5 GN188, SGCA GN189). PTC in the first 100 bp (codons 1-34) →
+    # PVS1_Moderate (re-initiation downstream); otherwise NMD → PVS1 and NMD
+    # escape → critical region / 10% rule. Canonical splice: frame-disrupting
+    # NMD skips → PVS1; in-frame skips → role unknown, 10% rule. The DYSF tree
+    # is written on NM_003494.4 (the muscle isoform); MANE NM_001130987.2 has a
+    # different first exon, so the codon 1-34 window is applied on MANE.
+    "DYSF": _GeneSpec(
+        gene="DYSF", transcript="NM_001130987.2", aa_len=2119,
+        trunc_nmd=(_S.VERY_STRONG, None), trunc_reinit_moderate=34,
+        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
+    ),
+    "SGCA": _GeneSpec(
+        gene="SGCA", transcript="NM_000023.4", aa_len=387,
+        trunc_nmd=(_S.VERY_STRONG, None), trunc_reinit_moderate=34,
+        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
+    ),
+    "SGCB": _GeneSpec(
+        gene="SGCB", transcript="NM_000232.5", aa_len=318,
+        trunc_nmd=(_S.VERY_STRONG, None), trunc_reinit_moderate=34,
+        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
+    ),
+    "SGCG": _GeneSpec(
+        gene="SGCG", transcript="NM_000231.3", aa_len=291,
+        trunc_nmd=(_S.VERY_STRONG, None), trunc_reinit_moderate=34,
+        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
+    ),
+    "SGCD": _GeneSpec(
+        gene="SGCD", transcript="NM_000337.6", aa_len=290,
+        trunc_nmd=(_S.VERY_STRONG, None), trunc_reinit_moderate=34,
+        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
+    ),
+    "CAPN3": _GeneSpec(
+        gene="CAPN3", transcript="NM_000070.3", aa_len=821,
+        trunc_nmd=(_S.VERY_STRONG, None), trunc_reinit_moderate=34,
+        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
+    ),
+    "ANO5": _GeneSpec(
+        gene="ANO5", transcript="NM_213599.3", aa_len=913,
+        trunc_nmd=(_S.VERY_STRONG, None), trunc_reinit_moderate=34,
+        start_lost=None, splice=_S.VERY_STRONG, deletion=_S.VERY_STRONG,
+        splice_inframe="10pct",
+    ),
+    # ABCA4 VCEP (GN164): initiation codon → PVS1 (next in-frame Met at p.61,
+    # >=44 P/LP variants upstream). Truncations / splice use the generic tree.
+    "ABCA4": _GeneSpec(
+        gene="ABCA4", transcript="NM_000350.3", aa_len=2273,
+        start_lost=_S.VERY_STRONG, splice=None, deletion=None,
+    ),
 }
 
 
 _SPLICE_SITE_RE = re.compile(r"c\.(-?\d+)([+-])([12])(?!\d)")
+
+
+# Per-allele canonical-splice tables, keyed by the gene's MANE transcript:
+# ENIGMA Specifications Table 4 (BRCA1/BRCA2, enigma_pvs1_splice_sites.tsv) and
+# the HBOP VCEP ATM / PALB2 PVS1 guides (vcep_pvs1_splice_sites.tsv).
+_ENIGMA_TX = {"BRCA1": "NM_007294", "BRCA2": "NM_000059",
+              "ATM": "NM_000051", "PALB2": "NM_024675"}
+_SITE_TABLES = ("enigma_pvs1_splice_sites.tsv", "vcep_pvs1_splice_sites.tsv")
+_ENIGMA_SNV = re.compile(r"c\.(-?\d+[+-][12])([ACGT])>([ACGT])$")
+_ENIGMA_STRENGTH = {"very_strong": _S.VERY_STRONG, "strong": _S.STRONG,
+                    "moderate": _S.MODERATE, "supporting": _S.SUPPORTING, "na": _S.NOT_MET}
+_ENIGMA_SITES: dict | None = None
+
+
+def _load_enigma_sites() -> dict:
+    """{(gene, "c.N+k", ref, alt): (strength, rna, note, source)} from the
+    per-allele splice tables in resources/shared (ENIGMA Specifications Table 4;
+    ATM / PALB2 PVS1 guides)."""
+    global _ENIGMA_SITES
+    if _ENIGMA_SITES is None:
+        import csv
+        from pathlib import Path
+        sites: dict = {}
+        for name in _SITE_TABLES:
+            path = Path(__file__).resolve().parents[3] / "resources" / "shared" / name
+            if not path.exists():
+                continue
+            default_src = "ENIGMA Table 4" if name.startswith("enigma") else "VCEP splice table"
+            with path.open(encoding="utf-8") as fh:
+                rows = csv.DictReader((ln for ln in fh if not ln.startswith("#")),
+                                      delimiter="\t")
+                for r in rows:
+                    st = _ENIGMA_STRENGTH.get((r.get("strength") or "").strip())
+                    if st is not None:
+                        sites[(r["gene"], r["site"], r["ref"], r["alt"])] = (
+                            st, (r.get("rna") or "0").strip() == "1",
+                            (r.get("note") or "").strip(),
+                            (r.get("source") or "").strip() or default_src)
+        _ENIGMA_SITES = sites
+    return _ENIGMA_SITES
+
+
+def enigma_splice_site(pc) -> tuple[CriterionStrength, str] | None:
+    """PVS1 of a BRCA1/BRCA2 donor/acceptor +/-1,2 substitution from ENIGMA
+    Specifications Table 4 (V1.2), or None when the variant is not listed."""
+    gene = pc.gene_symbol
+    tx = _ENIGMA_TX.get(gene or "")
+    if tx is None or (pc.transcript_id or "").split(".")[0] != tx:
+        return None
+    m = _ENIGMA_SNV.search((pc.hgvs_c or "").split(":")[-1])
+    if not m:
+        return None
+    hit = _load_enigma_sites().get((gene, f"c.{m.group(1)}", m.group(2), m.group(3)))
+    if hit is None:
+        return None
+    strength, rna, note, source = hit
+    label = _LABEL[strength] + (" (RNA)" if rna else "")
+    detail = f"; {note}" if note else ""
+    rna_note = (" [code assigned with mRNA assay data]" if rna else "")
+    return strength, (f"{gene} VCEP ({source}): c.{m.group(1)}{m.group(2)}>"
+                      f"{m.group(3)} -> {label}{detail}{rna_note}")
 
 
 def _canonical_splice_site(hgvs_c: str | None) -> tuple[str, int] | None:
@@ -950,10 +1139,21 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
     has a reviewer-supplied strength for the exon a canonical splice variant
     skips, that strength replaces the flat per-gene splice default."""
     spec = _SPECS.get(pc.gene_symbol)
+    cq = pc.consequence
     if spec is None:
+        # Genes without a spec can still carry VCEP per-exon splice strengths
+        # (SLC6A8 critical in-frame exons 2/5); everything else → generic tree.
+        if cq in _SPLICE and splice_overrides:
+            from acmg_classifier.pvs1.vcep_pvs1_exons import skipped_exon
+            exon = skipped_exon(cq, pc.intron)
+            override = splice_overrides.lookup(pc.gene_symbol, exon)
+            if override is not None:
+                return override, (
+                    f"{pc.gene_symbol} VCEP: canonical +/-1,2 splice skipping exon "
+                    f"{exon} -> {_LABEL[override]} (exon-aware)"
+                )
         return None
 
-    cq = pc.consequence
     if cq in _TRUNC:
         # VCEP-declared PVS1 exception regions (OTOF exon 46; MYO15A exons 8/26):
         # a truncation landing here is withheld — LoF is not established as
@@ -966,6 +1166,31 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
                         f"{pc.protein_position} in PVS1-exception region "
                         f"{lo}-{hi} ({spec.transcript}) -> N/A"
                     )
+        # PTC in the first codons: translation re-initiates downstream (LGMD).
+        if (spec.trunc_reinit_moderate is not None and pc.protein_position is not None
+                and pc.protein_position <= spec.trunc_reinit_moderate):
+            return _S.MODERATE, (
+                f"{spec.gene} VCEP: truncation at codon {pc.protein_position} within "
+                f"the first {spec.trunc_reinit_moderate} codons (first 100 bp; "
+                f"re-initiation) -> {_LABEL[_S.MODERATE]}"
+            )
+        # Frameshift whose new stop lies beyond a critical C-terminal residue
+        # (PALB2 p.Tyr1183): scored by whether it alters that residue.
+        if cq == ConsequenceType.FRAMESHIFT and spec.fs_tail_rule is not None:
+            from acmg_classifier.pvs1.nmd_predictor import ptc_codon
+            n, s_in, s_after = spec.fs_tail_rule
+            ptc = ptc_codon(pc)
+            hp = (pc.hgvs_p or "")
+            no_stop = ptc is None and ("fsTer?" in hp or "fs*?" in hp or "fsX?" in hp)
+            first = pc.protein_position
+            if first is not None and (no_stop or (ptc is not None and ptc > n)):
+                strength = s_in if first <= n else s_after
+                where = "alters" if first <= n else "does not alter"
+                return strength, (
+                    f"{spec.gene} VCEP: frameshift from codon {first} "
+                    f"(new stop {'none' if ptc is None else ptc}) {where} codon {n} "
+                    f"-> {_LABEL[strength]}"
+                )
         # Frameshift reading through the stop codon (new stop beyond the
         # original one, or no stop in the transcript: fsTer?).
         if cq == ConsequenceType.FRAMESHIFT and spec.readthrough_fs is not None:
@@ -1072,8 +1297,10 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
         )
 
     if cq in _SPLICE:
-        if spec.splice is None:
-            return None
+        # ENIGMA BRCA1/BRCA2: per-substitution PVS1 code of Specifications Table 4.
+        enigma = enigma_splice_site(pc)
+        if enigma is not None:
+            return enigma
         # Donor splice sites of specific introns may be excluded (ACADVL intron 8
         # is a GC donor of unclear impact → no PVS1).
         if cq == ConsequenceType.SPLICE_DONOR and spec.splice_exclude_donor_introns:
@@ -1109,6 +1336,25 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
                     f"{spec.gene} VCEP: canonical +/-1,2 splice skipping exon "
                     f"{exon} -> {_LABEL[override]} (exon-aware)"
                 )
+        if spec.splice is None:
+            return None
+        # SVI exon-skipping arm (in-frame / stop-codon exon / penultimate-exon
+        # frameshift) for VCEP trees that score those skips by the 10% rule.
+        if spec.splice_inframe is not None:
+            from acmg_classifier.pvs1.vcep_pvs1_exons import (
+                exon_skip_effect, svi_exon_skip_strength,
+            )
+            eff = exon_skip_effect(cq, pc.intron, pc.transcript_id)
+            fixed = _S.STRONG if spec.splice_inframe == "strong" else None
+            skip = svi_exon_skip_strength(eff, inframe_strength=fixed)
+            if skip is not None:
+                strength, why = skip
+                extra = (" (VCEP: Strong when >=1 pathogenic variant lies downstream "
+                         "in the skipped region, otherwise Moderate)"
+                         if fixed is not None and eff is not None and eff.in_frame
+                         and not eff.has_stop else "")
+                return strength, (f"{spec.gene} VCEP: canonical +/-1,2 splice; {why}"
+                                  f"{extra} -> {_LABEL[strength]}")
         return spec.splice, (
             f"{spec.gene} VCEP: canonical +/-1,2 splice variant -> {_LABEL[spec.splice]}"
         )

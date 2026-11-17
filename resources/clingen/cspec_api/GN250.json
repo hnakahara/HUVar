@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN250",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50099",
+    "@type": "Organization",
+    "label": "InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50099"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1678961644"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen InSiGHT Hereditary Colorectal Cancer/Polyposis  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for BMPR1A Version 1.0.0",
+  "lastUpdated": "2026-11-09T09:45:44.238Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1678961651",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=BMPR1A",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0700348",
+              "@type": "Disease",
+              "label": "MONDO:0700348",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "BMPR1A"
+        }
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,1542 @@
+Criteria Specification
+ClinGen Myeloid Malignancy Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for DDX41 Version 1.0
+Affiliation: Myeloid Malignancy VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : MM-VCEP Specifications for DDX41 Variant Curation
+Version : 1.0
+Released : 11/2/2026
+
+Contributors & Keywords
+Research Group: Myeloid Malignancy VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for DDX41
+General Comments:
+
+-DDX41 classification rules -Use of the Bayesian point based variant
+classification categories
+
+Gene: DDX41 (HGNC:18674) 
+Transcripts:
+NM_016222.4
+
+HGNC Name: DEAD-box helicase 41
+Disease:
+DDX41-related hematologic
+malignancy predisposition
+syndrome (MONDO:0014809)
+ Mode of Inheritance:
+Autosomal dominant
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+ClinGen Myeloid Malignancy Variant Curation Expert Panel (MMSpecifications:VCEP) Notes:
+1. The MM-VCEP recommends using NM_016222.4 as the default
+transcript, which is the MANE Select transcript. This transcript
+encodes a 622-amino acid protein. We note that there are other
+transcripts described in the NCBI/RefSeq and Ensembl databases,
+most of which are expected to lead to nonsense-mediated decay,
+often due to retained introns. From the NCBI, NM_001321732.2 and
+NM_001321830.2 encode 496-amino acid isoforms. Based on
+expressed sequence tags, NM_016222.4 is very likely to be the
+predominant transcript – with NM_001321732.2 likely representing a
+transcript with intron 1 retention – and the other two have little
+supportive evidence of significant expression (UCSC Genome
+Browser). From Ensembl, ENST00000629036.2 encodes a 201-amino
+acid isoform and ENST00000625286.1 encodes a 49-amino acid
+isoform, but these are disregarded due to the significant lack of the
+functional domains compared to the MANE Select isoform.
+2. Alternate start sites in the NM_016222.4 transcript may occur at
+Met127, Met132, or Met155. Protein expression of DDX41 in HEK cells
+revealed the presence of a full-length protein (70 kDa) that was
+primarily found in the nucleus and a smaller protein (~55 kDa) that
+was primarily found in the cytoplasm and would align with a start site
+at either Met127 or Met132. An expression level of 90% and 10% for
+the p70 and p55 isoforms, respectively, was approximated. However,
+this assessment was done in the context of overexpression, and it is
+of note that the Kozak sequence around the alternate start sites
+might be considered to be weaker than the Kozak sequence around
+Met1, so the expression ratios may vary endogenously. Furthermore,
+there is sufficient evidence of pathogenicity of variants upstream of
+Met127 suggesting that a transcript with an alternate start site is
+unlikely to be sufficient to compensate (possibly due to disrupted
+nuclear localization) (PMID: 26712909).
+3. Frameshift variation causing loss of the canonical stop, resulting in an
+elongated protein, is more likely to be pathogenic due to induction of
+non-stop decay and its disruptive downstream effects.
+All protein extension variants due to frameshift alterations were
+determined to result in an alternative stop codon beyond the
+poly-A insertion site; thus, they are expected to be subject to
+non-stop decay (see DDX41 PVS1 non-stop decay Figure).
+Non-stop decay is another mRNA surveillance mechanism that
+triggers degradation of an mRNA if protein translation is not
+progressing at a normal rate, which is likely a result of
+
+translation of the poly-A tail (series of lysine residues) that leads
+to ribosomal stalling and collisions. There may be additional
+causes of non-stop decay that are not well-described at this
+time. (PMID: 12210514, 32688260, 36825529) Non-stop decay
+has been described as a mechanism to consider in the curation
+of potential null variants by the Association for Clinical Genomic
+Science (ACGS), UK (https://www.acgs.uk.com/media/12533/ukpractice-guidelines-for-variant-classification-v12-2024.pdf) –
+notably at a very strong strength level. Though non-stop decay
+has not been included in the ClinGen SVI guidance for loss-offunction alterations (PMID: 30192042), a strength level of PVS1
+was assigned as proposed in the recommendation by the ACGS
+and as supported by internal analysis of genes that may
+undergo NSD.
+There is only one possible stop codon in the last exon of DDX41,
+located at c.1867. Therefore, the MM-VCEP predicts that all -1
+frameshift variants that escape NMD would undergo NSD. All the
++1 frameshift variants after c.1897 would also undergo NSD.
+However, the resulting protein extension will depend on the
+sequence of any random insertion. To determine whether a
+variant results in a protein extension, the MM-VCEP advises that
+curators check the cDNA using Mutalyzer (https://mutalyzer.nl/).
+Mutalyzer displays the protein prediction with a “?” at the end to
+indicate that the canonical stop codon is not in the coding
+sequence or the 3’UTR (p.XXX###XXXfs*?), meaning the
+alternative stop codon will be beyond the poly-A site
+of DDX41. Mutalyzer also displays the affected protein predicted
+sequence if the alternative stop codon is past the poly-A site,
+allowing curators to compare the natural sequence including the
+canonical stop codon, and the extended protein sequence, to
+determine if a protein extension occurs. We have included
+several example variants that result in NSD. Example frameshift
+variants include:
+Single nucleotide deletion: c.1658del
+Double nucleotide deletion: c.1778_1779del
+Four nucleotide deletion: c.1657_1660del
+Single nucleotide duplication: c.1780dup
+Double nucleotide duplication: c.1659_1660dup
+4. Splicing effects are currently based solely on predictions. The rules
+can be modified in the future if RNA evidence becomes available per
+PMID: 37352859 as a guide. Strength modifications should be based
+on the quality of the RNA study where:
+Comparison to a control is necessary;
+Patient RNA data are better than minigene assays;
+Primers are designed to capture the possibility of multiexonic/multi-cassette events;
+
+NMD inhibitors (e.g., puromycin, proprietary molecule found in
+PAXgene tubes), particularly when the predicted effect is
+nonsense-mediated decay, are used;
+Quantification of the effect by SNP analysis is better than
+percent splicing index (PSI) analysis is better than capillary
+electrophoresis, which in turn, is better than estimation by gel
+band density;
+Multiple studies are better than a single study;
+Caution should be used in modifying strength when the effect of
+the splicing impact is incomplete (i.e.,"leaky" splice site) or
+unclear.
+5. The deleterious effects of copy number variants (CNVs)
+in DDX41 (see DDX41 PVS1 decision tree for CNVs), most
+frequently observed as large multi-exon deletions, are primarily
+driven by disruption of exons encoding constrained residues, those
+encoding P/LP missense variants. The presence of these P/LP
+missense variants throughout the entire gene body indicate that all
+protein regions are important for its function, and therefore, any outof-frame exon deletions are inherently deleterious due to the
+resulting frameshift variant. Because there are no P/LP missense
+variants encoded by exons 2, 4, or 15, we cannot assess the impact
+of single exon deletions of those in-frame exons, and therefore, we
+cannot apply PVS1. Any other in-frame deletion would involve an
+exon encoding a P/LP missense variant, and therefore, we will apply
+PVS1.
+
+DDX41 Specification:
+PVS1_Variable: Per modified DDX41 decision trees for singlenucleotide variants (SNVs) – including a table of canonical splicing
+effects – small insertions/deletions (indels) or deletion and insertion
+events (delins), and copy number variants (CNVs).
+Canonical splice site variants (see DDX41 splicing variants Table)
+SNVs, indels/delins, and splicing variants
+[DDX41 PVS1 decision tree for SNVs PDF]
+CNVs
+[DDX41 PVS1 decision tree for CNVs PDF]
+PVS1_Variable (RNA): When RNA/splicing data is available for a
+variant, apply PVS1 at the appropriate strength level based on the
+predicted effect of the aberrant mRNA on protein translation as it
+corresponds to the PVS1_Variable decision trees. Strength may also
+be modified based on the quality of the RNA analysis (as described
+above). For "leaky" splice sites, strength level should be decreased
+by one if a near-complete impact is demonstrated, but no code
+
+should be applied if an incomplete impact is demonstrated. Refer to
+PMID: 37352859 for additional guidance.
+
+Very Strong
+PVS1_Very Strong: Use appropriate DDX41 decision tree.
+PVS1_Very Strong (RNA): Use for an observed splicing defect.
+Default
+8
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Strong
+PVS1_Strong: Use appropriate DDX41 decision tree.
+PVS1_Strong (RNA): Use for an observed splicing defect.
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+PVS1_Moderate: Use appropriate DDX41 decision tree.
+PVS1_Moderate (RNA): Use for an observed splicing defect.
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+PVS1_Supporting (RNA): Use for an observed splicing defect.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS1
+
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. The previously established pathogenic variant must be reviewed by
+the MM-VCEP and asserted pathogenic/likely pathogenic before this
+rule can be applied.
+2. For missense variants, RNA data or agreement in splicing predictor
+show no impact on splicing.
+3. For splice site variants, do not apply this code except for variants in
+the canonical donor/acceptor (“dinucleotide”) sites, the U2 donor
+motif (the last 3 bases of the exon and the 6 first nucleotides of the
+intron), or the U2 acceptor motif (the first base of the exon to 20
+bases upstream within the intron). Splicing prediction scores for the
+variant being evaluated and the known pathogenic/likely pathogenic
+(as assessed by VCEP rules) should be no less than 0.1 below the
+known variant for consideration of this criterion.
+
+DDX41 Specification:
+For missense variants:
+PS1_Strong: Same amino acid change as a previously established
+pathogenic variant regardless of nucleotide change.
+PS1_Moderate: Same amino acid change as a previously established
+likely pathogenic variant regardless of nucleotide change.
+For splice site variants: Follow recommendations by the ClinGen SVI
+Splicing Subgroup below (PMID: 37352859).
+[PS1 ClinGen SVI Splicing Subgroup recommendations PDF]
+
+Strong
+For missense variants:
+PS1: Same amino acid change as a previously established pathogenic variant
+regardless of nucleotide change.
+For splice site variants:
+PS1: Follow recommendations by the ClinGen SVI Splicing Subgroup (PMID:
+37352859).
+
+Default
+4
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Moderate
+For missense variants:
+PS1_Moderate: Same amino acid change as a previously established likely
+pathogenic variant regardless of nucleotide change.
+For splice site variants:
+PS1_Moderate: Follow recommendations by the ClinGen SVI Splicing Subgroup
+(PMID: 37352859).
+Default
+2
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Supporting
+For splice site variants:
+PS1_Supporting: Follow recommendations from the ClinGen SVI Splicing
+Subgroup (PMID: 37352859)
+Default
+1
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: The use of de novo cases is not
+informative for DDX41, because no such cases have been identified.
+Moreover, P/LP germline DDX41 variants cause late-onset cancers, after
+
+reproductive years. Therefore, the MM-VCEP recommends that this rule
+should not be applied for DDX41.
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: The mechanism of tumorigenesis is
+established as loss-of-function based on studies in cell lines or animal
+models (PMID: 25920683, 35303436, 33763998). While recent studies
+suggest that the mechanism may be related to the ability of R-loops – 3stranded RNA-DNA hybrids that play a role in transcription, DNA repair,
+telomere maintenance, and chromosomal segregation – to drive genomic
+instability (PMID: 34916496), the actual mechanism is still unknown. *See
+PVS1_Variable (RNA) for variants with RNA/splicing data.
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. The MM-VCEP has assessed the hematopoietic malignancies (HMs)
+that have been published in those with pathogenic/likely pathogenic
+DDX41 variants. As is widely accepted, these alleles are more
+commonly present in myeloid malignancies, such as MDS and AML,
+and much less frequently in lymphoid malignancies. For this reason,
+our phenotypic definition of DDX41-related malignancies is based on
+the occurrence of MDS/AML.
+
+2. An aggregated synthetic cohort of DDX41 (DDX41-ASC) germline and
+somatic variants was developed to inform the development of
+DDX41-specific curation guidelines, specifically to refine case
+enrichment for phenotypic ACMG/AMP criteria (PMID: 41703027). The
+cohort was derived from 1796 people with HMs and cytopenias
+compared to controls collected from three population databases:
+gnomAD v4.1.0, ToMMo 54KJPN v20230626, and Korean Variant
+Archive v2. From the DDX41-ASC, the highest portion of individuals
+with germline P/LP variants were among those people diagnosed with
+MDS/AML (79%), followed by those with unexplained cytopenias
+(45%), lymphoid neoplasms (29%), and other myeloid neoplasms
+(26%). A quasi-case-control study of specific variants in MDS/AMLenriched cases was performed due to the strong association of
+germline DDX41 variants and MDS/AML diagnosis, and odds ratios
+were calculated, with adjustments made for ancestry, to determine
+PS4 criterion strengths.
+3. Patients with DDX41 related hematopoietic malignancy predisposition
+syndrome display incomplete penetrance and the median age of
+onset of DDX41 related HMs is about 66 years (PMID: 34349893).
+4. To further assess the age of onset in DDX41 related malignancies, the
+MM-VCEP amassed a patient cohort of over 900 patients from
+various DDX41 related publications and clinical data from
+participating labs (PMID: 34349893, 35671390, 36322930). The MMVCEP analyzed age of onset and gender, finding that there was no
+significant difference in age of onset between men and women, with
+~97% of patients acquiring a DDX41-related malignancy at or over
+40 years of age. Thus, full penetrance is not expected at an early
+age. This was recapitulated using the DDX41-ASC (PMID: 41703027).
+
+DDX41 Specification:
+PS4_Variable: See DDX41 PS4 Table for known PS4_Variable variants. If
+you have a large, unpublished case-control cohort, you may do a casecontrol analysis to determine if PS4_Variable can be applied.
+PS4_Very_Strong: lower bound of the OR’s confidence interval ≥
+350
+PS4_Strong: lower bound of the OR’s confidence interval ≥ 18.7
+PS4_Moderate: lower bound of the OR’s confidence interval ≥ 4.33
+PS4_Supporting: lower bound of the OR’s confidence interval ≥2.08
+Caveats:
+Cases should be limited to individuals with AML or MDS.
+Make sure to only count unrelated probands if performing casecontrol analysis.
+Perform case-control analysis with ancestry-matched group using the
+highest frequency of the variant in the appropriate continental
+population. If control data to be used is available in both a population
+
+database and an ancestry-specific database, preference should be
+given to the more robust control cohort; where appropriate, data
+from both sources may be combined to maximize effective control
+sample size while maintaining ancestral comparability.
+
+Very Strong
+PS4_Very_Strong: lower bound of the OR’s confidence interval ≥ 350
+Caveats:
+Cases should be limited to individuals with AML or MDS.
+Make sure to only count unrelated probands if performing case-control analysis.
+Perform case-control analysis with ancestry-matched group using the highest
+frequency of the variant in the appropriate continental population. If control data to
+be used is available in both a population database and an ancestry-specific
+database, preference should be given to the more robust control cohort; where
+appropriate, data from both sources may be combined to maximize effective control
+sample size while maintaining ancestral comparability.
+Default
+8
+Point
+Value:
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Strong
+PS4_Strong: lower bound of the OR’s confidence interval ≥ 18.7
+Caveats:
+Cases should be limited to individuals with AML or MDS.
+Make sure to only count unrelated probands if performing case-control analysis.
+Perform case-control analysis with ancestry-matched group using the highest
+frequency of the variant in the appropriate continental population. If control data to
+be used is available in both a population database and an ancestry-specific
+database, preference should be given to the more robust control cohort; where
+appropriate, data from both sources may be combined to maximize effective control
+sample size while maintaining ancestral comparability.
+Default
+4
+Point
+Value:
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Moderate
+PS4_Moderate: lower bound of the OR’s confidence interval ≥ 4.33
+
+Caveats:
+Cases should be limited to individuals with AML or MDS.
+Make sure to only count unrelated probands if performing case-control analysis.
+Perform case-control analysis with ancestry-matched group using the highest
+frequency of the variant in the appropriate continental population. If control data to
+be used is available in both a population database and an ancestry-specific
+database, preference should be given to the more robust control cohort; where
+appropriate, data from both sources may be combined to maximize effective control
+sample size while maintaining ancestral comparability.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Supporting
+PS4_Supporting: lower bound of the OR’s confidence interval ≥ 2.08
+Caveats:
+Cases should be limited to individuals with AML or MDS.
+Make sure to only count unrelated probands if performing case-control analysis.
+Perform case-control analysis with ancestry-matched group using the highest
+frequency of the variant in the appropriate continental population. If control data to
+be used is available in both a population database and an ancestry-specific
+database, preference should be given to the more robust control cohort; where
+appropriate, data from both sources may be combined to maximize effective control
+sample size while maintaining ancestral comparability.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: Functional domains with respect to
+mechanism of tumorigenesis have not been established.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. The DDX41 germline predisposition syndrome does not impact
+reproductive rates and has late disease penetrance, resulting in a
+high allele frequency in the general population, including for the
+most common deleterious variants (0.0174% for c.3G>A and
+0.0201% for p.Asp140Glyfs*2 in gnomAD v4.1).
+2. While setting an arbitrary threshold of 0.02% could allow for applying
+the PM2_Supporting criterion to less common deleterious germline
+DDX41 variants, the majority (98%) of DDX41 variants in the
+gnomAD 4.1 database would also qualify.
+3. Therefore, we only apply this criterion when the variant is absent
+from the general population, recognizing that some variants may
+become impacted as population databases grow.
+
+DDX41 Specification:
+PM2_Supporting: Variant must be completely absent from major
+population databases.
+Caveats:
+The mean coverage of DDX41 in the population database used
+should be at least 20x.
+PM2_Supporting not applicable if PS4 is met at any strength level.
+
+Supporting
+PM2_Supporting: Variant must be completely absent from major population databases.
+Caveats:
+The mean coverage of DDX41 in the population database used should be at least
+20x.
+PM2_Supporting not applicable if PS4 is met at any strength level.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: DDX41-related hematopoietic
+malignancy predisposition syndrome is inherited in an autosomal
+dominant manner.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. In-frame deletions/insertions variants: The PM4 code is not
+recommended for germline DDX41 variants with in-frame
+deletions/insertions in a non-repeat region, because functional
+domains span the entire coding region and the functional domains
+that are critical for cancer predisposition are unclear.
+2. Protein extension variants (see DDX41 PM4 decision tree Figure):
+Stop-loss variants (DDX41 PM4 decision tree Figure,
+left):
+For substitutions: TAILVAR, an in-silico tool, evaluates
+hydrophobicity, protein stability, and evolutionary
+constraint of the extended C-terminus, with scores ≥0.70
+predicting pathogenic outcomes (PMID:41556340). The
+MM-VCEP therefore recommends the use of TAILVAR, with
+scores ≥0.70 meeting PM4 criteria, for stop-loss
+substitution variants in DDX41. TAILVAR has been used to
+model all possible stop-codon substitutions in DDX41 (See
+PM4 TAILVAR scores Table); accordingly, PM4 can be
+applied to all stop-loss substitution variants represented in
+this table.
+For in-frame delins: the MM-VCEP recommends applying
+PM4 criteria for in-frame delins confined to the stop codon,
+with no alteration of other C-terminal residues.
+In-frame indel including stop codon (DDX41 PM4 decision
+tree Figure, right): The MM-VCEP recommends applying PM4
+
+criteria to in-frame indels involving the canonical stop codon,
+with minimal alteration of adjacent C-terminal residues.
+
+DDX41 Specification:
+For in-frame deletions/insertions variants: Do not use; in
+DDX41, functional domains span the entire coding region and the
+functional domains that are critical for cancer predisposition are unclear.
+Protein extension variants:
+PM4: Per modified PM4 decision tree for stop-loss variants and In-frame
+indel including the stop codon.
+[DDX41 PM4 decision tree PDF]
+
+Moderate
+Protein extension variants:
+PM4: Per modified PM4 decision tree for stop-loss variants and In-frame indel including
+the stop codon.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. The previously established pathogenic variant must be reviewed by
+the MM-VCEP and asserted pathogenic/likely pathogenic before this
+rule can be applied. The date of evaluation for both the variant under
+evaluation and the previously established variant should be included.
+2. For missense variants, the Grantham score (PMID: 4843792) of the
+alternate residue of the new variant should be equal or higher to that
+of the alternate residue of the known pathogenic/likely pathogenic
+variant.
+
+3. For nonsense/frameshift variants, the MM-VCEP curated 127 DDX41
+variants using the v1 DDX41 criteria specifications. There are at least
+two variants that were curated as pathogenic or likely pathogenic in
+all exons (exons 1-17) without applying PM5_Supporting (see DDX41
+PM5_Supporting Table).
+[PM5 Grantham Scores Chart PDF]
+
+DDX41 Specification:
+For missense variants:
+PM5_Strong: Missense change at an amino acid residue where ≥ 2
+different missense changes which have previously been determined to be
+pathogenic (after accounting for Grantham scores).
+PM5_Moderate: Missense change at an amino acid residue where a
+different missense change which has previously been determined to be
+pathogenic (after accounting for Grantham scores).
+PM5_Supporting: Missense change at an amino acid residue where a
+different missense change which has previously been determined to be
+likely pathogenic (after accounting for Grantham scores).
+Caveats:
+Beware of changes that impact splicing rather than at the amino
+acid/protein level.
+Compare the Grantham scores of the original and variant residues to
+assess the similarities between the residues’ properties. Only
+applicable at the appropriate strength level if the alternate residue of
+the new variant is equal or higher than the alternate residue of the
+known pathogenic/likely pathogenic.
+Null Variants:
+PM5_Supporting: Nonsense/frameshift variants in an exon which
+contains ≥2 P/LP null variants, and the variant is predicted to lead to
+NMD or NSD (DDX41 PM5_supporting Table).
+
+Strong
+Missense Variants:
+PM5_Strong: Missense change at an amino acid residue where ≥ 2 different
+missense changes which have previously been determined to be pathogenic (after
+accounting for Grantham scores).
+Caveats:
+Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+Compare the Grantham scores of the original and variant residues to assess the
+similarities between the residues’ properties. Only applicable at the appropriate
+
+strength level if the alternate residue of the new variant is equal or higher than
+alternate residue of the known pathogenic/likely pathogenic variant.
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Missense Variants:
+PM5_Moderate: Missense change at an amino acid residue where a different
+missense change which has previously been determined to be pathogenic (after
+accounting for Grantham scores).
+Caveats:
+Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+Compare the Grantham scores of the original and variant residues to assess the
+similarities between the residues’ properties. Only applicable at the appropriate
+strength level if the alternate residue of the new variant is equal or higher than
+alternate residue of the known pathogenic/likely pathogenic variant
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Missense Variants:
+PM5_Supporting: Missense change at an amino acid residue where a different
+missense change which has previously been determined to be likely pathogenic
+(after accounting for Grantham scores).
+Caveats:
+Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+Compare the Grantham scores of the original and variant residues to assess the
+similarities between the residues’ properties. Only applicable at the appropriate
+strength level if the alternate residue of the new variant is equal or higher than
+the alternate residue of the known pathogenic/likely pathogenic.
+Null Variants
+PM5_Supporting: Nonsense/frameshift variants in an exon which contains ≥2 P/LP
+null variants, and the variant is predicted to lead to NMD or NSD (DDX41
+PM5_Supporting Table).
+
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: The use of de novo cases is not
+informative for DDX41, because no such cases have been identified.
+Moreover, P/LP germline DDX41 variants cause late-onset cancers, after
+reproductive years. Therefore, the MM-VCEP recommends that this rule
+should not be applied for DDX41.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. The MM-VCEP adopted the approach being taken by other ClinGenVCEPs and supported by the SVI and other work with additional
+meioses supporting higher evidence levels based on calculated LOD
+scores of 0.9, 1.5 and 2.1, respectively, with three or four meioses for
+PP1, five or six meioses for PP1_Moderate and seven or more
+meioses for PP1_Strong.
+2. Affected individuals should been diagnosed with either MDS or AML
+(see PS4).
+3. Only genotype and phenotype positive individuals and obligate
+carriers are counted.
+
+DDX41 Specification:
+PP1_Strong: ≥ 7 meioses observed within one family or across multiple
+families.
+PP1_Moderate: 5 or 6 meioses observed within one family or across
+multiple families.
+
+PP1_Supporting: 3 or 4 meioses observed within one family or across
+multiple families.
+Caveats:
+If PP4 is also applicable, evaluate PP4 first. The combination of PP4
+and PP1 is capped at Strong (+4 points), in accordance with current
+SVI guidance.
+
+Strong
+PP1_Strong: ≥ 7 meioses observed within one family or across multiple families.
+Caveats:
+If PP4 is also applicable, evaluate PP4 first. The combination of PP4 and PP1 is
+capped at Strong (+4 points), in accordance with current SVI guidance.
+Default
+4
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+PP1_Moderate: 5 or 6 meioses observed within one family or across multiple families.
+Caveats:
+If PP4 is also applicable, evaluate PP4 first. The combination of PP4 and PP1 is
+capped at Strong (+4 points), in accordance with current SVI guidance.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+PP1_Supporting: 3 or 4 meioses observed within one family or across multiple families.
+Caveats:
+If PP4 is also applicable, evaluate PP4 first. The combination of PP4 and PP1 is
+capped at Strong (+4 points), in accordance with current SVI guidance.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: Although DDX41 has a z-score of 3.15
+(gnomAD v4.1), which is above the cutoff for missense constraint z-score
+≥ 3.09 as recommended by the SVI, the MM-VCEP recommends against
+using this rule for DDX41 due to the presence of various missense
+variants throughout the gene that are clinically interpreted as benign
+(n=1) or likely benign (n=32) in ClinVar.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+Multiple lines of computational evidence support a deleterious effect on
+Specifications:the gene or gene product.
+MM-VCEP Notes:
+1. For in-silico evaluation of missense variants, the MM-VCEP
+recommends using AlphaMissense, a deep learning-based model,
+which outperformed REVEL in sensitivity at detecting putative
+pathogenic DDX41 variants, based on the co-occurrence of a second
+somatic hit (PMID: 41703027). However, as there is an insufficient
+number of missense variants that have been established as
+pathogenic or benign in DDX41, gene-specific thresholds cannot be
+set. Thus, the MM-VCEP recommends using only the supporting level
+thresholds established in PMID: 40084623; we do not recommend
+modifying strength level without the ability to evaluate gene-specific
+thresholds.
+2. For assessing splicing impact for any variant, the MM-VCEP
+recommends using SpliceAI. The threshold for a predicted splicing
+impact is based on PMID: 37352859. However, as SpliceAI only
+returns the maximum score in each of four categories (acceptor gain,
+acceptor loss, donor gain, donor loss), the MM-VCEP recommends
+
+using the IGV visualization to determine if there are other potentially
+significant effects predicted for the variant, including the potential for
+multiple splice sites. A manual assessment of the splicing impact on
+the protein should be undertaken to determine if the predicted effect
+is in-frame or would lead to a premature truncation codon.
+3. PP3 cannot be applied for canonical splice site variants.
+
+DDX41 Specification:
+For missense variants:
+PP3: AlphaMissense score ≥ 0.792
+For any variant (except canonical splice site variants):
+PP3:
+SpliceAI ∆ scores ≥ 0.20 including the creation of cryptic splice sites.
+Do not use for variants with a predicted splicing effect that is proven
+by RNA analysis. See PVS1_Variable (RNA).
+
+Supporting
+For missense variants:
+PP3: AlphaMissense score ≥ 0.792
+For any variant (except canonical splice site variants):
+PP3:
+SpliceAI ∆ scores ≥ 0.20 including the creation of cryptic splice sites.
+Do not use for variants with a predicted splicing effect that is proven by RNA
+analysis. See PVS1_Variable (RNA).
+Default
+1
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+Patient’s phenotype or family history is highly specific for a disease with a
+Specifications:single genetic etiology.
+MM-VCEP Notes:
+
+1. The DDX41-related hematopoietic malignancy predisposition
+syndrome phenotype is nonspecific and can be caused by numerous
+other inherited predisposition syndromes, somatic mutations, or
+environmental factors that are insufficient to meet the original
+ACMG/AMP rule PP4. However, the Germline/Somatic Variant
+Subcommittee of the ClinGen Hereditary Cancer Clinical Domain
+Working Group defined PP4 inclusive of use for "other somatic data
+types", such as tumor signatures or microsatellite instability, with a
+“statistically significant association to a single gene” (PMID:
+30311369).
+2. Tumor mutational burden in DDX41 is known to be low (PMID:
+36322930, 35671390), allowing for the use of this code to evaluate
+the germline variant.
+3. The MM-VCEP recommends calculations of positive likelihood ratios
+as a conservative approach to the application of this code. The quasicase-control study from the DDX41-ASC developed by members of
+the MM-VCEP and others (PMID: 41703027) integrated odds of
+pathogenicity (OddsPath) to examine the pathogenicity of germline
+DDX41 variants informed by the co-occurrence of a somatic DDX41
+variant(s). OddsPath was calculated using a multinomial model of
+somatic DDX41 second‑hit patterns, including both recurrent and
+non‑recurrent acquired variants. Thresholds correspond to very
+strong (≥350), strong (≥18.7), moderate (≥4.33), and supporting
+(≥2.08) evidence levels as defined by PMID: 29300386; however,
+OddsPath evidence was capped at the strong level as per the SVI
+recommendation (PMID: 38103548), such that values meeting or
+exceeding the very strong threshold (≥350) were recorded as
+strong. Please see DDX41 PP4 criteria and calculations for more
+details.
+
+DDX41 Specification:
+PP4_Variable:
+Recurrent somatic variants: R525H, G530D, P321L, T227M, E345D,
+G530S, and D344E.
+If you have a cohort of individuals carrying the germline variant
+under assessment, you may perform a cohort-based analysis to
+determine whether PP4_Variable can be applied by evaluating the
+total number of cases with the germline variant, assessing the
+number of cases with an acquired recurrent or non-recurrent somatic
+second-hit, and applying these values to the PP4 OddsPath formula
+provided in the supplemental material to calculate an OddsPath
+value.
+PP4_ Strong: OddsPath ≥ 18.7
+PP4_Moderate: OddsPath ≥ 4.33
+PP4_Supporting: OddsPath ≥ 2.08
+
+Caveats:
+When calculating OddsPath, care should be taken to avoid selective
+inclusion of only positive cases (i.e., cases with germline variant
+under assessment and an acquired second somatic hit). All identified
+cases carrying the same germline variant, including those without a
+recurrent or non-recurrent somatic second hit, must be included to
+avoid biasing or skewing the OddsPath calculation and pathogenicity
+evaluation.
+If PP1 is also applicable, evaluate PP4 first. The combination of PP4
+and PP1 is capped at Strong (+4 points), in accordance with current
+SVI guidance.
+
+Strong
+PP4_Strong: OddsPath ≥ 18.7
+Caveats:
+When calculating OddsPath, care should be taken to avoid selective inclusion of only
+positive cases (i.e., cases with germline variant under assessment and an acquired
+second somatic hit). All identified cases carrying the same germline variant,
+including those without a recurrent or non-recurrent somatic second hit, must be
+included to avoid biasing or skewing the OddsPath calculation and pathogenicity
+evaluation.
+If PP1 is also applicable, evaluate PP4 first. The combination of PP4 and PP1 is
+capped at Strong (+4 points), in accordance with current SVI guidance.
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+PP4_Moderate: OddsPath ≥ 4.33
+Caveats:
+When calculating OddsPath, care should be taken to avoid selective inclusion of only
+positive cases (i.e., cases with germline variant under assessment and an acquired
+second somatic hit). All identified cases carrying the same germline variant,
+including those without a recurrent or non-recurrent somatic second hit, must be
+included to avoid biasing or skewing the OddsPath calculation and pathogenicity
+evaluation.
+If PP1 is also applicable, evaluate PP4 first. The combination of PP4 and PP1 is
+capped at Strong (+4 points), in accordance with current SVI guidance.
+Default
+Point
+
+2
+
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+PP4_Supporting: OddsPath ≥ 2.08
+Caveats:
+When calculating OddsPath, care should be taken to avoid selective inclusion of only
+positive cases (i.e., cases with germline variant under assessment and an acquired
+second somatic hit). All identified cases carrying the same germline variant,
+including those without a recurrent or non-recurrent somatic second hit, must be
+included to avoid biasing or skewing the OddsPath calculation and pathogenicity
+evaluation.
+If PP1 is also applicable, evaluate PP4 first. The combination of PP4 and PP1 is
+capped at Strong (+4 points), in accordance with current SVI guidance.
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+Calculation of BA1:
+Specifications:
+After analyzing the frequency of phenotypes amongst our DDX41 cohort,
+we found that DDX41-related hematopoieticmalignancies more commonly
+present as myeloid malignancies, causing MDS or AML, and much less
+frequently lymphoid malignancies. For this reason, our phenotypic
+
+definition of DDX41-related malignancies is based on the occurrence of
+MDS/AML.
+The MM-VCEP modified BA1 using extremely conservative values to
+account for the unknown prevalence and disease attribution to DDX41. To
+obtain a DDX41-specific population allele frequency for BA1, we utilized
+the Whiffin/Ware calculator (http://cardiodb.org/allelefrequencyapp/) with
+a prevalence of AML of 1 in 3650, as calculated from the SEER database
+2023. We used conservative estimates for the following values:
+penetrance estimate of 50% (PMID: 36322930), an allelic heterogeneity of
+100% (conservative assumption that one pathogenic DDX41 variant would
+account for 100% of cases), and a maximum genetic heterogeneity of
+100% (conservative assumption that DDX41 – and no other gene –
+accounts for 100% of cases). A 95% confidence interval was used to
+develop the threshold.
+Following the Whiffin/Ware calculation, the calculated threshold of
+0.000274 was increased by two orders of magnitude, to provide
+separation from the PM2_Supporting threshold. The threshold developed
+for application of BA1 as a stand-alone criterion is a minor allele
+frequency (MAF) of equal to or higher than ≥ 0.0274 (2.74%).
+MM-VCEP Notes:
+1. The MM-VCEP adopted the SVI recommendation that the variant be
+present in any general continental population dataset with a
+minimum number of 2,000 alleles and variant present in ≥ 5 alleles.
+2. For founder variants, the MM-VCEP recommends ancestry matching
+to the appropriate population group within gnomAD, or to use a
+population database that is ancestry-matched, such as ToGoVar.
+
+DDX41 Specification:
+BA1: Minor allele frequency ≥ 0.0274 (2.74%) in any general continental
+population dataset with ≥ 2,000 alleles tested and variant present in ≥ 5
+alleles.
+
+Stand Alone
+BA1: Minor allele frequency ≥ 0.0274 (2.74%) in any general continental population
+dataset with ≥ 2,000 alleles tested and variant present in ≥ 5 alleles.
+Default
+Not Applicable
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS1
+
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Calculation of BS1:
+Specifications:
+Similar to BA1, for the BS1 calculation, we utilized the Whiffin/Ware
+calculator (http://cardiodb.org/allelefrequencyapp/) with a prevalence of
+AML of 1 in 3650, as calculated from the SEER database 2023. We used a
+conservative penetrance estimate of 50% (PMID: 36322930), an allelic
+heterogeneity of 100% and a maximum genetic heterogeneity of 10%
+(one magnitude lower than for BA1). A 95% confidence interval was used
+to develop the threshold. Following the Whiffin/Ware calculation, the
+calculated threshold of 0.0000274 was also increased by two orders of
+magnitude. We developed a range for application of BS1 for variants with
+a minor allele frequency between 0.0274 to 0.00274 (2.74% to 0.274%).
+MM-VCEP Notes:
+1. The MM-VCEP also adopted the SVI recommendation that the variant
+be present in any general continental population dataset with a
+minimum number of 2,000 alleles and variant present in ≥ 5 alleles.
+2. For founder variants, the MM-VCEP recommends ancestry matching
+to the appropriate population within gnomAD, or to use a population
+database that is ancestry-matched, such as ToGoVar.
+3. The variant can be classified as likely benign based on BS1 alone if
+there is no contradictory evidence supporting pathogenicity.
+
+DDX41 Specification:
+BS1: Minor allele frequency between 0.0274 (2.74%) and 0.00274
+(0.274%) in any general continental population dataset with ≥ 2,000
+alleles tested and variant present in ≥ 5 alleles.
+
+Strong
+BS1: Minor allele frequency between 0.0274 (2.74%) and 0.00274 (0.274%) in any
+general continental population dataset with ≥ 2,000 alleles tested and variant present in
+≥ 5 alleles.
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS2
+
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: Patients with DDX41-related
+hematopoietic malignancy predisposition syndrome display incomplete
+penetrance and the median age of onset of DDX41-related hematopoietic
+malignancies is about 66 years (PMID: 34349893). To further assess the
+age of onset in DDX41-related malignancies, the MM-VCEP amassed a
+patient cohort of over 900 patients from various DDX41-related
+publications and clinical data from participating labs (PMID: 34349893,
+35671390, 36322930). The MM-VCEP analyzed age of onset and gender,
+finding that there was no significant difference in age of onset between
+men and women, with ~97% of patients acquiring a DDX41-related
+malignancy at or over 40 years of age. Thus, full penetrance is not
+expected at an early age. This was recapitulated using the DDX41-ASC
+(PMID: 41703027).
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: The mechanism of tumorigenesis is
+established as loss-of-function based on studies in cell lines or animal
+models (PMID: 25920683, 35303436, 33763998). While recent studies
+suggest that the mechanism may be related to the ability of R-loops – 3stranded RNA-DNA hybrids that play a role in transcription, DNA repair,
+telomere maintenance, and chromosomal segregation – to drive genomic
+instability (PMID: 34916496), the actual mechanism is still unknown. *See
+BP7_Variable (RNA) for variants with RNA/splicing data.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: BS4 is not applicable due to the
+presence of phenocopies, reduced age-related penetrance, and alternative
+etiologies of myeloid neoplasms, such that phenotype-positive, genotypenegative relatives may represent phenocopies rather than true lack of
+segregation
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: Both truncating and missense variants
+cause DDX41-related hematopoietic malignancy predisposition syndrome.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+VCEP
+MM-VCEP Notes:
+Specifications:
+Mice lacking DDX41 likely results in embryonic lethality (PMID: 29871919).
+In addition, while there are siblings described with compound
+heterozygous missense variants (one variant claimed by authors to be
+pathogenic, the other variant of uncertain significance) (PMID: 30144193),
+there are no reports of biallelic germline DDX41 null variants in affected
+patients.
+
+DDX41 Specification:
+BP2: Applicable per the original ACMG/AMP guidelines for a germline
+variant found in:
+1. Trans with a pathogenic variant.
+2. Cis with different pathogenic variants in at least 2 instances.
+3. Homozygosity in an unaffected individual.
+Caveats:
+VAF must be > 40%.
+
+Do not use for variant identified in concert with a somatic hotspot
+variant (R525H, G530D, G530S, P321L, T227M, E345D, and D344E).
+
+Supporting
+BP2: Applicable per the original ACMG/AMP guidelines for a germline variant found in:
+1. Trans with a pathogenic variant.
+2. Cis with different pathogenic variants in at least 2 instances.
+3. Homozygosity in an unaffected individual.
+Caveats:
+VAF must be > 40%.
+Do not use for variant identified in concert with a somatic hotspot variant (R525H,
+G530D, G530S, P321L, T227M, E345D, and D344E).
+Default
+-1
+Point
+Value:
+Modification Gene-specific,None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+DDX41 Specification: Do not use: DDX41 does not contain a repetitive
+region without known function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. For in-silico evaluation of missense variants, the MM-VCEP
+recommends using AlphaMissense, a deep learning-based model,
+which outperformed REVEL in sensitivity at detecting putative
+pathogenic DDX41 variants, based on the co-occurrence of a second
+
+somatic hit (PMID:41703027). However, as there is an insufficient
+number of missense variants that have been established as
+pathogenic or benign in DDX41, gene-specific thresholds cannot be
+set. Thus, the MM-VCEP recommends using only the supporting level
+thresholds established in PMID: 40084623; we do not recommend
+modifying strength level without the ability to evaluate gene-specific
+thresholds.
+2. For assessing splicing impact for any variant, the MM-VCEP
+recommends using SpliceAI. The threshold for lack of impact is based
+on PMID: 37352859.
+
+DDX41 Specification:
+For missense variants:
+BP4: AlphaMissense score ≤ 0.169
+For intronic/synonymous variants:
+BP4: SpliceAI ∆ scores ≤ 0.10
+Do not use for synonymous/silent variants with a lack of splicing
+effect proven by RNA analysis. See BP7_Variable (RNA).
+Do not use for canonical splice site variants.
+
+Supporting
+For missense variants:
+BP4: AlphaMissense score ≤ 0.169
+For intronic/synonymous variants:
+BP4: SpliceAI ∆ scores ≤ 0.10
+Do not use for synonymous/silent variants with a lack of splicing effect proven by
+RNA analysis. See BP7_Variable (RNA).
+Do not use for canonical splice site variants.
+Default
+-1
+Point
+Value:
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+
+Comments:
+
+DDX41 Specification: Do not use: In rare circumstances, a patient can
+carry two pathogenic variants in genes predisposing to hematopoietic
+malignancies
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+MM-VCEP Notes:
+Specifications:
+1. The MM-VCEP supports omitting nucleotide conservation for BP7
+based on its limited predicted power, aligning with recommendations
+from the ClinGen SVI Splicing Subgroup (PMID: 30503770,
+37352859). BP7 is applicable to synonymous and intronic
+variants with SpliceAI ∆ scores ≤ 0.10, with the following restrictions:
+1. Do not consider synonymous variants that occur at last three
+and first two nucleotide positions of an exon per PMID:
+27240813.
+2. Do not consider any intronic variants that occur within 6
+nucleotides of each exon termination or within 20 nucleotides of
+each exon start.
+2. Splicing effects are currently based solely on predictions. The rules
+can be modified in the future if RNA evidence becomes available per
+PMID: 37352859 as a guide. Strength modifications should be based
+on the quality of the RNA study where:
+1. Comparison to a control is necessary;
+2. Patient RNA data are better than minigene assays;
+3. Primers are designed to capture the possibility of multiexonic/multi-cassette events;
+4. NMD inhibitors (e.g., puromycin, proprietary molecule found in
+PAXgene tubes), particularly when the predicted effect is
+nonsense-mediated decay, are used;
+
+5. Quantification of the effect by SNP analysis is better than
+percent splicing index (PSI) analysis is better than capillary
+electrophoresis, which in turn, is better than estimation by gel
+band density;
+6. Multiple studies are better than a single study;
+7. Caution should be used in modifying strength when the effect of
+the splicing impact is incomplete (i.e., "leaky" splice site) or
+unclear.
+
+DDX41 Specification:
+BP7: Applicable for
+Synonymous variants – excluding the following last three and first
+two nucleotides in an exon – with SpliceAI ∆ scores ≤ 0.10.
+Intronic variants that occur more than 6 nucleotides from exon ends
+and more than 20 nucleotides from exon starts and have SpliceAI ∆
+scores ≤ 0.10.
+
+Supporting
+BP7: Applicable for
+Synonymous variants – excluding the following last three and first two nucleotides in
+an exon – with SpliceAI ∆ scores ≤ 0.10.
+Intronic variants that occur more than 6 nucleotides from exon ends and more than
+20 nucleotides from exon starts and have SpliceAI ∆ scores ≤ 0.10.
+BP7_Variable (RNA): Applicable for variants with RNA data, with weighting based on the
+quality of the available RNA data.
+Default
+-1
+Point
+Value:
+Modification General recommendation
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes : - No single pathogenic code is sufficient for likely pathogenic classification No single benign code is sufficient for likely benign classification, except for BS1 - Any
+combination of 1 pathogenic very strong (PVS) + 1 pathogenic supporting (PP) reaches a likely
+pathogenic classification
+
+Files & Images
+DDX41 PS4 Table: 
+DDX41 PVS1 non stop decay: 
+DDX41 pilot variants: 
+DDX41 PVS1 decision tree for CNVs: 
+DDX41 PP4 criteria and calculations: 
+DDX41 PM4 TAILVAR scores Table: 
+DDX41 PM4 decision tree: 
+DDX41 splicing variants Table: 
+PS1 ClinGen SVI Splicing Subgroup recommendations: 
+DDX41 PM5_Supporting Table: 
+DDX41 PVS1 decision tree SNVs: 
+PM5 Grantham scores chart: 
+
+References
+1.
+
+Walker LC Hoya M et al. Using the ACMG/AMP framework to capture evidence related to
+predicted and observed impact on splicing: Recommendations from the ClinGen SVI Splicing
+Subgroup. Am J Hum Genet (2023) 110 (7) p. 1046-1067. 10.1016/j.ajhg.2023.06.002
+37352859 
+
+2.
+
+Lewinsohn M Brown AL et al. Novel germ line DDX41 mutations define families with a lower age
+of MDS/AML onset and lymphoid malignancies. Blood (2016) 127 (8) p. 1017-23.
+10.1182/blood-2015-10-676098 26712909 
+
+3.
+
+Ma J Mahmud N et al. DDX41 is needed for pre- and postnatal hematopoietic stem cell
+differentiation in mice. Stem Cell Reports (2022) 17 (4) p. 879-893.
+10.1016/j.stemcr.2022.02.010 35303436 
+
+4.
+
+Polprasert C Schulze I et al. Inherited and Somatic Defects in DDX41 in Myeloid Neoplasms.
+Cancer Cell (2015) 27 (5) p. 658-70. 10.1016/j.ccell.2015.03.017 25920683 
+
+5.
+
+Weinreb JT Gupta V et al. Ddx41 inhibition of DNA damage signaling permits erythroid
+progenitor expansion in zebrafish. Haematologica (2022) 107 (3) p. 644-654.
+10.3324/haematol.2020.257246 33763998 
+
+6.
+
+Mosler T Conte F et al. R-loop proximity proteomics identifies a role of DDX41 in transcriptionassociated genomic instability. Nat Commun (2021) 12 (1) p. 7314. 10.1038/s41467-02127530-y 34916496 
+
+7.
+
+Makishima H Saiki R et al. Germ line DDX41 mutations define a unique subtype of myeloid
+neoplasms. Blood (2023) 141 (5) p. 534-549. 10.1182/blood.2022018221 36322930 
+
+8.
+
+Walsh MF Ritter DI et al. Integrating somatic variant data and biomarkers for germline variant
+classification in cancer predisposition genes. Hum Mutat (2018) 39 (11) p. 1542-1552.
+10.1002/humu.23640 30311369 
+
+9.
+
+Wan Z Han B Clinical features of DDX41 mutation-related diseases: a systematic review with
+individual patient data. Ther Adv Hematol (2021) 12 p. 20406207211032433.
+10.1177/20406207211032433 34349893 
+
+10.
+
+Li P Brown S et al. The genetic landscape of germline DDX41 variants predisposing to myeloid
+neoplasms. Blood (2022) 140 (7) p. 716-755. 10.1182/blood.2021015135 35671390 
+
+11.
+
+Stavrou S Aguilera AN et al. DDX41 Recognizes RNA/DNA Retroviral Reverse Transcripts and Is
+Critical for In Vivo Control of Murine Leukemia Virus Infection. mBio (2018) 9 (3)
+10.1128/mBio.00923-18 29871919 
+
+12.
+
+Diness BR Risom L et al. Putative new childhood leukemia cancer predisposition syndrome
+caused by germline bi-allelic missense mutations in DDX41. Genes Chromosomes Cancer
+(2018) 57 (12) p. 670-674. 10.1002/gcc.22680 30144193 
+
+13.
+
+Grantham R Amino acid difference formula to help explain protein evolution. Science (1974)
+185 (4154) p. 862-4. 10.1126/science.185.4154.862 4843792 
+
+14.
+
+Vasudevan S Peltz SW et al. Non-stop decay--a new mRNA surveillance pathway. Bioessays
+(2002) 24 (9) p. 785-8. 10.1002/bies.10153 12210514 
+
+15.
+
+Powers KT Szeto JA et al. New insights into no-go, non-stop and nonsense-mediated mRNA
+decay complexes. Curr Opin Struct Biol (2020) 65 p. 110-118. 10.1016/j.sbi.2020.06.011
+32688260 
+
+16.
+
+Vind AC Snieckute G et al. Run, Ribosome, Run: From Compromised Translation to Human
+Health. Antioxid Redox Signal (2023) 39 (4-6) p. 336-350. 10.1089/ars.2022.0157 36825529
+
+
+17.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+18.
+
+Tiong IS Hunter S et al. Refinement of the classification of DDX41 variants through analysis of
+aggregated clinical datasets. Leukemia (2026) 40 (3) p. 649-660. 10.1038/s41375-026-028866 41703027 
+
+19.
+
+Yoon JG Lee S et al. A predictive framework for stop-loss variants with C-terminal extensions.
+Nucleic Acids Res (2026) 54 (2) 10.1093/nar/gkag031 41556340 
+
+20.
+
+Bergquist T Stenton SL et al. Calibration of additional computational tools expands ClinGen
+recommendation options for variant classification with PP3/BP4 criteria. Genet Med (2025) 27
+(6) p. 101402. 10.1016/j.gim.2025.101402 40084623 
+
+21.
+
+Tavtigian SV Greenblatt MS et al. Modeling the ACMG/AMP variant classification guidelines as a
+Bayesian classification framework. Genet Med (2018) 20 (9) p. 1054-1060.
+10.1038/gim.2017.210 29300386 
+
+22.
+
+Biesecker LG Byrne AB et al. ClinGen guidance for use of the PP1/BS4 co-segregation and PP4
+phenotype specificity criteria for sequence variant pathogenicity classification. Am J Hum
+Genet (2024) 111 (1) p. 24-38. 10.1016/j.ajhg.2023.11.009 38103548 
+
+23.
+
+Chong R Insigne KD et al. A Multiplexed Assay for Exon Recognition Reveals that an
+Unappreciated Fraction of Rare Genetic Variants Cause Large-Effect Splicing Disruptions. Mol
+Cell (2019) 73 (1) p. 183-194.e8. 10.1016/j.molcel.2018.10.037 30503770 
+
+24.
+
+Sibley CR Blazquez L et al. Lessons from non-canonical splicing. Nat Rev Genet (2016) 17 (7)
+p. 407-421. 10.1038/nrg.2016.46 27240813 
+
+

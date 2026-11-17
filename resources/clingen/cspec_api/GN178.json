@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN178",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50016",
+    "@type": "Organization",
+    "label": "Monogenic Diabetes Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50016"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1795775084"
+  },
+  "cspecStatus": "CSpec Deleted",
+  "currentStatus": "CSpec Deleted",
+  "label": "ClinGen Monogenic Diabetes  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for FOXP3 Version 1.0",
+  "lastUpdated": "2025-02-04T13:15:44.418Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1795775093",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=FOXP3",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0010580",
+              "@type": "Disease",
+              "label": "MONDO:0010580",
+              "modeOfInheritance": [
+                {
+                  "@id": "",
+                  "@label": "X-linked inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "FOXP3"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

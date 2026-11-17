@@ -1,0 +1,1037 @@
+Criteria Specification
+ClinGen Leber Congenital Amaurosis/early onset Retinal Dystrophy Expert Panel Specifications
+to the ACMG/AMP Variant Interpretation Guidelines for GUCY2D Version 1.0
+Affiliation: Leber Congenital Amaurosis/early onset Retinal Dystrophy VCEP
+Version : 1.0
+Released : 1/22/2025
+DOI : 10.5281/zenodo.21434777
+
+Contributors & Keywords
+Research Group: Leber Congenital
+Amaurosis/early onset Retinal Dystrophy VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+GUCY2D NM_000180.4 Autosomal recessive
+inheritance GUCY2D-related recessive retinopathy
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for GUCY2D
+General Comments:
+
+The GUCY2D gene gene encodes a retina-specific guanylate cyclase, which
+is a member of the membrane guanylyl cyclase family. Aliases for the
+protein (NP_000171.1) are numerous and include RetGC-1, RETGC-1; ROSGC, ROS-GC1, RetGC, and CG-E. Note: The point system of Tavtigian et al.
+(PMID 32720330) is being used for all classifications so the combining rules
+are not being utilized.
+
+Gene: GUCY2D (HGNC:4689) 
+Transcripts:
+NM_000180.4
+NP_000171.1
+
+HGNC Name: guanylate cyclase 2D, retinal
+Disease:
+GUCY2D-related recessive
+retinopathy (MONDO:0100453)
+ Mode of Inheritance:
+Autosomal recessive
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single
+or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of
+
+disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave the
+remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+See attached GUCY2D-specific PVS1 Decision Tree file, which has been
+Specifications:modified from Walker et al., 202317
+
+Very Strong
+Null variant in a gene where loss of function is a known mechanism of disease.
+Use as defined by ClinGen SVI working group (Abou Tayoun et al., 201816) and as
+updated by the ClinGen SVI Splicing Subgroup (Walker et al., 202317).
+Refer to GUCY2D-specific PVS1 Decision Tree, file attached.
+PVS1: Predicted splice defects at +/- 1,2 in exons 2-20
+PVS1: Single to multi-exon deletions, with or without predicted NMD. All exons
+are considered critical to protein function.
+PVS1: Applied to variants in the initiation codon. The second in-frame methionine
+is located at residue 218 and use of this as a start codon would eliminate the
+leader sequence which targets the protein to the endoplasmic reticulum. There is
+no known study indicating that this methionine in GUCY2D can be used as start
+codon. Variants affecting Met1 can lead to a complete absence of the protein
+product. Additionally, there are multiple variants located upstream of p.Met218
+that have been reported as a pathogenic in HGMD and ClinVar, evidence that
+this entire region of the protein is functionally important.
+PVS1: Nonsense or frameshift mutations from p.Thr2 through p.Lys1068
+PVS1: Duplications of exons proven in tandem
+PVS1(RNA): RNA splicing data with evidence of alternative transcript production
+at complete levels, relative to normal allele.
+Modification Gene-specific
+Type:
+
+Strong
+Null variant in a gene where loss of function is a known mechanism of disease.
+Use as defined by ClinGen SVI working group (Abou Tayoun et al., 201816) and as
+updated by the ClinGen SVI Splicing Subgroup (Walker et al., 202317).
+Refer to GUCY2D-specific PVS1 Decision Tree, file attached.
+PVS1_Strong: Nonsense or frameshift mutations from p.Pro1069 through
+p.Ser1103
+PVS1_Strong: Duplications of exons presumed in tandem
+PVS1(RNA)_Strong: RNA splicing data with evidence of alternative transcript
+production at near complete levels, relative to normal allele.
+
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Specifications:
+
+For assessing same amino acid changes, SpliceAI must be used to
+ensure comparison variant is not causing a splicing defect (score
+≤0.1)
+GUCY2D-specific PVS1 Decision Tree for scoring splicing variants is
+based on the recommendations of the ClinGen SVI Splicing Subgroup
+published in Walker et al. 2023 and is attached.
+
+Strong
+Same amino acid change as a previously established Pathogenic variant regardless of
+nucleotide change.
+Must have one comparison variant that reaches a Pathogenic classification using this
+rule specification.
+Same predicted splicing impact as a previously classified Pathogenic variant.
+Used in conjunction with PP3 for variants located outside the splice donor/acceptor
++/-1,2 dinucleotide positions that have a splice AI score ≥0.2 and have a comparable
+nucleotide variant at the same position that has been designated Pathogenic.
+Used in conjunction with PVS1 for variants located at the splice donor/acceptor +/-1,2
+dinucleotide positions and that have a comparable variant within the same splice
+donor/acceptor +/-1,2 dinucleotide that has been designated Pathogenic.
+Specific combinations are found in GUCY2D-specific PVS1 Decision Tree part (b) (Table 2
+from Walker 2023).
+Modification Gene-specific
+Type:
+
+Moderate
+Same amino acid change as a previously established Likely Pathogenic variant regardless
+of nucleotide change.
+Must have one comparison variant that reaches a Likely Pathogenic classification
+using this rule specification.
+
+Same predicted splicing impact as previously classified Likely Pathogenic variant.
+Used in conjunction with PP3 for variants located outside the splice donor/acceptor
++/-1,2 dinucleotide positions that have a splice AI score ≥0.2 and have a comparable
+nucleotide variant at the same position that has been designated Likely
+Pathogenic.
+Used in conjunction with PVS1_(reduced strength) for variants located at the splice
+donor/acceptor +/-1,2 dinucleotide positions and have a comparable variant within
+the same splice donor/acceptor motif (but outside the +/-1,2 dinucleotide) that
+has been designated Pathogenic.
+Specific combinations are found in GUCY2D-specific PVS1 Decision Tree part (b) (Table 2
+from Walker 2023).
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Used in conjunction with PP3 for variants located outside the splice donor/acceptor
++/-1,2 dinucleotide positions that have a splice AI score ≥0.2 and have a comparable
+nucleotide variant within the same motif that has been designated Likely
+Pathogenic.
+Used in conjunction with PVS1 or PVS1_(reduced strength) for variants located at the
+splice donor/acceptor +/-1,2 dinucleotide positions and have a comparable Likely
+Pathogenic or Pathogenic variant either within the same splice site donor/acceptor
+motif, outside the +/-1,2 dinucleotide, or at the +/-1,2 dinucleotide.
+Specific combinations are found in GUCY2D-specific PVS1 Decision Tree part (b) (Table 2
+from Walker 2023).
+Modification Gene-specific,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Use point table from SVI Recommendation for De Novo Criteria (PS2
+Specifications:& PM6) - Version 1.1 12 , file attached
+Individuals must have 2 variants to consider scoring one for de novo.
+To determine the appropriate strength level to apply for de novo
+occurrence(s), each proband with a de novo variant is awarded a point
+
+value based upon phenotypic consistency and confirmed or assumed
+parental relationships (PS2/PM6 file -Table 1). The combined point value of
+all de novo occurrences is then compared to Table 2 to determine the
+applicable evidence strength level.
+For “Phenotypic consistency” category, consider whether the proband
+meets PP4:
+Does not meet PP4 - use option 3: "Phenotype consistent with gene
+but not highly specific and high genetic heterogeneity"
+Meets PP4 at the Supporting level - use option 2: “Phenotype
+consistent with gene but not highly specific”
+Meets PP4 at the Moderate level - use option 1 - “Phenotype highly
+consistent for gene”
+Note that all probands being considered for any pathogenic phenotype
+codes (i.e. – PP1, PP4, PM3, PM6, PS2) at any strength must have the
+following phenotype characteristics:
+Absent or severely decreased rod electroretinogram response OR
+congenital night blindness/nyctalopia OR a diagnosis of Leber congenital
+amaurosis/eoRD/cone-rod dystrophy.
+
+Very Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Use ClinGen SVI's recommendation for assigning weight to the PS2/PM6 codes (See
+PS2-Table 1 within PS2/PM6 file).
+Total of 4 or more points required for Very Strong level
+Modification Gene-specific
+Type:
+
+Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Use ClinGen SVI's recommendation for assigning weight to the PS2/PM6 codes (See
+PS2-Table 1 within PS2/PM6 file).
+Total of 2.00 - 3.75 points required for Strong level
+Modification Gene-specific
+Type:
+
+Moderate
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+
+Use ClinGen SVI's recommendation for assigning weight to the PS2/PM6 codes (See
+PS2-Table 1 within PS2/PM6 file).
+Total of 1.00 - 1.75 points required for Moderate level
+Modification Gene-specific
+Type:
+
+Supporting
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Use ClinGen SVI's recommendation for assigning weight to the PS2/PM6 codes (See
+Table 1 within PS2/PM6 file).
+Total of 0.50 - 0.75 points required for Supporting level
+Modification Gene-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Studies included in attached table:
+Specifications:
+Boye et al., 2016 10
+Daich Varela et al., 2023 18
+Duda et al.,1999 9
+Duda et al., 2011 20
+Jacobson et al., 2013 5
+Jacobson et al., 2021 2
+Jacobson et al., 2022 3
+Peshenko et al., 2010 21
+Peshenko et al., 2015 7
+Peshenko et al., 2020 1
+Tucker et al., 1998 8
+Tucker et al., 2004 4
+Wimberg et al., 2018 15
+
+Zägel et al., 2014 19
+Zulliger et al., 2015 6
+
+Strong
+Well-established in vitro or in vivo functional studies supportive of a damaging effect.
+See attached table for acceptable functional studies.
+Eligible results include Gucy2e−/−Gucy2f−/− knockout mice subretinally injected with
+adeno-associated virus-packaged constructs encoding a GUCY2D variant (Boye et al.,
+2016,10) or mice with knock-in of a GUCY2D variant (not yet available in the published
+literature). Results should include flat or nearly flat scotopic and photopic
+electroretinogram responses in comparison to wild-type injected control, absent or nearabsent guanylate cyclase activity in comparison to wild-type injected control, and/or
+absent or near absent GUCY2D expression at the protein level despite approximately wildtype expression at the RNA level.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Well-established in vitro or in vivo functional studies supportive of a damaging effect. Not
+applicable for splicing effects (replaced by PVS1_Strength (RNA))
+See attached table for acceptable functional studies.
+For studies reporting guanylate cyclase activity, cutoff is ≤10% of wild-type control.
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0
+and the confidence interval around the estimate of RR or OR does not include 1.0. See
+manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+
+PM1
+
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+Because these sites have been identified based on well-established
+Specifications:functional domains rather than based on a known cluster of pathogenic or
+likely pathogenic variants, this criterion is not mutually exclusive with PM5.
+Missense variants that meet BS1 or BA1 should not be eligible to
+meet this criterion.
+Missense variants at a position where another benign missense
+variant is identified should not be eligible to meet this criterion.
+
+Moderate
+Met by active site residues that bind the GTP substrate or the Mg2+ ion; Phe883, Asp885,
+Thr890, Leu905, Glu925, Ile927, Asp929, Met932, Arg976, Arg995, Cys997, Leu998,
+Phe999, Gly1000, Val1003, Asn1004, Arg1008, and Glu1010 13.
+Modification Gene-specific
+Type:
+
+Supporting
+Met by variants not explicitly listed above, encoding missense substitutions between
+positions p.873-951. This region forms part of the guanylate cyclase catalytic domain
+and exhibits intolerance to missense variation 14.
+Met by variants in the 6 bp CRX binding site located at position 17:8002593-8002598
+(hg38) 18
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+Cutoff value of 4.0x10-4 is set just above the FAF of the most common
+Specifications:pathogenic GUCY2D variant (3.6x10-4) and below the Whiffin-Ware
+calculation of 1.6x10-3 for the maximum credible population allele
+frequency for the disease.
+
+This rule should not be applied if variant would otherwise meet criteria for
+a benign classification, as rarity of the variant should not outweigh other
+types of benign evidence.
+
+Supporting
+Absent/rare from controls in an ethnically-matched cohort population sample.
+Used if the gnomAD total allele frequency is ≤ 4.0 x 10-4.
+Modification Disease-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+VCEP
+Use SVI recommendations found in
+Specifications:https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf (or attached file “PM3 Tables”)
+To determine the appropriate strength level to apply for in trans
+occurrence(s), each proband is awarded a point value based upon phasing
+of the two variants in question (confirmed in trans versus unknown) and
+classification of the variant on the other allele (Table 1). The combined
+point value of all proband occurrences is then summed and compared to
+Table 2 to determine the applicable evidence strength level.
+Both variants must be classified using these rule specifications.
+Note that all probands being considered for any pathogenic phenotype
+codes (i.e. – PP1, PP4, PM3, PM6, PS2) at any strength must have the
+following phenotype characteristics:
+Absent or severely decreased rod electroretinogram response OR
+congenital night blindness/nyctalopia OR a diagnosis of Leber congenital
+amaurosis/eoRD/cone-rod dystrophy
+
+Very Strong
+Points are calculated using Table 1 from
+https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf (or attached file “PM3 Tables”)
+≥4 points from Table 1
+Modification Disease-specific
+Type:
+
+Strong
+Points are calculated using Table 1 from
+https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf (or attached file “PM3 Tables”)
+2 to 3.75 points from Table 1
+Modification Disease-specific
+Type:
+
+Moderate
+Points are calculated using Table 1 from
+https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf (or attached file “PM3 Tables”)
+1 to 1.75 points from Table 1
+Modification Disease-specific
+Type:
+
+Supporting
+Points are calculated using Table 1 from
+https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf (or attached file “PM3 Tables”)
+0.5 to 0.75 points from Table 1
+Modification Disease-specific
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Protein length change of ≥2 amino acids that leads to loss of at least one conserved
+residue (PhyloP>2.0) or insertion of new amino acids adjacent to at least one
+conserved residue (PhyloP>2.0).
+Modification Gene-specific
+Type:
+
+Supporting
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Protein length change of 1 amino acid that leads to loss of at least one conserved
+residue (PhyloP>2.0) or insertion of new amino acid adjacent to at least one
+conserved residue (PhyloP>2.0).
+Modification Gene-specific,Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Missense change at an amino acid residue where a different missense change determined
+to be pathogenic has been seen before.
+Must have one comparison variant that reaches a Pathogenic classification using this
+rule specification.
+SpliceAI scores for both variants should be in the same category (<0.1, between 0.1
+and 0.2, >0.2)
+Modification None
+Type:
+
+Supporting
+Missense change at an amino acid residue where a different missense change determined
+to be pathogenic has been seen before.
+Must have one comparison variant that reaches a Likely Pathogenic classification
+using this rule specification.
+SpliceAI scores for both variants should be in the same category (<0.1, between 0.1
+and 0.2, >0.2)
+Modification Strength
+Type:
+
+PM6
+
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Use the PS2 code in lieu of using this code for de novo variants.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+For moderate and strong codes, segregations can be added across multiple
+Specifications:families, with each having a proband + at least one affected relative.
+Note that all probands being considered for any pathogenic phenotype
+codes (i.e. – PP1, PP4, PM3, PM6, PS2) at any strength must have the
+following phenotype characteristics:
+Absent or severely decreased rod electroretinogram response OR
+congenital night blindness/nyctalopia OR a diagnosis of Leber congenital
+amaurosis/eoRD/cone-rod dystrophy
+
+Strong
+Co-segregation with disease in multiple affected family members and evidence that this
+variant and another GUCY2D variant are in trans.
+Requires segregation in one proband plus ≥3 similarly affected relatives
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Co-segregation with disease in multiple affected family members and evidence that this
+variant and another GUCY2D variant are in trans.
+Requires segregation in one proband plus 2 similarly affected relatives
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Co-segregation with disease in multiple affected family members and evidence that this
+variant and another GUCY2D variant are in trans.
+
+Requires segregation in one proband plus 1 similarly affected relative
+Modification Disease-specific,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable for GUCY2D.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can be
+used only once in any evaluation of a variant.
+VCEP
+PP3 should not be used to evaluate variants at canonical splice sites. For
+Specifications:canonical splice sites, apply PVS1(splicing).
+For non-canonical sites, if SpliceAI score is ≥0.2, apply PP3 (splicing)
+instead.
+Score ranges are based on calculations found in the publication of the SVI
+Working Group “Calibration of computational tools for missense variant
+pathogenicity classification and ClinGen recommendations for PP3/BP4
+criteria”
+
+Moderate
+For a missense variant use REVEL, requires a score of ≥ 0.774.
+Splice variants use PP3 only at Supporting level.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+For a missense variant use REVEL, requires a score of 0.644 - 0.773.
+For a variant in an untranslated region use CADD, requires a score of ≥ 20.0
+
+For a predicted splicing variant use SpliceAI with max distance set to 500 bp. Highest
+delta score from SpliceAI must be ≥ 0.2 to use this code. See GUCY2D-specific PVS1
+Decision Tree part (a) for SpliceAI flowchart.
+Modification Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+A point system was developed to determine when there is enough
+Specifications:information about a proband’s phenotype to qualify for use of this code
+(see below). Review eligible phenotype characteristics and add up points
+for each finding. This code can be used for a single proband. A proband
+must have two GUCY2D variants to consider applying PP4 (phase is not
+considered here). Caveat: PP4 should not be applied if variant meets
+either BA1 or BS1.
+Required for use of PP4 (0.5 points each)
+Absent or severely decreased rod electroretinogram (ERG)
+responses -ORCongenital night blindness/nyctalopia -ORClinical diagnosis of Leber congenital amaurosis or eoRD or
+cone-rod dystrophy
+Specific GUCY2D Phenotype Findings List
+Previous exome, genome or retinal dystrophy gene panel
+testing that did not provide an alternative explanation for
+visual impairment.
+gene panel only - 2 pts
+exome or genome NGS - 4 pts
+Participation in a gene therapy trial
+Study with strict inclusion criteria and subsequent
+positive results, details not reported - 2 pts
+Study with strict inclusion criteria and documented
+“Significant” improvement of FST or other measure of
+dark-adapted vision after treatment with GUCY2D gene
+therapy. Supporting information required from treating
+clinician if sufficient detail is not included in published
+report - 8 pts
+Consistent with GUCY2D Phenotype Findings List (0.5 or 1 point
+each)
+
+Optic nerve pallor (0.5)
+Attenuated vessels in context of relatively normal fundus
+(0.5)
+Poor pupillary light response (0.5)
+RPE mottling (0.5)
+Symptomatic onset between birth and age five years (1)
+Normal retinal structure (by OCT) is preserved with respect to
+vision loss (1)
+Decreased peripheral vision (1)
+Abnormal color vision or evidence of cone involvement on ERG
+(1)
+Decreased central visual acuity (1)
+Nystagmus (1)
+Photophobia (1)
+
+Moderate
+8 phenotype points or more are required to use this code at the moderate strength for
+a single proband (see points list below).
+Additionally, at least one specific criterion must be met (see below).
+Do not include a proband with a suspected diagnosis of more than one retinal
+dystrophy.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+4-7.5 phenotype points are required to use this code (see points list below).
+Do not include a proband with a suspected diagnosis of more than one retinal
+dystrophy.
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+The BA1 value was derived by increasing the BS1 lower cutoff (> 0.0016)
+Specifications:by one order of magnitude.
+
+Stand Alone
+Use gnomAD Grpmax FAF if available, cutoff of >0.016
+Use large population databases (i.e. gnomAD).
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+The maximum credible population allele frequency for the disease, based
+Specifications:on the Whiffen-Ware calculator, is 1.6 x 10 -3. This assumes a population
+frequency of 1 in 2000 individuals, genetic heterogeneity = 20%,
+penetrance of 100%, allele heterogeneity of 1.
+
+Strong
+Allele frequency greater than expected for disorder. Use gnomAD Grpmax FAF if available.
+Allele frequency of 0.0016 - 0.016
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+
+Variant is present in ≥ 3 homozygotes without any features of the phenotype. This rule
+applies to individuals found in the literature who have been well-phenotyped and are
+unaffected by age 40. Alternatively, this strength can be applied if the variant is present
+in ≥ 6 homozygotes in gnomAD v.4.1.0 or later.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Variant is present in ≥ 3 homozygotes in gnomAD v.4.1.0 or later.
+Modification Disease-specific,Strength
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+Extracellular domain variants (occurring between amino acids 52-462) are
+Specifications:known to show no damaging effect in these assays and are excluded from
+BS3.
+
+Supporting
+Not applicable for splicing effects (replaced by BP7_Strong (RNA)).
+For studies reporting guanylate cyclase activity, cutoff is >50% of wild-type control.
+Studies included; Peshenko et al., 20201, Feng et al., 2020, Jacobson et al., 20212,
+Jacobson et al., 20203, Tucker et al., 20044, Jacobson et al., 20135, and Peshenko et al.,
+20157
+See attached table of Approved PS3 Functional Assays for a list of acceptable functional
+studies including those that:
+Report failure of GUCY2D to localize to the cell surface : Zulliger et al., 20156.
+Report failure of GUCY2D to bind RD3: Zulliger et al., 20156.
+Report failure of GCAP1, GCAP2, or RD3 to co-localize with GUCY2D at the cell
+surface: Peshenko et al., 20201, Jacobson et al., 20203, and Peshenko et al., 20157.
+Modification Gene-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Lack of segregation in affected members of a family.
+One or both variants are absent in a similarly affected family member.
+Modification Clarification
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable for GUCY2D.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in cis with a Pathogenic variant.
+Use code if the variant of interest is in cis with a Pathogenic or Likely Pathogenic
+variant. The other variant must meet a Likely Pathogenic or Pathogenic classification
+using these rule specifications.
+Modification Disease-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+No repetitive regions with unknown function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Only applicable if both the REVEL and SpliceAI scores are below cutoffs.
+Specifications:
+
+Moderate
+For a missense variant use REVEL, requires a score of ≤0.183. In addition, highest SpliceAI
+delta score should also be below cutoff of 0.1.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+For a missense variant use REVEL, requires a score between 0.183 - 0.290. In addition,
+highest SpliceAI delta score should also be below cutoff of 0.1.
+For a silent / intronic variant outside the designated splice region (conservatively at or
+beyond positions +7/-21) and synonymous (silent) exonic variants located outside of the
+first and the last 3 bases of the exon, BP4 can be met if the highest of the four delta scores
+within SpliceAI is below the cutoff of ≤0.1. See GUCY2D-specific PVS1 Decision Tree part
+(a) for SpliceAI flowchart.
+Please note that BP7 can be met as well.
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Due to the high genetic heterogeneity and limited phenotypic specificities
+of retinal dystrophies, this rule should not be used. Additionally, the
+
+presence of this variant could simply represent carrier status.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+BP4 and BP7 can be added unless variant is in an excluded region.
+Specifications:Evolutionary conservation is not considered informative for application of
+this code.
+
+Strong
+BP7_Strong (RNA) Used to designate capture of splicing data (not BS3). See GUCY2Dspecific PVS1 Decision Tree, file attached, for weighting and combining with other codes.
+Modification Disease-specific
+Type:
+
+Supporting
+Use not only for synonymous variants but also for intronic variants located outside of the
+donor/acceptor +/- 1,2 dinucleotide positions.
+If SpliceAI score ≤0.1, apply BP4 followed by assessment of BP7. See GUCY2D-specific
+PVS1 Decision Tree part (a) for SpliceAI flowchart.
+Positions excluded from BP7:
+Synonymous substitutions at the first base of an exon
+Synonymous substitutions in the last 3 bases of an exon
++1 through +7 of donor sequence
+-1 through -21 of acceptor sequence
+Modification Gene-specific
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS2, PS3,
+PM3_Strong, PP1_Strong)
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND ≥ 2 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND 1 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND 1 Supporting
+(PS1_Supporting, PS2_Supporting, PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND ≥ 2 Supporting (PS1_Supporting,
+PS2_Supporting, PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting,
+PM5_Supporting, PP1, PP3, PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PP1_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PP1_Strong) AND ≥ 3 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PP1_Strong) AND 2 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 2 Supporting
+(PS1_Supporting, PS2_Supporting, PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PP1_Strong) AND 1 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 4 Supporting
+(PS1_Supporting, PS2_Supporting, PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PM3_Very Strong) AND 1 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PP1_Strong) AND 1 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PP1_Strong) AND ≥ 2 Supporting (PS1_Supporting,
+PS2_Supporting, PS3_Supporting, PM1_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting,
+PM5_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PS1_Moderate, PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate,
+PP4_Moderate)
+
+2 Moderate (PS1_Moderate, PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate,
+PP4_Moderate) AND ≥ 2 Supporting (PS1_Supporting, PS2_Supporting, PS3_Supporting, PM1_Supporting,
+PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Moderate (PS1_Moderate, PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate,
+PP4_Moderate) AND ≥ 4 Supporting (PS1_Supporting, PS2_Supporting, PS3_Supporting, PM1_Supporting,
+PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PM3_Strong, PP1_Strong) AND 2 Moderate (PS1_Moderate,
+PS2_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4, BP7_Strong)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS2, BS4, BP7_Strong) AND 1 Supporting (BS2_Supporting, BS3_Supporting, BP2, BP4,
+BP7)
+
+≥ 2 Supporting (BS2_Supporting, BS3_Supporting, BP2, BP4, BP7)
+
+Files & Images
+GUCY2D Rule Combination Rules: The point system of Tavtigian et al. (PMID 32720330) is being
+used for all classifications. In this file, Table 2 describes the points value for each evidence code and
+Table 3 specifies the point-based classification categories. 
+PM3 Tables: PM3: Table 1 - points awarded per in trans occurrence, Table 2 - evidence strength
+levels 
+GUCY2D-specific PVS1 decision tree: Document describes GUCY2D-specific PVS1 decision tree
+and other modified codes based on Walker 2023. Sub-parts (a) through (c) include detailed
+descriptions of rules for variants that are likely to be spliceogenic or for which effects on splicing have
+been considered. July 16, 2024. 
+PS3 Approved functional assays: Description of all functional assays to be used for consideration
+of the PS3 rule. Dec. 5, 2024 
+
+References
+1.
+
+Peshenko IV Olshevskaya EV et al. GUCY2D mutations in retinal guanylyl cyclase 1 provide
+biochemical reasons for dominant cone-rod dystrophy but not for stationary night blindness. J
+Biol Chem (2020) 295 (52) p. 18301-18315. 10.1074/jbc.RA120.015553 33109612 
+
+2.
+
+Jacobson SG Cideciyan AV et al. Safety and improved efficacy signals following gene therapy in
+childhood blindness caused by GUCY2D mutations. iScience (2021) 24 (5) p. 102409.
+10.1016/j.isci.2021.102409 33997691 
+
+3.
+
+Jacobson SG Cideciyan AV et al. Night vision restored in days after decades of congenital
+blindness. iScience (2022) 25 (10) p. 105274. 10.1016/j.isci.2022.105274 36274938 
+
+4.
+
+Tucker CL Ramamurthy V et al. Functional analyses of mutant recessive GUCY2D alleles
+identified in Leber congenital amaurosis patients: protein domain comparisons and dominant
+negative effects. Mol Vis (2004) 10 p. 297-303. 15123990 
+
+5.
+
+Jacobson SG Cideciyan AV et al. Determining consequences of retinal membrane guanylyl
+cyclase (RetGC1) deficiency in human Leber congenital amaurosis en route to therapy: residual
+cone-photoreceptor vision correlates with biochemical properties of the mutants. Hum Mol
+Genet (2013) 22 (1) p. 168-83. 10.1093/hmg/dds421 23035049 
+
+6.
+
+Zulliger R Naash MI et al. Impaired association of retinal degeneration-3 with guanylate cyclase1 and guanylate cyclase-activating protein-1 leads to leber congenital amaurosis-1. J Biol Chem
+(2015) 290 (6) p. 3488-99. 10.1074/jbc.M114.616656 25477517 
+
+7.
+
+Peshenko IV Olshevskaya EV et al. Dimerization Domain of Retinal Membrane Guanylyl Cyclase 1
+(RetGC1) Is an Essential Part of Guanylyl Cyclase-activating Protein (GCAP) Binding Interface. J
+Biol Chem (2015) 290 (32) p. 19584-96. 10.1074/jbc.M115.661371 26100624 
+
+8.
+
+Tucker CL Hurley JH et al. Two amino acid substitutions convert a guanylyl cyclase, RetGC-1, into
+an adenylyl cyclase. Proc Natl Acad Sci U S A (1998) 95 (11) p. 5993-7.
+10.1073/pnas.95.11.5993 9600905 
+
+9.
+
+Duda T Venkataraman V et al. Functional consequences of a rod outer segment membrane
+guanylate cyclase (ROS-GC1) gene mutation linked with Leber's congenital amaurosis.
+
+Biochemistry (1999) 38 (2) p. 509-15. 10.1021/bi9824137 9888789 
+10.
+
+Boye SL Olshevskaya EV et al. Functional study of two biochemically unusual mutations in
+GUCY2D Leber congenital amaurosis expressed via adenoassociated virus vector in mouse
+retinas. Mol Vis (2016) 22 p. 1342-1351. 27881908 
+
+11.
+
+Olshevskaya EV Calvert PD et al. The Y99C mutation in guanylyl cyclase-activating protein 1
+increases intracellular Ca2+ and causes photoreceptor degeneration in transgenic mice. J
+Neurosci (2004) 24 (27) p. 6078-85. 10.1523/JNEUROSCI.0963-04.2004 15240799 
+
+12.
+
+https://clinicalgenome.org/site/assets/files/3461/svi_proposal_for_de_novo_criteria_v1_1.pdf 
+
+13.
+
+Liu Y Ruoho AE et al. Catalytic mechanism of the adenylyl and guanylyl cyclases: modeling and
+mutational analysis. Proc Natl Acad Sci U S A (1997) 94 (25) p. 13414-9.
+10.1073/pnas.94.25.13414 9391039 
+
+14.
+
+Bouzia Z Georgiou M et al. GUCY2D-Associated Leber Congenital Amaurosis: A Retrospective
+Natural History Study in Preparation for Trials of Novel Therapies. Am J Ophthalmol (2020) 210
+p. 59-70. 10.1016/j.ajo.2019.10.019 31704230 
+
+15.
+
+Wimberg H Lev D et al. Photoreceptor Guanylate Cyclase (GUCY2D) Mutations Cause Retinal
+Dystrophies by Severe Malfunction of Ca(2+)-Dependent Cyclic GMP Synthesis. Front Mol
+Neurosci (2018) 11 p. 348. 10.3389/fnmol.2018.00348 30319355 
+
+16.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+17.
+
+Walker LC Hoya M et al. Using the ACMG/AMP framework to capture evidence related to
+predicted and observed impact on splicing: Recommendations from the ClinGen SVI Splicing
+Subgroup. Am J Hum Genet (2023) 110 (7) p. 1046-1067. 10.1016/j.ajhg.2023.06.002
+37352859 
+
+18.
+
+Daich Varela M Bellingham J et al. Multidisciplinary team directed analysis of whole genome
+sequencing reveals pathogenic non-coding variants in molecularly undiagnosed inherited retinal
+dystrophies. Hum Mol Genet (2023) 32 (4) p. 595-607. 10.1093/hmg/ddac227 36084042 
+
+19.
+
+Zägel P Koch KW Dysfunction of outer segment guanylate cyclase caused by retinal disease
+related mutations. Front Mol Neurosci (2014) 7 p. 4. 10.3389/fnmol.2014.00004 24616660 
+
+20.
+
+Duda T Pertzev A et al. 657WTAPELL663 motif of the photoreceptor ROS-GC1: a general
+phototransduction switch. Biochem Biophys Res Commun (2011) 408 (2) p. 236-41.
+10.1016/j.bbrc.2011.03.134 21463603 
+
+21.
+
+Peshenko IV Olshevskaya EV et al. Activation of retinal guanylyl cyclase RetGC1 by GCAP1:
+stoichiometry of binding and effect of new LCA-related mutations. Biochemistry (2010) 49 (4)
+p. 709-17. 10.1021/bi901495y 20050595 
+
+22.
+
+Tavtigian SV Harrison SM et al. Fitting a naturally scaled point system to the ACMG/AMP variant
+classification guidelines. Hum Mutat (2020) 41 (10) p. 1734-1737. 10.1002/humu.24088
+32720330 
+
+

@@ -1,0 +1,883 @@
+Criteria Specification
+ClinGen Lysosomal Diseases Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for IDUA Version 1.2
+Affiliation: Lysosomal Diseases VCEP
+Type: Richards et.al., 2015 - Combining rules
+Description : PP3: Updated the website for MutPred-InDel from http://mutpredindel.cs.indiana.edu/ (page
+no longer exists) to current webpage - https://mutpred2.mutdb.org/mutpredindel/ PP4: Added dermatan
+sulfate as a biomarker that may be reduced upon enzyme replacement therapy and bone marrow
+transplant, as previously reported (PMID: 20162367, 22991166).
+Version : 1.2
+Released : 1/23/2026
+DOI : 10.5281/zenodo.21434169
+Release Notes :
+PP4: Updated to remove the requirement for detailed description of clinical features for individuals that
+are part of a large cohort with a diagnosis of MPS I, when reported by a group with experience and
+expertise in MPS disorders. Note that an additional requirement must still be met, such as reduced IDUA
+activity, in order to apply PP4.
+Update to BS2: Minor update in wording for this criterion.
+
+Contributors & Keywords
+Research Group: Lysosomal Diseases VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+IDUA NM_000203.4 Autosomal recessive
+inheritance mucopolysaccharidosis type 1
+
+Rules for IDUA
+Gene: IDUA (HGNC:5391) 
+Transcripts:
+NM_000203.4
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+
+HGNC Name: alpha-L-iduronidase
+Disease:
+mucopolysaccharidosis type 1
+(MONDO:0001586)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Please consult the “PVS1 Decision Tree” (Appendix 2) for additional
+Specifications:information. If PVS1 is applied, PM4 will not be applied. If an in-frame
+deletion is smaller than one exon, PVS1 does not apply; consider using
+PM4. Use the PVS1 decision tree to assess the impact of single and multiexon duplications.
+Use SpliceAI in analysis of all canonical splice site variants (see PP3 and
+BP4 for details on thresholds). If there is a nearby (within +/- 20
+nucleotides) splice site sequence that may reconstitute in-frame splicing,
+this should be taken into consideration.
+Consult Walker et al (PMID: 37352859) to apply PVS1 for splice motif
+variants.
+
+Very Strong
+All nonsense and frameshift variants will meet PVS1 (Very Strong), unless the variant
+is predicted to be undetected by nonsense-mediated decay (NMD) i.e. if the resulting
+premature termination codon is in the last exon (exon 14) or in the last 50
+nucleotides of the penultimate exon (exon 13; after c.1778, codon 592). In this case,
+PVS1_Moderate will be applied because <10% of the primary amino acid sequence is
+predicted to be lost (in this case, ~9.3%).
+For all variants involving either the +1 or +2 position of GT donor splice sites, the
+exon immediately 5’ of the variant is predicted to be skipped, and for all variants
+involving either the -1 or -2 position of AG acceptor splice sites, the exon
+immediately 3’ of the variant is predicted to be skipped, unless indicated otherwise
+by RT-PCR or in silico prediction. For the predicted in frame/out of frame
+consequences for skipping any exon in IDUA, and recommended weight for PVS1, see
+Appendix 1.
+Follow the recommendations of Walker et al (PMID: 37352859) for all variants
+occurring in splice motifs (the donor site motif = last 3 nucleotides of an exon and
+first 6 nucleotides of an intron; acceptor site motif = first nucleotide of an exon and
+20 nucleotides upstream from the exon boundary).
+If a single or multi-exon deletion results in an out-of-frame consequence, use PVS1
+(Very Strong) if NMD is predicted to occur.
+Initiation codon variants will meet PVS1.
+The next in-frame methionine is at position 133. If used as a start signal, the
+signal sequence (amino acids 1-27) would be lost
+
+(https://www.uniprot.org/uniprotkb/P35475/entry)
+There are 6 variants, upstream of Met133, that are classified as pathogenic in
+ClinVar (data accessed July 20, 2022) (Table 1).
+If a deletion results in an in-frame consequence, the deletion must encompass one or
+more exons for PVS1 to apply. Consult Appendix 1 and use professional judgment
+regarding the strength of evidence to apply.
+For duplications, consult the PVS1 decision tree and Appendix 1 to assess the impact
+of single and multi-exon duplications and apply PVS1 at the appropriate strength.
+Modification None
+Type:
+
+Strong
+For frameshift variants at the 3’ end of IDUA that are not predicted to undergo NMD
+i.e. PTC downstream of c.1778, consider the length of abnormal amino acid sequence
+that is added due to the frameshift. If >10% of the length of the normal sequence is
+altered, PVS1 can be applied at strong.
+For all variants involving either the +1 or +2 position of GT donor splice sites, the
+exon immediately 5’ of the variant is predicted to be skipped, and for all variants
+involving either the -1 or -2 position of AG acceptor splice sites, the exon
+immediately 3’ of the variant is predicted to be skipped, unless indicated otherwise
+by RT-PCR or in silico prediction. For the predicted in frame/out of frame
+consequences for skipping any exon in IDUA, and recommended weight for PVS1, see
+Appendix 1.
+Follow the recommendations of Walker et al (PMID: 37352859) for all variants
+occurring in splice motifs (the donor site motif = last 3 nucleotides of an exon and
+first 6 nucleotides of an intron; acceptor site motif = first nucleotide of an exon and
+20 nucleotides upstream from the exon boundary).
+If a deletion results in an in-frame consequence, the deletion must encompass one or
+more exons for PVS1 to apply. Consult Appendix 1 and use professional judgment
+regarding the strength of evidence to apply.
+For duplications, consult the PVS1 decision tree and Appendix 1 to assess the impact
+of single and multi-exon duplications and apply PVS1 at the appropriate strength.
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Any nonsense or frameshift variant that is predicted to be undetected by nonsensemediated decay (NMD) i.e. if the resulting premature termination codon is in the last
+exon (exon 14) or in the last 50 nucleotides of the penultimate exon (exon 13; after
+c.1778, codon 592). In this case, PVS1_Moderate will be applied because <10% of
+the primary amino acid sequence is predicted to be lost ( ~9.3%).
+For frameshift variants at the 3’ end of IDUA that are not predicted to undergo NMD
+i.e. PTC downstream of c.1778, consider the length of abnormal amino acid sequence
+
+that is added due to the frameshift. If <10% of the length of the normal sequence is
+altered, PVS1 can be applied at moderate.
+For all variants involving either the +1 or +2 position of GT donor splice sites, the
+exon immediately 5’ of the variant is predicted to be skipped, and for all variants
+involving either the -1 or -2 position of AG acceptor splice sites, the exon
+immediately 3’ of the variant is predicted to be skipped, unless indicated otherwise
+by RT-PCR or in silico prediction. For the predicted in frame/out of frame
+consequences for skipping any exon in IDUA, and recommended weight for PVS1, see
+Appendix 1.
+Follow the recommendations of Walker et al (PMID: 37352859) for all variants
+occurring in splice motifs (the donor site motif = last 3 nucleotides of an exon and
+first 6 nucleotides of an intron; acceptor site motif = first nucleotide of an exon and
+20 nucleotides upstream from the exon boundary).
+If a deletion results in an in-frame consequence, the deletion must encompass one or
+more exons for PVS1 to apply. Consult Appendix 1 and use professional judgment
+regarding the strength of evidence to apply.
+For duplications, see the PVS1 decision tree and Appendix 1 to assess the impact of
+single and multi-exon duplications and apply PVS1 at the appropriate strength.
+Modification Disease-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+The classification of the other variant must be made following the
+Specifications:Lysosomal Diseases VCEP specifications. To avoid circularity, the
+classification of the other variant should not use evidence from the variant
+being interrogated. If there is a question as to whether PS1 should be
+applied to variant A or variant B, use the classification of the variant with
+a greater level of evidence to support the classification of the variant with
+less evidence.
+When applying PS1 for amino acid changes, there should be no splicing
+impact for either variant, shown by splicing assay or computational
+predictors (SpliceAI <0.1).
+
+Strong
+
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.Splice region variants following Table 3 in Walker et al (PMID:
+37352859).
+Modification None
+Type:
+
+Moderate
+Same amino acid change as a previously established likely pathogenic variant regardless
+of nucleotide change. Splice region variants following Table 3 in Walker et al (PMID:
+37352859).
+Modification Strength
+Type:
+
+Supporting
+Splice region variants following Table 3 in Walker et al (PMID: 37352859).
+Modification Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Note: De novo variants are rarely reported in IDUA.
+Specifications:
+
+Strong
+Variant occurs de novo in an affected individual, and the biological relationship of the
+parent without the variant is confirmed e.g. if the father is not heterozygous for an IDUA
+variant that has been detected in the patient, paternity must be confirmed.
+Modification Disease-specific
+Type:
+
+Moderate
+Variant occurs de novo in an affected individual, and the biological relationship of the
+parent without the variant is not confirmed.
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Any variant meeting the requirements below can meet PS3 (at the
+Specifications:appropriate strength). Note that these assays are in vitro, research-based,
+and may not truly reflect in vivo function.
+There are several studies involving expression of IDUA sequence variants
+in cultured cells and subsequent measurement of enzyme activity. Some
+studies also include analysis of IDUA synthesis and processing by Western
+blot. Please see Appendix 3 for details on the methodology used in the
+studies that included the largest number of variants (up to 8 variants per
+study) (Beesley et al, 2001; Yogalingam et al, 2004, PMID: 15300847; Yu
+et al, 2020, PMID: 33198351). Additional studies on smaller numbers of
+variants have also been published (e.g. Bach et al, 1993, PMID: 8328452;
+Tieu et al, 1995, PMID: 7550232; Lee-Chen et al, 1999, PMID: 10466419;
+Prommajan et al, 2011, PMID: 21364962; Ngiwsara et al, 2017, PMID:
+29282708). Historically, these assays have been broadly accepted in the
+analysis of IDUA variants as well as other enzymes involved in metabolic
+disease.
+Note: PS3 will not be used for RT-PCR assays proving evidence that a
+variant impacts splicing. Instead, this evidence will be used to assign the
+appropriate weight of evidence for PVS1, following the guidance of Walker
+et al (PMID: 37352859).
+
+Moderate
+When PS3_Supporting is met for enzyme activity AND there is expression data (Western
+blot, pulse chase) showing a clear difference in synthesis and/or processing of alphaiduronidase, PS3 will be applied at moderate (e.g. Matte et al, 2003, PMID: 12559846;
+see Appendix 3).
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+In vitro expression studies: After assessment of the parameters listed below, results from
+such studies can be used at PS3_Supporting (see Appendix 3 for thresholds for specific
+studies; <2% activity (Beesley et al, 2001, PMID: 11735025; Yogalingam et al, 2004,
+
+PMID: 15300847; Matte et al, 2003); <1% activity / enzyme abundance (Yu et al, 2020.
+PMID: 33198351).
+Were clones sequenced to verify that the variant is present and that no artifacts
+have been introduced during the site-directed mutagenesis process?
+Were appropriate controls included? Examples
+Negative controls: Empty vector, antisense (at least one appropriate negative
+control is required);
+Positive control: Wild type IDUA, normal cells (at least one appropriate positive
+control is required)
+Was the experiment replicated?
+If cells have intrinsic IDUA activity e.g., COS cells, the level of activity should be
+stated so that this can be taken into account.
+Modification Disease-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+Comments:
+There are no case-control studies for MPS1. As this is a recessive disorder,
+the prevalence of the variant in affected individuals may not be increased
+compared to controls (who could be heterozygous carriers). The number
+of patients with the variant will be addressed by the PM3 evidence code.
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+
+Studies on functional domains (Bie et al, 2013, PMID: 24036510; Maita et al, 2013, PMID:
+23959878; Saito et al, 2014, PMID: 24480078; Figueiredo et al, 2014, PMID: 25459762)
+have shown that the following residues are important to the function of IDUA:
+Active site nucleophiles: Glu182 and Glu299
+Active site pocket and substrate binding: Arg89, His91, Asn181, His262, Lys264, Asp301,
+Gly305, Trp306, Asp349, Arg363, Asn372.
+PM1 will be applied to any missense substitutions or inframe deletions of the above
+residues.
+There are no benign or likely benign missense or infame deletions of these residues in
+ClinVar, or common missense or inframe deletions of these residues in gnomAD v4.1.0
+(ClinVar and gnomAD v4.1.0 data accessed on October 30, 2024).
+Modification Disease-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+This criterion will be applied at the supporting level based on guidance from the ClinGen
+Sequence Variant Interpretation Working Group.
+Minor allele frequency <0.025% (0.00025) in any continental population with >2000
+alleles in the most recent version of gnomAD (version # will be stated in the written
+summary).
+Variants may be observed in the homozygous state because MPS1 can present in
+adulthood, and some variants may be hypomorphic. However, the presence and number
+of homozygotes should be noted.
+Modification General recommendation,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+VCEP
+Specifications:
+
+PM2_Supporting must be met in order to apply points to any case.
+The patient must be described as having MPS1, at a minimum. If the
+case meets PP4 and PM3, both criteria are applied. However, our PP4
+criterion need not necessarily be met in order to apply PM3, as long
+as the patient is stated to have MPS1.
+For compound heterozygous cases, the second variant must have
+been classified by the Lysosomal Diseases VCEP.
+For rare variants that are routinely observed to be in cis with a
+pseudodeficiency variant, substantial additional evidence must be
+available to support the pathogenicity of the variant. The variant
+must meet PM2_Supporting, functional data should be available to
+support a deleterious impact, and cases considered for PM3 must
+have other clinical and laboratory findings supporting a diagnosis of
+MPS1. We strongly recommend not applying this exception for a
+novel variant with a single report.
+If multiple unrelated compound heterozygous cases have the same
+genotype, and the variants are not confirmed in trans, then no more
+than two cases should be used for assigning points (i.e. maximum of
+1 point; similar to the guidance for homozygotes). This avoids overcounting evidence if the variants are actually in cis, and hence
+inherited together, in multiple individuals. Care must be taken to
+ensure that the reports do not represent the same case.
+For a variant to be “confirmed in trans” in a compound heterozygous
+patient, parental testing in at least one parent, or another
+appropriate molecular method (such as cloning each allele separately
+followed by sequencing), must have been performed. Otherwise, the
+phase of the variants is unknown. Parental testing is not required for
+homozygous cases.
+As noted in the SVI guidance for PM3, “To avoid circularity, in all
+instances (phasing confirmed or unknown), the classification of the
+variant on the other allele should not use evidence from the variant
+being interrogated.”
+
+Very Strong
+Detected in trans with a pathogenic variant. Points system based on guidance from the
+ClinGen Sequence Variant Interpretation Working Group. See Appendix 4 for the
+Lysosomal Diseases VCEP's specification of PM3. Note that points will NOT be applied for
+any variants of uncertain significance confirmed in trans, due to the high number of
+pseudodeficiency variants in IDUA.
+These variant interpretation guidelines should be used to determine the classification of
+the “other variant” in order to determine the appropriate number of points to assign.
+Modification General recommendation,Strength
+Type:
+
+Strong
+Detected in trans with a pathogenic variant. Points system based on guidance from the
+ClinGen Sequence Variant Interpretation Working Group. See Appendix 4 for the
+Lysosomal Diseases VCEP's specification of PM3. Note that points will NOT be applied for
+any variants of uncertain significance confirmed in trans, due to the high number of
+pseudodeficiency variants in IDUA.
+These variant interpretation guidelines should be used to determine the classification of
+the “other variant” in order to determine the appropriate number of points to assign.
+Modification General recommendation,Strength
+Type:
+
+Moderate
+Detected in trans with a pathogenic variant. Points system based on guidance from the
+ClinGen Sequence Variant Interpretation Working Group. See Appendix 4 for the
+Lysosomal Diseases VCEP's specification of PM3. Note that points will NOT be applied for
+any variants of uncertain significance confirmed in trans, due to the high number of
+pseudodeficiency variants in IDUA.
+These variant interpretation guidelines should be used to determine the classification of
+the “other variant” in order to determine the appropriate number of points to assign.
+Modification None
+Type:
+
+Supporting
+Detected in trans with a pathogenic variant. Points system based on guidance from the
+ClinGen Sequence Variant Interpretation Working Group. See Appendix 4 for the
+Lysosomal Diseases VCEP's specification of PM3. Note that points will NOT be applied for
+any variants of uncertain significance confirmed in trans, due to the high number of
+pseudodeficiency variants in IDUA.
+These variant interpretation guidelines should be used to determine the classification of
+the “other variant” in order to determine the appropriate number of points to assign.
+Modification General recommendation,Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+VCEP
+For in-frame deletions of one or more exons, use PVS1.
+Specifications:
+
+Moderate
+Stop loss variants, and in frame deletion/insertions of two or more amino acids but less
+than one exon.
+Modification None
+Type:
+
+Supporting
+In frame deletion/insertion of one amino acid.
+Modification Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+The classification of the other variant must be made following the
+Specifications:Lysosomal Diseases VCEP specifications. To avoid circularity, the
+classification of the other variant should not use evidence from the variant
+being interrogated. If there is a question as to whether PM5 should be
+applied to variant A or variant B, use the classification of the variant with
+a greater level of evidence to support the classification of the variant with
+less evidence.
+There is no splicing impact for either variant, shown by splicing assay or
+computational predictors (SpliceAI ≤0.1).
+
+Moderate
+Missense change at an amino acid residue where a different missense change determined
+to be pathogenic has been seen before.
+Stop loss variant if another stop loss variant has been determined to be pathogenic.
+Modification None
+Type:
+
+Supporting
+
+Missense change at an amino acid residue where a different missense change determined
+to be likely pathogenic has been seen before.
+Stop loss variant if another stop loss variant has been determined to be likely pathogenic.
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+See PS2.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+The combination of strengths for PP1 and PP4 MUST NOT exceed strong (2
+Specifications:x moderate, i.e. 4 points using Bayesian system) if cases are also being
+counted as probands under PM3.
+Counting segregations:
+Do not count probands as a segregation.
+Affected segregations = # affected individuals in the family with the
+variants minus 1.
+Affected segregations are defined as affected family members
+(typically siblings) who harbor the variant in question and a second
+variant on the remaining allele.
+Unaffected segregations are defined as unaffected family members,
+typically siblings, who are at risk to inherit the two variants (or one
+variant in homozygosity) identified in the proband. These individuals
+should be either homozygous normal or heterozygous for only one
+variant.
+Unaffected, carrier parents DO NOT count as unaffected
+segregations.
+
+Moderate
+See Appendix 5 for points system and guidance (based on PMID: 38103548).
+
+Modification General recommendation
+Type:
+
+Supporting
+See Appendix 5 for points system and guidance (based on PMID: 38103548).
+Modification General recommendation
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Does not apply; there are benign and pathogenic missense variants in
+IDUA.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+We note that a publication on the use of in silico predictors for IDUA
+Specifications:reported specificity of 88% and sensitivity of 75% for REVEL, using a 0.75
+cutoff to create a binary classification (PMID: 34746235). REVEL
+performed well, although some other predictors, including BaysDel, had
+better sensitivity, specificity, and accuracy. We have decided to continue
+using REVEL and to follow the SVI guidance (Pejaver et al, PMID:
+3641399), due to the ease of use of this predictor and the ability to apply
+weight of evidence based on score.
+
+Moderate
+Any missense changes with a REVEL score >0.773 will meet PP3_Moderate (Based on
+Pejaver et al, PMID: 3641399; Note that the VCEP has chosen not to apply PP3 at strong).
+Modification Disease-specific
+Type:
+
+Supporting
+Any missense changes with a REVEL score between 0.644 - 0.773 will meet PP3
+(Pejaver et al., PMID: 3641399)
+For in frame insertions and deletions, use Mutation Taster
+(http://www.mutationtaster.org/ ; count if “disease-causing”), and MutPred-Indel
+(https://mutpred2.mutdb.org/mutpredindel/ ; score >0.5 for “pathogenic”). Apply PP3
+if both predictors indicate that the variant is deleterious.
+For non-canonical splice site variants (e.g., +3, -3), use SpliceAI
+(https://spliceailookup.broadinstitute.org/ ). A score of >0.2 is taken to indicate
+disruption of the splice site allowing PP3 to be applied (based on Walker et al, PMID:
+37352859). Evidence for use of a cryptic splice site and the impact on the gene
+product should also be assessed. PP3 for splicing variants will be applied only in the
+absence of functional (RNA analysis) data.
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Moderate
+3 or more of the following criteria are met:
+Deficient IDUA activity, within the affected range (usually non-detectable or stated to
+be in the affected range by lab) in fibroblasts, leukocytes, or plasma.
+Do not count if one or more pseudodeficiency variants are reported to be
+present, or if the result was obtained on newborn screen without confirmatory
+enzyme testing.
+Enzyme replacement therapy results in a significant reduction in urine GAGs (either
+total, or dermatan or heparan sulfate).
+Elevated urinary and/or blood GAGs expressed as either total GAGs, specific GAG
+(heparan sulfate, dermatan sulfate, or endogenous biomarker) stated to be
+consistent with MPS I.
+An individual with clinical features specific to MPS I; At minimum at least 2 of the
+following: dysostosis multiplex, hepatosplenomegaly, arthropathy, corneal
+involvement, valvular thickening; AND/OR case reported within the context of a
+larger clinically-diagnosed MPS I cohort, when published by groups with
+demonstrated experience (as determined at the discretion of the VCEP) in lysosomal
+disorders and the clinical care of affected individuals. When detailed clinical
+information is limited, confidence in the phenotypic classification is strengthened
+when the report originates from groups with established familiarity in the diagnosis
+and longitudinal management of MPS I.
+
+Bone marrow transplant results in a significant reduction in urine GAGs (either total,
+or dermatan or heparan sulfate).
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+2 of the following criteria are met:
+Deficient IDUA activity, within the affected range (usually non-detectable or stated to
+be in the affected range by lab) in fibroblasts, leukocytes, or plasma.
+Do not count if one or more pseudodeficiency variants are reported to be
+present, or if the result was obtained on newborn screen without confirmatory
+enzyme testing.
+Enzyme replacement therapy results in a significant reduction in urine GAGs (either
+total, or dermatan or heparan sulfate).
+Elevated urinary and/or blood GAGs expressed as either total GAGs, specific GAG
+(heparan sulfate, dermatan sulfate, or endogenous biomarker) stated to be
+consistent with MPS I.
+An individual with clinical features specific to MPS I; At minimum at least 2 of the
+following: dysostosis multiplex, hepatosplenomegaly, arthropathy, corneal
+involvement, valvular thickening; AND/OR case reported within the context of a
+larger clinically-diagnosed MPS I cohort, when published by groups with
+demonstrated experience (as determined at the discretion of the VCEP) in lysosomal
+disorders and the clinical care of affected individuals. When detailed clinical
+information is limited, confidence in the phenotypic classification is strengthened
+when the report originates from groups with established familiarity in the diagnosis
+and longitudinal management of MPS I.
+Bone marrow transplant results in a significant reduction in urine GAGs (either total,
+or dermatan or heparan sulfate).
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Any variant with Grpmax >0.005 in the most recent version of gnomAD (95% confidence
+interval, lower bound) (version # will be stated in the written summary)
+BA1 minor allele frequency cut-off calculated using http://cardiodb.org/allelefrequencyapp
+with prevalence = 1 in 40,000 (PMID: 33208168), genetic heterogeneity = 1.0 (IDUA is
+the only gene known to cause MPS1), allelic heterogeneity = 1.0, and penetrance = 1.0.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Variants meeting only BS1 will be classified as likely benign.
+Specifications:
+
+Strong
+Any variant with Grpmax >0.0025 in the most recent version of gnomAD (95% confidence
+interval, lower bound) (version # will be stated in the written summary).
+BS1 minor allele frequency cut-off calculated using http://cardiodb.org/allelefrequencyapp
+with prevalence = 1 in 40,000 (PMID: 33208168), genetic heterogeneity = 1.0 (IDUA is
+the only gene known to cause MPS1), allelic heterogeneity = ~0.5 (frequency of the most
+common known pathogenic variants in patients with MPS1 (PMID: 28595941, 29393969),
+and penetrance = 1.0.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+BS2 can be applied if there is clear documentation that an individual of any age is either
+homozygous for the variant, or has the variant confirmed in trans with a pathogenic or
+likely pathogenic variant and has IDUA activity in the unaffected range as documented by
+standard diagnostic laboratory-based activity determination. Values for IDUA activity and
+the reference range for the laboratory must be provided.
+Note: Patients with late onset MPS1 can present late in life (5th-6th decade), can have mild
+symptoms, and may remain undiagnosed. Therefore, it is possible that individuals who are
+homozygous for hypomorphic IDUA variants could be present in population databases.
+Modification None
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+Variants meeting the combination of BS3_Supporting, BP4, and
+Specifications:PM2_Supporting will be classified as likely benign.
+
+Supporting
+The same assays outlined for PS3 will be used for BS3. Please see PS3 guidance for
+additional information on these assays.
+BS3_Supporting can be applied for expression of IDUA sequence variants in cultured cells
+and subsequent measurement of enzyme activity provided that there is no other evidence
+to suggest that the variant could be disease-causing e.g. mislocalization (see Appendix 3
+for thresholds for specific studies: >10% activity (Beesley et al, 2001, PMID: 11735025;
+Yogalingam et al, 2004, PMID: 15300847; Matte et al, 2003); >~10% activity / enzyme
+abundance (Yu et al, 2020. PMID: 33198351).
+Modification Disease-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Non-segregation with disease in a family i.e. variant is absent in an affected individual.
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Does not apply. All types of variants cause MPS1.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+There are no known repetitive regions without known function in IDUA.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Variants meeting the combination of BS3_Supporting, BP4, and
+Specifications:PM2_Supporting will be classified as likely benign.
+
+Supporting
+Missense changes with a REVEL score < 0.290 (threshold based on Pejaver et al;
+however, BP4 will only be applied at the supporting level).
+For in frame insertions and deletions, use PROVEAN
+(http://provean.jcvi.org/seq_submit.php ; score >-2.5), Mutation Taster
+(http://www.mutationtaster.org/ ; count if “polymorphism”, and MutPred-Indel
+(http://mutpredindel.cs.indiana.edu/ ; score <0.5. Apply BP4 if all predictors indicate
+that the variant is benign.
+For non-canonical splice site variants, use SpliceAI
+(https://spliceailookup.broadinstitute.org/ ) to assess the impact of variants that are
+not +/-1 or 2 canonical splice site variants. This criterion can be applied as PP3
+(Splicing) for SpliceAI scores ≤0.1 (based on Walker et al, PMID: 37352859).
+If there is any evidence for possible creation of a cryptic splice site, this criterion
+should not be applied.
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+There is no known alternate molecular basis for deficiency of alpha-Liduronidase activity, other than variants in IDUA.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BP7
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+If a variant meets BP7, BP4 can also be applied.
+Specifications:
+
+Strong
+Experimental evidence (RT-PCR, RNA Seq, minigene) shows that the variant does not
+impact splicing. BP7_Strong (RNA) will be used only under strict circumstances in which it
+is clear that the allele with the variant is expressed at the normal level to avoid counting a
+“normal” result because the allele with the variant is absent due to nonsense-mediated
+decay (Walker et al, PMID: 37352859).
+Modification Strength
+Type:
+
+Supporting
+BP7 can be applied if the variant is synonymous, unless the variant is in the first
+nucleotide or last three nucleotides of an exon, AND BP4 is met i.e. SpliceAI predicts no
+impact on splicing (score ≤ 0.10)
+Modification None
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong AND ≥ 1 Strong
+1 Very Strong AND ≥ 2 Moderate
+1 Very Strong AND 1 Moderate AND 1 Supporting
+1 Very Strong AND ≥ 2 Supporting
+
+≥ 2 Strong
+1 Strong AND ≥ 3 Moderate
+1 Strong AND 2 Moderate AND ≥ 2 Supporting
+1 Strong AND 1 Moderate AND ≥ 4 Supporting
+
+Likely Pathogenic
+1 Very Strong AND 1 Moderate
+1 Strong AND 1 Moderate
+1 Strong AND ≥ 2 Supporting
+
+≥ 3 Moderate
+2 Moderate AND ≥ 2 Supporting
+1 Moderate AND ≥ 4 Supporting
+1 Strong AND 2 Moderate
+
+Benign
+≥ 2 Strong
+1 Stand Alone
+
+Likely Benign
+1 Strong AND 1 Supporting
+
+≥ 2 Supporting
+
+Files & Images
+Appendix 2_PVS1_Decision Tree_IDUA: IDUA-specific modifications have been made to the
+decision tree that was provided by the SVI. 
+Appendix 5_PP1 guidance_IDUA: 
+Appendix 4_PM3 points system_IDUA: 
+Appendix 3_Functional assays: Describes published in vitro functional assays for IDUA variants
+expressed in a heterologous cell type; thresholds are assay-specific; not to be used for enzyme
+assay in patient samples. 
+Appendix 1_PVS1 strength_IDUA: Provides details on the molecular consequence of loss of any
+exon within the IDUA gene, taking into account the number of nucleotides and amino acids that are
+critical to the function of the gene product. 
+
+

@@ -1,0 +1,42 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN058",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50007",
+    "@type": "Organization",
+    "label": "Hearing Loss Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50007"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/643243128"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Hearing Loss Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for USH2A Version 2.0",
+  "lastUpdated": "2022-08-18T19:14:00.973Z",
+  "legacyFullySuperseded": false,
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/643243135",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=USH2A",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019501",
+              "@type": "Disease",
+              "label": "MONDO:0019501"
+            }
+          ],
+          "label": "USH2A"
+        }
+      ]
+    }
+  ],
+  "version": "2.0"
+}

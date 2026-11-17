@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN239",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50082",
+    "@type": "Organization",
+    "label": "Leber Congenital Amaurosis/early onset Retinal Dystrophy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50082"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1420410141"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Leber Congenital Amaurosis/early onset Retinal Dystrophy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for LCA5 Version 1.0",
+  "lastUpdated": "2026-11-12T16:24:57.801Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1420410150",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=LCA5",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0100445",
+              "@type": "Disease",
+              "label": "MONDO:0100445",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "LCA5"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

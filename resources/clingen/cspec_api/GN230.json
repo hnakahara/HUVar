@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN230",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50049",
+    "@type": "Organization",
+    "label": "Peroxisomal Disorders Variant Curation Expert Panel ",
+    "url": "https://clinicalgenome.org/affiliation/50049"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/544836218"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Peroxisomal Disorders  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for PEX1 Version 1.0",
+  "lastUpdated": "2026-07-08T13:17:59.899Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/544836227",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=PEX1",
+          "@type": "Gene",
+          "label": "PEX1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

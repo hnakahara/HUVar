@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN093",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50087",
+    "@type": "Organization",
+    "label": "ENIGMA BRCA1 and BRCA2 Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50087"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1530972301"
+  },
+  "cspecStatus": "CSpec Deleted",
+  "currentStatus": "CSpec Deleted",
+  "label": "ClinGen ENIGMA BRCA1 and BRCA2  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for BRCA2 Version 1.0",
+  "lastUpdated": "2023-01-17T16:15:03.634Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1530972314",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=BRCA2",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0012933",
+              "@type": "Disease",
+              "label": "MONDO:0012933",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "BRCA2"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

@@ -7,7 +7,8 @@ to three tiers per direction:
 
 * ``revel_pp3_supporting`` / ``revel_pp3_moderate`` / ``revel_pp3_strong`` —
   pathogenic-side cutoffs; PP3 fires at the tier whose ``REVEL >= cutoff`` holds.
-* ``revel_bp4_supporting`` / ``revel_bp4_moderate`` / ``revel_bp4_strong`` —
+* ``revel_bp4_supporting`` / ``revel_bp4_moderate`` / ``revel_bp4_strong`` /
+  ``revel_bp4_very_strong`` (the X-linked IRD VCEP's Stand Alone tier) —
   benign-side cutoffs; BP4 fires at the tier whose ``REVEL <= cutoff`` holds.
 
 A VCEP that only grants PP3/BP4 at Supporting fills just the ``*_supporting``
@@ -43,6 +44,8 @@ _BP4_COLS = {
     "revel_bp4_supporting": CriterionStrength.SUPPORTING,
     "revel_bp4_moderate": CriterionStrength.MODERATE,
     "revel_bp4_strong": CriterionStrength.STRONG,
+    # RPGR / RS1 "Stand Alone criteria applies to: Missense variants: REVEL <= 0.003".
+    "revel_bp4_very_strong": CriterionStrength.VERY_STRONG,
 }
 
 

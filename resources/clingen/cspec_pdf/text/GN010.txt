@@ -1,0 +1,507 @@
+Criteria Specification
+ClinGen Lysosomal Storage Disorders Variant Curation Expert Panel Specifications to the
+ACMG/AMP Variant Interpretation Guidelines Version 2.0
+Affiliation: Lysosomal Diseases VCEP
+Description : LSD EP specifications to the ACMG/AMP Variant Curation Guidelines
+Version : 2.0
+Released : 6/2/2021
+DOI : 10.5281/zenodo.21421511
+Release Notes :
+Specifications for PS3 and BS3 have been revised and the strength has been downgraded.
+PM2 has been downgraded to PM2_Supporting.
+PP4 has been revised to allow the use of additional evidence types with strength of evidence based
+on a points system.
+Cases are no longer required to meet the strict PP4 criterion in order to be counted for PM3.
+Specifications for PM1 and BS2 are now included.
+The tools used for in silico prediction of the impact of splice variants and in frame insertions and
+deletions for PP3 and BP4 have been revised.
+
+Contributors & Keywords
+Research Group: Lysosomal Diseases VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+GAA NM_000152.4
+
+Rules for GAA
+Gene: GAA (HGNC:4065) 
+Transcripts:
+NM_000152.4
+
+HGNC Name: alpha glucosidase
+Disease:
+glycogen storage disease II
+(MONDO:0009290) 
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Null variant in a gene where loss of function is a known mechanism of disease or in frame
+loss of an exon that contains residues involved in the active site of GAA.
+Any nonsense, frameshift, or splice variant creating a premature stop codon before
+codon 916.
+In frame deletions of an entire exon containing critical active site/substrate binding
+residues (exons 8 and 10), or for which another variant removing the exon is known
+to be pathogenic (exons 2 and 18).
+Modification None
+Type:
+
+Strong
+Null variant in a gene where loss of function is a known mechanism of disease.
+In frame loss of an exon which is part of the catalytic barrel domain and contains
+pathogenic/likely pathogenic nontruncating variants (exons 6 and 9).
+Initiator codon variant.
+Modification Strength,Disease-specific
+Type:
+
+Moderate
+Null variant in a gene where loss of function is a known mechanism of disease.
+Premature termination codon in the 3’ end of GAA (3’ to codon 916), not predicted to
+be detected by nonsense-mediated decay.
+Predicted exon-skipping due to canonical splice variant or exon deletion resulting in
+an in frame deletion of <10% of the gene product (exons 17, 19, and 20).
+Modification Strength,Disease-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Modification None
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Not Applicable
+Comments:
+De novo variants are rarely reported in GAA (PMIDs 7981676, 27142047).
+The occurrence of de novo variants in GAA is not a mechanism of disease
+for Pompe disease, and the observation that a variant in GAA has arisen
+de novo does not support its causality. Any de novo variants will be
+assessed based on the variant type, functional evidence, and in trans data
+as described in these guidelines.
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Well-established in vitro or in vivo functional studies supportive of a damaging effect.
+RT-PCR evidence of mis-splicing for non-canonical intronic variants with no evidence
+of normal splice products.
+Modification None
+Type:
+
+Moderate
+
+Well-established in vitro or in vivo functional studies supportive of a damaging effect.
+<5% wild type GAA activity when the variant is expressed in a heterologous cell type
+and evidence of abnormal GAA synthesis and/or processing.
+RT-PCR evidence of mis-splicing for non-canonical intronic variants with evidence of
+normal splice products.
+Modification Strength,Disease-specific
+Type:
+
+Supporting
+Well-established in vitro or in vivo functional studies supportive of a damaging effect.
+<30% wild type GAA activity when the variant is expressed in a heterologous cell
+type.
+RT-PCR evidence of mis-splicing for non-canonical intronic variants with evidence of
+normal splice products.
+Modification Strength,Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+Comments:
+There are no case-control studies for Pompe disease. As this is a recessive
+disorder, the prevalence of the variant in affected individuals may not be
+increased compared to controls (who could be heterozygous carriers). The
+number of patients with the variant will be addressed by the PM3
+evidence code.
+
+PM1
+Original ACMG
+Summary
+
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Located in a mutational hot spot and/or critical and well-established functional domain
+without benign variation.
+Missense substitution or in frame deletion of residues important in the active site
+architecture and substrate binding of GAA:- D282, W376, D404, L405, I441, W481,
+W516, D518, M519, R600, W613, D616, W618, F649, L650, H674.
+Modification Disease-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Moderate
+Low frequency in population databases.
+Minor allele frequency <0.1% (0.001) in all continental populations with >2000
+alleles in gnomAD.
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Very Strong
+Detected in trans with a pathogenic variant. Points-based system. See main specifications
+document.
+
+Strong
+Detected in trans with a pathogenic variant. Points-based system. See main specifications
+document.
+
+Moderate
+Detected in trans with a pathogenic variant. Points-based system. See main specifications
+document.
+Modification None
+Type:
+
+Supporting
+Detected in trans with a pathogenic variant. Points-based system. See main specifications
+document.
+Modification Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a nonrepeat region or stoploss variants.
+In frame deletion/insertions of two or more amino acids but less than one exon.
+Modification None
+Type:
+
+Supporting
+Protein length changes due to in-frame deletions/insertions in a nonrepeat region or stoploss variants.
+In frame deletion/insertions of one amino acid.
+Modification Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Missense change at an amino acid residue where a different missense change determined
+to be pathogenic has been seen before.
+Modification None
+Type:
+
+Supporting
+Missense change at an amino acid residue where a different missense change determined
+to be 'likely pathogenic' has been seen before.
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+See explanation for PS2.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Not Applicable
+Comments:
+Sib-ships large enough to meet this criterion are extremely rare. In
+addition, because GAA is the only gene involved in Pompe disease, all
+patients are expected to be bi-allelic, regardless of whether the
+pathogenic variants can be, or have been, detected. A variant under
+assessment may not be the true pathogenic variant but instead in linkage
+disequilibrium with an unidentified pathogenic variant. For this reason,
+this criterion does not facilitate assessment of pathogenicity.
+
+PP2
+
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Does not apply; there are benign and pathogenic missense variants in
+GAA.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product.
+REVEL score >0.7 for missense variants.
+In frame deletion or insertion predicted deleterious by 2 out of 3 tools (PROVEAN,
+MutationTaster, MutPred-InDel).
+Predicted impact on splicing by SpliceAI (score >0.5).
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Moderate
+Phenotype specific for disease with single genetic etiology.
+Points-based system. See main specifications document
+Modification Strength,Disease-specific
+Type:
+
+Supporting
+Phenotype specific for disease with single genetic etiology.
+Points-based system. See main specifications document
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Common in population databases.
+Highest minor allele frequency >0.01 (>1%) in any continental population in
+gnomAD with >2000 alleles.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency greater than expected for disease.
+Highest minor allele frequency >0.005 (>0.5%) in any continental population in
+gnomAD with >2000 alleles.
+
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed in the homozygous state in a healthy adult.
+Homozygous individual of any age with normal GAA activity.
+Modification None
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Supporting
+Well-established in vitro or in vivo functional studies shows no damaging effect on protein
+function.
+
+50% activity when the variant is expressed in a heterologous cell type,
+or >30% activity if there is also evidence of normal synthesis and
+processing.
+Modification Strength,Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Not Applicable
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Does not apply. All types of variants cause Pompe disease.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in cis with a pathogenic variant.
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+There are no known repetitive regions without known function in GAA.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence suggest no impact on gene or gene product.
+REVEL score <0.5 for missense variants.
+In frame deletion or insertion predicted benign by PROVEAN, MutationTaster, and
+MutPred-InDel.
+No predicted impact on splicing by SpliceAI (score <0.2)
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+* An individual could be a carrier of a pathogenic variant in GAA and have
+another disorder. * There is no known alternate molecular basis for
+deficiency of GAA activity, other than variants in GAA.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site AND the nucleotide is
+not highly conserved.
+Modification None
+Type:
+
+

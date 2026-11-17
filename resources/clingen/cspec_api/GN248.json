@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN248",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50034",
+    "@type": "Organization",
+    "label": "Myeloid Malignancy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50034"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1678492013"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen Myeloid Malignancy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for GATA2 Version 1.0.0",
+  "lastUpdated": "2026-11-04T20:25:00.355Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1678492020",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=GATA2",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0042982",
+              "@type": "Disease",
+              "label": "MONDO:0042982",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "GATA2"
+        }
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}

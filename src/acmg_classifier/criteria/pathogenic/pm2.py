@@ -32,9 +32,50 @@ _RAW_AF_RECESSIVE = 0.005
 #             that subpopulation AF must be <0.00002": a single allele is judged on
 #             the global AF, a recurring one on the subpopulation AF.
 _PM2_MALE_ABSENT = frozenset({"F8", "F9"})
-_PM2_ALLOW_ONE_ALLELE = frozenset({"RYR1"})
+# "absent (1 allele allowed)" / "1 allele is allowed" (Congenital Myopathies VCEP:
+# RYR1, DNM2, NEB) and "One or fewer alleles" (Epilepsy Sodium Channel VCEP).
+_PM2_ALLOW_ONE_ALLELE = frozenset({
+    "RYR1", "DNM2", "NEB", "SCN1A", "SCN1B", "SCN2A", "SCN3A", "SCN8A"})
+# MTM1 (X-linked): "absent (1 observation allowed in females only)".
+_PM2_ONE_FEMALE_ALLELE = frozenset({"MTM1"})
+# Minimum number of alleles assessed at the position: "population databases of at
+# least 2000 alleles" (Congenital Myopathies VCEP, RUNX1) / "a minimum of 10,000
+# alleles assessed" (SCN genes). A gnomAD record with fewer alleles cannot
+# establish rarity.
+_PM2_MIN_AN: dict[str, int] = {
+    **{g: 2000 for g in ("ACTA1", "DNM2", "MTM1", "NEB", "RYR1", "RUNX1")},
+    **{g: 10000 for g in ("SCN1A", "SCN1B", "SCN2A", "SCN3A", "SCN8A")},
+}
+# HHT VCEP (ACVRL1 / ENG): "<6 total alleles in gnomAD or <0.00004 in gnomAD
+# subpopulations" -> fewer than this many alleles meets PM2 whatever the AF.
+_PM2_FEW_ALLELES: dict[str, int] = {"ACVRL1": 6, "ENG": 6}
+# APC: "<= 0.000003 if the allele count is > 1 OR < 0.00001 if the allele count
+# is <= 1" -> cutoff used for a single observed allele.
+_PM2_SINGLE_ALLELE_CUTOFF: dict[str, float] = {"APC": 0.00001}
+# Global AF below the gene cutoff for a one-off allele; a subpopulation carrying
+# >= 2 alleles is judged on its own AF against this cutoff (PTEN; CDH1 "if
+# present in >=2 individuals within a subpopulation, must be present in <= One out
+# of 50,000 alleles").
+_PM2_SUBPOP_CUTOFF: dict[str, float] = {"PTEN": 0.00002, "CDH1": 0.00002}
+# TP53: global AF < the gene cutoff AND, "if multiple alleles are present within
+# any genetic ancestry group, allele frequency in that group must be <0.00004"
+# (gnomAD's GrpMax already leaves out the founder / remaining groups).
+_PM2_GLOBAL_AND_SUBPOP: dict[str, float] = {"TP53": 0.00004}
+# "Only applies to populations of >= N alleles" (Glaucoma VCEP: MYOC 10,000,
+# CYP1B1 2,000) / "any sub-population data is acceptable (as long as there is a
+# minimum allele count of 1,000)" (BMPR2). When the GrpMax population has fewer
+# alleles than this, its frequency is not used and the global AF is compared (the
+# next-highest population is not carried here).
+_PM2_MIN_POP_AN: dict[str, int] = {"MYOC": 10000, "CYP1B1": 2000, "BMPR2": 1000}
+# DICER1: "no more than one allele in any subpopulation" (judged on the GrpMax
+# group, the only per-group count carried here).
+_PM2_MAX_SUBPOP_ALLELES: dict[str, int] = {"DICER1": 1}
 _PM2_SINGLE_ALLELE_RARE = frozenset({"ATM"})
-_PM2_PTEN_SUBPOP_CUTOFF = 0.00002
+# Platelet VCEP (ITGA2B / ITGB3, GN011): PM2 (Moderate) "Absent from controls";
+# PM2_Supporting "Prevalence <1/10,000 (<0.0001) alleles in gnomAD" -> the gene's
+# Moderate strength holds only when absent; a present-but-rare variant is Supporting.
+_PM2_MODERATE_ONLY_IF_ABSENT = frozenset({"ITGA2B", "ITGB3"})
+_PM2_PTEN_SUBPOP_CUTOFF = 0.00002   # kept for callers; see _PM2_SUBPOP_CUTOFF
 
 # Poisson exact upper one-sided 95% confidence limits, λ_U = 0.5·χ²₀.₉₅(2(k+1)),
 # indexed by observed allele count k. Used by the Cardiomyopathy/HCM PM2 rule,
@@ -257,6 +298,12 @@ class PM2Evaluator(CriterionEvaluator):
             if value is None:
                 value = gd.af if gd.af is not None else 0.0
             metric = "AF"
+        _min_pop = _PM2_MIN_POP_AN.get(gene or "")
+        if (_min_pop is not None and gd.an_grpmax is not None
+                and gd.an_grpmax < _min_pop):
+            value = gd.af if gd.af is not None else 0.0
+            metric = (f"global AF [GrpMax population has {gd.an_grpmax} alleles, "
+                      f"< {_min_pop}]")
 
         # Non-cancer subset (ENIGMA BRCA1/2): the VCEP judges absence on gnomAD's
         # non-cancer subset, so a variant present only in cancer cohorts still
@@ -308,6 +355,20 @@ class PM2Evaluator(CriterionEvaluator):
             absent, absent_detail = True, "absent in males (nhemi=0)"
         elif gene_u in _PM2_ALLOW_ONE_ALLELE and (gd.ac or 0) <= 1:
             absent, absent_detail = True, f"AC={gd.ac or 0} <= 1 allele allowed"
+        elif (gene_u in _PM2_ONE_FEMALE_ALLELE and (gd.ac or 0) <= 1
+              and (gd.nhemi or 0) == 0):
+            absent, absent_detail = True, f"AC={gd.ac or 0} <= 1, none in males"
+        elif gene_u in _PM2_FEW_ALLELES and (gd.ac or 0) < _PM2_FEW_ALLELES[gene_u]:
+            absent, absent_detail = (
+                True, f"AC={gd.ac or 0} < {_PM2_FEW_ALLELES[gene_u]} total alleles")
+
+        min_an = _PM2_MIN_AN.get(gene_u)
+        if min_an is not None and gd.an is not None and 0 < gd.an < min_an:
+            return CriteriaResult.not_met(
+                ACMGCriterion.PM2,
+                f"{gene_u} VCEP: only {gd.an} alleles assessed in gnomAD "
+                f"(< {min_an} required){filter_note}",
+            )
 
         # AC=0 means "observed only in samples that failed QC" — effectively
         # absent for ACMG purposes, so we treat it the same as value == 0.
@@ -338,13 +399,28 @@ class PM2Evaluator(CriterionEvaluator):
         # PTEN: a single allele is judged on the GLOBAL AF (< threshold 1e-5); a
         # subpopulation carrying >=2 alleles is judged on that subpopulation AF
         # (< 2e-5). This avoids penalising a one-off small-denominator point AF.
-        if gene_u == "PTEN":
+        if gene_u in _PM2_SUBPOP_CUTOFF:
             if (gd.ac_grpmax or 0) >= 2:
                 value = gd.popmax_af if gd.popmax_af is not None else (gd.af or 0.0)
-                threshold, metric = _PM2_PTEN_SUBPOP_CUTOFF, "subpop AF"
+                threshold, metric = _PM2_SUBPOP_CUTOFF[gene_u], "subpop AF"
             else:
                 value = gd.af if gd.af is not None else 0.0
                 metric = "global AF"
+        extra_block = None
+        if gene_u in _PM2_GLOBAL_AND_SUBPOP:
+            value = gd.af if gd.af is not None else 0.0
+            metric = "global AF"
+            cut = _PM2_GLOBAL_AND_SUBPOP[gene_u]
+            if (gd.ac_grpmax or 0) >= 2 and gd.popmax_af is not None and gd.popmax_af >= cut:
+                extra_block = (f"GrpMax group carries {gd.ac_grpmax} alleles at "
+                               f"AF={gd.popmax_af:.2e} ≥ {cut}")
+        if gene_u in _PM2_MAX_SUBPOP_ALLELES and \
+                (gd.ac_grpmax or 0) > _PM2_MAX_SUBPOP_ALLELES[gene_u]:
+            extra_block = (f"{gd.ac_grpmax} alleles in the GrpMax group "
+                           f"(> {_PM2_MAX_SUBPOP_ALLELES[gene_u]} allowed)")
+        if gene_u in _PM2_SINGLE_ALLELE_CUTOFF and (gd.ac or 0) <= 1:
+            threshold = _PM2_SINGLE_ALLELE_CUTOFF[gene_u]
+            basis = f"{gene} VCEP, allele count <= 1"
 
         self.note(pm2_metric=metric, pm2_value=f"{value:.3g}", pm2_cutoff=f"{threshold:g}")
         if value < threshold:
@@ -358,16 +434,21 @@ class PM2Evaluator(CriterionEvaluator):
             if (rule and rule.subpop_mode == "point" and rule.use_faf
                     and gd.faf95_popmax is not None):
                 subpop = None
-            block = subpop or zyg_block or depth_block
+            block = extra_block or subpop or zyg_block or depth_block
             if block:
                 return CriteriaResult.not_met(
                     ACMGCriterion.PM2,
                     f"gnomAD {metric}={value:.2e} < {threshold} but {block} "
                     f"[{basis}]{filter_note}",
                 )
+            tier_note = ""
+            if (gene_u in _PM2_MODERATE_ONLY_IF_ABSENT
+                    and strength != CriterionStrength.SUPPORTING):
+                strength = CriterionStrength.SUPPORTING
+                tier_note = " (present in gnomAD: PM2_Supporting; Moderate needs absence)"
             return CriteriaResult.met(
                 ACMGCriterion.PM2, strength,
-                f"gnomAD {metric}={value:.2e} < {threshold} [{basis}]{filter_note}",
+                f"gnomAD {metric}={value:.2e} < {threshold}{tier_note} [{basis}]{filter_note}",
             )
 
         # ATM: "if n=1 in a single sub population, that is sufficiently rare and

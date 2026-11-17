@@ -58,3 +58,65 @@ GALT	6	strong	in-frame skip; exon 6 = critical active site aa171-188
 GALT	7	moderate	in-frame skip, role of region unknown
 GALT	9	moderate	in-frame skip, role of region unknown
 GALT	10	moderate	in-frame skip, role of region unknown
+# --- CSpec file audit (2026-11): in-frame / C-terminal exon skips from the VCEP PVS1 trees ---
+# PTEN (NM_000314.8, GN003): in-frame exons 3/8/9 (critical) -> Strong
+PTEN	3	strong	in-frame skip, critical region
+PTEN	8	strong	in-frame skip, critical region
+PTEN	9	strong	in-frame skip, critical region
+# ACADVL (NM_000018.4, GN021): in-frame 3/6/9/11/12/20 -> Moderate; 13/14 (critical) -> Strong
+ACADVL	3	moderate	in-frame skip, role unknown, <10%
+ACADVL	6	moderate	in-frame skip, role unknown, <10%
+ACADVL	9	moderate	in-frame skip, role unknown, <10%
+ACADVL	11	moderate	in-frame skip, role unknown, <10%
+ACADVL	12	moderate	in-frame skip, role unknown, <10%
+ACADVL	13	strong	in-frame skip, critical region
+ACADVL	14	strong	in-frame skip, critical region
+ACADVL	20	moderate	final exon, in-frame, <10%
+# F8 (NM_000132.4, GN071 RNA tree): exon 7 listed with the frameshift/NMD exons -> PVS1;
+# exon 25 (no NMD) and exon 26 (final, critical) -> Strong; other in-frame exons -> 10% rule
+F8	7	very_strong	VCEP lists exon 7 with the frameshift / NMD exons
+F8	25	strong	frameshift not predicted to undergo NMD (VCEP)
+F8	26	strong	final exon, critical C2 domain
+# F9 (NM_000133.4, GN080): in-frame exons 1/4/5 -> Strong
+F9	1	strong	in-frame skip (VCEP)
+F9	4	strong	in-frame skip (VCEP)
+F9	5	strong	in-frame skip (VCEP)
+# NEB (NM_001164508.2, GN146): critical exons 55 and 161-183 stay PVS1; other in-frame -> 10% rule
+NEB	55	very_strong	critical exon
+NEB	161	very_strong	critical exon
+NEB	162	very_strong	critical exon
+NEB	163	very_strong	critical exon
+NEB	164	very_strong	critical exon
+NEB	165	very_strong	critical exon
+NEB	166	very_strong	critical exon
+NEB	167	very_strong	critical exon
+NEB	168	very_strong	critical exon
+NEB	169	very_strong	critical exon
+NEB	170	very_strong	critical exon
+NEB	171	very_strong	critical exon
+NEB	172	very_strong	critical exon
+NEB	173	very_strong	critical exon
+NEB	174	very_strong	critical exon
+NEB	175	very_strong	critical exon
+NEB	176	very_strong	critical exon
+NEB	177	very_strong	critical exon
+NEB	178	very_strong	critical exon
+NEB	179	very_strong	critical exon
+NEB	180	very_strong	critical exon
+NEB	181	very_strong	critical exon
+NEB	182	very_strong	critical exon
+NEB	183	very_strong	critical exon
+# SLC6A8 (NM_005629.4, GN027 v2.1): in-frame exons 2/5 (critical) -> Strong; 9/12/13 -> generic 10% rule
+SLC6A8	2	strong	in-frame skip, critical region
+SLC6A8	5	strong	in-frame skip, critical region
+# SLC9A6 (GN033): VCEP exon 3 (NM_006359.2) = MANE NM_001379110.1 exon 4 (extra non-coding exon 1) -> Strong;
+# VCEP exon 10 = MANE exon 11 (critical) keeps PVS1
+SLC9A6	4	strong	in-frame skip, role unknown (VCEP exon 3 on NM_006359.2)
+# UBE3A (GN037): VCEP exons 7/8 (NM_130838.2) = MANE NM_130839.5 exons 9/10 (two extra 5' non-coding exons;
+# the only consecutive in-frame pair) -> Strong; VCEP exon 11 keeps PVS1
+UBE3A	9	strong	in-frame skip (VCEP exon 7 on NM_130838.2)
+UBE3A	10	strong	in-frame skip (VCEP exon 8 on NM_130838.2)
+# MECP2 (GN036): VCEP exon 4 (NM_004992, e2) = MANE NM_001110792.2 (e1) exon 3, final -> Strong
+MECP2	3	strong	final exon skip, frameshift without NMD (VCEP exon 4 on NM_004992)
+# HNF1A (NM_000545.8, GN017): exon 10 (final, transactivation domain) -> Strong
+HNF1A	10	strong	final exon skip (VCEP)

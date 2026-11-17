@@ -1,0 +1,625 @@
+Criteria Specification
+ClinGen RASopathy Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines for PPP1CB Version 1.3
+Affiliation: RASopathy VCEP
+Description : These are the ACMG/AMP variant classification specifications developed by the RASopathy
+VCEP for PPP1CB.
+Version : 1.3
+Released : 12/3/2024
+DOI : 10.5281/zenodo.21434681
+Release Notes :
+These are the ACMG/AMP variant classification specifications developed by the RASopathy VCEP for
+PPP1CB. Pilot variants are included in the LZTR1 submission. “Observed in ≥5 probands” removed from
+PM5 at Moderate strength.
+
+Contributors & Keywords
+Research Group: RASopathy VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+PPP1CB NM_002709.3 Autosomal dominant
+inheritance RASopathy
+
+Rules for PPP1CB
+Gene: PPP1CB (HGNC:9282) 
+Transcripts:
+NM_002709.3
+
+HGNC Name: protein phosphatase 1 catalytic
+subunit beta
+Disease:
+RASopathy (MONDO:0021060)
+ Mode of Inheritance:
+Autosomal dominant
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+Not applicable.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Same amino acid change as a previously established pathogenic variant
+Specifications:regardless of nucleotide change.
+
+Strong
+Same amino acid change as a previously established pathogenic variant in PPP1CB
+regardless of nucleotide change.
+Modification Analogous Gene
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Follow SVI recommendations for point-based scoring in conjunction with
+Specifications:PM6 (see Reference 1) and phenotypic specifications: full points awarded
+with RASopathy phenotypes, reduced points applicable to cases with
+minimal phenotypic information (i.e. prenatal cases, cases with a clinical
+order of a RASopathy panel without clinical information, and cases with
+limited clinical information in other global tests (such as WES)).
+
+Very Strong
+4 Points.
+Modification Strength
+Type:
+
+Strong
+2 Points.
+Modification None
+Type:
+
+Moderate
+1 Point.
+Modification Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Not Applicable
+Comments:
+Approved functional studies are available for each individual gene in the
+supplemental material. Additional functional studies can be submitted to
+the expert panel for approval. PS3 is not applicable for PPP1CB at this
+time.
+
+PS4
+Original ACMG
+Summary
+
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Strength adjustment using point-based scoring for autosomal dominant
+Specifications:cases with phenotypic specifications: full points awarded with RASopathy
+phenotypes, reduced points applicable to cases with minimal phenotypic
+information (i.e. prenatal cases, cases with a clinical order of a RASopathy
+panel without clinical information, and cases with limited clinical
+information in other global tests (such as WES)).
+
+Strong
+≥5 points.
+Modification Disease-specific
+Type:
+
+Moderate
+≥3 points.
+Modification Strength
+Type:
+
+Supporting
+≥1 points.
+Modification Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+Not applicable for PPP1CB.
+
+PM2
+
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+The variant must be absent from controls (gnomAD).
+Specifications:
+
+Supporting
+The variant must be absent from controls (gnomAD).
+Modification Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Not applicable.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+VCEP
+Protein length changes due to in-frame deletions/insertions in a nonSpecifications:repeat region or stop-loss variants.
+
+Moderate
+No known repetitive areas in gene. Use as described.
+Modification General recommendation
+Type:
+
+PM5
+Original ACMG
+Summary
+
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Applicable for observed analogous residue positions in PPP1CB. PM1 and
+Specifications:PM5 may be used in conjunction at moderate levels, however, PM1 may
+not be applied if PM5_Strong is applied to avoid overweighting.
+
+Strong
+≥2 different [likely] pathogenic residues changes at the same codon observed in ≥5
+probands.
+Modification Strength
+Type:
+
+Moderate
+1 [likely] pathogenic residue change at the same codon.
+Modification Disease-specific
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+Follow SVI recommendations for point-based scoring in conjunction with
+Specifications:PS2 (see Reference 1) and phenotypic specifications: full points awarded
+with RASopathy phenotypes, reduced points applicable to cases with
+minimal phenotypic information (i.e. prenatal cases, cases with a clinical
+order of a RASopathy panel without clinical information, and cases with
+limited clinical information in other global tests (such as WES)).
+
+Strong
+2 Points.
+Modification Strength
+Type:
+
+Moderate
+1 Point.
+
+Modification None
+Type:
+
+Supporting
+0.5 Points.
+Modification Strength
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Segregation in more than one family is recommended.
+Specifications:
+
+Strong
+≥7 informative meioses.
+Modification Strength
+Type:
+
+Moderate
+≥5 informative meioses.
+Modification Strength
+Type:
+
+Supporting
+≥3 informative meioses.
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+VCEP
+Missense variant in a gene that has a low rate of benign missense
+Specifications:variation and where missense variants are a common mechanism of
+disease.
+
+Supporting
+Missense z score is >3.09 in gnomAD.
+Modification Gene-specific
+Type:
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+For missense variants: REVEL ≥ 0.7. For splicing impact, predicted
+Specifications:outcome must match disease mechanism.
+
+Supporting
+For missense variants: REVEL ≥ 0.7. For splicing impact, predicted outcome must match
+disease mechanism.
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+Not applicable, see PS4.
+
+PP5
+Original ACMG
+Summary
+
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+GnomAD filtering allele frequency ≥0.05%.
+Specifications:
+
+Stand Alone
+GnomAD filtering allele frequency ≥0.05%.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+GnomAD filtering allele frequency ≥0.025%.
+Specifications:
+
+Strong
+GnomAD filtering allele frequency ≥0.025%.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+VCEP
+Strength adjustment using point-based scoring based on phenotypic
+Specifications:specifications. Phenotypic specifications: based on healthy homozygote or
+heterozygote individuals, reduced points for apparently unaffected
+heterozygous individuals, applicable to parent or sibling samples during
+clinical family evaluations.
+
+Strong
+-4 Points.
+Modification Strength
+Type:
+
+Supporting
+-1 Point.
+Modification Strength
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+Approved functional studies are available for each individual gene in the
+supplemental material. Additional functional studies can be submitted to
+the expert panel for approval.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+Lack of segregation in affected members of a family.
+Specifications:
+
+Strong
+Requires only one informative meiosis.
+
+Modification General recommendation
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+VCEP
+Truncating, LOF variant in a gene for which primarily missense, GOF
+Specifications:variants are known to cause disease.
+
+Supporting
+This rule has contraindications for use with RASopathies. Given the disease mechanism is
+gain-of-function for RASopathies, BP1 should be used for any truncating variant
+(nonsense, frameshift, affects canonical splice sites, initiation codon, entire gene or multi
+exon deletion) in genes without established LOF correlation to disease. See the
+supplemental material regarding dosage sensitivity information for each individual gene
+and potential association to disorders associated with LOF variants.
+Modification Disease-specific
+Type:
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+VCEP
+Points are awarded for an alternative molecular cause of a RASopathy in
+Specifications:the same gene (and/or in conjunction with BP5) and the phenotype is
+consistent with expected severity of the RASopathy.
+
+Strong
+≥ (-4) Points.
+Modification Strength
+Type:
+
+Moderate
+≥ (-2) Points.
+
+Modification Strength
+Type:
+
+Supporting
+≥ (-1) Point.
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+No known benign repetitive areas in RASopathy genes.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+For missense variants: REVEL ≤0.3. For splicing variants: predicted
+Specifications:outcome is negligible or does not match disease mechanism.
+
+Supporting
+For missense variants: REVEL ≤0.3.
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+VCEP
+Points are awarded for an alternative molecular cause of a RASopathy in a
+Specifications:different gene (and/or in conjunction with BP2) and the phenotype is
+
+consistent with expected severity of the RASopathy. Points are also
+awarded for phenotypes inconsistent with a RASopathy and fully explained
+by a different causative variant (e.g. WES testing).
+
+Strong
+≥ (-4) Points.
+Modification Strength
+Type:
+
+Moderate
+≥ (-2) Points.
+Modification Strength
+Type:
+
+Supporting
+≥ (-1) Point.
+Modification None
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+A synonymous variant for which splicing prediction algorithms predict no
+Specifications:impact to the splice consensus sequence nor the creation of a new splice
+site AND the nucleotide is not highly conserved.
+
+Supporting
+
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site AND the nucleotide is
+not highly conserved. This rule is also applicable for intronic positions (except canonical
+splice sites) or non-coding variants and should be used in conjunction with BP4.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PS2_Very Strong) AND ≥ 1 Strong (PS1, PS2, PS4, PM5_Strong, PM6_Strong, PP1_Strong)
+1 Very Strong (PS2_Very Strong) AND ≥ 2 Moderate (PS2_Moderate, PS4_Moderate, PM4, PM5, PM6,
+PP1_Moderate)
+
+1 Very Strong (PS2_Very Strong) AND 1 Moderate (PS2_Moderate, PS4_Moderate, PM4, PM5, PM6,
+PP1_Moderate) AND 1 Supporting (PS3_Supporting, PS4_Supporting, PM2_Supporting, PM6_Supporting,
+PP1, PP2, PP3)
+
+1 Very Strong (PS2_Very Strong) AND ≥ 2 Supporting (PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM6_Supporting, PP1, PP2, PP3)
+
+≥ 2 Strong (PS1, PS2, PS4, PM5_Strong, PM6_Strong, PP1_Strong)
+1 Strong (PS1, PS2, PS4, PM5_Strong, PM6_Strong, PP1_Strong) AND ≥ 3 Moderate (PS2_Moderate,
+PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+1 Strong (PS1, PS2, PS4, PM5_Strong, PM6_Strong, PP1_Strong) AND 2 Moderate (PS2_Moderate,
+PS4_Moderate, PM4, PM5, PM6, PP1_Moderate) AND ≥ 2 Supporting (PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM6_Supporting, PP1, PP2, PP3)
+
+1 Strong (PS1, PS2, PS4, PM5_Strong, PM6_Strong, PP1_Strong) AND 1 Moderate (PS2_Moderate,
+PS4_Moderate, PM4, PM5, PM6, PP1_Moderate) AND ≥ 4 Supporting (PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM6_Supporting, PP1, PP2, PP3)
+
+Likely Pathogenic
+1 Very Strong (PS2_Very Strong) AND 1 Moderate (PS2_Moderate, PS4_Moderate, PM4, PM5, PM6,
+PP1_Moderate)
+
+1 Strong (PS1, PS2, PS4, PM5_Strong, PM6_Strong, PP1_Strong) AND 1 Moderate (PS2_Moderate,
+PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+1 Strong (PS1, PS2, PS4, PM5_Strong, PM6_Strong, PP1_Strong) AND ≥ 2 Supporting (PS3_Supporting,
+PS4_Supporting, PM2_Supporting, PM6_Supporting, PP1, PP2, PP3)
+
+≥ 3 Moderate (PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate)
+2 Moderate (PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate) AND ≥ 2 Supporting
+(PS3_Supporting, PS4_Supporting, PM2_Supporting, PM6_Supporting, PP1, PP2, PP3)
+
+1 Moderate (PS2_Moderate, PS4_Moderate, PM4, PM5, PM6, PP1_Moderate) AND ≥ 4 Supporting
+(PS3_Supporting, PS4_Supporting, PM2_Supporting, PM6_Supporting, PP1, PP2, PP3)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4, BP2_Strong, BP5_Strong)
+1 Stand Alone (BA1)
+
+Likely Benign
+
+1 Strong (BS1, BS2, BS4, BP2_Strong, BP5_Strong) AND 1 Supporting (BS2_Supporting, BP1, BP2, BP4,
+BP5, BP7)
+
+≥ 2 Supporting (BS2_Supporting, BP1, BP2, BP4, BP5, BP7)
+1 Strong (BS1, BS2, BS4, BP2_Strong, BP5_Strong)
+1 Strong (BS1)
+
+Files & Images
+Approved Functional Studies: This documentation specifies which assays can be used in the
+application of PS3/BS3 and at what strength. 
+BP5/BP2 Scoring: Information to apply BP5/BP2 and ACMG/AMP evidence strength level for applying
+BP5/BP2.
+
+BS2 Scoring: Phenotypic information to apply BS2 and ACMG/AMP evidence strength level for applying
+BS2.
+
+PS4 Scoring: Phenotypic information to apply PS4 and ACMG/AMP evidence strength level for applying
+PS4.
+
+PS2/PM6 Scoring: De novo occurrences in a proband(s) with the disease and no family history and
+ACMG/AMP evidence strength level for de novo occurrence(s).
+
+References
+1.
+
+https://clinicalgenome.org/site/assets/files/3461/svi_proposal_for_de_novo_criteria_v1_1.pdf 
+
+

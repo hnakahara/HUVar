@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN232",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50061",
+    "@type": "Organization",
+    "label": "Limb Girdle Muscular Dystrophy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50061"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/572545819"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen Limb Girdle Muscular Dystrophy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for FKRP Version 1.0",
+  "lastUpdated": "2026-05-22T12:17:07.469Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/572545826",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=FKRP",
+          "@type": "Gene",
+          "label": "FKRP"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

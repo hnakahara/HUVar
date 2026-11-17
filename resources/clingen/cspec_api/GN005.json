@@ -1,0 +1,1256 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN005",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50007",
+    "@type": "Organization",
+    "label": "Hearing Loss Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50007"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/135637577"
+  },
+  "cspecStatus": "Released",
+  "currentStatus": "Released",
+  "label": "ClinGen Hearing Loss Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for CDH23, COCH, GJB2,\nKCNQ4, MYO6, MYO7A, SLC26A4, TECTA and USH2A Version 2.0",
+  "lastUpdated": "2022-03-30T05:00:00.000Z",
+  "legacy": true,
+  "legacyReplaced": false,
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/135640633",
+      "@type": "RuleSet",
+      "criteriaCodes": [
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638906",
+          "@type": "CriteriaCode",
+          "description": "Located in a mutational hot spot and/or critical and well-established functional domain (e.g. active site of an enzyme) without benign variation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638906/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638906/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638906/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638906/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Mutational hot spot or well-studied functional domain without benign variation (KCNQ4 pore-forming region).\n* KCNQ4 (NM_004700.4) gene - missense variants located within amino acids 271-292 can be awarded PM1. This region is the pore-forming intramembrane region where many variants that cause autosomal dominant hearing loss are located (Naito et al. 2013, PMID: 23717403; https://www.uniprot.org/uniprot/P56696). There are only two missense variants in this region in gnomAD, each with only single allele (http://gnomad.broadinstitute.org/; rs763326539: 1/33578 Latino chromosomes; rs55737429: 1/111720 European chromosomes).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638906/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638904",
+          "@type": "CriteriaCode",
+          "description": "A synonymous variant for which splicing prediction algorithms predict no impact to the splice consensus sequence nor the creation of a new splice site AND the nucleotide is not highly conserved.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638904/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638904/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638904/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638904/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638904/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Silent variant with no predicted impact to splicing.\nNo changes. Follow recommendations as outlined in Richard 2015 and/or ClinGen's Sequence Variant Interpretation working group.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP7"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638900",
+          "@type": "CriteriaCode",
+          "description": "Variant found in a case with an alternate molecular basis for disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638900/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638900/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638900/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638900/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638900/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Variant in an autosomal dominant gene found in a patient with an alternate explanation.\n* Autosomal recessive: Do not use. An individual could be carrier of pathogenic variant and have an alternate cause. Therefore, BP5 shouldn’t be used as evidence for benign in this case.\n* Autosomal dominant: Can use BP5 as outlined by Richards 2015.\n\n * Caveat: consider whether multiple pathogenic autosomal dominant variants could cause a more severe phenotype or whether multigenic inheritance is known to occur (example: Bardet-Biedl syndrome).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638895",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies supportive of a damaging effect on the gene or gene product.\nNote: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are considered the most well-established.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638895/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638895/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638895/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Knock-in mouse model demonstrates the phenotype.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638895/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Validated functional studies show a deleterious effect (predefined list): GJB2: electrical coupling assays, dye transfer assays → PS3_Moderate\n* Dye Transfer Assays: Expect results that compare the fluorescence of a variant-transfected cell to\nboth a negative control (or H2O injected control) and a wildtype-transfected cell. PS3_Moderate\nwould be applied if the variant results in no dye transfer or significantly different dye transfer when\ncompared to the wildtype.\n* Electrical Coupling Assays: Expect results comparing the current of the variant-transfected cells to both a negative control (i.e. H2O injected control) and a wildtype-transfected cell. PS3_Moderate would be applied if the variant results in significantly different current compared to the wildtype, and the current is comparable to background levels/negative control.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638895/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "SLC26A4: Radio isotope and fluorescence assays → PS3_Supporting\n* Radio Isotope Assays: PS3_Supporting would be applied when cells transfected with mutant SLC26A4 show a statistically significant decreased efflux of iodide compared to wildtype pendrin.\n* Fluorescence Assays: PS3_Supporting would be applied when a cell transfected with the mutant SLC26A4 shows a statistically significant difference in fluorescence (ΔFmax %) compared to the wildtype protein, and when the fluorescence is not significantly different from that of an empty vector control.\nCOCH: Localization, secretion, and dimerization studies performed using immunofluorescence and\nWestern blotting techniques →PS3_Supporting\n* Localization: PS3_Supporting would be applied if the mutant cochlin protein does not aggregate into extracellular deposits or in the perinuclear region, comparable to the localization of wildtype cochlin.\n* Secretion: PS3_Supporting would be applied if cochlin protein containing the variant does not show secretion from transfected cells, but aggregates in cell regions such as the ER, Golgi and nucleus or is degraded.\n* Dimerization: In a non-reducing environment, wildtype cochlin migrate quickly and appear smaller than in the reduced state because the structure is maintained by disulfide bonds. PS3_Supporting would be applied if the cochlin protein containing the variant forms more, or less, stable disulfide bonds when compared to the wildtype in non-reducing conditions.\n* If not listed above, OK to use PS3_Supporting for other genes/functional analyses if\n  * The assay has been validated by a known pathogenic and benign variant AND  \n  * There is plausible reason that the function the assay is testing relates to the phenotype AND\n  * The assay conditions are likely to mimic the physiological environment.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638894",
+          "@type": "CriteriaCode",
+          "description": "In frame-deletions/insertions in a repetitive region without a known function.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638894/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638894/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638894/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638894/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638894/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "In-frame indels in repeat region without known function.\nNo changes. Follow recommendations as outlined in Richard 2015 and/or ClinGen's Sequence Variant Interpretation working group.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638888",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene for which primarily truncating variants are known to cause disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638888/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638888/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638888/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638888/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638888/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638887",
+          "@type": "CriteriaCode",
+          "description": "Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before.\nExample: Arg156His is pathogenic; now you observe Arg156Cys.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638887/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638887/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638887/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Missense change at same codon as two different pathogenic missense variants.\n* Located at an amino acid residue with known pathogenic variation (at least 2 other variants at the same site meet pathogenic criteria for based on independent data)\n* Caveat: Assess whether the variants in question could have an impact at the DNA level, such as through splicing impacts.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638887/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Missense change at same codon as another pathogenic missense variant.\nNo changes. Follow recommendations as outlined in ACMG/AMP guidelines and/or Sequence Variant Interpretation working group.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638887/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638884",
+          "@type": "CriteriaCode",
+          "description": "Observed in a healthy adult individual for a recessive (homozygous), dominant (heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an early age.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638884/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638884/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638884/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Observation of variant (biallelic with known pathogenic variant for recessive) in controls inconsistent with disease penetrance.\n* Advise caution when using this rule, since most of hearing loss is autosomal recessive, and autosomal dominant hearing loss could display reduced penetrance or variable expression.\n* However, if biallelic observations in controls are inconsistent with disease penetrance, this may be applicable.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638884/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638884/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432874",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as benign, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432874/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432874/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432874/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432874/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432874/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP6"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638892",
+          "@type": "CriteriaCode",
+          "description": "Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or observed in cis with a pathogenic variant in any inheritance pattern.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638892/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638892/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638892/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638892/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638892/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Observed in trans with a dominant variant/observed in cis with a pathogenic variant (use with caution).\nUse with caution. For genes that are associated with both dominant and recessive hearing loss, consider whether an earlier onset/more severe phenotype could be present if variant is identified in trans with a dominant variant.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638885",
+          "@type": "CriteriaCode",
+          "description": "Protein length changes due to in-frame deletions/insertions in a non-repeat region or stop-loss variants.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638885/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638885/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638885/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638885/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Protein length change due to an in-frame deletion or insertion that are not located in repetitive regions.\n* No changes. Follow recommendations as outlined in ACMG/AMP guidelines and/or Sequence Variant Interpretation working group.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638885/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638882",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is greater than expected for disorder.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638882/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638882/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638882/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "MAF of ≥0.003 (0.3%) for autosomal recessive; MAF of ≥0.0002 (0.02%) for autosomal dominant. Likely benign, provided there is no conflicting evidence.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638882/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638882/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "MAF of ≥0.0007 (0.07%) for autosomal recessive. No BS1_Supporting criteria for autosomal dominant.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432875",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as pathogenic, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432875/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432875/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432875/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432875/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/638432875/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638905",
+          "@type": "CriteriaCode",
+          "description": "Patient’s phenotype or family history is highly specific for a disease with a single genetic etiology.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638905/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638905/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638905/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638905/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638905/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Patient's phenotype highly specific for gene or fully sequenced gene set (see specifications in Table 7).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638899",
+          "@type": "CriteriaCode",
+          "description": "Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of disease.\nCaveats:\n * Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).\n * Use caution interpreting LOF variants at the extreme 3’ end of a gene.\n * Use caution with splice variants that are predicted to lead to exon skipping but leave the remainder of the protein intact.\n * Use caution in the presence of multiple transcripts.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638899/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638899/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Null variant in a gene with established LOF as a disease mechanism; see PVS1_Strong, PVS1_Moderate, PVS1_Supporting for reduced evidence applications.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638899/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "See PVS1 flow chart for PVS1_Strong variants in gene where LOF is a known mechanism of disease.\n* PVS1 should also be considered for the following genes with variants assessed in the Hearing Loss Variant Pilot: GJB2, CDH23, USH2A, SLC26A4, MYO6, MYO7A, TECTA, KCNQ4.\n* For other genes, LOF must be an established disease mechanism, and the gene/disease association must be Strong or Definitive clinical validity level as outlined in Strande et al. 2017 (PMID: 28552198).\n* If above criteria is met, follow PVS1 flowchart as recommended by the SVI.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638899/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "See PVS1 flowchart for PVS1_Moderate variants in gene where LOF is a known mechanism of disease.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638899/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "See PVS1 flowchart for PVS1_Supporting variants in gene where LOF is a known mechanism of disease.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PVS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638897",
+          "@type": "CriteriaCode",
+          "description": "Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease.\nNote: May be used as stronger evidence with increasing segregation data.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638897/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638897/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638897/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Segregation in three affected relatives for recessive and five affected relatives for dominant.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638897/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Segregation in two affected relatives for recessive and 4 affected relatives for dominant.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638897/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Segregation in one affected relative for recessive and two affected relatives for dominant.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638896",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence suggest no impact on gene or gene product (conservation, evolutionary, splicing impact, etc)\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm cannot be counted as an independent criterion. BP4 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638896/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638896/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638896/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638896/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638896/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Computational evidence suggests no impact; REVEL score ≤0.15 or no impact to splicing in MaxEntScan.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638891",
+          "@type": "CriteriaCode",
+          "description": "Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.\nExample: Val->Leu caused by either G>C or G>T in the same codon.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638891/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638891/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638891/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Same amino acid change as an established pathogenic variant; OR\nsplice variants at same nucleotide and with similar impact prediction as previously reported pathogenic variant.\n* Established variant must meet criteria for pathogenicity by the HL specifications\n * Can also use PS1 for splice variants located in the splice consensus sequence, at the same nucleotide position as a previously reported pathogenic variant\n  * Example: c.105+1G>C is known to be pathogenic, can use PS1 for c.105+1G>T\n* No additional hearing loss specifications for missense variants. Follow recommendations as outlined in Richard 2015 and/or the Sequence Variant Interpretation working group within ClinGen.\n\n* Caveat (from ACMG/AMP guidelines): Assess the possibility that the variant may act directly through the DNA change (e.g. through splicing disruption as assessed by at least computational analysis) instead of through the amino acid change)",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638891/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638891/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638907",
+          "@type": "CriteriaCode",
+          "description": "Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.\nCaveat: Population data for indels may be poorly called by next generation sequencing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638907/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638907/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638907/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638907/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638907/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Absent/Rare in population databases (absent or ≤0.00007 (0.007%) for autosomal recessive, ≤0.00002 (0.002%) for autosomal dominant).\n* Background: Rarity or absence in the general population is not robust evidence for pathogenicity, particularly for autosomal recessive disorders. However, the ACMG/AMP Guidelines were devised in such a way that absence or rarity were considered moderate evidence towards pathogenicity, and the framework requires multiple pieces of evidence to classify a variant as likely pathogenic or pathogenic.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638889",
+          "@type": "CriteriaCode",
+          "description": "Lack of segregation in affected members of a family.\nCaveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation among affected individuals. Also, families may have more than one pathogenic variant contributing to an autosomal dominant disorder, further confounding an apparent lack of segregation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638889/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638889/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638889/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Non-segregation with disease.\n* Phenotype+/genotype-\n * Strong evidence for benign.\n * Be cautious when using this as the possibility for phenocopy is high. The hearing loss phenotype should be consistent within the family to consider it a non-segregation, though intra-familial variability has been reported. Factors to consider are:\n  * Age of onset (ie. congenital/early childhood vs. adult onset).\n * Hearing loss prevalence increases significantly with age. A congenital hearing loss in a child and a late onset hearing loss in a grandparent would not be a consistent phenotype.\n  * Severity (ie - mild vs. profound).\n   * Minor differences may exist among family members.\n   * Keep in mind that progression in older individuals may account for a discrepancy between individuals.\n  * Sex -based differences (infertility, genes on X chromosomes)\n * Audiogram shape.\n  * May not be completely consistent among family members even with same etiology.\n* Genotype+/phenotype-\n * Confounding variables to applying this rule: Age-related/sex-related penetrance, variable expressivity, etc.\n * If the gene is associated with later onset and individual with the non-segregation is beyond the expected age that the hearing loss would occur, consider applying BS4_Supporting\n * Recommend only using for fully penetrant genes (typically genes associated with AR hearing loss).\n * Must be confident that patient is truly unaffected and a hearing loss is not missed or subclinical. Be cautious if only phenotyping was newborn hearing screening. Diagnostic audiometric testing (auditory brainstem response (ABR) or audiogram should be required).\n * Any evidence for reduced penetrance, do not use BS4",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638889/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638889/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638886",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies show no damaging effect on protein function or splicing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638886/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638886/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638886/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638886/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638886/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Functional study shows no deleterious effect (predefined list).\n* Recommend that functional evidence is not used as strong evidence, due to the absence of well-established functional studies for hearing loss genes.\n* Guidance on functional evidence at supporting level is as follows (see functional spreadsheets attached):\n * GJB2: electrical coupling assays, dye transfer assays → BS3_Supporting\n  * Dye Transfer Assays: Expect results that compare the fluorescence of a variant-transfected cell to both a negative control (or H2O injected control) and a wildtype-transfected cell. BS2_Supporting can be applied if the variant results in dye transfer comparable to the wildtype.\n  * Electrical Coupling Assays: Expect results comparing the current of the variant-transfected cells to both a negative control (or H2O injected control) and a wildtype-transfected cell. BS2_Supporting would be applied if the variant results in a current comparable to the wildtype.\n * SLC26A4: Radio isotope and fluorescence assays → BS3_Supporting\n  * Radio Isotope Assays: BS3_Supporting would be applied if the variant results in iodide efflux levels comparable to the wildtype.\n  * Fluorescence assay: BS3_Supporting would be applied if the variant results in fluorescence comparable to the wildtype\n * COCH: Localization, secretion, and dimerization studies performed using immunofluorescence and Western blotting techniques → BS3_Supporting\n  * Localization: BS3_Supporting would be applied if the variant results in extracellular deposits comparable to the wildtype.\n  * Secretion: BS3_Supporting would be applied if the variant results in secretion comparable to the wildtype.\n  * Dimerization: In a non-reducing environment, wildtype cochlin migrate quickly and appear smaller than in the reduced state because the structure is maintained by disulfide bonds. BS3_Supporting would be applied if the variant results in molecular weight and size comparable to the wildtype.\n* If not listed above, OK to use BS3_Supporting for other genes/functional analyses if\n * The assay has been validated by a known pathogenic and benign variant AND\n * There is plausible reason that the function the assay is testing relates to the phenotype AND\n * The assay conditions are likely to mimic the physiological environment.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638883",
+          "@type": "CriteriaCode",
+          "description": "For recessive disorders, detected in trans with a pathogenic variant\nNote: This requires testing of parents (or offspring) to determine phase.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638883/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638883/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "4 points awarded from tables 7a and 7b\nExample: Detected in trans in ≥4 probands with a pathogenic variant (recessive).",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638883/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "2 points awarded from tables 7a and 7b\nExample: Detected in trans in 2 probands with a pathogenic variant (recessive).",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638883/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "1 point awarded from tables 7a and 7b.\nExample: Detected in trans with a pathogenic variant (recessive).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638883/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "0.5 points awarded from tables 7a and 7b\nExamples: Two variants that meet PM2_Supporting detected in trans; OR\na homozygous variant meeting PM2_Supporting.\n",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638903",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence support a deleterious effect on the gene or gene product (conservation, evolutionary, splicing impact, etc.).\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm should not be counted as an independent criterion. PP3 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638903/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638903/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638903/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638903/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638903/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "REVEL score ≥0.7, or predicted impact to splicing using MaxEntScan.\n* Use REVEL and MAXENTSCAN.\n * For missense variants, award PP3 if REVEL score is ≥0.7.\n * If splicing is predicted to be impacted, either creation of a cryptic splice site, or disruption of a native splice site, award PP3.\n* For splice variants (except for canonical -/+1 or 2), use MAXENTSCAN.\n * For -/+ 1 or 2 splice variants, do not use PP3 if you are using PVS1.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638902",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene that has a low rate of benign missense variation and where missense variants are a common mechanism of disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638902/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638902/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638902/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638902/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638902/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638901",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638901/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "MAF of ≥0.005 (0.5%) for autosomal recessive; MAF of ≥0.001 (0.1%) for autosomal dominant.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638901/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638901/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638901/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638901/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BA1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638898",
+          "@type": "CriteriaCode",
+          "description": "The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls.\nNote 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0 and the confidence interval around the estimate of RR or OR does not include 1.0. See manuscript for detailed guidance.\nNote 2: In instances of very rare variants where case-control studies may not reach statistical significance, the prior observation of the variant in multiple unrelated patients with the same phenotype, and its absence in controls, may be used as moderate level of evidence.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638898/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638898/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638898/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Fisher Exact or Chi-Squared analysis shows statistical increase in cases over controls, OR\nAutosomal dominant: ≥15 probands with variant, and variant meets PM2_Supporting.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638898/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Autosomal dominant: ≥6 probands with variant, and variant meets PM2_Supporting.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638898/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "Autosomal dominant: ≥2 probands with variant, and variant meets PM2_Supporting.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638893",
+          "@type": "CriteriaCode",
+          "description": "De novo (both maternity and paternity confirmed) in a patient with the disease and no family history.\nNote: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638893/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638893/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "4 points per tables 5a and 5b:\nExamples: 2 proven de novo occurrences; OR 1 proven + 2 assumed de novo occurrences; OR\n4 assumed de novo occurrences.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638893/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "2 points per tables 5a and 5b:\nExamples: 1 proven de novo occurrence; OR 2 assumed de novo occurrences.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638893/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "1 point per tables 5a and 5b:\nExamples: 1 proven de novo occurrence (phenotype consistent but not specific to gene); OR\n1 assumed de novo occurrence; OR 2 assumed de novo occurrences (phenotype/gene not specific).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638893/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "0.5 points per tables 5a and 5b:\nExample: 1 assumed de novo occurrence (phenotype/gene not specific).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638890",
+          "@type": "CriteriaCode",
+          "description": "Assumed de novo, but without confirmation of paternity and maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638890/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638890/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638890/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638890/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable with VCEP specification",
+              "description": "See PS2 above",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/135638890/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable for this VCEP",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM6"
+        }
+      ],
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=CDH23",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019501",
+              "@type": "Disease",
+              "label": "MONDO:0019501"
+            },
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "CDH23"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=COCH",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "COCH"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=GJB2",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "GJB2"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=KCNQ4",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "KCNQ4"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=MYO6",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "MYO6"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=MYO7A",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019501",
+              "@type": "Disease",
+              "label": "MONDO:0019501"
+            },
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "MYO7A"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=SLC26A4",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0010134",
+              "@type": "Disease",
+              "label": "MONDO:0010134"
+            }
+          ],
+          "label": "SLC26A4"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=TECTA",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "TECTA"
+        },
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=USH2A",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019501",
+              "@type": "Disease",
+              "label": "MONDO:0019501"
+            }
+          ],
+          "label": "USH2A"
+        }
+      ]
+    }
+  ],
+  "version": "2.0"
+}

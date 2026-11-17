@@ -1,0 +1,47 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN050",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50007",
+    "@type": "Organization",
+    "label": "Hearing Loss Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50007"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/643243120"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Hearing Loss Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for CDH23 Version 2.0",
+  "lastUpdated": "2022-08-18T19:13:28.663Z",
+  "legacyFullySuperseded": false,
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/643243127",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=CDH23",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019501",
+              "@type": "Disease",
+              "label": "MONDO:0019501"
+            },
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0019497",
+              "@type": "Disease",
+              "label": "MONDO:0019497"
+            }
+          ],
+          "label": "CDH23"
+        }
+      ]
+    }
+  ],
+  "version": "2.0"
+}

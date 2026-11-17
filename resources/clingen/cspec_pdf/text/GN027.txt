@@ -1,0 +1,824 @@
+Criteria Specification
+ClinGen Cerebral Creatine Deficiency Syndromes Expert Panel Specifications to the ACMG/AMP
+Variant Interpretation Guidelines for SLC6A8 Version 2.1
+Affiliation: Cerebral Creatine Deficiency Syndromes VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : Cerebral Creatine Deficiency Syndromes Variant Curation Expert Panel ACMG Classification
+Rules Specified for Solute Carrier Family 6, Member 8 (SLC6A8; Creatine Transporter) Summary of ACMGAMP Criteria for SLC6A8 Variants. General: variant curation for SLC6A8 uses the Bayesian point-based
+approach as described by Tavtigian, 2020 (PMID: 32720330). See "Bayesian points system" attachment
+and disregard "Rules for Combining Criteria" at the end of this document.
+Version : 2.1
+Released : 7/6/2026
+DOI : 10.5281/zenodo.21421641
+Release Notes :
+Removed the attached document with the response to the SVI.
+
+Contributors & Keywords
+Research Group: Cerebral Creatine Deficiency
+Syndromes VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+SLC6A8 NM_005629.4 X-linked inheritance
+creatine transporter deficiency
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for SLC6A8
+Gene: SLC6A8 (HGNC:11055) 
+Transcripts:
+NM_005629.4
+
+HGNC Name: solute carrier family 6 member 8
+Disease:
+creatine transporter deficiency
+(MONDO:0010305)  Mode
+of Inheritance: X-linked
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+See attached PVS1 decision tree, adapted from Tayoun, et.al. 2018 [PMID:30192042]
+for nonsense, frameshift, predictions for canonical splice variants, deletions,
+duplications and initiation codon variants.
+See attached PVS1 decision tree, adapted from Walker, et. al. 2023 [PMID:37352859]
+for observed RNA splicing defects from functional splicing assays (minigene assay,
+RNA Sequencing, transcriptome analysis, etc) [PMID: 39418753]
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+See attached PVS1 decision tree, adapted from Tayoun, et.al. 2018 [PMID:30192042]
+for nonsense, frameshift, predictions for canonical splice variants, deletions,
+duplications and initiation codon variants.
+See attached PVS1 decision tree, adapted from Walker, et. al. 2023 [PMID:37352859]
+for observed RNA splicing defects from functional splicing assays (minigene assay,
+RNA Sequencing, transcriptome analysis, etc) [PMID: 39418753]
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+See attached PVS1 decision tree, adapted from Tayoun, et.al. 2018 [PMID:30192042]
+for nonsense, frameshift, predictions for canonical splice variants, deletions,
+duplications and initiation codon variants.
+See attached PVS1 decision tree, adapted from Walker, et. al. 2023 [PMID:37352859]
+for observed RNA splicing defects from functional splicing assays (minigene assay,
+RNA Sequencing, transcriptome analysis, etc) [PMID: 39418753]
+Default
+Point
+Value:
+
+2
+
+Modification Gene-specific
+Type:
+
+Supporting
+See attached PVS1 decision tree, adapted from Tayoun, et.al. 2018 [PMID:30192042]
+for nonsense, frameshift, predictions for canonical splice variants, deletions,
+duplications and initiation codon variants.
+See attached PVS1 decision tree, adapted from Walker, et. al. 2023 [PMID:37352859]
+for observed RNA splicing defects from functional splicing assays (minigene assay,
+RNA Sequencing, transcriptome analysis, etc) [PMID: 39418753]
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+PS1 is applicable as described.
+PS1 may also be applicable for intronic variants in the canonical splice consensus
+sequence or in the splice region. See “PS1_SpliceVariants” for applicable points,
+from Walker, et.al. PMID:37352859
+Splice AI score must be <0.1 for both the variant under review and the previously
+reported variant to apply this code.
+Default
+4
+Point
+Value:
+Modification General recommendation
+Type:
+
+Moderate
+PS1 is applicable as described
+PS1_Moderate may also be applicable for intronic variants in the canonical splice
+consensus sequence or in the splice region. See “PS1_SpliceVariants” for applicable
+
+points
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+PS1 is applicable as described
+PS1_Supp may also be applicable for intronic variants in the canonical splice
+consensus sequence or in the splice region. See “PS1_SpliceVariants” for applicable
+points
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Strong
+Is applicable in the case of a hemizygous male or a heterozygous female minimally
+meeting PP4_Supporting with a de novo variant
+confirmation of maternity only is sufficient in male probands
+confirmation of both maternity and paternity is necessary in female probands
+Default
+4
+Point
+Value:
+Modification Disease-specific,None
+Type:
+
+Moderate
+Is applicable in the case of a newly hemizygous male with variant identified de novo in
+asymptomatic mother when one of the following conditions are met
+
+Identified in male proband minimally meeting PP4_Supporting if the biological
+mother (asymptomatic or affected) has a de novo SLC6A8 variant confirmed by
+parental testing in her parents
+Identified in male proband minimally meeting PP4_Supporting if the biological
+mother (asymptomatic or affected) has a mosaic SLC6A8 (≤30% variant allele
+frequency)
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Variants demonstrated by functional assays to alter splicing should not be
+Specifications:scored under PS3 criteria. Please see PVS1 (above) and PVS1 decision
+tree (attached) to apply appropriate strength for variants with functional
+splicing data. Decision tree for variants with observed RNA splicing
+defects adapted from Walker, et.al 2023 [PMID:37352859].
+
+Moderate
+Creatine transport deficient mouse models have biochemical findings including
+reduced/absent creatine in brain [PMID:21249153, 25485098, 33389772], which has been
+recapitulated in brain-specific creatine transport knockout models [PMID:22751104].
+PS3_Moderate is applicable when the variant under review is used to generate a mouse
+knock-in model and assessment of brain creatine demonstrates significantly reduced or
+absent brain creatine when compared to wildtype littermates.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Creatine transport assay using site directed mutagenesis to introduce the variant under
+review into SLC6A8 deficient cell line, and results in <10% creatine transport compared to
+wildtype cells when using ≤125uM creatine, or ≤25% when using creatine >125uM.
+
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Specifications:
+
+Note 1: Relative risk or OR, as obtained from case–control studies, is
+>5.0, and the confidence interval around the estimate of relative risk
+or OR does not include 1.0. See the article for detailed guidance.
+Note 2: In instances of very rare variants where case–control studies
+may not reach statistical significance, the prior observation of the
+variant in multiple unrelated patients with the same phenotype, and
+its absence in controls, may be used as moderate level of evidence.
+Note 3: A single individual cannot be counted for both PP4 and PS4.
+Use the individual with the highest possible PP4 evidence under that
+code and use PS4 to count additional affected individuals.
+
+Very Strong
+8 independent probands with elevated urine creatine/creatinine ratio on one
+occasion at minimum, in addition to any proband used for PP4.
+Affected females may be counted if meeting PP4_Supporting
+Variant must meet PM2_Supporting criterion for PS4 to apply.
+Default
+8
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Strong
+
+4 independent probands with elevated urine creatine/creatinine ratio on one
+occasion at minimum, in addition to any proband used for PP4.
+Affected females may be counted if meeting PP4_Supporting
+Variant must meet PM2_Supporting criterion for PS4 to apply.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+2 independent probands with elevated urine creatine/creatinine ratio on one
+occasion at minimum, in addition to any proband used for PP4.
+Affected females may be counted if meeting PP4_Supporting
+Variant must meet PM2_Supporting criterion for PS4 to apply.
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+1 independent proband with elevated urine creatine/creatinine ratio on one occasion
+at minimum, in addition to any proband used for PP4.
+Variant must meet PM2_Supporting criterion for PS4 to apply.
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+Not applicable
+
+PM2
+
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+PM2 at Moderate strength level is not applicable per SVI recommendations
+Specifications:
+
+Supporting
+Applicable when Grpmax Filtering Allele Frequency is ≤0.00002 (0.002%) AND 0 homo- or
+hemizygotes are present in the most current version of gnomAD available at the time of
+curation
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+SLC6A8 is an X-linked gene, therefore PM3 is not applicable
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length changes as a result of in-frame deletions/insertions in a non-repeat region
+or stop-loss variants.
+Default
+Point
+Value:
+
+2
+
+Modification None
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Same as described.
+Splice AI score must be <0.1 for both the variant under review and the previously
+reported variant to apply this code.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Novel missense change at an amino acid residue where a different missense change
+determined to be Likely pathogenic has been seen before. Example: Arg156His is Likely
+pathogenic; now you observe Arg156Cys
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Moderate
+See criteria in PS2.
+Default
+Point
+
+2
+
+Value:
+Modification No change
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Specifications:
+
+Based on Biesecker, 2024 [PMID:38103548], the following strength
+levels are applicable for SLC6A8 – segregations include:
+variant positive, phenotype positive males
+variant negative, phenotype negative males
+variant positive, phenotype positive females
+variant positive asymptomatic females should NOT be counted
+Total locus evidence for PP1+PP4 must be capped at 5.0 points per
+allele
+
+Strong
+4 segregations
+Default
+4
+Point
+Value:
+Modification Strength
+Type:
+
+Moderate
+2 segregations
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+1 segregations
+Default
+Point
+Value:
+
+1
+
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable, Missense Z score is 3.05 (o/e =0.46).
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Applicable for missense variants with REVEL >0.75
+Applicable for canonical splice, splice region, or deep intronic variants with SpliceAI
+delta score ≥0.20
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+See attached PP4 table for phenotypes in males and/or female probands
+Specifications:required to meet PP4 criteria. Point total for applicable PP4 criteria should
+be summed.
+
+• Sum of points for phenotype from attached table and strength at which
+to apply PP4
+PP4 (+1): = 1-2 points
+PP4_Moderate (+2): = 3 points
+PP4_Strong (+4): = 4 points
+
+Strong
+See attached PP4 table for phenotypes in males and/or female probands required to meet
+PP4 criteria. Point total for applicable PP4 criteria should be summed.
+PP4_Strong (+4): = 4 points
+Two or more data types are required to reach strong.
+An individual used to assign PP4, at any weight, cannot be also included for PS4
+count. If multiple unrelated probands with the variant have been identified, it is
+recommended that the case with the highest PP4 points is assigned the appropriate
+weight for PP4, and the other cases are used for PS4.
+Variant must meet PM2_Supporting for PP4 to apply at any strength.
+For PP4 to be applied at strong, full SLC6A8 gene sequencing, including all coding
+exons and intron/exon boundaries must have been carried out. If not, downgrade by
+one strength level.
+Total locus evidence for PP1+PP4 must be capped at 5.0 points per allele
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+See attached PP4 table for phenotypes in males and/or female probands required to meet
+PP4 criteria. Point total for applicable PP4 criteria should be summed.
+PP4_Moderate (+2): = 3 points
+An individual used to assign PP4, at any weight, cannot be also included for PS4
+count. If multiple unrelated probands with the variant have been identified, it is
+recommended that the case with the highest PP4 points is assigned the appropriate
+weight for PP4, and the other cases are used for PS4.
+Variant must meet PM2_Supporting for PP4 to apply at any strength.
+Total locus evidence for PP1+PP4 must be capped at 5.0 points per allele
+Default
+Point
+Value:
+
+2
+
+Modification Strength
+Type:
+
+Supporting
+See attached PP4 table for phenotypes in males and/or female probands required to meet
+PP4 criteria. Point total for applicable PP4 criteria should be summed.
+PP4 (+1): = 1-2 points
+An individual used to assign PP4, at any weight, cannot be also included for PS4
+count. If multiple unrelated probands with the variant have been identified, it is
+recommended that the case with the highest PP4 points is assigned the appropriate
+weight for PP4, and the other cases are used for PS4.
+Variant must meet PM2_Supporting for PP4 to apply at any strength.
+Total locus evidence for PP1+PP4 must be capped at 5.0 points per allele
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Applicable when Grpmax Filtering Allele Frequency is ≥0.002 (0.2%) OR ≥10 homo- or
+hemizygotes (or the sum of total hemi- and homozygotes) are present in the most current
+version of gnomAD available at the time of curation.
+Default
+Point
+Value:
+
+Not Applicable
+
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Applicable when Grpmax Filtering Allele Frequency is ≥0.0002 (0.02%)
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Applicable when the variant is observed in ≥2 homo- or hemizygotes in the most current
+version of gnomAD available at the time of curation OR the variant is identified in a male
+with documented normal urine creatine/creatinine ratio
+BS1 and BS2 should not be co-applied based on the number of homo- or
+hemizygotes present in gnomAD
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Can be used if the variant is identified in a male with creatine transport studies ≥80%
+compared to wildtype if ≤125uM creatine was used in the study.
+Default
+Point
+Value:
+
+-1
+
+Modification Gene-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+BS3 is not applicable at Strong strength level
+Specifications:
+
+Supporting
+Creatine transport assay demonstrating ≥50% normal transport activity compared to
+controls when using ≤125uM creatine. Any study using >125uM creatine for
+creatine transporter assays cannot be used as Benign evidence.
+RT-PCR evidence demonstrating no observable effect of splicing for canonical splice,
+splice region, and deep intronic variants
+Expression assay demonstrating wildtype transcript levels
+Default
+-1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Asymptomatic, variant positive females should NOT be used as benign segregation
+evidence
+Default
+Point
+Value:
+
+-4
+
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable, truncating and missense variants have been reported in
+affected patients.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Not applicable, SLC6A8 is an X-linked gene
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Not applicable, SLC6A8 is a transmembrane protein with no repetitive
+regions of unknown function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+
+REVEL score ≤ 0.20
+For variants potentially impacting splicing, Splice AI score <0.10
+Default
+-1
+Point
+Value:
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Use as described.
+Default
+-1
+Point
+Value:
+Modification None
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site
+
+SpliceAI score ≤0.10
+May also be applied in conjunction with PB4 for an intronic variant outside the splice
+region (beyond -4bp or +7 bp)
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+-1 - 5
+
+Likely Benign
+
+-6 - -2
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+SLC6A8 Functional Assay SVI documentation: 
+SLC6A8_PVS1_v2.1_033026: 
+SLC6A8 PP4 V2: 
+SLC6A8_Bayesian Points System_033026: 
+SLC6A8 PS1 Splice Variants: 
+
+

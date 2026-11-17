@@ -1,0 +1,1155 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN141",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50095",
+    "@type": "Organization",
+    "label": "Antibody Deficiencies Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50095"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1610842289"
+  },
+  "cspecStatus": "Released",
+  "currentStatus": "Released",
+  "label": "ClinGen Antibody Deficiencies Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for PIK3CD Version 1.0",
+  "lastUpdated": "2025-12-16T16:36:15.375Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1610842302",
+      "@type": "RuleSet",
+      "criteriaCodes": [
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131391",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene for which primarily truncating variants are known to cause disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131391/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131391/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131391/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131391/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131391/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131415",
+          "@type": "CriteriaCode",
+          "description": "Protein length changes due to in-frame deletions/insertions in a non-repeat region or stop-loss variants.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131415/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131415/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131415/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131415/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131415/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131410",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies supportive of a damaging effect on the gene or gene product.\nNote: Functional studies that have been validated and shown to be reproducible and robust in a clinical diagnostic laboratory setting are considered the most well-established.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131410/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131410/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131410/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PS3 will be applied at the default level of strength for evidence from an animal model expressing the variant of interest and recapitulating the APDS phenotype. This strength level is considered particularly appropriate if multiple mouse models of the same variant recapitulate APDS features.\n*   PS3 will be applied at the default level of strength for an abnormal result in an approved _in vitro_ assay with a calculated OddsPath >18.7 (as recommended in PMID: 31892348). One example has been found in the literature:\n    *   Enrichment of the variant in high phospho-S6 and phospho-AKT T cells relative to low phospho-S6 and phospho-AKT T cells, within a next generation sequencing-based screen of donor T cells subjected to of CRISPR-mediated adenine base-editing (PMID: 40543502)",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131410/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PS3 will be applied at the moderate level of strength for an abnormal result in an approved _in vitro_ assay with a minimum of 11 total pathogenic and benign variant controls (classified using these same specifications, as recommended in PMID: 31892348). Example assays with sufficient control variants have not yet been found in published reports at the time of these specifications, but are anticipated in the future as additional studies are published.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131410/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PS3\\_Supporting can be applied based on an abnormal result in an approved _in vitro_ assay. These are described in detail in the attached Excel file entitled “PIK3CD\\_Functional\\_Assays\\_PS3\\_BS3”\n    *   Approved assay classes and specific assay instances: \n        *   AKT kinase activity assay\n            *   PMID: 24136356, PMID: 24165795, PMID: 28414062\n        *   Lipid kinase activity \n            *   PMID: 24136356; PMID: 28167755;  PMID: 28414062\n        *   Lipid vesicle affinity\n            *   PMID: 24136356\n        *   Conformational dynamics: \n            *   PMID: 28167755; PMID: 28414062\n*   Please note that protein binding assays testing PIK3CD binding to PIK3R1 were also considered for inclusion in PS3\\_Supporting, but were excluded based on lack of evidence of altered binding by disease-associated variants compared to wild-type controls (PMID: 24165795; PMID: 28414062).\n*   Patient cell-based functional assays directly showing abnormally high activity of the disease-relevant PI3K delta pathway were considered for inclusion in the PS3\\_Supporting code but are viewed as part of the proband phenotype and have been recommended for consideration under the PP4\\_Moderate code instead.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131395",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is greater than expected for disorder.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131395/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131395/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131395/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Applicable to variants with a GrpMax filtering allele frequency greater than or equal to 0.000316 in gnomAD v4.1.0.\n*   If GrpMax filtering allele frequency is not listed for the variant, this code is applicable to the maximum allele frequency among the five major continental populations (African / African-American, East Asian, European non-Finnish, Latino / Admixed-American, or South Asian).\n*   The BS1 threshold was derived by decreasing the BA1 cutoff (greater than or equal to 0.00316) by one order of magnitude.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131395/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131395/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131401",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as benign, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131401/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131401/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131401/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131401/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Supporting"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131401/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Moderate"
+            }
+          ],
+          "label": "BP6"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131399",
+          "@type": "CriteriaCode",
+          "description": "Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.\nCaveat: Population data for indels may be poorly called by next generation sequencing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131399/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131399/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131399/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131399/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131399/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Downgraded to PM2\\_Supporting\n*   Applicable to variants with a total allele frequency \\<0.00000132 across all populations in gnomAD v4.1.0.\n*   Maximum credible population allele frequency threshold determined using Whiffin/Ware calculator ([https://www.cardiodb.org/allelefrequencyapp/](https://www.cardiodb.org/allelefrequencyapp/)) and the following estimated parameters (with the prevalence estimated for autosomal dominant PIK3CD-related immune disease):\n    *   Prevalence: 1 in 4000 (a conservative estimate for primary immunodeficiency diseases from PMID: 17577648, PMID: 23201919)\n    *   Allelic heterogeneity: 1\n    *   Genetic heterogeneity: 1\n    *   Penetrance: 0.95 (a conservative estimate based on multiple reports of incomplete but nearly complete penetrance in PMID: 27555459, PMID: 36749229, PMID: 37390899)",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131407",
+          "@type": "CriteriaCode",
+          "description": "Lack of segregation in affected members of a family.\nCaveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation among affected individuals. Also, families may have more than one pathogenic variant contributing to an autosomal dominant disorder, further confounding an apparent lack of segregation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131407/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131407/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131407/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Caution in case the phenotype is not highly specific. The patients lacking segregation must reach 6 or more points of the phenotypic scoring system described in **Table 4.**\n*   Lack of segregation should be identified in more than 1 affected family member to meet BS4 at the default level of strength.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131407/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131407/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Caution in case the phenotype is not highly specific. The patient lacking segregation must reach 6 or more points of the phenotypic scoring system described in **Table 4.**\n*   BS4\\_Supporting is met if only 1 affected family member lacks segregation of the genotype.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131398",
+          "@type": "CriteriaCode",
+          "description": "Located in a mutational hot spot and/or critical and well-established functional domain (e.g. active site of an enzyme) without benign variation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131398/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131398/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131398/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131398/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131398/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131394",
+          "@type": "CriteriaCode",
+          "description": "Variant found in a case with an alternate molecular basis for disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131394/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131394/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131394/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131394/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131394/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "Variant found in a case with an alternate molecular basis for disease.\n\nAt least two such cases are required to mitigate the reliance on assertions of variant pathogenicity in genes outside of the purview of the Antibody Deficiencies VCEP.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131402",
+          "@type": "CriteriaCode",
+          "description": "Patient’s phenotype or family history is highly specific for a disease with a single genetic etiology.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131402/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131402/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131402/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131402/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PP4\\_Moderate is met when a proband scores greater than or equal to 10 phenotype points in the PS4 counting rubric AND has genotyping to rule out a variant in the _PIK3R1_ locus AND has patient cell-based functional assays directly showing abnormally high activity of the disease-relevant PI3K delta pathway.\n*   Patient cell-based functional experiments generally isolate T cells from affected and unaffected patients and often perform stimulation by anti-CD3 and anti-CD28 antibodies, followed by assessment of PI3K delta pathway function using western blotting or flow cytometry in combination with phospho-specific antibodies. These methods detect levels of AKT phosphorylation at Ser473 (PMID: 24136356, PMID: 28414062, PMID: 28428270) or Thr308 (PMID: 24165795) and/or S6 phosphorylation at Ser235/Ser236 (PMID: 28428270) or Ser240/Ser244 (PMID: 28414062). Phosphorylation may be upregulated by 1.2-fold to 7.5-fold in cells from the affected patient relative to the healthy control, and in some assays may be shown to be abrogated by PI3K-specific inhibitor (PMID: 28428270).\n*   Please note that a proband used for PP4\\_Moderate cannot be included in PS4.\n*   In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131402/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   In order to be counted for this criterion, a proband must score greater than or equal to 10 phenotype points in the PS4 counting rubric **(Table 3)** AND have genotyping to rule out a variant in the _PIK3R1_ locus.\n*   Please note that a proband used for PP4 cannot be included in PS4.\n*   In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131397",
+          "@type": "CriteriaCode",
+          "description": "Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome Aggregation Consortium.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131397/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Applicable to variants with a GrpMax filtering allele frequency greater than or equal to 0.00316 in gnomAD v4.1.0.\n*   If GrpMax filtering allele frequency is not listed for the variant, this code is applicable to the maximum allele frequency among the five major continental populations (African / African-American, East Asian, European non-Finnish, Latino / Admixed-American, or South Asian).\n*   Maximum credible population allele frequency threshold determined using Whiffin/Ware calculator ([https://www.cardiodb.org/allelefrequencyapp/](https://www.cardiodb.org/allelefrequencyapp/)) and the following estimated parameters (with the prevalence estimated for PIK3CD-related immune disease and the inheritance tailored to the autosomal recessive rather than autosomal dominant mode of inheritance, associated with complete penetrance):\n    *   Inheritance: biallelic\n    *   Prevalence: 1 in 100,000 (calculated at 1 in 7,500,000 based on the USIDNET cohort, PMID: 34352450, but adjusted based on expectation that cases are actually more common, resulting in a much more frequent / more aggressive prevalence estimate of 1 in 100,000 in order to generate a more conservative estimate)\n    *   Allelic heterogeneity: 1\n    *   Genetic heterogeneity: 1\n    *   Penetrance: 1",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131397/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131397/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131397/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131397/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BA1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131389",
+          "@type": "CriteriaCode",
+          "description": "Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of disease.\nCaveats:\n * Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).\n * Use caution interpreting LOF variants at the extreme 3’ end of a gene.\n * Use caution with splice variants that are predicted to lead to exon skipping but leave the remainder of the protein intact.\n * Use caution in the presence of multiple transcripts.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131389/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131389/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131389/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131389/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131389/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PVS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131405",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence support a deleterious effect on the gene or gene product (conservation, evolutionary, splicing impact, etc.).\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm should not be counted as an independent criterion. PP3 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131405/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131405/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131405/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131405/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131405/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Met at the default (PP3) level by a missense variant with REVEL score greater than or equal to 0.644 and CADD PHRED score greater than or equal to 25.3.\n*   Higher strength levels of PP3\\_Moderate or PP3\\_Strong have not been recommended due to pilot data indicating poor performance and significant discordance between REVEL and CADD predictions for established benign and gain-of-function _PIK3CD_ variants.\n*   SpliceAI scores should be checked for missense variants, but there currently is no evidence of variants causing autosomal dominant disease through a splicing mechanism, so PP3 cannot be met by a variant located in the boundary exonic/intronic region with a predicted splicing impact. A variant with a predicted impact on splicing (SpliceAI Δ score greater than or equal to 0.2) should not be evaluated using these specifications, but rather using alternative specifications for autosomal recessive disease with a loss-of-function mechanism, unless functional evidence indicates a gain-of-function effect.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131414",
+          "@type": "CriteriaCode",
+          "description": "The prevalence of the variant in affected individuals is significantly increased compared to the prevalence in controls.\nNote 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0 and the confidence interval around the estimate of RR or OR does not include 1.0. See manuscript for detailed guidance.\nNote 2: In instances of very rare variants where case-control studies may not reach statistical significance, the prior observation of the variant in multiple unrelated patients with the same phenotype, and its absence in controls, may be used as moderate level of evidence.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131414/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131414/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131414/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   The strength of this code is defined in **Table 4**. Use PS4 at the default level of strength when four or more probands meet the phenotype scoring criteria in **Table 3** and genetic testing requirements described below. Please note that a proband used for PP4 or PP4\\_Moderate cannot be included in PS4.\n*   Point strength has been determined based on a survey of clinical experts, with the goal of quantifying the degree to which a proband’s phenotypes are specific to PIK3CD-related immunodeficiency. Phenotypes have been grouped into categories such as “respiratory findings” or “gastrointestinal disease” to prioritize the diversity of systems affected. Probands receive full points for at least one reported feature in the category. Points per category have been tailored to reward those considered most characteristic of and prevalent within patients with PIK3CD-related immunodeficiency.\n*   A proband must reach greater than or equal to 6 points in the phenotype scoring criteria above (**Table 3**) and, at minimum, a primary immunodeficiency or antibody gene testing panel must have identified no likely pathogenic or pathogenic variants in the _PIK3R1_ locus in order to be counted toward PS4\n    *   Genome or exome sequencing is acceptable in lieu of a gene panel\n    *   For genes associated with autosomal recessive disorders, carrier status is acceptable.\n*   If no gene testing panel was performed, additional phenotypic features (reaching greater than or equal to 10 points) are required to count the proband toward PS4.\n*   Scoring of probands with previous genetic testing should be prioritized, particularly in the event of scoring historical or rare probands/variants.\n*   In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131414/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   The strength of this code is defined in **Table 4**. Use PS4\\_Moderate when 2-3 probands meet the phenotype scoring criteria in **Table 3** and genetic testing requirements described below. Please note that a proband used for PP4 or PP4\\_Moderate cannot be included in PS4\\_Moderate.\n*   Point strength has been determined based on a survey of clinical experts, with the goal of quantifying the degree to which a proband’s phenotypes are specific to PIK3CD-related immunodeficiency. Phenotypes have been grouped into categories such as “respiratory findings” or “gastrointestinal disease” to prioritize the diversity of systems affected. Probands receive full points for at least one reported feature in the category. Points per category have been tailored to reward those considered most characteristic of and prevalent within patients with PIK3CD-related immunodeficiency.\n*   A proband must reach greater than or equal to 6 points in the phenotype scoring criteria above (**Table 3**) and, at minimum, a primary immunodeficiency or antibody gene testing panel must have identified no likely pathogenic or pathogenic variants in the _PIK3R1_ locus in order to be counted toward PS4\n    *   Genome or exome sequencing is acceptable in lieu of a gene panel\n    *   For genes associated with autosomal recessive disorders, carrier status is acceptable.\n*   If no gene testing panel was performed, additional phenotypic features (reaching greater than or equal to 10 points) are required to count the proband toward PS4.\n*   Scoring of probands with previous genetic testing should be prioritized, particularly in the event of scoring historical or rare probands/variants.\n*   In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131414/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   The strength of this code is defined in **Table 4**. Use PS4\\_Supporting when one proband meets the phenotype scoring criteria in **Table 3** and genetic testing requirements. Please note that a proband used for PP4 or PP4\\_Moderate cannot be included in PS4\\_Supporting.\n*   Point strength has been determined based on a survey of clinical experts, with the goal of quantifying the degree to which a proband’s phenotypes are specific to PIK3CD-related immunodeficiency. Phenotypes have been grouped into categories such as “respiratory findings” or “gastrointestinal disease” to prioritize the diversity of systems affected. Probands receive full points for at least one reported feature in the category. Points per category have been tailored to reward those considered most characteristic of and prevalent within patients with PIK3CD-related immunodeficiency.\n*   A proband must reach greater than or equal to 6 points in the phenotype scoring criteria above (**Table 3**) and, at minimum, a primary immunodeficiency or antibody gene testing panel must have identified no likely pathogenic or pathogenic variants in the _PIK3R1_ locus in order to be counted toward PS4\n    *   Genome or exome sequencing is acceptable in lieu of a gene panel\n    *   For genes associated with autosomal recessive disorders, carrier status is acceptable.\n*   If no gene testing panel was performed, additional phenotypic features (reaching greater than or equal to 10 points) are required to count the proband toward PS4.\n*   Scoring of probands with previous genetic testing should be prioritized, particularly in the event of scoring historical or rare probands/variants.\n*   In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131393",
+          "@type": "CriteriaCode",
+          "description": "Same amino acid change as a previously established pathogenic variant regardless of nucleotide change.\nExample: Val->Leu caused by either G>C or G>T in the same codon.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131393/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131393/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131393/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use at the default level (PS1) for missense variants when other variant was classified as Pathogenic for autosomal dominant PIK3CD gain-of-function-related disease by Antibody Deficiencies VCEP specifications for _PIK3CD_ without using PS1.\n*   Beware of changes that impact splicing rather than the amino acid (based on RNA data or splicing predictors). Neither change should be predicted to affect splicing (SpliceAI Δ score \\<0.2).",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131393/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use at the PS1\\_Moderate level for missense variants when other variant was classified as Likely Pathogenic for autosomal dominant PIK3CD gain-of-function-related disease by Antibody Deficiencies VCEP specifications for _PIK3CD_ without using PS1.\n*   Beware of changes that impact splicing rather than the amino acid (based on RNA data or splicing predictors). Neither change should be predicted to affect splicing (SpliceAI Δ score \\<0.2).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131393/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131388",
+          "@type": "CriteriaCode",
+          "description": "In frame-deletions/insertions in a repetitive region without a known function.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131388/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131388/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131388/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131388/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131388/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131411",
+          "@type": "CriteriaCode",
+          "description": "Assumed de novo, but without confirmation of paternity and maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131411/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131411/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131411/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131411/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131411/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM6"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131403",
+          "@type": "CriteriaCode",
+          "description": "Observed in a healthy adult individual for a recessive (homozygous), dominant (heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an early age.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131403/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131403/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131403/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131403/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131403/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131390",
+          "@type": "CriteriaCode",
+          "description": "Missense variant in a gene that has a low rate of benign missense variation and where missense variants are a common mechanism of disease.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131390/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131390/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131390/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131390/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131390/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131400",
+          "@type": "CriteriaCode",
+          "description": "Multiple lines of computational evidence suggest no impact on gene or gene product (conservation, evolutionary, splicing impact, etc)\nCaveat: As many in silico algorithms use the same or very similar input for their predictions, each algorithm cannot be counted as an independent criterion. BP4 can be used only once in any evaluation of a variant.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131400/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131400/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131400/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131400/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131400/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Met at the default (BP4) level by a missense variant with REVEL score less than or equal to 0.290 and CADD PHRED score less than or equal to 22.7.\n*   SpliceAI Δ scores should be checked for missense variants as well. Variants with a predicted impact on splicing (SpliceAI Δ score greater than or equal to 0.2) should not be evaluated using these specifications, but rather using alternative specifications for autosomal recessive disease with a loss-of-function mechanism, unless functional evidence indicates a gain-of-function effect. The current specifications are written for a PIK3CD gain-of-function disease mechanism that has so far not been reported in association with variants that disrupt splicing.\n*   Met at the default (BP4) level by a synonymous or intronic variant not predicted to impact splicing by SpliceAI (SpliceAI Δ score \\<0.1, PMID: 37352859).\n*   Higher strength levels of BP4\\_Moderate or BP4\\_Strong have not been recommended due to pilot data indicating poor performance and significant discordance between REVEL and CADD predictions for established benign and gain-of-function PIK3CD variants.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP4"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131409",
+          "@type": "CriteriaCode",
+          "description": "De novo (both maternity and paternity confirmed) in a patient with the disease and no family history.\nNote: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors in embryo transfer, etc. can contribute to non-maternity.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131409/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131409/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use PS2\\_VeryStrong when there are four or more _de novo_ occurrences according to the attached Recommendation for determining the appropriate ACMG/AMP evidence strength level for de novo occurrences (Table 2).\n*   The “phenotypic consistency” used on the attached Table 1 (Points awarded per _de novo_ occurrence) will be chosen for each proband by the number of phenotype points scored by the proband on the attached Phenotype scoring criteria per affected individual (Table 3):\n\n1.  If the proband scores at least 4 and \\<6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific and high genetic heterogeneity”.\n2.  If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific”.\n3.  If the proband scores at least 10 phenotype points in the PS4 counting rubric AND has genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype highly specific for gene”.\n\n*   PS2\\_VeryStrong can only be applied if the variant does not meet BA or BS1.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131409/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use PS2\\_Moderate when there are 2 - 3 _de novo_ occurrences according to the attached Recommendation for determining the appropriate ACMG/AMP evidence strength level for de novo occurrences (Table 2).\n*   The “phenotypic consistency” used on the attached Table 1 (Points awarded per _de novo_ occurrence) will be chosen for each proband by the number of phenotype points scored by the proband on the attached Phenotype scoring criteria per affected individual (Table 3):\n\n1.  If the proband scores at least 4 and \\<6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific and high genetic heterogeneity”.\n2.  If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific”.\n3.  If the proband scores at least 10 phenotype points in the PS4 counting rubric AND has genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype highly specific for gene”.\n\n*   PS2 can only be applied if the variant does not meet BA or BS1.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131409/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use PS2\\_Moderate when there is one de novo occurrence according to the attached Recommendation for determining the appropriate ACMG/AMP evidence strength level for de novo occurrences (Table 2).\n*   The “phenotypic consistency” used on the attached Table 1 (Points awarded per _de novo_ occurrence) will be chosen for each proband by the number of phenotype points scored by the proband on the attached Phenotype scoring criteria per affected individual (Table 3):\n\n1.  If the proband scores at least 4 and \\<6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific and high genetic heterogeneity”.\n2.  If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific”.\n3.  If the proband scores at least 10 phenotype points in the PS4 counting rubric AND has genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype highly specific for gene”.\n\n*   PS2\\_Moderate can only be applied if the variant does not meet BA or BS1.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131409/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use PS2\\_Supporting when there is one de novo occurrence according to the attached Recommendation for determining the appropriate ACMG/AMP evidence strength level for de novo occurrences (Table 2).\n*   The “phenotypic consistency” used on the attached Table 1 (Points awarded per _de novo_ occurrence) will be chosen for each proband by the number of phenotype points scored by the proband on the attached Phenotype scoring criteria per affected individual (Table 3):\n\n1.  If the proband scores at least 4 and \\<6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific and high genetic heterogeneity”.\n2.  If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype consistent with gene but not highly specific”.\n3.  If the proband scores at least 10 phenotype points in the PS4 counting rubric AND has genotyping to rule out variants in the _PIK3R1_ locus, use the number of _de novo_ points corresponding to “Phenotype highly specific for gene”.\n\n*   PS2\\_Supporting can only be applied if the variant does not meet BA or BS1.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PS2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131404",
+          "@type": "CriteriaCode",
+          "description": "Co-segregation with disease in multiple affected family members in a gene definitively known to cause the disease.\nNote: May be used as stronger evidence with increasing segregation data.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131404/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131404/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131404/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PP1 will require each family member to reach at least 6 points in the PS4 counting rubric in order to be considered affected for the purpose of counting co-segregations.\n*   Met at the PP1\\_Strong level for co-segregation of the variant with the affected phenotype across at least 4 meioses in one family or combined across multiple unrelated families (PMID: 38103548).\n*   The combined strength of the PP1 and PP4 codes is limited so that a variant that meets PP1\\_Strong can meet PP4 but not PP4\\_Moderate (PMID: 38103548).\n*   PP1 should not be applied when a variant also has population data meeting BA1 or BS1 since a common variant may appear to segregate with the disease by chance.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131404/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PP1 will require each family member to reach at least 6 points in the PS4 counting rubric in order to be considered affected for the purpose of counting co-segregations.\n*   Met at the PP1\\_Moderate level for co-segregation of the variant with the affected phenotype across at least two meioses in one family or combined across multiple unrelated families (PMID: 38103548).\n*   PP1 should not be applied when a variant also has population data meeting BA1 or BS1 since a common variant may appear to segregate with the disease by chance.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131404/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   PP1 will require each family member to reach at least 6 points in the PS4 counting rubric in order to be considered affected for the purpose of counting co-segregations.\n*   Met at the supporting level for co-segregation of the variant with the affected phenotype across at least one meiosis (i.e. the variant is present in the proband + an affected relative, PMID: 38103548).\n*   PP1 should not be applied when a variant also has population data meeting BA1 or BS1 since a common variant may appear to segregate with the disease by chance.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PP1"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131412",
+          "@type": "CriteriaCode",
+          "description": "For recessive disorders, detected in trans with a pathogenic variant\nNote: This requires testing of parents (or offspring) to determine phase.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131412/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131412/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131412/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131412/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131412/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131396",
+          "@type": "CriteriaCode",
+          "description": "A synonymous variant for which splicing prediction algorithms predict no impact to the splice consensus sequence nor the creation of a new splice site AND the nucleotide is not highly conserved.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131396/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131396/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131396/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131396/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131396/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Met for a synonymous variant if SpliceAI does not predict a splicing defect (cut-off \\<0.1).\n*   Synonymous variants in the first nucleotide of an exon or the final 3 nucleotides of an exon are not eligible for this code, as they are considered part of the splice region.\n*   Met for an intronic variant if SpliceAI does not predict a splicing defect (cut-off \\<0.1).\n*   Intronic variants between +1 and +6 or between -1 and -20 are not eligible for this code, as they are considered part of the splice region (PMID: 37352859).",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP7"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131406",
+          "@type": "CriteriaCode",
+          "description": "Reputable source recently reports variant as pathogenic, but the evidence is not available to the laboratory to perform an independent evaluation.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131406/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131406/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131406/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131406/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Supporting"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131406/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "description": "This criterion is not for use as recommended by the ClinGen Sequence Variant Interpretation VCEP Review Committee.",
+              "label": "Moderate"
+            }
+          ],
+          "label": "PP5"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131413",
+          "@type": "CriteriaCode",
+          "description": "Well-established in vitro or in vivo functional studies show no damaging effect on protein function or splicing.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131413/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131413/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131413/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   BS3 may potentially be applied at the default strength level of strong for evidence from an animal model expressing the variant of interest and failing to recapitulate the APDS phenotype. Animal models will be reviewed on a case-by-case basis by the VCEP to determine the appropriate strength level.",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131413/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   BS3 will be applied at the moderate level of strength for an normal result in an approved _in vitro_ assay with a minimum of 11 total pathogenic and benign variant controls (classified using these same specifications, as recommended in PMID: 31892348). Please note that an example assay with sufficient control variants has been identified in the literature, but was recommended for BS3\\_Supporting instead based on OddsPath ratio (PMID: 40543502).",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131413/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   BS3\\_Supporting can be applied based on a normal result in at least two different approved _in vitro_ assays (from two separate approved assay classes). These are described in detail in the attached Excel file entitled “PIK3CD\\_Functional\\_Assays\\_PS3\\_BS3”.\n*   Approved assay classes and specific assay instances:\n    *   AKT kinase activity assay (PMID: 24136356, PMID: 24165795, PMID: 28414062)\n    *   Lipid kinase activity (PMID: 24136356, PMID: 28167755, PMID: 28414062)\n    *   Enrichment of the variant in high phospho-S6 and phospho-AKT T cells relative to low phospho-S6 and phospho-AKT T cells, within a next generation sequencing-based screen of donor T cells subjected to of CRISPR-mediated adenine base-editing (PMID: 40543502)\n    *   Lipid vesicle affinity (PMID: 24136356)\n    *   Conformational dynamics (PMID: 28167755; PMID: 28414062)\n*   Please note that protein binding assays testing PIK3CD binding to PIK3R1 were also considered for inclusion in BS3\\_Supporting, but were excluded based on lack of evidence of altered binding by disease-associated variants compared to wild-type controls (PMID: 24165795; PMID: 28414062).\n*   Patient cell-based functional assays directly showing normal activity of the disease-relevant PI3K delta pathway were considered for inclusion in the BS3\\_Supporting code but are viewed as part of the proband phenotype instead.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BS3"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131408",
+          "@type": "CriteriaCode",
+          "description": "Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or observed in cis with a pathogenic variant in any inheritance pattern.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131408/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131408/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131408/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131408/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131408/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Supporting"
+            }
+          ],
+          "label": "BP2"
+        },
+        {
+          "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131392",
+          "@type": "CriteriaCode",
+          "description": "Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before.\nExample: Arg156His is pathogenic; now you observe Arg156Cys.\nCaveat: Beware of changes that impact splicing rather than at the amino acid/protein level.",
+          "evidenceStrengths": [
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131392/str/Stand%20Alone",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Stand Alone"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131392/str/Very%20Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not applicable",
+              "label": "Very Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131392/str/Strong",
+              "@type": "EvidenceStrength",
+              "applicability": "Not Applicable",
+              "label": "Strong"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131392/str/Moderate",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use at the default strength level (PM5) for missense variants when other variant was classified as Pathogenic for autosomal dominant PIK3CD-related disease by Antibody Deficiencies VCEP specifications for _PIK3CD_ without using PM5.\n*   Beware of changes that impact splicing rather than the amino acid (based on RNA data or splicing predictors). Neither change should be predicted to affect splicing (SpliceAI Δ score ≤0.2).\n*   Do not apply at codon where any benign variants are known.\n*   The variant being evaluated must have a Grantham distance value greater than or equal to that of the known pathogenic variant, indicating that the variant residue is equally chemically different or more chemically different than the known pathogenic residue in comparison to the wild type residue.",
+              "label": "Moderate"
+            },
+            {
+              "@id": "https://cspec.genome.network/cspec/api/CriteriaCode/id/532131392/str/Supporting",
+              "@type": "EvidenceStrength",
+              "applicability": "Applicable",
+              "description": "*   Use at PM5\\_Supporting strength for missense variants when other variant was classified as Likely Pathogenic for autosomal dominant PIK3CD-related disease by Antibody Deficiencies VCEP specifications for _PIK3CD_ without using PM5.\n*   Beware of changes that impact splicing rather than the amino acid (based on RNA data or splicing predictors). Neither change should be predicted to affect splicing (SpliceAI Δ score \\<0.2).\n*   Do not apply at codon where any benign variants are known.\n*   The variant being evaluated must have a Grantham distance value greater than or equal to that of the known likely pathogenic variant, indicating that the variant residue is equally chemically different or more chemically different than the known likely pathogenic residue in comparison to the wild type residue.",
+              "label": "Supporting"
+            }
+          ],
+          "label": "PM5"
+        }
+      ],
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=PIK3CD",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0014222",
+              "@type": "Disease",
+              "label": "MONDO:0014222",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "PIK3CD"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

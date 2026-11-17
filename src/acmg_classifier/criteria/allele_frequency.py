@@ -103,12 +103,65 @@ class GeneThresholds:
     # Strength the BS1 cutoff fires at — the spec's BS1 tier (e.g. MYO15A/OTOF
     # fire VeryStrong at >=0.3%); defaults to the ACMG BS1 Strong level.
     bs1_strength: CriterionStrength = CriterionStrength.STRONG
+    # Lower cutoff of the VCEP's BS1_Supporting tier (``bs1_supporting_threshold``;
+    # e.g. PTEN 0.0000043, BRCA1/2 0.00002, hearing-loss AR genes 0.0007): a
+    # frequency at or above it but below ``bs1`` gives BS1 at Supporting.
+    bs1_supporting: Optional[float] = None
     # Comma-separated bare protein changes the VCEP bars from BS1 regardless of
     # frequency (a recurrent disease allele, e.g. MYOC p.Gln368Ter). The BS1
     # evaluator withholds BS1 for a variant matching one of these.
     bs1_exclude: str = ""
     # Same format for BA1 (LGMD "BS1 exception" variants are barred from both).
     ba1_exclude: str = ""
+
+
+# Point-estimate BA1 / BS1 rules that also need enough observations in the
+# population the frequency comes from (general "VCEP Specifications" text):
+#   CDH1 "subpopulation must >= 2,000 alleles and have a minimum of five variant
+#   alleles present"; MYOC / CYP1B1 "present in >= 5 alleles in any ... population
+#   dataset of at least 2,000 observed alleles"; RUNX1 ">= 2,000 alleles tested and
+#   variant present in >= 5 alleles"; F8 / F9 "subpopulation must have a minimum of
+#   five variant alleles present".   gene -> (min allele count, min allele number)
+MIN_GRPMAX_ALLELES: dict[str, tuple[int, int]] = {
+    "CDH1": (5, 2000), "MYOC": (5, 2000), "CYP1B1": (5, 2000), "RUNX1": (5, 2000),
+    "F8": (5, 0), "F9": (5, 0),
+}
+
+
+def min_alleles_block(gene: str | None, gd) -> str:
+    """Reason BA1 / BS1 must be withheld because the GrpMax population carries too
+    few variant alleles / too few alleles for the gene's VCEP, or "". Unknown
+    counts (a gnomAD DB without the grpmax AC / AN columns) do not block."""
+    rule = MIN_GRPMAX_ALLELES.get(gene or "")
+    if rule is None or gd is None:
+        return ""
+    min_ac, min_an = rule
+    ac = gd.ac_grpmax if gd.ac_grpmax is not None else gd.ac
+    if ac is not None and ac < min_ac:
+        return f"{gene} VCEP: only {ac} variant allele(s) (>= {min_ac} required)"
+    if min_an and gd.an_grpmax is not None and gd.an_grpmax < min_an:
+        return (f"{gene} VCEP: only {gd.an_grpmax} alleles in the GrpMax population "
+                f"(>= {min_an} required)")
+    return ""
+
+
+# ENIGMA BRCA1 / BRCA2 BA1 and BS1 (general text): "Do not apply if read depth
+# <20". gene -> minimum gnomAD mean read depth around the variant.
+AF_MIN_DEPTH: dict[str, float] = {"BRCA1": 20.0, "BRCA2": 20.0}
+
+
+def depth_block(coverage, gene: str | None, variant) -> str:
+    """Reason BA1 / BS1 must be withheld because gnomAD's mean read depth at the
+    variant is below the gene's VCEP minimum, or "" (also when the coverage DB is
+    unavailable or has no value there: the gate is skipped, as for PM2)."""
+    need = AF_MIN_DEPTH.get(gene or "")
+    if need is None or coverage is None or not getattr(coverage, "available", False):
+        return ""
+    end = variant.pos + max(0, len(variant.ref) - 1)
+    dp = coverage.mean_depth(variant.chrom, variant.pos, end)
+    if dp is None or dp >= need:
+        return ""
+    return f"{gene} VCEP: gnomAD mean read depth {dp:.0f} < {need:g}"
 
 
 def variant_listed(listing: str, hgvs_c: str | None, hgvs_p: str | None) -> str:
@@ -231,8 +284,13 @@ def _resolve_row(row: dict[str, str]) -> GeneThresholds:
         ba1_hom_count = int(raw_hom) if raw_hom else None
     except ValueError:
         ba1_hom_count = None
+    try:
+        bs1_supporting = float((row.get("bs1_supporting_threshold") or "").strip())
+    except ValueError:
+        bs1_supporting = None
     return GeneThresholds(
         ba1=ba1, bs1=bs1, af_basis=af_basis, af_subset=af_subset,
+        bs1_supporting=bs1_supporting,
         bs1_strength=bs1_strength, bs1_exclude=bs1_exclude, ba1_exclude=ba1_exclude,
         ba1_hom_count=ba1_hom_count,
     )

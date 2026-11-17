@@ -205,6 +205,19 @@ class PM4Evaluator(CriterionEvaluator):
                     f"{gene}: deleted region contains no ClinVar P/LP or VUS variant",
                 )
             rc = annotation.rule_consequence or pc  # VCEP regions: MANE Select numbering
+            need = self._regions.denied_below(gene, rc.protein_position, aa)
+            if need is not None:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.PM4,
+                    f"{gene}: VCEP applies PM4 in this region only to indels of >= {need} aa",
+                )
+            if pc.consequence == ConsequenceType.INFRAME_DELETION:
+                dstr = self._regions.deletion_strength(gene, rc.protein_position)
+                if dstr is not None:
+                    return CriteriaResult.met(
+                        ACMGCriterion.PM4, strength=dstr,
+                        evidence=f"in-frame deletion ({gene}: VCEP PM4_{dstr.value} region)",
+                    )
             rstr = self._regions.indel_strength(gene, rc.protein_position)
             if rstr == "not_met":
                 # A small indel still earns Supporting even where Moderate is
@@ -219,14 +232,25 @@ class PM4Evaluator(CriterionEvaluator):
                     f"{gene}: in-frame indel outside PM4 region / in denied region",
                 )
             if isinstance(rstr, CriterionStrength):
+                small = self._regions.small_outside(gene)
+                if (small is not None and aa is not None and aa <= small
+                        and rstr != CriterionStrength.SUPPORTING
+                        and not self._regions.in_tier(gene, rc.protein_position)):
+                    return CriteriaResult.met(
+                        ACMGCriterion.PM4, strength=CriterionStrength.SUPPORTING,
+                        evidence=(f"in-frame indel of <={small} aa outside the functionally "
+                                  f"important regions ({gene}: VCEP PM4_Supporting)"),
+                    )
                 if rstr == CriterionStrength.MODERATE and size_eligible:
                     return CriteriaResult.met(
                         ACMGCriterion.PM4, strength=CriterionStrength.SUPPORTING,
                         evidence=f"in-frame indel of <={max_aa} aa ({gene}: PM4_Supporting)",
                     )
+                where = ("region" if self._regions.in_tier(gene, rc.protein_position)
+                         else "non-repeat region default")
                 return CriteriaResult.met(
                     ACMGCriterion.PM4, strength=rstr,
-                    evidence=f"in-frame indel ({gene}: VCEP PM4_{rstr.value} region)",
+                    evidence=f"in-frame indel ({gene}: VCEP PM4_{rstr.value} {where})",
                 )
             # rstr is None → no region default → fall through to the flat default.
 

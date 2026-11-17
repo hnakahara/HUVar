@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN117",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50061",
+    "@type": "Organization",
+    "label": "Limb Girdle Muscular Dystrophy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50061"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1565662061"
+  },
+  "cspecStatus": "CSpec Deleted",
+  "currentStatus": "CSpec Deleted",
+  "label": "ClinGen Limb Girdle Muscular Dystrophy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for CAPN3 Version 1.0",
+  "lastUpdated": "2024-07-23T16:15:03.634Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1565662074",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=CAPN3",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0015152",
+              "@type": "Disease",
+              "label": "MONDO:0015152",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "CAPN3"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

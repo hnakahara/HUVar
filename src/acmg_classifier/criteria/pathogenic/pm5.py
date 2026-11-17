@@ -137,6 +137,16 @@ class PM5Evaluator(CriterionEvaluator):
         splice_note = ""
         if hits and gene in cond.SPLICE and cond.SPLICE[gene][1] in ("both", "comparator"):
             hits, splice_note = self._filter_comparator_splice(gene, hits, cand_sp)
+        # RASopathy VCEP: comparators at the analogous residue of a paralogue.
+        para_note = ""
+        if gene in cond.PARALOG_COMPARATORS:
+            para = self._paralog_comparators(pc, cond.PARALOG_COMPARATORS[gene])
+            if para:
+                hits = list(hits) + para
+                genes = sorted({h.gene_symbol for h in para if h.gene_symbol})
+                para_note = (f"incl. {len(para)} comparator(s) at the analogous residue of "
+                             f"{'/'.join(genes)} ({gene} VCEP)")
+                vcep_note = "; ".join(x for x in (vcep_note, para_note) if x)
         if not hits:
             par = self._paralog_route(pc) if gene in cond.PARALOG_SUPPORTING else None
             if par is not None:
@@ -212,6 +222,7 @@ class PM5Evaluator(CriterionEvaluator):
             return CriteriaResult.met(
                 ACMGCriterion.PM5, strength=strength,
                 evidence=f"ClinVar {tag}: {text}: {ids}"
+                + (f" [{para_note}]" if para_note else "")
                 + (f" [{splice_note}]" if splice_note else "")
                 + self._splice_caveat(gene, sp, cand_sp, qualifying) + cons_note,
             )
@@ -348,6 +359,30 @@ class PM5Evaluator(CriterionEvaluator):
         if unknown:
             parts.append(f"comparator splice not assessed for {unknown}")
         return kept, "; ".join(parts)
+
+    def _paralog_comparators(self, pc, siblings) -> list[ClinVarRecord]:
+        """P / LP missense records at the residue of each sibling gene aligned to
+        the candidate's residue, with the same wild-type amino acid and a
+        DIFFERENT substituted amino acid than the candidate."""
+        if not self._paralog_map.has_gene(pc.gene_symbol) or not pc.amino_acids:
+            return []
+        parts = pc.amino_acids.split("/")
+        if len(parts) != 2:
+            return []
+        ref, alt = parts[0].strip(), parts[1].strip()
+        from acmg_classifier.local_db.clinvar_sqlite import query_paralog_codon
+        analogs = self._paralog_map.analogs(pc.gene_symbol, pc.protein_position)
+        out: list[ClinVarRecord] = []
+        for sib in siblings:
+            spos = analogs.get(sib)
+            if spos is None:
+                continue
+            for h in query_paralog_codon(self._cfg.clinvar_sqlite, sib, ref, spos,
+                                         min_stars=self._cfg.pm5_min_stars):
+                aac = h.amino_acid_change or ""
+                if aac and not aac.endswith(alt):
+                    out.append(h)
+        return out
 
     def _paralog_route(self, pc) -> CriteriaResult | None:
         """SCN1A/2A/3A/8A: PM5_Supporting when >1 non-identical amino-acid

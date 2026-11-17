@@ -1,0 +1,640 @@
+Criteria Specification
+ClinGen Thrombosis Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines for SERPINC1 Version 1.1
+Affiliation: Thrombosis VCEP
+Description : Rule specifications for antithrombin deficiency.
+Version : 1.1
+Released : 2/7/2025
+DOI : 10.5281/zenodo.21434018
+Release Notes :
+All requested edits were made in this document and in the VCI, with exception of one. We would like the
+p.Cys29= variant to remain a VUS since there is only one benign code assigned. The point counting
+system is currently only being applied when conflicting rules codes are applied.
+
+Contributors & Keywords
+Research Group: Thrombosis VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+SERPINC1 NM_000488.4 Autosomal dominant
+inheritance antithrombin III deficiency
+
+Rules for SERPINC1
+Gene: SERPINC1 (HGNC:775) 
+Transcripts:
+NM_000488.4
+
+HGNC Name: serpin family C member 1
+Disease:
+antithrombin III deficiency
+(MONDO:0013144)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Use decision tree as per SVI WG with specified “regions critical to protein function”.
+Modification Gene-specific
+Type:
+
+Strong
+Use decision tree as per SVI WG with specified “regions critical to protein function”.
+Modification Gene-specific
+Type:
+
+Moderate
+Use decision tree as per SVI WG with specified “regions critical to protein function”.
+Modification Gene-specific
+Type:
+
+Supporting
+Use decision tree as per SVI WG with specified “regions critical to protein function”.
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Use caution not to compare variants being curated to variants that are
+Specifications:potential cryptic slice sites.
+
+Strong
+Use with no specification except comparison variant must be classified as pathogenic
+using SERPINC1 rule specifications from the Thrombosis VCEP.
+
+Modification Gene-specific
+Type:
+
+Moderate
+Use with no specification except comparison variant must be classified as likely
+pathogenic using SERPINC1 rule specifications from the Thrombosis VCEP.
+Modification Gene-specific
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Any proband must meet the PP4 defined antithrombin deficiency
+Specifications:laboratory phenotype (see PP4/PS4 description below).
+
+Very Strong
+Use proposed SVI point recommendations for “Phenotype highly specific for gene.” See de
+novo rule code guidance attached. Required 4 points.
+Modification Disease-specific
+Type:
+
+Strong
+Use proposed SVI point recommendations for “Phenotype highly specific for gene.” See de
+novo rule code guidance attached. Required 2 points.
+Modification Disease-specific
+Type:
+
+Moderate
+Use proposed SVI point recommendations for “Phenotype highly specific for gene.” See de
+novo rule code guidance attached. Required 1 point.
+Modification Disease-specific
+Type:
+
+Supporting
+Use proposed SVI point recommendations for “Phenotype highly specific for gene.” See de
+novo rule code guidance attached. Required 0.5 point.
+
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Model organism do not tend to recapitulate the phenotype of interest and
+Specifications:are not used for curation.
+
+Supporting
+See attached spreadsheet for list of approved assays to use for this rule code. Below is a
+general description of assays that can be used:
+- In vitro functional studies in COS-1, HEK293T, HEK-EBNA cells demonstrating abnormal
+activity levels:
+Antithrombin activity levels measured by FXa inhibition activity assay
+Antithrombin activity levels measured by thrombin inhibition activity assay
+OR
+- In vitro functional studies in COS-1, HEK293T, HEK-EBNA cells demonstrating abnormal
+antigen levels:
+Antithrombin antigen levels measured by ELISA
+Immunofluorescence assay – intracellular retention and secretion defects
+OR
+- In vivo studies demonstrating rescue of antithrombin levels would be considered, but no
+studies are
+known to be available at this time.
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+This code requires the use of proband points. Please see attached
+Specifications:guidance on tallying proband points for this phenotype. Do not apply this
+code for variants that meet BS1 or BA1 criteria. Do not count proband
+used for PP4 in this code's proband count.
+
+Very Strong
+Appropriate to use code when there 8 or more proband points that meet the defined
+antithrombin deficiency laboratory phenotype.
+Modification Disease-specific
+Type:
+
+Strong
+Appropriate to use code when there 4-7 proband points that meet the defined
+antithrombin deficiency laboratory phenotype.
+Modification Disease-specific
+Type:
+
+Moderate
+Appropriate to use code when there 2-3 proband points that meet the defined
+antithrombin deficiency laboratory phenotype.
+Modification Disease-specific
+Type:
+
+Supporting
+Appropriate to use code when there is 1 proband point that meets the defined
+antithrombin deficiency laboratory phenotype.
+Modification Disease-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+This code is applicable for variants disrupting cystine residues involved in disulfide
+bridges (Cys40, Cys53, Cys127, Cys160, Cys279, Cys462)1, variants that would impact
+heparin binding site residues (Ile39, Arg56, Pro73, Arg79), variants involving reactive site
+residues (Ala414 and Ala416)2, and variants involving the N-glycosylation site (Asn224)3.
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Use code for variants with a popmax MAF of <0.00002 in gnomAD.
+Modification Disease-specific,Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Variants in this gene are being curated as a dominant condition, so this
+rule code does not apply.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+No specification
+
+Modification None
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Use caution not to compare variants being curated to variants that are
+Specifications:potential cryptic slice sites.
+
+Moderate
+Use code when previously reported variant reaches a pathogenic classification using the
+SERPINC1 rule specifications from the Thrombosis VCEP.
+Modification General recommendation
+Type:
+
+Supporting
+Use code when previously reported variant reaches a likely pathogenic classification using
+the SERPINC1 rule specifications from the Thrombosis VCEP.
+Modification General recommendation
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Use the PS2 code in lieu of using this code for de novo variants.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Appropriate to use there are 7 or more meioses across more than one family.
+Modification Disease-specific
+Type:
+
+Moderate
+Appropriate to use there are 4-6 meioses across one or more families.
+Modification Disease-specific
+Type:
+
+Supporting
+Appropriate to use when there are 2-3 meioses across one or more families.
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable due to presence of benign variation throughout the
+SERPINC1 gene.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Appropriate to use for missense variants that have a REVEL score of greater or equal to
+0.6. For potential splicing variants, SpliceAI must predict a damaging impact with a score
+greater or equal to 0.5.
+
+Modification Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+Please see attached guidance regarding the use of PP4/PS4 rule codes to
+Specifications:properly assess eligibility. Do not apply this code for variants that meet
+BS1 or BA1 criteria. Do not count the proband used for the PP4 code for
+the PS4 code's proband count.
+
+Supporting
+Proband must have an antithrombin activity level of < 0.8 IU/mL (or below the lower limit
+of a laboratory’s assays reference range). confirmed on repeated independent samples.
+An abnormal crossed immunoelectrophoresis assay demonstrating decreased
+antithrombin function may be used in lieu of low activity levels, which is typically caused
+by type II variants.
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+
+Appropriate to use for variants with a popmax MAF of greater than or equal to 0.002 in
+gnomAD.
+Modification Disease-specific,Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Common founder SERPINC1 variants are excluded from eligibility of the
+Specifications:BS1 code. The list of variants will likely grow over time, but currently
+consists of the SERPINC1 c.218C>T; p.Pro73Leu (PMID:23910795),
+SERPINC1 c.236G>A; p.Arg79His (AT Padua), SERPINC1 c.439A>G;
+p.Thr147Ala (PMID:32920809) and SERPINC1 c.1246G>T ; SERPINC1
+p.Ala416Ser (AT Cambridge II); SERPINC1 p.Leu131Phe (PMID:26748602);
+SERPINC1 c.89T>A; p.Val30Glu (AT Dublin; PMID:27098529) variants.
+
+Strong
+Appropriate to use for variants with a Popmax MAF of >0.0002 in gnomAD.
+Modification Disease-specific,Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+This evidence code is available when the variant is identified in 2 or more heterozygotes
+or 1 or more homozygotes with normal antithrombin levels [> 0.8 IU/mL (or above the
+lower limit of a laboratory’s assays reference range)].
+Modification Disease-specific
+Type:
+
+Supporting
+This evidence code is available when the variant is identified in 1 heterozygote with
+normal antithrombin levels [> 0.8 IU/mL (or above the lower limit of a laboratory’s assays
+reference range)].
+
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+There are no available assays or model organisms that can recapitulate
+disease, and in vitro studies cannot dependably rule out pathogenicity.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Appropriate to use when the variant is found not to segregate in a minimum of four
+relatives with abnormal antithrombin activity levels [< 0.8 IU/mL (or below the lower limit
+of a laboratory’s assays reference range)] within the same family, OR the variant does not
+segregate in 2 or more families. Non-segregation defined by having abnormal
+antithrombin activity levels without SERPINC1 variant of interest.
+Modification Disease-specific
+Type:
+
+Supporting
+Appropriate to use when the variant is found not to segregate in a minimum of two
+relatives with abnormal antithrombin activity levels [< 0.8 IU/mL (or below the lower limit
+of a laboratory’s assays reference range)] within the same family.
+Modification Disease-specific
+Type:
+
+BP1
+
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+This rule code does not apply to the SERPINC1 gene, as missense and
+truncating variants account for disease.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+This rule can be applied when a SERPINC1 variant is in cis with another
+pathogenic SERPINC1 variant. The pathogenic variant must be evaluated using
+ClinGen SERPINC1 specified rules. This rule cannot be applied to a variant in trans with a
+pathogenic variant, as this scenario could reasonably occur and increase the risk of
+venous thrombosis.
+Modification Disease-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+​There are no known repetitive regions in the SERPINC1 gene without a
+known function.
+
+BP4
+Original ACMG
+Summary
+
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Use this code for missense variants with a REVEL score of < or equal to 0.30 and no
+evidence of a potential splicing effect using the Splice AI prediction tool (less than or
+equal to 0.1), or for non-canonical intronic variants with no evidence of a potential splicing
+effect using the Splice AI prediction tool.
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+This rule code is not recommended for use at this time. There are other
+genes that can be associated with decreased antithrombin activity levels,
+such as genes associated with the congenital disorders of glycosylation.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+
+Use Splice AI to rule out a predicted splicing effect (less than or equal to 0.1).
+Evolutionary conservation is defined as a PhyloP > 0.1 OR the reference nucleotide is
+present in 3 mammals or 1 primate.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS2, PS4,
+PP1_Strong)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate) AND 1 Supporting
+(PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1,
+PP3, PP4)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS4, PP1_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PP1_Strong) AND ≥ 3 Moderate (PVS1_Moderate, PS1_Moderate,
+PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PP1_Strong) AND 2 Moderate (PVS1_Moderate, PS1_Moderate,
+PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate) AND ≥ 2 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PP1_Strong) AND 1 Moderate (PVS1_Moderate, PS1_Moderate,
+PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate) AND ≥ 4 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PP1_Strong) AND 1 Moderate (PVS1_Moderate, PS1_Moderate,
+PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PP1_Strong) AND ≥ 2 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM1, PM4, PM5,
+PP1_Moderate)
+
+2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate)
+AND ≥ 2 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate)
+AND ≥ 4 Supporting (PVS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS4, PP1_Strong) AND 2 Moderate (PVS1_Moderate, PS1_Moderate,
+PS2_Moderate, PS4_Moderate, PM1, PM4, PM5, PP1_Moderate)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS4_Very Strong) AND 1 Supporting (PVS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS2, BS4) AND 1 Supporting (BS2_Supporting, BS4_Supporting, BP2, BP4, BP7)
+
+≥ 2 Supporting (BS2_Supporting, BS4_Supporting, BP2, BP4, BP7)
+
+Files & Images
+Phenotype rules (PS4/PP4) guidance : 
+SERPINC1 functional assay list : 
+SERPINC1 Rule code combination rules: Use these rules when there are variants with benign
+and pathogenic rule codes applied. 
+De novo rule guidance : 
+
+References
+1.
+
+Kottke-Marchant K Duncan A Antithrombin deficiency: issues in laboratory diagnosis. Arch
+Pathol Lab Med (2002) 126 (11) p. 1326-36. 10.5858/2002-126-1326-AD 12421140 
+
+2.
+
+Perry DJ Carrell RW CpG dinucleotides are "hotspots" for mutation in the antithrombin III gene.
+Twelve variants identified using the polymerase chain reaction. Mol Biol Med (1989) 6 (3) p.
+239-43. 2615648 
+
+3.
+
+Navarro-Fernández, et al. Antithrombin Dublin (p.Val30Glu): a relatively common variant with
+moderate thrombosis risk of causing transient antithrombin deficiency. Thromb Haemost . 2016
+Jul 4;116(1):146-54.
+
+

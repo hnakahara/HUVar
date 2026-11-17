@@ -1,0 +1,781 @@
+Criteria Specification
+ClinGen Coagulation Factor Deficiency Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for F9 Version 2.1
+Affiliation: Coagulation Factor Deficiency VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : Rule specifications for hemophilia B.
+Version : 2.1
+Released : 4/16/2026
+DOI : 10.5281/zenodo.21433987
+Release Notes :
+v2.1.0 corrects the PVS1 Decision Tree file.
+Edits post SVI review
+PVS1 - Updated to include RNA recommendations based on Walker, et al paper.
+PP3/BP4/BP7 - Updated SpliceAI cut off based on Walker, et al paper.
+PS4 - changed requirement that only 3 hemizygotes could be present in gnomAD in order to apply code.
+This was changed as a result of the increased number of individuals in gnomAD v4.1. Now using a ratio to
+avoid needing to update regularly in the future.
+BS2- fixed typo
+PS1 - added splicing option from Walker, et al.
+PS3 - downgraded all assays to supporting weight
+
+Contributors & Keywords
+Research Group: Coagulation Factor Deficiency
+VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards F9
+NM_000133.4 X-linked inheritance hemophilia B
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for F9
+General Comments:
+
+Gene: F9 (HGNC:3551) 
+Transcripts:
+NM_000133.4
+
+When pathogenic and benign rule codes are applied, see guidance below
+for the point counting variant classification system rather than defer to
+classification of variant of uncertain significance.
+
+HGNC Name: coagulation factor IX
+Disease:
+hemophilia B
+(MONDO:0010604)  Mode
+
+of Inheritance: X-linked
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Apply the ClinGen Coagulation Factor Deficiency VCEP/SVI decision tree to
+Specifications:determine use and strength of the PVS1 rule. PVS1 (RNA): assays
+demonstrating a variant leads to aberrant splicing profile that can be used
+in the PVS1 decision tree as described in Walker et al. (PMID: 36865205)
+that was added to the v1 CFD-VCEP PVS1 flowchart. If using PVS1(RNA),
+do not apply PP3.
+
+Very Strong
+Per Coagulation Factor Deficiency VCEP/SVI PVS1 decision tree.
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+Per Coagulation Factor Deficiency VCEP/SVI PVS1 decision tree.
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+
+Per Coagulation Factor Deficiency VCEP/SVI PVS1 decision tree.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Per Coagulation Factor Deficiency VCEP/SVI PVS1 decision tree.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+This evidence code can be applied when there is 1 pathogenic variant or 2 likely
+pathogenic variants at the same residue based on F9 gene rule specifications from the
+Coagulation Factor Deficiency VCEP and where in silico predictors do not suggest a
+splicing defect.
+OR
+When two or more variants are share the same predicted splicing effect and one
+comparison splicing variant reaches a pathogenic classification or 2 comparison variants
+reach a likely pathogenic classification using the Coagulation Factor Deficiency VCEP
+specifications modified from Walker, et al 2023 (PMID: 37352859).
+Default
+4
+Point
+Value:
+Modification General recommendation
+Type:
+
+Moderate
+
+This evidence code can be applied when there is 1 likely pathogenic variants at the same
+residue based on F9 gene rule specifications from the Coagulation Factor Deficiency VCEP
+and where in silico predictors do not suggest a splicing defect.
+OR
+When the comparison variant shares the same predicted splicing effect and the
+comparison splicing variant reaches a likely pathogenic classification using the
+Coagulation Factor Deficiency VCEP specifications based on Walker, et al 2023 (PMID:
+37352859).
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Use ClinGen’s de novo modified point system for a highly specific
+Specifications:phenotype (see guidance below). Combine all assumed and confirmed de
+novo cases for this code and use at the appropriate strength based on
+amount of points for all probands. Probands must meet the PS4 phenotype
+criteria to apply this code.
+
+Very Strong
+Use the SVI recommendations for de novo cases; 4 points. Use de novo guidance below to
+determine point value.
+Default
+8
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Strong
+Use the SVI recommendations for de novo cases; 2 points. Use de novo guidance below to
+determine point value.
+
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+Use the SVI recommendations for de novo cases; 1 point. Use de novo guidance below to
+determine point value.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+Use the SVI recommendations for de novo cases; 0.5 point. Use de novo guidance below
+to determine point value.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+See functional study spreadsheet.
+Specifications:
+
+Supporting
+Abnormal factor IX activity level (<40 IU/dL or 40%) in a cell line and/or mouse model.
+--OR-Abnormal factor IX activity level (<40 IU/dL or 40%) studied in an animal model setting
+other than mouse (i.e. – bovine factor IX activity levels compared to factor X levels).
+--OR--
+
+Absent or significantly reduced factor IX antigen level compared to wildtype using
+conformation-specific reporter assay in cell lines.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Hemophilia B phenotype requirements:
+Specifications:-Abnormal factor IX activity levels in the severe, moderate or mild range
+(< 40% factor IX activity level) are sufficient to confer a diagnosis.
+- It is reasonable to expect that genomic data from individuals with
+hemophilia B could be used in population databases. Therefore, we
+decided to implement use of a ratio of hemizygotes found to harbor a
+variant of interest by the total number of alleles in XY individuals in that
+population database (# of hemizygotes with variant of interest/total # of
+alleles from XY individuals sequenced in the database) as a criteria for
+using the PS4 code. The PS4 code is only applicable to variants with a
+ratio lower than or equal to 1.26 x 10-5. This ratio was set by using the
+most frequently seen pathogenic variant, F9 c.316G>A, p.Gly106Ser, in
+gnomAD that was studied in the Coagulation Factor Deficiency VCEP pilot
+F9 study.
+
+Very Strong
+≥8 probands meet criteria described below
+Default
+Point
+Value:
+
+8
+
+Modification Disease-specific
+Type:
+
+Strong
+4-7 probands meet criteria described below
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+2-3 probands meet criteria described below
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+1 proband meets criteria described below
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+The combined weight of codes PM1 and PM5 applied for a single variant
+Specifications:can only equal strong.
+
+Strong
+This code can be used for variants affecting any of the 3 catalytic residues (H267, D315 or
+S411) and 2 activation residues (R191-A192 and R226-V227) in the F9 gene (PMID:
+12554099).
+
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+This code should be applied when the variant is within exons 3, 4 or 5.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+none
+Specifications:
+
+Supporting
+Variant must be absent in males in population databases, such as gnomAD.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Not applicable for the F9 gene.
+
+PM4
+
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+VCEP
+.
+Specifications:
+
+Moderate
+Use code with no specification.
+Default
+2
+Point
+Value:
+Modification None
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+The combined weight of codes PM1 and PM5 applied for a single variant
+Specifications:can only equal strong.
+
+Moderate
+This evidence code can be applied when there is 1 pathogenic variant or 2 likely
+pathogenic variants at the same residue based on F9 rule specification from the
+Coagulation Factor Deficiency VCEP and where in silico predictors do not suggest a
+splicing defect.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+This evidence code can be applied when there is 1 likely pathogenic variant at the same
+residue based on F9 rule specifications Coagulation Factor Deficiency VCEP and where in
+
+silico predictors do not suggest a splicing defect. A “highly suspicious” VUS is defined as a
+variant that is 1 supporting code away from reaching a likely pathogenic classification.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+This rule code is combined with PS2. Please combined assumed de novo
+cases with confirmed de novo cases and apply PS2 at the appropriate
+weight.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Base strength of rule code on number of meioses across one or more
+Specifications:families.
+
+Strong
+This code is applicable when there ≥4 meioses across ≥2 families.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+This code is applicable when there are at least 3 meioses across one or more families.
+Default
+Point
+Value:
+
+2
+
+Modification Disease-specific
+Type:
+
+Supporting
+This code is applicable when there 2 meioses in one family OR 1 meiosis between 2
+affected siblings.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable for F9.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+Do not apply PP3 for variants that meet criteria for a PVS1_RNA rule code.
+Specifications:
+
+Supporting
+Code can be applied for variants where the REVEL score is greater than or equal to 0.6 or
+a SpliceAI score of greater than or equal to 0.2.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+Hemophilia B phenotype requirements:
+Specifications:-Abnormal factor IX activity levels in the severe, moderate or mild range
+(< 40% factor IX activity level) are sufficient to confer a diagnosis.
+-A proband must have had full gene sequencing and deletion/duplication
+analysis to apply this code.
+-A proband used for this code cannot be applied towards the PS4 count.
+
+Moderate
+Proband must meet hemophilia B phenotype criteria AND have full gene sequencing and
+deletion/duplication analysis.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+99.99% CI; subpopulation must have a minimum of five variant alleles
+Specifications:present. Males and females are included for this code.
+
+Stand Alone
+MAF cutoff of greater than or equal to 0.0000556 (or 0.00556%).
+Default
+Not Applicable
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+99.99% CI; subpopulation must have a minimum of five variant alleles
+Specifications:present. Males and females are included for this code.
+
+Strong
+MAF cutoff of greater than or equal to 0.00000556 (or 0.000556%).
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+none
+Specifications:
+
+Strong
+This evidence code can be used when a F9 variant is observed in a male with a normal
+factor IX activity level (at least >40% IU or as defined by laboratory cut off).
+Default
+Point
+Value:
+
+-4
+
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+none
+Specifications:
+
+Strong
+This code can be used for F9 gene variants studied in a cell line or mouse model setting
+that confer a normal factor IX activity AND normal factor IX antigen levels OR normal
+Western Blot.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+none
+Specifications:
+
+Strong
+This evidence code can be used when a F9 variant is observed in a male with a family
+history of hemophilia B and has a normal factor IX activity level.
+Default
+Point
+Value:
+
+-4
+
+Modification Disease-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable for F9 gene.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Not being used at this time. There are reports of males with hemophilia
+having two suspicious pathogenic variants.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Not applicable for F9 gene.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+none
+Specifications:
+
+Supporting
+This code can be applied for variants reaching a REVEL score of 0.3 or below AND a Splice
+AI score of less than or equal to 0.1.
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+This rule code is not recommended for use at this time. There is no known
+alternate cause of isolated factor IX deficiency.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+This code can also be used for non-canonical intronic variants. The use of
+Specifications:BP7 with BP4 is allowed, as appropriate, to classify variants meeting both
+criteria as likely benign.
+
+Strong
+
+Applicable for variants that have no observable splicing impact with RNA sequencing
+and/or minigene assay and a SpliceAI score of less than or equal to 0.1.
+Default
+-4
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+Splicing prediction score of less than or equal to 0.1 is required. Conservation should be
+assess using PhyloP (cutoff less than 0.1) and PhastCons (cutoff less than 0.5).
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+Rule Guidance for Combining Pathogenic and Benign Codes: A point counting policy is used
+for variants where pathogenic and benign rule codes can be applied rather than defaulting to a VUS
+classification. This document illustrates how to combine pathogenic and benign rule codes. 
+PVS1 Decision Tree: 
+Guidance for Combined De Novo Rule Code (PS2/PM6): Use this for guidance to apply the
+combined de novo rule code (PS2/PM6) for hemophilia A or B. 
+F9 Functional Assays: List of approved function assays for F9 variants. 
+
+Pilot Study Results for F8 and F9: Pilot study results for the F8 and F9 rule specifications. Use
+the tab at the bottom of the spreadsheet to toggle between results for hemophilia A and B. 
+
+

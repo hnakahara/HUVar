@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN238",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50154",
+    "@type": "Organization",
+    "label": "Albinism Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50154"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1414229270"
+  },
+  "cspecStatus": "Classification Rules Submitted",
+  "currentStatus": "Classification Rules Submitted",
+  "label": "ClinGen Albinism  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for TYR Version 1.0",
+  "lastUpdated": "2026-11-09T15:34:49.766Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1414229279",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=TYR",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0043209",
+              "@type": "Disease",
+              "label": "MONDO:0043209",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000007",
+                  "@label": "Autosomal recessive inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "TYR"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

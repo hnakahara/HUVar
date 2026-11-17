@@ -1,0 +1,1052 @@
+Criteria Specification
+ClinGen Glaucoma Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines for MYOC Version 2.1
+Affiliation: Glaucoma VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : Minor changes: 1. Added additional combinations to reach PM5_Strong 2. Updated the
+Rules combining criteria to reflect the point system approved 3. Clarified that stability assays also
+included part of PS3/BS3 and uploaded functional data previously assessed
+Version : 2.1
+Released : 11/6/2025
+DOI : 10.5281/zenodo.21421581
+Release Notes :
+Minor changes:
+1. Added additional combinations to reach PM5_Strong
+2. Updated the Rules combining criteria to reflect the point system approved
+3. Clarified that stability assays also included part of PS3/BS3 and uploaded functional data previously
+assessed
+
+Contributors & Keywords
+Research Group: Glaucoma VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+MYOC NM_000261.1 Autosomal dominant
+inheritance open-angle glaucoma
+
+Rules for MYOC
+Gene: MYOC (HGNC:7610) 
+Transcripts:
+NM_000261.1
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+
+HGNC Name: myocilin
+Disease:
+open-angle glaucoma
+(MONDO:0005338)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+MYOC variants cause JOAG/POAG through a gain of function (GoF) disease
+mechanism and not loss of function (LoF). Truncating variants in exon 3
+are expected to be pathogenic because they escape nonsense-mediated
+decay.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Specifications:
+
+The novel change must not affect splicing (SpliceAI ≤ 0.2)
+The combination of PP3 and PS1 should not be higher than 6 points
+
+Strong
+Same amino acid change as previously established pathogenic variant
+Default
+4
+Point
+Value:
+Modification Clarification
+Type:
+
+Moderate
+Same amino acid change as a previously established likely pathogenic variant
+Default
+Point
+Value:
+
+2
+
+Modification Clarification,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+PS2 and PM6 have been combined under PS2. See Table 3 for point
+Specifications:system. The proposed SVI point recommendations for “phenotype
+consistent with gene but not highly specific” applies to JOAG and
+“phenotype consistent with the gene but not highly specific and with high
+genetic heterogeneity” applies to POAG.
+Both maternity and paternity need to be proven for confirmed de
+novo variants.
+Parents need to be clinically assessed and not have a diagnosis of
+glaucoma (If a parent has suspicious signs of glaucoma, the age and
+the severity of the symptoms should be taken into account before
+applying criteria).
+
+Strong
+≥2 confirmed de novo in JOAG
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+≥2 confirmed de novo in POAG
+Or 1 confirmed de novo in JOAG
+Or ≥2 assumed de novo in JOAG
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+
+1 confirmed de novo in POAG
+Or ≥2 assumed de novo in POAG
+Or 1 assumed de novo in JOAG
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+The mechanism by which the variants cause POAG is a GoF mechanism
+Specifications:with accumulation of insoluble aggregates inside the endoplasmic
+reticulum of the trabecular meshwork cells.31,32 Follow the SVI
+recommendations from Brnich et al. when assessing functional assays to
+apply PS3 toward functional evidence.33
+Applies to the following functional studies: stability, solubility or
+secretion assays OR animal models that replicate the glaucoma
+phenotype.
+PS3 should only be applied if the assay includes both negative and
+positive controls and includes technical and/or biological replicates.
+If multiple results from functional assays are available for a single
+variant, then the evidence from the assay that is best validated
+should apply.
+Controls from the same general class of assay can be combined to
+calculate the odds of pathogenicity (OddsPath) as per the published
+SVI recommendations.33
+If results from different assays are conflicting for a single variant,
+then the level of validation of each assay should be considered to
+decide whether the results from one assay can override the results
+from another.
+The characteristics of each study reviewed, the summary of the assays
+combined, validation controls, OddsPath and recommendations and
+classification of variants with functional data are detailed in Tables 1 & 2.
+
+Strong
+Assays with OddsPath >18.7 as per the SVI recommendations.1
+
+Default
+4
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+Assays with OddsPath >4.3 as per the SVI recommendations.1
+Default
+2
+Point
+Value:
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Supporting
+Assays with OddsPath >2.1 as per the SVI recommendations.1
+Default
+1
+Point
+Value:
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Case-control data for MYOC variants is limited due to control cohorts often
+Specifications:being too small to reflect the true prevalence of variants in a true control
+population. Instead, the Glaucoma VCEP recommends using PS4 for
+counting probands from multiple independent studies using a “quasi casecontrol study” approach.
+Probands need to be clinically assessed and have JOAG or POAG
+
+PM2 needs to be met (due to incomplete penetrance, late age of
+onset of glaucoma and the rate of undiagnosed glaucoma in the
+general population, pathogenic variants may be present in population
+databases)
+Individuals with multiple MYOC VUS/LP/P variants cannot be
+considered as evidence of either variant
+
+Strong
+≥ 15 probands from multiple independent studies.
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+≥ 6 probands from multiple independent studies.
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+≥ 2 probands from multiple independent studies.
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+MYOC has no mutational hot spot and benign variants are present though
+the well-characterised olfactomedin domain in exon 3.
+
+PM2
+
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+Specifications:
+
+The highest allele frequency in population databases should be used.
+Only applies to populations of ≥ 10,000 alleles.
+PM2 should be used at a Supporting level as per the SVI
+recommendations.
+
+The filtering allele frequency for PM2 was set one order of magnitude
+lower than BS1. This is a conservative approach: some pathogenic
+variants are expected to be present in population databases due to POAG
+being a complex disease with late onset and age-related penetrance.
+Moreover, most MYOC pathogenic variants are absent from large
+population databases.
+
+Supporting
+Allele frequency ≤ 0.0001 in population databases.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+MYOC variants have an autosomal dominant mode of inheritance.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+VCEP
+The disease mechanism for MYOC variants is GoF, not LoF.2,3 Therefore,
+Specifications:PM4 is used instead of PVS1 for truncating variants in the olfactomedin
+domain. One stop-loss variant has been reported in MYOC.4
+There are only four in-frame variants reported in the MYOC database.
+There is a lack of current data to support a benign/pathogenic
+classification of in-frame del/ins.5,6,7,8
+
+Moderate
+In-frame del/ins, stop-loss variants and truncating variants involving >10% of the protein
+and located within the conserved olfactomedin domain (AA 246-502).
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+In-frame del/ins, stop-loss variants and truncating variants involving ≤10% of the protein
+and located within the conserved olfactomedin domain (AA 246-502).
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Specifications:
+
+Strong
+
+The novel change must not affect splicing (SpliceAI ≤ 0.2) and must
+meet PP3
+The novel change must have a Grantham score equal or greater than
+the previously established pathogenic or likely pathogenic variant
+The combination of PP3 and PM5 should not be higher than 5 points
+
+Same residue as 2 previously established pathogenic variants or 1 previously established
+pathogenic and 2 likely pathogenic variants or 4 previously established likely pathogenic
+variants (all assessed independently of PM5)
+Default
+4
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Moderate
+Same residue as a previously established pathogenic variant (assessed independently of
+PM5) or 2 previously established likely pathogenic variants (both assessed independently
+of PM5)
+Default
+2
+Point
+Value:
+Modification Clarification
+Type:
+
+Supporting
+Same residue as a previously established likely pathogenic variant (assessed
+independently of PM5)
+Default
+1
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Refer to PS2
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Specifications:
+
+BA1 and BS1 must not be met.
+Multiple families are jointly considered by adding the informative
+meioses across families according to Kelly et al.9
+Only genotype positive/phenotype positive and obligate
+carriers/phenotype positive individuals should be counted as
+segregations.
+Individuals who are genotype positive/phenotype negative and
+individuals who are genotype negative/phenotype negative should
+not be counted
+Phenotype positive need to be clinically assessed and either have a
+diagnosis of glaucoma or suspicious signs of glaucoma.
+Do not apply Strong level of evidence if the variant is present in a
+single family due to risk of other variant in linkage disequilibrium
+
+Strong
+≥7 meioses in >1 family
+Default
+4
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Moderate
+≥ 5 meioses regardless of the number of families
+Default
+2
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Supporting
+≥ 3 meioses regardless of the number of families
+Default
+1
+Point
+Value:
+Modification Clarification
+Type:
+
+PP2
+
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Although pathogenic missense variants are common in MYOC, the gene
+also has a significant amount of benign missense variants as shown by the
+missense constraint z score in gnomAD (z = 0.52) supporting tolerance to
+variation.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+The combination of PP3 and PM5 should not be higher than 5 points,
+and the combination of PP3 and PS1 should not be higher than 6
+points.
+
+Pejaver et al. estimated thresholds for different strength of evidence for
+computational predictors and recommended using one that reaches a
+strong level of evidence for pathogenicity and moderate for benignity.26
+The Glaucoma VCEP recommended using only one in silico predictor, in
+line with a recent study showing a lower rate of concordance when
+multiple software are used.25 The Glaucoma VCEP piloted the 4 predictors
+recommended by Pejaver et al. (REVEL, VEST4, BayesDel2 and MutPred2)
+on previously established LB/B and LP/P variants by the Glaucoma VCEP.
+Of the 4 tools, REVEL had the highest sensitivity (PP3 was applied to
+95.2% (20/21) of LP/P variants (5x at PP3, 13x at PP3_Moderate and 2x at
+PP3_Strong), reclassifying 5x LP variants as P) and the lowest specificity
+(BP4 was applied to 45.0% (9/20) of LB/B variants (5x at BP4 and 4x at
+BP4_Moderate), reclassifying 2x LB variants as B). MutPred2 had a
+sensitivity of 47.6% while VEST4 and BayesDel2 had a sensitivity of
+81.0%. Of note, two variants classified as LB/B was predicted to have
+impact with REVEL but this was consistent across the other 3 prediction
+tools. Therefore the VCEP recommends using REVEL based on its ease of
+access, high level of accuracy toward variant pathogenicity 27 and more
+conservative predictions toward benign impact in the context of MYOC
+variants.
+
+Based on the disease mechanism (GoF), the fact that all pathogenic
+variants are located in the last exon of the gene and the absence of
+current evidence supporting splicing as having a deleterious impact, the
+Glaucoma VCEP does not recommend using SpliceAI for PP3.
+
+Strong
+REVEL score of ≥ 0.932
+Default
+4
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Moderate
+REVEL score of 0.773-0.931
+Default
+2
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Supporting
+REVEL score of 0.644-0.772
+Default
+1
+Point
+Value:
+Modification Clarification
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+The phenotype associated with MYOC variants is not highly specific and
+there is genetic heterogeneity.
+
+PP5
+
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+Specifications:
+
+The highest allele frequency in population databases should be used.
+Variant must be present in ≥ 5 alleles in any validated general
+continental population dataset of at least 2,000 observed alleles.
+
+The Whiffin/Ware calculator13 was used to obtain a population allele
+frequency threshold for BA1 using conservative figures. The prevalence of
+POAG in the African population, which is the highest among all
+populations, was used (1/24).14,15The maximum allelic contribution for the
+most common MYOC variant (p.Gln368Ter) was set at 2.6% using data
+from large disease registries (the Australian and New Zealand of
+Advanced Glaucoma and the Glaucoma Inheritance Study in Tasmania
+with data on over 3,236 individuals).16 A conservative estimate for the
+penetrance at 7.6% was used based on the penetrance of p.Gln368Ter in a
+population-based study using data from the UK biobank.17 The maximum
+credible allele frequency calculated was 0.007, which was rounded up to
+0.01.
+
+Stand Alone
+Allele frequency ≥ 0.01 in population databases.
+Default
+Not Applicable
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+
+Allele frequency is greater than expected for disorder.
+VCEP
+Specifications:
+
+The highest allele frequency in population databases should be used.
+Variant must be present in ≥ 5 alleles in any validated general
+continental population dataset of at least 2,000 observed alleles.
+Does not apply to p.Gln368Ter.
+
+The Whiffin/Ware calculator was used to obtain a population allele
+frequency threshold for BS1 using a more realistic estimate of the
+penetrance.13 The prevalence of POAG and the maximum allelic
+contribution used were the same as for BA1. A penetrance at 56% was
+used based on the penetrance of p.Gln368Ter in family-based studies
+using data from the Australian and New Zealand of Advanced Glaucoma
+and the Glaucoma Inheritance Study in Tasmania.17 The maximum
+credible allele frequency calculated was 0.001.
+An exemption was applied to p.Gln368Ter. MYOC p.Gln368Ter is a wellestablished pathogenic variant but displays incomplete penetrance. Its
+allele frequency in gnomAD is 0.001588 in European Non-Finnish,
+0.003344 in European Finnish, and is 0.0025 in the UKBB. Evidence
+supports a European founder effect.18
+
+Strong
+Allele frequency ≥ 0.001 in population databases.
+Default
+-4
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+Comments:
+MYOC variants have an incomplete penetrance and late age of onset.
+
+BS3
+Original ACMG
+Summary
+
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+BS3 at a Moderate or Supporting level applies to variants showing
+Specifications:solubility or secretion in functional assays for studies with OddsPath as
+per the published SVI recommendations.1
+Only apply if the assay includes both negative and positive controls
+and includes technical and/or biological replicates.
+If multiple results from functional assays are available for a single
+variant, then the evidence from the assay that is best validated
+should apply.
+Controls from the same general class of assay can be combined to
+calculate the odds of pathogenicity (OddsPath) as per the published
+SVI recommendations.1
+If results from different assays are conflicting for a single variant,
+then the level of validation of each assay should be considered to
+decide whether the results from one assay can override the results
+from another.
+
+Moderate
+Applies to variants showing solubility or secretion in functional assays for studies with
+OddsPath <0.23 as per the SVI recommendations.
+Default
+-2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Applies to variants showing solubility or secretion in functional assays for studies with
+OddsPath <0.48 as per the SVI recommendations.
+Default
+-1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Not Applicable
+Comments:
+The presence of phenocopies, the reduced age-related penetrance and
+the possibility that more than one pathogenic variant can contribute to
+the phenotype observed in families make non-segregation difficult to
+assess in the context of MYOC and POAG.
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Both truncating and missense MYOC variants are causative.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Biallelic variants (either compound heterozygotes or homozygotes) have
+been reported (with variable phenotype) and are not incompatible with
+life. Two missense variants in cis could act synergistically or the effect of a
+variant occurring after a truncating variant may not be predicted.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+MYOC does not have a repetitive region without a known function.
+
+BP4
+
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Similar to PP3, The Glaucoma VCEP decided to follow the SVI
+Specifications:recommendations to apply the REVEL thresholds calculated for the
+different levels of evidence.10
+
+MYOC which only has 3 exons, one transcript and for which splicing is not
+known to vary. Based on the disease mechanism and the absence of
+current evidence supporting pathogenicity of intronic/noncoding variants,
+the Glaucoma VCEP agreed to apply BP4 to noncoding variants using
+SpliceAI.
+
+Strong
+REVEL score of ≤ 0.016
+Default
+-4
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Moderate
+REVEL score of 0.017-0.183
+Default
+-2
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Supporting
+For missense variants: REVEL score of 0.184-0.290
+For all other variants located outside of donor/acceptor ±1,2 dinucleotide positions,
+when splicing assay is not available: SpliceAI ≤ 0.1
+Default
+Point
+Value:
+
+-1
+
+Modification Clarification
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Multiple molecular diagnoses are possible and variants in different genes
+could have an additive effect.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Apply to intronic/noncoding and synonymous (silent) exonic variants if BP4 is met
+Default
+-1
+Point
+Value:
+Modification Clarification
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+-1 - 5
+
+Likely Benign
+
+-6 - -2
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+Table 3: Point system for PS2
+
+References
+1.
+
+Brnich SE Abou Tayoun AN et al. Recommendations for application of the functional evidence
+PS3/BS3 criterion using the ACMG/AMP sequence variant interpretation framework. Genome
+Med (2019) 12 (1) p. 3. 10.1186/s13073-019-0690-2 31892348 
+
+2.
+
+Caballero M Borrás T Inefficient processing of an olfactomedin-deficient myocilin mutant:
+potential physiological relevance to glaucoma. Biochem Biophys Res Commun (2001) 282
+(3) p. 662-70. 10.1006/bbrc.2001.4624 11401512 
+
+3.
+
+Liu Y Vollrath D Reversal of mutant myocilin non-secretion and cell killing: implications for
+glaucoma. Hum Mol Genet (2004) 13 (11) p. 1193-204. 10.1093/hmg/ddh128 15069026 
+
+4.
+
+Collantes ERA Delfin MS et al. EFEMP1 rare variants cause familial juvenile-onset open-angle
+glaucoma. Hum Mutat (2022) 43 (2) p. 240-252. 10.1002/humu.24320 34923728 
+
+5.
+
+Alward WL Kwon YH et al. Variations in the myocilin gene in patients with open-angle glaucoma.
+Arch Ophthalmol (2002) 120 (9) p. 1189-97. 10.1001/archopht.120.9.1189 12215093 
+
+6.
+
+Angius A De Gioia E et al. A novel mutation in the GLC1A gene causes juvenile open-angle
+glaucoma in 4 families from the Italian region of Puglia. Arch Ophthalmol (1998) 116 (6) p.
+793-7. 10.1001/archopht.116.6.793 9639450 
+
+7.
+
+Braghini CA Neshich IA et al. New mutation in the myocilin gene segregates with juvenile-onset
+open-angle glaucoma in a Brazilian family. Gene (2013) 523 (1) p. 50-7.
+10.1016/j.gene.2013.02.054 23566828 
+
+8.
+
+Alward WL Fingert JH et al. Clinical features associated with mutations in the chromosome 1
+open-angle glaucoma gene (GLC1A). N Engl J Med (1998) 338 (15) p. 1022-7.
+10.1056/NEJM199804093381503 9535666 
+
+9.
+
+Kelly MA Caleshu C et al. Adaptation and validation of the ACMG/AMP variant classification
+framework for MYH7-associated inherited cardiomyopathies: recommendations by ClinGen's
+Inherited Cardiomyopathy Expert Panel. Genet Med (2018) 20 (3) p. 351-359.
+10.1038/gim.2017.218 29300372 
+
+10.
+
+Pejaver V Byrne AB et al. Calibration of computational tools for missense variant pathogenicity
+classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet (2022) 109
+(12) p. 2163-2177. 10.1016/j.ajhg.2022.10.013 36413997 
+
+11.
+
+Ghosh R Oak N et al. Evaluation of in silico algorithms for use with ACMG/AMP clinical variant
+interpretation guidelines. Genome Biol (2017) 18 (1) p. 225. 10.1186/s13059-017-1353-5
+29179779 
+
+12.
+
+Tian Y Pesaran T et al. REVEL and BayesDel outperform other in silico meta-predictors for
+clinical variant classification. Sci Rep (2019) 9 (1) p. 12752. 10.1038/s41598-019-49224-8
+31484976 
+
+13.
+
+Whiffin N Minikel E et al. Using high-resolution variant frequencies to empower clinical genome
+interpretation. Genet Med (2017) 19 (10) p. 1151-1158. 10.1038/gim.2017.26 28518168 
+
+14.
+
+Tham YC Li X et al. Global prevalence of glaucoma and projections of glaucoma burden through
+2040: a systematic review and meta-analysis. Ophthalmology (2014) 121 (11) p. 2081-90.
+10.1016/j.ophtha.2014.05.013 24974815 
+
+15.
+
+Quigley HA Broman AT The number of people with glaucoma worldwide in 2010 and 2020. Br J
+Ophthalmol (2006) 90 (3) p. 262-7. 10.1136/bjo.2005.081224 16488940 
+
+16.
+
+Souzeau E Burdon KP et al. Higher prevalence of myocilin mutations in advanced glaucoma in
+comparison with less advanced disease in an Australasian disease registry. Ophthalmology
+(2013) 120 (6) p. 1135-43. 10.1016/j.ophtha.2012.11.029 23453510 
+
+17.
+
+Han X Souzeau E et al. Myocilin Gene Gln368Ter Variant Penetrance and Association With
+Glaucoma in Population-Based and Registry-Based Studies. JAMA Ophthalmol (2019) 137 (1)
+p. 28-35. 10.1001/jamaophthalmol.2018.4477 30267046 
+
+18.
+
+Baird PN Craig JE et al. Analysis of 15 primary open-angle glaucoma families from Australia
+identifies a founder effect for the Q368STOP mutation of myocilin. Hum Genet (2003) 112 (2)
+p. 110-6. 10.1007/s00439-002-0865-5 12522550 
+
+19.
+
+Ghosh R Oak N et al. Evaluation of in silico algorithms for use with ACMG/AMP clinical variant
+interpretation guidelines. Genome Biol (2017) 18 (1) p. 225. 10.1186/s13059-017-1353-5
+29179779 
+
+20.
+
+Tian Y Pesaran T et al. REVEL and BayesDel outperform other in silico meta-predictors for
+clinical variant classification. Sci Rep (2019) 9 (1) p. 12752. 10.1038/s41598-019-49224-8
+31484976 
+
+21.
+
+Pejaver V Byrne AB et al. Calibration of computational tools for missense variant pathogenicity
+classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet (2022) 109
+(12) p. 2163-2177. 10.1016/j.ajhg.2022.10.013 36413997 
+
+22.
+
+Ghosh R Oak N et al. Evaluation of in silico algorithms for use with ACMG/AMP clinical variant
+interpretation guidelines. Genome Biol (2017) 18 (1) p. 225. 10.1186/s13059-017-1353-5
+29179779 
+
+23.
+
+Pejaver V Byrne AB et al. Calibration of computational tools for missense variant pathogenicity
+classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet (2022) 109
+(12) p. 2163-2177. 10.1016/j.ajhg.2022.10.013 36413997 
+
+24.
+
+Tian Y Pesaran T et al. REVEL and BayesDel outperform other in silico meta-predictors for
+clinical variant classification. Sci Rep (2019) 9 (1) p. 12752. 10.1038/s41598-019-49224-8
+31484976 
+
+25.
+
+Ghosh R Oak N et al. Evaluation of in silico algorithms for use with ACMG/AMP clinical variant
+interpretation guidelines. Genome Biol (2017) 18 (1) p. 225. 10.1186/s13059-017-1353-5
+29179779 
+
+26.
+
+Pejaver V Byrne AB et al. Calibration of computational tools for missense variant pathogenicity
+classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet (2022) 109
+(12) p. 2163-2177. 10.1016/j.ajhg.2022.10.013 36413997 
+
+27.
+
+Tian Y Pesaran T et al. REVEL and BayesDel outperform other in silico meta-predictors for
+clinical variant classification. Sci Rep (2019) 9 (1) p. 12752. 10.1038/s41598-019-49224-8
+31484976 
+
+28.
+
+Brnich SE Abou Tayoun AN et al. Recommendations for application of the functional evidence
+PS3/BS3 criterion using the ACMG/AMP sequence variant interpretation framework. Genome
+Med (2019) 12 (1) p. 3. 10.1186/s13073-019-0690-2 31892348 
+
+29.
+
+Liu Y Vollrath D Reversal of mutant myocilin non-secretion and cell killing: implications for
+glaucoma. Hum Mol Genet (2004) 13 (11) p. 1193-204. 10.1093/hmg/ddh128 15069026 
+
+30.
+
+Caballero M Borrás T Inefficient processing of an olfactomedin-deficient myocilin mutant:
+potential physiological relevance to glaucoma. Biochem Biophys Res Commun (2001) 282
+(3) p. 662-70. 10.1006/bbrc.2001.4624 11401512 
+
+31.
+
+Caballero M Borrás T Inefficient processing of an olfactomedin-deficient myocilin mutant:
+potential physiological relevance to glaucoma. Biochem Biophys Res Commun (2001) 282
+(3) p. 662-70. 10.1006/bbrc.2001.4624 11401512 
+
+32.
+
+Liu Y Vollrath D Reversal of mutant myocilin non-secretion and cell killing: implications for
+glaucoma. Hum Mol Genet (2004) 13 (11) p. 1193-204. 10.1093/hmg/ddh128 15069026 
+
+33.
+
+Brnich SE Abou Tayoun AN et al. Recommendations for application of the functional evidence
+PS3/BS3 criterion using the ACMG/AMP sequence variant interpretation framework. Genome
+Med (2019) 12 (1) p. 3. 10.1186/s13073-019-0690-2 31892348 
+
+

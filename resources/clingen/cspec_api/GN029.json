@@ -1,0 +1,42 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN029",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50027",
+    "@type": "Organization",
+    "label": "Mitochondrial Diseases Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50027"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/643243099"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Mitochondrial Diseases Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for ETHE1 Version 1.0",
+  "lastUpdated": "2022-08-18T19:12:03.420Z",
+  "legacyFullySuperseded": false,
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/643243106",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=ETHE1",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0011229",
+              "@type": "Disease",
+              "label": "MONDO:0011229"
+            }
+          ],
+          "label": "ETHE1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

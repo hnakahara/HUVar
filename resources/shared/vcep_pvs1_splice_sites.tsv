@@ -1,0 +1,199 @@
+# Per-allele PVS1 codes for canonical +/-1,2 splice substitutions from VCEP PVS1 guides
+# (HBOP VCEP: ATM v1.6 pages 5-8, NM_000051.4; PALB2 v1.3 pages 6 and 8, NM_024675.4).
+# Only alleles whose code differs from the gene default (PVS1) are listed: ATM lists B
+# (Strong), C/F (Supporting) and the N/A sites; PALB2 Moderate / Supporting / N/A and
+# list D (Strong). rna=1: underlined in red in the guide (experimental splicing data).
+gene	site	ref	alt	strength	rna	note	source
+ATM	c.-31+1	G	A	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-31+1	G	T	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-31+1	G	C	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-31+2	T	C	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-31+2	T	G	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-31+2	T	A	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-30-2	A	G	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-30-2	A	C	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-30-2	A	T	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-30-1	G	A	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-30-1	G	C	na	0	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.-30-1	G	T	na	1	5'UTR intron: exon skipping / cryptic site does not affect the coding sequence	ATM PVS1 guide v1.6
+ATM	c.6347+2	T	C	na	0	creates a GC donor predicted functional; no splicing alteration predicted	ATM PVS1 guide v1.6
+ATM	c.6807+2	T	C	na	0	creates a GC donor predicted functional; no splicing alteration predicted	ATM PVS1 guide v1.6
+ATM	c.7629+2	T	C	na	1	creates a GC donor predicted functional; no splicing alteration predicted	ATM PVS1 guide v1.6
+ATM	c.8786+2	T	C	na	0	creates a GC donor predicted functional; no splicing alteration predicted	ATM PVS1 guide v1.6
+ATM	c.8987+2	T	C	na	0	creates a GC donor predicted functional; no splicing alteration predicted	ATM PVS1 guide v1.6
+ATM	c.7515+2	C	T	na	0	GC-AG donor: variant improves the donor site	ATM PVS1 guide v1.6
+ATM	c.332-2	A	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.332-2	A	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.332-2	A	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.332-1	G	A	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.332-1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.332-1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.496+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.496+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.496+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.496+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.496+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.496+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1607+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1607+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1607+1	G	T	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1607+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1607+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1607+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1608-2	A	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1608-2	A	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1608-2	A	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1608-1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1608-1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1608-1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1802+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1802+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1802+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1802+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1802+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1802+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1898+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1898+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1898+1	G	T	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1898+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1898+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.1898+2	T	G	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2250+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2250+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2250+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2250+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2250+2	T	C	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2250+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2376+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2376+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2376+1	G	T	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2376+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2376+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2376+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2377-2	A	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2377-2	A	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2377-2	A	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2377-1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2377-1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2377-1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2466+1	G	A	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2466+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2466+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2466+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2466+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2466+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3576+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3576+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3576+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3576+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3576+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3576+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3993+1	G	A	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3993+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3993+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3993+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3993+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.3993+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4612-2	A	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4612-2	A	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4612-2	A	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4612-1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4612-1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4612-1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4776+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4776+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4776+1	G	T	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4776+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4776+2	T	C	strong	1	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4776+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4910-2	A	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4910-2	A	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4910-2	A	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4910-1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4910-1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.4910-1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5005+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5005+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5005+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5005+2	T	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5005+2	T	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5005+2	T	G	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5496+1	G	A	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5496+1	G	C	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.5496+1	G	T	strong	0	list B: in-frame skip in the N-terminal HEAT repeats (exons 2-38)	ATM PVS1 guide v1.6
+ATM	c.2467-2	A	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2467-2	A	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2467-1	G	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2467-1	G	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2839-2	A	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2839-2	A	G	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2839-2	A	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2839-1	G	A	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2839-1	G	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.2839-1	G	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4237-2	A	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4237-2	A	G	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4237-2	A	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4237-1	G	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4237-1	G	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4437-2	A	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4437-2	A	G	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4437-2	A	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4437-1	G	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.4437-1	G	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.5675-2	A	C	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.5675-2	A	T	supporting	0	list C: cryptic site preserving the frame, very small indel (PROVEAN damaging; HEAT)	ATM PVS1 guide v1.6
+ATM	c.6199-2	A	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.6199-2	A	G	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.6199-2	A	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.6199-1	G	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.6199-1	G	T	supporting	1	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.7928-2	A	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.7928-2	A	G	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.7928-2	A	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.7928-1	G	A	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.7928-1	G	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.7928-1	G	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8152-2	A	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8152-2	A	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8152-1	G	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8152-1	G	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8269-2	A	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8269-2	A	G	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8269-2	A	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8269-1	G	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8269-1	G	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8419-2	A	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8419-2	A	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8419-1	G	C	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+ATM	c.8419-1	G	T	supporting	0	list F: cryptic site preserving the frame, very small indel (PROVEAN damaging; FATKIN)	ATM PVS1 guide v1.6
+PALB2	c.49-2	A	C	moderate	0	in-frame skip, role unknown, <10% (exon 2 acceptor; footnote G)	PALB2 PVS1 guide v1.3
+PALB2	c.49-2	A	T	moderate	1	in-frame skip, role unknown, <10% (exon 2 acceptor; footnote G)	PALB2 PVS1 guide v1.3
+PALB2	c.49-1	G	A	moderate	1	in-frame skip, role unknown, <10% (exon 2 acceptor; footnote G)	PALB2 PVS1 guide v1.3
+PALB2	c.49-1	G	C	moderate	0	in-frame skip, role unknown, <10% (exon 2 acceptor; footnote G)	PALB2 PVS1 guide v1.3
+PALB2	c.49-1	G	T	moderate	0	in-frame skip, role unknown, <10% (exon 2 acceptor; footnote G)	PALB2 PVS1 guide v1.3
+PALB2	c.211+1	G	A	supporting	1	in-frame insertion <10% (exon 3 donor; footnote H)	PALB2 PVS1 guide v1.3
+PALB2	c.211+1	G	C	supporting	0	in-frame insertion <10% (exon 3 donor; footnote H)	PALB2 PVS1 guide v1.3
+PALB2	c.211+1	G	T	supporting	0	in-frame insertion <10% (exon 3 donor; footnote H)	PALB2 PVS1 guide v1.3
+PALB2	c.211+2	T	A	supporting	0	in-frame insertion <10% (exon 3 donor; footnote H)	PALB2 PVS1 guide v1.3
+PALB2	c.211+2	T	C	supporting	0	in-frame insertion <10% (exon 3 donor; footnote H)	PALB2 PVS1 guide v1.3
+PALB2	c.211+2	T	G	supporting	0	in-frame insertion <10% (exon 3 donor; footnote H)	PALB2 PVS1 guide v1.3
+PALB2	c.108+2	T	C	na	1	creates a GC site predicted functional	PALB2 PVS1 guide v1.3
+PALB2	c.3350+2	C	T	na	0	non-canonical GC donor improved to GT	PALB2 PVS1 guide v1.3
+PALB2	c.212-2	A	C	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.212-2	A	G	strong	1	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.212-2	A	T	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.212-1	G	A	strong	1	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.212-1	G	C	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.212-1	G	T	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1684+1	G	A	strong	1	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1684+1	G	C	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1684+1	G	T	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1684+2	T	A	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1684+2	T	C	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1684+2	T	G	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1685-2	A	C	strong	1	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1685-2	A	G	strong	1	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1685-2	A	T	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1685-1	G	C	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3
+PALB2	c.1685-1	G	T	strong	0	list D: NMD-escaping in-frame skip, role unknown, >=10% (exons 4/5)	PALB2 PVS1 guide v1.3

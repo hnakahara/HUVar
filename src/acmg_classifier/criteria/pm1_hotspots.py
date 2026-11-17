@@ -43,6 +43,23 @@ PM1_CO_REQUIREMENTS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     "RAG1": ((), ("BA1", "BS1", "BS2")),
     "RAG2": ((), ("BA1", "BS1", "BS2")),
     "IL7R": ((), ("BA1", "BS1", "BS2")),
+    # FOXN1 (GN113) / JAK3 (GN121) corrections documents: PM1 caveat "variant
+    # must not meet BS1, BS2, or BA1".
+    "FOXN1": ((), ("BA1", "BS1", "BS2")),
+    "JAK3": ((), ("BA1", "BS1", "BS2")),
+    # RASopathy VCEP v2.3.0 (PM1 / PM5 general text): "PM1 and PM5 may be used in
+    # conjunction at moderate levels, however, PM1 may not be applied if PM5_Strong
+    # is applied to avoid overweighting."
+    **{g: ((), ("PM5:Strong",)) for g in (
+        "BRAF", "HRAS", "KRAS", "LZTR1", "MAP2K1", "MAP2K2", "MRAS", "NRAS", "PPP1CB",
+        "PTPN11", "RAF1", "RIT1", "RRAS2", "SHOC2", "SOS1", "SOS2")},
+    # General text: SCN genes "If PM5_Strong is reached, and the variant falls
+    # within a PM1 region, then do not add PM1 with PM5_Strong"; HHT VCEP (ACVRL1 /
+    # ENG) "do not use PM1 with PM5_Strong. PM1 can still be combined with PM5".
+    **{g: ((), ("PM5:Strong",)) for g in (
+        "SCN1A", "SCN2A", "SCN3A", "SCN8A", "ACVRL1", "ENG")},
+    # RPE65: "Missense variants that meet BS1 or BA1 should not be eligible".
+    "RPE65": ((), ("BA1", "BS1")),
     # PAH (GN006): "Do not apply if PP3_Strong applies".
     "PAH": ((), ("PP3:Strong",)),
 }

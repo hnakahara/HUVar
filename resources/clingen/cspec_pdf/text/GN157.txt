@@ -1,0 +1,610 @@
+Criteria Specification
+ClinGen Leukodystrophy and Leukoencephalopathy Expert Panel Specifications to the
+ACMG/AMP Variant Interpretation Guidelines for GFAP Version 1.0
+Affiliation: Leukodystrophy and Leukoencephalopathy VCEP
+Type: Richards et.al., 2015 - Combining rules
+Version : 1.0
+Released : 8/3/2026
+DOI : 10.5281/zenodo.21777354
+
+Contributors & Keywords
+Research Group: Leukodystrophy and
+Leukoencephalopathy VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+GFAP NM_002055.5 Autosomal dominant
+inheritance Alexander disease
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for GFAP
+General Comments:
+
+Alexander Disease is caused by gain of function variants in GFAP, which
+lead to protein aggregation and loss of protein solubility that is damaging
+to astrocytes.
+
+Gene: GFAP (HGNC:4235) 
+Transcripts:
+NM_002055.5
+
+HGNC Name: glial fibrillary acidic protein
+Disease:
+Alexander disease
+(MONDO:0008752)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+LOF is not a known disease mechanism
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Previously established variant must be established as pathogenic or likely
+Specifications:pathogenic per criteria established by this VCEP. Caveat: Beware of
+changes that impact splicing rather than at the amino acid/protein level
+
+Strong
+Same amino acid change as a previously established pathogenic or Likely Pathogenic
+variant regardless of nucleotide change. Previously established variant must be
+established as pathogenic per criteria established by this VCEP. Caveat: Beware of
+changes that impact splicing rather than at the amino acid/protein level.
+Modification No change
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Modifications made to the SVI Recommendation for De Novo Criteria (PS2
+Specifications:& PM6). Instuction in the document attached.
+This document is also uploaded as “PS2 & PM6 instructions”
+
+Very Strong
+10 points (per SVI Recommendation for De Novo Criteria (PS2 & PM6) with modifications
+for GFAP)
+Modification Gene-specific,Strength
+Type:
+
+Strong
+6 points (per SVI Recommendation for De Novo Criteria (PS2 & PM6) with modifications for
+GFAP)
+Modification Gene-specific,None
+Type:
+
+Moderate
+3 points (per SVI Recommendation for De Novo Criteria (PS2 & PM6) with modifications for
+GFAP)
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+1.5 points (per SVI Recommendation for De Novo Criteria (PS2 & PM6) with modifications
+for GFAP)
+Modification Gene-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Please see instructions in attached document (PS3/BS3 Instructions)
+Specifications:
+(Unsure of what excel file referred to in the comments is. No excel file was
+submitted and there no “Impaired Enzyme Activity” assays exist)
+
+Very Strong
+Animal model that replicates human phenotype
+
+Modification Gene-specific,Strength
+Type:
+
+Strong
+Immunoassay/Western blot that demonstrates GFAP insolubility in non patient-derived cell
+lines that are transfected (or genome edited) with the variant in question
+Modification Gene-specific
+Type:
+
+Moderate
+Immunocytochemistry/Immunohistochemisty demonstrates abnormal GFAP aggregation
+(compared to wild-type control with demonstrated intermediate fillament architecture) in
+non patient-derived cell lines that are transfected (or genome edited) with the variant in
+question
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Immunoassay/Western blot, Immunocytochemistry/Immunohistochemisty, or
+confocal/electron microscopy show protein aggregation/loss of solubility in patient-derived
+cell lines.
+Modification Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Follow the instructions in the document provided.
+Specifications:
+Criteria established by VCEP using the Yoshida criteria as guidelines and
+making appropriate modifications based on discussion with experts on
+AxD
+
+Very Strong
+15+ points
+Modification Gene-specific,Strength
+Type:
+
+Strong
+9-14 points
+Modification Gene-specific,No change
+Type:
+
+Moderate
+4-8 points
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+2-3 points
+Modification Gene-specific,Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+This includes missense variants and in-frame deletions/duplications in ANY
+Specifications:transcript expressed in astrocytes.
+
+Moderate
+Variant affecting an amino acid at or in between positions 59-88. This region shows
+variation constraint (p-value 6/45e-4), as well as a high concentration of pathogenic/likely
+pathogenic variants (24 variants in 30 amino acids in this region vs 41 variants in 402
+amino acids outside this region). This includes missense variants and in-frame
+deletions/duplications
+Modification Gene-specific
+Type:
+
+PM2
+
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+SVI guidance on PM2 recommends decreasing weight of criterion PM2
+Specifications:from moderate to supporting strength level.
+
+Supporting
+Absent in gnomAD
+Modification Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Autosomal Dominant disorder
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Not Applicable
+Comments:
+There are some in frame deletions but mechanism is not common enough
+to assign this criteria
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Novel missense change at an amino acid residue where one different pathogenic or likely
+pathogenic variant has been identified.
+Modification None
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+To assign points to the variant, follow instructions in the document
+Specifications:provided.
+Modifications were made to the SVI Recommendation for De Novo Criteria
+(PS2 & PM6) to adapt to GFAP.
+(CSPEC editor does not allow to add VeryStrong for PM6)
+
+Strong
+6 points (per SVI Recommendation for De Novo Criteria (PS2 & PM6) with modifications for
+GFAP)
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+3 points (per SVI Recommendation for De Novo Criteria (PS2 & PM6) with modifications for
+GFAP)
+Modification Gene-specific
+Type:
+
+Supporting
+1.5 points (per SVI Recommendation for De Novo Criteria (PS2 & PM6) with modifications
+for GFAP)
+Modification Gene-specific,Strength
+Type:
+
+PP1
+
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+If PP4 is applied, PP1 cannot be applied (per ClinGen Guidance): PMID:
+Specifications:38103548 https://pubmed.ncbi.nlm.nih.gov/38103548/
+If PP4 is not met, individuals must meet “consistent”, “probable”, or
+“definite” diagnosis according to VCEP PS2/PM6 guidelines.
+
+Strong
+≥5 informative meioses
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+≥3 informative meioses.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+≥2 informative meioses.
+Modification Gene-specific,None
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable because missense z score is <3.09.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Not Applicable
+Comments:
+This criterion is not applicable. GFAP has a gain of function mechanism of
+disease and no individual tool or meta predictor has provided consistent
+and accurate scores for GFAP variants, especially those variants
+associated with Type II or adult-onset presentations. Use of this criterion
+can be revisited in the future if modeling tools specific to this gene or
+designed to characterize gain of function mutations are shown to more
+accruately model pathogenicity of GFAP variants.
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+PP4 is only applicable if individual meets “consistent”, “probable”, or
+Specifications:“definite” diagnosis according to VCEP PS2/PM6 guidelines.
+PP4 and PP1 are mutually exclusive, therefore if PP4 is not met, PP1
+should be considered instead.
+
+Strong
+Elevated GFAP protein levels in plasma, serum, or CSF. For clinical tests, established
+thresholds are dependent on age and currently only exist for individuals above the age of
+18 years. Clinical lab reports clearly indicate if levels are elevated (in pg/mL). For
+research-based testing, levels must be significantly elevated when compared to agematched controls.
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Existence of Rosenthal fibers in addition to gliosis and loss of myelin.
+Modification Gene-specific,Strength
+Type:
+
+PP5
+Original ACMG
+Summary
+
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+GnomAD (v4.1.0) filtering allele frequency ≥0.01%
+Modification Gene-specific,None
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+GnomAD (v4.1.0) filtering allele frequency ≥0.001%
+Modification Gene-specific,None
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+Observed in gnomAD in a homozygous state.
+Specifications:
+
+Strong
+Observed in gnomAD in a homozygous state.
+
+Modification Gene-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+Please see instructions in attached document (PS3/BS3 Instructions)
+Specifications:
+
+Strong
+Protein expression assay demonstrates loss of function when variant is transfected or
+genome edited into non patient-derived cell lines
+Modification Gene-specific,None
+Type:
+
+Moderate
+Immunoassay/Western blot that demonstrates GFAP normal solubility in non patientderived cell lines that are transfected (or genome edited) with the variant in question OR
+Immunocytochemistry/Immunohistochemisty demonstrates normal GFAP aggregation
+(compared to wild-type control with demonstrated intermediate fillament architecture) in
+non patient-derived cell lines that are transfected (or genome edited) with the variant in
+question OR Immunoassay/Western blot, Immunocytochemistry/Immunohistochemisty, or
+confocal/electron microscopy show protein normal protein distribution and solubility in
+patient-derived cell lines.
+Modification Gene-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+VCEP
+To count as affected individuals: Must meet “consistent”, “probable”, or
+Specifications:“definite” diagnosis according to VCEP PS2/PM6 guidelines.
+
+To count as unaffected they must meet both of the following.
+Negative MRI at or after 18 years
+No clinical symptoms listed in the PS2/PM6 guidelines at or after 18
+year
+Any individuals not meeting either criteria for affected or unaffected
+should not be counted as informative.
+
+Strong
+≥3 informative meioses.
+Modification Gene-specific
+Type:
+
+Moderate
+≥2 informative meioses.
+Modification Gene-specific,Strength
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+GFAP is caused primarily by missense variants.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed with another variant (regardless of phase) in GFAP that is established as
+pathogenic or likely pathogenic per these criteria.
+Modification Gene-specific
+Type:
+
+BP3
+
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+No repetitive regions without known function
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Not Applicable
+Comments:
+GFAP has a gain of function mechanism of disease and no individual tool
+or meta predictor has provided consistent and accurate scores for GFAP
+variants, especially those variants associated with Type II or adult-onset
+presentations. Use of this criterion can be revisited in the future if
+modeling tools specific to this gene or designed to characterize gain of
+function mutations are shown to more accruately model pathogenicity of
+GFAP variants.
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+Modification None
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved. An amino acid is considered highly conserved if the phyloP score is
+<2.27. PhyloP score can be found in gnomAD in the In Silico Predictors tool.
+Modification None
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong AND ≥ 1 Strong
+1 Very Strong AND ≥ 2 Moderate
+1 Very Strong AND 1 Moderate AND 1 Supporting
+1 Very Strong AND ≥ 2 Supporting
+
+≥ 2 Strong
+1 Strong AND ≥ 3 Moderate
+1 Strong AND 2 Moderate AND ≥ 2 Supporting
+1 Strong AND 1 Moderate AND ≥ 4 Supporting
+
+Likely Pathogenic
+1 Very Strong AND 1 Moderate
+1 Strong AND 1 Moderate
+1 Strong AND ≥ 2 Supporting
+
+≥ 3 Moderate
+2 Moderate AND ≥ 2 Supporting
+1 Moderate AND ≥ 4 Supporting
+
+Benign
+≥ 2 Strong
+1 Stand Alone
+
+Likely Benign
+1 Strong (BS1)
+1 Strong (BS2, BS3, BS4) AND 1 Supporting (BP2, BP5, BP7)
+
+Files & Images
+PP4 Instructions: Diagnositc criteria. Instructions for PP4 
+PS3 Decision Tree: Decision Tree created to guide curators through PS3. 
+PS2 & PM6 Instructions: Instructions for PS2 & PM6 
+PP4 Instructions: Diagnositc criteria. Instructions for PP4 
+PS3 Excel Sheet: 
+Toshida 2017 publication that is referenced for diagnostic criteria.: 
+PS4 instructions: 
+Pilot Variants: Excel file with pilot variants (includes incorporated feedback) 
+Missense constrait in amino acids 59-88 of GFAP.: GnomAD screenshot showing the missense
+constraint observed in amino acids 59-88 of GFAP.
+
+

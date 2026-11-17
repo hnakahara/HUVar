@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN176",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50147",
+    "@type": "Organization",
+    "label": "Glucose-6-phosphate dehydrogenase Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50147"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1780341901"
+  },
+  "cspecStatus": "Pilot Rules Submitted",
+  "currentStatus": "Pilot Rules Submitted",
+  "label": "ClinGen Glucose-6-phosphate dehydrogenase  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for G6PD Version 1.0",
+  "lastUpdated": "2026-11-10T16:47:16.084Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1780341911",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=G6PD",
+          "@type": "Gene",
+          "label": "G6PD"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

@@ -1,0 +1,423 @@
+Criteria Specification
+ClinGen Platelet Disorders Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines Version 2.1
+Affiliation: Platelet Disorders VCEP
+Description : This version specified for the following genes: ITGA2B, ITGB3
+Version : 2.1
+Released : 11/1/2021
+DOI : 10.5281/zenodo.21421529
+Release Notes :
+Updated MONDO ID for Glanzmann thrombasthenia from MONDO:0010119 to MONDO:0100326
+(November 2021).
+
+Contributors & Keywords
+Research Group: Platelet Disorders VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+ITGA2B NM_000419.4 ITGB3 NM_000212.2
+
+Rules for ITGA2B, ITGB3
+Gene: ITGA2B (HGNC:6138) 
+Transcripts:
+NM_000419.4
+
+HGNC Name: integrin subunit alpha 2b
+Disease:
+Glanzmann thrombasthenia
+(MONDO:0100326) 
+
+Gene: ITGB3 (HGNC:6156) 
+Transcripts:
+NM_000212.2
+
+HGNC Name: integrin subunit beta 3
+Disease:
+Glanzmann thrombasthenia
+(MONDO:0100326) 
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Use decision tree as per SVI WG with specified “regions critical to protein function”.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Use with no specification.
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Strong
+Use proposed SVI point recommendations.
+Only applicable when proband has a known pathogenic or likely pathogenic variant
+with the de novo variant
+
+Moderate
+Use proposed SVI point recommendations.
+Only applicable when proband has a known pathogenic or likely pathogenic variant
+with the de novo variant
+
+PS3
+
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+In a transgenic animal model, must demonstrate minimal to no function. OR
+In a model organism or heterologous cell line, EITHER (A) when expression is normal
+or reduced, disruption of protein function must be demonstrated OR (B) Absent
+surface protein expression (<5%).
+
+Moderate
+In a model organism or heterologous cell line, significantly reduced surface protein
+expression (5
+25%).
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Strong
+Rule does not apply due to rarity of disorder and lack of appropriate studies.
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Rule does not apply due to genes being highly polymorphic.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Moderate
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes Project, or Exome Aggregation Consortium
+
+Supporting
+Prevalence <1/10,000 (<0.0001) alleles in gnomAD.
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Very Strong
+Use proposed SVI point recommendations. Both variants must be classified using
+ITGA2B/ITGB3 Rule Specifications.
+
+Strong
+Use proposed SVI point recommendations. Both variants must be classified using
+ITGA2B/ITGB3 Rule Specifications.
+
+Moderate
+Use proposed SVI point recommendations. Both variants must be classified using
+ITGA2B/ITGB3 Rule Specifications.
+
+Supporting
+
+Use proposed SVI point recommendations. Both variants must be classified using
+ITGA2B/ITGB3 Rule Specifications.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Use with no specification.
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Use with no specification.
+
+Supporting
+Use at adjusted strength.
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Very Strong
+Use proposed SVI point recommendations.
+Only applicable when proband has a known pathogenic or likely pathogenic variant
+with the de novo variant
+
+Strong
+
+Use proposed SVI point recommendations.
+Only applicable when proband has a known pathogenic or likely pathogenic variant
+with the de novo variant
+
+Moderate
+Use proposed SVI point recommendations.
+Only applicable when proband has a known pathogenic or likely pathogenic variant
+with the de novo variant
+
+Supporting
+Use proposed SVI point recommendations.
+Only applicable when proband has a known pathogenic or likely pathogenic variant
+with the de novo variant
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Segregations in proband plus >2 affected relatives.
+Affected relatives must have both variants identified in proband.
+
+Moderate
+Segregation in proband plus 2 affected relatives.
+Affected relatives must have both variants identified in proband.
+
+Supporting
+Segregation in proband plus 1 affected relative.
+Affected relatives must have both variants identified in proband.
+
+PP2
+Original ACMG
+Summary
+
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+This rule does not apply because benign missense variants are not rare.
+This rule does not apply to GT due to the fact that these genes are
+thought to be highly polymorphic (PMID: 25827233).
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+REVEL score of ≥ 0.7 OR
+
+2 independent in silico missense predictors predict a damaging impact
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Strong
+Proband with clinical diagnosis of GT based on the presence of mucocutaneous bleeding
+and appropriate lab abnormalities. Full sequencing of both genes is required at this
+strength
+
+Moderate
+Proband with clinical diagnosis of GT based on the presence of mucocutaneous bleeding
+and appropriate lab abnormalities.
+
+Supporting
+
+Patients phenotype or family history is highly specific for a disease with a single genetic
+etiology
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Frequency cutoff of 0.24% (>0.0024 at 99.99% CI w/subpopulation w/min of 5 alleles).
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Frequency cutoff of 0.158% (>0.00158 at 99.99% CI w/subpopulation w/min of 5 alleles)
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+
+1 homozygote who is unaffected proven with at least aggregometry.
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+Must demonstrate normal aggregometry in a transgenic mouse model. OR
+In a heterologous cell line, must demonstrate BOTH normal expression and normal
+protein function
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Variant not detected in an affected family member.
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Supporting
+Rule does not apply as truncating variants do not predominate and missense variants are
+a known cause of disease.
+
+BP2
+
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Use as written for recessive variants (i.e. - variant must be observed in cis with a
+pathogenic variant)
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Supporting
+Use with no specification
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+REVEL score of < 0.25
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Do not use this rule as an individual can be a carrier of an unrelated pathogenic variant
+for a recessive disorder.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Use with no specification.
+
+

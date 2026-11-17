@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN132",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50096",
+    "@type": "Organization",
+    "label": "Amyotrophic Lateral Sclerosis Spectrum Disorders Variant Curation Expert Panel ",
+    "url": "https://clinicalgenome.org/affiliation/50096"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1575650622"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Amyotrophic Lateral Sclerosis Spectrum Disorders  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for SOD1 Version 1.0",
+  "lastUpdated": "2026-06-04T19:12:43.812Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1575650635",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=SOD1",
+          "@type": "Gene",
+          "label": "SOD1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

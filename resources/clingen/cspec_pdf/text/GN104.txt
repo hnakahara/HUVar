@@ -1,0 +1,1315 @@
+Criteria Specification
+ClinGen Glaucoma Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines for CYP1B1 Version 2.0
+Affiliation: Glaucoma VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Version : 2.0
+Released : 7/16/2026
+DOI : 10.5281/zenodo.21434369
+Release Notes :
+Updates:
+- PP3/BP4: Add the use of AlphaMissense for missense variants where REVEL scores are not available (e.g.
+due to change of more than 1 nucleotide)
+- PVS1 (RNA): Apply PVS1 decision tree to spliceogenic variants outside of splice donor/acceptor ± 1,2
+dinucleotides if in vitro analysis results in aberrant splicing profile interpretable via PVS1 decision process
+
+Contributors & Keywords
+Research Group: Glaucoma VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+CYP1B1 NM_000104.4 Autosomal recessive
+inheritance CYP1B1-related glaucoma with or
+without anterior segment dysgenesis
+
+Rules for CYP1B1
+Gene: CYP1B1 (HGNC:2597) 
+Transcripts:
+NM_000104.4
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+
+HGNC Name: cytochrome P450 family 1
+subfamily B member 1
+Disease:
+CYP1B1-related glaucoma with
+or without anterior segment
+dysgenesis (MONDO:0800472)
+ Mode of Inheritance:
+Autosomal recessive
+inheritance
+
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Use CYP1B1 decision tree for PVS1 (Figure 2) adapted from Abou Tayoun
+Specifications:et al.2
+
+CYP1B1 primary transcript (NM_000104.4) consists of 5,218 bp and
+encodes a 543 amino acids protein. It contains 3 exons, although
+only exons 2 and 3 are coding. CYP1B1 variants cause the phenotype
+through a loss of function (LoF) disease mechanism. NMD is predicted
+to be activated for nonsense or frameshift variants where the
+premature termination codon is prior to amino acid 330 (last 50bp of
+exon 2, see Figure 1).
+CYP1B1 is an enzyme that relies on a haem group for its activity.
+There is evidence supporting that the haem-binding domain (position
+aa460-493, located in exon 3) is vital for CYP1B1 enzymatic activity:
+Missense variants within this domain (e.g. R469W1,6, C470Y and
+S485F3) and truncating variants prior to this domain have no activity,
+even when detectable by Western blot in an overexpression system
+(e.g. p.E262*)6. Thus, truncating variants that remove this domain
+are expected to be null variants. Additionally, there are a number of
+known pathogenic truncating variants in exon 3 (e.g. R444*,
+T404Sfs*30, R355Hfs*69).
+There are no other biologically relevant transcripts of this very small
+gene, therefore the options related to exons being absent from
+biologically relevant transcript(s) are not applicable and have been
+removed from the original decision tree. The Glaucoma VCEP
+adapted the decision tree from Abou Tayoun et al.2 for CYP1B1 and
+removed options that were not applicable to the gene.
+Nonsense or Frameshift
+The haem-binding domain is considered vital for CYP1B1 enzymatic
+activity and the biological effect of removing the haem-binding
+domain is equivalent to NMD. Truncating variants that are predicted
+to escape NMD but remove the haem-binding domain can meet
+PVS1.
+There are no LoF variants in gnomAD after the end of haem-binding
+domain at residue 493, therefore the branch of the decision tree
+
+referring to variants escaping NMD in a region of unknown function
+with LoF variants frequent in the general population is not applicable.
+The final decision point in the original decision tree refers to variants
+that are not predicted to undergo NMD, are in a region of unknown
+function and LoF variants are not frequent in the general population.
+Since the haem-binding domain ends at aa493 and residue 489
+marks the last 10% of the protein, the option related to a variant
+removing >10% of the protein is not applicable. If the variant is after
+the haem-binding domain, it is within the last 10% and
+PVS1_Moderate would apply as per the decision tree.
+Splice variants
+
+CYP1B1 only has 2 coding exons and the splice site is after the point
+at which NMD could occur, but more importantly, it is upstream of
+the haem-binding domain. There are also no in-frame exons, with
+codon R348 being encoded across the exon 2/3 boundary. Therefore,
+exon skipping or the use of a cryptic splice site preserving the
+reading frame is not applicable.
+Similar to nonsense and frameshift variants, PVS1 applies to splice
+variants predicting to escape NMD but removing the haem-binding
+domain.
+For spliceogenic variants outside of splice donor/acceptor ± 1,2
+dinucleotides: Use the PVS1 decision tree if in vitro analysis results in
+aberrant splicing profile interpretable via PVS1 decision process (as
+per Walker et al.).5 Consider design & results when assessing
+confidence in RNA findings. Apply PVS1 one level of evidence down
+based on considerations of construct-based assays design. This
+replaces PP3.
+Deletions
+CYP1B1 variation causes glaucoma through LoF disease mechanism,
+supported by mice model Cyp1b1 deficient showing developmental
+eye abnormalities and phenotype similar to humans.4 Consequently,
+PVS1_stand alone (PVS1_SA) can be applied to full gene deletions.
+CYP1B1 has only one transcript and only 2 exons that disrupt the
+reading frame. There is no experimental evidence to suggest whether
+NMD occurs in the context of deletions in this 2 exon gene, therefore
+these two options have been combined. Moreover, deletion of either
+exon disrupts/removes the haem-binding domain because none of
+the exons are in frame.
+Similar to other truncating variants, PVS1 applies to deletions
+disrupting/removing the haem-binding domain.
+CYP1B1 variation causes glaucoma through LoF disease mechanism,
+supported by mice model Cyp1b1 deficient showing developmental
+eye abnormalities and phenotype similar to humans.4 Consequently,
+PVS1_stand alone (PVS1_SA) can be applied to full gene deletions.
+
+The deletion of exon 1 is harder to interpret as it is a non-coding exon
+in the 5’UTR. It would not be expected to alter reading frame, is in a
+region of unknown function for the protein, LoF variants in this exon
+are not common and it would alter <10% of the protein. Following
+these options on the original decision tree leads to PVS1_Moderate.
+The VCEP recommends downgrading this to PVS1_Supporting as the
+effect on the protein is not known.
+Duplications
+Similar to other truncating variants, PVS1 applies to duplications
+disrupting/removing the haem-binding domain and these have been
+combined to deletions predicted to undergo NMD under PVS1 as they
+lead to the same outcome.
+Initiation codon
+
+CYP1B1 has only 1 transcript and there are reported pathogenic
+variants upstream of the closest potential alternative in-frame start
+codon (aa132). Therefore, the option if there are no pathogenic
+variants upstream of the closest potential start is not applicable.
+The option for a different functional transcript that uses an
+alternative start codon has been listed, in case such a transcript is
+reported in the future.
+
+Very Strong
+Applies to:
+Nonsense/frameshifts variants predicted to undergo NMD (aa1-330) or removing the
+haem-binding domain (aa331-493)
+GT-AG 1,2 splice sites variants leading to exon skipping or use of a cryptic splice site
+disrupting reading frame predicted to undergo NMD (aa1-330) or removing the
+haem-binding domain (aa331-493)
+Full gene deletions and deletions removing exon 2 and/or exon 3
+Duplications (≥1 exon and completely contained within the gene) disrupting the
+reading frame, predicted to undergo NMD (aa1-330) or removing the haem-binding
+domain (aa331-493), AND proven in tandem
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+Applies to:
+Duplications (≥1 exon and completely contained within the gene) disrupting the
+reading frame, predicted to undergo NMD (aa1-330) or removing the haem-binding
+
+domain (aa331-493), AND presumed in tandem
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+Applies to:
+Nonsense/frameshifts variants NOT removing the haem-binding domain (aa494-Ter)
+GT-AG 1,2 splice sites variants leading to exon skipping or use of a cryptic splice site
+disrupting reading frame and NOT predicted to undergo NMD (aa1-330) or removing
+the haem-binding domain (aa331-493)
+Duplications (≥1 exon and completely contained within the gene) disrupting the
+reading frame after the haem-binding domain (aa4934-Ter) AND proven in tandem
+Initiation codon variants when there is no known alternative start codon in other
+transcripts and ≥1 pathogenic variant upstream of closest potential in-frame start
+codon
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+Applies to:
+Deletions removing exon 1 only
+Duplications (≥1 exon and completely contained within the gene) disrupting the
+reading frame after the haem-binding domain (aa4934-Ter) AND presumed in tandem
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Specifications:
+
+The combination of PP3, PM1 and PS1 should not be higher than 6
+points.
+This rule does not apply to initiation codons
+
+Strong
+For missense variants that do not affect splicing (SpliceAI ≤ 0.2): same amino acid change
+as a previously established pathogenic variant.
+For variants that affect splicing (SpliceAI > 0.2), refer to Table 3.6
+Default
+4
+Point
+Value:
+Modification Clarification
+Type:
+
+Moderate
+For missense variants that do not affect splicing (SpliceAI ≤ 0.2): same amino acid change
+as a previously established likely pathogenic variant.
+For variants that affect splicing (SpliceAI > 0.2), refer to Table 3.6
+Default
+2
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Supporting
+For variants that affect splicing (SpliceAI > 0.2), refer to Table 3.6
+Default
+1
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+PS2 and PM6 have been combined under PS2. See Table 2 for point
+Specifications:system. The proposed SVI point recommendations for “phenotype
+consistent with gene but not highly specific” applies to PCG and
+“phenotype consistent with the gene but not highly specific and with high
+genetic heterogeneity” applies to other CYP1B1-related glaucoma
+phenotypes (JOAG, POAG, ASD). See Supplementary Material for
+phenotype list.
+Paternity and/or maternity of the non-carrier parent(s) need to be
+proven for confirmed de novo variants
+Both parents need to be clinically assessed and should not have a
+diagnosis of CYP1B1-related glaucoma phenotypes. If a parent has
+glaucoma or suspicious signs of glaucoma, the age at diagnosis and
+the phenotype should be considered before applying criteria due to
+the prevalence of JOAG/POAG in the population and the possibility of
+phenocopies.
+Decrease the strength of evidence by one level for de novo
+occurrences without an additional P/LP variant.
+
+Very Strong
+≥ 4.0 points
+Default
+8
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Strong
+≥ 2.0 points
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+≥ 1.0 points
+Default
+Point
+Value:
+
+2
+
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+≥ 0.5 points
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+The mechanism by which CYP1B1 variants cause the associated
+Specifications:phenotype is a LoF mechanism. Cyp1b1-deficient mice show oxidative
+damage to trabecular meshwork cells, leading to apoptosis and increased
+IOP.4,12 CYP1B1 is an enzyme involved in the metabolism of different
+substrates, including retinol to retinal,10 and steroid.11 The underlying
+mechanism by which CYP1B1 variants cause glaucoma is currently
+unknown, however it is hypothesized that the reduction of the enzyme
+activity and protein abundance is linked to the potential role of CYP1B1 in
+the development and function of the eye. Although there is evidence
+connecting estrogen to glaucoma, the specific substrates implicated in the
+development of CYP1B1-associated glaucoma have not yet been
+characterised.
+Animal models of specific variants (e.g. knock in mice models) have not
+been reported at this stage. They would need to replicate the phenotype
+reported in humans (e.g. increase in IOP, degeneration of the optic nerve
+and/or damage to trabecular meshwork cells) in order to meet PS3.
+Previous functional evidence assessing the impact of CYP1B1 variants on
+the function of the protein have reported on reduced protein abundance,
+protein stability and enzymatic activity of different substrates. The
+Glaucoma VCEP followed the SVI recommendations from Brnich et al.
+when assessing functional assays to apply PS3 toward functional
+evidence.13 The characteristics of each assay/study were extracted to
+assess whether they would meet minimum requirements (e.g. biological
+and/or technical replicates, positive and negative controls).13 The
+
+methodologies were reviewed to establish which studies used the same
+methods and could therefore be combined for the purposes of assessing
+control data. The VCEP assessed all variants reported in published
+functional assays as part of the pilot phase to identify those classified as
+LB/B and LP/P without the use of functional studies. These variants was
+then used as validation controls to determine OddsPath as per Brnich et
+al.13 to assess the level at which PS3 could be applied for each
+combination of assay/studies. Finally, studies were reviewed to assess if
+there were clear thresholds to differentiate abnormal vs normal readouts
+to distinguish LB/B from LP/P control variants. The review process included
+studies that measured CYP1B1 protein stability, protein abundance, and
+enzymatic activity for various substrates; 17β estradiol, ethoxyresorufin,
+retinol/retinoids, arachidonic acid and benzo[a]pyrene. The characteristics
+of each study reviewed is detailed in Table 5, the summary of the assays
+combined, validation controls, OddsPath and recommendations is
+available in Table 6 and the classification of variants with functional
+evidence in Table 7.
+In summary, there was quite some variability in term of study
+methodology. However, studies using the same methods (vectors, cell
+lines and detection methods) were combined when possible. There was
+also variability between the enzymatic activity of different substrates with
+the activity for each variant not always consistent between different
+substrates. A limited number of LB/B variants have been assessed by
+published studies overall, therefore PS3 could only be applied at a
+Supporting level at this stage. One study measured activity against
+benzol[a]pyrene-7R-trans-7,8-dihidrodiol to investigate the potential for
+increased cancer risk, due to the carcinogenic nature of this substrate
+produced during combustion. Although there is no known connection
+between this group of toxins and glaucoma, this assay tested variants
+observed in primary congenital glaucoma, had sufficient control variants
+and clearly distinguished LP/P from LB/B variants. Considering that none of
+the substrates assessed by the different studies have been directly
+implicated in the development of glaucoma, but that some studies
+showed clear demarcation of LB/B and LP/P validation control variants, the
+Glaucoma VCEP decided to apply PS3 to animal models that replicate the
+glaucoma phenotype as well as assays that show lack of enzymatic
+activity (regardless of substrate) OR low protein stability if it meets the
+following:
+It has an appropriate number of validation controls (level of evidence
+to be established based on validation controls and associated
+OddsPath).
+The results show clear differentiation between LP/P and LB/B variants
+to establish threshold (or include indeterminate results in OddsPath
+calculation).
+
+The assay includes both negative and positive controls as well as
+technical and/or biological replicates.
+Controls from the same general class of assays and with same
+methodology can be combined to calculate OddsPath.
+If the results from different assays are conflicting for a single variant,
+then the level of validation of each assay should be considered to
+decide whether the results from one assay can override the results
+from another.
+Ideally variants should be assessed against their background
+haplotype.
+
+Strong
+Assays with OddsPath >18.7 as per the SVI recommendations
+Animal models that replicate the glaucoma phenotype
+Default
+4
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+Assays with OddsPath >4.3 as per the SVI recommendations
+Default
+2
+Point
+Value:
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Supporting
+Assays with OddsPath >2.1 as per the SVI recommendations
+As of 06/11/25, the following studies meet the criteria to apply PS3_supporting: ChavarriaSoley et al. 200831, Pasutto et al. 201033 and Mammen et al. 200332.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+Comments:
+CYP1B1 variants cause autosomal recessive disorders associated with
+glaucoma. The number of probands with the variant will be addressed by
+PM3.
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+VCEP
+Specifications:
+
+Although the crystal structure of CYP1B1 has not yet been
+established, cytochrome P450 proteins have known conserved
+regions and CYP1B1 structure can be predicted by comparative
+modeling. CYP proteins are characterized by a highly conserved
+structural core divisible into α-rich and β-rich domains
+comprising ∼14 helices and four to six β-sheets. Their structure
+comprises five functional relevant regions: the haem-binding region,
+the meander-region, the hinge-region, residues in alpha-helices
+(stabilization and interaction 3D) and residues in beta-sheets.12,13
+The Glaucoma VCEP analysed the presence of known pathogenic and
+benign variants in each of the characterized domains and helices and
+supporting functional evidence2,11 and decided to apply PM1 to the
+Hinge region (aa51-61) and the haem-binding domain (aa 463-472)
+which are critical and well-established functional domains without
+benign variation. Moreover, the whole L-helix region (aa 460-493)
+was included as opposed to the smaller haem-binding domain as
+there are functional variants detected in the larger region and the
+whole region is important for protein function. The Meander region
+(aa 437-445) was excluded as containing benign variation. The G
+helix (aa 253-282) and I helix (aa 339-365) do not have benign
+variation. These are important for substrate binding and contain
+evaluated functional variants. PM1_Supporting applies to variants in
+these helices as they are less well defined in the context of CYP1B1
+(as opposed to other CYPs).
+
+The combination of PP3 and PM1 should not be higher than 4 points,
+the combination of PP3, PM1 and PM5 should not be higher than 5
+points, and the combination of PP3, PM1 and PS1 should not be
+higher than 6 points.
+
+Moderate
+Missense variants and in-frame indels in the hinge region (aa51-61) or the L-helix
+including the haem-binding domain (aa460-493).
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Missense variants and in-frame indels in the G helix (aa253-282) or the I helix (339-365).
+Default
+1
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+VCEP
+Specifications:
+
+The highest allele frequency in population databases should be used.
+Only applies to populations of ≥ 2,000 alleles.
+PM2 should be used at a Supporting level as per the SVI
+recommendations.
+
+The Whiffin/Ware calculator14 for autosomal recessive disorders was used
+to obtain a population allele frequency threshold for PM2 using the lowest
+prevalence reported in populations (Europeans). The prevalence of PCG in
+European populations is among the lowest. MacKinnon et al. previously
+reported a disease frequency for PCG in Australia at 1/30,000.16 Dimasi et
+al. identified biallelic CYP1B1 variants in 22% of families with a maximum
+allelic contribution of 19%.15 Based on these figures and setting the
+penetrance at 100%, the maximum credible allele frequency calculated
+was 0.000515.
+
+Supporting
+Allele frequency ≤ 0.0005 in population databases.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+VCEP
+See Table 1 for point system for PM3.
+Specifications:
+The Glaucoma VCEP decided to follow the SVI recommendations with
+some modifications. SVI recommendations are that variants should
+meet PM2 to ensure that they are rare. Since some known
+pathogenic variants do not meet PM2, instead the Glaucoma VCEP
+specified that variants assessed for PM3 must not meet BS1. Variants
+need to meet PM4 (for in-frame indels) or PVS1 at any strength (for
+null variants) and must not meet BS1 or BP4.
+Affected is defined as a diagnosis of PCG, ASD, JOAG or POAG (see
+Supplementary Material for phenotype list).
+To avoid circularity, in all instances (phasing confirmed or unknown),
+the classification of the variant on the other allele should not use
+evidence from the variant being interrogated.
+
+The variant on the other allele must have been classified following
+these VCEP specifications.
+Multiple probands from different studies can be counted if they are
+independent. However, the number of points given to multiple
+compound heterozygous cases that have the same genotype has
+been capped to two when the variants are not confirmed in trans to
+avoid counting evidence if the variants are actually in cis and
+inherited together.
+The number of points per proband if homozygosity occurrence is due
+to consanguinity has been decreased to 0.25 points (max points 0.5)
+to account for homozygous variants being present by chance in
+consanguineous couples.
+Testing of one parent (or an unaffected first-degree relative carrying
+one of the two variants) is sufficient to confirm in trans for compound
+heterozygous cases.
+Parental testing is not required for homozygous cases.
+Individuals with multiple VUS/LP/P variants cannot be considered as
+evidence of either variant when the phase is unknown or for multiple
+variants in cis.
+
+Very Strong
+≥ 4.0 points
+Default
+8
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Strong
+≥ 2.0 points
+Default
+4
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+Moderate
+≥ 1.0 points
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+≥ 0.5 points
+Default
+1
+Point
+Value:
+Modification General recommendation,Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Stop loss variants are not a known disease mechanism, therefore PM4 does not apply to
+that variant type
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Specifications:
+
+The novel change must not affect splicing (SpliceAI ≤ 0.2), must
+meet PP3 and have a Grantham score equal or greater than the
+previously established pathogenic or likely pathogenic variant.
+The combination of PP3, PM1 and PM5 should not be higher than 5
+points.
+
+Strong
+Same residue as 2 previously established pathogenic variants (in which case both variants
+must be assessed independently of PM5).
+
+Default
+4
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Moderate
+Same residue as previously established pathogenic variant (assessed independently of
+PM5) or 2 previously established likely pathogenic variants (in which case both variants
+must be assessed independently of PM5).
+Default
+2
+Point
+Value:
+Modification Clarification
+Type:
+
+Supporting
+Same residue as previously established likely pathogenic variant (assessed independently
+of PM5).
+Default
+1
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Refer to PS2
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+See Table 4 for number of segregations for each level of strength.
+Specifications:
+
+Affected segregations are affected family members in whom
+compound heterozygous (in trans) or homozygous variants
+segregate.
+Affected is defined as a diagnosis of PCG, ASD, JOAG or POAG (see
+Supplementary Material for phenotype list). Use caution and consider
+phenotypes of the affected segregations, age at diagnosis and
+pedigree structure before applying to segregations with POAG due to
+the risk of phenocopy.
+Segregations from multiple families can be added.
+Unaffected family members are individuals at risk to inherit the two
+variants identified in the proband and are either wild-type for both
+variants or a heterozygous carrier for a single variant.17
+The variant in trans needs to be independently assessed and
+classified as VUS/LP/P.
+
+Strong
+≥ 3 affected segregations or 2 affected segregations AND ≥ 3 unaffected segregations or
+1 affected segregation AND ≥ 8 unaffected segregations.
+Default
+4
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Moderate
+2 affected segregations or 1 affected segregation AND ≥ 5 unaffected segregations or ≥
+10 unaffected segregations.
+Default
+2
+Point
+Value:
+Modification Clarification,Strength
+Type:
+
+Supporting
+1 affected segregation or ≥ 5 unaffected segregations.
+Default
+1
+Point
+Value:
+Modification Clarification
+Type:
+
+PP2
+
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Although pathogenic missense variants are common in CYP1B1, the gene
+also has a significant amount of benign missense variants as shown by the
+missense constraint z score in gnomAD (z = -0.75) supporting tolerance to
+variation.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+The Glaucoma VCEP recommended using only one in silico predictor,
+in line with a recent study showing a lower rate of concordance when
+multiple software is used.7 Follow the SVI recommendations8 for the
+REVEL thresholds calculated for the different levels of evidence.
+Apply the highest level of strength met.
+Apply AlphaMissense to missense variants where REVEL scores are
+not available (e.g. due to changes of >1 nucleotide). Apply at
+PP3_Supporting level until the VCEP can validate the use of
+AlphaMissense scores in a large sample size.
+The combination of PP3 and PM1 should not be higher than 4 points,
+the combination of PP3, PM1 and PM5 should not be higher than 5
+points, and the combination of PP3, PM1 and PS1 should not be
+higher than 6 points.
+
+Strong
+For missense variants: REVEL score of ≥ 0.932
+Default
+4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+For missense variants: REVEL score of 0.773-0.931
+Default
+2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+For missense variants: SpliceAI ≥ 0.2 OR REVEL score of 0.644-0.772
+For missense variants where REVEL scores are not available: AlphaMissense ≥ 0.7929
+For all other variants located outside of donor/acceptor ±1,2 dinucleotide positions, when
+splicing assay is not available: SpliceAI ≥ 0.2
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+The phenotype associated with CYP1B1 variants is not highly specific and
+there is genetic heterogeneity.
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BA1
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+VCEP
+Specifications:
+
+The highest allele frequency in population databases should be used.
+Variant must be present in ≥ 5 alleles in any validated general
+continental population dataset of at least 2,000 observed alleles.
+
+The Whiffin/Ware calculator14 for autosomal recessive disorders was used
+to obtain a population allele frequency threshold for maximum credible
+allele frequency using the population with the highest ever reported
+genetic contribution and prevalence for the disease in a small population
+with founder effect (Romani people in Slovakia). The prevalence of PCG in
+Romani people in Slovakia was reported at 1/2,210.22 A single CYP1B1
+variant was reported to account for all families in this population due to
+founder effect (penetrance, genetic and allelic contribution 100%).21
+Based on these figures, the maximum credible allele frequency calculated
+was 0.0213. However, the VCEP revised the threshold for BA1 to 0.05
+based on justification below.
+It should be noted that populations with the highest incidences of PCG
+(India, Pakistan, Romani populations) are currently not well represented in
+gnomAD v4. Therefore, the allele frequency of some potential pathogenic
+variants in populations with high incidence remains uncertain. Based on
+gnomAD v4.1.0, only two variants currently in ClinVar have a highest
+allele frequency between 0.02 and 0.05: A443G (0.04963) and R368H
+(0.03079). There is currently insufficient evidence to classify R368H as
+either benign or pathogenic. It has multiple conflicting interpretations in
+ClinVar ranging from Benign to Pathogenic ((P (4); LP (2); VUS (11); B (1);
+LB (2)), highlighting the complexity of its role. LB/B classifications come
+from the fact that it has been considered too common in some populations
+with high occurrence of the phenotype (South Asian 0.0379, Middle
+Eastern 0.02343), while accounting for a minority of cases in Saudi
+Arabia18 and around 30-50% of cases in South Asia.19,20 Published
+evidence does not support an incomplete or low penetrance for this
+variant. Additionally, functional evidence (meeting criteria for
+PS3_Supporting) supports an impact of the variant on the protein, and
+computational evidence (PP3), cases, segregations (PP1_Strong) and de
+novo evidence (PS2_Supporting) support a pathogenic impact. An
+exclusion rule from BA1 is not appropriate as it would disregard its high
+frequency in some populations. Based on the fact that this variant would
+meet BA1 if the threshold was set at 0.02, and that the allele frequency of
+potential pathogenic variants in high incidence populations is not well
+represented in current population datasets available, the threshold for
+BA1 was set at 0.05 until more evidence becomes available to reassess it.
+
+Stand Alone
+Allele frequency ≥ 0.05 in population databases.
+
+Default
+Not Applicable
+Point
+Value:
+Modification Clarification
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Specifications:
+
+The highest allele frequency in population databases should be used.
+The variant must be present in ≥ 5 alleles in any validated general
+continental population dataset of at least 2,000 observed alleles.
+
+The Whiffin/Ware calculator for autosomal recessive disorders was used to
+obtain a population allele frequency threshold for BS1 using the
+population with the highest genetic contribution and prevalence for the
+disease in a well-defined population (Saudi Arabia).14 The prevalence of
+PCG in the Saudi Arabian population is among the highest. Abouelhoda et
+al. recently estimated the disease frequency for PCG in Saudi Arabia at
+1/4,500.23 Alsaif et al. published on the largest PCG cohort from Saudi
+Arabia: biallelic CYP1B1 variants accounted for 77% of families with a
+penetrance of 91% and the most common variant was p.G61E which
+accounted for 76% of families attributable to CYP1B1 variants.18 Based on
+these figures, the maximum credible allele frequency calculated was 0.01.
+
+Strong
+Allele frequency is ≥ 0.01 (1%) in population databases.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+
+Comments:
+
+CYP1B1 variants can have an incomplete penetrance and late age of
+onset. Adults with known pathogenic homozygous CYP1B1 variants who
+had a normal eye examination have been reported.
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+Given that normal protein abundance and stability does not rule out
+impact on enzymatic activity, and that normal enzymatic activity for one
+substrate is not indicative of other substrates, the Glaucoma VCEP
+decided to not apply BS3.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Non-segregations with PCG, ASD or JOAG. Use caution and consider phenotypes of the
+affected segregations, age at diagnosis and pedigree structure before applying to nonsegregations with JOAG or POAG.
+Default
+-4
+Point
+Value:
+Modification Clarification
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Both truncating and missense CYP1B1 variants are causative.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Two missense variants in cis could act synergistically or the effect of a
+variant occurring after a truncating variant may not be predicted.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+CYP1B1 does not have a repetitive region without a known function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+Specifications:
+
+Strong
+
+Similar to PP3, The Glaucoma VCEP decided to follow the SVI
+recommendations8 to apply the REVEL thresholds calculated for the
+different levels of evidence and to use SpliceAI for variants located
+outside of donor/acceptor ±1,2 dinucleotide positions.5
+Apply the highest level of strength met.
+Apply AlphaMissense to missense variants where REVEL scores are
+not available (e.g. due to changes of >1 nucleotide). Apply at
+BP4_Supporting level until the VCEP can validate the use of
+AlphaMissense scores in a large sample size.
+
+For missense variants: SpliceAI ≤ 0.1 AND REVEL score of ≤ 0.016
+Default
+-4
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Moderate
+For missense variants: SpliceAI ≤ 0.1 AND REVEL score of 0.017-0.183
+Default
+-2
+Point
+Value:
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+For missense variants: SpliceAI ≤ 0.1 AND REVEL score of 0.184-0.290
+For missense variants where REVEL scores are not available: AlphaMissense ≤ 0.1699
+For all other variants (not meeting PVS1 or PM4) located outside of donor/acceptor ±1,2
+dinucleotide positions, when splicing assay is not available: SpliceAI ≤ 0.1
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Multiple molecular diagnoses are possible and variants in different genes
+could have an additive effect.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Applies to intronic/noncoding variants outside the donor/ acceptor splice region (intronic
+variants at or beyond positions +7/-21) and synonymous (silent) exonic variants located
+outside of the first and the last 3 bases of the exon if BP4 is met.
+Default
+-1
+Point
+Value:
+Modification Clarification
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+-1 - 5
+
+Likely Benign
+
+-6 - -2
+
+Benign
+
+-7
+
+Additional Notes : PVS1_SA is stand alone for Pathogenic
+
+Files & Images
+CYP1B1 Pilot list: List of variants, criteria applied and evidence summaries for CYP1B1 variants in
+the pilot list 
+Table 7: functional evidence_variants classification: 
+
+Table 6: combined assays and recommendations: 
+Table 5: assays characteristics: 
+Table 1: Point system for PM3:
+
+Table 2: Point system for PS2:
+
+Supplementary Material: CYP1B1-related diseases:
+
+Table 4: Recommendations for counting segregations:
+
+Figure 1: Schematic diagram of CYP1B1.: The boxes represent the 3 exons with bigger boxes for
+coding exons 2 & 3. The haem-binding domain (aa460-493) is represented in red. Amino acid 330 marks
+the site where NMD is predicted to be activated (last 50bp of exon 2). Amino acid 489 marks the last
+10% of the protein. NMD: nonsense-mediated decay.
+
+Table 3: PS1 code weights for variants with the same predicted splicing event as a known (likely)
+pathogenic variant
+
+Figure 2: PVS1 decision tree: a. NMD prediction based on the premature termination codon not
+occurring in the 3′ most exon or the 3′-most 50bp of the penultimate exon. b. Relevant domain indicated
+by experimental evidence proving a critical role of the domain and/or presence of non-truncating
+pathogenic variants in the region. c. The role of the region in protein function is unknown, loss-offunction variants in this exon are not frequent in the general population, and the variant removes <10%
+of the protein.
+
+References
+1.
+
+Jansson I Stoilov I et al. Effect of two mutations of human CYP1B1, G61E and R469W, on
+stability and endogenous steroid substrate metabolism. Pharmacogenetics (2001) 11 (9) p.
+793-801. 10.1097/00008571-200112000-00007 11740343 
+
+2.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+3.
+
+Medina-Trillo C Ferre-Fernández JJ et al. Functional characterization of eight rare missense
+CYP1B1 variants involved in congenital glaucoma and their association with null genotypes.
+Acta Ophthalmol (2016) 94 (7) p. e555-e560. 10.1111/aos.13017 27060699 
+
+4.
+
+Teixeira LB Zhao Y et al. Ultrastructural abnormalities of the trabecular meshwork extracellular
+matrix in Cyp1b1-deficient mice. Vet Pathol (2015) 52 (2) p. 397-403.
+10.1177/0300985814535613 24879660 
+
+5.
+
+Walker LC Hoya M et al. Using the ACMG/AMP framework to capture evidence related to
+predicted and observed impact on splicing: Recommendations from the ClinGen SVI Splicing
+Subgroup. Am J Hum Genet (2023) 110 (7) p. 1046-1067. 10.1016/j.ajhg.2023.06.002
+37352859 
+
+6.
+
+Campos-Mollo E López-Garrido MP et al. CYP1B1 mutations in Spanish patients with primary
+congenital glaucoma: phenotypic and functional variability. Mol Vis (2009) 15 p. 417-31.
+19234632 
+
+7.
+
+Ghosh R Oak N et al. Evaluation of in silico algorithms for use with ACMG/AMP clinical variant
+interpretation guidelines. Genome Biol (2017) 18 (1) p. 225. 10.1186/s13059-017-1353-5
+29179779 
+
+8.
+
+Pejaver V Byrne AB et al. Calibration of computational tools for missense variant pathogenicity
+classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet (2022) 109
+(12) p. 2163-2177. 10.1016/j.ajhg.2022.10.013 36413997 
+
+9.
+
+Bergquist T Stenton SL et al. Calibration of additional computational tools expands ClinGen
+recommendation options for variant classification with PP3/BP4 criteria. Genet Med (2025) 27
+(6) p. 101402. 10.1016/j.gim.2025.101402 40084623 
+
+10.
+
+Choudhary D Jansson I et al. Metabolism of retinoids and arachidonic acid by human and mouse
+cytochrome P450 1b1. Drug Metab Dispos (2004) 32 (8) p. 840-7. 10.1124/dmd.32.8.840
+15258110 
+
+11.
+
+Vasiliou V Gonzalez FJ Role of CYP1B1 in glaucoma. Annu Rev Pharmacol Toxicol (2008) 48 p.
+333-58. 10.1146/annurev.pharmtox.48.061807.154729 17914928 
+
+12.
+
+Zhao Y Wang S et al. Cyp1b1 mediates periostin regulation of trabecular meshwork
+development by suppression of oxidative stress. Mol Cell Biol (2013) 33 (21) p. 4225-40.
+10.1128/MCB.00856-13 23979599 
+
+13.
+
+Brnich SE Abou Tayoun AN et al. Recommendations for application of the functional evidence
+PS3/BS3 criterion using the ACMG/AMP sequence variant interpretation framework. Genome
+Med (2019) 12 (1) p. 3. 10.1186/s13073-019-0690-2 31892348 
+
+14.
+
+Whiffin N Minikel E et al. Using high-resolution variant frequencies to empower clinical genome
+interpretation. Genet Med (2017) 19 (10) p. 1151-1158. 10.1038/gim.2017.26 28518168 
+
+15.
+
+Dimasi DP Hewitt AW et al. Prevalence of CYP1B1 mutations in Australian patients with primary
+congenital glaucoma. Clin Genet (2007) 72 (3) p. 255-60. 10.1111/j.1399-0004.2007.00864.x
+17718864 
+
+16.
+
+MacKinnon JR Giubilato A et al. Primary infantile glaucoma in an Australian population. Clin Exp
+Ophthalmol (2004) 32 (1) p. 14-8. 10.1046/j.1442-9071.2004.00750.x 14746584 
+
+17.
+
+Oza AM DiStefano MT et al. Expert specification of the ACMG/AMP variant interpretation
+guidelines for genetic hearing loss. Hum Mutat (2018) 39 (11) p. 1593-1613.
+10.1002/humu.23630 30311386 
+
+18.
+
+Alsaif HS Khan AO et al. Congenital glaucoma and CYP1B1: an old story revisited. Hum Genet
+(2019) 138 (8-9) p. 1043-1049. 10.1007/s00439-018-1878-z 29556725 
+
+19.
+
+Reddy AB Kaur K et al. Mutation spectrum of the CYP1B1 gene in Indian primary congenital
+glaucoma patients. Mol Vis (2004) 10 p. 696-702. 15475877 
+
+20.
+
+Chakrabarti S Kaur K et al. Globally, CYP1B1 mutations in primary congenital glaucoma are
+strongly structured by geographic and haplotype backgrounds. Invest Ophthalmol Vis Sci
+(2006) 47 (1) p. 43-7. 10.1167/iovs.05-0912 16384942 
+
+21.
+
+Plásilová M Stoilov I et al. Identification of a single ancestral CYP1B1 mutation in Slovak Gypsies
+(Roms) affected with primary congenital glaucoma. J Med Genet (1999) 36 (4) p. 290-4.
+10227395 
+
+22.
+
+Genĉík A Epidemiology and genetics of primary congenital glaucoma in Slovakia. Description of
+a form of primary congenital glaucoma in gypsies with autosomal-recessive inheritance and
+complete penetrance. Dev Ophthalmol (1989) 16 p. 76-115. 2676634 
+
+23.
+
+Abouelhoda M Faquih T et al. Revisiting the morbid genome of Mendelian disorders. Genome
+Biol (2016) 17 (1) p. 235. 10.1186/s13059-016-1102-1 27884173 
+
+

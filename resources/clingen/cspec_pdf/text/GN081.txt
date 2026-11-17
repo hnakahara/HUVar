@@ -1,0 +1,622 @@
+Criteria Specification
+ClinGen von Willebrand Disease Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for VWF Version 1.0
+Affiliation: von Willebrand Disease VCEP
+Description : Rule specifications for von Willebrand disease type 2A, 2B and 2M.
+Version : 1.0
+Released : 7/9/2024
+DOI : 10.5281/zenodo.21433993
+
+Contributors & Keywords
+Research Group: von Willebrand Disease VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+VWF NM_000552.5 Autosomal dominant
+inheritance von Willebrand disease type 2A
+Autosomal dominant inheritance von Willebrand
+disease type 2B Autosomal dominant inheritance
+von Willebrand disease type 2M Undetermined
+mode of inheritance von Willebrand disease 2
+Other von Willebrand disease (hereditary or
+acquired)
+
+Rules for VWF
+General Comments:
+
+Applying VWD type 2 variant curation guidance is complex. If you are
+unsure how to apply these rule specifications after reading guidance
+materials provided below, it may be best not to use these guidelines.
+Alternatively, you are welcome to submit variants for the ClinGen VWD
+VCEP to curate for you.
+
+Gene: VWF (HGNC:12726) 
+Transcripts:
+NM_000552.5
+
+HGNC Name: von Willebrand factor
+Disease:
+von Willebrand disease type
+2A (MONDO:0015628) 
+Mode of Inheritance:
+Autosomal dominant
+inheritance
+von Willebrand disease type
+2B (MONDO:0015629) 
+Mode of Inheritance:
+Autosomal dominant
+inheritance
+
+von Willebrand disease type
+2M (MONDO:0015630) 
+Mode of Inheritance:
+Autosomal dominant
+inheritance
+von Willebrand disease 2
+(MONDO:0013304)  Mode
+of Inheritance:
+Undetermined mode of
+inheritance
+von Willebrand disease
+(hereditary or acquired)
+(MONDO:0024574)  Mode
+of Inheritance: Other
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+VWD type 2 is defined by qualitative defects in the VWF protein and not
+caused by null variants.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+
+Use with no specification except comparison variant must be classified as pathogenic
+using rules from the VWD VCEP.
+Modification Gene-specific
+Type:
+
+Moderate
+Use with no specification except comparison variant must be classified as likely
+pathogenic using rules from the VWD VCEP.
+Modification Gene-specific
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+Use proposed SVI point recommendations for “Phenotype consistent with gene but
+not highly specific” if the proband meets PP4 criteria. Use “Phenotype highly
+specific for gene” phenotype consistency if the proband meets PP4_Moderate
+criteria. See Table 1 attached. Required 4 points.
+Modification Disease-specific
+Type:
+
+Strong
+Use proposed SVI point recommendations for “Phenotype consistent with gene but
+not highly specific” if the proband meets PP4 criteria. Use “Phenotype highly
+specific for gene” phenotype consistency if the proband meets PP4_Moderate
+criteria. See Table 1 attached. Required 2 points.
+Modification Disease-specific
+Type:
+
+Moderate
+Use proposed SVI point recommendations for “Phenotype consistent with gene but
+not highly specific” if the proband meets PP4 criteria. Use “Phenotype highly
+specific for gene” phenotype consistency if the proband meets PP4_Moderate
+criteria. See Table 1 attached. Required 1 point.
+
+Modification Disease-specific
+Type:
+
+Supporting
+Use proposed SVI point recommendations for “Phenotype consistent with gene but
+not highly specific” if the proband meets PP4 criteria. If the proband meets
+PP4_Moderate criteria, use a moderate or higher evidence weight (see above). See Table 1
+attached. Required 0.5 point.
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Either
+(1) In a transgenic animal model, must demonstrate minimal to no function.
+OR
+(2) The following types of assays using recombinant vWF are approved for each subtype:
+Subtype 2A = A multimerization assay in which the variant is expressed in a recombinant
+system (either independently or coexpressed with WT) resulting in abnormal multimers,
+with a reported loss of HMWM, AND, to confirm this is consistent with the variant's
+mechanism of disease, there must be a patient harboring the variant with a clinical assay
+also showing loss of HMWMs. This evidence must be published in a peer reviewed journal
+and a picture of the gel must be visible for evaluation.
+Subtype 2B = A GP1b or platelet binding assay indicating gain of function by increased
+binding at low doses of ristocetin
+Subtype 2M = Either (1) A GP1b or platelet binding assay OR (2) Collagen binding assay,
+indicating loss of function by decreased binding
+See attached spreadsheet for examples of approved assay instances to use for this rule
+code. There are no universal thresholds for these assays; however, the relevant results
+should be described as clinically significant if assays were performed in a clinical
+laboratory or statistically significant if pertaining to research findings.
+
+Modification Disease-specific
+Type:
+
+Supporting
+Subtype 2A = Either (1) a multimerization assay in which the variant is expressed in a
+recombinant system (either independently or coexpressed with WT) resulting in abnormal
+multimers, with a reported loss of HMWM. This evidence must be published in a peer
+reviewed journal and a picture of the gel must be visible for evaluation. (2) a ADAMTS
+susceptibility assay indicating increased susceptibility relative to WT.
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Do not apply this code for variants that meet BS1 or BA1 criteria. Do not
+Specifications:count proband used for PP4 in this code's proband count.
+
+Very Strong
+Appropriate to use code when there are 8 or more probands that meet the laboratory
+phenotype of the PP4 definition for a specific VWD type 2 phenotype (i.e. – all probands
+must qualify for a clinical diagnosis of the same VWD type 2 phenotype based on
+laboratory criteria stated under PP4).
+Modification Disease-specific
+Type:
+
+Strong
+Appropriate to use code when there are 4-7 probands that meet the laboratory phenotype
+of the PP4 definition for a specific VWD type 2 phenotype (i.e. – all probands must qualify
+for a clinical diagnosis of the same VWD type 2 phenotype based on laboratory criteria
+stated under PP4).
+
+Modification Disease-specific
+Type:
+
+Moderate
+Appropriate to use code when there are 2-3 probands that meet the laboratory phenotype
+of the PP4 definition for a specific VWD type 2 phenotype (i.e. – all probands must qualify
+for a clinical diagnosis of the same VWD type 2 phenotype based on laboratory criteria
+stated under PP4).
+Modification Disease-specific
+Type:
+
+Supporting
+Appropriate to use code when there is 1 proband that meets the laboratory phenotype of
+the PP4 definition for a specific VWD type 2 phenotype.
+Modification Disease-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+Rule does not apply due to benign variation being present throughout the
+gene.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Use code for variants with a popmax MAF of <0.0001 in gnomAD.
+Modification Disease-specific,Gene-specific
+Type:
+
+PM3
+
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+These are dominant conditions, so this rule code does not apply.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Use with no specification for type 2A and 2M. This rule code is not applicable to variants
+associated with type 2B disease, since type 2B is only associated with gain of function
+variants.
+Modification Gene-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Use code when previously reported variant reaches a pathogenic classification using the
+VWD Type 2 rule specifications. Previously reported variant can be associated with a
+different type of VWD.
+Code may also be applied when two previously reported variants reach a likely pathogenic
+classification using the VWD Type 2 rule specifications. Previously reported variants can
+be associated with a different type of VWD.
+Modification General recommendation
+Type:
+
+Supporting
+Use code when previously reported variant reaches a likely pathogenic classification using
+the VWD Type 2 rule specifications. Previously reported variant can be associated with a
+different type of VWD.
+Modification General recommendation
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Use the PS2 code in lieu of using this code for de novo variants.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Moderate
+Appropriate to use when there are multiple families each reported to have two or more
+meioses.
+Modification Disease-specific
+Type:
+
+Supporting
+Appropriate to use when there are 2 or more meioses within a single family.
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Not applicable due to presence of benign variation throughout the VWF
+gene.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Appropriate to use for missense variants that have a REVEL score of greater or equal to
+0.644 OR a SpliceAI score suggestive of a splicing defect (greater or equal to 0.5).
+Modification Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+The PP4 code cannot be applied for variants that meet BA1 criteria.
+Specifications:
+
+Moderate
+The patient must have a clinical phenotype of excessive mucocutaneous bleeding and
+required laboratory values to use the PP4 rule code at the moderate strength. See Table
+2A for required and consistent laboratory values.
+Modification Disease-specific
+Type:
+
+Supporting
+The patient must have a clinical phenotype of excessive mucocutaneous bleeding and
+required laboratory values to use the PP4 rule code at the supporting strength. See Table
+2B for required and consistent laboratory values.
+
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Appropriate to use for variants with a Popmax MAF of >0.1 in gnomAD.
+Modification Disease-specific,Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Appropriate to use for variants with a Popmax MAF of >0.01 in gnomAD.
+Modification Disease-specific,Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+Comments:
+Not applicable due to the incomplete penetrance seen in VWD.
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+There are no available assays that can clearly and dependably show no
+damaging protein effects.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Appropriate to use when two or more relatives have the phenotype consistent with VWD
+type 2 without harboring the variant identified in other affected family members.
+Additionally, there is not another established cause of type 2 VWD (e.g. - there are not
+multiple type 2 VWD diagnoses) segregating in the family.
+Modification Disease-specific
+Type:
+
+Supporting
+Appropriate to use when only one relative has the phenotype consistent with VWD type 2
+without harboring the variant identified in other affected family members. Additionally,
+there is not another established cause of type 2 VWD (e.g. - there are not multiple type 2
+VWD diagnoses) segregating in the family.
+Modification Disease-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+The VWF gene is not constrained for missense variation (gnomAD).
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Do not use due to potential of variant being associated with VWD 2N
+(recessive disease).
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+​There are no known repetitive regions in the VWF gene without a known
+function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Use for missense variants that have a REVEL score of less than or equal to 0.290 AND
+SpliceAI cutoff of <0.1. Use SpliceAI cutoff of <0.1 for other variant types.
+
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+A second variant in VWF may be considered an alternate molecular basis for disease
+when that variant is LP/P (as evaluated by the VWD VCEP) and fully explains the
+phenotype of the patient's reported VWD subtype.
+Modification None
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Use SpliceAI for splicing predictor with a cutoff score of <0.1.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+
+1 Very Strong (PS2_Very Strong, PS4_Very Strong) AND ≥ 1 Strong (PS1, PS2, PS3, PS4)
+1 Very Strong (PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Moderate (PS1_Moderate, PS2_Moderate,
+PS4_Moderate, PM4, PM5, PP1_Moderate, PP4_Moderate)
+
+1 Very Strong (PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PS1_Moderate, PS2_Moderate,
+PS4_Moderate, PM4, PM5, PP1_Moderate, PP4_Moderate) AND 1 Supporting (PS2_Supporting,
+PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Very Strong (PS2_Very Strong, PS4_Very Strong) AND ≥ 2 Supporting (PS2_Supporting,
+PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+≥ 2 Strong (PS1, PS2, PS3, PS4)
+1 Strong (PS1, PS2, PS3, PS4) AND ≥ 3 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4,
+PM5, PP1_Moderate, PP4_Moderate)
+1 Strong (PS1, PS2, PS3, PS4) AND 2 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4,
+PM5, PP1_Moderate, PP4_Moderate) AND ≥ 2 Supporting (PS2_Supporting, PS3_Supporting,
+PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Strong (PS1, PS2, PS3, PS4) AND 1 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4,
+PM5, PP1_Moderate, PP4_Moderate) AND ≥ 4 Supporting (PS2_Supporting, PS3_Supporting,
+PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PS2_Very Strong, PS4_Very Strong) AND 1 Moderate (PS1_Moderate, PS2_Moderate,
+PS4_Moderate, PM4, PM5, PP1_Moderate, PP4_Moderate)
+1 Strong (PS1, PS2, PS3, PS4) AND 1 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4,
+PM5, PP1_Moderate, PP4_Moderate)
+1 Strong (PS1, PS2, PS3, PS4) AND ≥ 2 Supporting (PS2_Supporting, PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PP1_Moderate, PP4_Moderate)
+2 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PP1_Moderate, PP4_Moderate) AND
+≥ 2 Supporting (PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1,
+PP3, PP4)
+
+1 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4, PM5, PP1_Moderate, PP4_Moderate) AND
+≥ 4 Supporting (PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM5_Supporting, PP1,
+PP3, PP4)
+
+1 Strong (PS1, PS2, PS3, PS4) AND 2 Moderate (PS1_Moderate, PS2_Moderate, PS4_Moderate, PM4,
+PM5, PP1_Moderate, PP4_Moderate)
+
+Benign
+≥ 2 Strong (BS1, BS4)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS4) AND 1 Supporting (BS4_Supporting, BP4, BP5, BP7)
+
+≥ 2 Supporting (BS4_Supporting, BP4, BP5, BP7)
+
+Files & Images
+VWD 2A/2M/2N functional assays: This document guides curators to determine which functional
+assays can be used to apply the PS3 rule code. 
+
+Introduction to von Willebrand disease: This document summarizes von Willebrand disease for
+individuals who may be less familiar with this condition. 
+VWD type 2 PS2/PM6 rule guidance: This document guides curators to determine if the PS2/PM6
+rule code can be applied and, if so, at what strength. 
+VWD type 2 List of Approved Functional Assays:: This document provides a list of functional
+assays that have been approved to use for PS3_Supporting by the VWD VCEP 
+VWD Type 2 Rule Set Instructions for Use: Please refer to this document before using this rule
+set. This rule set only applies to VWF variants that are associated with a VWD type 2 diagnosis or no
+bleeding phenotype at all. VWD type 2 is complex to diagnose. There is flowchart for your reference
+to determine if this rule is appropriate for your variant. 
+VWD type 2 PP4 rule guidance: This document guides curators to determine if the PP4 rule code
+can be applied and, if so, at what strength. 
+
+

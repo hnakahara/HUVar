@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN152",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50100",
+    "@type": "Organization",
+    "label": "Urea Cycle Disorders Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50100"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1616836621"
+  },
+  "cspecStatus": "Pilot Rules In Prep",
+  "currentStatus": "Pilot Rules In Prep",
+  "label": "ClinGen Urea Cycle Disorders  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for CPS1 Version 1.0",
+  "lastUpdated": "2024-05-13T14:12:13.282Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1616836630",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=CPS1",
+          "@type": "Gene",
+          "label": "CPS1"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

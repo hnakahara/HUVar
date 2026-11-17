@@ -1,0 +1,1010 @@
+Criteria Specification
+ClinGen Antibody Deficiencies Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for PIK3CD Version 1.0
+Affiliation: Antibody Deficiencies VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : This submission includes the revised PIK3CD specifications following the pilot phase.
+Version : 1.0
+Released : 12/16/2025
+DOI : 10.5281/zenodo.21434737
+
+Contributors & Keywords
+Research Group: Antibody Deficiencies VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+PIK3CD NM_005026.3 Autosomal dominant
+inheritance immunodeficiency 14
+
+Rules for PIK3CD
+General Comments:
+
+The current specifications for PIK3CD variant curation are written in
+relation to autosomal dominant rather than autosomal recessive forms of
+disease, with a gain-of-function rather than loss-of-function mechanism of
+pathogenicity. Unfortunately, there is no a priori way to exclude one mode
+of inheritance or the other, so both need to considered initially while
+assessing the variant. However, in general, only variants predicted to lead
+to a single missense amino acid substitution have thus far been shown to
+have a gain-of-function (GOF) effect in PIK3CD so any other types of
+variants should not enter this classification criteria.
+
+Gene: PIK3CD (HGNC:8977) 
+Transcripts:
+NM_005026.3
+
+Criteria & Strength Specifications
+
+PVS1
+
+HGNC Name: phosphatidylinositol-4,5bisphosphate 3-kinase catalytic subunit delta
+Disease:
+immunodeficiency 14
+(MONDO:0014222)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+Does not apply given gain of function disease mechanism.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Use at the default level (PS1) for missense variants when other variant was classified
+as Pathogenic for autosomal dominant PIK3CD gain-of-function-related disease by
+Antibody Deficiencies VCEP specifications for PIK3CD without using PS1.
+Beware of changes that impact splicing rather than the amino acid (based on RNA
+data or splicing predictors). Neither change should be predicted to affect splicing
+(SpliceAI Δ score <0.2).
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+Use at the PS1_Moderate level for missense variants when other variant was
+classified as Likely Pathogenic for autosomal dominant PIK3CD gain-of-functionrelated disease by Antibody Deficiencies VCEP specifications for PIK3CD without
+using PS1.
+
+Beware of changes that impact splicing rather than the amino acid (based on RNA
+data or splicing predictors). Neither change should be predicted to affect splicing
+(SpliceAI Δ score <0.2).
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+This code has been adapted to also reward de novo occurrences in cases
+Specifications:where maternity and paternity are suspected but not confirmed, as the
+PM6 code is not in use. For this code use Table 1. Points awarded per de
+novo occurrences, Table 2. Recommendation for determining the
+appropriate ACMG/AMP evidence strength level for de novo occurrence(s).
+and Table 3. Phenotype scoring criteria per affected individual.
+
+Very Strong
+Use PS2_VeryStrong when there are four or more de novo occurrences according to
+the attached Recommendation for determining the appropriate ACMG/AMP evidence
+strength level for de novo occurrences (Table 2).
+The “phenotypic consistency” used on the attached Table 1 (Points awarded per de
+novo occurrence) will be chosen for each proband by the number of phenotype
+points scored by the proband on the attached Phenotype scoring criteria per affected
+individual (Table 3):
+1. If the proband scores at least 4 and <6 phenotype points in the PS4 counting rubric
+but lacks genotyping to rule out variants in the PIK3R1 locus, use the number of de
+novo points corresponding to “Phenotype consistent with gene but not highly specific
+and high genetic heterogeneity”.
+2. If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks
+genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype consistent with gene but not highly specific”.
+3. If the proband scores at least 10 phenotype points in the PS4 counting rubric AND
+has genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype highly specific for gene”.
+PS2_VeryStrong can only be applied if the variant does not meet BA or BS1.
+
+Default
+8
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Strong
+Use PS2_Moderate when there are 2 - 3 de novo occurrences according to the
+attached Recommendation for determining the appropriate ACMG/AMP evidence
+strength level for de novo occurrences (Table 2).
+The “phenotypic consistency” used on the attached Table 1 (Points awarded per de
+novo occurrence) will be chosen for each proband by the number of phenotype
+points scored by the proband on the attached Phenotype scoring criteria per affected
+individual (Table 3):
+1. If the proband scores at least 4 and <6 phenotype points in the PS4 counting rubric
+but lacks genotyping to rule out variants in the PIK3R1 locus, use the number of de
+novo points corresponding to “Phenotype consistent with gene but not highly specific
+and high genetic heterogeneity”.
+2. If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks
+genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype consistent with gene but not highly specific”.
+3. If the proband scores at least 10 phenotype points in the PS4 counting rubric AND
+has genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype highly specific for gene”.
+PS2 can only be applied if the variant does not meet BA or BS1.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+Use PS2_Moderate when there is one de novo occurrence according to the attached
+Recommendation for determining the appropriate ACMG/AMP evidence strength level
+for de novo occurrences (Table 2).
+The “phenotypic consistency” used on the attached Table 1 (Points awarded per de
+novo occurrence) will be chosen for each proband by the number of phenotype
+points scored by the proband on the attached Phenotype scoring criteria per affected
+individual (Table 3):
+1. If the proband scores at least 4 and <6 phenotype points in the PS4 counting rubric
+but lacks genotyping to rule out variants in the PIK3R1 locus, use the number of de
+novo points corresponding to “Phenotype consistent with gene but not highly specific
+and high genetic heterogeneity”.
+
+2. If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks
+genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype consistent with gene but not highly specific”.
+3. If the proband scores at least 10 phenotype points in the PS4 counting rubric AND
+has genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype highly specific for gene”.
+PS2_Moderate can only be applied if the variant does not meet BA or BS1.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+Use PS2_Supporting when there is one de novo occurrence according to the attached
+Recommendation for determining the appropriate ACMG/AMP evidence strength level
+for de novo occurrences (Table 2).
+The “phenotypic consistency” used on the attached Table 1 (Points awarded per de
+novo occurrence) will be chosen for each proband by the number of phenotype
+points scored by the proband on the attached Phenotype scoring criteria per affected
+individual (Table 3):
+1. If the proband scores at least 4 and <6 phenotype points in the PS4 counting rubric
+but lacks genotyping to rule out variants in the PIK3R1 locus, use the number of de
+novo points corresponding to “Phenotype consistent with gene but not highly specific
+and high genetic heterogeneity”.
+2. If the proband scores at least 6 phenotype points in the PS4 counting rubric but lacks
+genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype consistent with gene but not highly specific”.
+3. If the proband scores at least 10 phenotype points in the PS4 counting rubric AND
+has genotyping to rule out variants in the PIK3R1 locus, use the number of de novo
+points corresponding to “Phenotype highly specific for gene”.
+PS2_Supporting can only be applied if the variant does not meet BA or BS1.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+PS3 will be applied at the default level of strength for evidence from an animal model
+expressing the variant of interest and recapitulating the APDS phenotype. This
+strength level is considered particularly appropriate if multiple mouse models of the
+same variant recapitulate APDS features.
+PS3 will be applied at the default level of strength for an abnormal result in an
+approved in vitro assay with a calculated OddsPath >18.7 (as recommended in PMID:
+31892348). One example has been found in the literature:
+Enrichment of the variant in high phospho-S6 and phospho-AKT T cells relative
+to low phospho-S6 and phospho-AKT T cells, within a next generation
+sequencing-based screen of donor T cells subjected to of CRISPR-mediated
+adenine base-editing (PMID: 40543502)
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+PS3 will be applied at the moderate level of strength for an abnormal result in an
+approved in vitro assay with a minimum of 11 total pathogenic and benign variant
+controls (classified using these same specifications, as recommended in PMID:
+31892348). Example assays with sufficient control variants have not yet been found
+in published reports at the time of these specifications, but are anticipated in the
+future as additional studies are published.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+PS3_Supporting can be applied based on an abnormal result in an approved in vitro
+assay. These are described in detail in the attached Excel file entitled
+“PIK3CD_Functional_Assays_PS3_BS3”
+Approved assay classes and specific assay instances:
+AKT kinase activity assay
+PMID: 24136356, PMID: 24165795, PMID: 28414062
+Lipid kinase activity
+
+PMID: 24136356; PMID: 28167755; PMID: 28414062
+Lipid vesicle affinity
+PMID: 24136356
+Conformational dynamics:
+PMID: 28167755; PMID: 28414062
+Please note that protein binding assays testing PIK3CD binding to PIK3R1 were also
+considered for inclusion in PS3_Supporting, but were excluded based on lack of
+evidence of altered binding by disease-associated variants compared to wild-type
+controls (PMID: 24165795; PMID: 28414062).
+Patient cell-based functional assays directly showing abnormally high activity of the
+disease-relevant PI3K delta pathway were considered for inclusion in the
+PS3_Supporting code but are viewed as part of the proband phenotype and have
+been recommended for consideration under the PP4_Moderate code instead.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+For this code use Table 3. Phenotype scoring criteria per affected
+Specifications:individual and Table 4. Recommendation for determining the appropriate
+PS4 evidence strength level based on the number of affected individuals
+meeting the phenotype criteria and genetic testing requirements.
+
+Strong
+The strength of this code is defined in Table 4. Use PS4 at the default level of
+strength when four or more probands meet the phenotype scoring criteria in Table 3
+and genetic testing requirements described below. Please note that a proband used
+for PP4 or PP4_Moderate cannot be included in PS4.
+
+Point strength has been determined based on a survey of clinical experts, with the
+goal of quantifying the degree to which a proband’s phenotypes are specific to
+PIK3CD-related immunodeficiency. Phenotypes have been grouped into categories
+such as “respiratory findings” or “gastrointestinal disease” to prioritize the diversity
+of systems affected. Probands receive full points for at least one reported feature in
+the category. Points per category have been tailored to reward those considered
+most characteristic of and prevalent within patients with PIK3CD-related
+immunodeficiency.
+A proband must reach greater than or equal to 6 points in the phenotype scoring
+criteria above (Table 3) and, at minimum, a primary immunodeficiency or antibody
+gene testing panel must have identified no likely pathogenic or pathogenic
+variants in the PIK3R1 locus in order to be counted toward PS4
+Genome or exome sequencing is acceptable in lieu of a gene panel
+For genes associated with autosomal recessive disorders, carrier status is
+acceptable.
+If no gene testing panel was performed, additional phenotypic features (reaching
+greater than or equal to 10 points) are required to count the proband toward PS4.
+Scoring of probands with previous genetic testing should be prioritized, particularly
+in the event of scoring historical or rare probands/variants.
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+The strength of this code is defined in Table 4. Use PS4_Moderate when 2-3
+probands meet the phenotype scoring criteria in Table 3 and genetic testing
+requirements described below. Please note that a proband used for PP4 or
+PP4_Moderate cannot be included in PS4_Moderate.
+Point strength has been determined based on a survey of clinical experts, with the
+goal of quantifying the degree to which a proband’s phenotypes are specific to
+PIK3CD-related immunodeficiency. Phenotypes have been grouped into categories
+such as “respiratory findings” or “gastrointestinal disease” to prioritize the diversity
+of systems affected. Probands receive full points for at least one reported feature in
+the category. Points per category have been tailored to reward those considered
+most characteristic of and prevalent within patients with PIK3CD-related
+immunodeficiency.
+A proband must reach greater than or equal to 6 points in the phenotype scoring
+criteria above (Table 3) and, at minimum, a primary immunodeficiency or antibody
+gene testing panel must have identified no likely pathogenic or pathogenic
+variants in the PIK3R1 locus in order to be counted toward PS4
+Genome or exome sequencing is acceptable in lieu of a gene panel
+
+For genes associated with autosomal recessive disorders, carrier status is
+acceptable.
+If no gene testing panel was performed, additional phenotypic features (reaching
+greater than or equal to 10 points) are required to count the proband toward PS4.
+Scoring of probands with previous genetic testing should be prioritized, particularly
+in the event of scoring historical or rare probands/variants.
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+The strength of this code is defined in Table 4. Use PS4_Supporting when one
+proband meets the phenotype scoring criteria in Table 3 and genetic testing
+requirements. Please note that a proband used for PP4 or PP4_Moderate cannot be
+included in PS4_Supporting.
+Point strength has been determined based on a survey of clinical experts, with the
+goal of quantifying the degree to which a proband’s phenotypes are specific to
+PIK3CD-related immunodeficiency. Phenotypes have been grouped into categories
+such as “respiratory findings” or “gastrointestinal disease” to prioritize the diversity
+of systems affected. Probands receive full points for at least one reported feature in
+the category. Points per category have been tailored to reward those considered
+most characteristic of and prevalent within patients with PIK3CD-related
+immunodeficiency.
+A proband must reach greater than or equal to 6 points in the phenotype scoring
+criteria above (Table 3) and, at minimum, a primary immunodeficiency or antibody
+gene testing panel must have identified no likely pathogenic or pathogenic
+variants in the PIK3R1 locus in order to be counted toward PS4
+Genome or exome sequencing is acceptable in lieu of a gene panel
+For genes associated with autosomal recessive disorders, carrier status is
+acceptable.
+If no gene testing panel was performed, additional phenotypic features (reaching
+greater than or equal to 10 points) are required to count the proband toward PS4.
+Scoring of probands with previous genetic testing should be prioritized, particularly
+in the event of scoring historical or rare probands/variants.
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Gene-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+The PM1 code has been considered but does not apply to PIK3CD variant
+curation for this disease entity.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Downgraded to PM2_Supporting
+Applicable to variants with a total allele frequency <0.00000132 across all
+populations in gnomAD v4.1.0.
+Maximum credible population allele frequency threshold determined using
+Whiffin/Ware calculator (https://www.cardiodb.org/allelefrequencyapp/) and the
+following estimated parameters (with the prevalence estimated for autosomal
+dominant PIK3CD-related immune disease):
+Prevalence: 1 in 4000 (a conservative estimate for primary immunodeficiency
+diseases from PMID: 17577648, PMID: 23201919)
+Allelic heterogeneity: 1
+Genetic heterogeneity: 1
+Penetrance: 0.95 (a conservative estimate based on multiple reports of
+incomplete but nearly complete penetrance in PMID: 27555459, PMID:
+36749229, PMID: 37390899)
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+This criterion does not apply since the model of inheritance is autosomal
+dominant.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Not Applicable
+Comments:
+This criterion does not apply since the mechanism of disease is the Gain
+of function caused by missense mutations.
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Use at the default strength level (PM5) for missense variants when other variant was
+classified as Pathogenic for autosomal dominant PIK3CD-related disease by Antibody
+Deficiencies VCEP specifications for PIK3CD without using PM5.
+Beware of changes that impact splicing rather than the amino acid (based on RNA
+data or splicing predictors). Neither change should be predicted to affect splicing
+(SpliceAI Δ score ≤0.2).
+Do not apply at codon where any benign variants are known.
+The variant being evaluated must have a Grantham distance value greater than or
+equal to that of the known pathogenic variant, indicating that the variant residue is
+equally chemically different or more chemically different than the known pathogenic
+residue in comparison to the wild type residue.
+Default
+Point
+Value:
+
+2
+
+Modification Clarification
+Type:
+
+Supporting
+Use at PM5_Supporting strength for missense variants when other variant was
+classified as Likely Pathogenic for autosomal dominant PIK3CD-related disease by
+Antibody Deficiencies VCEP specifications for PIK3CD without using PM5.
+Beware of changes that impact splicing rather than the amino acid (based on RNA
+data or splicing predictors). Neither change should be predicted to affect splicing
+(SpliceAI Δ score <0.2).
+Do not apply at codon where any benign variants are known.
+The variant being evaluated must have a Grantham distance value greater than or
+equal to that of the known likely pathogenic variant, indicating that the variant
+residue is equally chemically different or more chemically different than the known
+likely pathogenic residue in comparison to the wild type residue.
+Default
+1
+Point
+Value:
+Modification Clarification
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+De novo occurrences without confirmation of paternity and maternity can
+still be counted under the PS2 code, using the point system shown in
+Tables 1 and 2.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+PP1 will require each family member to reach at least 6 points in the PS4 counting
+rubric in order to be considered affected for the purpose of counting co-segregations.
+
+Met at the PP1_Strong level for co-segregation of the variant with the affected
+phenotype across at least 4 meioses in one family or combined across multiple
+unrelated families (PMID: 38103548).
+The combined strength of the PP1 and PP4 codes is limited so that a variant that
+meets PP1_Strong can meet PP4 but not PP4_Moderate (PMID: 38103548).
+PP1 should not be applied when a variant also has population data meeting BA1 or
+BS1 since a common variant may appear to segregate with the disease by chance.
+Default
+4
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+PP1 will require each family member to reach at least 6 points in the PS4 counting
+rubric in order to be considered affected for the purpose of counting co-segregations.
+Met at the PP1_Moderate level for co-segregation of the variant with the affected
+phenotype across at least two meioses in one family or combined across multiple
+unrelated families (PMID: 38103548).
+PP1 should not be applied when a variant also has population data meeting BA1 or
+BS1 since a common variant may appear to segregate with the disease by chance.
+Default
+2
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+PP1 will require each family member to reach at least 6 points in the PS4 counting
+rubric in order to be considered affected for the purpose of counting co-segregations.
+Met at the supporting level for co-segregation of the variant with the affected
+phenotype across at least one meiosis (i.e. the variant is present in the proband + an
+affected relative, PMID: 38103548).
+PP1 should not be applied when a variant also has population data meeting BA1 or
+BS1 since a common variant may appear to segregate with the disease by chance.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PP2
+
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+The gnomAD v2.1.1 missense Z score for PIK3CD (Z = 4.27) suggests this
+gene is constrained for missense variation. However, given the gain of
+function disease mechanism, it is not considered reasonable to expect
+that a missense variant at any residue will lead to a gain of function.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Met at the default (PP3) level by a missense variant with REVEL score greater than or
+equal to 0.644 and CADD PHRED score greater than or equal to 25.3.
+Higher strength levels of PP3_Moderate or PP3_Strong have not been recommended
+due to pilot data indicating poor performance and significant discordance between
+REVEL and CADD predictions for established benign and gain-of-function PIK3CD
+variants.
+SpliceAI scores should be checked for missense variants, but there currently is no
+evidence of variants causing autosomal dominant disease through a splicing
+mechanism, so PP3 cannot be met by a variant located in the boundary
+exonic/intronic region with a predicted splicing impact. A variant with a predicted
+impact on splicing (SpliceAI Δ score greater than or equal to 0.2) should not be
+evaluated using these specifications, but rather using alternative specifications for
+autosomal recessive disease with a loss-of-function mechanism, unless functional
+evidence indicates a gain-of-function effect.
+Default
+1
+Point
+Value:
+Modification Clarification,Disease-specific
+Type:
+
+PP4
+
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Moderate
+PP4_Moderate is met when a proband scores greater than or equal to 10 phenotype
+points in the PS4 counting rubric AND has genotyping to rule out a variant in
+the PIK3R1 locus AND has patient cell-based functional assays directly showing
+abnormally high activity of the disease-relevant PI3K delta pathway.
+Patient cell-based functional experiments generally isolate T cells from affected and
+unaffected patients and often perform stimulation by anti-CD3 and anti-CD28
+antibodies, followed by assessment of PI3K delta pathway function using western
+blotting or flow cytometry in combination with phospho-specific antibodies. These
+methods detect levels of AKT phosphorylation at Ser473 (PMID: 24136356, PMID:
+28414062, PMID: 28428270) or Thr308 (PMID: 24165795) and/or S6 phosphorylation
+at Ser235/Ser236 (PMID: 28428270) or Ser240/Ser244 (PMID: 28414062).
+Phosphorylation may be upregulated by 1.2-fold to 7.5-fold in cells from the affected
+patient relative to the healthy control, and in some assays may be shown to be
+abrogated by PI3K-specific inhibitor (PMID: 28428270).
+Please note that a proband used for PP4_Moderate cannot be included in PS4.
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+In order to be counted for this criterion, a proband must score greater than or equal
+to 10 phenotype points in the PS4 counting rubric (Table 3) AND have genotyping to
+rule out a variant in the PIK3R1 locus.
+Please note that a proband used for PP4 cannot be included in PS4.
+In order to be evaluated for this criterion, the variant must not meet BS1 or BA1.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP5
+
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Applicable to variants with a GrpMax filtering allele frequency greater than or equal
+to 0.00316 in gnomAD v4.1.0.
+If GrpMax filtering allele frequency is not listed for the variant, this code is applicable
+to the maximum allele frequency among the five major continental populations
+(African / African-American, East Asian, European non-Finnish, Latino / AdmixedAmerican, or South Asian).
+Maximum credible population allele frequency threshold determined using
+Whiffin/Ware calculator (https://www.cardiodb.org/allelefrequencyapp/) and the
+following estimated parameters (with the prevalence estimated for PIK3CD-related
+immune disease and the inheritance tailored to the autosomal recessive rather than
+autosomal dominant mode of inheritance, associated with complete penetrance):
+Inheritance: biallelic
+Prevalence: 1 in 100,000 (calculated at 1 in 7,500,000 based on the USIDNET
+cohort, PMID: 34352450, but adjusted based on expectation that cases are
+actually more common, resulting in a much more frequent / more aggressive
+prevalence estimate of 1 in 100,000 in order to generate a more conservative
+estimate)
+Allelic heterogeneity: 1
+Genetic heterogeneity: 1
+Penetrance: 1
+Default
+Not Applicable
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS1
+
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Applicable to variants with a GrpMax filtering allele frequency greater than or equal
+to 0.000316 in gnomAD v4.1.0.
+If GrpMax filtering allele frequency is not listed for the variant, this code is applicable
+to the maximum allele frequency among the five major continental populations
+(African / African-American, East Asian, European non-Finnish, Latino / AdmixedAmerican, or South Asian).
+The BS1 threshold was derived by decreasing the BA1 cutoff (greater than or equal
+to 0.00316) by one order of magnitude.
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+Comments:
+Does not apply due to incomplete penetrance and variable expressivity of
+disease.
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+BS3 may potentially be applied at the default strength level of strong for evidence
+from an animal model expressing the variant of interest and failing to recapitulate
+the APDS phenotype. Animal models will be reviewed on a case-by-case basis by the
+VCEP to determine the appropriate strength level.
+
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+BS3 will be applied at the moderate level of strength for an normal result in an
+approved in vitro assay with a minimum of 11 total pathogenic and benign variant
+controls (classified using these same specifications, as recommended in PMID:
+31892348). Please note that an example assay with sufficient control variants has
+been identified in the literature, but was recommended for BS3_Supporting instead
+based on OddsPath ratio (PMID: 40543502).
+Default
+-2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+BS3_Supporting can be applied based on a normal result in at least two different
+approved in vitro assays (from two separate approved assay classes). These are
+described in detail in the attached Excel file entitled
+“PIK3CD_Functional_Assays_PS3_BS3”.
+Approved assay classes and specific assay instances:
+AKT kinase activity assay (PMID: 24136356, PMID: 24165795, PMID: 28414062)
+Lipid kinase activity (PMID: 24136356, PMID: 28167755, PMID: 28414062)
+Enrichment of the variant in high phospho-S6 and phospho-AKT T cells relative
+to low phospho-S6 and phospho-AKT T cells, within a next generation
+sequencing-based screen of donor T cells subjected to of CRISPR-mediated
+adenine base-editing (PMID: 40543502)
+Lipid vesicle affinity (PMID: 24136356)
+Conformational dynamics (PMID: 28167755; PMID: 28414062)
+Please note that protein binding assays testing PIK3CD binding to PIK3R1 were also
+considered for inclusion in BS3_Supporting, but were excluded based on lack of
+evidence of altered binding by disease-associated variants compared to wild-type
+controls (PMID: 24165795; PMID: 28414062).
+Patient cell-based functional assays directly showing normal activity of the diseaserelevant PI3K delta pathway were considered for inclusion in the BS3_Supporting
+code but are viewed as part of the proband phenotype instead.
+Default
+Point
+Value:
+
+-1
+
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Caution in case the phenotype is not highly specific. The patients lacking segregation
+must reach 6 or more points of the phenotypic scoring system described in Table 4.
+Lack of segregation should be identified in more than 1 affected family member to
+meet BS4 at the default level of strength.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+Caution in case the phenotype is not highly specific. The patient lacking segregation
+must reach 6 or more points of the phenotypic scoring system described in Table 4.
+BS4_Supporting is met if only 1 affected family member lacks segregation of the
+genotype.
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+BP2 is considered not applicable, as the field at present does not
+understand all of the potential allelic mechanisms associated with PIK3CD
+variants, so that the possibility of diverse combinatorial variant effects
+cannot be excluded. This has been described for other inborn errors of
+immunity genes.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Met at the default (BP4) level by a missense variant with REVEL score less than or
+equal to 0.290 and CADD PHRED score less than or equal to 22.7.
+SpliceAI Δ scores should be checked for missense variants as well. Variants with a
+predicted impact on splicing (SpliceAI Δ score greater than or equal to 0.2) should
+not be evaluated using these specifications, but rather using alternative
+specifications for autosomal recessive disease with a loss-of-function mechanism,
+unless functional evidence indicates a gain-of-function effect. The current
+specifications are written for a PIK3CD gain-of-function disease mechanism that has
+so far not been reported in association with variants that disrupt splicing.
+Met at the default (BP4) level by a synonymous or intronic variant not predicted to
+impact splicing by SpliceAI (SpliceAI Δ score <0.1, PMID: 37352859).
+
+Higher strength levels of BP4_Moderate or BP4_Strong have not been recommended
+due to pilot data indicating poor performance and significant discordance between
+REVEL and CADD predictions for established benign and gain-of-function PIK3CD
+variants.
+Default
+-1
+Point
+Value:
+Modification Clarification,Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+At least two such cases are required to mitigate the reliance on assertions of variant
+pathogenicity in genes outside of the purview of the Antibody Deficiencies VCEP.
+Default
+-1
+Point
+Value:
+Modification Clarification
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BP7
+Original ACMG
+Summary
+
+PubMed : 29543229 
+
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Met for a synonymous variant if SpliceAI does not predict a splicing defect (cut-off
+<0.1).
+Synonymous variants in the first nucleotide of an exon or the final 3 nucleotides of
+an exon are not eligible for this code, as they are considered part of the splice
+region.
+Met for an intronic variant if SpliceAI does not predict a splicing defect (cut-off <0.1).
+Intronic variants between +1 and +6 or between -1 and -20 are not eligible for this
+code, as they are considered part of the splice region (PMID: 37352859).
+Default
+-1
+Point
+Value:
+Modification Clarification
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+Points system to reach final classification: Rules for combining pathogenic and benign codes to
+reach final classification according to points system (PMID: 32720330). 
+Summary_of_PIK3CD_updates: Updates and responses to SVI feedback 
+PIK3CD_pilot_results: Updated list of PIK3CD pilot variants, codes met, classifications, and
+evidence summaries 
+Tables 1 & 2: Standard tables to count points for de novo occurrences (PS2)
+
+Phenotype scoring criteria per affected individual (PS4 and PP4): Table listing scores for PIK3CDassociated phenotypes for PS4 and PP4 evaluation.
+
+Recommendation for determining the appropriate PS4 evidence strength level based on the
+number of affected individuals meeting the phenotype criteria and genetic testing
+requirements.:
+
+

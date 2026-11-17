@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN244",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50051",
+    "@type": "Organization",
+    "label": "von Willebrand Disease  Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50051"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1610299972"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen von Willebrand Disease   Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for VWF Version 1.0",
+  "lastUpdated": "2026-09-08T15:38:15.580Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1610299979",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=VWF",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0024574",
+              "@type": "Disease",
+              "label": "MONDO:0024574",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000005",
+                  "@label": "Undetermined mode of inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "VWF"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

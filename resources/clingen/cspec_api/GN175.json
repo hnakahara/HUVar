@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN175",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50016",
+    "@type": "Organization",
+    "label": "Monogenic Diabetes Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50016"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1767024968"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen Monogenic Diabetes  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for HNF1B Version 1.0",
+  "lastUpdated": "2024-04-12T19:01:25.700Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1767024977",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=HNF1B",
+          "@type": "Gene",
+          "label": "HNF1B"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

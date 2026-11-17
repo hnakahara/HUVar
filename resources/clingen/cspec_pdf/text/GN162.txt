@@ -1,0 +1,811 @@
+Criteria Specification
+ClinGen Ocular Anterior Segment Disorder Expert Panel Specifications to the ACMG/AMP
+Variant Interpretation Guidelines for PAX6 Version 1.0
+Affiliation: Ocular Anterior Segment Disorder VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : Rule specifications for curating variants in PAX6 (MANE NM_001368894.2, commonly
+referenced transcript NM_000280.6) and are associated with PAX6-related ocular dysgenesis.
+Version : 1.0
+Released : 8/26/2026
+DOI : 10.5281/zenodo.22115985
+
+Contributors & Keywords
+Research Group: Ocular Anterior Segment
+Disorder VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+PAX6 NM_001368894.2 Autosomal dominant
+inheritance PAX6-related ocular dysgenesis
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for PAX6
+Gene: PAX6 (HGNC:8620) 
+Transcripts:
+NM_001368894.2
+
+HGNC Name: paired box 6
+Disease:
+PAX6-related ocular
+dysgenesis (MONDO:0800183)
+ Mode of Inheritance:
+Autosomal dominant
+inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+The Ocular Anterior Segment Dysgenesis VCEP will utilize SVI’s PVS1
+Specifications:recommendation for determining applicable PVS1 strength level as well as
+using experimental splicing data to score non-canonical splice variants
+under the PVS1 code (Abou Tayoun et al 2018; PMID:30192042 and Walker
+et. al., PMID 37352859).
+The Ocular Anterior Segment Dysgenesis VCEP would like to highlight
+the reported impact of the PAX6 Downstream Regulatory Region
+(DRR) to PAX6 expression. The ClinGen Dosage Curation Working
+Group has curated the PAX6 DRR (11p13 PAX6 Downstream
+Regulatory Region (within introns 5-7 of ELP4); ISCA-46758) as having
+sufficient evidence of haploinsufficiency which is in line with clinical
+observations of PAX6-related ocular dysgenesis in cases where the
+minimum deletion region chr11:31626701-31644792 (hg38) (PMID
+30291432) which includes intron 7 to exon 9 of ELP4 which is
+approximately 180kb 3’ of PAX6.
+Extension variants will be curated under PVS1 to recognize the
+evidence of this variant type leading to PAX6-related ocular
+dysgenesis in at least 21 families and shown to segregate with
+aniridia in at least 3 families (PMIDs 32360764, 32396632,
+29618921, 26661695, 18483559, 22361317, 21850189, 35791194,
+36816037)
+Splice impacting variants in exons 2 and 3 of the 5' UTR may be
+scored under PVS1 if there is a predicted impact to splicing due to
+disruption of a canonical splice site OR experimental evidence of
+altered splicing OR evidence of reduced expression to ≤50% of
+wildtype (See Filatova et. al., PMID 34174135)
+
+Very Strong
+The Ocular Anterior Segment Dysgenesis will utilize SVI’s PVS1 recommendation for
+determining applicable PVS1 strength level (Abou Tayoun et al 2018; PMID:30192042).
+See modified decision was modified for PAX6.
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+The Ocular Anterior Segment Dysgenesis will utilize SVI’s PVS1 recommendation for
+determining applicable PVS1 strength level (Abou Tayoun et al 2018; PMID:30192042).
+See modified decision was modified for PAX6.
+
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+The Ocular Anterior Segment Dysgenesis will utilize SVI’s PVS1 recommendation for
+determining applicable PVS1 strength level (Abou Tayoun et al 2018; PMID:30192042).
+See modified decision was modified for PAX6.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+The Ocular Anterior Segment Dysgenesis will utilize SVI’s PVS1 recommendation for
+determining applicable PVS1 strength level (Abou Tayoun et al 2018; PMID:30192042).
+See modified decision was modified for PAX6.
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+PS1_Strength may be combined with PP3 or PVS1 following guidance in
+Specifications:Walker et. al.; PMID 37352859
+
+Strong
+Missense variant at the same codon leading to the same amino acid substitution as a
+variant classified pathogenic by the OASD VCEP’s guidelines and has the same predicted
+impact to splicing
+
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+Missense variant at the same codon leading to the same amino acid substitution as a
+variant classified likely pathogenic by the OASD VCEP’s guidelines and has the same
+predicted impact to splicing
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Follow guidance in Walker et. al.; PMID 37352859 for PS1_Strength in combination with
+PP3 or PVS1
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+All de novo variants (confirmed AND unconfirmed parentage) should be
+Specifications:scored under PS2 using the attached scoring and classification weight
+tables
+Phenotype highly specific for gene = aniridia OR foveal hypoplasia
+Phenotype consistent with gene but not highly specific = ≥ 2 of the
+following: Peters anomaly, cataracts, microphthalmia, nystagmus,
+optic disc anomalies
+Do not score if phenotype is unilateral and the other eye is described
+as normal or healthy
+
+Very Strong
+≥ 4pts using the attached de novo scoring table
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+≥2 pts using the attached de novo scoring table
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+≥1 pt using the attached de novo scoring table
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+≥0.5 pts using the attached de novo scoring table
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+VCEP
+The OASD VCEP will follow the SVI recommendations from Brnich et. al.;
+Specifications:PMID 31892348 when assessing functional assays to apply PS3 toward
+functional evidence
+
+Strong
+Mouse model with a variant reported in a human case with aniridia phenotype or mouse
+phenotype is similar to human disease (iris hypoplasia, abnormal, lens morphology,
+cataracts, corneal opacification, and incomplete separation of lens from the cornea. The
+genetic background of the animal HAS been assessed and off-target effects for models
+chemically/radiation‑induced or targeted mutations induced were assessed.
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+Mouse model with a human mutation reported with aniridia phenotype or mouse
+phenotype is similar to human disease (must have 2 or more of these features: iris
+hypoplasia, abnormal, lens morphology, cataracts, corneal opacification, and
+incomplete separation of lens from the cornea, microphthalmia).
+PAX6 reduction in function assayed by luciferase assay AND binding activity to ≤50%
+of wildtype control
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Demonstrated decrease in PAX6 function by luciferase assay
+reduction must be ≤50% of wildtype control
+High-throughput assay assaying PAX6 paired domain DNA binding by yeast-1-hybrid
+competition assay (McDonnell et. al.; PMID 38849565) that reaches the pathogenic
+threshold set by the OASD VCEP
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS4
+
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Use PS4 for counting probands from multiple independent studies.
+Specifications:Probands clinical phenotype which either meets PP4_Supporting criteria
+OR has 2 or more of the following features
+Microphthalmia, corneal opacity, foveal hypoplasia, limbal stem cell
+deficiency, optic nerve anomalies, congenital or juvenile cataracts
+Do not apply this code unless BS1 is Not Met - Can not be the same case
+scored for PP4_[Strength] - Do not score if phenotype is unilateral and the
+other eye is described as normal or healthy
+
+Very Strong
+17+ probands meeting the above phenotype criteria
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+5-16 probands meeting the above phenotype criteria
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+3-4 probands meeting the above phenotype criteria
+Default
+Point
+Value:
+
+2
+
+Modification Gene-specific
+Type:
+
+Supporting
+2 probands meeting the above phenotype criteria
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+This code can be applied to a missense variant that occurs in the homeodomain (c.676 to
+c.841) or paired domain (c.10 to c.427)
+Do not apply this code if the variant meets BS1
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Apply to variants with Popmax MAF ≤0.000001 (1x10-6) allele frequency in the most
+recent version of gnomAD population database
+Population codes are NOT MET if both genomes and exomes fail gnomAD QC metrics
+Default
+Point
+
+1
+
+Value:
+Modification Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+This code is not applicable to PAX6
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+VCEP
+Use this code only for small in-frame indels, extension variants will be
+Specifications:scored under PVS1
+
+Moderate
+Protein length changes due to in-frame deletions/insertions in a non-repeat region
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+Do not combine with PM1 - use this code preferentially to recognize the
+Specifications:impact from the amino acid substitution specific to the variant under
+
+consideration
+
+Moderate
+Can be applied when:
+at least one variant at an amino acid residue previously curated pathogenic by the
+OASD VCEP leads to a different amino acid from the comparison variant
+at least two variants at an amino acid residue previously curated likely pathogenic by
+the OASD VCEP leads to a different amino acid from the comparison variant
+predicted impact to splicing should match the informative variant
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Can be applied when:
+one variant at an amino acid residue previously curated likely pathogenic by the
+OASD VCEP leads to a different amino acid from the comparison variant
+predicted impact to splicing should match the informative variant
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+See PS2
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+VCEP
+Cases must present with aniridia OR foveal hypoplasia OR 2+ of the
+Specifications:following features must be reported and not aniridia: Peters anomaly,
+cataracts, microphthalmia, foveal hypoplasia +/- nystagmus, optic disc
+anomalies +/- nystagmus - Do not score a family member if the
+phenotype is unilateral and the other eye is described as normal or
+healthy
+
+Strong
+≥7 meioses in ≥1 families
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+≥5 meioses in ≥1 families
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+≥ 3 meioses, in ≥1 families
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+High constraint is limited to the paired and homeo domains which are
+critical to the function of PAX6 and not the entire coding sequence
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Moderate
+REVEL score of ≥0.9
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+REVEL score of 0.70 to 0.899 OR spliceAI ≥0.2
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+This code is not applicable unless BS1 is NOT MET - Do not score if
+Specifications:phenotype is unilateral and the other eye is described as normal or
+healthy
+
+Moderate
+Absence or partial absence of the iris (aniridia) AND 1 or more of the following:
+Foveal hypoplasia
+Limbal stem cell deficiency
+Optic nerve anomalies
+
+Congenital or juvenile cataracts
+Nystagmus
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Absence or partial absence of the iris (aniridia)
+OR
+≥3 of the following phenotypes:
+foveal hypoplasia
+limbal stem cell deficiency
+optic nerve anomalies
+congenital or juvenile cataracts
+nystagmus
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Apply to variants with a Total Grpmax filtering allele frequency of ≥0.0001 in the most
+recent version of gnomAD population database - population codes are NOT MET if both
+
+genomes and exomes fail gnomAD QC metrics
+Default
+Not Applicable
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Apply to variants with a Total Grpmax filtering allele frequency of ≥0.00001 in the most
+recent version of gnomAD population database - population codes are NOT MET if both
+genomes and exomes fail gnomAD QC metrics
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+This code only applies to cases shown to carry the variant under
+Specifications:consideration with no ocular phenotypes reported
+
+Strong
+Apply to variants obvserved in the heterozygous state in an individual with a documented
+normal dilated ocular exam
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+Apply to variants observed in the heterozygous state that is found in a reportedly
+unaffected case with no documentation of a dilated ocular exam
+Default
+-2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Apply if the variant under consideration is not found in a family member reported with
+phenotypes consistent with PP4 criteria
+Default
+-4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+Apply if the variant under consideration is not found in a family member with a phenotype
+consistent with the probands ocular phenotype
+Proband should not meet PP4
+
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Apply if the variant under consideration is found in addition to a second variant that has
+been curated as pathogenic/likely pathogenic using the OASD VCEPs PAX6 rule
+specifications
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Can be applied to missense variants with a REVEL score ≤0.29 AND SpliceAI ≤0.1
+For other variant types SpliceAI ≤0.1
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Can be applied to synonymous variants as well as intronic variants beyond the +7/-21
+splice region that also meet BP4 criteria. Conservation metrics are not required for scoring
+
+this code.
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+Functional assay worksheet: 
+PS2 case scoring and classification weight tables: 
+PVS1 flow-chart: 
+
+

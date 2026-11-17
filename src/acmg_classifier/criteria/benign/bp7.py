@@ -4,7 +4,7 @@ from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
-from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType
+from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 
@@ -68,6 +68,11 @@ def _splice_benign(annotation: AnnotationData, cutoff: float = 0.10) -> bool:
     #     # |delta_logit_psi| < 0.5 → minimal predicted splice effect (matches BP4).
     #     return abs(sp.raw_score) < 0.5
     return False
+
+
+# VCEPs that apply BP7 above its Supporting default (ABCA4: BP7 at Moderate for
+# an intronic or synonymous variant "when Splice AI prediction is <0.1").
+_BP7_STRENGTH = {"ABCA4": CriterionStrength.MODERATE}
 
 
 class BP7Evaluator(CriterionEvaluator):
@@ -139,6 +144,7 @@ class BP7Evaluator(CriterionEvaluator):
                 sp = annotation.splice
                 return CriteriaResult.met(
                     ACMGCriterion.BP7,
+                    strength=_BP7_STRENGTH.get(pc.gene_symbol, CriterionStrength.SUPPORTING),
                     evidence=f"Synonymous + {sp.tool} score benign + not highly conserved",
                 )
             return CriteriaResult.not_met(
@@ -193,6 +199,7 @@ class BP7Evaluator(CriterionEvaluator):
                 range_desc = "deep intronic (+7/-21)"
             return CriteriaResult.met(
                 ACMGCriterion.BP7,
+                strength=_BP7_STRENGTH.get(pc.gene_symbol, CriterionStrength.SUPPORTING),
                 evidence=(
                     f"{range_desc} (dist={pc.intron_distance_from_splice}) "
                     "and splice score benign + not highly conserved (Walker 2023)"

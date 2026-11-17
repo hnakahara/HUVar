@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN211",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50090",
+    "@type": "Organization",
+    "label": "Optic Nerve Atrophy Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50090"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/100042372"
+  },
+  "cspecStatus": "Classification Rules Submitted",
+  "currentStatus": "Classification Rules Submitted",
+  "label": "ClinGen Optic Nerve Atrophy  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for ACO2 Version 1.0",
+  "lastUpdated": "2026-11-09T20:35:38.262Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/100042381",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=ACO2",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0014571",
+              "@type": "Disease",
+              "label": "MONDO:0014571",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0032113",
+                  "@label": "Semidominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "ACO2"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

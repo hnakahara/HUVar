@@ -1,0 +1,578 @@
+Criteria Specification
+ClinGen Brain Malformations Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines Version 1.1
+Affiliation: Brain Malformations VCEP
+Description : This version is specified for the following genes: AKT3, MTOR, PIK3CA, PIK3R2
+Version : 1.1
+Released : 8/19/2022
+DOI : 10.5281/zenodo.21421573
+Release Notes :
+The following criteria descriptions were modified for clarity based on feedback:
+PS2 modified to make the distinction between PS2_strong vs PS2_moderate more clear and provide
+an example within the text
+PS3 modified so it is clear the supplementary document applies to the SVI recommendation and not
+the animal model section
+PS4’s upper margins were modified to make it clear that curators should not round off any of the
+values in Table 2A since it is not possible to obtain a value that is .99 or .49
+BA1 and BS1 calculations corrected, rational provided in supplement
+BS2 modified to make it clear that either homozygous instances in gnomAD or phenotyped family
+members can be utilized for this criterion
+BP2 modified to indicate that this criterion can be used for either a cis or trans variant
+BP4 modified to be consistent with detailed description provided later in the document
+
+Contributors & Keywords
+Research Group: Brain Malformations VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+AKT3 NM_005465.4 MTOR NM_004958.3 PIK3CA
+NM_006218.3 PIK3R2 NM_005027.3
+
+Rules for AKT3, MTOR, PIK3CA, PIK3R2
+Gene: AKT3 (HGNC:393) 
+Transcripts:
+NM_005465.4
+
+HGNC Name: AKT serine/threonine kinase 3
+Disease:
+cerebral malformation
+(MONDO:0016054) 
+
+Gene: MTOR (HGNC:3942) 
+
+HGNC Name: mechanistic target of rapamycin
+kinase
+Disease:
+cerebral malformation
+(MONDO:0016054) 
+
+Transcripts:
+NM_004958.3
+
+Gene: PIK3CA (HGNC:8975) 
+Transcripts:
+NM_006218.3
+
+Gene: PIK3R2 (HGNC:8980) 
+Transcripts:
+NM_005027.3
+
+HGNC Name: phosphatidylinositol-4,5bisphosphate 3-kinase catalytic subunit alpha
+Disease:
+cerebral malformation
+(MONDO:0016054) 
+HGNC Name: phosphoinositide-3-kinase
+regulatory subunit 2
+Disease:
+cerebral malformation
+(MONDO:0016054) 
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+LOF and/or haploinsufficiency have not been clearly identified as disease
+mechanisms underlying brain malformations related to these genes, so in
+general this rule is not applicable. The disease mechanism for these genes
+is gain of function (GOF).
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+
+No change.
+Modification None
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Strong
+Award the PS2_Strong point if Criteria 1 AND Criteria 2 are fulfilled.
+Criteria 1. The variant is present at a detectable allele fraction but is absent from parental
+samples with confirmed maternity and paternity.
+Criteria 2. The variant is present at a detectable allele fraction in an affected tissue
+sample but is absent from or detected at a lower allelic fraction in another tissue (e.g. if
+present in 5% of brain tissue but absent from the blood or skin this point can be awarded).
+For the sake of implementation, these criteria are intended to apply to high-confidence
+somatic mutations identified by the reporting CLIA laboratory. The expert panel recognizes
+that in practice there may be significant heterogeneity in the technical methods and
+thresholds used to identify such variants as 'high confidence', and flags the need to
+establish consensus statistical frameworks (e.g. Phred-scaled genotype qualities) or
+experimental approaches (e.g., confirmation of somatic variants by sequencing on
+orthogonal platforms) by which quality thresholds can be consistently applied.
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Award the PS2_Moderate point if Criteria 1 is fulfilled, OR if parents are not available but
+Criteria 2 is fulfilled.
+Modification Disease-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+Document 1. (PS3)
+Specifications:
+Functional Assay Validation
+PMID: 31892348
+1. The 4 classes of assays (phosphorylation, DEPTOR binding, cell
+survivability, cell proliferation) are considered “broadly accepted
+historically” for these genes.
+2. Any publication within the spreadsheet can be used as evidence for a
+supporting level of evidence (PS3).
+3. Any paper must have validation controls (positive and negative) in
+order to be used as evidence for a level above supporting. Positive
+validation controls are defined as variants classified as
+pathogenic/likely pathogenic (P/LP) independent of the PS3 criterion.
+Negative validation controls are defined as variants classified as
+benign/likely benign independent of the BS3 criterion
+8-34 variants are required for moderate evidence.
+35+ variants are required for strong evidence.
+4. For a publication to be used for any strength of evidence above
+supporting, it must also meet the minimum criteria below, depending
+on the type of evidence:
+Supplemental Table 1
+Evidence from Phosphorylation/Deptor Binding/Cell Survivability
+Assay:
+(Assay Controls)
+Basic Positive Control – WT necessary
+Basic Negative Control – Empty vector or blank transfection can be
+used.
+Biological Replicates – not necessary
+Technical Replicates – yes, documented in at least triplicate (You can
+contact the researcher and ask if it is not specifically mentioned in
+the publication.)
+Evidence of Cell Proliferation:
+Basic Positive Control - WT necessary
+Basic Negative Control – Empty vector or blank transfection can be
+used.
+Biological Replicates – Necessary for animal studies (e.g., each
+mouse is a replicate, need at least 2)
+Technical Replicates – Necessary, multiple samples measured from
+the same animal or experiment done in triplicate (at least 3)
+
+Strong
+Follow recommendations set forth by the SVI in conjunction with specifications added by
+the BMVCEP for quality metrics and minimum validation controls required. (Supplemental
+Document 1) Animal models are considered in a different manner.
+Award PS4_Strong if the animal model generated with the variant of interest expressed in
+neural progenitors shows a complementary brain phenotype.
+Award PS3 if the functional assay meets the acceptability criteria delimited in (PMID:
+31892348) with specifications added by the BMVCEP. Quality metrics and minimum
+validation controls required can be found in Supplementary Document 1.
+Animal models are considered in a different manner. Award PS4_Strong if the animal
+model generated with the variant of interest expressed in neural progenitors show a
+complementary brain phenotype.
+Caveat: Studies of cell lines derived from the affected patient as the only source of
+functional characterization are by themselves insufficient to provide strong evidence of
+pathogenicity. This is because cells derived from patient affected tissue are likely to
+exhibit the desired phenotype since the patient tissue exhibits the phenotype. It is
+therefore impossible to determine whether the variant of interest was solely responsible
+for that phenotype. Instead, functional readout of patient-derived cells are now included
+in PS4.
+Modification Disease-specific
+Type:
+
+Moderate
+Follow recommendations set forth by the SVI in conjunction with specifications added by
+the BMVCEP for quality metrics and minimum validation controls required (PMID:
+31892348). Animal models are considered in a different manner. Award PS4_Moderate if
+the animal model generated with the variant of interest expressed in non-neural tissues
+show an increased cancer burden.
+Modification Strength
+Type:
+
+Supporting
+Follow recommendations set forth by the SVI in conjunction with specifications added by
+the BMVCEP for quality metrics and minimum validation controls required (PMID:
+31892348).
+Modification Strength
+Type:
+
+PS4
+
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Very Strong
+Points are assigned for phenotype according to (Table 2A). Phenotype criteria can only be
+used if the variant meets criteria for (PM2). Strength of evidence is determined by points
+according to (Table 2B). PS4_VeryStrong ≥ 16 points. For PS4, for cases reported in the
+literature, we recommend assigning each one to the SINGLE category below that is
+associated with the highest point value (Table 2A). The total score obtained for all
+reported cases with a particular variant will determine the strength of PS4 assigned
+according to the scale (Table 2B)*.
+
+PS4_VeryStrong ≥ 16 points.
+*Applicable if the variant is absent/rare from controls according to PM2 to ensure the
+
+variant is not simply present due to beinging common in the general population.
+Modification Disease-specific,Strength
+Type:
+
+Strong
+Points are assigned for phenotype according to (Table 2A). Phenotype criteria can only be
+used if the variant is absent from controls (PM2). Strength of evidence is determined by
+points according to (Table 2B). PS4_Strong = 3.5-15.75 points.
+Modification Disease-specific
+Type:
+
+Moderate
+Points are assigned for phenotype according to (Table 2A). Phenotype criteria can only be
+used if the variant is absent from controls (PM2). Strength of evidence is determined by
+points according to (Table 2B). PS4_Moderate = 1.5-3.25 points.
+Modification Strength
+Type:
+
+Supporting
+
+Points are assigned for phenotype according to (Table 2A). Phenotype criteria can only be
+used if the variant is absent from controls (PM2). Strength of evidence is determined by
+points according to (Table 2B). PS4_Supporting = 0.5 – 1.25 points.
+Modification Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Supporting
+Residues affecting critical functional domains provided in Table 4 for each gene.
+Modification Strength
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Absent/rare from controls in an ethnically-matched cohort population sample ( ≥1).
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Not applicable since disease-causing variants are heterozygous.
+
+PM4
+
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Not Applicable
+Comments:
+Although there have been reported in-frame deletion/insertions in these
+genes which cause the overgrowth phenotype, they are exceptionally rare.
+Most insertion/deletions are associated with a LoF disease mechanism and
+so this point will still not be used even though we recognize that it is
+possible that a variant is an in-frame indel that results in a GoF
+mechanism.
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+No change.
+Modification None
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+This point is addressed according to PS2 and will not be used.
+
+PP1
+Original ACMG
+Summary
+
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Not Applicable
+Comments:
+Not applicable since disease-causing variants are germline mosaic, de
+novo or mosaic.
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Supporting
+Missense constraint computed in ExAC/gnomAD was utilized. Award PP2 if the z-score >
+3.09. (applicable to MTOR, PIK3CA and AKT3 but not PIK3R2).
+Modification Disease-specific
+Type:
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Not Applicable
+Comments:
+This criterion is not applicable since these variants are GOF, and
+traditional mutation pathogenicity prediction algorithms focus on LOF
+mechanisms. Use of this criterion can be revisited if there emerges
+additional published experience with predictive algorithms specifically
+designed to detect gain of function mutations.
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+Comments:
+Not applicable since this criterion is accounted for under PS4.
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Allele frequency (>0.0926%). An allele frequency (>0.0926%) was approved. Note: this
+was adjusted from ACMG Guidelines due to maintaining the 5x threshold for benign
+(consistent with previously established guidelines)
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency (>0.0185%). An allele frequency (>0.0185%) was approved.
+(Supplemental Table 3).
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Award BS2 if ≥3 homozygotes present in gnomAD or ≥3 heterozygous in well phenotyped
+family members. Clinical laboratories are encouraged to accumulate more than 2 (≥3)
+instances of well phenotyped family members before applying this strong criterion. To be
+considered for this point, the variant should be either germline (most common), or
+somatic in a relevant tissue. Homozygous occurrences in gnomAD or ExAC can also be
+counted for this point (≥3).
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Strong
+Follow recommendations set forth by the SVI in conjunction with specifications added by
+the Brain Malformation Group for quality metrics and minimum validation controls
+required.
+Modification Disease-specific
+Type:
+
+Supporting
+Follow recommendations set forth by the SVI in conjunction with specifications added by
+the Brain Malformation Group for quality metrics and minimum validation controls
+required.
+Modification Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Not Applicable
+Comments:
+Not applicable as these are de novo, germline mosaic or post-zygotic
+mutations.
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Not applicable as LOF is not the disease mechanism.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in cis or trans with a known pathogenic variant in the same gene.
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+This is not applicable for the genes specified since the exon regions do not
+have repetitive regions without a known function.
+
+BP4
+Original ACMG
+Summary
+
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Award BP4 for a synonymous, intronic positions (except canonical splice sites) or noncoding variants in the UTRs, if two out of three of the splicing prediction tools predicted no
+impact on splicing function. Not applicable for any variant type except for synonymous,
+intronic positions (except canonical splice sites) and non-coding variants in the UTRs,. This
+criterion can be applied when two of three splicing prediction tools predict no splicing
+change. The splicing prediction tools used are: varSEAK, spliceAI and MaxEntScan.
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+No change.
+Modification None
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+
+highly conserved.
+
+Supporting
+For synonymous, intronic positions (except canonical splice sites) and non-coding variants
+in the UTRs, if the nucleotide is non-conserved award this point (PhyloP score <0.1).
+Modification Disease-specific
+Type:
+
+

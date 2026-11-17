@@ -1,0 +1,809 @@
+Criteria Specification
+ClinGen ABCA4 Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines
+for ABCA4 Version 1.0
+Affiliation: ABCA4 VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : This VCEP is only curating the ABCA4 gene with a single autosomal recessive phenotype,
+which is ABCA4-related retinopathies.
+Version : 1.0
+Released : 11/14/2025
+DOI : 10.5281/zenodo.21434773
+
+Contributors & Keywords
+Research Group: ABCA4 VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+ABCA4 NM_000350.3 Autosomal recessive
+inheritance ABCA4-related retinopathy
+
+Rules for ABCA4
+General Comments:
+
+This rule set uses the point counting classification system introduced by
+Tavtigian, et al. (PMID: 32720330) in lieu of the rule combining
+recommendations in Richards, et al (PMID: 25741868).
+
+Gene: ABCA4 (HGNC:34) 
+Transcripts:
+NM_000350.3
+
+HGNC Name: ATP binding cassette subfamily A
+member 4
+Disease:
+ABCA4-related retinopathy
+(MONDO:0800406)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Please reference ABCA4 Modified ClinGen SVI PVS1 flowchart below.
+Specifications:
+
+Very Strong
+Please use the SVI WG decision tree modified for the ABCA4 gene.
+Default
+8
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Strong
+Please use the SVI WG decision tree modified for the ABCA4 gene.
+Default
+4
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Moderate
+Please use the SVI WG decision tree modified for the ABCA4 gene.
+Default
+2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Comparison missense variant must reach a pathogenic classification using the ABCA4
+VCEP specifications. Do not apply if the comparison variant is suspected to cause a
+splicing defect via SpliceAI or other splice predictor.
+OR
+Comparison splicing variant must reach a pathogenic classification using the ABCA4 VCEP
+specifications and both variants must share the same predicted splicing effect.
+OR
+See Walker, et al 2023 (PMID: 37352859) Figure 5 to use this rule code for variants with
+RNA sequencing data.
+Default
+4
+Point
+Value:
+Modification General recommendation
+Type:
+
+Moderate
+Comparison variant must reach a likely pathogenic classification using the ABCA4 VCEP
+specifications. Do not apply if the comparison variant is suspected to cause a splicing
+defect via SpliceAI or other splice predictor.
+OR
+Comparison splicing variant must reach a likely pathogenic classification using the ABCA4
+VCEP specifications and both variants must share the same predicted splicing effect.
+OR
+See Walker, et al 2023 (PMID: 37352859) Figure 5 to use this rule code for variants with
+RNA sequencing data.
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+See Walker, et al 2023 (PMID: 37352859) Figure 5 to use this rule code for variants with
+RNA sequencing data.
+Default
+Point
+
+1
+
+Value:
+Modification General recommendation
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Probands must have a second ABCA4 variant that is classified using the
+Specifications:ABCA4 VCEP Rule Classification Guidelines to use this rule code. If the
+second ABCA4 variant is classified as a variant of uncertain significance
+(VUS), the proband’s points should be downgraded by half. Additionally,
+this code’s strength should be capped at moderate if phase is unknown for
+all probands. See additional guidance below.
+
+Very Strong
+Use proposed SVI point recommendations for “Phenotype consistent with gene but not
+highly specific” for probands with Stargardt disease. Use proposed SVI point
+recommendations for “Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity” for probands with other ABCA4-related retinopathies (e.g. retinitis pigmentosa, cone-rod dystrophy, etc.).
+Default
+8
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Strong
+Use proposed SVI point recommendations for “Phenotype consistent with gene but not
+highly specific” for probands with Stargardt disease. Use proposed SVI point
+recommendations for “Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity” for probands with other ABCA4-related retinopathies (e.g. retinitis pigmentosa, cone-rod dystrophy, etc.).
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+Use proposed SVI point recommendations for “Phenotype consistent with gene but not
+highly specific” for probands with Stargardt disease. Use proposed SVI point
+recommendations for “Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity” for probands with other ABCA4-related retinopathies (e.g. retinitis pigmentosa, cone-rod dystrophy, etc.).
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+Use proposed SVI point recommendations for “Phenotype consistent with gene but not
+highly specific” for probands with Stargardt disease. Use proposed SVI point
+recommendations for “Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity” for probands with other ABCA4-related retinopathies (e.g. retinitis pigmentosa, cone-rod dystrophy, etc.).
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Loss of function of ABCA4 protein in transgenic mice measured by autofluorescence
+and/or A2E production.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+
+Measurement of ABCA4 expression or ATPase activity in HEK293 or HeLa cells. See list of
+approved functional assays in PS3/BS3 Guidance spreadsheet below.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Strong
+Enrichment analysis was performed for all likely bi-allelic ABCA4 variants that were
+published up to December 31, 2020 compared to population matched gnomAD data from
+Cornelis et al., 20221. This code can be applied to variants with an OR > or = 5, where the
+CI does not contain 1.
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+Enrichment analysis was performed for all likely bi-allelic ABCA4 variants that were
+published up to December 31, 2020 compared to population matched gnomAD data from
+Cornelis et al., 20221. This code can be applied to variants with an OR greater or equal to
+3 and less than 5, where the CI does not contain 1.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+This code is not applicable as there is benign variation throughout the
+ABCA4 gene.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Total MAF <0.0001 in gnomAD.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+VCEP
+Neither variant can meet BS1 or BA1 criteria to apply this code.
+Specifications:
+
+Very Strong
+Use proposed SVI point recommendations. Both variants must be classified using ABCA4
+Rule Specifications.
+Default
+Point
+Value:
+
+8
+
+Modification General recommendation
+Type:
+
+Strong
+Use proposed SVI point recommendations. Both variants must be classified using ABCA4
+Rule Specifications.
+Default
+4
+Point
+Value:
+Modification General recommendation
+Type:
+
+Moderate
+Use proposed SVI point recommendations. Both variants must be classified using ABCA4
+Rule Specifications.
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+Use proposed SVI point recommendations. Both variants must be classified using ABCA4
+Rule Specifications.
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+This code can be applied for >1 amino acid deletion/insertion or a stop loss variant, or >1
+nucleotide with PhyloP ≥7.367
+(https://www.medrxiv.org/content/10.1101/2023.04.24.23288782v1).
+Default
+Point
+
+2
+
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+This code can be applied for 1 amino acid deletion/insertion or a stop loss variant, or 1
+nucleotide with PhyloP ≥7.367
+(https://www.medrxiv.org/content/10.1101/2023.04.24.23288782v1).
+Default
+1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Comparison variant must reach a pathogenic classification using the ABCA4 VCEP
+specifications. Do not apply if the comparison variant is suspected to cause a splicing
+defect via SpliceAI or other splice predictor.
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+Comparison variant must reach a likely pathogenic classification using the ABCA4 VCEP
+specifications. Do not apply if the comparison variant is suspected to cause a splicing
+defect via SpliceAI or other splice predictor.
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Use the PS2 code for all (including non-confirmed paternity) de novo
+variants.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Please note: Non-truncating in trans variants must be curated using the
+Specifications:ClinGen ABCA4 VCEP Rule Specifications and reach a pathogenic or likely
+pathogenic classification. Truncating in trans variants need no further
+curation.
+
+Strong
+Segregations in proband plus >2 affected relatives.
+Affected relatives must have both variants identified in proband..
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+Segregation in proband plus 2 affected relatives.
+Affected relatives must have both variants identified in proband.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+
+Segregation in proband plus 1 affected relative.
+Affected relatives must have both variants identified in proband.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+This rule does not apply because this gene is not constrained for missense
+variation.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Moderate
+This code is applicable for missense variants with a REVEL score of >0.772 or for
+synonymous or indel variants with a CADD score of greater or equal to 28.1
+(https://www.medrxiv.org/content/10.1101/2023.04.24.23288782v1). This code is also
+applicable for variant with a SpliceAI score of greater than or equal to 0.8.
+Default
+2
+Point
+Value:
+Modification General recommendation,Gene-specific
+Type:
+
+Supporting
+This code is applicable for missense variants with a REVEL score between 0.644-0.772 or
+for synonymous or indel variants with a CADD score between 25.3-28.0
+
+(https://www.medrxiv.org/content/10.1101/2023.04.24.23288782v1). This code is also
+applicable for variant with a SpliceAI score of greater than or equal to 0.2.
+Default
+1
+Point
+Value:
+Modification General recommendation,Gene-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+Use the ABCA4 PP4 Specification Table attached below for the list of
+Specifications:phenotypic and genetic testing criteria available for scoring a single
+proband. This rule is not applicable for variants meeting BS1 or BA1
+criteria.
+
+Moderate
+This code is applicable when a single proband can be awarded 8 or more phenotype
+points.
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+This code is applicable when a single proband can be awarded 3-7.5 phenotype points.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Gprmax allele frequency cutoff of greater than 0.163 in gnomAD.
+Default
+Not Applicable
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+The BS1 rule is based on the Whiffen-Ware calculator using a prevalence
+Specifications:of 1 in 7,500, allelic and gene heterogeneity of 1 and penetrance of 0.5.
+The following variants are excluded from this rule code (or see attached
+list below):
+The following variants are excluded from this rule code (or see list below):
+c.2588G>C, p.Gly863Ala
+c.5603A.T, p.Asn1868Ile
+c.5882G>A, p.Gly1961Glu
+c.3113C>T, p.Ala1038Val
+c.6320G>A, p.Arg2107His
+c.4685T>C, p.Ile1562Thr
+c.4253+43G>A
+
+Strong
+Grpmax allele frequency cutoff of greater than 0.0163 in gnomAD.
+
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+Grpmax allele frequency cutoff of greater than 0.00163 in gnomAD.
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Not Applicable
+Comments:
+This code is not applicable as the age of onset is variable and penetrance
+is known to be incomplete for some variants.
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+Transgenic mouse models or conflicting minigene assay results should not
+Specifications:be used as benign evidence.
+
+Supporting
+See list of approved functional assays in PS3/BS3 Guidance spreadsheet below.
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+This code is applicable when there are two affected family members without the variant of
+interest.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Rule code does not apply as truncating variants do not predominate and
+missense variants are a known cause of disease.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Rule code does not apply because some modifier gene variants are in cis
+with known pathogenic variants.
+
+BP3
+
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+There are no known repetitive regions without known function.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Moderate
+This code is applicable for missense variants with a REVEL score of <0.184 or for
+synonymous or indel variants with a CADD score of less than or equal to 17.3 (PMID:
+40225145).
+Default
+-2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Supporting
+This code is applicable for missense variants with a REVEL score between 0.184-0.290 or
+for synonymous or indel variants with a CADD score between 17.4-20 (PMID: 40225145).
+This code is also applicable for intronic variants where BP7 is not applicable and the
+SpliceAI score is < or = 0.1.
+Default
+-1
+Point
+Value:
+Modification Gene-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Do not use this rule as an individual can be a carrier of a pathogenic
+ABCA4 variant while having another molecular etiology for their
+retinopathy.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+BP4 is not used in combination with this rule code.
+Specifications:
+
+Moderate
+Rule code is applicable to intronic (outside of canonical -21 to +7) or synonymous variant
+when Splice AI prediction is <0.1 (PMID: 40225145). This code does not apply when
+conflicting minigene or other functional data is available.
+Default
+-2
+Point
+Value:
+Modification Gene-specific
+Type:
+
+Point Based Variant Classification Categories
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+0-5
+
+Likely Benign
+
+-6 - -1
+
+Benign
+
+-7
+
+Additional Notes :
+
+Files & Images
+ABCA4 Functional assay Guidance: 
+ABCA4 PM3 Guidance: 
+Functional assay Guidance: 
+BS1 Exclusion Variants: List of ABCA4 variants where the BS1 or BS1_Supporting rule code should
+not be applied. 
+ABCA4 PS2 Guidance: 
+ABCA4 PP4 Proband Scoring Table: 
+ABCA4 PVS1 Flowchart: 
+
+References
+1.
+
+Cornelis SS Runhart EH et al. Personalized genetic counseling for Stargardt disease: Offspring
+risk estimates based on variant severity. Am J Hum Genet (2022) 109 (3) p. 498-507.
+10.1016/j.ajhg.2022.01.008 35120629 
+
+

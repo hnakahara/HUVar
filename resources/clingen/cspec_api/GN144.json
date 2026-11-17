@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN144",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50079",
+    "@type": "Organization",
+    "label": "Parkinson's Disease Variant Curation Expert Panel",
+    "url": "https://clinicalgenome.org/affiliation/50079"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1612839626"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen Parkinson's Disease  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for LRRK2 Version 1.0",
+  "lastUpdated": "2023-07-26T19:21:54.238Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1612839639",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=LRRK2",
+          "@type": "Gene",
+          "label": "LRRK2"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

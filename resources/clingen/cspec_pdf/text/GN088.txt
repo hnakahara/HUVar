@@ -1,0 +1,668 @@
+Criteria Specification
+ClinGen Severe Combined Immunodeficiency Disease Expert Panel Specifications to the
+ACMG/AMP Variant Interpretation Guidelines for RMRP Version 1.3
+Affiliation: Severe Combined Immunodeficiency Disease VCEP
+Type: Richards et.al., 2015 - Combining rules
+Version : 1.3
+Released : 5/1/2026
+DOI : 10.5281/zenodo.21434137
+Release Notes :
+Edited Rules for Combining Criteria to reflect standard combinations plus (A) 1 very strong + 1
+supporting = Likely Pathogenic and (B) 1 Strong Benign = Likely Benign.
+
+Contributors & Keywords
+Research Group: Severe Combined
+Immunodeficiency Disease VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+RMRP NR_003051.3 Autosomal recessive
+inheritance cartilage-hair hypoplasia
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for RMRP
+Gene: RMRP (HGNC:10031) 
+Transcripts:
+NR_003051.3
+
+HGNC Name: RNA component of mitochondrial
+RNA processing endoribonuclease
+Disease:
+cartilage-hair hypoplasia
+(MONDO:0009595)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+Does not apply.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Supporting
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Downgraded to PS1_Supporting.
+Applicable if a different nucleotide change at the same nucleotide position has been
+previously classified as pathogenic or likely pathogenic.
+Cannot be applied if a different nucleotide change at the same position has been
+previously classified as benign or likely benign.
+Previously established variants must be classified by SCID VCEP specifications
+for RMRP.
+Modification Gene-specific,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+The following guidelines should be used when determining the phenotypic
+Specifications:consistency of each proband:
+“Phenotype highly specific for gene” proband must meet
+PP4_Moderate criteria;
+
+“Phenotype consistent with gene but not highly specific” proband
+must meet PP4 criteria;
+“Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity”: proband has been asserted to have a
+Cartilage-hair hypoplasia (CHH) phenotype but does not meet PP4
+criteria;
+Reduce points per proband by half if the phase is unconfirmed.
+
+Very Strong
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification Disease-specific,Strength
+Type:
+
+Strong
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification Disease-specific,Strength
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+PS3 may be applied when RT/PCR or RNA evidence indicates variant
+Specifications:results in absent expression.
+
+Strong
+
+PS3 may potentially be applied at the default strength level of strong for evidence from an
+animal model expressing the variant of interest and recapitulating the Cartilage-hair
+hypoplasia (CHH) phenotype. Animal models will be reviewed on a case-by-case basis by
+the VCEP to determine the appropriate strength level.
+Modification Gene-specific
+Type:
+
+Supporting
+PS3_Supporting can be applied based on an abnormal result in at least one approved in
+vitro assay.
+Approved assay instances:
+Endonucleolytic cleavage activity assay (mRNA cleavage activity smaller than 0.9)
+Thiel et al., 2005 (PMID: 16252239)
+Thiel et al., 2007 (PMID: 17701897)) OR
+Luciferase reporter assay
+Hermanns et al., 2005 (PMID: 16254002)) (luciferase activity higher than 7)
+Modification Disease-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+Comments:
+Does not apply.
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Strong
+Defined to include insertions/duplications between the TATA box (spanning n.-32 to
+n.-24) and the transcription start site (n.4). Caveat: All variants should be sufficiently
+rare - variant does not have to meet PM2 specification criteria but variant should not
+meet BS1/BA1 criteria (unless a suspected founder variant). The applicability of PM1
+to suspected founder variants exceeding the BS1/BA1 threshold will be evaluated on
+a case-by-case basis by the VCEP.
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Absent in population databases (or at extremely low frequency if recessive).
+Downgraded to PM2_Supporting.
+gnomAD popmax filtering allele frequency <0.0000447
+The applicability of PM2 to suspected founder variants with allele frequencies exceeding
+the PM2 threshold will be evaluated on a case-by-case basis by the VCEP.
+Modification Disease-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+VCEP
+Caveat: All variants should be sufficiently rare - variant does not have to
+Specifications:meet PM2 specification criteria but variant should not meet BS1/BA1
+criteria (unless a suspected founder variant). The applicability of PM3 to
+suspected founder variants exceeding the BS1/BA1 threshold will be
+evaluated on a case-by-case basis by the VCEP.
+
+Very Strong
+
+Use ClinGen SVI recommendations for in trans criterion with the additional requirement
+that the co-occurring variant must be classified using the SCID VCEP specifications
+for RMRP.
+Modification General recommendation,Strength
+Type:
+
+Strong
+Use ClinGen SVI recommendations for in trans criterion with the additional requirement
+that the co-occurring variant must be classified using the SCID VCEP specifications
+for RMRP.
+Modification General recommendation,Strength
+Type:
+
+Moderate
+Use ClinGen SVI recommendations for in trans criterion with the additional requirement
+that the co-occurring variant must be classified using the SCID VCEP specifications
+for RMRP.
+Modification General recommendation
+Type:
+
+Supporting
+Use ClinGen SVI recommendations for in trans criterion with the additional requirement
+that the co-occurring variant must be classified using the SCID VCEP specifications
+for RMRP.
+Modification General recommendation,Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Defined to include insertions/duplications of 6 or more nucleotides increasing the
+distance between the TATA box (spanning n.-32 to n.-24) and the transcription start
+site (n.4).
+Modification Gene-specific
+Type:
+
+PM5
+
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Not Applicable
+Comments:
+Does not apply.
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+The following guidelines should be used when determining the phenotypic
+Specifications:consistency of each proband:
+“Phenotype highly specific for gene” proband must meet
+PP4_Moderate criteria;
+“Phenotype consistent with gene but not highly specific” proband
+must meet PP4 criteria;
+“Phenotype consistent with gene but not highly specific and high
+genetic heterogeneity”: proband has been asserted to have a
+Cartilage-hair hypoplasia (CHH) phenotype but does not meet PP4
+criteria;
+Reduce points per proband by half if the phase is unconfirmed.
+
+Strong
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification Disease-specific,Strength
+Type:
+
+Moderate
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+Use ClinGen SVI recommendations for de novo criteria (see instructions below).
+
+Modification Disease-specific,Strength
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Use ClinGen SVI recommendations for co-segregation criterion (PMID:
+Specifications:30311386) with the additional specification that unaffected individuals
+contributing to the calculated LOD score (Attached document: PP1
+specifications) must be heterozygous carriers of one of the variants
+observed in the affected individuals (i.e. do not count wild-type/wild-type,
+individuals).
+
+Strong
+Use recommendations for co-segregation criterion from PMID: 30311386, with strength
+dependent on number of affected segregations.
+Modification General recommendation,Strength
+Type:
+
+Moderate
+Use recommendations for co-segregation criterion from PMID: 30311386, with strength
+dependent on number of affected segregations.
+Modification General recommendation,Strength
+Type:
+
+Supporting
+Use recommendations for co-segregation criterion from PMID: 30311386, with strength
+dependent on number of affected segregations.
+Modification General recommendation,Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Does not apply.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or
+gene product (conservation, evolutionary, splicing impact, etc).
+Use RNAsnp to access SNP effects on local RNA secondary structure
+(https://rth.dk/resources/rnasnp/)
+Use only for Single Nucleotide Polymorphism inside the gene (do not use for
+promoter sequence)
+Parameters utilized:
+Input sequence: FASTA (Ensembl NR__003051.3)
+Insert SNP details
+Mode: 1
+Folding window: 100 nt
+Measure: “Distance” option
+Minimum length of the sequence interval: 50
+Cut-off the base pair probabilities: 0.01
+The p-value threshold significance should be considered 0.1 according to Sabarinathan et
+al., 2013. PMID: 23315997. If the value is less than 0.1, apply PP3 as a supporting level of
+evidence.
+Modification Gene-specific,Strength
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+PP4 applicability and strength is determined by the total points
+Specifications:accumulated by a single affected individual according to the list below and
+
+the following total point ranges:
+<1 point: PP4 not met
+1-<2 points: PP4
+≥2 points: PP4_Moderate
+Diagnostic criteria for SCID/Leaky SCID/Omenn syndrome met1 1pt
+SCID gene panel or exome/genome sequencing conducted (only
+applicable if genetic testing did not provide an alternative genetic
+explanation for SCID/Leaky SCID/Omenn syndrome phenotype) 0.5pt
+Family history of SCID 0.5pt
+Family history of CHH 1pt
+Metaphyseal dysplasia (disproportionate short stature + radiographic
+evidence) 1pt
+Skeletal dysplasia gene panel or WES/WGS conducted with no alternative
+genetic diagnosis 1pt
+Hypotrichosis 0.5 pt
+Macrocytic, hypoplastic anemia 0.25pt
+Hirschsprung disease or congenital megacolon 0.25pt
+T-cell lymphopenia* (see notes) 0.5 pt
+3-fold or more reduction of mutant RMRP RNA (or cDNA) expression in
+peripheral blood mononuclear cells 2 pts
+1
+
+The diagnostic criteria should follow the PIDTC 2022 specification,
+summarized here.
+*Notes:
+1. If maternal T cells are present, the T lymphocyte profile is still
+considered to be T- (autologous T cells are absent).
+2. Allocate 0.25 points for T-cell lymphopenia only in cases where the
+SCID diagnostic criteria are not applied. It is important to note that if
+the SCID diagnostic criteria were applied, the points for the T-B+NK+
+lymphocyte subset profile cannot be considered.
+
+Moderate
+A patient score of ≥2 points (see instructions below).
+Modification Disease-specific,Gene-specific,Strength
+Type:
+
+Supporting
+A patient score of 1-<2 points (see instructions below).
+
+Modification Disease-specific,Gene-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+Common in population databases.
+gnomAD popmax filtering allele frequency >0.00400
+Maximum credible population allele frequency threshold determined using
+Whiffin/Ware calculator (https://www.cardiodb.org/allelefrequencyapp/) and the
+following parameters:
+Prevalence: 1:5,000
+Allelic heterogeneity: 1
+Genetic heterogeneity: 0.04 (based on the contribution of RMRP variants to
+total SCID in the PIDTC 6901 cohort reported in Dvorak et al., 2019 (PMID:
+30193840, Table 1): 3.6%, rounded to 4%)
+Penetrance: 50%
+Use caution when applying BA1 based on allele frequencies derived from
+gnomAD exome sequencing given the reduced coverage of certain regions
+of RMRP. Ensure at least 20X read depth for allele frequencies derived from
+exome sequencing.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency is greater than expected for disorder.
+gnomAD popmax filtering allele frequency >0.00089
+Maximum credible population allele frequency threshold determined using
+Whiffin/Ware calculator (https://www.cardiodb.org/allelefrequencyapp/) and the
+following parameters:
+Prevalence: 1:50,000
+Allelic heterogeneity: 1
+Genetic heterogeneity: 0.04 (based on the contribution of RMRP variants to
+total SCID in the PIDTC 6901 cohort reported in Dvorak et al., 2019 (PMID:
+30193840, Table 1): 3.6%, rounded to 4%)
+Penetrance: 100%
+Use caution when applying BS1 based on allele frequencies derived from gnomAD exome
+sequencing given the reduced coverage of certain regions of RMRP. Ensure at least 20X
+read depth for allele frequencies derived from exome sequencing.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+BS2_Strong: Observed in >=3 (3 or more) homozygotes in gnomAD.
+Modification Gene-specific,Strength
+Type:
+
+Supporting
+BS2_Supporting: Can be applied at Supporting level of evidence if observed at least 2
+homozygotes in gnomAD.
+Modification Gene-specific,Strength
+Type:
+
+BS3
+
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Can be applied without additional specifications. To apply the BS4 criteria, it is sufficient
+to have one affected family member without the segregation of the variant.
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Does not apply.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BP7
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Not Applicable
+Comments:
+Does not apply.
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PS2_Very Strong, PM3_Very Strong) AND ≥ 1 Strong (PS2, PS3, PM1_Strong,
+PM3_Strong, PM6_Strong, PP1_Strong)
+
+1 Very Strong (PS2_Very Strong, PM3_Very Strong) AND ≥ 2 Moderate (PS2_Moderate, PM3, PM4, PM6,
+PP1_Moderate, PP4_Moderate)
+
+1 Very Strong (PS2_Very Strong, PM3_Very Strong) AND 1 Moderate (PS2_Moderate, PM3, PM4, PM6,
+PP1_Moderate, PP4_Moderate) AND 1 Supporting (PS1_Supporting, PS2_Supporting, PS3_Supporting,
+PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Very Strong (PS2_Very Strong, PM3_Very Strong) AND ≥ 2 Supporting (PS1_Supporting,
+PS2_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+≥ 2 Strong (PS2, PS3, PM1_Strong, PM3_Strong, PM6_Strong, PP1_Strong)
+1 Strong (PS2, PS3, PM1_Strong, PM3_Strong, PM6_Strong, PP1_Strong) AND ≥ 3 Moderate
+(PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate)
+1 Strong (PS2, PS3, PM1_Strong, PM3_Strong, PM6_Strong, PP1_Strong) AND 2 Moderate
+(PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate) AND ≥ 2 Supporting (PS1_Supporting,
+PS2_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+1 Strong (PS2, PS3, PM1_Strong, PM3_Strong, PM6_Strong, PP1_Strong) AND 1 Moderate
+(PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate) AND ≥ 4 Supporting (PS1_Supporting,
+PS2_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PS2_Very Strong, PM3_Very Strong) AND 1 Moderate (PS2_Moderate, PM3, PM4, PM6,
+PP1_Moderate, PP4_Moderate)
+1 Strong (PS2, PS3, PM1_Strong, PM3_Strong, PM6_Strong, PP1_Strong) AND 1 Moderate
+(PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate)
+1 Strong (PS2, PS3, PM1_Strong, PM3_Strong, PM6_Strong, PP1_Strong) AND ≥ 2 Supporting
+(PS1_Supporting, PS2_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3,
+PP4)
+
+≥ 3 Moderate (PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate)
+2 Moderate (PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate) AND ≥ 2 Supporting
+(PS1_Supporting, PS2_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3,
+PP4)
+1 Moderate (PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate) AND ≥ 4 Supporting
+(PS1_Supporting, PS2_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3,
+PP4)
+
+1 Very Strong (PS2_Very Strong, PM3_Very Strong) AND 1 Supporting (PS1_Supporting,
+PS2_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM6_Supporting, PP1, PP3, PP4)
+1 Strong (PS2, PS3, PM1_Strong, PM3_Strong, PM6_Strong, PP1_Strong) AND 2 Moderate
+(PS2_Moderate, PM3, PM4, PM6, PP1_Moderate, PP4_Moderate)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4)
+1 Stand Alone (BA1)
+
+Likely Benign
+≥ 2 Supporting (BS2_Supporting)
+1 Strong (BS1, BS2, BS4)
+
+Files & Images
+VCEP Comments: Updates to PM1 10/23/25 
+PS3_BS3: RMRP Functional Evidence 
+PM3: SVI recommendations for pm3 criterion 
+PP1: Specifications 
+PS2_PM6: SVI recommendations for de novo criteria 
+
+

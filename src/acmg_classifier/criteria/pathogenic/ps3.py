@@ -5,10 +5,14 @@ Evidence sources (in priority order):
 1. Curator-supplied supplement (user curation or the eRepo supplement) — any strength.
 2. PS3 applied by a ClinGen expert panel to this variant in ClinVar (>=3 stars),
    imported at the strength the panel stated (curated evidence, not text mining).
-2b. TP53 missense variants, opt-in (--with-tp53-functional; NCI TP53 Database terms
-   are non-commercial): the TP53 VCEP functional flowchart on systematic assay data
-   (Kato / Giacomelli / Kotler / Kawaguchi; criteria/tp53_functional.py). When such
-   data exist for the variant, text mining is not used.
+2a. Variant-level codes from the VCEPs' functional-evidence files (TP53 Table S3,
+   OTC yeast complementation, GALT activity table, PAH, IDUA Appendix 3;
+   criteria/functional_assays.py, policy ``vcep_table``).
+2b. TP53 missense variants absent from Table S3, opt-in (--with-tp53-functional; NCI
+   TP53 Database terms are non-commercial): the TP53 VCEP functional flowchart on
+   systematic assay data (Kato / Giacomelli / Kotler / Kawaguchi;
+   criteria/tp53_functional.py). When such data exist for the variant, text mining
+   is not used.
 2c. Calibrated functional assays (criteria/functional_assays.py): ENIGMA Table 9 for
    BRCA1/2, otherwise MaveDB clinical calibrations (Brnich 2019 OddsPath strengths,
    per-gene VCEP rules). Used for TP53 when the NCI data are off or lack the variant.
@@ -101,11 +105,14 @@ class PS3Evaluator(CriterionEvaluator):
         # fallback for those genes (a manual supplement above still applies).
         pc = annotation.primary_consequence
         gene = pc.gene_symbol if pc else None
-        if gene == "TP53" and pc is not None and self._tp53:
+        # 2a. VCEP variant-level table first; 2b. TP53 NCI flowchart; 2c. MaveDB.
+        fa = self._functional.vcep_call(variant, annotation)
+        if fa is None and gene == "TP53" and pc is not None and self._tp53:
             r = tp53_functional_result(self._tp53, pc, ACMGCriterion.PS3)
             if r is not None:
                 return r
-        fa = self._functional.call(variant, annotation)
+        if fa is None:
+            fa = self._functional.call(variant, annotation)
         if fa is not None:
             if fa.criterion == ACMGCriterion.PS3 and gene not in _PS3_NOT_APPLICABLE:
                 st = fa.strength

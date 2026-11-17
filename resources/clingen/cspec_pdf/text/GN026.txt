@@ -1,0 +1,884 @@
+Criteria Specification
+ClinGen Cerebral Creatine Deficiency Syndromes Expert Panel Specifications to the ACMG/AMP
+Variant Interpretation Guidelines for GAMT Version 2.0
+Affiliation: Cerebral Creatine Deficiency Syndromes VCEP
+Description : Cerebral Creatine Deficiency Syndromes Variant Curation Expert Panel ACMG Classification
+Rules Specified for GAMT (guanidinoacetate methytransferase) Summary of ACMG-AMP Criteria for GAMT
+Variants
+Version : 2.0
+Released : 5/23/2024
+DOI : 10.5281/zenodo.21421631
+Release Notes :
+The following changes were made to include new guidance from the SVI on classification of splicing
+variants (Walker et al, 2023, PMID: 37352859) and the use of in silico data (Pejaver et al, 2022, PMID:
+36413997).
+A statement summarizing the use of guidance from the SVI Splicing subgroup was added to the
+“instructions” section for PVS1.
+PS1_Moderate and PS1_Supporting were added to include the possible use of these codes for
+splicing variants, as outlined in PMID: 37352859.
+Details on splicing assays e.g. RT-PCR were removed from PS3 because this data is now included in
+PVS1 (PMID: 37352859)
+PP3_Strong and PP3_Moderate have been added to allow use of these codes at higher strength than
+supporting based on PMID: 36413997.
+BP4 has been updated to include new cut-offs for REVEL and SpliceAI based on SVI guidance (PMID:
+36413997, PMID: 37352859).
+BP7 was updated to include application of this code for intronic variants (at or beyond +7/-21) with
+no splicing impact, and BP7_Strong was added to allow for use of RT-PCR data, as indicated in
+PMID: 37352859.
+Added the following statement in PVS1 instructions:
+Follow the guidance from the ClinGen SVI Splicing Subgroup capturing evidence related to predicted and
+observed impact on splicing (Walker et al, 2023, PMID: 37352859). Follow the decision tree outlined in
+Figure 5. As shown, if PVS1 is applied at any strength, PP3 should not be applied. Experimental evidence,
+such as RT-PCR, is used to determine the weight of PVS1; PS3 is not applied if PVS1 is applied; instead
+PVS1_Strength (RNA) is used. PS1 may also be applied for splice variants (see Table 3 in PMID: 37352859).
+Regarding assays to assess splicing, in patients who are compound heterozygotes for a splicing variant
+and another variant type that does not disrupt splicing (such as a missense variant), evidence of normal
+splicing is expected. Therefore, the presence of normal splice products could complicate the assessment
+of the impact of the splice variant.
+Added the following statement under PS1:
+PS1 may also be applied for splicing variants under specific circumstances (see Table 3
+in PMID: 37352859).
+Have now included PS1_Moderate:
+This criterion is applicable as for any variant resulting in the same amino acid change as a
+previously established likely pathogenic variant regardless of nucleotide change.
+If the variant is in the last 3 nucleotides of an exon, further analysis using splicing site prediction
+algorithms (see PP3) and data from the literature (if available) is required to investigate the impact
+on splicing.
+
+PS1_Moderate may also be applied for splicing variants under specific circumstances (see Table 3
+in PMID: 37352859).
+Have now included PS1_Supporting:
+PS1_Supporting may also be applied for splicing variants under specific circumstances (see Table 3
+in PMID: 37352859).
+Updated PS3 to remove splicing assays as those are now included under PVS1. Therefore, PS3 is now
+deleted, and PS3_Supporting has been updated to include on in vitro enzyme assay.
+For PP3, added Pejaver et al for different strength, and removed current statement from PP3_Moderate
+(regarding splicing) as this is now included under PS1.
+For BP4, added “ REVEL score <0.29 for missense variants (based on guidance from Pejaver et al, 2022,
+PMID: 36413997).”
+For BP7, added “A synonymous (silent) variant OR an intronic variant at or beyond positions +7 and -21,
+for which SpliceAI, https://spliceailookup.broadinstitute.org/, predicts no impact on splicing (score <0.1).”
+Combining criteria
+Additional combinations have been added for “Likely Pathogenic” to be consistent with the Richards et al
+combining criteria and to include the option for PVS1 + PM2_Supporting -> Likely Pathogenic, as
+recommended by the SVI.
+
+Contributors & Keywords
+Research Group: Cerebral Creatine Deficiency
+Syndromes VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+GAMT NM_000156.6 guanidinoacetate
+methyltransferase deficiency
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for GAMT
+Gene: GAMT (HGNC:4136) 
+Transcripts:
+NM_000156.6
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+
+HGNC Name: guanidinoacetate Nmethyltransferase
+Disease:
+guanidinoacetate
+methyltransferase deficiency
+(MONDO:0012999) 
+
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Loss of function (LOF) of GAMT is a known mechanism of disease for
+Specifications:guanidinoacetate methyltransferase deficiency (GAMT-D). There are
+examples of various LOF variants, including nonsense and frameshift, in
+GAMT in individuals with GAMT-D
+(https://databases.lovd.nl/shared/variants/GAMT/unique). The
+specifications are based on the PVS1 decision tree (Figure 1, Abou Tayoun
+et al, 2018, PMID 30192042). See “GAMT PVS1 flowchart”.
+For all Splice site variants (+1, +2, -1, -2), follow the guidance from the
+ClinGen SVI Splicing Subgroup capturing evidence related to predicted and
+observed impact on splicing (Walker et al, 2023, PMID: 37352859). Follow
+the decision tree outlined in Figure 5. As shown, if PVS1 is applied at any
+strength, PP3 should not be applied. Experimental evidence, such as RTPCR, is used to determine the weight of PVS1; PS3 is not applied if PVS1 is
+applied; instead PVS1_Strength (RNA) is used. PS1 may also be applied for
+splice variants (see Table 3 in PMID: 37352859). Regarding assays to
+assess splicing in patients who are compound heterozygotes for a splicing
+variant and another variant type that does not disrupt splicing (such as a
+missense variant), evidence of normal splicing is expected. Therefore, the
+presence of normal splice products could complicate the assessment of
+the impact of the splice variant.
+
+Very Strong
+Nonsense-mediated decay predicted
+Nonsense and frameshift variants
+All nonsense and frameshift variants will meet PVS1 unless a premature termination
+codon is predicted to be missed by nonsense-mediated decay (NMD) because it is
+located in the last exon (exon 6) or the last 50 bases of the penultimate exon of the
+gene (exon 5, c.520). In that case, PVS1_Strong or PVS1_Moderate will be applied,
+depending on whether >10% or <10% of the protein is lost.
+Splice site variants (+1, +2, -1, -2)
+All canonical splice site pairs in GAMT are GT-AG.
+For any canonical splice site variant (+1, +2, -1, -2), the exon immediately adjacent
+to the variant is predicted to be skipped i.e. upstream exon skipped for canonical
+
+donor splice site variants and downstream exon skipped for canonical acceptor splice
+site variants.
+For the predicted in frame/out of frame consequences of exon skipping and assigned
+strength of PVS1, see Appendix 1.
+If this criterion is applied, PP3 (in silico splice site prediction tools) should not be
+used.
+Use SpliceAI to look for nearby (+/- 20 nucleotides) strong consensus splice
+sequence that may reconstitute in-frame splicing. Otherwise, the PVS1 strength
+should be reduced accordingly.
+Non-canonical splice variants, such as +3 or -3, will not meet PVS1, but could meet
+PS3 and/or PP3 criteria.
+Deletions (single or multi exon)
+If a single or multi-exon deletion results in an out of frame consequence, use PVS1
+unless not predicted to undergo NMD.
+If not predicted to undergo NMD, use PVS1_Strong if >10% of the protein is predicted
+to be removed, and use PVS1_Moderate if <10% of the protein is predicted to be
+removed.
+If the consequence is in frame, the deletion must encompass one or more exons for
+PVS1 to apply. Use PVS1_Strong if more than 10% of the protein is removed and
+PVS1_Moderate if <10% of the protein is removed.
+If the in frame deletion is smaller than one exon, PVS1 does not apply; consider using
+PM4.
+Appendix 1 can be used to predict the consequences of single exon deletions.
+Duplications
+Use the PVS1 decision tree (Figure 1, Abou Tayoun et al, 2018, PMID 30192042) to
+assess the impact of duplications.
+Modification None
+Type:
+
+Strong
+Single exon or larger deletion resulting in loss of >10% of the protein.
+Nonsense and frameshift variants
+All nonsense and frameshift variants will meet PVS1 unless a premature termination
+codon is predicted to be missed by nonsense-mediated decay (NMD) because it is
+located in the last exon (exon 6) or the last 50 bases of the penultimate exon of the
+gene (exon 5, c.520). In that case, PVS1_Strong will be applied if >10% of the protein
+is lost.
+Splice site variants (+1, +2, -1, -2)
+All canonical splice site pairs in GAMT are GT-AG.
+For any canonical splice site variant (+1, +2, -1, -2), the exon immediately adjacent
+to the variant is predicted to be skipped i.e. upstream exon skipped for canonical
+
+donor splice site variants and downstream exon skipped for canonical acceptor splice
+site variants.
+Use SpliceAI to look for nearby (+/- 20 nucleotides) strong consensus splice
+sequence that may reconstitute in-frame splicing.
+For considerations for strength at which PVS1 may be applied see Appendix 1.
+If this criterion is applied, PP3 (in silico splice site prediction tools) should not be
+used.
+Non-canonical splice variants, such as +3 or -3, will not meet PVS1, but could meet
+PS3 and/or PP3 criteria.
+Deletions (single or multi exon)
+If a single or multi-exon deletion results in an out of frame consequence, use PVS1
+unless not predicted to undergo NMD.
+If not predicted to undergo NMD, use PVS1_Strong if >10% of the protein is
+predicted to be removed, and use PVS1_Moderate if <10% of the protein is predicted
+to be removed.
+If the consequence is in frame, the deletion must encompass one or more exons for
+PVS1 to apply. Use PVS1_Strong if more than 10% of the protein is removed and
+PVS1_Moderate if <10% of the protein is removed.
+If the in frame deletion is smaller than one exon, PVS1 does not apply; consider using
+PM4.
+Appendix 1 can be used to predict the consequences of single exon deletions.
+Duplications
+Use the PVS1 decision tree (Figure 1, Abou Tayoun et al, 2018, PMID 30192042) to
+assess the impact of duplications.
+Modification Strength
+Type:
+
+Moderate
+Single exon or larger deletion resulting in loss of <10% of the protein.
+Nonsense and frameshift variants
+All nonsense and frameshift variants will meet PVS1 unless a premature termination
+codon is predicted to be missed by nonsense-mediated decay (NMD) because it is
+located in the last exon (exon 6) or the last 50 bases of the penultimate exon of the
+gene (exon 5, c.520). In that case, PVS1_Moderate will be applied if <10% of the
+protein is lost.
+Splice site variants (+1, +2, -1, -2)
+All canonical splice site pairs in GAMT are GT-AG.
+Use SpliceAI to look for nearby (+/- 20 nucleotides) strong consensus splice
+sequence that may reconstitute in-frame splicing.
+For any canonical splice site variant (+1, +2, -1, -2), if RT-PCR data predicts in-frame
+loss of <10% of the protein, apply PVS1_Moderate.
+
+If this criterion is applied, PP3 (in silico splice site prediction tools) should not be
+used.
+Non-canonical splice variants, such as +3 or -3, will not meet PVS1, but could meet
+PS3 and/or PP3 criteria.
+Initiator codon variants
+All initiator codon variants will meet PVS1_Moderate. The next in-frame methionine is
+at amino acid position 42 (based on NP_000147.1).
+Deletions (single or multi exon)
+If a single or multi-exon deletion results in an out of frame consequence, use PVS1
+unless not predicted to undergo NMD.
+If not predicted to undergo NMD, use PVS1_Strong if >10% of the protein is predicted
+to be removed, and use PVS1_Moderate if <10% of the protein is predicted to be
+removed.
+If the consequence is in frame, the deletion must encompass one or more exons for
+PVS1 to apply. Use PVS1_Strong if more than 10% of the protein is removed and
+PVS1_Moderate if <10% of the protein is removed.
+If the in frame deletion is smaller than one exon, PVS1 does not apply; consider using
+PM4.
+Appendix 1 can be used to predict the consequences of single exon deletions.
+Duplications
+Use the PVS1 decision tree (Figure 1, Abou Tayoun et al, 2018, PMID 30192042) to
+assess the impact of duplications.
+Modification Strength
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+As noted, any additional variants used to support the classification of the
+Specifications:variant under assessment MUST have been previously classified by the
+CCDS VCEP, using these criteria, and the classification MUST be approved.
+
+Strong
+This criterion is applicable for any variant resulting in the same amino acid change as
+a variant that has been previously established as pathogenic by the CCDS VCEP, by
+
+assessment using these criteria, regardless of nucleotide change.
+If the variant is in the last 3 nucleotides of an exon, further analysis using splicing
+site prediction algorithms (see PP3) and data from the literature (if available) is
+required to investigate the impact on splicing.
+PS1 may also be applied for splicing variants under specific circumstances (see Table
+3 in PMID: 37352859).
+Modification General recommendation
+Type:
+
+Moderate
+This criterion is applicable for any variant resulting in the same amino acid change as
+a variant that has been previously established as likely pathogenic by the CCDS
+VCEP, by assessment using these criteria, regardless of nucleotide change.
+If the variant is in the last 3 nucleotides of an exon, further analysis using splicing
+site prediction algorithms (see PP3) and data from the literature (if available) is
+required to investigate the impact on splicing.
+PS1_Moderate may also be applied for splicing variants under specific circumstances
+(see Table 3 in PMID: 37352859).
+Modification General recommendation,Strength
+Type:
+
+Supporting
+PS1_Supporting may be applied for splicing variants under specific circumstances (see
+Table 3 in PMID: 37352859).
+Modification General recommendation,Strength
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Not Applicable
+Comments:
+De novo (both maternity and paternity confirmed) in a patient with the
+disease and no family history. Note: Confirmation of paternity only is
+insufficient. Egg donation, surrogate motherhood, errors in embryo
+transfer, and so on, can contribute to non-maternity.
+
+PS3
+
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+See Appendix 2 for further details on GAMT functional assays.
+Specifications:
+
+Supporting
+PS3_Supporting can be assigned if a variant is expressed in GAMT-deficient fibroblasts,
+HeLa cells and has <15% of the control value, for values published in MercimekMahmutoglu et al, 2014, PMID 24415674; Mercimek-Mahmutoglu et al, 2016, PMID
+26319512; or DesRoches et al, 2016, PMID 26003046.
+Modification Disease-specific,Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+Comments:
+The prevalence of the variant in affected individuals is significantly
+increased compared with the prevalence in controls. CCDS VCEP notes for
+PS4: This rule is typically used for autosomal dominant disorders, with
+PM3 used as a case-counting mechanism for autosomal recessive
+conditions.
+
+PM1
+Original ACMG
+Summary
+
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+Located in a mutational hot spot and/or critical and well-established
+functional domain (e.g., active site of an enzyme) without benign
+variation.
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+See Appendix 3 for details on allele frequency thresholds for GAMT.
+Specifications:
+Note – PM2 will NOT be used at moderate strength; PM2 will only be
+applied as a Supporting criterion based on ClinGen SVI recommendations
+(https://www.clinicalgenome.org/site/assets/files/5182/pm2__svi_recommendation_-_approved_sept2020.pdf ).
+
+Supporting
+Allele frequency <0.0004 (<0.04%) in all populations in gnomAD.
+It is acceptable for a GAMT variant to be present in controls, if heterozygous, because
+GAMT-D is a recessive disorder. Homozygotes should not be seen in a population
+database, such as gnomAD, because the penetrance of this condition in individuals with
+biallelic pathogenic variants is expected to be 100% and the condition is expected to
+present with severe symptoms early in life.
+GAMT specifications:
+All subpopulations in gnomAD v4.0 must have a maximum allele frequency less than
+0.0004 (the highest population minor allele frequency of the most common
+pathogenic GAMT variant, c.327G>A, in gnomAD). Any variant with a frequency
+below this cutoff will meet PM2_Supporting.
+If homozygotes are observed, or variant is confirmed in trans with a known
+pathogenic variant, the variant will meet BS2 (assuming 100% penetrance for an
+individual with 2 pathogenic variants in trans).
+Modification Disease-specific,Strength
+Type:
+
+PM3
+
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+VCEP
+Any additional variants used to support the classification of the variant
+Specifications:under assessment MUST have been previously classified by the CCDS
+VCEP, using these criteria, and the classification MUST be approved. In
+other words, when awarding points for PM3 for a compound heterozygote,
+the second variant MUST have been assessed by the VCEP and an
+appropriate classification approved.
+As noted in the SVI guidance, circularity must be avoided. Variant A can
+support the classification of Variant B, or vice versa but NOT both.
+
+Very Strong
+Follow SVI guidance for PM3
+(https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf).
+Parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed in order to
+confirm that the variants are in trans if the patient is compound heterozygous.
+Modification Strength
+Type:
+
+Strong
+Follow SVI guidance for PM3
+(https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf).
+Parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed in order to
+confirm that the variants are in trans if the patient is compound heterozygous.
+Modification Strength
+Type:
+
+Moderate
+Follow SVI guidance for PM3
+(https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf).
+Parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed in order to
+confirm that the variants are in trans if the patient is compound heterozygous.
+
+Modification None
+Type:
+
+Supporting
+Follow SVI guidance for PM3
+(https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf).
+Parental testing, or another appropriate molecular method (such as cloning each
+allele separately followed by sequencing), must have been performed in order to
+confirm that the variants are in trans if the patient is compound heterozygous.
+Modification Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+GAMT specifications: Use this rule “as is” for stop loss variant, and in frame deletions and
+insertions of 2 or more amino acids, but downgrade to PM4_Supporting for single amino
+acid deletions and insertions.
+Modification None
+Type:
+
+Supporting
+Downgrade to PM4_Supporting for single amino acid deletions and insertions.
+Modification Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+VCEP
+As noted, any additional variants used to support the classification of the
+Specifications:variant under assessment MUST have been previously classified by the
+CCDS VCEP, using these criteria, and the classification MUST be approved.
+
+Moderate
+This criterion is applicable for any variant resulting in a different amino acid change,
+at the same amino acid position, as a variant that has been previously established as
+pathogenic by the CCDS VCEP, by assessment using these criteria, regardless of
+nucleotide change.
+If the variant is in the last 3 nucleotides of an exon, further analysis using splicing
+site prediction algorithms (see PP3) and data from the literature (if available) is
+required to investigate the impact on splicing.
+If the variant is likely pathogenic, use PM5_Supporting.
+Modification None
+Type:
+
+Supporting
+This criterion is applicable for any variant resulting in a different amino acid change,
+at the same amino acid position, as a variant that has been previously established as
+likely pathogenic by the CCDS VCEP, by assessment using these criteria, regardless
+of nucleotide change.
+If the variant is in the last 3 nucleotides of an exon, further analysis using splicing
+site prediction algorithms (see PP3) and data from the literature (if available) is
+required to investigate the impact on splicing.
+If the variant is likely pathogenic, use PM5.
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Assumed de novo but without confirmation of paternity and maternity.
+CCDS VCEP notes for PS2 and PM6: De novo variants have not been
+reported in patients with GAMT deficiency, to our knowledge. Furthermore,
+the observation that a variant in GAMT has arisen de novo does not
+support its causality because GAMT deficiency is an autosomal recessive
+disorder. The occurrence of de novo variants is more supportive in
+autosomal dominant and X-linked disorders. Any de novo variants in
+
+GAMT, should they be observed, will be assessed based on the variant
+type, functional evidence, and in trans data as described.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Not Applicable
+Comments:
+Cosegregation with disease in multiple affected family members in a gene
+definitively known to cause the disease. CCDS VCEP notes for PP1:
+Sibships large enough to use meet this criterion are extremely rare. In
+addition, because GAMT is the only gene involved in GAMT-D, ALL patients
+are expected to be bi-allelic, regardless of whether the pathogenic
+variants can be, or have been, detected. A variant under assessment may
+not be the true pathogenic variant but instead in linkage disequilibrium
+with an unidentified pathogenic variant. For this reason, this criterion does
+not facilitate assessment of pathogenicity.
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Missense variant in a gene that has a low rate of benign missense
+variation and in which missense variants are a common mechanism of
+disease. CCDS VCEP notes for PP2: Does not apply; there are benign and
+pathogenic missense variants in GAMT
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+VCEP
+See Appendix 3 for justification of PP3 strength using REVEL score.
+Specifications:
+Do not apply PP3 if PVS1 has been applied at any strength.
+
+Strong
+Missense variant with a REVEL score equal to or >0.932 (based on guidance from Pejaver
+et al, 2022, PMID: 36413997).
+Modification General recommendation,Strength
+Type:
+
+Moderate
+Missense variant with a REVEL score 0.773-0.932 (based on guidance from Pejaver et al,
+2022, PMID: 36413997).
+Modification General recommendation,Strength
+Type:
+
+Supporting
+Missense variant with a REVEL score 0.644-0.773 (based on guidance from Pejaver et
+al, 2022, PMID: 36413997).
+In frame deletion or insertion predicted deleterious by PROVEAN and MutationTaster.
+Results must be consistent to count.
+For non-canonical splice site variants (e.g., +3, -3), predict the impact on splicing by
+using SpliceAI, https://spliceailookup.broadinstitute.org/ , and apply PP3 for a score
+equal to or >0.2 (as indicated in PMID: 37352859, Table 1 and Figure 4). Assess the
+possibility of activation of cryptic splice sites.
+Modification General recommendation,None
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Strong
+4 points based on any combination of the following. Two or more data types are required
+to apply PP4_Strong:
+Elevated urine guanidinoacetate with or without low or low normal creatine (1 point).
+Elevated plasma guanidinoacetate with or without low or low normal creatine (2
+points).
+
+Significantly decreased creatine peak in brain magnetic resonance spectroscopy with
+or without visible guanidinoacetate peak (3 points).
+GAMT enzyme activity <5% of normal (3 points).
+Variant must meet PM2_Supporting for PP4 to apply at any strength.
+For PP4 to be applied at strong, full GAMT gene sequencing, including all coding
+exons and intron/exon boundaries, must have been carried out. If not, consider
+downgrading.
+Modification Disease-specific
+Type:
+
+Moderate
+3 points based on any combination of the following. Two or more data types are
+recommended to apply PP4_Moderate:
+Elevated urine guanidinoacetate with or without low or low normal creatine (1 point).
+Elevated plasma guanidinoacetate with or without low or low normal creatine (2
+points).
+Significantly decreased creatine peak in brain magnetic resonance spectroscopy with
+or without visible guanidinoacetate peak (3 points).
+GAMT enzyme activity <5% of normal (3 points).
+Variant must meet PM2_Supporting for PP4 to apply at any strength.
+Modification Strength
+Type:
+
+Supporting
+1-2 points based on:
+Elevated urine guanidinoacetate with or without low or low normal creatine (1 point).
+Elevated plasma guanidinoacetate with or without low or low normal creatine (2
+points).
+Variant must meet PM2_Supporting for PP4 to apply at any strength.
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+See Appendix 3 for details on allele frequency thresholds for GAMT.
+Specifications:
+
+Stand Alone
+Allele frequency >0.003 (0.3%) in gnomAD v4.0 in any continental population with
+>2000 alleles (based on the estimated prevalence 1 in 114,000, PMID 24071436) in
+gnomAD v4.0 (max allelic contribution = 100%; max genetic contribution = 100%).
+Use the highest population minor allele frequency (MAF) in any given continental
+population with >2,000 alleles (European non-Finnish, African, East Asian, South
+Asian, Latino) (PMID 30311383).
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+See Appendix 3 for details on allele frequency thresholds for GAMT.
+Specifications:
+
+Strong
+Allele frequency >0.001 (0.1%) in gnomAD v4.0 in any continental population with
+>2000 alleles (based on the estimated prevalence 1 in 114,000 (PMID: 24071436) in
+gnomAD v4.0 (max allelic contribution = 40%; max genetic contribution = 100%).
+Use the highest population minor allele frequency (MAF) in any given continental
+population with >2,000 alleles (European non-Finnish, African, East Asian, South
+Asian, Latino) (PMID 30311383).
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed in the homozygous state in a healthy adult, or confirmed in trans with a variant
+that has been classified as pathogenic by the CCDS VCEP using these criteria.
+Modification None
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Supporting
+In vitro assays in which a variant is expressed in GAMT-deficient cultured cells (e.g. GAMTdeficient fibroblasts) or in-fusion High-Fidelity cloning of GAMT transcript and site directed
+mutagenesis to generate missense variant overexpressed in HeLa cells and measurement
+of GAMT activity in cells for wild-type and missense variant. Any variant with enzyme
+activity at or above 30% of normal in the following publications meets BS3_Supporting
+(Mercimek-Mahmutoglu et al, 2014; PMID 24415674; Mercimek-Mahmutoglu et al, 2016,
+PMID 26319512; DesRoches et al, 2016, PMID 26003046).
+Modification Disease-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Not Applicable
+Comments:
+Lack of segregation in a family. Caveat: The presence of phenocopies for
+common phenotypes.
+
+BP1
+
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Does not apply. All types of variants cause GAMT-D.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in cis with a pathogenic variant (to take AR inheritance into account).
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+There are no known repetitive regions without known function in GAMT.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+REVEL score <0.29 for missense variants (based on guidance from Pejaver et al,
+2022, PMID: 36413997).
+In frame deletion or insertion predicted benign by PROVEAN and MutationTaster.
+
+No predicted impact on splicing by SpliceAI, https://spliceailookup.broadinstitute.org/
+, based on a score <0.1 (as indicated in PMID: 37352859, Table 1 and Figure 4).
+Modification General recommendation,None
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+An individual could be a carrier of a pathogenic variant in GAMT and have
+another disorder.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Strong
+Experimental evidence, such as RT-PCR, shows no impact on splicing. Follow the decision
+tree outlined in Figure 5, Walker et al, 2023, PMID: 37352859. Note that splicing may
+appear normal in compound heterozygous patients if the splicing defect generates a
+transcript that is degraded by nonsense-mediated decay. Therefore, caution must be used
+when assessing the data prior to applying this code.
+Modification General recommendation,Strength
+Type:
+
+Supporting
+
+A synonymous (silent) variant OR an intronic variant at or beyond positions +7 and -21,
+for which SpliceAI, https://spliceailookup.broadinstitute.org/, predicts no impact on splicing
+(score <0.1).
+Modification None
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PM3_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS3, PM3_Strong,
+PP4_Strong)
+
+1 Very Strong (PVS1, PM3_Very Strong) AND ≥ 2 Moderate (PVS1_Moderate, PM3, PM4, PM5,
+PP3_Moderate, PP4_Moderate)
+
+1 Very Strong (PVS1, PM3_Very Strong) AND 1 Moderate (PVS1_Moderate, PM3, PM4, PM5,
+PP3_Moderate, PP4_Moderate) AND 1 Supporting (PS3_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PP3, PP4)
+
+1 Very Strong (PVS1, PM3_Very Strong) AND ≥ 2 Supporting (PS3_Supporting, PM2_Supporting,
+PM3_Supporting, PM4_Supporting, PM5_Supporting, PP3, PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS3, PM3_Strong, PP4_Strong)
+1 Strong (PVS1_Strong, PS1, PS3, PM3_Strong, PP4_Strong) AND ≥ 3 Moderate (PVS1_Moderate, PM3,
+PM4, PM5, PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS3, PM3_Strong, PP4_Strong) AND 2 Moderate (PVS1_Moderate, PM3,
+PM4, PM5, PP3_Moderate, PP4_Moderate) AND ≥ 2 Supporting (PS3_Supporting, PM2_Supporting,
+PM3_Supporting, PM4_Supporting, PM5_Supporting, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS3, PM3_Strong, PP4_Strong) AND 1 Moderate (PVS1_Moderate, PM3,
+PM4, PM5, PP3_Moderate, PP4_Moderate) AND ≥ 4 Supporting (PS3_Supporting, PM2_Supporting,
+PM3_Supporting, PM4_Supporting, PM5_Supporting, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PM3_Very Strong) AND 1 Moderate (PVS1_Moderate, PM3, PM4, PM5,
+PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PM3_Strong, PP3_Strong, PP4_Strong) AND ≥ 1 Moderate (PVS1_Moderate,
+PS1_Moderate, PM3, PM4, PM5, PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PM3_Strong, PP3_Strong, PP4_Strong) AND ≥ 2 Supporting
+(PS1_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PP3,
+PP4)
+
+≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PM3, PM4, PM5, PP3_Moderate, PP4_Moderate)
+2 Moderate (PVS1_Moderate, PS1_Moderate, PM3, PM4, PM5, PP3_Moderate, PP4_Moderate) AND ≥ 2
+Supporting (PS1_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting,
+PM5_Supporting, PP3, PP4)
+
+1 Moderate (PVS1_Moderate, PS1_Moderate, PM3, PM4, PM5, PP3_Moderate, PP4_Moderate) AND ≥ 4
+Supporting (PS1_Supporting, PS3_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting,
+PM5_Supporting, PP3, PP4)
+
+1 Very Strong (PVS1) AND 1 Supporting (PM2_Supporting)
+
+Benign
+
+≥ 2 Strong (BS1, BS2)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS2) AND 1 Supporting (BS3_Supporting, BP2, BP4, BP7)
+
+≥ 2 Supporting (BS3_Supporting, BP2, BP4, BP7)
+
+Files & Images
+Appendix 4_GAMT REVEL scores: Box and whisker plots showing REVEL scores for P/LP, VUS, and
+B/LB GAMT variants classified without in silico data. 
+Appendix 3_GAMT MAF thresholds: 
+Appendix 2_GAMT functional studies: 
+GAMT PVS1 flowchart: GAMT-specific guidance on application of PVS1. 
+Appendix 1_GAMT: In frame/ out of frame consequence of exon deletion to provide weight for
+PVS1. 
+
+

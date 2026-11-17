@@ -6,7 +6,7 @@ from acmg_classifier.config import Config
 from acmg_classifier.criteria.base import CriterionEvaluator
 from acmg_classifier.models.annotation import AnnotationData
 from acmg_classifier.models.criteria import CriteriaResult
-from acmg_classifier.models.enums import ACMGCriterion
+from acmg_classifier.models.enums import ACMGCriterion, CriterionStrength
 from acmg_classifier.models.variant import VariantRecord
 from acmg_classifier.models.supplement import SupplementEntry
 from acmg_classifier.criteria.allele_frequency import DiseaseThresholds, variant_listed
@@ -24,6 +24,11 @@ def _norm_pchange(hgvs_p: str | None) -> str:
     return m.group(1).replace("*", "Ter").lower() if m else ""
 
 
+# Genes whose BS1_Supporting tier is raised to the full BS1 strength when gnomAD
+# shows at least this many homozygotes (HHT VCEP, ACVRL1 / ENG).
+_BS1_SUPPORTING_HOM_UPGRADE: dict[str, int] = {"ACVRL1": 2, "ENG": 2}
+
+
 class BS1Evaluator(CriterionEvaluator):
     """
     BS1 threshold is disorder-specific, derived from disease_prevalence.tsv
@@ -36,6 +41,12 @@ class BS1Evaluator(CriterionEvaluator):
         # Thresholds are loaded once at instantiation rather than per-variant
         # to avoid re-parsing the TSV across thousands of variant evaluations.
         self._thresholds = DiseaseThresholds(cfg.disease_prevalence_tsv)
+        # gnomAD coverage for the ENIGMA BRCA1/2 read-depth condition; optional.
+        from acmg_classifier.local_db.coverage_db import CoverageDB
+        try:
+            self._coverage = CoverageDB(getattr(cfg, "gnomad_coverage_db", None))
+        except Exception:  # noqa: BLE001 - no coverage DB -> gate skipped
+            self._coverage = None
 
     def evaluate(
         self,
@@ -125,11 +136,48 @@ class BS1Evaluator(CriterionEvaluator):
         # the threshold to misleadingly coarse values (0.000358 → "0.0004",
         # 0.000316 → "0.0003"). The comparison itself uses full float precision.
         if faf >= threshold:
+            from acmg_classifier.criteria.allele_frequency import min_alleles_block
+            few = min_alleles_block(gene, gd)
+            if not few:
+                from acmg_classifier.criteria.allele_frequency import depth_block
+                few = depth_block(self._coverage, gene, variant)
+            if few:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BS1,
+                    f"{metric}={faf:.3g} >= BS1 threshold {threshold:.3g} but {few}",
+                )
             return CriteriaResult.met(
                 ACMGCriterion.BS1,
                 strength=gt.bs1_strength,
                 evidence=f"{metric}={faf:.3g} >= BS1 threshold {threshold:.3g} "
                          f"({gt.bs1_strength.value}) for {gene or 'default'}",
+            )
+        sup = gt.bs1_supporting
+        if sup is not None and faf >= sup:
+            from acmg_classifier.criteria.allele_frequency import min_alleles_block
+            few = min_alleles_block(gene, gd)
+            if not few:
+                from acmg_classifier.criteria.allele_frequency import depth_block
+                few = depth_block(self._coverage, gene, variant)
+            if few:
+                return CriteriaResult.not_met(
+                    ACMGCriterion.BS1,
+                    f"{metric}={faf:.3g} >= BS1_Supporting threshold {sup:.3g} but {few}",
+                )
+            # HHT VCEP (ACVRL1 / ENG): BS1 (Strong) also "if variant meets
+            # BS1_Supporting and has >= 2 homozygotes".
+            need_hom = _BS1_SUPPORTING_HOM_UPGRADE.get(gene)
+            if need_hom is not None and (gd.nhomalt or 0) >= need_hom:
+                return CriteriaResult.met(
+                    ACMGCriterion.BS1, strength=gt.bs1_strength,
+                    evidence=(f"{metric}={faf:.3g} >= BS1_Supporting threshold {sup:.3g} and "
+                              f"{gd.nhomalt} homozygotes (>= {need_hom}) "
+                              f"({gt.bs1_strength.value}) for {gene}"),
+                )
+            return CriteriaResult.met(
+                ACMGCriterion.BS1, strength=CriterionStrength.SUPPORTING,
+                evidence=(f"{metric}={faf:.3g} >= BS1_Supporting threshold {sup:.3g} "
+                          f"(< BS1 threshold {threshold:.3g}) for {gene}"),
             )
         return CriteriaResult.not_met(
             ACMGCriterion.BS1,

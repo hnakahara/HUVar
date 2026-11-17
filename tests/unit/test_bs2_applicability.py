@@ -250,7 +250,10 @@ class TestResolvedTSV:
         # NB: IL2RG intentionally dropped — GN129 takes the hemizygote count
         # ">=3 in gnomAD" (Strong) / ">=2 in gnomAD" (Supporting), so it is
         # gnomAD-eligible (applicable with bs2_strength tiers), per the audit fix.
-        for gene in ("CDKL5", "RS1", "PDHA1", "RPGR",
-                     "SLC9A6", "F9", "SLC6A8", "MECP2", "F8"):
+        # SLC6A8 / PDHA1 likewise dropped: their BS2 also takes gnomAD homo-/
+        # hemizygote counts (SLC6A8 >=2; PDHA1 >=16 Strong, 4-15 Supporting).
+        for gene in ("CDKL5", "RS1", "RPGR", "SLC9A6", "F9", "MECP2", "F8"):
             assert rows[gene]["bs2"] == "not_applicable", gene
             assert rows[gene]["bs2_count"] == "", gene
+        assert rows["SLC6A8"]["bs2"] == "applicable" and rows["SLC6A8"]["bs2_count"] == "2"
+        assert rows["PDHA1"]["bs2_strength"] == "Strong:16,Supporting:4"

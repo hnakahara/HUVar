@@ -1,0 +1,34 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN110",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50012",
+    "@type": "Organization",
+    "label": "PTEN Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50012"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1553964879"
+  },
+  "cspecStatus": "CSpec Deleted",
+  "currentStatus": "CSpec Deleted",
+  "label": "ClinGen PTEN  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for PTEN Version 1.0",
+  "lastUpdated": "2023-01-17T16:15:03.634Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1553964892",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=PTEN",
+          "@type": "Gene",
+          "label": "PTEN"
+        }
+      ]
+    }
+  ],
+  "version": "1.0"
+}

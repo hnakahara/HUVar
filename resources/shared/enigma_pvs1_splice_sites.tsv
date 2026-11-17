@@ -1,0 +1,579 @@
+# ENIGMA BRCA1/BRCA2 VCEP Specifications Table 4 (V1.2, 2024-11-18), 'Table 4 - Annotated Exons':
+# PVS1 code per donor/acceptor +/-1,2 substitution (NM_007294 / NM_000059). rna=1: the code is
+# marked '(RNA)' in Table 4 (assigned with mRNA assay data). Table 4 row 331 'c.6937+1T>' is read as c.6937+2T.
+gene	site	ref	alt	strength	rna	note
+BRCA1	c.-20+1	G	A	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-20+1	G	C	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-20+1	G	T	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-20+2	T	A	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-20+2	T	C	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-20+2	T	G	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-19-1	G	A	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-19-1	G	C	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-19-1	G	T	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-19-2	A	C	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-19-2	A	G	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.-19-2	A	T	na	0	Predicted alteration does not affect the coding sequence
+BRCA1	c.80+1	G	A	very_strong	1	
+BRCA1	c.80+1	G	C	very_strong	0	
+BRCA1	c.80+1	G	T	very_strong	0	
+BRCA1	c.80+2	T	A	very_strong	0	
+BRCA1	c.80+2	T	C	very_strong	0	
+BRCA1	c.80+2	T	G	very_strong	0	
+BRCA1	c.81-1	G	A	very_strong	0	
+BRCA1	c.81-1	G	C	very_strong	1	
+BRCA1	c.81-1	G	T	very_strong	0	
+BRCA1	c.81-2	A	C	very_strong	0	
+BRCA1	c.81-2	A	G	very_strong	0	
+BRCA1	c.81-2	A	T	very_strong	0	
+BRCA1	c.134+1	G	A	very_strong	1	In-frame Δ(E3) observed and exon2-exon 4(5) junction creates a de novo TGA (stop codon)
+BRCA1	c.134+1	G	C	very_strong	0	In-frame Δ(E3) predicted and exon2-exon 4(5) junction creates a de novo TGA (stop codon)
+BRCA1	c.134+1	G	T	very_strong	0	In-frame Δ(E3) predicted and exon2-exon 4(5) junction creates a de novo TGA (stop codon)
+BRCA1	c.134+2	T	A	very_strong	0	In-frame Δ(E3) predicted and exon2-exon 4(5) junction creates a de novo TGA (stop codon)
+BRCA1	c.134+2	T	C	very_strong	0	In-frame Δ(E3) predicted and exon2-exon 4(5) junction creates a de novo TGA (stop codon)
+BRCA1	c.134+2	T	G	very_strong	0	In-frame Δ(E3) predicted and exon2-exon 4(5) junction creates a de novo TGA (stop codon)
+BRCA1	c.135-1	G	A	very_strong	0	
+BRCA1	c.135-1	G	C	very_strong	1	
+BRCA1	c.135-1	G	T	very_strong	1	
+BRCA1	c.135-2	A	C	very_strong	0	
+BRCA1	c.135-2	A	G	very_strong	0	
+BRCA1	c.135-2	A	T	very_strong	0	
+BRCA1	c.212+1	G	A	very_strong	1	
+BRCA1	c.212+1	G	C	very_strong	1	
+BRCA1	c.212+1	G	T	very_strong	1	
+BRCA1	c.212+2	T	A	very_strong	0	
+BRCA1	c.212+2	T	C	very_strong	1	
+BRCA1	c.212+2	T	G	very_strong	0	
+BRCA1	c.213-1	G	A	very_strong	1	
+BRCA1	c.213-1	G	C	very_strong	0	
+BRCA1	c.213-1	G	T	very_strong	0	
+BRCA1	c.213-2	A	C	very_strong	1	
+BRCA1	c.213-2	A	G	very_strong	1	
+BRCA1	c.213-2	A	T	very_strong	0	
+BRCA1	c.301+1	G	A	supporting	0	Small in-frame predicted
+BRCA1	c.301+1	G	C	supporting	1	Small in-frame observed
+BRCA1	c.301+1	G	T	supporting	0	Small in-frame predicted
+BRCA1	c.301+2	T	A	supporting	0	Small in-frame predicted
+BRCA1	c.301+2	T	C	supporting	0	Small in-frame predicted
+BRCA1	c.301+2	T	G	supporting	0	Small in-frame predicted
+BRCA1	c.302-1	G	A	very_strong	1	
+BRCA1	c.302-1	G	C	very_strong	0	
+BRCA1	c.302-1	G	T	very_strong	0	
+BRCA1	c.302-2	A	C	very_strong	1	
+BRCA1	c.302-2	A	G	very_strong	0	
+BRCA1	c.302-2	A	T	very_strong	0	
+BRCA1	c.441+1	G	A	very_strong	1	
+BRCA1	c.441+1	G	C	very_strong	0	
+BRCA1	c.441+1	G	T	very_strong	0	
+BRCA1	c.441+2	T	A	very_strong	1	
+BRCA1	c.441+2	T	C	very_strong	0	
+BRCA1	c.441+2	T	G	very_strong	1	
+BRCA1	c.442-1	G	A	supporting	0	Small in-frame predicted
+BRCA1	c.442-1	G	C	supporting	0	Small in-frame predicted
+BRCA1	c.442-1	G	T	supporting	0	Small in-frame predicted
+BRCA1	c.442-2	A	C	supporting	0	Small in-frame predicted
+BRCA1	c.442-2	A	G	supporting	0	Small in-frame predicted
+BRCA1	c.442-2	A	T	supporting	0	Small in-frame predicted
+BRCA1	c.547+1	G	A	very_strong	1	
+BRCA1	c.547+1	G	C	very_strong	0	
+BRCA1	c.547+1	G	T	very_strong	0	
+BRCA1	c.547+2	T	A	very_strong	1	
+BRCA1	c.547+2	T	C	very_strong	1	
+BRCA1	c.547+2	T	G	very_strong	0	
+BRCA1	c.548-1	G	A	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.548-1	G	C	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.548-1	G	T	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.548-2	A	C	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.548-2	A	G	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.548-2	A	T	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.593+1	G	A	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.593+1	G	C	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.593+1	G	T	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.593+2	T	A	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.593+2	T	C	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.593+2	T	G	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.594-1	G	A	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.594-1	G	C	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.594-1	G	T	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.594-2	A	C	na	1	Δ(E8,9)[Δ(E9,10)] rescues
+BRCA1	c.594-2	A	G	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.594-2	A	T	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.670+1	G	A	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.670+1	G	C	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.670+1	G	T	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.670+2	T	A	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.670+2	T	C	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.670+2	T	G	na	0	Δ(E8,9)[Δ(E9,10)] rescue expected
+BRCA1	c.671-1	G	A	moderate	0	Expected in-frame Δ(E8_E10)[Δ(E9_E11)] suspected (partially) functional
+BRCA1	c.671-1	G	C	moderate	0	Expected in-frame Δ(E8_E10)[Δ(E9_E11)] suspected (partially) functional
+BRCA1	c.671-1	G	T	moderate	0	Expected in-frame Δ(E8_E10)[Δ(E9_E11)] suspected (partially) functional
+BRCA1	c.671-2	A	C	moderate	1	Observed in-frame Δ(E8_E10)[Δ(E9_E11)] suspected (partially) functional
+BRCA1	c.671-2	A	G	moderate	0	Expected in-frame Δ(E8_E10)[Δ(E9_E11)] suspected (partially) functional
+BRCA1	c.671-2	A	T	moderate	0	Expected in-frame Δ(E8_E10)[Δ(E9_E11)] suspected (partially) functional
+BRCA1	c.4096+1	G	A	moderate	1	Observed in-frame Δ(E10q3309) [Δ(E11q3309)] suspected (partially) functional
+BRCA1	c.4096+1	G	C	moderate	0	Expected in-frame Δ(E10q3309) [Δ(E11q3309)] suspected (partially) functional
+BRCA1	c.4096+1	G	T	moderate	0	Expected in-frame Δ(E10q3309) [Δ(E11q3309)] suspected (partially) functional
+BRCA1	c.4096+2	T	A	moderate	0	Expected in-frame Δ(E10q3309) [Δ(E11q3309)] suspected (partially) functional
+BRCA1	c.4096+2	T	C	moderate	0	Expected in-frame Δ(E10q3309) [Δ(E11q3309)] suspected (partially) functional
+BRCA1	c.4096+2	T	G	moderate	0	Expected in-frame Δ(E10q3309) [Δ(E11q3309)] suspected (partially) functional
+BRCA1	c.4097-1	G	A	very_strong	0	PTC_NMD predicted
+BRCA1	c.4097-1	G	C	supporting	0	Small in-frame predicted
+BRCA1	c.4097-1	G	T	supporting	0	Small in-frame predicted
+BRCA1	c.4097-2	A	C	supporting	0	Small in-frame predicted
+BRCA1	c.4097-2	A	G	very_strong	1	PTC_NMD observed
+BRCA1	c.4097-2	A	T	supporting	0	Small in-frame predicted
+BRCA1	c.4185+1	G	A	very_strong	1	
+BRCA1	c.4185+1	G	C	very_strong	0	
+BRCA1	c.4185+1	G	T	very_strong	0	
+BRCA1	c.4185+2	T	A	very_strong	0	
+BRCA1	c.4185+2	T	C	very_strong	0	
+BRCA1	c.4185+2	T	G	very_strong	0	
+BRCA1	c.4186-1	G	A	supporting	1	Small in-frame observed
+BRCA1	c.4186-1	G	C	supporting	0	Small in-frame predicted
+BRCA1	c.4186-1	G	T	supporting	0	Small in-frame predicted
+BRCA1	c.4186-2	A	C	supporting	0	Small in-frame predicted
+BRCA1	c.4186-2	A	G	very_strong	0	PTC_NMD predicted
+BRCA1	c.4186-2	A	T	supporting	0	Small in-frame predicted
+BRCA1	c.4357+1	G	A	very_strong	1	
+BRCA1	c.4357+1	G	C	very_strong	0	
+BRCA1	c.4357+1	G	T	very_strong	1	
+BRCA1	c.4357+2	T	A	very_strong	0	
+BRCA1	c.4357+2	T	C	very_strong	0	Creates a GC splice site (but not AG|GCAAGT), SpliceAI score <0.8. Recommend investigate for leaky splicing.
+BRCA1	c.4357+2	T	G	very_strong	0	
+BRCA1	c.4358-1	G	A	supporting	0	Small in-frame predicted
+BRCA1	c.4358-1	G	C	supporting	0	Small in-frame predicted
+BRCA1	c.4358-1	G	T	supporting	0	Small in-frame predicted
+BRCA1	c.4358-2	A	C	supporting	0	Small in-frame predicted
+BRCA1	c.4358-2	A	G	very_strong	0	PTC_NMD predicted
+BRCA1	c.4358-2	A	T	supporting	0	Small in-frame predicted
+BRCA1	c.4484+1	G	A	very_strong	1	
+BRCA1	c.4484+1	G	C	very_strong	0	
+BRCA1	c.4484+1	G	T	very_strong	1	
+BRCA1	c.4484+2	T	A	very_strong	0	
+BRCA1	c.4484+2	T	C	very_strong	0	
+BRCA1	c.4484+2	T	G	very_strong	0	
+BRCA1	c.4485-1	G	A	very_strong	0	
+BRCA1	c.4485-1	G	C	very_strong	1	
+BRCA1	c.4485-1	G	T	very_strong	0	
+BRCA1	c.4485-2	A	C	very_strong	0	
+BRCA1	c.4485-2	A	G	very_strong	0	
+BRCA1	c.4485-2	A	T	very_strong	0	
+BRCA1	c.4675+1	G	A	very_strong	1	
+BRCA1	c.4675+1	G	C	very_strong	1	
+BRCA1	c.4675+1	G	T	very_strong	0	
+BRCA1	c.4675+2	T	A	very_strong	0	
+BRCA1	c.4675+2	T	C	very_strong	0	
+BRCA1	c.4675+2	T	G	very_strong	0	
+BRCA1	c.4676-1	G	A	very_strong	0	
+BRCA1	c.4676-1	G	C	very_strong	0	
+BRCA1	c.4676-1	G	T	very_strong	0	
+BRCA1	c.4676-2	A	C	very_strong	0	
+BRCA1	c.4676-2	A	G	very_strong	0	
+BRCA1	c.4676-2	A	T	very_strong	0	
+BRCA1	c.4986+1	G	A	very_strong	0	
+BRCA1	c.4986+1	G	C	very_strong	1	
+BRCA1	c.4986+1	G	T	very_strong	1	
+BRCA1	c.4986+2	T	A	very_strong	0	
+BRCA1	c.4986+2	T	C	very_strong	0	
+BRCA1	c.4986+2	T	G	very_strong	0	
+BRCA1	c.4987-1	G	A	very_strong	1	
+BRCA1	c.4987-1	G	C	very_strong	0	
+BRCA1	c.4987-1	G	T	very_strong	0	
+BRCA1	c.4987-2	A	C	very_strong	0	
+BRCA1	c.4987-2	A	G	very_strong	1	
+BRCA1	c.4987-2	A	T	very_strong	0	
+BRCA1	c.5074+1	G	A	very_strong	1	
+BRCA1	c.5074+1	G	C	very_strong	0	
+BRCA1	c.5074+1	G	T	very_strong	1	
+BRCA1	c.5074+2	T	A	very_strong	0	
+BRCA1	c.5074+2	T	C	very_strong	0	
+BRCA1	c.5074+2	T	G	very_strong	0	
+BRCA1	c.5075-1	G	A	very_strong	0	
+BRCA1	c.5075-1	G	C	very_strong	1	
+BRCA1	c.5075-1	G	T	very_strong	0	
+BRCA1	c.5075-2	A	C	very_strong	0	
+BRCA1	c.5075-2	A	G	very_strong	1	
+BRCA1	c.5075-2	A	T	very_strong	0	
+BRCA1	c.5152+1	G	A	very_strong	0	
+BRCA1	c.5152+1	G	C	very_strong	1	
+BRCA1	c.5152+1	G	T	very_strong	0	
+BRCA1	c.5152+2	T	A	very_strong	0	
+BRCA1	c.5152+2	T	C	very_strong	0	
+BRCA1	c.5152+2	T	G	very_strong	0	
+BRCA1	c.5153-1	G	A	very_strong	1	
+BRCA1	c.5153-1	G	C	very_strong	0	
+BRCA1	c.5153-1	G	T	very_strong	0	
+BRCA1	c.5153-2	A	C	very_strong	0	
+BRCA1	c.5153-2	A	G	very_strong	0	
+BRCA1	c.5153-2	A	T	very_strong	0	
+BRCA1	c.5193+1	G	A	very_strong	0	
+BRCA1	c.5193+1	G	C	very_strong	0	
+BRCA1	c.5193+1	G	T	very_strong	0	
+BRCA1	c.5193+2	T	A	very_strong	0	
+BRCA1	c.5193+2	T	C	na	0	Functional GC splice site predicted based on functional data, perfect match with the consensus (AG|GCAAGT), and SpliceAI score <0.8
+BRCA1	c.5193+2	T	G	very_strong	1	
+BRCA1	c.5194-1	G	A	very_strong	0	
+BRCA1	c.5194-1	G	C	very_strong	0	
+BRCA1	c.5194-1	G	T	very_strong	1	
+BRCA1	c.5194-2	A	C	very_strong	0	
+BRCA1	c.5194-2	A	G	very_strong	1	
+BRCA1	c.5194-2	A	T	very_strong	0	
+BRCA1	c.5277+1	G	A	very_strong	1	
+BRCA1	c.5277+1	G	C	very_strong	0	
+BRCA1	c.5277+1	G	T	very_strong	0	
+BRCA1	c.5277+2	T	A	very_strong	0	
+BRCA1	c.5277+2	T	C	very_strong	0	
+BRCA1	c.5277+2	T	G	very_strong	0	
+BRCA1	c.5278-1	G	A	very_strong	1	
+BRCA1	c.5278-1	G	C	very_strong	1	
+BRCA1	c.5278-1	G	T	very_strong	1	
+BRCA1	c.5278-2	A	C	very_strong	0	
+BRCA1	c.5278-2	A	G	very_strong	0	
+BRCA1	c.5278-2	A	T	very_strong	0	
+BRCA1	c.5332+1	G	A	very_strong	1	
+BRCA1	c.5332+1	G	C	very_strong	0	
+BRCA1	c.5332+1	G	T	very_strong	0	
+BRCA1	c.5332+2	T	A	very_strong	0	
+BRCA1	c.5332+2	T	C	very_strong	0	
+BRCA1	c.5332+2	T	G	very_strong	0	
+BRCA1	c.5333-1	G	A	very_strong	0	
+BRCA1	c.5333-1	G	C	very_strong	0	
+BRCA1	c.5333-1	G	T	very_strong	1	
+BRCA1	c.5333-2	A	C	very_strong	0	
+BRCA1	c.5333-2	A	G	very_strong	0	
+BRCA1	c.5333-2	A	T	very_strong	0	
+BRCA1	c.5406+1	G	A	very_strong	1	
+BRCA1	c.5406+1	G	C	very_strong	0	
+BRCA1	c.5406+1	G	T	very_strong	0	
+BRCA1	c.5406+2	T	A	very_strong	0	
+BRCA1	c.5406+2	T	C	very_strong	0	
+BRCA1	c.5406+2	T	G	very_strong	0	
+BRCA1	c.5407-1	G	A	very_strong	0	
+BRCA1	c.5407-1	G	C	very_strong	0	
+BRCA1	c.5407-1	G	T	very_strong	0	
+BRCA1	c.5407-2	A	C	very_strong	0	
+BRCA1	c.5407-2	A	G	very_strong	1	
+BRCA1	c.5407-2	A	T	very_strong	0	
+BRCA1	c.5467+1	G	A	very_strong	1	
+BRCA1	c.5467+1	G	C	very_strong	0	
+BRCA1	c.5467+1	G	T	very_strong	0	
+BRCA1	c.5467+2	T	A	very_strong	0	
+BRCA1	c.5467+2	T	C	very_strong	1	
+BRCA1	c.5467+2	T	G	very_strong	0	
+BRCA1	c.5468-1	G	A	very_strong	1	
+BRCA1	c.5468-1	G	C	very_strong	0	
+BRCA1	c.5468-1	G	T	very_strong	0	
+BRCA1	c.5468-2	A	C	very_strong	0	
+BRCA1	c.5468-2	A	G	very_strong	1	
+BRCA1	c.5468-2	A	T	very_strong	0	
+BRCA2	c.-40+1	G	A	na	0	Predicted alteration does not affect the coding sequence
+BRCA2	c.-40+1	G	C	na	0	Predicted alteration does not affect the coding sequence
+BRCA2	c.-40+1	G	T	na	0	Predicted alteration does not affect the coding sequence
+BRCA2	c.-40+2	T	A	na	0	Predicted alteration does not affect the coding sequence
+BRCA2	c.-40+2	T	C	na	0	Predicted alteration does not affect the coding sequence
+BRCA2	c.-40+2	T	G	na	0	Predicted alteration does not affect the coding sequence
+BRCA2	c.-39-1	G	A	very_strong	1	
+BRCA2	c.-39-1	G	C	very_strong	0	
+BRCA2	c.-39-1	G	T	very_strong	0	
+BRCA2	c.-39-2	A	C	very_strong	0	
+BRCA2	c.-39-2	A	G	very_strong	0	
+BRCA2	c.-39-2	A	T	very_strong	0	
+BRCA2	c.67+1	G	A	very_strong	1	
+BRCA2	c.67+1	G	C	very_strong	0	
+BRCA2	c.67+1	G	T	very_strong	1	
+BRCA2	c.67+2	T	A	very_strong	0	
+BRCA2	c.67+2	T	C	very_strong	1	
+BRCA2	c.67+2	T	G	very_strong	0	
+BRCA2	c.68-1	G	A	supporting	1	Small in-frame observed
+BRCA2	c.68-1	G	C	supporting	1	Small in-frame observed
+BRCA2	c.68-1	G	T	supporting	1	Small in-frame observed
+BRCA2	c.68-2	A	C	supporting	1	Small in-frame observed
+BRCA2	c.68-2	A	G	supporting	1	Small in-frame observed
+BRCA2	c.68-2	A	T	supporting	1	Small in-frame observed
+BRCA2	c.316+1	G	A	very_strong	0	
+BRCA2	c.316+1	G	C	very_strong	0	
+BRCA2	c.316+1	G	T	very_strong	1	
+BRCA2	c.316+2	T	A	very_strong	0	
+BRCA2	c.316+2	T	C	very_strong	1	
+BRCA2	c.316+2	T	G	very_strong	0	
+BRCA2	c.317-1	G	A	na	0	PTC_NMD Δ(E4) predicted. Δ(E4) and in-frame Δ(E4,5) (suspected functional) expected
+BRCA2	c.317-1	G	C	na	0	PTC_NMD Δ(E4) predicted. Δ(E4) and in-frame Δ(E4,5) (suspected functional) expected
+BRCA2	c.317-1	G	T	na	0	PTC_NMD Δ(E4) predicted. Δ(E4) and in-frame Δ(E4,5) (suspected functional) expected
+BRCA2	c.317-2	A	C	na	0	PTC_NMD Δ(E4) predicted. Δ(E4) and in-frame Δ(E4,5) (suspected functional) expected
+BRCA2	c.317-2	A	G	na	0	PTC_NMD Δ(E4) predicted. Δ(E4) and in-frame Δ(E4,5) (suspected functional) observed
+BRCA2	c.317-2	A	T	na	0	PTC_NMD Δ(E4) predicted. Δ(E4) and in-frame Δ(E4,5) (suspected functional) expected
+BRCA2	c.425+1	G	A	na	0	PTC_NMD Δ(E4) predicted. In-frame Δ(E4,5) expected (c.425G>T data) and suspected functional
+BRCA2	c.425+1	G	C	na	0	PTC_NMD Δ(E4) predicted. In-frame Δ(E4,5) expected (c.425G>T data) and suspected functional
+BRCA2	c.425+1	G	T	na	0	PTC_NMD Δ(E4) predicted. In-frame Δ(E4,5) expected (c.425G>T data) and suspected functional
+BRCA2	c.425+2	T	A	na	0	PTC_NMD Δ(E4) predicted. In-frame Δ(E4,5) expected (c.425G>T data) and suspected functional
+BRCA2	c.425+2	T	C	na	0	PTC_NMD Δ(E4) predicted. In-frame Δ(E4,5) expected (c.425G>T data) and suspected functional
+BRCA2	c.425+2	T	G	na	0	PTC_NMD Δ(E4) predicted. In-frame Δ(E4,5) expected (c.425G>T data) and suspected functional
+BRCA2	c.426-1	G	A	very_strong	0	
+BRCA2	c.426-1	G	C	very_strong	0	
+BRCA2	c.426-1	G	T	very_strong	0	
+BRCA2	c.426-2	A	C	very_strong	0	
+BRCA2	c.426-2	A	G	very_strong	0	
+BRCA2	c.426-2	A	T	very_strong	1	
+BRCA2	c.475+1	G	A	very_strong	1	
+BRCA2	c.475+1	G	C	very_strong	0	
+BRCA2	c.475+1	G	T	very_strong	1	
+BRCA2	c.475+2	T	A	very_strong	0	
+BRCA2	c.475+2	T	C	very_strong	0	
+BRCA2	c.475+2	T	G	very_strong	0	
+BRCA2	c.476-1	G	A	very_strong	0	
+BRCA2	c.476-1	G	C	very_strong	0	
+BRCA2	c.476-1	G	T	very_strong	0	
+BRCA2	c.476-2	A	C	very_strong	0	
+BRCA2	c.476-2	A	G	very_strong	1	
+BRCA2	c.476-2	A	T	very_strong	0	
+BRCA2	c.516+1	G	A	very_strong	1	
+BRCA2	c.516+1	G	C	very_strong	0	
+BRCA2	c.516+1	G	T	very_strong	1	
+BRCA2	c.516+2	T	A	very_strong	1	
+BRCA2	c.516+2	T	C	very_strong	1	
+BRCA2	c.516+2	T	G	very_strong	0	
+BRCA2	c.517-1	G	A	very_strong	1	PTC_NMD Δ(E7p1) predicted. PTC_NMD observed
+BRCA2	c.517-1	G	C	na	0	PTC_NMD Δ(E7) predicted. Δ(E7) and in-frame Δ(E4_E7) (suspected functional) expected
+BRCA2	c.517-1	G	T	na	0	PTC_NMD Δ(E7) predicted. Δ(E7) and in-frame Δ(E4_E7) (suspected functional) expected
+BRCA2	c.517-2	A	C	na	0	PTC_NMD Δ(E7) predicted. Δ(E7) and in-frame Δ(E4_E7) (suspected functional) expected
+BRCA2	c.517-2	A	G	na	0	PTC_NMD Δ(E7) predicted. Δ(E7) and in-frame Δ(E4_E7) (suspected functional) observed
+BRCA2	c.517-2	A	T	na	0	PTC_NMD Δ(E7) predicted. Δ(E7) and in-frame Δ(E4_E7) (suspected functional) expected
+BRCA2	c.631+1	G	A	very_strong	1	PTC_NMD Δ(E7) predicted. PTC_NMD Δ(E7) observed
+BRCA2	c.631+1	G	C	very_strong	0	PTC_NMD Δ(E7) predicted
+BRCA2	c.631+1	G	T	very_strong	0	PTC_NMD Δ(E7) predicted
+BRCA2	c.631+2	T	A	very_strong	0	PTC_NMD Δ(E7) predicted
+BRCA2	c.631+2	T	C	very_strong	0	PTC_NMD Δ(E7) predicted
+BRCA2	c.631+2	T	G	very_strong	1	PTC_NMD Δ(E7) predicted. Main transcript Δ(E7), in-frame Δ(E4_E7) also observed at low levels. Clinical data supports pathogenicity.
+BRCA2	c.632-1	G	A	very_strong	1	PTC_NMD Δ(E8p4) predicted. PTC_NMD  Δ(E8p4), Δ(E8), Δ(6q39_E8p4) observed
+BRCA2	c.632-1	G	C	very_strong	1	PTC_NMD Δ(E8p4) predicted. PTC_NMD  Δ(E8p4), Δ(E8), Δ(6q39_E8p4) observed
+BRCA2	c.632-1	G	T	na	0	PTC_NMD Δ(E8p4) predicted. PTC_NMD Δ(E4_8) , Δ(6q39_E7) and in-frame Δ(6q39_E8) (suspected functional) expected
+BRCA2	c.632-2	A	C	na	0	PTC_NMD Δ(E8p4) predicted. PTC_NMD Δ(E4_8) , Δ(6q39_E7) and in-frame Δ(6q39_E8) (suspected functional) expected
+BRCA2	c.632-2	A	G	na	0	PTC_NMD Δ(E8p4) predicted. PTC_NMD Δ(E4_8) , Δ(6q39_E7) and in-frame Δ(6q39_E8) (suspected functional) observed
+BRCA2	c.632-2	A	T	na	0	PTC_NMD Δ(E8p4) predicted. PTC_NMD Δ(E4_8) , Δ(6q39_E7) and in-frame Δ(6q39_E8) (suspected functional) expected
+BRCA2	c.681+1	G	A	na	0	PTC_NMD Δ(E8)/▼(E8q4) predicted. In-frame Δ(E8_E10) (suspected functional) observed
+BRCA2	c.681+1	G	C	na	0	PTC_NMD Δ(E8)/▼(E8q4) predicted. In-frame Δ(E8_E10) (suspected functional) expected
+BRCA2	c.681+1	G	T	na	0	PTC_NMD Δ(E8)/▼(E8q4) predicted. In-frame Δ(E8_E10) (suspected functional) expected
+BRCA2	c.681+2	T	A	na	0	PTC_NMD Δ(E8)/▼(E8q4) predicted. In-frame Δ(E8_E10) (suspected functional) expected
+BRCA2	c.681+2	T	C	na	0	PTC_NMD Δ(E8)/▼(E8q4) predicted. In-frame Δ(E8_E10) (suspected functional) expected
+BRCA2	c.681+2	T	G	na	0	PTC_NMD Δ(E8)/▼(E8q4) predicted. In-frame Δ(E8_E10) (suspected functional) expected
+BRCA2	c.682-1	G	A	very_strong	0	
+BRCA2	c.682-1	G	C	very_strong	1	
+BRCA2	c.682-1	G	T	very_strong	0	
+BRCA2	c.682-2	A	C	very_strong	1	
+BRCA2	c.682-2	A	G	very_strong	1	
+BRCA2	c.682-2	A	T	very_strong	0	
+BRCA2	c.793+1	G	A	very_strong	0	
+BRCA2	c.793+1	G	C	very_strong	1	
+BRCA2	c.793+1	G	T	very_strong	1	
+BRCA2	c.793+2	T	A	very_strong	0	
+BRCA2	c.793+2	T	C	very_strong	0	Creates a GC splice site (but not AG|GCAAGT), SpliceAI score <0.8. Recommend investigate for leaky splicing.
+BRCA2	c.793+2	T	G	very_strong	0	
+BRCA2	c.794-1	G	A	very_strong	0	PTC_NMD predicted
+BRCA2	c.794-1	G	C	na	0	in-frame Δ(E10) and small in-frame suspected functional predicted
+BRCA2	c.794-1	G	T	na	0	in-frame Δ(E10) and small in-frame suspected functional predicted
+BRCA2	c.794-2	A	C	na	0	in-frame Δ(E10) and small in-frame suspected functional predicted
+BRCA2	c.794-2	A	G	na	1	in-frame Δ(E10) (suspected functional) observed
+BRCA2	c.794-2	A	T	na	0	in-frame Δ(E10) and small in-frame suspected functional predicted
+BRCA2	c.1909+1	G	A	very_strong	1	PTC_NMD Δ(E9_E10) observed
+BRCA2	c.1909+1	G	C	very_strong	1	PTC_NMD Δ(E9_E10) observed
+BRCA2	c.1909+1	G	T	very_strong	0	PTC_NMD Δ(E9_E10) predicted
+BRCA2	c.1909+2	T	A	very_strong	0	PTC_NMD Δ(E9_E10) predicted
+BRCA2	c.1909+2	T	C	very_strong	0	PTC_NMD Δ(E9_E10) predicted
+BRCA2	c.1909+2	T	G	very_strong	0	PTC_NMD Δ(E9_E10) predicted
+BRCA2	c.1910-1	G	A	very_strong	0	
+BRCA2	c.1910-1	G	C	very_strong	0	
+BRCA2	c.1910-1	G	T	very_strong	0	
+BRCA2	c.1910-2	A	C	very_strong	0	
+BRCA2	c.1910-2	A	G	very_strong	0	
+BRCA2	c.1910-2	A	T	very_strong	0	
+BRCA2	c.6841+1	G	A	very_strong	1	
+BRCA2	c.6841+1	G	C	very_strong	1	
+BRCA2	c.6841+1	G	T	very_strong	0	
+BRCA2	c.6841+2	T	A	very_strong	0	
+BRCA2	c.6841+2	T	C	very_strong	0	Creates a GC splice site (but not AG|GCAAGT), SpliceAI score <0.8. Recommend investigate for leaky splicing.
+BRCA2	c.6841+2	T	G	very_strong	0	
+BRCA2	c.6842-1	G	A	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6842-1	G	C	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6842-1	G	T	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6842-2	A	C	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6842-2	A	G	na	0	Observed in-frame Δ(12) suspected functional
+BRCA2	c.6842-2	A	T	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6937+1	G	A	na	0	Observed in-frame Δ(12) suspected functional
+BRCA2	c.6937+1	G	C	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6937+1	G	T	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6937+2	T	A	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6937+2	T	C	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6937+2	T	G	na	0	Predicted in-frame Δ(12) suspected functional
+BRCA2	c.6938-1	G	A	very_strong	0	
+BRCA2	c.6938-1	G	C	very_strong	0	
+BRCA2	c.6938-1	G	T	very_strong	0	
+BRCA2	c.6938-2	A	C	very_strong	0	
+BRCA2	c.6938-2	A	G	very_strong	0	
+BRCA2	c.6938-2	A	T	very_strong	0	
+BRCA2	c.7007+1	G	A	very_strong	0	
+BRCA2	c.7007+1	G	C	very_strong	1	
+BRCA2	c.7007+1	G	T	very_strong	0	
+BRCA2	c.7007+2	T	A	very_strong	0	
+BRCA2	c.7007+2	T	C	very_strong	0	
+BRCA2	c.7007+2	T	G	very_strong	0	
+BRCA2	c.7008-1	G	A	very_strong	1	
+BRCA2	c.7008-1	G	C	very_strong	0	
+BRCA2	c.7008-1	G	T	very_strong	0	
+BRCA2	c.7008-2	A	C	very_strong	0	
+BRCA2	c.7008-2	A	G	very_strong	1	
+BRCA2	c.7008-2	A	T	very_strong	1	
+BRCA2	c.7435+1	G	A	very_strong	0	
+BRCA2	c.7435+1	G	C	very_strong	1	
+BRCA2	c.7435+1	G	T	very_strong	0	
+BRCA2	c.7435+2	T	A	very_strong	0	
+BRCA2	c.7435+2	T	C	very_strong	0	
+BRCA2	c.7435+2	T	G	very_strong	0	
+BRCA2	c.7436-1	G	A	very_strong	1	
+BRCA2	c.7436-1	G	C	very_strong	0	
+BRCA2	c.7436-1	G	T	very_strong	0	
+BRCA2	c.7436-2	A	C	very_strong	0	
+BRCA2	c.7436-2	A	G	very_strong	1	
+BRCA2	c.7436-2	A	T	very_strong	1	
+BRCA2	c.7617+1	G	A	very_strong	1	
+BRCA2	c.7617+1	G	C	very_strong	0	
+BRCA2	c.7617+1	G	T	very_strong	1	
+BRCA2	c.7617+2	T	A	very_strong	0	
+BRCA2	c.7617+2	T	C	very_strong	0	Creates a GC splice site (but not AG|GCAAGT), SpliceAI score <0.8. Recommend investigate for leaky splicing.
+BRCA2	c.7617+2	T	G	very_strong	1	
+BRCA2	c.7618-1	G	A	very_strong	1	
+BRCA2	c.7618-1	G	C	very_strong	1	
+BRCA2	c.7618-1	G	T	very_strong	0	
+BRCA2	c.7618-2	A	C	very_strong	0	
+BRCA2	c.7618-2	A	G	very_strong	1	
+BRCA2	c.7618-2	A	T	very_strong	1	
+BRCA2	c.7805+1	G	A	very_strong	1	
+BRCA2	c.7805+1	G	C	very_strong	0	
+BRCA2	c.7805+1	G	T	very_strong	0	
+BRCA2	c.7805+2	T	A	very_strong	0	
+BRCA2	c.7805+2	T	C	very_strong	0	
+BRCA2	c.7805+2	T	G	very_strong	0	
+BRCA2	c.7806-1	G	A	very_strong	1	
+BRCA2	c.7806-1	G	C	very_strong	0	
+BRCA2	c.7806-1	G	T	very_strong	1	
+BRCA2	c.7806-2	A	C	very_strong	0	
+BRCA2	c.7806-2	A	G	very_strong	1	
+BRCA2	c.7806-2	A	T	very_strong	0	
+BRCA2	c.7976+1	G	A	very_strong	1	
+BRCA2	c.7976+1	G	C	very_strong	0	
+BRCA2	c.7976+1	G	T	very_strong	0	
+BRCA2	c.7976+2	C	A	very_strong	0	
+BRCA2	c.7976+2	C	G	very_strong	0	
+BRCA2	c.7976+2	C	T	na	0	GC site improved to GT site
+BRCA2	c.7977-1	G	A	very_strong	0	
+BRCA2	c.7977-1	G	C	very_strong	1	
+BRCA2	c.7977-1	G	T	very_strong	1	
+BRCA2	c.7977-2	A	C	very_strong	0	
+BRCA2	c.7977-2	A	G	very_strong	0	
+BRCA2	c.7977-2	A	T	very_strong	1	
+BRCA2	c.8331+1	G	A	strong	1	Variants at this splice site are reported to result in leaky splicing, evidence strength reduced to strong.
+BRCA2	c.8331+1	G	C	strong	0	Variants at this splice site are reported to result in leaky splicing, evidence strength reduced to strong.
+BRCA2	c.8331+1	G	T	strong	1	Variants at this splice site are reported to result in leaky splicing, evidence strength reduced to strong.
+BRCA2	c.8331+2	T	A	strong	0	Variants at this splice site are reported to result in leaky splicing, evidence strength reduced to strong.
+BRCA2	c.8331+2	T	C	strong	1	Variants at this splice site are reported to result in leaky splicing, evidence strength reduced to strong.
+BRCA2	c.8331+2	T	G	strong	0	Variants at this splice site are reported to result in leaky splicing, evidence strength reduced to strong.
+BRCA2	c.8332-1	G	A	very_strong	1	
+BRCA2	c.8332-1	G	C	very_strong	0	
+BRCA2	c.8332-1	G	T	very_strong	0	
+BRCA2	c.8332-2	A	C	very_strong	0	
+BRCA2	c.8332-2	A	G	very_strong	1	
+BRCA2	c.8332-2	A	T	very_strong	0	
+BRCA2	c.8487+1	G	A	very_strong	1	
+BRCA2	c.8487+1	G	C	very_strong	0	
+BRCA2	c.8487+1	G	T	very_strong	0	
+BRCA2	c.8487+2	T	C	very_strong	1	
+BRCA2	c.8487+2	T	G	very_strong	0	
+BRCA2	c.8488-1	G	A	supporting	1	Small in-frame observed
+BRCA2	c.8488-1	G	C	supporting	0	Small in-frame predicted
+BRCA2	c.8488-1	G	T	supporting	0	Small in-frame predicted
+BRCA2	c.8488-2	A	C	supporting	0	Small in-frame predicted
+BRCA2	c.8488-2	A	G	supporting	1	Small in-frame observed
+BRCA2	c.8488-2	A	T	supporting	0	Small in-frame predicted
+BRCA2	c.8632+1	G	A	very_strong	1	
+BRCA2	c.8632+1	G	C	very_strong	0	
+BRCA2	c.8632+1	G	T	very_strong	0	
+BRCA2	c.8632+2	T	A	very_strong	0	
+BRCA2	c.8632+2	T	C	very_strong	0	
+BRCA2	c.8632+2	T	G	very_strong	1	
+BRCA2	c.8633-1	G	A	very_strong	0	
+BRCA2	c.8633-1	G	C	very_strong	0	
+BRCA2	c.8633-1	G	T	very_strong	0	
+BRCA2	c.8633-2	A	C	very_strong	0	
+BRCA2	c.8633-2	A	G	very_strong	1	
+BRCA2	c.8633-2	A	T	very_strong	0	
+BRCA2	c.8754+1	G	A	very_strong	1	
+BRCA2	c.8754+1	G	C	very_strong	0	
+BRCA2	c.8754+1	G	T	very_strong	0	
+BRCA2	c.8754+2	T	A	very_strong	0	
+BRCA2	c.8754+2	T	C	very_strong	0	
+BRCA2	c.8754+2	T	G	very_strong	0	
+BRCA2	c.8755-1	G	A	very_strong	1	
+BRCA2	c.8755-1	G	C	very_strong	0	
+BRCA2	c.8755-1	G	T	very_strong	0	
+BRCA2	c.8755-2	A	C	very_strong	0	
+BRCA2	c.8755-2	A	G	very_strong	0	
+BRCA2	c.8755-2	A	T	very_strong	0	
+BRCA2	c.8953+1	G	A	very_strong	0	
+BRCA2	c.8953+1	G	C	very_strong	0	
+BRCA2	c.8953+1	G	T	very_strong	1	
+BRCA2	c.8953+2	T	A	very_strong	0	
+BRCA2	c.8953+2	T	C	na	0	Functional GC splice site predicted based on functional data, perfect match with the consensus (AG|GCAAGT), and SpliceAI score <0.8
+BRCA2	c.8953+2	T	G	very_strong	1	
+BRCA2	c.8954-1	G	A	very_strong	0	
+BRCA2	c.8954-1	G	C	very_strong	0	
+BRCA2	c.8954-1	G	T	very_strong	0	
+BRCA2	c.8954-2	A	C	very_strong	0	
+BRCA2	c.8954-2	A	G	very_strong	0	
+BRCA2	c.8954-2	A	T	very_strong	1	
+BRCA2	c.9117+1	G	A	very_strong	1	
+BRCA2	c.9117+1	G	C	very_strong	0	
+BRCA2	c.9117+1	G	T	very_strong	1	
+BRCA2	c.9117+2	T	A	very_strong	1	
+BRCA2	c.9117+2	T	C	very_strong	1	
+BRCA2	c.9117+2	T	G	very_strong	0	
+BRCA2	c.9118-1	G	A	supporting	0	Small in-frame predicted
+BRCA2	c.9118-1	G	C	very_strong	0	PTC_NMD predicted
+BRCA2	c.9118-1	G	T	very_strong	0	PTC_NMD predicted
+BRCA2	c.9118-2	A	C	very_strong	0	PTC_NMD predicted
+BRCA2	c.9118-2	A	G	very_strong	1	PTC_NMD observed
+BRCA2	c.9118-2	A	T	very_strong	0	PTC_NMD predicted
+BRCA2	c.9256+1	G	A	very_strong	1	
+BRCA2	c.9256+1	G	C	very_strong	0	
+BRCA2	c.9256+1	G	T	very_strong	0	
+BRCA2	c.9256+2	T	A	very_strong	0	
+BRCA2	c.9256+2	T	C	very_strong	0	
+BRCA2	c.9256+2	T	G	very_strong	0	
+BRCA2	c.9257-1	G	A	very_strong	0	PTC_NMD predicted
+BRCA2	c.9257-1	G	C	supporting	1	Small in-frame observed
+BRCA2	c.9257-1	G	T	supporting	0	Small in-frame predicted
+BRCA2	c.9257-2	A	C	supporting	0	Small in-frame predicted
+BRCA2	c.9257-2	A	G	supporting	0	Small in-frame predicted
+BRCA2	c.9257-2	A	T	supporting	0	Small in-frame predicted
+BRCA2	c.9501+1	G	A	very_strong	0	
+BRCA2	c.9501+1	G	C	very_strong	0	
+BRCA2	c.9501+1	G	T	very_strong	0	
+BRCA2	c.9501+2	T	A	very_strong	0	
+BRCA2	c.9501+2	T	C	very_strong	0	Creates a GC splice site (but not AG|GCAAGT), SpliceAI score <0.8. Recommend investigate for leaky splicing.
+BRCA2	c.9501+2	T	G	very_strong	0	
+BRCA2	c.9502-1	G	A	very_strong	0	
+BRCA2	c.9502-1	G	C	very_strong	0	
+BRCA2	c.9502-1	G	T	very_strong	0	
+BRCA2	c.9502-2	A	C	very_strong	1	
+BRCA2	c.9502-2	A	G	very_strong	0	
+BRCA2	c.9502-2	A	T	very_strong	0	
+BRCA2	c.9648+1	G	A	very_strong	1	
+BRCA2	c.9648+1	G	C	very_strong	0	
+BRCA2	c.9648+1	G	T	very_strong	0	
+BRCA2	c.9648+2	T	A	very_strong	0	
+BRCA2	c.9648+2	T	C	very_strong	0	
+BRCA2	c.9648+2	T	G	very_strong	0	
+BRCA2	c.9649-1	G	A	very_strong	0	
+BRCA2	c.9649-1	G	C	very_strong	0	
+BRCA2	c.9649-1	G	T	very_strong	0	
+BRCA2	c.9649-2	A	C	very_strong	0	
+BRCA2	c.9649-2	A	G	very_strong	1	
+BRCA2	c.9649-2	A	T	very_strong	0	

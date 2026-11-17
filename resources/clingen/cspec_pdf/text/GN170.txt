@@ -1,0 +1,730 @@
+Criteria Specification
+ClinGen Hemoglobinopathy Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines for HBB Version 1.0
+Affiliation: Hemoglobinopathy VCEP
+Type: Richards et.al., 2015 - Combining rules
+Description : ClinGen Hemoglobinopathy Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for HBB Version 1.0.0
+Version : 1.0
+Released : 3/20/2026
+DOI : 10.5281/zenodo.21434787
+
+Contributors & Keywords
+Research Group: Hemoglobinopathy VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards HBB
+NM_000518.5 Autosomal recessive inheritance
+beta-thalassemia HBB/LCRB
+
+Rules for HBB
+Gene: HBB (HGNC:4827) 
+Transcripts:
+NM_000518.5
+
+HGNC Name: hemoglobin subunit beta
+Disease:
+beta-thalassemia HBB/LCRB
+(MONDO:0013517)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single
+or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of
+disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave the
+
+remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+VCEP
+Use Hemoglobinopathy VCEP PVS1 decision tree.
+Specifications:
+Loss of function has been established as a disease mechanism for
+haemoglobinopathies.
+
+Very Strong
+Null variant (nonsense, frameshift, canonical +/-1 or 2 splice sites, initiation codon, single
+or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of
+disease.
+Caveats:
+Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+Use caution with splice variants that are predicted to lead to exon skipping but leave the
+remainder of the protein intact.
+Modification
+Type:
+
+No change
+
+Strong
+Null variant (nonsense, frameshift, canonical +/-1 or 2 splice sites, initiation codon, single
+or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of
+disease.
+Caveats:
+Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+Use caution with splice variants that are predicted to lead to exon skipping but leave the
+remainder of the protein intact.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+Moderate
+Null variant (nonsense, frameshift, canonical +/-1 or 2 splice sites, initiation codon, single
+or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of
+disease.
+Caveats:
+Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+Use caution with splice variants that are predicted to lead to exon skipping but leave the
+remainder of the protein intact.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein level.
+VCEP
+A variant classification must have a minimum of two-star annotation in
+Specifications:ClinVar to be considered established or VCEP consensus recommendation.
+
+Strong
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Modification
+Type:
+
+No change
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+Both maternal and paternal sample must be tested and shown to be the
+Specifications:biological parents of the affected individual. Otherwise, identity is assumed,
+and not confirmed, and PM6 applies.
+Only applicable in the absence of any other established pathogenic
+variants. If other suspicious variants are present, then PM6 should be used
+instead. Should not be used in combination with PM6.
+Definition of trait phenotype is provided in the Appendix 3.
+
+Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease or in a
+phenotypic trait individual and no family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on the
+gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and robust
+in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+The list of approved functional studies is provided in the Appendix 2
+Specifications:(Functional Studies).
+
+Supporting
+In vitro or in vivo functional studies supportive of a damaging effect on the gene, gene
+product, expression levels and protein function.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is >5.0
+and the confidence interval around the estimate of RR or OR does not include 1.0. See
+manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Very Strong
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls. Strength evidence is determined by points according to
+Appendix 3. Very Strong evidence requires ≥16 points
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+Strong
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls. Strength evidence is determined by points according to
+Appendix 3. Strong evidence requires 3.5-15.99 points
+
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+Moderate
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls. Strength evidence is determined by points according to
+Appendix 3. Moderate evidence requires 1.5-3.49 points.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+Supporting
+The prevalence of the variant in affected individuals is significantly increased compared
+with the prevalence in controls. Strength evidence is determined by points according to
+Appendix 3. Supporting evidence requires 0.5-1.49 points
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain (e.g.
+active site of an enzyme) without benign variation.
+
+Moderate
+Located in a mutational hot spot and/or critical and well-established functional domain (e.g.
+active site of an enzyme) without benign variation.
+TATAA box (-30 to -26 from transcription initiation, i.e. c.-80 to c.-76)
+Poly(A) signals: AATAAA sequence
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+Position of reported variant must have sufficient coverage (>= 20x) in the
+Specifications:population database.
+
+Supporting
+Allele frequency <0.0001 (0.01%) in gnomAD.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+VCEP
+Strength is determined using the ClinGen SVI guidelines
+Specifications:(https://clinicalgenome.org/site/assets/files/3717/svi_proposal_for_pm3_criterion__version_1.pdf).
+Both variants must meet PM2_Supporting specification, i.e. be sufficiently
+rare, unless they are in the exception list (Appendix 4), or present in
+gnomAD with <20x genomic coverage.
+Phase is confirmed in trans by testing both or one parent, and the
+pathogenicity of the variant on the other allele must have at least 2-star
+rating in ClinVar or VCEP consensus recommendation
+
+Very Strong
+For recessive disorders, detected in trans with a pathogenic or likely pathogenic variant in
+an affected patient. Strength is determined using the ClinGen SVI guidelines.
+Modification
+Type:
+
+Strength
+
+Strong
+For recessive disorders, detected in trans with a pathogenic or likely pathogenic variant in
+an affected patient. Strength is determined using the ClinGen SVI guidelines.
+Modification
+Type:
+
+Strength
+
+Moderate
+For recessive disorders, detected in trans with a pathogenic or likely pathogenic variant in
+an affected patient. Strength is determined using the ClinGen SVI guidelines.
+Modification
+Type:
+
+Supporting
+
+No change
+
+For recessive disorders, detected in trans with a pathogenic or likely pathogenic variant in
+an affected patient. Strength is determined using the ClinGen SVI guidelines.
+Modification
+Type:
+
+Strength
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+VCEP
+Should not be used, if PVS1 has been applied.
+Specifications:
+
+Moderate
+Protein length changes as a result of in-frame deletions/insertions in a non-repeat region.
+Modification
+Type:
+
+No change
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein level.
+VCEP
+Beware of changes that impact splicing rather than at the amino
+Specifications:acid/protein level. Assess potential for creation of exonic splicing event
+using in silico splicing prediction tools, as described in PP3/BP4.
+A previously established variant as pathogenic must have at least 2-star
+rating in ClinVar or VCEP consensus recommendation.
+
+Moderate
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before, or base change at a non-coding
+position and previous pathogenic mutation has been seen before.
+Examples:
+Arg156His is pathogenic; now you observe Arg156Cys.
+Non-coding variant g.15300G>C is pathogenic, now you observe g. 15300G>A.
+
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+VCEP
+In contrast to PS2, identity testing was NOT performed in parental samples
+Specifications:to confirm identity, which is assumed. Should not be used in combination
+with PS2.
+
+Moderate
+Assumed de novo, but without confirmation of paternity and maternity.
+Modification
+Type:
+
+No change
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+LOD score for recessive disorder can be estimated from the tables in
+Specifications:Appendix 1 (Segregation Analysis), based on the number of affected and
+unaffected individuals.
+Caution needed when counting segregations in the presence of other
+possible disease-causing variants. Compound heterozygous individuals are
+counted only if phase is confirmed to be in trans.
+
+Strong
+Cosegregation with disease in multiple affected family members in a gene definitively
+known to cause the disease. Strong evidence requires LOD score >2.1.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+Moderate
+Cosegregation with disease in multiple affected family members in a gene definitively
+known to cause the disease. MODERATE evidence requires LOD score >1.5.
+
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+Supporting
+Cosegregation with disease in multiple affected family members in a gene definitively
+known to cause the disease. SUPPORTING evidence requires LOD score >0.9.
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+For missense: REVEL score > 0.8 OR SpliceAI > 0.3. If REVEL score is not available, use
+CADD PHRED score > 23.5
+For non-coding, synonymous, inframe indels, stop-lost: CADD PHRED score > 12 OR
+SpliceAI DS > 0.3
+Should not be used for LOF variants considered in PVS1.
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+PP4
+Original ACMG
+Summary
+
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Not Applicable
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+Use the Filtering AF, such as Popmax FAF from gnomAD. If the variant is
+Specifications:present at high frequency in the non-continental population (e.g.,
+Ashkenazi Jews), you can calculate the filtering allele frequency using a
+95% confidence interval by selecting "Inverse AF" at
+http://cardiodb.org/allelefrequencyapp/
+Assumptions to calculate this threshold:
+For β-haemoglobinopathies (autosomal recessive):
+Prevalence: 1/1000 (the highest reported prevalence of the disease)
+Genetic heterogeneity: 100% (only one gene involved in disease
+causality)
+Allelic heterogeneity: 15% (variants in the exclusion list are not
+considered)
+Penetrance: 90% (to account for silent variants)
+Variants in Appendix 4 are excluded from this criterion.
+
+Stand Alone
+Allele frequency ≥0.005 (0.5%) in a studied general population with ≥2000 alleles and
+variant present in ≥5 alleles.
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+Use the Filtering AF, such as Popmax FAF from gnomAD. If the variant is
+Specifications:present at high frequency in the non-continental population (e.g. Ashkenazi
+Jews), you can calculate the filtering allele frequency using a 95%
+confidence interval by selecting "Inverse AF" at
+http://cardiodb.org/allelefrequencyapp/
+Assumptions to calculate this threshold:
+For β-haemoglobinopathies (autosomal recessive):
+Prevalence: 1/3000 (the highest reported prevalence of the disease)
+Genetic heterogeneity: 100% (only one gene involved in disease
+causality)
+Allelic heterogeneity: 5% (variants in the exclusion list are not
+considered)
+Penetrance: 90% (to account for silent variants)
+Variants in Appendix 4 are excluded from this criterion.
+
+Strong
+Allele frequency ≥0.001 (0.1%) in a studied general population with ≥2000 alleles and
+variant present in ≥5 alleles.
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+VCEP
+Normal haematological values are provided in Appendix 3.
+Specifications:
+The healthy individual must be well-phenotyped/well-documented to rule
+out any mild symptoms and ensure that the individual is unaffected. A fullblood count and Hb characterization are required to exclude variants and/or
+abnormal quantities.
+In compound heterozygous individuals, only established pathogenic
+variants should be considered (i.e. at least 2-star rating in ClinVar).
+
+Applies to subjects over 2 years of age.
+BS2: Only applicable if no coinheritance is detected of an HBA1/HBA2
+pathogenic variant.
+BS2_P: Only applicable if no well-established disease-modifying mutations
+are detected.
+
+Strong
+Two independent occurrences in individuals (asymptomatic or with trait phenotype) for a
+recessive (homozygous or compound heterozygous) disorder, with full penetrance expected
+at early age.
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+Supporting
+Observation in one individual (asymptomatic or with trait phenotype) for a recessive
+(homozygous or compound heterozygous) disorder, with full penetrance expected at early
+age.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+The list of approved functional studies is provided in the Appendix 2
+Specifications:(Functional Studies).
+
+Supporting
+In vivo or in vitro functional studies show no damaging effect on gene, gene product,
+expression levels and protein function.
+Modification
+Type:
+
+Disease-specific,Gene-specific,Strength
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Lack of segregation in affected members of a family.
+Modification
+Type:
+
+No change
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder or
+observed in cis with a pathogenic variant in any inheritance pattern.
+VCEP
+Do not use when the variant has only ever been observed in cis with a
+Specifications:pathogenic variant as its significance/severity in isolation is unknown.
+Only applies when the phenotype is not more severe than when either of
+the two variants are seen in isolation.
+Use only if in cis with variants classified as pathogenic in ClinVar with at
+least two-star rating.
+
+Supporting
+Observed in cis with a pathogenic variant in any inheritance pattern.
+Modification
+Type:
+
+No change
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc.)
+For missense: REVEL score < 0.7 AND SpliceAI DS ≤ 0.3 (if REVEL score is not available, use
+CADD PHRED score ≤ 20, instead)
+For non-coding, synonymous, inframe indels, stop-lost: CADD PHRED score ≤ 11 AND
+SpliceAI DS ≤ 0.3
+Modification
+Type:
+
+Disease-specific,Gene-specific
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+VCEP
+This is about phenotypes that are COMPLETELY explained by variants in
+Specifications:different genes. Specifically:
+duplication of the α-locus can result in β-thalassaemia intermedia
+phenotype
+variants in SUPT5H that can cause β-thalassemia phenotype
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+Modification
+Type:
+
+BP6
+
+No change
+
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+VCEP
+Synonymous variant with no impact on splicing (SpliceAI ≤0.3) AND
+Specifications:GERP++ <0 for conservation
+
+Supporting
+A synonymous (silent) variant for which splicing prediction algorithms predict no impact to
+the splice consensus sequence nor the creation of a new splice site AND the nucleotide is
+not highly conserved.
+Modification
+Type:
+
+No change
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong AND ≥ 1 Strong
+1 Very Strong AND ≥ 2 Moderate
+1 Very Strong AND 1 Moderate AND 1 Supporting
+1 Very Strong AND ≥ 2 Supporting
+
+≥ 2 Strong
+1 Strong AND ≥ 3 Moderate
+1 Strong AND 2 Moderate AND ≥ 2 Supporting
+1 Strong AND 1 Moderate AND ≥ 4 Supporting
+
+≥ 2 Very Strong (PVS1)
+≥ 2 Very Strong (PVS1, PS4_Very Strong, PM3_Very Strong)
+
+Likely Pathogenic
+1 Very Strong AND 1 Moderate
+
+1 Strong AND 1 Moderate
+1 Strong AND ≥ 2 Supporting
+
+≥ 3 Moderate
+2 Moderate AND ≥ 2 Supporting
+1 Moderate AND ≥ 4 Supporting
+
+Benign
+≥ 2 Strong
+1 Stand Alone
+
+Likely Benign
+1 Strong AND 1 Supporting
+
+≥ 2 Supporting
+
+Files & Images
+Appendix 1_Segregation analysis: 
+PVS1 decision tree: 
+Appendix 4_Exclusion variants: 
+Appendix 2_Functional Studies: 
+Appendix 3_Evaluation of phenotypes in heterozygotes PS4: 
+
+References
+1.
+
+Richards S Aziz N et al. Standards and guidelines for the interpretation of sequence variants: a
+joint consensus recommendation of the American College of Medical Genetics and Genomics and
+the Association for Molecular Pathology. Genet Med (2015) 17 (5) p. 405-24.
+10.1038/gim.2015.30 25741868 
+
+2.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+

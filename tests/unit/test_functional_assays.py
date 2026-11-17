@@ -54,9 +54,17 @@ def test_msh2_primary_vs_conservative():
     assert fa.strength == S.MODERATE
 
 
+def _mavedb_only_tp53():
+    """FunctionalAssays with TP53 on the MaveDB path (the VCEP Table S3 bypassed)."""
+    fa = FunctionalAssays(_cfg())
+    fa._rules = dict(fa._rules)
+    fa._rules["TP53"] = {**fa._rules["TP53"], "policy": "oddspath"}
+    return fa
+
+
 def test_strength_recomputed_from_oddspath_not_label():
     # TP53 p.Ala138Gly primary IGVF calibration: OddsPath 10.03 -> Moderate.
-    fa = FunctionalAssays(_cfg()).call(_v("chr17"), _ann("TP53", "NM_000546.6", "NP_000537.3:p.Ala138Gly"))
+    fa = _mavedb_only_tp53().call(_v("chr17"), _ann("TP53", "NM_000546.6", "NP_000537.3:p.Ala138Gly"))
     assert fa.criterion == ACMGCriterion.PS3 and fa.strength == S.MODERATE
 
 
@@ -121,11 +129,16 @@ def test_ps3_and_bs3_evaluators_use_the_call():
     assert bs3.triggered and bs3.strength == S.STRONG
 
 
-def test_tp53_uses_mavedb_when_nci_data_off():
+def test_tp53_uses_vcep_table_before_mavedb():
+    # TP53 missense variants are coded by the VCEP Table S3 (vcep_functional_codes.tsv);
+    # MaveDB is the fallback for variants absent from it.
+    from acmg_classifier.criteria.functional_assays import SRC_VCEP_TABLE
     ann = _ann("TP53", "NM_000546.6", "NP_000537.3:p.Ala129Ser", splice=0.01)
     bs3 = [r for r in ManualBenignEvaluator(_cfg()).evaluate(_v("chr17"), ann)
            if r.criterion == ACMGCriterion.BS3][0]
-    assert bs3.triggered and bs3.evidence.startswith(SRC_MAVEDB)
+    assert bs3.triggered and bs3.evidence.startswith(SRC_VCEP_TABLE)
+    fa = _mavedb_only_tp53().call(_v("chr17"), ann)
+    assert fa.criterion == ACMGCriterion.BS3 and fa.evidence.startswith(SRC_MAVEDB)
 
 
 # ---------------------------------------------------------------------------

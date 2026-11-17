@@ -150,6 +150,16 @@ Third-party data redistributed in resources/ (derived tables):
     table (scripts/build_enigma_table9.py). https://cspec.genome.network/cspec/ui/svi/doc/GN092
     Cite: Parsons MT et al., Am J Hum Genet 2024;111:2044-2058.
 
+* ClinGen VCEP functional-evidence files (CSpec document pages)
+    resources/shared/vcep_functional_codes.tsv (scripts/build_vcep_functional_codes.py)
+    transcribes: TP53 VCEP Functional worksheet, Supplementary Table S3 (GN009;
+    Kato 2003, Funk 2025, Giacomelli 2018, Kotler 2018, Kawaguchi 2005 assays);
+    OTC VCEP Functional Supplement, Table S7 (GN156; Lo RS et al., Am J Hum Genet
+    2023;110:863-879, PMID 37146589), coded with the OTC VCEP thresholds; GALT VCEP
+    PS3 functional assay table (GN158, July 2024); PAH VCEP Table S8 (GN006; Kanavy
+    DM et al., Genome Med 2019;11:77), with codes of the eRepo PAH classifications;
+    IDUA VCEP Appendix 3 (GN091). https://cspec.genome.network/cspec/ui/svi/
+
 * Network of Cancer Genes (NCG 7.1), http://network-cancer-genes.org/
     Freely available; no licence required. resources/shared/somatic_gene_roles.tsv
     is derived from NCG_cancerdrivers_annotation_supporting_evidence.tsv (canonical

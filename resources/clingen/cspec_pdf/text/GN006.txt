@@ -1,0 +1,571 @@
+Criteria Specification
+ClinGen Phenylketonuria Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines for PAH Version 2.1
+Affiliation: Phenylketonuria VCEP
+Type: Richards et.al., 2015 - Combining rules
+Description : ACMG variant classification (PAH) version 2.1
+Version : 2.1
+Released : 11/3/2026
+Release Notes :
+1/31/25 Corrected “Glu289” to “Gly289” in PM1.
+4/19/24: Please see response to SVI comments in the Word document. All suggestions are addressed;
+specifically, changes to PM1 and PS3.
+Version 2 has many changes and updates. See attached Word document for specifics. response to SVI
+comments are in PM1 and PP3, with attachments for PVS1 and PS3.
+
+Contributors & Keywords
+Research Group: Phenylketonuria VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for PAH
+General Comments:
+
+Version 2.1
+
+Gene: PAH (HGNC:8582) 
+Transcripts:
+NM_000277.3
+
+HGNC Name: phenylalanine hydroxylase
+Disease:
+phenylketonuria
+(MONDO:0009861)  Mode
+of Inheritance: Autosomal
+recessive inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Applicable as described in Tayoun et al. 2018.
+Any nonsense or frameshift variant occurring upstream of c.1285
+Any canonical splice site predicted to disrupt reading frame and undergo nonsense
+mediated decay
+PVS1 (RNA): splicing assay data - assays demonstrating a variant leads to aberrant
+splicing profile that can be categorized against a PVS1 decision tree
+Use the PVS1 decision tree to determine code strength
+Applicable as described in Walker et al. (PMID: 36865205)
+Modification Disease-specific
+Type:
+
+Strong
+Use PVS1_strong with:
+Any nonsense or frameshift variant occurring downstream of c.1285
+Any canonical splice site predicted to preserve reading frame (skipping of exons 1, 9,
+10) or affect the last exon (exon 13)
+Initiator codon variant
+Modification Disease-specific
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same predicted splicing impact as a previously classified (likely) pathogenic variant
+Applicable as described in Walker et al. (PMID: 36865205)
+
+Modification Disease-specific
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Strong
+Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood, errors
+in embryo transfer, etc. can contribute to non-maternity. Only applicable when proband
+has a known pathogenic variant in trans with the de novo variant.
+Modification Disease-specific
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Moderate
+Functional studies with sufficient analyses to calculate OddsPath reaching strong have not
+been identified. Therefore, the strength of this criteria is modified to PS3_moderate or
+PS3_supporting for future or existing studies.
+In vitro enzyme activity <50% compared to wild type controls.
+Expression systems placing the mutant (and wild-type) cDNAs into plasmid vectors
+and introducing these into human or other mammalian host cells, which is the
+closest available approximation to the in vivo situation (e.g., COS cells) (Trunzo et al.
+Gene. 2016. 594:138-143. PMID: 27620137).
+With ≥11 benign/pathogenic variant controls used in assay
+NOTE: no papers that meet PS3_Moderate criteria have been identified by the PAH
+VCEP at time of this specification update. However, there may be future studies that
+meet the above criteria where a moderate level of evidence can be applied.
+
+Modification Disease-specific
+Type:
+
+Supporting
+In vitro enzyme activity ≤50% compared to wild type controls
+with ≤10 benign/pathogenic variant controls used in assay
+Modification Strength
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Not Applicable
+Comments:
+This criterion is not applicable for PAH. For proband counting, use PM3
+criterion.
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Active site residues in PAH include: Tyr138, Arg158, Val245, Tyr268, Thr278, Pro279,
+Gly289, Ala300, Asp315, Phe331, Ala345, Gly346, Ser349, Tyr377
+Substrate binding residues in PAH are: 46-48, 63-69
+Cofactor binding residues in PAH are: His285, His290, Glu330, 246-266, 280-283,
+322-326, 377-379
+Do not apply if PP3_Strong applies
+Modification Gene-specific
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Threshold <0.0002 (0.02%)
+The 0.0002 cutoff is based on disease frequency of 1:12,000 and the most common PAH
+pathogenic variant, R408W, the ExAC frequency is 0.0006594 (ExAC MAF: 0.001109
+74/66718 European Non-Finnish) and gnomAD overall: 0.0009056 (gnomAD MAF:
+0.001728 219/126,700 European Non-Finnish).
+Modification Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Very Strong
+Applicable as described in SVI recommendations for in trans criterion
+Modification Strength
+Type:
+
+Strong
+Applicable as described in SVI recommendations for in trans criterion
+Modification Strength
+Type:
+
+Moderate
+Applicable as described in SVI recommendations for in trans criterion
+Modification Strength
+Type:
+
+Supporting
+Applicable as described in SVI recommendations for in trans criterion
+
+Modification Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Applicable as described
+Modification No change
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Moderate
+Applicable as described.
+Modification No change
+Type:
+
+Supporting
+Applicable when the different missense change is likely pathogenic.
+Modification Strength
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+3 affected segregations + 0 unaffected segregations OR
+2 affected segregations + 3 unaffected segregations
+Modification Strength
+Type:
+
+Moderate
+2 affected segregations + 0 unaffected segregations
+Modification Strength
+Type:
+
+Supporting
+1 affected family member + 3 unaffected segregations
+Modification Strength
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+VCEP
+Per SVI recommendations (PMID: 36865205), PP3 should not be used for
+Specifications:variants with experimental evidence of altered splicing; for variants
+without experimental evidence of altered splicing, PP3 can be used for
+variants that have a SpliceAI delta score of ≥0.2.
+
+Strong
+Applicable as described in Pejaver et al (PMID: 36413997): REVEL score ≥0.932 for
+missense variants
+PP3 + PM1 should not exceed Strong
+Modification Strength
+Type:
+
+Moderate
+Applicable as described in Pejaver et al (PMID: 36413997): REVEL score 0.773 - 0.932 for
+missense variants
+Modification Strength
+Type:
+
+Supporting
+Applicable as described in Pejaver et al. (PMID: 36413997):
+REVEL score of 0.644 - 0.733 for missense variants
+In frame deletion or insertion predicted deleterious by 2 out of 3 tools (PROVEAN,
+MutationTaster, MutPred-InDel)
+Predicted impact on splicing by SpliceAI (score >0.5)
+Modification Strength
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Moderate
+Plasma phenylalanine concentration persistently above 120 µmol/L (2mg/dL), and either
+normal urine pterins and normal DHPR activity, or sequencing of genes in the BH4
+cofactor metabolism pathway to exclude a defect of BH4 cofactor metabolism.
+Modification Disease-specific,Strength
+Type:
+
+Supporting
+A plasma phenylalanine concentration persistently above 120umol/L (2mg/dL) without
+analysis of urine pterins, DHPR activity, or sequencing to exclude defects of BH4 cofactor
+metabolism.
+Modification Strength
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+An allele frequency ≥0.015 (1.5%), which is calculated with genetic heterogeneity of 90%
+to account for defects of BH4 metabolism, and penetrance of 80% to account for
+individuals who come to attention after becoming clinically symptomatic.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Strong
+Allele frequency ≥0.002 (0.2%)
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Only to be used when variant is observed in the homozygous state in a healthy adult.
+Modification None
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Supporting
+In vitro enzyme activity >85% compared to wild type
+Expression systems: placing the mutant (and wildtype) cDNA into plasmid vectors
+and introducing these into host cells. Transiently transfected human or other
+mammalian host cells are the closest available approximation to the in vivo situation
+(e.g., COS cells) (Trunzo, et al. Gene. 2016. 594:138-143).
+Modification Disease-specific,Strength
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Applicable as described
+
+Modification None
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Not Applicable
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+BP4_very strong: applicable as described in Pejaver et al.
+Specifications:
+
+Strong
+Applicable as described in Pejaver et al.
+
+Modification No change
+Type:
+
+Moderate
+Applicable as described in Pejaver et al.
+Modification No change
+Type:
+
+Supporting
+Applicable as described in Pejaver et al.
+REVEL score of 0.183 - 0.290 for missense variants
+In frame deletion or insertion predicted benign by PROVEAN, MutationTaster, and
+MutPred-InDel
+No predicted impact on splicing by SpliceAI (score <0.1)
+Modification Gene-specific,None
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Applicable as described
+Modification No change
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BP7
+Original ACMG
+Summary
+
+PubMed : 29543229 
+
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Strong
+Applicable as described by Walker et al. (PMID: 36865205).
+Modification Strength
+Type:
+
+Supporting
+Per SVI recommendations (PMID: 36865205), use BP7 only if BP4 is met; for variants with
+experimental evidence supporting that they do not alter splicing, use BP7_strong (RNA)
+intronic variants must be outside +7/-21 nt
+exonic variants must be outside first and last 3 bases of exon
+Modification Gene-specific,None
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PM3_Very Strong) AND ≥ 1 Strong (PVS1_Strong, PS1, PS2, PM3_Strong,
+PP1_Strong, PP3_Strong)
+
+1 Very Strong (PVS1, PM3_Very Strong) AND ≥ 2 Moderate (PS3_Moderate, PM1, PM3, PM4, PM5,
+PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Very Strong (PVS1, PM3_Very Strong) AND 1 Moderate (PS3_Moderate, PM1, PM3, PM4, PM5,
+PP1_Moderate, PP3_Moderate, PP4_Moderate) AND 1 Supporting (PS3_Supporting, PM2_Supporting,
+PM3_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Very Strong (PVS1, PM3_Very Strong) AND ≥ 2 Supporting (PS3_Supporting, PM2_Supporting,
+PM3_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PM3_Strong, PP1_Strong, PP3_Strong)
+1 Strong (PVS1_Strong, PS1, PS2, PM3_Strong, PP1_Strong, PP3_Strong) AND ≥ 3 Moderate
+(PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PM3_Strong, PP1_Strong, PP3_Strong) AND 2 Moderate
+(PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 2 Supporting
+(PS3_Supporting, PM2_Supporting, PM3_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PM3_Strong, PP1_Strong, PP3_Strong) AND 1 Moderate
+(PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 4 Supporting
+(PS3_Supporting, PM2_Supporting, PM3_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PM3_Very Strong) AND 1 Moderate (PS3_Moderate, PM1, PM3, PM4, PM5,
+PP1_Moderate, PP3_Moderate, PP4_Moderate)
+1 Strong (PVS1_Strong, PS1, PS2, PM3_Strong, PP1_Strong, PP3_Strong) AND 1 Moderate
+(PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PM3_Strong, PP1_Strong, PP3_Strong) AND ≥ 2 Supporting
+(PS3_Supporting, PM2_Supporting, PM3_Supporting, PM5_Supporting, PP1, PP3, PP4)
+
+≥ 3 Moderate (PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+2 Moderate (PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 2
+Supporting (PS3_Supporting, PM2_Supporting, PM3_Supporting, PM5_Supporting, PP1, PP3, PP4)
+1 Moderate (PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 4
+Supporting (PS3_Supporting, PM2_Supporting, PM3_Supporting, PM5_Supporting, PP1, PP3, PP4)
+1 Strong (PVS1_Strong, PS1, PS2, PM3_Strong, PP1_Strong, PP3_Strong) AND 2 Moderate
+(PS3_Moderate, PM1, PM3, PM4, PM5, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4, BP4_Strong, BP7_Strong)
+1 Stand Alone (BA1)
+
+Likely Benign
+1 Strong (BS1, BS2, BS4, BP4_Strong, BP7_Strong) AND 1 Supporting (BS3_Supporting, BP4, BP5, BP7)
+
+≥ 2 Supporting (BS3_Supporting, BP4, BP5, BP7)
+
+Files & Images
+PAH PS3 functional data: 
+PAH PVS1 decision tree: 
+PAH PP3 REVEL data explanation: 
+PAH PP3 REVEL data explanation: 
+
+

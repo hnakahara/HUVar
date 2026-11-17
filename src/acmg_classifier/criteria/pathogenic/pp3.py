@@ -148,9 +148,38 @@ _PP3_SPLICE_CUTOFF: dict[str, tuple[float, bool]] = {
         "RYR1", "SGCA", "SGCB", "SGCD", "SGCG", "SERPINC1", "VWF", "GP1BA",
         "GP1BB", "GP9")},
     "GAA": (0.50, True), "PAH": (0.50, True),          # "> 0.5"
+    "VHL": (0.50, True),                                 # "Splice AI (>0.5)"
+    "PTEN": (0.50, False),   # general text: "SpliceAI: scores 0.5-1 ... evidence of pathogenic"
     "RUNX1": (0.38, False),                              # ">= 0.38"
     "HBB": (0.30, True), "HBA2": (0.30, True),           # "> 0.3"
 }
+
+
+# SpliceAI score at/above which the splice-based PP3 is Moderate instead of
+# Supporting (ABCA4 VCEP: PP3_Moderate "for variant with a SpliceAI score of greater
+# than or equal to 0.8").
+_PP3_SPLICE_MODERATE: dict[str, float] = {"ABCA4": 0.80}
+
+
+def _splice_tier(gene: str | None, max_delta: float | None,
+                 strength: CriterionStrength | None) -> CriterionStrength | None:
+    cut = _PP3_SPLICE_MODERATE.get(gene or "")
+    if (strength == CriterionStrength.SUPPORTING and cut is not None
+            and max_delta is not None and max_delta >= cut):
+        return CriterionStrength.MODERATE
+    return strength
+
+
+# Nucleotides (MANE c. change prefix) at which a VCEP bars PP3. CDH1 general text:
+# "PP3 code also does not apply to the last nucleotide of exon 3 (c.387G)".
+_PP3_EXCLUDE_C: dict[str, tuple[str, ...]] = {"CDH1": ("c.387G>",)}
+
+
+def _pp3_excluded(gene: str | None, hgvs_c: str | None) -> bool:
+    if not hgvs_c or gene not in _PP3_EXCLUDE_C:
+        return False
+    c = hgvs_c.split(":", 1)[1] if ":" in hgvs_c else hgvs_c
+    return c.startswith(_PP3_EXCLUDE_C[gene])
 
 
 def _splice_cutoff(gene: str | None) -> tuple[float, bool]:
@@ -239,9 +268,10 @@ class PP3Evaluator(CriterionEvaluator):
                     if pc.gene_symbol in _PP3_SPLICE_CUTOFF else "")
         prec = (" (splice prediction takes precedence over the protein-level call)"
                 if protein.triggered else "")
+        tier = _splice_tier(pc.gene_symbol, sp.max_delta, CriterionStrength.SUPPORTING)
         return CriteriaResult.met(
-            ACMGCriterion.PP3, CriterionStrength.SUPPORTING,
-            f"{label} max_delta={sp.max_delta:.3f}{cut_note} (Supporting) — missense "
+            ACMGCriterion.PP3, tier,
+            f"{label} max_delta={sp.max_delta:.3f}{cut_note} ({tier.value}) — missense "
             f"with predicted splice impact{prec}; protein-level: {protein.evidence}",
         )
 
@@ -254,6 +284,12 @@ class PP3Evaluator(CriterionEvaluator):
         pc = annotation.primary_consequence
         if pc is None:
             return CriteriaResult.not_met(ACMGCriterion.PP3, "No consequence")
+        rc_excl = annotation.rule_consequence or pc
+        if _pp3_excluded(pc.gene_symbol, rc_excl.hgvs_c):
+            return CriteriaResult.not_met(
+                ACMGCriterion.PP3,
+                f"{pc.gene_symbol}: PP3 not applied at {rc_excl.hgvs_c} per VCEP",
+            )
 
         # Missense branch: the variant changes the amino acid but might also
         # affect splicing. ClinGen SVI splicing-WG says we should award PP3
@@ -408,6 +444,8 @@ class PP3Evaluator(CriterionEvaluator):
             else:
                 return CriteriaResult.not_met(ACMGCriterion.PP3, "Splice score unavailable")
 
+            if strength and sp.tool in ("spliceai", "openspliceai"):
+                strength = _splice_tier(pc.gene_symbol, sp.max_delta, strength)
             if strength:
                 return CriteriaResult.met(
                     ACMGCriterion.PP3, strength,

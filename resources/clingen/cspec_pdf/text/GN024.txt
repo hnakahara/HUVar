@@ -1,0 +1,873 @@
+Criteria Specification
+ClinGen DICER1 and miRNA-Processing Gene Expert Panel Specifications to the ACMG/AMP
+Variant Interpretation Guidelines for DICER1 Version 1.4
+Affiliation: DICER1 and miRNA-Processing Gene VCEP
+Type: Tavtigian et.al., 2020 - Bayesian adaptation of Richards et.al., 2015
+Description : 1.4 Release: 1. Updated C Spec specifications type to Tavtigian points based system as
+allowed in the latest C Spec release in order to appropriately reflect the classification schema the VCEP
+has used from the start and to remove the irrelevant criteria combinations at the bottom of the page. 2.
+PP3/BP4: Changed REVEL cutoffs to 3 decimal points to avoid ambiguity regarding rounding. 1.3 Release:
+1. BA1/BS1/PM2 Clarification: In light of the recent release of gnomAD v4.0.0 without a (non-cancer) filter,
+removed the (non-cancer) text and added the following clarifying instruction: "In general, the most
+recent/most comprehensive gnomAD version should be used." 2. Criteria Combination Clarification: Added
+a general comment to the C Spec asking users to disregard the "Rules for Combining Criteria" section and
+instead use the "Evidence Criteria Combinations" table.
+Version : 1.4
+Released : 7/8/2025
+DOI : 10.5281/zenodo.21421619
+Release Notes :
+1.4.0 Notes:
+1. Updated C Spec specifications type to Tavtigian points based system as allowed in the latest C Spec
+release in order to appropriately reflect the classification schema the VCEP has used from the start and to
+remove the irrelevant criteria combinations at the bottom of the page.
+2. PP3/BP4: Changed REVEL cutoffs to 3 decimal points to avoid ambiguity regarding rounding.
+1.3.0 Notes:
+1. BA1/BS1/PM2 Clarification: In light of the recent release of gnomAD v4.0.0 without a (non-cancer) filter,
+removed the (non-cancer) text and added the following clarifying instruction: "In general, the most
+recent/most comprehensive gnomAD version should be used."
+2. Criteria Combination Clarification: Added a general comment to the C Spec asking users to disregard
+the "Rules for Combining Criteria" section and instead use the "Evidence Criteria Combinations" table.
+
+Contributors & Keywords
+Research Group: DICER1 and miRNA-Processing
+Gene VCEP
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+DICER1 NM_177438.2 Autosomal dominant
+inheritance DICER1-related tumor predisposition
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Rules for DICER1
+General Comments:
+
+For more information, please see our open access publication:
+https://www.hindawi.com/journals/humu/2023/9537832/
+
+Gene: DICER1 (HGNC:17098) 
+Transcripts:
+NM_177438.2
+
+HGNC Name: dicer 1, ribonuclease III
+Disease:
+DICER1-related tumor
+predisposition
+(MONDO:0100216)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Follow SVI guidance, using DICER1-specific information. Per the PVS1 workflow guidance
+provided in Tayoun et al. 20181, the following will apply:
+Nonsense or frameshift variants:
+PVS1 applies to variants predicted to result in nonsense-mediated decay (NMD); the
+predicted NMD cutoff for DICER1 occurs at p.Pro1850.
+PVS1_Moderate applies to variants resulting in protein truncation 3’ of this cutoff
+Canonical splice variants (+/- 1,2 intronic positions): PVS1 applies with the following
+exceptions:
+Exon 10 SDS/SAS: PVS1_Strong (in-frame but exon includes >10% protein)
+Exons 5, 15, 18, 22 SDS/SAS: PVS1_Moderate (in-frame and each <10% of protein)
+Exon 27 SAS: PVS1_Moderate (final exon)
+Exon 1: no criteria (non-coding)
+Variants that disrupt the translation start site (p.M1?): no criteria applied given p.M1
+is not highly conserved, there are three in-frame possible alternate start codons
+(p.Met11, p.Met17, p.Met24), and multiple lab cases of p.Met1? without DICER1
+phenotype. SDS = splice donor site; SAS = splice acceptor site. Refer to PS3 weight
+guidelines when a variant meets criterion for application of both PVS1 and PS3. A
+disease-specific PVS1 decision tree incorporating the above bullets is also included at
+the end of this document as an additional curation tool.
+
+Default
+8
+Point
+Value:
+Modification Disease-specific,General recommendation
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+All variants should be assessed by MaxEntScan (MES) and SpliceAI for
+Specifications:predicting de novo and cryptic splice sites. However, for predicting
+impact to consensus splice sites, SpliceAI scores alone should be
+considered for variants outside the MES validation threshold, as MES is not
+capable of predicting native splice site impact for such variants. (MES
+validation threshold = last 3 nucleotides of exon through intronic position
++6 (donor sites); intronic position -20 through first 3 nucleotides of exon
+(acceptor sites))
+
+Strong
+For same AA change, must confirm there is no difference in splicing using RNA data or insilico modeling data (concordance of MaxEntScan and SpliceAI). For non-canonical intronic
+splicing variants at same nucleotide should have equal or worse splicing impact. This rule
+code can only be used to compare variants asserted as pathogenic by the ClinGen DICER1
+VCEP. Likely pathogenic changes do not apply.
+Default
+4
+Point
+Value:
+Modification General recommendation
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+VCEP
+De novo points should be tallied using the simplified table for tallying
+Specifications:proband points and used to determine the applied strength of PS2,
+consistent with SVI guidance. To avoid redundancy and increase
+consistency, the EP has opted to drop PM6 and exclusively use PS2 for de
+novo evidence.
+
+Very Strong
+≥4 de novo points
+Default
+8
+Point
+Value:
+Modification Strength
+Type:
+
+Strong
+≥2 but less than 4 de novo points
+Default
+4
+Point
+Value:
+Modification Strength
+Type:
+
+Moderate
+≥1 but less than 2 de novo points
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+Supporting
+≥0.5 but less than 1 de novo points
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PS3
+
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+VCEP
+This rule should be used and weighted appropriately for variants with
+Specifications:functional evidence of a splicing impact and/or reduced DICER1 ability to
+cleave pre-miRNA. Follow SVI guidance regarding control numbers for
+functional studies. Do not apply PS3 at any strength if PVS1 is applied at
+full strength.
+
+Strong
+RNA assay shows splicing impact that is out-of-frame, in-frame ≥193 residues, or in-frame
+with RNase IIIb disruption. (PS3_Moderate if PVS1_Strong is applied).
+Default
+4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Moderate
+RNA assay shows in-frame splicing impact with change in protein length <193 residues
+AND RNase IIIb domain not disrupted.
+Default
+2
+Point
+Value:
+Modification Disease-specific,General recommendation
+Type:
+
+Supporting
+In vitro cleavage assay shows failure or severely reduced capacity to produce either 5p or
+3p microRNAs from a premiRNA (positive and negative controls also performed).
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PS4
+
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+Unrelated probands may contribute up to 1 point each based on
+Specifications:phenotype (see Tables 2 & 3 in ruleset) Caveats:
+Do not apply PS4 if variant meets BA1/BS1 criteria.
+Do not apply points for a phenotype in an individual with a likely
+pathogenic germline variant in a second gene that could have
+reasonably contributed to the phenotype (e.g. Wilms tumor in an
+individual with a P/LP WT1 variant).
+Do not apply points for a proband whose tumor sequencing is
+consistent with a likely sporadic event (i.e. sequencing reveals a
+somatic, VCEPcurated, non-hotspot, likely pathogenic DICER1 variant
+in addition to a somatic hotspot variant and the germline variant
+under assessment). Of note, DICER1 tumors that consistently or
+occasionally follow a classical 2- hit hypothesis (i.e. LOF of both
+alleles) are exempt from this caveat. For example, identification of a
+somatic pathogenic non-hotspot DICER1 variant in pineoblastoma2,
+pituitary blastoma3, and lung cysts or cystic nephroma lacking
+mesenchymal cells4,5 should not exclude the proband from PS4.
+
+Strong
+≥4 phenotype points
+Default
+4
+Point
+Value:
+Modification General recommendation
+Type:
+
+Moderate
+2 – 3.5 phenotype points
+Default
+Point
+Value:
+
+2
+
+Modification Strength
+Type:
+
+Supporting
+1 – 1.5 phenotype points
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+Putative missense variants at residues affecting metal ion-binding: codons p.S1344,
+p.E1705, p.D1709, p.D1713, p.G1809, p.D1810, p.E1813
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+Putative missense variants at residues in the RNase IIIb domain (p.Y1682 – p.S1846),
+besides the metal ion-binding residues (see PM1).
+Default
+1
+Point
+Value:
+Modification Strength
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+VCEP
+In general, the most recent/most comprehensive gnomAD version should
+Specifications:be used.
+
+Supporting
+Allele frequency <0.000005 across gnomAD with no more than one allele in any
+subpopulation and at least 20x coverage.
+Default
+1
+Point
+Value:
+Modification Disease-specific,Strength
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Autosomal dominant.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+In-frame indels with a residue within the RNase IIIb domain (p.Y1682 – p.S1846).
+Default
+2
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+In-frame indels outside of the RNase IIIb domain (p.Y1682 – p.S1846) and repeat regions
+(p.D606-p.D609; p.E1418-p.E1420; p.E1422-p.E1425).
+Default
+Point
+
+1
+
+Value:
+Modification Strength
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+VCEP
+All variants should be assessed by MaxEntScan (MES) and SpliceAI for
+Specifications:predicting de novo and cryptic splice sites. However, for predicting
+impact to consensus splice sites, SpliceAI scores alone should be
+considered for variants outside the MES validation threshold, as MES is not
+capable of predicting native splice site impact for such variants. (MES
+validation threshold = last 3 nucleotides of exon through intronic position
++6 (donor sites); intronic position -20 through first 3 nucleotides of exon
+(acceptor sites))
+
+Moderate
+Missense variant under evaluation should have equal or worse Grantham score. Splicing
+should be ruled out with either RNA data or agreement in splicing predictors (MaxEntScan
+and SpliceAI) that show no splicing effects. The other variant must be interpreted as
+pathogenic by the ClinGen DICER1 VCEP. Likely pathogenic changes do not apply. This rule
+cannot be applied in combination with PM1 or PS1.
+Default
+2
+Point
+Value:
+Modification General recommendation
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Not Applicable
+Comments:
+Combined with PS2. Use PS2 instead of PM6.
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+Phenotype-positive individuals should have high, moderate, or lowSpecifications:specificity phenotypes (see phenotype table). (Caveat: segregation with a
+single low-specificity phenotype across multiple individuals (e.g. familial
+Wilms tumor) does not fulfill PP1.) Do not apply PP1 if variant meets
+BA1/BS1 criteria.
+
+Strong
+≥7 meioses across ≥2 families
+Default
+4
+Point
+Value:
+Modification Strength
+Type:
+
+Moderate
+5 – 6 meioses across ≥1 family
+Default
+2
+Point
+Value:
+Modification Strength
+Type:
+
+Supporting
+3 – 4 meioses across ≥1 family
+Default
+1
+Point
+Value:
+Modification General recommendation
+Type:
+
+PP2
+Original ACMG
+Summary
+
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+While DICER1 does meet recommended cutoff for missense constraint z
+score of ≥3.09 established by the SVI (4.23 on gnomAD) the VCEP
+recommends this rule not be used for DICER1 due to the presence of
+various missense variants throughout the gene that are clinically
+interpreted as benign (9) or likely benign (30) in ClinVar.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+VCEP
+All variants should be assessed by MaxEntScan (MES) and SpliceAI for
+Specifications:predicting de novo and cryptic splice sites. However, for predicting
+impact to consensus splice sites, SpliceAI scores alone should be
+considered for variants outside the MES validation threshold, as MES is not
+capable of predicting native splice site impact for such variants. (MES
+validation threshold = last 3 nucleotides of exon through intronic position
++6 (donor sites); intronic position -20 through first 3 nucleotides of exon
+(acceptor sites))
+
+Supporting
+For missense variants, REVEL score ≥ 0.750 OR agreement in splicing predictors predict
+splicing effects. For splicing variants, concordance of MaxEntScan and SpliceAI.
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Supporting
+Somatic tumor testing identifies somatic hotspot second hit and no additional somatic LOF
+variants. Tumor testing6 of a neoplasm with known DICER1 association in a proband who
+carries the germline variant under evaluation reveals the following:
+A previously reported somatic second hit of DICER1 in an RNase IIIb-disrupting
+“hotspot” codon (p.S1344, p.E1705, p.D1709, p.D1713, p.G1809, p.D1810, or
+p.E1813) AND
+Retention of the germline DICER1 variant under evaluation. PP4 is NOT applicable if:
+The germline variant is a missense variant in one of the seven RNase IIIb “hotspot”
+codons (see PM1), OR
+Somatic sequencing reveals additional DICER1 non-hotspot variants (could be
+consistent with sporadic tumorigenesis).
+Default
+1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+In general, the most recent/most comprehensive gnomAD version should
+Specifications:be used.
+
+Stand Alone
+Frequency >0.003 (0.3%) in gnomAD subpopulations. Subpopulations must have >2,000
+alleles tested and a minimum of 5 alleles present.
+
+Default
+Not Applicable
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+In general, the most recent/most comprehensive gnomAD version should
+Specifications:be used.
+
+Strong
+Frequency >0.0003 (0.03%) in gnomAD subpopulations. Subpopulations must have
+>2,000 alleles tested and a minimum of 5 alleles present.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+40+ unrelated females from a single source are tumor-free through age 50 (caveat: ratio
+of BS2-eligible females to PS4-eligible probands must be ≥ 40:1) OR 2+ observations of
+homozygosity in healthy individuals OR 1+ observation(s) of homozygosity in a healthy
+individual with status confirmed by parental testing.
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+10+ unrelated females from a single source are tumor-free through age 50 (caveat: ratio
+of BS2-eligible females to PS4-eligible probands must be ≥ 10:1) OR 2+ observations of
+homozygosity in individuals lacking clinical information
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+VCEP
+This rule should be used and weighted appropriately for variants with
+Specifications:functional evidence of no splicing impact and/or no reduced DICER1 ability
+to cleave pre-miRNA. Follow SVI guidance regarding control numbers for
+functional studies.
+
+Strong
+For intronic or synonymous variants, no splicing impact observed via RNA assay. (Should
+be observed more than once.)
+Default
+-4
+Point
+Value:
+Modification Disease-specific
+Type:
+
+Supporting
+An in vitro cleavage assay must demonstrate the variant produces both 5p and 3p
+microRNAs from a pre-miRNA (positive and negative controls also performed). An example
+of an appropriate assay to which criteria could be applied is Wu et al. 20187.
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BS4
+
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Family members should be phenotype-positive (must be high- or moderatespecificity
+phenotype; see phenotype table), genotype-negative 1st, 2nd, or 3rd degree relatives of
+the proband.
+Default
+-4
+Point
+Value:
+Modification General recommendation
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+This rule code does not apply to this gene, as truncating variants account
+for only a portion of disease-causing variants.
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+≥1 observation in trans with P/LP DICER1 variant or ≥3 observations in cis or phase
+unknown with 2+ different P/LP DICER1 variants.
+Default
+Point
+Value:
+
+-1
+
+Modification Disease-specific
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+Not applicable at this time.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+VCEP
+All variants should be assessed by MaxEntScan (MES) and SpliceAI for
+Specifications:predicting de novo and cryptic splice sites. However, for predicting
+impact to consensus splice sites, SpliceAI scores alone should be
+considered for variants outside the MES validation threshold, as MES is not
+capable of predicting native splice site impact for such variants. (MES
+validation threshold = last 3 nucleotides of exon through intronic position
++6 (donor sites); intronic position -20 through first 3 nucleotides of exon
+(acceptor sites))
+
+Supporting
+For missense variants, REVEL score < 0.500 and agreement in splicing predictors that no
+splicing effects are predicted. For synonymous/intronic/non-coding variants concordance
+of MaxEntScan and SpliceAI.
+Default
+-1
+Point
+Value:
+Modification Disease-specific
+Type:
+
+BP5
+
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Given the broad spectrum of DICER1-related neoplasms and the General
+recommendation lack of evidence of other high-penetrance germline
+variants that could account for such neoplasms (except perhaps for some
+already low-specificity phenotypes such as Wilms tumor), this rule should
+not be used at this time.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Silent variant OR Intronic variant at or beyond +7 to -21 positions OR Other intronic or
+non-coding variant if the variant is the reference nucleotide in ≥1 primate and/or ≥4
+mammalian species. Caveat: Variant must meet BP4 to apply BP7
+Default
+-1
+Point
+Value:
+Modification General recommendation
+Type:
+
+Point Based Variant Classification Categories
+
+Category
+
+Point
+Ranges
+
+Pathogenic
+
+10
+
+Likely
+Pathogenic
+
+6-9
+
+Uncertain
+Significance
+
+-1 - 5
+
+Likely Benign
+
+-6 - -2
+
+Benign
+
+-7
+
+Additional Notes : A final point value of -1 may be overriden to Likely Benign in cases where at
+least 2 benign evidence codes are applied AND PM2_Supporting is the only pathogenic code
+applied.
+
+Files & Images
+PVS1: Decision Tree Guide for PVS1 
+PP4 Flowchart and Second Hits: Flowchart for application of PP4 and table of qualifying, previously
+reported somatic second hits.
+
+Phenotype Table: Phenotypes specificity table for use with PS4, PS2, PP1, PP4, BS4
+
+Table for Tallying Proband Points: Table for tallying points for PS4 and PS2. Use in conjunction with
+Phenotype Table.
+
+Evidence Criteria Combinations: Modified Bayesian point system for variants with conflicting
+evidence codes. Adapted from Tables 2 and 3 of Tavtigian et al. 2020 (PMID: 32720330)
+
+References
+1.
+
+Abou Tayoun AN Pesaran T et al. Recommendations for interpreting the loss of function PVS1
+ACMG/AMP variant criterion. Hum Mutat (2018) 39 (11) p. 1517-1524. 10.1002/humu.23626
+30192042 
+
+2.
+
+de Kock L Sabbaghian N et al. Germ-line and somatic DICER1 mutations in pineoblastoma. Acta
+Neuropathol (2014) 128 (4) p. 583-95. 10.1007/s00401-014-1318-7 25022261 
+
+3.
+
+de Kock L Sabbaghian N et al. Pituitary blastoma: a pathognomonic feature of germ-line DICER1
+mutations. Acta Neuropathol (2014) 128 (1) p. 111-22. 10.1007/s00401-014-1285-z
+24839956 
+
+4.
+
+Wagh PK Gardner MA et al. Cell- and developmental stage-specific Dicer1 ablation in the lung
+epithelium models cystic pleuropulmonary blastoma. J Pathol (2015) 236 (1) p. 41-52.
+10.1002/path.4500 25500911 
+
+5.
+
+Yin Y Castro AM et al. Fibroblast Growth Factor 9 Regulation by MicroRNAs Controls Lung
+Development and Links DICER1 Loss to the Pathogenesis of Pleuropulmonary Blastoma. PLoS
+Genet (2015) 11 (5) p. e1005242. 10.1371/journal.pgen.1005242 25978641 
+
+6.
+
+Walsh MF Ritter DI et al. Integrating somatic variant data and biomarkers for germline variant
+classification in cancer predisposition genes. Hum Mutat (2018) 39 (11) p. 1542-1552.
+10.1002/humu.23640 30311369 
+
+7.
+
+Wu MK Vujanic GM et al. Anaplastic sarcomas of the kidney are characterized by DICER1
+mutations. Mod Pathol (2018) 31 (1) p. 169-178. 10.1038/modpathol.2017.100 28862265 
+
+8.
+
+de Kock L Wu MK et al. Ten years of DICER1 mutations: Provenance, distribution, and associated
+phenotypes. Hum Mutat (2019) 40 (11) p. 1939-1953. 10.1002/humu.23877 31342592 
+
+9.
+
+Wu MK Sabbaghian N et al. Biallelic DICER1 mutations occur in Wilms tumours. J Pathol (2013)
+230 (2) p. 154-64. 10.1002/path.4196 23620094 
+
+10.
+
+Gadd S Huff V et al. A Children's Oncology Group and TARGET initiative exploring the genetic
+landscape of Wilms tumor. Nat Genet (2017) 49 (10) p. 1487-1494. 10.1038/ng.3940
+28825729 
+
+11.
+
+Tavtigian SV Harrison SM et al. Fitting a naturally scaled point system to the ACMG/AMP variant
+classification guidelines. Hum Mutat (2020) 41 (10) p. 1734-1737. 10.1002/humu.24088
+32720330 
+
+

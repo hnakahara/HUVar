@@ -14,7 +14,8 @@
 * ``ps1_max``    — per-gene PS1 strength ceiling: ``Supporting`` (RMRP, whose
   VCEP downgrades PS1 to Supporting) or ``Moderate``; blank = no cap (PS1 keeps
   its Strong/Moderate comparator-derived strength).
-* ``ps1_paralog_group`` — sibling genes whose analogous (same-numbered) residue a
+* ``ps1_paralog_group`` — sibling genes whose analogous residue (the same number,
+  or the aligned residue for a pair in ``ps1_paralog_map.tsv``: MAP2K1/2, SOS1/2) a
   PS1 same-AA comparator may also come from (RASopathy "highly analogous
   groupings" HRAS/NRAS/KRAS, MAP2K1/MAP2K2, SOS1/SOS2; HBA2↔HBA1). Comma-joined,
   the OTHER genes of the group.

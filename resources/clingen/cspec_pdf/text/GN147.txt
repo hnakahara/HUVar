@@ -1,0 +1,782 @@
+Criteria Specification
+ClinGen Congenital Myopathies Expert Panel Specifications to the ACMG/AMP Variant
+Interpretation Guidelines for ACTA1 Version 2.0
+Affiliation: Congenital Myopathies VCEP
+Description : The Congenital Myopathies VCEP aims to (1) define criteria for the specific classification of
+variants related to congenital myopathies based on the ACMG standards and guidelines for variant
+interpretation and classification, and (2) review the majority of reported variants that have been
+associated with these disorders to provide expert-approved classification for their clinical significance,
+starting with 5 genes that have been described as having Definitive evidence for a causal role in disease:
+ACTA1, NEB, MTM1, DNM2, RYR1
+Version : 2.0
+Released : 8/27/2024
+DOI : 10.5281/zenodo.21434744
+Release Notes :
+BS1 and BA1 thresholds were accidentally switched. Those have been corrected in this 2.0 version.
+
+Contributors & Keywords
+Research Group: Congenital Myopathies VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+ACTA1 NM_001100.4 Autosomal dominant
+inheritance alpha-actinopathy
+
+Rules for ACTA1
+General Comments:
+
+*Note on multiple Modes of Inheritance: In general, the easiest way to tell
+whether a variant is AD or AR is to look at the clinical situation of probands
+with the variant, along with the family and inheritance. If it’s de novo, it’s
+much more likely to be AD and if it’s observed with a second variant, it’s
+much more likely to be AR. Loss of function variants are almost always
+associated with AR disease. For truncating/putative LOF variants, this is
+easier to determine, but some missense variants are observed that may
+have LOF functional consequence. The AD and AR specifications are listed
+separately.
+
+Gene: ACTA1 (HGNC:129) 
+Transcripts:
+NM_001100.4
+
+HGNC Name: actin alpha 1, skeletal muscle
+Disease:
+alpha-actinopathy
+(MONDO:0100084)  Mode
+of Inheritance: Autosomal
+dominant inheritance
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Not Applicable
+Comments:
+Loss of function is not a mechanism of disease for autosomal dominant
+alpha-actinopathy caused by variants in ACTA1.
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change. Example: Val->Leu caused by either G>C or G>T in the same codon.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Strong
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history. Note: Confirmation of paternity only is insufficient. Egg donation, surrogate
+motherhood, errors in embryo transfer, etc. can contribute to non-maternity.
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PS3
+Original ACMG
+Summary
+
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Strong may only be considered for variant-specific mouse models. Currently, no other
+assays are applicable at this strength.
+Modification Disease-specific
+Type:
+
+Moderate
+The two assays from PS3_Supporting may be stacked to reach a Moderate Strength
+Modification Gene-specific
+Type:
+
+Supporting
+Three specific assays are currently suggested to be applied at Supporting:
+1. Actin Localization: An abnormal readout consists of integration of actin into
+cytoplasmic or intranuclear aggregates or rods.
+2. Actin Polymerization: An abnormal readout consists of a significant reduction in
+levels of actin in insoluble fraction or absent or short polymerized actin filaments
+compared to WT.
+3. Actin Motility Assay: An abnormal readout consists of percent motility, velocity, and
+force generation statistically different from WT.
+If not listed above, it is acceptable to use PS3_Supporting for other functional analyses if
+The assay has been validated by a known pathogenic and benign variant AND
+There is plausible reason that the function the assay is testing relates to the
+phenotype AND
+The assay conditions are likely to mimic the physiological environment.
+Modification Gene-specific
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+VCEP
+ACTA1 is associated with both autosomal recessive and autosomal
+Specifications:dominant disease. If you are curating biallelic observations, please use the
+AR specifications.
+Cases should not be counted if there are complex phenotypic features in
+addition to those listed that are incompatible with ACTA1, such as
+neurogenic etiology, central nervous system involvement, lysosomal
+disorders, increased serum CK levels, or extraocular muscle weakness.
+
+Strong
+8 case observations
+Modification Gene-specific
+Type:
+
+Moderate
+4 case observations
+Modification Gene-specific
+Type:
+
+Supporting
+2 case observations
+Modification Gene-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Not Applicable
+Comments:
+There are no defined hotspots or critical functional domains in ACTA1 at
+this time.
+
+PM2
+
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+VCEP
+If the mode of inheritance for the variant is unclear (largely with missense
+Specifications:variants as loss of function variants are predicted to cause AR disease),
+use the more conservative AD cutoff for PM2_Supporting.
+
+Supporting
+PM2_Supporting may be applied if the minor allele frequency in population databases of
+at least 2000 alleles is
+absent (1 allele allowed) for autosomal dominant
+Modification Disease-specific,Gene-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Not Applicable
+Comments:
+Biallelic cases should not be counted using the ACTA1 autosomal
+dominant specifications. Please see the autosomal recessive specifications
+for use of PM3.
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before. Example: Arg156His is pathogenic;
+now you observe Arg156Cys. Caveat: Beware of changes that impact splicing rather than
+at the amino acid/protein level.
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PM6
+Original ACMG
+Summary
+
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Strong
+No change - use as originally described
+Modification No change
+Type:
+
+Moderate
+Assumed de novo, but without confirmation of paternity and maternity.
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+VCEP
+The segregation chart (adopted from Biesecker et al 2023
+Specifications:PMID:38103548) should be used to determine the strength level of the
+total number of segregations. The combination of PP1 and PP4 is capped
+at strong.
+
+Strong
+See segregation chart
+Modification General recommendation
+Type:
+
+Moderate
+See segregation chart
+Modification General recommendation
+Type:
+
+Supporting
+
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease. Note: May be used as stronger evidence with increasing
+segregation data.
+See segregation chart
+Modification General recommendation
+Type:
+
+PP2
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Supporting
+ACTA1 is a gene that is constrained for missense variation (gnomAD v4.1 z=6.09). PP2
+may be used for missense variants with an autosomal dominant mode of inheritance.
+Modification Gene-specific
+Type:
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.). Caveat: As many in silico
+algorithms use the same or very similar input for their predictions, each algorithm should
+not be counted as an independent criterion. PP3 can be used only once in any evaluation
+of a variant.
+PP3 is met if the REVEL score ≥ 0.7 or if the variant is predicted to impact splicing using
+SpliceAI score ≥0.5
+Modification General recommendation
+Type:
+
+PP4
+
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+VCEP
+The strength of PP4 should be determined based on the case with the
+Specifications:most specific phenotype. It should only be applied once per variant, even
+if there are multiple cases that meet PP4 criteria. The combination of PP4
+and PP1 is capped at strong.
+
+Strong
+PP4 follows the published SVI guidance from Biesecker et al 2023 (PMID:38103548). For
+ACTA1, a conservative estimate of the diagnostic yield is 33%, which corresponds to +2
+points and a moderate strength in Table 2 of this guidance. However, if the proband
+meets PP4_Moderate criteria and has had a comprehensive myopathy panel, exome, or
+genome testing that is negative for all other causes of myopathy, PP4 can be applied at
+strong, per the SVI guidance.
+The combination of PP1 and PP4 is capped at strong.
+Modification Disease-specific,Gene-specific
+Type:
+
+Moderate
+PP4 follows the published SVI guidance from Biesecker et al 2023 (PMID:38103548). For
+ACTA1, a conservative estimate of the diagnostic yield is 33%, which corresponds to +2
+points and a moderate strength in Table 2 of this guidance.
+PP4_Moderate is met with the presence of any of these features
+Presence on Muscle Biopsy of:
+Accumulated thin filaments
+Intranuclear rods
+Cores, fiber type disproportion
+Zebra bodies
+Modification Disease-specific,Gene-specific
+Type:
+
+Supporting
+If a biopsy demonstrates a presence of nemaline rods, this is suggestive of ACTA1-related
+congenital myopathy and can be given PP4 at a supporting level.
+Modification Disease-specific,Gene-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+VCEP
+If the mode of inheritance for the variant is unclear (this largely applies to
+Specifications:missense variants as loss of function variants are suspected to cause AR
+disease), use the more conservative AR cutoff for BA1.
+
+Stand Alone
+The minor allele frequency using the filtering allele frequency of either exomes or
+genomes in gnomAD is ≥0.0000781 for AD variants. All continental populations in
+gnomAD used should have at least 2000 alleles and >1 observation.
+Modification Gene-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+VCEP
+If the mode of inheritance for the variant is unclear (this largely applies to
+Specifications:missense variants as loss of function variants are suspected to cause AR
+disease), use the more conservative AR cutoff for BS1.
+
+Strong
+The minor allele frequency using the filtering allele frequency of either exomes or
+genomes in gnomAD is ≥0.00000781 for AD variants. All continental populations used
+in gnomAD should have at least 2000 alleles and >1 observation.
+
+Modification Gene-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Not Applicable
+Comments:
+The VCEP has decided that lack of demonstrated effect in a functional
+assay should not count against the pathogenicity of an ACTA1 variant
+because of the numerous possible functions of Actin; therefore all
+specified functional assays will only be used as evidence for pathogenicity.
+
+BS4
+
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Lack of segregation in affected members of a family. Caveat: The presence of
+phenocopies for common phenotypes (i.e. cancer, epilepsy) can mimic lack of segregation
+among affected individuals. Also, families may have more than one pathogenic variant
+contributing to an autosomal dominant disorder, further confounding an apparent lack of
+segregation.
+Modification No change
+Type:
+
+Moderate
+No change - use as originally described
+Modification No change
+Type:
+
+Supporting
+No change - use as originally described
+Modification No change
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+Comments:
+Both missense and truncating variants in ACTA1 are disease-causing.
+
+BP2
+Original ACMG
+Summary
+
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+Modification No change
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Not Applicable
+Comments:
+There are no regions in ACTA1 where BP3 would apply.
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc) Caveat: As many in silico algorithms use
+the same or very similar input for their predictions, each algorithm cannot be counted as
+an independent criterion. BP4 can be used only once in any evaluation of a variant.
+BP4 is met if the REVEL score ≤ 0.15 or if the variant is not predicted to impact splicing
+using SpliceAI.
+Modification General recommendation
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Supporting
+Variant found in a case with an alternate molecular basis for disease.
+Modification No change
+Type:
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BP7
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+A synonymous variant for which SpliceAI predicts no impact to the splice consensus
+sequence nor the creation of a new splice site AND the nucleotide is not highly conserved.
+Modification General recommendation
+Type:
+
+Rules for Combining Criteria
+Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS3_Very Strong, PS4_Very Strong, PM3_Very Strong) AND ≥ 1
+Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong,
+PP3_Strong, PP4_Strong)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS3_Very Strong, PS4_Very Strong, PM3_Very Strong) AND ≥ 2
+Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM3, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS3_Very Strong, PS4_Very Strong, PM3_Very Strong) AND 1
+Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM3, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND 1 Supporting (PVS1_Supporting, PS1_Supporting,
+PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting,
+PM5_Supporting, PM6_Supporting, PP1, PP2, PP3, PP4)
+
+1 Very Strong (PVS1, PS2_Very Strong, PS3_Very Strong, PS4_Very Strong, PM3_Very Strong) AND ≥ 2
+Supporting (PVS1_Supporting, PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting,
+PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP2, PP3, PP4)
+
+≥ 2 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong,
+PP1_Strong, PP3_Strong, PP4_Strong)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong,
+PP3_Strong, PP4_Strong) AND ≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate,
+PS3_Moderate, PS4_Moderate, PM3, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong,
+PP3_Strong, PP4_Strong) AND 2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate,
+PS4_Moderate, PM3, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 2 Supporting
+(PVS1_Supporting, PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM3_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP2, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong,
+PP3_Strong, PP4_Strong) AND 1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate,
+PS4_Moderate, PM3, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 4 Supporting
+(PVS1_Supporting, PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting,
+PM3_Supporting, PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP2, PP3, PP4)
+
+Likely Pathogenic
+1 Very Strong (PVS1, PS2_Very Strong, PS3_Very Strong, PS4_Very Strong, PM3_Very Strong) AND 1
+Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM3, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong,
+PP3_Strong, PP4_Strong) AND 1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate,
+PS4_Moderate, PM3, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong,
+PP3_Strong, PP4_Strong) AND ≥ 2 Supporting (PVS1_Supporting, PS1_Supporting, PS2_Supporting,
+PS3_Supporting, PS4_Supporting, PM2_Supporting, PM3_Supporting, PM4_Supporting, PM5_Supporting,
+PM6_Supporting, PP1, PP2, PP3, PP4)
+
+≥ 3 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM3, PM4,
+PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM3, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 2 Supporting (PVS1_Supporting,
+PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP2, PP3, PP4)
+
+1 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate, PS4_Moderate, PM3, PM4, PM5,
+PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate) AND ≥ 4 Supporting (PVS1_Supporting,
+PS1_Supporting, PS2_Supporting, PS3_Supporting, PS4_Supporting, PM2_Supporting, PM3_Supporting,
+PM4_Supporting, PM5_Supporting, PM6_Supporting, PP1, PP2, PP3, PP4)
+
+1 Strong (PVS1_Strong, PS1, PS2, PS3, PS4, PM3_Strong, PM4_Strong, PM5_Strong, PM6_Strong, PP1_Strong,
+PP3_Strong, PP4_Strong) AND 2 Moderate (PVS1_Moderate, PS1_Moderate, PS2_Moderate, PS3_Moderate,
+PS4_Moderate, PM3, PM4, PM5, PM6, PP1_Moderate, PP3_Moderate, PP4_Moderate)
+
+Benign
+≥ 2 Strong (BS1, BS2, BS4, BP2_Strong, BP5_Strong, BP7_Strong)
+1 Stand Alone (BA1)
+
+Likely Benign
+
+1 Strong (BS1, BS2, BS4, BP2_Strong, BP5_Strong, BP7_Strong) AND 1 Supporting (BS2_Supporting,
+BS4_Supporting, BP2, BP4, BP5, BP7)
+
+≥ 2 Supporting (BS2_Supporting, BS4_Supporting, BP2, BP4, BP5, BP7)
+
+Files & Images
+Approved AD ACTA1 functional assays: These assays apply to AD variants only 
+PP1 segregation chart: Table 3 from Biesecker et al 2023 PMID:38103548 
+
+References
+1.
+
+Oza AM DiStefano MT et al. Expert specification of the ACMG/AMP variant interpretation
+guidelines for genetic hearing loss. Hum Mutat (2018) 39 (11) p. 1593-1613.
+10.1002/humu.23630 30311386 
+
+2.
+
+Chan C Fan J et al. Myopathy-inducing mutation H40Y in ACTA1 hampers actin filament structure
+and function. Biochim Biophys Acta (2016) 1862 (8) p. 1453-8. 10.1016/j.bbadis.2016.04.013
+27112274 
+
+3.
+
+Yao X Grade S et al. His(73), often methylated, is an important structural determinant for actin.
+A mutagenic analysis of HIS(73) of yeast actin. J Biol Chem (1999) 274 (52) p. 37443-9.
+10.1074/jbc.274.52.37443 10601317 
+
+4.
+
+Clarke NF Ilkovski B et al. The pathogenesis of ACTA1-related congenital fiber type
+disproportion. Ann Neurol (2007) 61 (6) p. 552-61. 10.1002/ana.21112 17387733 
+
+5.
+
+D'Amico A Graziano C et al. Fatal hypertrophic cardiomyopathy and nemaline myopathy
+associated with ACTA1 K336E mutation. Neuromuscul Disord (2006) 16 (9-10) p. 548-52.
+10.1016/j.nmd.2006.07.005 16945537 
+
+6.
+
+Marston S Mirza M et al. Functional characterisation of a mutant actin (Met132Val) from a
+patient with nemaline myopathy. Neuromuscul Disord (2004) 14 (2) p. 167-74.
+10.1016/j.nmd.2003.11.003 14733965 
+
+7.
+
+Bathe FS Rommelaere H et al. Phenotypes of myopathy-related actin mutants in differentiated
+C2C12 myotubes. BMC Cell Biol (2007) 8 p. 2. 10.1186/1471-2121-8-2 17227580 
+
+8.
+
+Costa CF Rommelaere H et al. Myopathy mutations in alpha-skeletal-muscle actin cause a range
+of molecular defects. J Cell Sci (2004) 117 (Pt 15) p. 3367-77. 10.1242/jcs.01172 15226407 
+
+9.
+
+Domazetovska A Ilkovski B et al. Intranuclear rod myopathy: molecular pathogenesis and
+mechanisms of weakness. Ann Neurol (2007) 62 (6) p. 597-608. 10.1002/ana.21200
+17705262 
+
+10.
+
+Ilkovski B Nowak KJ et al. Evidence for a dominant-negative effect in ACTA1 nemaline myopathy
+caused by abnormal folding, aggregation and altered polymerization of mutant actin isoforms.
+Hum Mol Genet (2004) 13 (16) p. 1727-43. 10.1093/hmg/ddh185 15198992 
+
+11.
+
+Fan J Chan C et al. Molecular Consequences of the Myopathy-Related D286G Mutation on Actin
+Function. Front Physiol (2018) 9 p. 1756. 10.3389/fphys.2018.01756 30564146 
+
+12.
+
+Feng JJ Ushakov DS et al. Direct visualisation and kinetic analysis of normal and nemaline
+myopathy actin polymerisation using total internal reflection microscopy. J Muscle Res Cell
+Motil (2009) 30 (1-2) p. 85-92. 10.1007/s10974-009-9178-9 19418233 
+
+13.
+
+Ross JA Levy Y et al. Impairments in contractility and cytoskeletal organisation cause nuclear
+defects in nemaline myopathy. Acta Neuropathol (2019) 138 (3) p. 477-495. 10.1007/s00401019-02034-8 31218456 
+
+14.
+
+Biesecker LG Byrne AB et al. ClinGen guidance for use of the PP1/BS4 co-segregation and PP4
+phenotype specificity criteria for sequence variant pathogenicity classification. Am J Hum
+Genet (2024) 111 (1) p. 24-38. 10.1016/j.ajhg.2023.11.009 38103548 
+
+

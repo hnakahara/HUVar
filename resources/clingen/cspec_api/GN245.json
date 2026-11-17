@@ -1,0 +1,48 @@
+{
+  "@context": "https://cspec.genome.network/cspec/api/context/SequenceVariantInterpretation",
+  "@id": "https://cspec.genome.network/cspec/api/SequenceVariantInterpretation/id/GN245",
+  "@type": "Criteria Specification",
+  "affiliation": {
+    "@id": "https://cspec.genome.network/cspec/api/Organization/id/50099",
+    "@type": "Organization",
+    "label": "InSiGHT Hereditary Colorectal Cancer/Polyposis Variant Curation Expert Panel",
+    "url": "http://clinicalgenome.org/affiliation/50099"
+  },
+  "assertionMethod": {
+    "@id": "_:am1",
+    "@type": "AssertionMethod",
+    "url": "https://cspec.genome.network/cspec/SequenceVariantInterpretation/id/1639305186"
+  },
+  "cspecStatus": "Classification Rules In Prep",
+  "currentStatus": "Classification Rules In Prep",
+  "label": "ClinGen InSiGHT Hereditary Colorectal Cancer/Polyposis  Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines for SMAD4 Version 1.0.0",
+  "lastUpdated": "2026-10-09T14:00:09.521Z",
+  "ruleSets": [
+    {
+      "@id": "https://cspec.genome.network/cspec/api/RuleSet/id/1639305193",
+      "@type": "RuleSet",
+      "genes": [
+        {
+          "@id": "https://www.genenames.org/tools/search/#!/?query=SMAD4",
+          "@type": "Gene",
+          "diseases": [
+            {
+              "@id": "http://purl.obolibrary.org/obo/MONDO_0008278",
+              "@type": "Disease",
+              "label": "MONDO:0008278",
+              "modeOfInheritance": [
+                {
+                  "@id": "https://hpo.jax.org/app/browse/term/HP:0000006",
+                  "@label": "Autosomal dominant inheritance",
+                  "@type": "Mode of inheritance"
+                }
+              ]
+            }
+          ],
+          "label": "SMAD4"
+        }
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}

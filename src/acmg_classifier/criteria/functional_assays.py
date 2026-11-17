@@ -1,6 +1,16 @@
 """PS3 / BS3 from calibrated functional assays.
 
-Two sources, chosen per gene by ``resources/shared/functional_evidence_rules.tsv``:
+Sources, chosen per gene by ``resources/shared/functional_evidence_rules.tsv``:
+
+* ``vcep_table`` (TP53, OTC, GALT, PAH, IDUA): variant-level codes from the functional
+  evidence files the VCEPs attach to their CSpec specifications
+  (``resources/shared/vcep_functional_codes.tsv``, built by
+  ``scripts/build_vcep_functional_codes.py``): the TP53 VCEP pre-assigned code for
+  every missense variant, the OTC yeast complementation scores (Lo 2023) coded
+  with the VCEP thresholds, the GALT residual-activity table, PAH (the current
+  eRepo VCEP classification, else the pilot assignment) and the IDUA Appendix 3
+  activities coded with the study thresholds. ``vcep_table+oddspath`` falls back to MaveDB for variants absent
+  from the table (TP53).
 
 * ``enigma_table9`` (BRCA1/BRCA2): the ClinGen ENIGMA VCEP Specifications Table 9,
   which gives, per variant, the PS3 or BS3 code the VCEP assigns from calibrated
@@ -42,6 +52,7 @@ from __future__ import annotations
 
 import csv
 import gzip
+import re
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -51,6 +62,7 @@ from acmg_classifier.models.enums import ACMGCriterion, ConsequenceType, Criteri
 
 SRC_MAVEDB = "[MaveDB]"
 SRC_ENIGMA_T9 = "[ENIGMA Table 9]"
+SRC_VCEP_TABLE = "[VCEP functional table]"
 
 S = CriterionStrength
 _RANK = {S.SUPPORTING: 1, S.MODERATE: 2, S.THREE_POINT: 3, S.STRONG: 4, S.VERY_STRONG: 8}
@@ -166,6 +178,65 @@ def load_table9(path: Path) -> dict[tuple[str, str], dict]:
     return {(r["gene"], r["hgvs_c"]): r for r in _rows(path)}
 
 
+@lru_cache(maxsize=4)
+def load_vcep_codes(path: Path) -> dict[tuple[str, str], list[dict]]:
+    """(gene, "Arg175His" | "c.1A>G") -> rows of vcep_functional_codes.tsv."""
+    out: dict[tuple[str, str], list[dict]] = {}
+    if not path.exists():
+        return out
+    for r in _rows(path):
+        key = r["hgvs_c"] or r["aa_change"]
+        if key:
+            out.setdefault((r["gene"], key), []).append(r)
+    return out
+
+
+_P3 = re.compile(r"p\.\(?([A-Z][a-z]{2}\d+(?:[A-Z][a-z]{2}|Ter|=))\)?$")
+
+
+def _aa_change(hgvs_p: str | None) -> Optional[str]:
+    """'NP_000537.3:p.Arg175His' -> 'Arg175His' (substitutions only)."""
+    m = _P3.search((hgvs_p or "").split(":")[-1].replace("%3D", "=").replace("*", "Ter"))
+    return m.group(1) if m else None
+
+
+_AA1 = {"A": "Ala", "R": "Arg", "N": "Asn", "D": "Asp", "C": "Cys", "Q": "Gln", "E": "Glu",
+        "G": "Gly", "H": "His", "I": "Ile", "L": "Leu", "K": "Lys", "M": "Met", "F": "Phe",
+        "P": "Pro", "S": "Ser", "T": "Thr", "W": "Trp", "Y": "Tyr", "V": "Val"}
+
+
+def _aa_from_parts(amino_acids: str | None, pos: int | None) -> Optional[str]:
+    """VEP 'R/H' + 175 -> 'Arg175His' (missense only)."""
+    if not amino_acids or pos is None or "/" not in amino_acids:
+        return None
+    ref, alt = amino_acids.split("/", 1)
+    if ref not in _AA1 or alt not in _AA1:
+        return None
+    return f"{_AA1[ref]}{pos}{_AA1[alt]}"
+
+
+def _seq_matches(seq: str, hgvs_c: str, codons: str | None) -> Optional[bool]:
+    """Does a codon-specific TP53 row (``seq_change``) describe this variant?
+    ``c.``-changes are compared with the HGVS; codon (``CGG>CTA``) and base
+    (``G>T`` / ``CC>TT``) changes with VEP's ``codons`` (``Cgg/Ctg``). None when
+    the variant's codons are unknown."""
+    if seq.startswith("c."):
+        return seq == hgvs_c
+    if not codons or "/" not in codons:
+        return None
+    ref, alt = (x.upper() for x in codons.split("/", 1))
+    if len(ref) != 3 or len(alt) != 3:
+        return None
+    a, b = seq.upper().split(">")
+    if len(a) == 3:
+        return (a, b) == (ref, alt)
+    diff = [i for i in range(3) if ref[i] != alt[i]]
+    if not diff:
+        return False
+    i, j = diff[0], diff[-1] + 1
+    return (ref[i:j], alt[i:j]) == (a, b)
+
+
 @lru_cache(maxsize=8)
 def _has_ruo_column(path: Path) -> bool:
     """Whether a MaveDB table carries the ``ruo`` column (built since RUO support)."""
@@ -208,6 +279,8 @@ class FunctionalAssays:
                 self._mavedb_path = packaged
                 self._sets_path = _REPO / "mavedb_scoresets.tsv"
         self._t9_path = _resolve(getattr(cfg, "enigma_table9_tsv", None), "enigma_brca12_table9.tsv")
+        self._vcep_path = _resolve(getattr(cfg, "vcep_functional_codes_tsv", None),
+                                   "vcep_functional_codes.tsv")
         from acmg_classifier.classification.gene_validity import _vcep_genes
         # VCEP genes decide the not_applicable default; fall back to the packaged
         # table so a missing data copy never opens MaveDB up to every VCEP gene.
@@ -233,6 +306,11 @@ class FunctionalAssays:
         if pc is None:
             return None
         policy, ps3_max, bs3_max, spec = self.policy(pc.gene_symbol)
+        if policy.startswith("vcep_table"):
+            vt = self._vcep_table(annotation, pc, ps3_max, bs3_max, spec)
+            if vt is not None or policy != "vcep_table+oddspath" or pc.consequence in _NULL:
+                return vt
+            return self._mavedb(variant, annotation, pc, ps3_max, bs3_max, spec)
         if policy == "enigma_table9":
             # VCEP-curated per variant, splicing included: applied as listed.
             t9 = self._table9(annotation, pc.gene_symbol)
@@ -245,6 +323,76 @@ class FunctionalAssays:
         if policy != "oddspath" or pc.consequence in _NULL:
             return None
         return self._mavedb(variant, annotation, pc, ps3_max, bs3_max, spec)
+
+    def vcep_call(self, variant, annotation) -> Optional[FunctionalCall]:
+        """The VCEP variant-level table only (no MaveDB fallback); None when the
+        gene has no table or the variant is not listed."""
+        if not self._enabled:
+            return None
+        pc = annotation.primary_consequence
+        if pc is None:
+            return None
+        policy, ps3_max, bs3_max, spec = self.policy(pc.gene_symbol)
+        if not policy.startswith("vcep_table"):
+            return None
+        return self._vcep_table(annotation, pc, ps3_max, bs3_max, spec)
+
+    # -- VCEP variant-level tables -------------------------------------------------------
+    def _vcep_table(self, annotation, pc, ps3_max, bs3_max, spec) -> Optional[FunctionalCall]:
+        if pc.consequence in _NULL:
+            return None  # null variants: PVS1 territory (as for MaveDB)
+        rc = annotation.rule_consequence or pc
+        gene = pc.gene_symbol
+        table = load_vcep_codes(self._vcep_path)
+        acc, _, c = (rc.hgvs_c or "").partition(":")
+        rows = table.get((gene, c), []) if c else []
+        aa = None
+        if not rows:
+            aa = _aa_change(rc.hgvs_p) or _aa_from_parts(rc.amino_acids, rc.protein_position)
+            rows = table.get((gene, aa), []) if aa else []
+        tx = (rc.transcript_id or acc).split(".")[0]
+        rows = [r for r in rows if tx == r["transcript"]]
+        if not rows:
+            return None
+        label = c if rows[0]["hgvs_c"] else f"p.{aa}"
+        # Codon-specific TP53 codes: keep the row(s) for this nucleotide change.
+        specific = [r for r in rows if r["seq_change"]]
+        if specific:
+            hits = [r for r in specific if _seq_matches(r["seq_change"], c, rc.codons)]
+            if hits:
+                rows = hits
+            elif len({(r["code"], r["strength"]) for r in rows}) > 1:
+                return FunctionalCall(None, None, (
+                    f"{SRC_VCEP_TABLE} {gene} {label}: codon-specific codes "
+                    f"({', '.join(r['seq_change'] + ' ' + (r['code'] + '_' + r['strength'] if r['code'] != 'none' else 'none') for r in specific)}) "
+                    f"and this change ({c or 'unknown'}, codons {rc.codons or 'unknown'}) "
+                    "not resolved -> no PS3/BS3"))
+        r = rows[0]
+        why = f"{SRC_VCEP_TABLE} {gene} {label}: {r['source']}"
+        if r["seq_change"]:
+            why += f" [{r['seq_change']}]"
+        if r["note"]:
+            why += f"; {r['note']}"
+        if r["code"] not in ("PS3", "BS3"):
+            return FunctionalCall(None, None, why + " -> no PS3/BS3")
+        st = _strength_of(r["strength"]) or S.STRONG
+        # Splicing: the codes come from protein-level (cDNA / yeast) assays.
+        sp = annotation.splice
+        splice = sp.max_delta if (sp is not None and sp.is_available) else None
+        if gene == "OTC" and splice is not None and splice >= SPLICE_CUTOFF:
+            return FunctionalCall(None, None, why + (
+                f" -> {r['code']} not applied: splice score {splice:.2f} >= {SPLICE_CUTOFF} "
+                "(OTC VCEP: not for variants with a potential splicing impact)"))
+        if r["code"] == "BS3" and (splice is None or splice >= SPLICE_CUTOFF):
+            reason = "no splice prediction" if splice is None else f"splice score {splice:.2f} >= {SPLICE_CUTOFF}"
+            return FunctionalCall(None, None, why + f" -> BS3 withheld (protein-level assay; {reason})")
+        cap = ps3_max if r["code"] == "PS3" else bs3_max
+        capped = _cap(st, cap)
+        if capped is None:
+            return FunctionalCall(None, None, why + f" -> {r['code']} not applicable ({spec})")
+        tag = "" if capped == st else f" (capped from {st.value}: {spec})"
+        return FunctionalCall(ACMGCriterion(r["code"]), capped,
+                              why + f" -> {r['code']}_{capped.value}{tag}")
 
     # -- ENIGMA Table 9 ---------------------------------------------------------------
     def _table9(self, annotation, gene: str) -> Optional[FunctionalCall]:

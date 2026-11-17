@@ -1,0 +1,603 @@
+Criteria Specification
+ClinGen Hearing Loss Expert Panel Specifications to the ACMG/AMP Variant Interpretation
+Guidelines for OTOF and MYO15A Version 1.0
+Affiliation: Hearing Loss VCEP
+Version : 1.0
+Released : 3/30/2022
+DOI : 10.5281/zenodo.21421608
+
+Contributors & Keywords
+Research Group: Hearing Loss VCEP
+
+Rights Holder: The Clinical Genome Resource
+(ClinGen)
+
+Keywords: human biology genomics variant
+variant classification clingen disease standards
+MYO15A NM_016239.3 Autosomal Recessive OTOF
+NM_194248.2 Autosomal Recessive
+
+Rules for MYO15A, OTOF
+Gene: MYO15A (HGNC:7594) 
+Transcripts:
+NM_016239.3
+
+HGNC Name: myosin XVA
+Disease:
+nonsyndromic genetic
+deafness (MONDO:0019497) 
+Mode of Inheritance:
+Autosomal Recessive
+
+Gene: OTOF (HGNC:8515) 
+Transcripts:
+NM_194248.2
+
+HGNC Name: otoferlin
+Disease:
+nonsyndromic genetic
+deafness (MONDO:0019497) 
+Mode of Inheritance:
+Autosomal Recessive
+
+Criteria & Strength Specifications
+
+PVS1
+Original ACMG
+Summary
+Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon,
+single or multi-exon deletion) in a gene where loss of function (LOF) is a known
+mechanism of disease.
+Caveats:
+
+• Beware of genes where LOF is not a known disease mechanism (e.g. GFAP, MYH7).
+• Use caution interpreting LOF variants at the extreme 3’ end of a gene.
+• Use caution with splice variants that are predicted to lead to exon skipping but leave
+the remainder of the protein intact.
+• Use caution in the presence of multiple transcripts.
+
+Very Strong
+Null variant in a gene with established LOF as a disease mechanism; see PVS1_Strong,
+PVS1_Moderate, PVS1_Supporting for reduced evidence applications. PVS1 should also be
+considered for both of the genes OTOF and MYO15A with variants falling in two exons
+being exceptions to this rule: OTOF: NM_194248.2 Exon 46 (c.5841 to c.5994; PMID:
+19250381) and MYO15A: NM_016239.3 Exon 8 (c.4033 to c. 4038; PMID: 10552926) and
+Exon 26 (c.5911 to c.5964; PMID: 30096381 and high frequency LOF variant
+https://gnomad.broadinstitute.org/variant/17-18046894-G-A?dataset=gnomad_r2_1)
+Modification Disease-specific
+Type:
+
+Strong
+See PVS1 flow chart for PVS1_Strong variants in gene where LOF is a known mechanism of
+disease.
+Modification None
+Type:
+
+Moderate
+See PVS1 flowchart for PVS1_Moderate variants in gene where LOF is a known mechanism
+of disease.
+Modification None
+Type:
+
+Supporting
+See PVS1 flowchart for PVS1_Supporting variants in gene where LOF is a known
+mechanism of disease.
+Modification None
+Type:
+
+PS1
+Original ACMG
+Summary
+Same amino acid change as a previously established pathogenic variant regardless of
+nucleotide change.
+Example: Val->Leu caused by either G>C or G>T in the same codon.
+
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Same amino acid change as an established pathogenic variant; OR splice variants at
+same nucleotide and with similar impact prediction as previously reported pathogenic
+variant.
+Established variant must meet criteria for pathogenicity by the HL specifications.
+Can also use PS1 for splice variants located in the splice consensus sequence, at the
+same nucleotide position as a previously reported pathogenic variant.
+Example: c.105+1G>C is known to be pathogenic, can use PS1 for c.105+1G>T.
+No additional hearing loss specifications for missense variants. Follow
+recommendations as outlined in Richard 2015 and/or the Sequence Variant
+Interpretation working group within ClinGen.
+Caveat (from ACMG/AMP guidelines): Assess the possibility that the variant may act
+directly through the DNA change (e.g. through splicing disruption as assessed by at
+least computational analysis) instead of through the amino acid change).
+Modification None
+Type:
+
+PS2
+Original ACMG
+Summary
+De novo (both maternity and paternity confirmed) in a patient with the disease and no
+family history.
+Note: Confirmation of paternity only is insufficient. Egg donation, surrogate motherhood,
+errors in embryo transfer, etc. can contribute to non-maternity.
+
+Very Strong
+4 points per tables 5a and 5b: Examples: 2 proven de novo occurrences; OR 1 proven + 2
+assumed de novo occurrences; OR 4 assumed de novo occurrences.
+Modification None
+Type:
+
+Strong
+2 points per tables 5a and 5b: Examples: 1 proven de novo occurrence; OR 2 assumed de
+novo occurrences.
+OTOF and MYO15A are associated with autosomal recessive conditions. Therefore, de
+novo variants are expected to be an unlikely occurrence. It is recommended that de
+novo evidence is only awarded when phase with another variant (VUS, Likely
+Pathogenic, or Pathogenic) can be confirmed in trans. This is to avoid inappropriately
+awarding de novo evidence, which would lead to potentially incorrect classification.
+
+Follow recommendations as specified by the Sequence Variant Interpretation working
+group within ClinGen, as outlined below
+Determine number of points per proband using table 1 below. Sum the total number
+of points for all probands, and determine the strength of the evidence by using table
+2.
+Please note, the phenotype for de novo occurrences for MYO15A and OTOF are
+not considered “highly specific”.
+Modification None
+Type:
+
+Moderate
+1 point per tables 5a and 5b: Examples: 1 proven de novo occurrence (phenotype
+consistent but not specific to gene); OR 1 assumed de novo occurrence; OR 2 assumed de
+novo occurrences (phenotype/gene not specific).
+Modification None
+Type:
+
+Supporting
+0.5 points per tables 5a and 5b: Example: 1 assumed de novo occurrence
+(phenotype/gene not specific).
+Modification None
+Type:
+
+PS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies supportive of a damaging effect on
+the gene or gene product.
+Note: Functional studies that have been validated and shown to be reproducible and
+robust in a clinical diagnostic laboratory setting are considered the most well-established.
+
+Strong
+Knock-in mouse model demonstrates the phenotype.
+Recommend that functional evidence, except for a variant specific mouse model, is
+not used as strong evidence, due to the absence of well-established functional
+studies for hearing loss genes.
+There are no specific assays for OTOF or MYO15A. However, PS3_Supporting can be
+applied for other functional analyses if
+The assay has been validated by a known pathogenic and benign variant AND
+There is plausible reason that the function the assay is testing relates to the
+phenotype AND
+
+The assay conditions are likely to mimic the physiological environment.
+Modification None
+Type:
+
+Moderate
+Validated functional studies show a deleterious effect (none are defined for OTOF and
+MYO15A).
+Modification None
+Type:
+
+Supporting
+Functional studies with limited validation show a deleterious effect.
+Modification None
+Type:
+
+PS4
+Original ACMG
+Summary
+The prevalence of the variant in affected individuals is significantly increased compared to
+the prevalence in controls.
+Note 1: Relative risk (RR) or odds ratio (OR), as obtained from case-control studies, is
+>5.0 and the confidence interval around the estimate of RR or OR does not include 1.0.
+See manuscript for detailed guidance.
+Note 2: In instances of very rare variants where case-control studies may not reach
+statistical significance, the prior observation of the variant in multiple unrelated patients
+with the same phenotype, and its absence in controls, may be used as moderate level of
+evidence.
+
+Very Strong
+Fisher Exact or Chi-Squared analysis shows statistical increase in cases over controls.
+Modification Disease-specific
+Type:
+
+PM1
+Original ACMG
+Summary
+Located in a mutational hot spot and/or critical and well-established functional domain
+(e.g. active site of an enzyme) without benign variation.
+
+Moderate
+
+Mutational hot spot or well-studied functional domain without benign variation (None
+defined for OTOF and MYO15A).
+Modification None
+Type:
+
+PM2
+Original ACMG
+Summary
+Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing
+Project, 1000 Genomes or Exome Aggregation Consortium.
+Caveat: Population data for indels may be poorly called by next generation sequencing.
+
+Supporting
+Absent/Rare in population databases (absent or ≤0.00007 (0.007%) for autosomal
+recessive).
+Modification Disease-specific
+Type:
+
+PM3
+Original ACMG
+Summary
+For recessive disorders, detected in trans with a pathogenic variant
+Note: This requires testing of parents (or offspring) to determine phase.
+
+Very Strong
+4 points awarded from tables 7a and 7b. Example: Detected in trans in ≥4 probands with
+a pathogenic variant (recessive).
+Modification Strength
+Type:
+
+Strong
+2 points awarded from tables 7a and 7b. Example: Detected in trans in 2 probands with a
+pathogenic variant (recessive).
+Modification Strength
+Type:
+
+Moderate
+1 point awarded from tables 7a and 7b Example: Detected in trans with a pathogenic
+variant (recessive).
+
+Modification Strength
+Type:
+
+Supporting
+0.5 points awarded from tables 7a and 7b Examples: Two variants that meet
+PM2_Supporting detected in trans; OR a homozygous variant meeting PM2_Supporting.
+Modification Strength
+Type:
+
+PM4
+Original ACMG
+Summary
+Protein length changes due to in-frame deletions/insertions in a non-repeat region or stoploss variants.
+
+Moderate
+Protein length change due to an in-frame deletion or insertion that are not located in
+repetitive regions. No changes. Follow recommendations as outlined in ACMG/AMP
+guidelines and/or Sequence Variant Interpretation working group.
+
+PM5
+Original ACMG
+Summary
+Novel missense change at an amino acid residue where a different missense change
+determined to be pathogenic has been seen before.
+Example: Arg156His is pathogenic; now you observe Arg156Cys.
+Caveat: Beware of changes that impact splicing rather than at the amino acid/protein
+level.
+
+Strong
+Missense change at same codon as two different pathogenic missense variants. Located
+at an amino acid residue with known pathogenic variation (at least 2 other variants at the
+same site meet pathogenic criteria for based on independent data).
+Caveat: Assess whether the variants in question could have an impact at the DNA
+level, such as through splicing impacts.
+Modification None
+Type:
+
+Moderate
+
+Missense change at same codon as another pathogenic missense variant. No changes.
+Follow recommendations as outlined in ACMG/AMP guidelines and/or Sequence Variant
+Interpretation working group.
+Modification None
+Type:
+
+PM6
+Original ACMG
+Summary
+Assumed de novo, but without confirmation of paternity and maternity.
+
+Moderate
+See PS2 above.
+Modification None
+Type:
+
+PP1
+Original ACMG
+Summary
+Co-segregation with disease in multiple affected family members in a gene definitively
+known to cause the disease.
+Note: May be used as stronger evidence with increasing segregation data.
+
+Strong
+Segregation in three affected relatives for recessive.
+Modification Strength
+Type:
+
+Moderate
+Segregation in two affected relatives for recessive.
+Modification Strength
+Type:
+
+Supporting
+Segregation in one affected relative for recessive.
+Modification Strength
+Type:
+
+PP2
+
+Original ACMG
+Summary
+Missense variant in a gene that has a low rate of benign missense variation and where
+missense variants are a common mechanism of disease.
+
+Not Applicable
+Comments:
+Advise against using this rule because there are few such genes that this
+would apply to, particularly genes associated to autosomal recessive
+hearing loss.
+
+PP3
+Original ACMG
+Summary
+Multiple lines of computational evidence support a deleterious effect on the gene or gene
+product (conservation, evolutionary, splicing impact, etc.).
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm should not be counted as an independent criterion. PP3 can
+be used only once in any evaluation of a variant.
+
+Supporting
+REVEL score ≥0.7, or predicted impact to splicing using MaxEntScan.
+Use REVEL and MAXENTSCAN
+For missense variants, award PP3 if REVEL score is ≥0.7
+If splicing is predicted to be impacted, either creation of a cryptic splice site, or
+disruption of a native splice site, award PP3
+For splice variants (except for canonical -/+1 or 2), use MAXENTSCAN.
+For -/+ 1 or 2 splice variants, do not use PP3 if you are using PVS1
+Modification Disease-specific
+Type:
+
+PP4
+Original ACMG
+Summary
+Patient’s phenotype or family history is highly specific for a disease with a single genetic
+etiology.
+
+Supporting
+Patient's phenotype highly specific for gene or fully sequenced gene set (see
+specifications in Table 7).
+The HL-EP applied this rule to HL syndromes if all causative genes have been
+sequenced and the detection rate at least doubles when the added clinical feature is
+
+present.
+See table below for applicable gene-disease phenotypes.
+Advise against using PP4 for patients with nonsyndromic or apparently nonsyndromic
+hearing loss, given genetic heterogeneity.
+Modification Disease-specific
+Type:
+
+PP5
+Original ACMG
+Summary
+Reputable source recently reports variant as pathogenic, but the evidence is not available
+to the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+PubMed : 29543229 
+
+BA1
+Original ACMG
+Summary
+Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes or Exome
+Aggregation Consortium.
+
+Stand Alone
+MAF of ≥0.005 (0.5%) for autosomal recessive.
+Modification Disease-specific
+Type:
+
+BS1
+Original ACMG
+Summary
+Allele frequency is greater than expected for disorder.
+
+Very Strong
+MAF of ≥0.003 (0.3%) for autosomal recessive. Likely benign, provided there is no
+conflicting evidence.
+Modification Disease-specific
+Type:
+
+Supporting
+
+MAF of ≥0.0007 (0.07%) for autosomal recessive.
+Modification Disease-specific
+Type:
+
+BS2
+Original ACMG
+Summary
+Observed in a healthy adult individual for a recessive (homozygous), dominant
+(heterozygous), or X-linked (hemizygous) disorder, with full penetrance expected at an
+early age.
+
+Strong
+Observation of variant (biallelic with known pathogenic variant for recessive) in controls
+inconsistent with disease penetrance.
+Advise caution when using this rule, since most of hearing loss is autosomal
+recessive, and autosomal dominant hearing loss could display reduced penetrance or
+variable expression.
+However, if biallelic observations in controls are inconsistent with disease
+penetrance, this may be applicable. Ensure age of the unaffected individual is
+appropriate. MYO15A and OTOF are expected to cause congenital or childhood onset
+hearing loss. Therefore, an adult (ie >18 years) may be an appropriate individual to
+consider application of this criteria. Please see additional considerations listed under
+BS4 “Genotype+/phenotype-”.
+Modification Disease-specific
+Type:
+
+BS3
+Original ACMG
+Summary
+Well-established in vitro or in vivo functional studies show no damaging effect on protein
+function or splicing.
+
+Supporting
+Functional study shows no deleterious effect (none are defined for OTOF and MYO15A).
+Recommend that functional evidence is not used as strong evidence, due to the
+absence of well-established functional studies for hearing loss genes.
+No specific assays are listed for OTOF or MYO15A. However, BS3_Supporting can be
+used for functional analyses if
+The assay has been validated by a known pathogenic and benign variant AND
+
+There is plausible reason that the function the assay is testing relates to the
+phenotype AND
+The assay conditions are likely to mimic the physiological environment.
+Modification Disease-specific
+Type:
+
+BS4
+Original ACMG
+Summary
+Lack of segregation in affected members of a family.
+Caveat: The presence of phenocopies for common phenotypes (i.e. cancer, epilepsy) can
+mimic lack of segregation among affected individuals. Also, families may have more than
+one pathogenic variant contributing to an autosomal dominant disorder, further
+confounding an apparent lack of segregation.
+
+Strong
+Non-segregation with disease.
+Phenotype+/genotypeStrong evidence for benign.
+Be cautious when using this as the possibility for phenocopy is high. The hearing loss
+phenotype should be consistent within the family to consider it a non-segregation,
+though intra-familial variability has been reported. Factors to consider are:
+Age of onset (ie. congenital/early childhood vs. adult onset)
+Hearing loss prevalence increases significantly with age. A congenital hearing loss in
+a child and a late onset hearing loss in a grandparent would not be a consistent
+phenotype.
+Severity (ie - mild vs. profound)
+Minor differences may exist among family members.
+Keep in mind that progression in older individuals may account for a discrepancy
+between individuals.
+Audiogram shape
+May not be completely consistent among family members even with same etiology.
+Genotype+/phenotypeConfounding variables to applying this rule: Age-related penetrance, variable
+expressivity, etc.
+If the gene is associated with later onset and individual with the non-segregation is
+beyond the expected age that the hearing loss would occur, consider applying
+BS4_Supporting .
+Recommend only using for fully penetrant genes (typically genes associated with AR
+hearing loss) o Must be confident that patient is truly unaffected and a hearing loss is
+not missed or subclinical. Be cautious if only phenotyping was newborn hearing
+
+screening. Diagnostic audiometric testing (auditory brainstem response (ABR) or
+audiogram should be required).
+Any evidence for reduced penetrance, do not use BS4.
+Modification Disease-specific
+Type:
+
+BP1
+Original ACMG
+Summary
+Missense variant in a gene for which primarily truncating variants are known to cause
+disease.
+
+Not Applicable
+
+BP2
+Original ACMG
+Summary
+Observed in trans with a pathogenic variant for a fully penetrant dominant gene/disorder
+or observed in cis with a pathogenic variant in any inheritance pattern.
+
+Supporting
+Observed in trans with a dominant variant/observed in cis with a pathogenic variant (use
+with caution).
+Use with caution. For genes that are associated with both dominant and recessive
+hearing loss, consider whether an earlier onset/more severe phenotype could be
+present if variant is identified in trans with a dominant variant.
+Modification None
+Type:
+
+BP3
+Original ACMG
+Summary
+In frame-deletions/insertions in a repetitive region without a known function.
+
+Supporting
+In-frame indels in repeat region without known function.
+No changes. Follow recommendations as outlined in Richard 2015 and/or ClinGen's
+Sequence Variant Interpretation working group.
+
+Modification None
+Type:
+
+BP4
+Original ACMG
+Summary
+Multiple lines of computational evidence suggest no impact on gene or gene product
+(conservation, evolutionary, splicing impact, etc)
+Caveat: As many in silico algorithms use the same or very similar input for their
+predictions, each algorithm cannot be counted as an independent criterion. BP4 can be
+used only once in any evaluation of a variant.
+
+Supporting
+Computational evidence suggests no impact; REVEL score ≤0.15 or no impact to splicing
+in MaxEntScan.
+Use REVEL, award BP4 if score is 0.15 or lower. Make sure to also check
+MAXENTSCAN to rule out the creation of a cryptic splice site.
+Modification Disease-specific
+Type:
+
+BP5
+Original ACMG
+Summary
+Variant found in a case with an alternate molecular basis for disease.
+
+Not Applicable
+Comments:
+Autosomal recessive: Do not use. An individual could be carrier of
+pathogenic variant and have an alternate cause. Therefore, BP5 shouldn’t
+be used as evidence for benign in this case.
+
+BP6
+Original ACMG
+Summary
+Reputable source recently reports variant as benign, but the evidence is not available to
+the laboratory to perform an independent evaluation.
+
+Not Applicable
+This criterion is not for use as recommended by the ClinGen Sequence Variant
+Interpretation VCEP Review Committee.
+
+BP7
+
+PubMed : 29543229 
+
+Original ACMG
+Summary
+A synonymous variant for which splicing prediction algorithms predict no impact to the
+splice consensus sequence nor the creation of a new splice site AND the nucleotide is not
+highly conserved.
+
+Supporting
+Silent variant with no predicted impact to splicing.
+No changes. Follow recommendations as outlined in Richard 2015 and/or ClinGen's
+Sequence Variant Interpretation working group.
+Modification None
+Type:
+
+
