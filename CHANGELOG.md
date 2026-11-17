@@ -67,8 +67,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
       <= 5 and PP3 + PM1 + PS1 <= 6 points; MYOC PP3 + PM5 <= 5 and PP3 + PS1 <= 6;
       F8 / F9 PM1 + PM5 <= Strong; TP53 PS1 + PM5 <= Strong.
     - PM1 not with PM5_Strong (SCN genes, ACVRL1, ENG); RPE65 PM1 not with BA1 / BS1.
-    - BA1 / BS1 minimum allele counts (CDH1, MYOC, CYP1B1, RUNX1, F8, F9); APC frequency
-      criteria on the non-cancer subset; SERPINC1 founder variants excluded from BS1.
+    - BA1 / BS1 minimum allele counts (CDH1, MYOC, CYP1B1, RUNX1, F8, F9); SERPINC1
+      founder variants excluded from BS1. (APC's "non-cancer dataset" is not applied:
+      the GRCh38 non-cancer companion DB covers the BRCA1/2 contigs only by default.)
     - PM2 coverage (CDH1 30x, HBB / HBA2 20x); HBB / HBA2 BP7 (SpliceAI <= 0.3, not
       conserved); PTEN splice cutoffs (PP3 >= 0.5, BP4 <= 0.2); PAH BP4 Very Strong;
       ABCA4 BP4 not with BP7; AIPL1 PM4 in p.328-384 only for indels >= 5 aa.

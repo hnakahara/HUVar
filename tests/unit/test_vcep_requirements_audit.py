@@ -727,7 +727,8 @@ def test_tsv_values_from_general_text():
         assert (rows[g]["pm2_min_depth"], rows[g]["bp7_splice_cutoff"], rows[g]["bp7_phylop"]) \
             == ("20", "0.3", "0")
     assert rows["PTEN"]["bp4_splice_cutoff"] == "0.2" and _splice_cutoff("PTEN") == (0.50, False)
-    assert rows["APC"]["pm2_subset"] == "non_cancer"
+    # APC non-cancer subset deliberately not used (companion DB covers chr13/chr17 only)
+    assert rows["APC"]["pm2_subset"] == ""
     assert "p.Ala416Ser" in rows["SERPINC1"]["bs1_exclude"]
 
 

@@ -944,9 +944,12 @@ _AUDIT_OVERRIDES.setdefault("IL2RG", {}).update(
 #   * HBB / HBA2 BP7: "SpliceAI <= 0.3 AND GERP++ < 0" (phyloP < 0 stands in for GERP).
 #   * PTEN BP4: "SpliceAI: scores 0-0.2 are considered evidence of benign".
 #   * PAH: "BP4_very strong: applicable as described in Pejaver et al." (REVEL <= 0.003).
-#   * APC BA1 / BS1 / PM2: "Use the non-cancer dataset from gnomAD".
+#   * APC BA1 / BS1 / PM2 "Use the non-cancer dataset from gnomAD (v2.1.1)" is NOT
+#     applied: on GRCh38 the non-cancer companion DB is built for the BRCA1/2
+#     contigs only by default, and a miss there reads as "absent from the non-cancer
+#     subset", which would give PM2 to every APC variant present in gnomAD.
 #   * SERPINC1: common founder variants "excluded from eligibility of the BS1 code".
-for _g, _cols in {'TP53': {'pm5_grantham': 'ge'}, 'CYP1B1': {'pm5_grantham': 'ge'}, 'CDH1': {'pm2_min_depth': '30'}, 'HBB': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'HBA2': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'PTEN': {'bp4_splice_cutoff': '0.2'}, 'PAH': {'revel_bp4_very_strong': '0.003'}, 'APC': {'pm2_subset': 'non_cancer'}, 'SERPINC1': {'bs1_exclude': 'p.Pro73Leu,p.Arg79His,p.Thr147Ala,p.Ala416Ser,p.Leu131Phe,p.Val30Glu'}}.items():
+for _g, _cols in {'TP53': {'pm5_grantham': 'ge'}, 'CYP1B1': {'pm5_grantham': 'ge'}, 'CDH1': {'pm2_min_depth': '30'}, 'HBB': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'HBA2': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'PTEN': {'bp4_splice_cutoff': '0.2'}, 'PAH': {'revel_bp4_very_strong': '0.003'}, 'SERPINC1': {'bs1_exclude': 'p.Pro73Leu,p.Arg79His,p.Thr147Ala,p.Ala416Ser,p.Leu131Phe,p.Val30Glu'}}.items():
     _AUDIT_OVERRIDES.setdefault(_g, {}).update(_cols)
 for _g, _cols in _AUDIT_OVERRIDES.items():
     _CURATED_OVERRIDES.setdefault(_g, {}).update(_cols)
