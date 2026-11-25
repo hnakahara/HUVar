@@ -164,6 +164,38 @@ def depth_block(coverage, gene: str | None, variant) -> str:
     return f"{gene} VCEP: gnomAD mean read depth {dp:.0f} < {need:g}"
 
 
+def filtering_af(ac: int | None, an: int | None, confidence: float = 0.9999) -> float | None:
+    """Filtering allele frequency at *confidence* (Whiffin et al. 2017): the
+    highest true allele frequency at which observing ``ac`` or more alleles out of
+    ``an`` still has probability >= 1 - *confidence* (Poisson). ``None`` when the
+    counts are unknown; 0.0 for ``ac`` = 0. gnomAD's FAF95 is the same quantity at
+    95%; the CDH1 and F8 / F9 VCEPs state BA1 / BS1 at "99.99% CI"."""
+    import math
+    if ac is None or an is None or an <= 0 or ac <= 0:
+        return None if (ac is None or an is None or an <= 0) else 0.0
+    alpha = 1.0 - confidence
+
+    def p_ge(lam: float) -> float:          # P(X >= ac | lambda)
+        term, cdf = math.exp(-lam), 0.0
+        for k in range(ac):
+            if k:
+                term *= lam / k
+            cdf += term
+        return max(0.0, 1.0 - cdf)
+
+    lo, hi = 0.0, float(ac)
+    while p_ge(hi) < alpha:                  # p_ge grows with lambda
+        lo, hi = hi, hi * 2 + 1
+    # largest lambda with P(X >= ac) <= alpha
+    for _ in range(80):
+        mid = (lo + hi) / 2
+        if p_ge(mid) <= alpha:
+            lo = mid
+        else:
+            hi = mid
+    return lo / an
+
+
 def variant_listed(listing: str, hgvs_c: str | None, hgvs_p: str | None) -> str:
     """Return the entry of a comma-separated VCEP variant list (bs1_exclude /
     ba1_exclude) that matches this variant, or "". Entries are protein changes

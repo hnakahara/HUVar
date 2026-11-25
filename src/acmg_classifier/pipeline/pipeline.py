@@ -234,12 +234,15 @@ def _classify_record(variant: VariantRecord, ctx: _ClassifyContext) -> Classific
                    or (ctx.supplement.get(variant.input_variant) if variant.input_variant else None)
                    or [])
     criteria_results = registry.evaluate_all(variant, ann, sup_entries)
-    classification_2015, rules = clf_2015.classify(criteria_results)
+    _pc0 = ann.primary_consequence
+    classification_2015, rules = clf_2015.classify(
+        criteria_results, gene=_pc0.gene_symbol if _pc0 else None)
     score, classification_bay = clf_bay.classify(criteria_results)
 
     def _evaluate_on(ann_tx, _variant=variant, _sup=sup_entries):
         crit = registry.evaluate_all(_variant, ann_tx, _sup)
-        c2015, r2015 = clf_2015.classify(crit)
+        _tpc = ann_tx.primary_consequence if ann_tx is not None else None
+        c2015, r2015 = clf_2015.classify(crit, gene=_tpc.gene_symbol if _tpc else None)
         sc, cbay = clf_bay.classify(crit)
         tpc = ann_tx.primary_consequence
         c2015, cbay, _w = apply_gene_validity(
@@ -510,7 +513,8 @@ def classify_annotated(
 
     def _evaluate_on(ann_tx):
         crit = registry.evaluate_all(variant, ann_tx, supplement)
-        c2015, r2015 = clf_2015.classify(crit)
+        _tpc = ann_tx.primary_consequence if ann_tx is not None else None
+        c2015, r2015 = clf_2015.classify(crit, gene=_tpc.gene_symbol if _tpc else None)
         sc, cbay = clf_bay.classify(crit)
         tpc = ann_tx.primary_consequence if ann_tx is not None else None
         c2015, cbay, warn = apply_gene_validity(

@@ -118,6 +118,18 @@ class BS1Evaluator(CriterionEvaluator):
             faf = gd.popmax_af
             metric = "gnomAD popmax AF (point)"
 
+        # "99.99% CI" (CDH1, F8 / F9 VCEPs): the filtering AF at 99.99% confidence,
+        # from the GrpMax population's allele count / number. Without those counts
+        # the gnomAD FAF95 (or the point AF) stays in use, and the metric says so.
+        if gt.af_basis == "faf9999":
+            from acmg_classifier.criteria.allele_frequency import filtering_af
+            f9999 = filtering_af(gd.ac_grpmax, gd.an_grpmax)
+            if f9999 is not None:
+                faf = f9999
+                metric = "gnomAD GrpMax filtering AF (99.99% CI)"
+            else:
+                metric += " [99.99% CI not computable: GrpMax AC/AN unavailable]"
+
         # No FAF95 (gnomAD computes it only when the grpmax group has more than one
         # observation): the ClinGen/VCEP frequency rules are defined on FAF95 in
         # populations with >1 observation, so a single-observation point AF must

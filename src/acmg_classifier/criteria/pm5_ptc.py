@@ -16,8 +16,9 @@ Group A (position rules, PM5_Supporting)
     undergo NMD, or whose PTC is located upstream of the last known pathogenic
     truncating variant. The latter is the most 3' truncating variant the CDH1
     VCEP classified Pathogenic in the ClinGen Evidence Repository,
-    NM_004360.5:c.2506G>T p.(Glu836Ter); a PTC at codon < 836 qualifies. The
-    site-specific canonical-splice recommendations are not automated.
+    NM_004360.5:c.2506G>T p.(Glu836Ter); a PTC at codon < 836 qualifies.
+    Canonical splice variants get PM5_Supporting at the 15 sites the splicing
+    table (Luo et al. 2023, Table S5) marks "PVS1_Strong + PM5_Supporting".
   * ATM (HBOP VCEP, GN020 v1.5.0): PTC upstream of p.Arg3047.
   * PALB2 (HBOP VCEP, GN077 v1.2.0): PTC upstream of p.Tyr1183.
     For ATM and PALB2, splice variants qualify only with RNA evidence
@@ -74,6 +75,16 @@ _PTC_UPSTREAM_OF = {"ATM": 3047, "PALB2": 1183}
 # ClinGen Evidence Repository (c.2506G>T, p.Glu836Ter). No Pathogenic frameshift
 # in the eRepo has a PTC further 3' (latest: c.2430del p.Phe810LeufsTer6, PTC 815).
 _CDH1_LAST_PATHOGENIC_PTC = 836
+# CDH1 splicing table (Luo et al. J Med Genet 2023, Table S5): canonical splice
+# sites with "PVS1_Strong + PM5_Supporting" — the sites where a (likely)
+# pathogenic canonical variant had been curated. The other PVS1_Strong sites
+# carry no PM5_Supporting. ("donor", N) = c.N+1/+2, ("acceptor", N) = c.N-1/-2.
+_CDH1_PM5_SPLICE_SITES = frozenset({
+    ("donor", 48), ("acceptor", 49), ("donor", 531), ("acceptor", 532),
+    ("donor", 687), ("donor", 832), ("acceptor", 833), ("donor", 1008),
+    ("donor", 1137), ("donor", 1320), ("donor", 1565), ("donor", 1711),
+    ("acceptor", 2165), ("acceptor", 2296), ("acceptor", 2440),
+})
 _RUNX1_MIN_CPOS = 98          # variant must lie downstream of c.98
 _RUNX1_MAX_SPLICE = 0.20      # SpliceAI max delta must be <= 0.20
 
@@ -170,12 +181,20 @@ def evaluate_pm5_ptc(
     if _base(pc.transcript_id) != tx:
         return _S.NOT_MET, f"PM5_PTC ({gene}): rule defined on {tx}, variant on {pc.transcript_id}"
     if cdh1_splice:
-        # CDH1 v3.1: PM5_Supporting also for canonical splice variants (site-
-        # specific splicing table). In the eRepo it accompanies PVS1_Strong
-        # sites and is withheld at the in-frame PVS1_Moderate sites; the
-        # registry suppresses it unless PVS1 is met at Strong or higher.
-        return _S.SUPPORTING, ("PM5_PTC (CDH1, HDGC VCEP): canonical +/-1,2 splice "
-                               "variant predicted to truncate -> PM5_Supporting")
+        # CDH1 v3.1: PM5_Supporting for canonical splice variants at the sites the
+        # splicing table marks "PVS1_Strong + PM5_Supporting"; the registry also
+        # withholds it unless PVS1 is met at Strong or higher.
+        from acmg_classifier.pvs1.vcep_pvs1 import _canonical_splice_site
+        site = _canonical_splice_site(pc.hgvs_c)
+        if site is None:
+            return _S.NOT_MET, "PM5_PTC (CDH1): canonical splice site not resolved"
+        kind, pos = site
+        if site not in _CDH1_PM5_SPLICE_SITES:
+            return _S.NOT_MET, (f"PM5_PTC (CDH1, HDGC VCEP): {kind} site c.{pos} has no "
+                                "PM5_Supporting in the splicing table")
+        return _S.SUPPORTING, (f"PM5_PTC (CDH1, HDGC VCEP): canonical +/-1,2 {kind} "
+                               f"site c.{pos} (splicing table: PVS1_Strong + "
+                               "PM5_Supporting) -> PM5_Supporting")
 
     from acmg_classifier.pvs1.nmd_predictor import nmd_status, ptc_codon
 

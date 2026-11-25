@@ -715,8 +715,8 @@ def test_min_alleles_for_point_estimate_ba1_bs1():
     assert min_alleles_block("CDH1", _gd(ac_grpmax=6, an_grpmax=50000)) == ""
     assert min_alleles_block("F8", _gd(ac_grpmax=4)) != "" and min_alleles_block("F8", _gd(ac_grpmax=5)) == ""
     assert min_alleles_block("BRCA1", _gd(ac_grpmax=1)) == ""
-    r = _bs1("CDH1", faf95_popmax=0.002, popmax_af=0.003, af=0.001, ac=3, ac_grpmax=3,
-             an_grpmax=1000)
+    r = _bs1("CDH1", faf95_popmax=0.002, popmax_af=0.08, af=0.001, ac=4, ac_grpmax=4,
+             an_grpmax=50)
     assert not r.triggered and "CDH1 VCEP" in r.evidence
 
 
@@ -854,3 +854,152 @@ def test_pm2_small_grpmax_population_falls_back_to_global_af(tmp_path):
     r = ev.evaluate(_V, _ann("HBB", gnomad=_gd(ac=2, ac_grpmax=2, an_grpmax=4000, an=1_500_000,
                                                af=1.3e-6, popmax_af=5e-4)))
     assert not r.triggered
+
+
+# =========================== CDH1 (Luo et al. J Med Genet 2023 supplement) =========
+
+def _cdh1_pc(cq, hgvs_c, tx="NM_004360.5"):
+    return ConsequenceInfo(transcript_id=tx, gene_id="E", gene_symbol="CDH1", consequence=cq,
+                           biotype="protein_coding", is_mane_select=True,
+                           hgvs_c=f"{tx}:{hgvs_c}")
+
+
+@pytest.mark.parametrize("hgvs, cq, expected", [
+    ("c.387+1G>A", CT.SPLICE_DONOR, S.MODERATE),        # exon 3 donor (in-frame by RNA)
+    ("c.387+2T>C", CT.SPLICE_DONOR, S.MODERATE),
+    ("c.1566-1G>C", CT.SPLICE_ACCEPTOR, S.MODERATE),    # exon 11 acceptor
+    ("c.1712-2A>C", CT.SPLICE_ACCEPTOR, S.MODERATE),    # exon 12 acceptor
+    ("c.1565+1G>A", CT.SPLICE_DONOR, S.STRONG),         # default
+    ("c.163+1G>A", CT.SPLICE_DONOR, S.STRONG),
+])
+def test_cdh1_pvs1_splicing_table(hgvs, cq, expected):
+    from acmg_classifier.pvs1.vcep_pvs1 import evaluate_vcep_pvs1
+    assert evaluate_vcep_pvs1(_cdh1_pc(cq, hgvs))[0] == expected
+
+
+def test_cdh1_initiation_codon_pvs1():
+    from acmg_classifier.pvs1.vcep_pvs1 import evaluate_vcep_pvs1
+    assert evaluate_vcep_pvs1(_cdh1_pc(CT.START_LOST, "c.1A>G"))[0] == S.VERY_STRONG
+
+
+@pytest.mark.parametrize("hgvs, cq, expected", [
+    ("c.48+1G>A", CT.SPLICE_DONOR, S.SUPPORTING),
+    ("c.49-2A>G", CT.SPLICE_ACCEPTOR, S.SUPPORTING),
+    ("c.1137+2T>C", CT.SPLICE_DONOR, S.SUPPORTING),
+    ("c.2440-2A>G", CT.SPLICE_ACCEPTOR, S.SUPPORTING),
+    ("c.163+1G>A", CT.SPLICE_DONOR, S.NOT_MET),         # PVS1_Strong only
+    ("c.1009-1G>A", CT.SPLICE_ACCEPTOR, S.NOT_MET),
+    ("c.2295+2T>C", CT.SPLICE_DONOR, S.NOT_MET),
+    ("c.387+1G>A", CT.SPLICE_DONOR, S.NOT_MET),         # PVS1_Moderate site
+])
+def test_cdh1_pm5_supporting_only_at_listed_splice_sites(hgvs, cq, expected):
+    from acmg_classifier.criteria.pm5_ptc import evaluate_pm5_ptc
+    assert evaluate_pm5_ptc(_cdh1_pc(cq, hgvs), AnnotationData())[0] == expected
+
+
+def test_filtering_af_9999():
+    from acmg_classifier.criteria.allele_frequency import filtering_af
+    import math
+    f = filtering_af(10, 100000)
+    lam = f * 100000
+    # P(X >= 10 | lam) == 1e-4 at the bound
+    p = 1 - sum(math.exp(-lam) * lam ** k / math.factorial(k) for k in range(10))
+    assert abs(p - 1e-4) < 1e-6
+    assert filtering_af(10, 100000, 0.95) > f                 # FAF95 is higher
+    assert filtering_af(0, 1000) == 0.0 and filtering_af(None, 1000) is None
+
+
+@pytest.mark.parametrize("gene", ["CDH1", "F8", "F9"])
+def test_ba1_bs1_on_99_99_ci(gene):
+    from acmg_classifier.criteria.benign.ba1 import BA1Evaluator
+    assert DiseaseThresholds(_DP).get(gene).af_basis == "faf9999"
+    cfg = MagicMock()
+    cfg.disease_prevalence_tsv = _DP
+    cfg.popmax_af_basis = True
+    # point AF 0.0025 (>= BA1 0.002 for CDH1) but the 99.99% bound of 10/4000 is lower
+    ann = _ann(gene, gnomad=_gd(faf95_popmax=0.0013, popmax_af=0.0025, af=0.0001, ac=10,
+                               ac_grpmax=10, an_grpmax=4000))
+    r = BA1Evaluator(cfg).evaluate(_V, ann)
+    assert "99.99% CI" in r.evidence
+    if gene == "CDH1":
+        assert not r.triggered
+    ann = _ann(gene, gnomad=_gd(faf95_popmax=0.0013, popmax_af=0.0025, af=0.0001, ac=10))
+    r = BS1Evaluator(cfg).evaluate(_V, ann)
+    assert "not computable" in r.evidence
+
+
+# =========================== CDH1 v3.1 PVS1 decision tree (c. ranges) ===============
+
+@pytest.mark.parametrize("cq, hgvs, expected", [
+    (CT.STOP_GAINED, "c.2386C>T", S.VERY_STRONG),       # nonsense c.4-2388
+    (CT.STOP_GAINED, "c.2389G>T", S.STRONG),            # c.2389-2508
+    (CT.STOP_GAINED, "c.2506G>T", S.STRONG),
+    (CT.STOP_GAINED, "c.2512C>T", S.MODERATE),          # c.2509-2646
+    (CT.STOP_GAINED, "c.2547_2548insTAA", S.MODERATE),
+    (CT.FRAMESHIFT, "c.2370del", S.VERY_STRONG),        # -1: c.4-2375
+    (CT.FRAMESHIFT, "c.2376del", S.STRONG),             # -1: c.2376-2443
+    (CT.FRAMESHIFT, "c.2450del", S.MODERATE),           # -1: c.2444-2646
+    (CT.FRAMESHIFT, "c.2352dup", S.VERY_STRONG),        # +1: c.4-2352
+    (CT.FRAMESHIFT, "c.2490dup", S.STRONG),             # +1: c.2353-2499
+    (CT.FRAMESHIFT, "c.2499_2500insA", S.STRONG),
+    (CT.FRAMESHIFT, "c.2520dup", S.MODERATE),           # +1: c.2500-2646
+    (CT.FRAMESHIFT, "c.2504_2505del", S.MODERATE),      # 2-nt deletion = +1 frame
+    (CT.FRAMESHIFT, "c.2440_2441delinsT", S.STRONG),    # net -1
+])
+def test_cdh1_pvs1_truncation_ranges(cq, hgvs, expected):
+    from acmg_classifier.pvs1.vcep_pvs1 import evaluate_vcep_pvs1
+    assert evaluate_vcep_pvs1(_cdh1_pc(cq, hgvs))[0] == expected
+
+
+def test_trunc_kind_parsing():
+    from acmg_classifier.pvs1.vcep_pvs1 import _trunc_kind_and_start
+    k = lambda cq, h: _trunc_kind_and_start(_cdh1_pc(cq, h))
+    assert k(CT.FRAMESHIFT, "c.100_101insAT") == ("fs-1", 100)
+    assert k(CT.FRAMESHIFT, "c.100_103del") == ("fs-1", 100)
+    assert k(CT.FRAMESHIFT, "c.100_101dup") == ("fs-1", 100)
+    assert k(CT.FRAMESHIFT, "c.2388+1del") == (None, None)
+    assert k(CT.STOP_GAINED, "c.12G>A") == ("nonsense", 12)
+
+
+# ---------------------------------------------------------------------------
+# VCEP exceptions: Likely benign on a single BS (CDH1 v3.1, IDUA, RUNX1, DDX41)
+# ---------------------------------------------------------------------------
+
+def _lb_r(crit, strength=None):
+    from acmg_classifier.models.criteria import CriteriaResult
+    from acmg_classifier.models.enums import ACMGCriterion
+    c = getattr(ACMGCriterion, crit)
+    return CriteriaResult.met(c, strength) if strength else CriteriaResult.met(c)
+
+
+@pytest.mark.parametrize("gene,crit,expected", [
+    ("CDH1", "BS1", "LIKELY_BENIGN"),
+    ("CDH1", "BS2", "LIKELY_BENIGN"),
+    ("IDUA", "BS1", "LIKELY_BENIGN"),
+    ("IDUA", "BS2", "VUS"),
+    ("RUNX1", "BS1", "LIKELY_BENIGN"),
+    ("DDX41", "BS1", "LIKELY_BENIGN"),
+    ("BRCA1", "BS1", "VUS"),
+    (None, "BS1", "VUS"),
+])
+def test_lb_on_single_bs(gene, crit, expected):
+    from acmg_classifier.classification.classifier_2015 import Classifier2015
+    from acmg_classifier.models.enums import Pathogenicity
+    path, _ = Classifier2015().classify([_lb_r(crit)], gene=gene)
+    assert path == getattr(Pathogenicity, expected)
+
+
+def test_lb_on_single_bs_contradictory_evidence():
+    from acmg_classifier.classification.classifier_2015 import Classifier2015
+    from acmg_classifier.models.enums import CriterionStrength as S, Pathogenicity
+    clf = Classifier2015()
+    pp = _lb_r("PP3", S.SUPPORTING)
+    # RUNX1/DDX41: "if there is no contradictory evidence supporting pathogenicity"
+    assert clf.classify([_lb_r("BS1"), pp], gene="RUNX1")[0] == Pathogenicity.VUS
+    # CDH1: no such clause -> Table 5 conflict rule only (no pathogenic rule met)
+    assert clf.classify([_lb_r("BS1"), pp], gene="CDH1")[0] == Pathogenicity.LIKELY_BENIGN
+    # CDH1 BS1 at Supporting is a BP-level item, not "BS1 alone"
+    assert clf.classify([_lb_r("BS1", S.SUPPORTING)], gene="CDH1")[0] == Pathogenicity.VUS
+    # pathogenic rule met -> VUS (Table 5 contradiction)
+    lp = [_lb_r("PVS1", S.VERY_STRONG), _lb_r("PM2", S.MODERATE), _lb_r("BS2")]
+    assert clf.classify(lp, gene="CDH1")[0] == Pathogenicity.VUS

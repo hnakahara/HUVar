@@ -119,6 +119,12 @@ class _GeneSpec:
     # NOT_MET marks a VCEP N/A site. Sites not listed use ``splice``. (RUNX1
     # "Summary of splicing effects" table.)
     splice_sites: dict[tuple[str, int], CriterionStrength] | None = None
+    # Truncation strengths by the c. position where the variant starts, per
+    # variant type: "nonsense", "fs-1" (net length change = -1 mod 3, e.g. a 1-nt
+    # deletion) and "fs+1" (net +1 mod 3, e.g. a 1-nt duplication). Each value is
+    # ((first c., last c., strength), ...); the first matching band wins. Used
+    # before the NMD / codon rules (CDH1 v3.1 PVS1 decision tree).
+    trunc_c_bands: dict[str, tuple[tuple[int, int, CriterionStrength], ...]] | None = None
     # With ``trunc_ptc``: a frameshift whose PTC escapes NMD (band strength below
     # Very Strong) or reads through the stop is Strong when its abnormal sequence
     # alters >10% of the protein (IDUA: "consider the length of abnormal amino
@@ -372,11 +378,33 @@ _SPECS: dict[str, _GeneSpec] = {
     # CDH1 (HDGC VCEP, v3). Nonsense/frameshift predicted to undergo NMD → PVS1;
     # NMD escape (last exon 16 / last 50 nt of exon 15) → PVS1_Strong (the
     # cytoplasmic C-terminal region is critical). Canonical ±1,2 splice DEFAULT is
-    # PVS1_Strong (per the v3 caveat / splicing table), not Very Strong.
+    # PVS1_Strong (per the v3 caveat), with the site-specific recommendations of
+    # the splicing table (Luo et al. J Med Genet 2023, Table S5): the exon 3 donor
+    # (c.387+1/+2, in-frame transcripts by RNA), the exon 11 acceptor (c.1566-1/-2,
+    # predicted in-frame insertion with a potential rescue transcript) and the
+    # exon 12 acceptor (c.1712-1/-2, in-frame c.1712_1720del9) → PVS1_Moderate.
+    # Initiation codon → PVS1 (versions 2/3, Table S4: "PVS1 was applied for
+    # initiation codon variations").
+    # Nonsense / frameshift follow the c. ranges of the v3.1 PVS1 decision tree:
+    # NMD -> PVS1 (nonsense c.4-2388, frameshift -1 c.4-2375, +1 c.4-2352); no NMD
+    # but upstream of the last pathogenic truncation c.2506G>T -> PVS1_Strong
+    # (c.2389-2508 / c.2376-2443 / c.2353-2499); <10% of the protein removed ->
+    # PVS1_Moderate (c.2509-2646 / c.2444-2646 / c.2499-2646; c.2499 +1 frameshifts
+    # are listed in both, the stronger band is used).
     "CDH1": _GeneSpec(
         gene="CDH1", transcript="NM_004360.5", aa_len=882,
         trunc_nmd=(_S.VERY_STRONG, _S.STRONG),
-        start_lost=None, splice=_S.STRONG, deletion=_S.VERY_STRONG,
+        trunc_c_bands={
+            "nonsense": ((4, 2388, _S.VERY_STRONG), (2389, 2508, _S.STRONG),
+                         (2509, 2646, _S.MODERATE)),
+            "fs-1": ((4, 2375, _S.VERY_STRONG), (2376, 2443, _S.STRONG),
+                     (2444, 2646, _S.MODERATE)),
+            "fs+1": ((4, 2352, _S.VERY_STRONG), (2353, 2499, _S.STRONG),
+                     (2500, 2646, _S.MODERATE)),
+        },
+        start_lost=_S.VERY_STRONG, splice=_S.STRONG, deletion=_S.VERY_STRONG,
+        splice_sites={("donor", 387): _S.MODERATE, ("acceptor", 1566): _S.MODERATE,
+                      ("acceptor", 1712): _S.MODERATE},
     ),
     # AIPL1 (LCA VCEP, Walker 2023-adapted). All 6 exons critical. Nonsense and
     # frameshift score differently in the C-terminus (frameshift adds residues
@@ -1096,6 +1124,43 @@ def enigma_splice_site(pc) -> tuple[CriterionStrength, str] | None:
                       f"{m.group(3)} -> {label}{detail}{rna_note}")
 
 
+_C_START_RE = re.compile(r"c\.(\d+)(?:_(\d+))?(del|dup|ins|delins)?([ACGTN]*|\d*)")
+
+
+def _trunc_kind_and_start(pc) -> tuple[str | None, int | None]:
+    """("nonsense" | "fs-1" | "fs+1" | None, first c. position) of a nonsense or
+    frameshift variant from its HGVS c. (coding positions only; intronic / UTR
+    offsets give None)."""
+    hgvs = (pc.hgvs_c or "").split(":")[-1]
+    if not hgvs.startswith("c.") or re.match(r"c\.[-*]", hgvs) or re.search(r"\d[+-]\d", hgvs):
+        return None, None
+    m = _C_START_RE.match(hgvs)
+    if not m:
+        return None, None
+    a = int(m.group(1))
+    if pc.consequence == ConsequenceType.STOP_GAINED:
+        return "nonsense", a       # SNV, or an in-frame indel creating a stop
+    if pc.consequence != ConsequenceType.FRAMESHIFT:
+        return None, None
+    b = int(m.group(2)) if m.group(2) else a
+    op, seq = m.group(3), m.group(4) or ""
+    ins = int(seq) if seq.isdigit() else len(seq)
+    if op == "del":
+        net = -(b - a + 1)
+    elif op == "dup":
+        net = b - a + 1
+    elif op == "ins":
+        net = ins                  # c.N_N+1insX: counted at N, like c.Ndup
+    elif op == "delins":
+        net = ins - (b - a + 1)
+    else:
+        return None, None
+    if not ins and op in ("ins", "delins") and not seq:
+        return None, None
+    r = net % 3
+    return ({2: "fs-1", 1: "fs+1"}.get(r), a)
+
+
 def _canonical_splice_site(hgvs_c: str | None) -> tuple[str, int] | None:
     """(``"donor"`` | ``"acceptor"``, exon-boundary c. position) of the first
     canonical +/-1,2 position named in an HGVS c. string (``c.508+1G>A`` ->
@@ -1203,6 +1268,17 @@ def evaluate_vcep_pvs1(pc, splice_overrides=None) -> tuple[CriterionStrength, st
                     f"{spec.gene} VCEP: frameshift reading through the stop codon "
                     f"-> {_LABEL[spec.readthrough_fs]}"
                 )
+        # c.-range truncation bands (CDH1 decision tree).
+        if spec.trunc_c_bands and pc.transcript_id and \
+                pc.transcript_id.split(".")[0] == spec.transcript.split(".")[0]:
+            kind, start = _trunc_kind_and_start(pc)
+            for lo, hi, strength in spec.trunc_c_bands.get(kind or "", ()):
+                if start is not None and lo <= start <= hi:
+                    label = {"nonsense": "nonsense", "fs-1": "frameshift (-1)",
+                             "fs+1": "frameshift (+1)"}[kind]
+                    return strength, (
+                        f"{spec.gene} VCEP: {label} at c.{start} (decision-tree range "
+                        f"c.{lo}-c.{hi}) -> {_LABEL[strength]}")
         # Genes with no per-gene truncation rule (only an exception carve-out)
         # defer the rest to the generic tree.
         if spec.trunc_nmd is None and spec.trunc_bands is None:

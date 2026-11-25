@@ -98,11 +98,27 @@ def _triggered(results: list[CriteriaResult]) -> dict[str, list[str]]:
     return out
 
 
+# VCEP exceptions to Table 5: a single benign Strong criterion that is enough for
+# Likely benign.  gene -> (criteria, require_no_pathogenic_evidence)
+#   CDH1 (GN007 v3.1): "We allow a variant to reach a likely benign
+#     classification based on BS1 alone" / "... based on BS2 alone".
+#   IDUA (GN091): "Variants meeting only BS1 will be classified as likely benign."
+#   RUNX1 (GN008) / DDX41 (GN159): "The variant can be classified as likely
+#     benign based on BS1 alone if there is no contradictory evidence
+#     supporting pathogenicity" -> any triggered pathogenic criterion blocks it.
+_LB_ON_SINGLE_BS: dict[str, tuple[frozenset[str], bool]] = {
+    "CDH1": (frozenset({"BS1", "BS2"}), False),
+    "IDUA": (frozenset({"BS1"}), False),
+    "RUNX1": (frozenset({"BS1"}), True),
+    "DDX41": (frozenset({"BS1"}), True),
+}
+
+
 class Classifier2015:
     """Implements the ACMG 2015 combination rules (Table 5)."""
 
     def classify(
-        self, results: list[CriteriaResult]
+        self, results: list[CriteriaResult], gene: str | None = None
     ) -> tuple[Pathogenicity, str]:
         """Apply ACMG 2015 Table 5 combination rules.
 
@@ -148,6 +164,10 @@ class Classifier2015:
         )
         benign = bs >= 2                                  # (BA1 handled above)
         likely_benign = (bs >= 1 and bp >= 1) or bp >= 2
+        single = _LB_ON_SINGLE_BS.get(gene or "")
+        if single and bs == 1 and g["bs"][0] in single[0]:
+            if not single[1] or (pvs + ps + pm + pp) == 0:
+                likely_benign = True
 
         # "If criteria are contradictory, the variant should be classified as
         # an uncertain significance" (Table 5 footnote): both a pathogenic and

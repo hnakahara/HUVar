@@ -951,6 +951,10 @@ _AUDIT_OVERRIDES.setdefault("IL2RG", {}).update(
 #   * SERPINC1: common founder variants "excluded from eligibility of the BS1 code".
 for _g, _cols in {'TP53': {'pm5_grantham': 'ge'}, 'CYP1B1': {'pm5_grantham': 'ge'}, 'CDH1': {'pm2_min_depth': '30'}, 'HBB': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'HBA2': {'pm2_min_depth': '20', 'bp7_splice_cutoff': '0.3', 'bp7_phylop': '0'}, 'PTEN': {'bp4_splice_cutoff': '0.2'}, 'PAH': {'revel_bp4_very_strong': '0.003'}, 'SERPINC1': {'bs1_exclude': 'p.Pro73Leu,p.Arg79His,p.Thr147Ala,p.Ala416Ser,p.Leu131Phe,p.Val30Glu'}}.items():
     _AUDIT_OVERRIDES.setdefault(_g, {}).update(_cols)
+# CDH1 (GN007) / F8 (GN071) / F9 (GN080) BA1 / BS1: "99.99% CI" -> filtering AF
+# at 99.99% confidence from the GrpMax AC / AN (af_basis "faf9999").
+for _g in ("CDH1", "F8", "F9"):
+    _AUDIT_OVERRIDES.setdefault(_g, {})["af_basis"] = "faf9999"
 for _g, _cols in _AUDIT_OVERRIDES.items():
     _CURATED_OVERRIDES.setdefault(_g, {}).update(_cols)
 

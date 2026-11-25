@@ -76,6 +76,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
     - RYR1 in-frame deletions in the pore region (aa 4800-4950) PM4_Strong; CDH1 PP3 not
       at c.387G (last nucleotide of exon 3); BRCA1 / BRCA2 BA1 and BS1 withheld when the
       gnomAD mean read depth is below 20 (needs the coverage database).
+    - CDH1 (Luo et al. J Med Genet 2023 supplement, Tables S4 / S5): PVS1_Moderate at the
+      exon 3 donor and the exon 11 / exon 12 acceptors; PM5_Supporting for canonical
+      splice variants only at the 15 sites the splicing table lists; initiation codon
+      PVS1. BA1 / BS1 for CDH1 and F8 / F9 on the filtering AF at 99.99% confidence
+      computed from the GrpMax AC / AN (`af_basis=faf9999`).
+    - CDH1 VCEP v3.1 PVS1 decision tree: nonsense / frameshift (-1) / frameshift (+1)
+      variants are graded by their c. position (PVS1 / PVS1_Strong / PVS1_Moderate:
+      nonsense c.4-2388 / 2389-2508 / 2509-2646; fs-1 c.4-2375 / 2376-2443 / 2444-2646;
+      fs+1 c.4-2352 / 2353-2499 / 2500-2646) instead of the NMD / last-exon rule.
+    - Likely benign on a single benign Strong criterion in the 2015 classifier:
+      CDH1 BS1 alone or BS2 alone, IDUA BS1 alone, RUNX1 / DDX41 BS1 alone when no
+      pathogenic criterion is met (`Classifier2015.classify(..., gene=)`).
     - GUCY2D / AIPL1 PS1: comparison variants with SpliceAI > 0.1 are not used (precomputed
       SpliceAI lookup). MYOC / CYP1B1 / BMPR2 PM2: a GrpMax population with fewer than
       10,000 / 2,000 / 1,000 alleles is not used (global AF instead).
